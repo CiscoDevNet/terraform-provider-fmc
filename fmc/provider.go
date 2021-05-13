@@ -49,6 +49,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"fmc_network_objects": resourceNetworkObjects(),
+			"fmc_url_objects": resourceURLObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
