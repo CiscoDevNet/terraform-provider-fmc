@@ -208,7 +208,7 @@ func (v *Client) DeleteURLObject(ctx context.Context, id string) error {
 	return errors.New(fmt.Sprintf("deleting url objects: %s - %s", url, r.Status))
 }
 
-func (v *Client) GetNetworkObject(ctx context.Context, id string) (*NetworkObjectResponse, error) {
+func (v *Client) GetURLObject(ctx context.Context, id string) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/api/fmc_config/v1/domain/%s/object/urls/%s", v.baseURL, v.DomainUUID, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

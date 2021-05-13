@@ -18,7 +18,7 @@ func resourceURLObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"value": {
+			"url": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -92,7 +92,7 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 		return diags
 	}
 
-	if err := d.Set("url", item.Url); err != nil {
+	if err := d.Set("url", item.URL); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read url object",
