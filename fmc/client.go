@@ -238,7 +238,7 @@ func (v *Client) GetURLObject(ctx context.Context, id string) (*URLObjectRespons
 }
 
 func (v *Client) CreateURLObject(ctx context.Context, object *URLObject) (*URLObjectResponse, error) {
-	url := fmt.Sprintf("%s/api/fmc_config/v1/domain/%s/object/urls", v.baseURL, v.DomainUUID)
+	url := fmt.Sprintf("%s/api/fmc_config/v1/domain/%s/object/urls?bulk=true", v.baseURL, v.DomainUUID)
 	body, err := json.Marshal(&object)
 	if err != nil {
 		return nil, errors.New(fmt.Sprintf("creating url objects: %s - %s", url, err.Error()))
