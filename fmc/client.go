@@ -24,7 +24,6 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 		user:               user,
 		password:           password,
 		host:               host,
-		domainBaseURL:      "",
 	}
 }
 
@@ -78,7 +77,7 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	if r.StatusCode != status {
 		return fmt.Errorf("wrong status code: %d", r.StatusCode)
 	}
-	// Handle 429 if any
+	//TODO: Handle 429 if any
 	log.Printf("Status code: %d", r.StatusCode)
 	if item != nil {
 		defer r.Body.Close()
