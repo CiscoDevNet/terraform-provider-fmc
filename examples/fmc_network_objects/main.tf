@@ -9,7 +9,7 @@ terraform {
 provider "fmc" {
   fmc_username = "api"
   fmc_password = "CXsecurity!@34"
-  fmc_host = "fmc.adyah.cisco"
+  fmc_host = "10.106.107.228"
   fmc_insecure_skip_verify = true
 }
 
