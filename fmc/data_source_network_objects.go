@@ -42,6 +42,13 @@ func dataSourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m
 		item *NetworkObjectResponse
 		err  error
 	)
+	if (okId && (okName || okValue)) || (okName && okValue) {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Warning,
+			Summary:  "More than one filter provided",
+			Detail:   "The first filter in the order of id, name and value will be used, and the rest will be ignored",
+		})
+	}
 	switch {
 	case okId:
 		item, err = c.GetNetworkObject(ctx, idInput.(string))
