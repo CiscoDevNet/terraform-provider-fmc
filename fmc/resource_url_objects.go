@@ -98,14 +98,6 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 		})
 		return diags
 	}
-	if err := d.Set("type", item.Type); err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read url object",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
 	return diags
 }
 
@@ -113,7 +105,7 @@ func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m int
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "url", "type") {
+	if d.HasChanges("name", "description", "url") {
 		_, err := c.UpdateURLObject(ctx, id, &URLObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),

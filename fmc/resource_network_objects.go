@@ -98,14 +98,6 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 		})
 		return diags
 	}
-	if err := d.Set("type", item.Type); err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read network object",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
 	return diags
 }
 
@@ -113,7 +105,7 @@ func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "value", "type") {
+	if d.HasChanges("name", "description", "value") {
 		_, err := c.UpdateNetworkObject(ctx, id, &NetworkObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),

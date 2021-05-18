@@ -6,62 +6,15 @@ terraform {
   }
 }
 
+provider "fmc" {
+  fmc_username = "patrick"
+  fmc_password = "CXsecurity!@34"
+  fmc_host = "10.106.36.90"
+  fmc_insecure_skip_verify = true
+}
+
 resource "fmc_url_objects" "new" {
-  name        = "terraform_bulk_url_object_1"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new2" {
-  name        = "terraform_bulk_url_object_2"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new3" {
-  name        = "terraform_bulk_url_object_3"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new4" {
-  name        = "terraform_bulk_url_object_4"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new5" {
-  name        = "terraform_bulk_url_object_5"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new6" {
-  name        = "terraform_bulk_url_object_6"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new7" {
-  name        = "terraform_bulk_url_object_7"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new8" {
-  name        = "terraform_bulk_url_object_8"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new9" {
-  name        = "terraform_bulk_url_object_9"
-  url       = "http://wwwin.ami.cisco.com"
-  description = "My Scale Test Terraform URL Object"
-}
-
-resource "fmc_url_objects" "new10" {
-  name        = "terraform_bulk_url_object_10"
+  name        = "terraform_bulk_url_object_21"
   url       = "http://wwwin.ami.cisco.com"
   description = "My Scale Test Terraform URL Object"
 }
