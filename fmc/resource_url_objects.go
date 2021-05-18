@@ -7,6 +7,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var url_type string = "Url"
+
 func resourceURLObjects() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceURLObjectsCreate,
@@ -26,10 +28,6 @@ func resourceURLObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"type": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
 		},
 	}
 }
@@ -43,8 +41,8 @@ func resourceURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m int
 	res, err := c.CreateURLObject(ctx, &URLObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Url:       d.Get("url").(string),
-		Type:        d.Get("type").(string),
+		Url:         d.Get("url").(string),
+		Type:        url_type,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -119,8 +117,8 @@ func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m int
 		_, err := c.UpdateURLObject(ctx, id, &URLObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
-			Url:       d.Get("url").(string),
-			Type:        d.Get("type").(string),
+			Url:         d.Get("url").(string),
+			Type:        url_type,
 			ID:          id,
 		})
 		if err != nil {
