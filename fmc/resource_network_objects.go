@@ -7,8 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var network_type string = "Network"
-
 func resourceNetworkObjects() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceNetworkObjectsCreate,
@@ -28,6 +26,10 @@ func resourceNetworkObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Required: true,
+			},
 		},
 	}
 }
@@ -42,7 +44,7 @@ func resourceNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Value:       d.Get("value").(string),
-		Type:        network_type,
+		Type:        d.Get("type").(string),
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -118,7 +120,7 @@ func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Value:       d.Get("value").(string),
-			Type:        network_type,
+			Type:        d.Get("type").(string),
 			ID:          id,
 		})
 		if err != nil {

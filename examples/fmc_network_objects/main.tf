@@ -17,12 +17,14 @@ resource "fmc_network_objects" "new" {
   name        = "terraform_network_object_204"
   value       = "1.0.0.0/24"
   description = "just"
+  type        = "Network"
 }
 
 resource "fmc_network_objects" "new_3" {
   name        = "terraform_network_object_205"
   value       = "1.0.0.0/24"
   description = "My First Terraform Network Object"
+  type        = "Network"
 }
 
 output "new_fmc_network_object" {
