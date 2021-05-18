@@ -78,7 +78,7 @@ type NetworkObjectsResponse struct {
 }
 
 func (v *Client) GetNetworkObjectByNameOrValue(ctx context.Context, nameOrValue string) (*NetworkObjectResponse, error) {
-	url := fmt.Sprintf("%s/object/networks?limit=1&expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
+	url := fmt.Sprintf("%s/object/networks?expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting network object by name/value: %s - %s", url, err.Error())
@@ -88,8 +88,11 @@ func (v *Client) GetNetworkObjectByNameOrValue(ctx context.Context, nameOrValue 
 	if err != nil {
 		return nil, fmt.Errorf("getting network object by name/value: %s - %s", url, err.Error())
 	}
-	if l := len(resp.Items); l != 1 {
-		return nil, fmt.Errorf("length of response is: %d, expected 1", l)
+	switch l := len(resp.Items); {
+	case l > 1:
+		return nil, fmt.Errorf("duplicates found, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+	case l == 0:
+		return nil, fmt.Errorf("no network objects found, length of response is: %d, expected 1, please check your filter", l)
 	}
 	return v.GetNetworkObject(ctx, resp.Items[0].ID)
 }
