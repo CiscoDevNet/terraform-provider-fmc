@@ -11,18 +11,19 @@ import (
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("fmc_username").(string)
 	password := d.Get("fmc_password").(string)
-	baseURL := d.Get("fmc_base_url").(string)
+	host := d.Get("fmc_host").(string)
+	insecureSkipVerify := d.Get("fmc_insecure_skip_verify").(bool)
 	var diags diag.Diagnostics
 
-	if username != "" && password != "" && baseURL != "" {
-		client := NewClient(username, password, baseURL)
+	if username != "" && password != "" && host != "" {
+		client := NewClient(username, password, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
 			return nil, diag.FromErr(err)
 		}
 		return client, diags
 	}
-	return nil, diag.FromErr(errors.New("Missing FMC username, password or base url"))
+	return nil, diag.FromErr(errors.New("missing fmc username, password or base url"))
 }
 
 // Provider
@@ -41,14 +42,19 @@ func Provider() *schema.Provider {
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_PASSWORD", nil),
 			},
-			"fmc_base_url": {
+			"fmc_host": {
 				Type:        schema.TypeString,
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_BASE_URL", nil),
 			},
+			"fmc_insecure_skip_verify": {
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"fmc_url_objects": resourceURLObjects(),
+			"fmc_url_objects":     resourceURLObjects(),
 			"fmc_network_objects": resourceNetworkObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
