@@ -7,34 +7,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-// func dataSourceNetworkObjects() *schema.Resource {
-// 	return &schema.Resource{
-// 		ReadContext: dataSourceNetworkObjectsRead,
-// 		Schema: map[string]*schema.Schema{
-// 			"network_objects": &schema.Schema{
-// 				Type:     schema.TypeList,
-// 				Computed: true,
-// 				Elem: &schema.Resource{
-// 					Schema: map[string]*schema.Schema{
-// 						"id": {
-// 							Type:     schema.TypeString,
-// 							Computed: true,
-// 						},
-// 						"name": {
-// 							Type:     schema.TypeString,
-// 							Computed: true,
-// 						},
-// 						"value": {
-// 							Type:     schema.TypeString,
-// 							Computed: true,
-// 						},
-// 					},
-// 				},
-// 			},
-// 		},
-// 	}
-// }
-
 func dataSourceNetworkObjects() *schema.Resource {
 	return &schema.Resource{
 		ReadContext: dataSourceNetworkObjectsRead,
