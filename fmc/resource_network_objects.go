@@ -28,6 +28,10 @@ func resourceNetworkObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -98,6 +102,16 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 		})
 		return diags
 	}
+
+	if err := d.Set("type", item.Type); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
 	return diags
 }
 

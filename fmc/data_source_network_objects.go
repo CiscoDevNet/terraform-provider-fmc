@@ -26,6 +26,10 @@ func dataSourceNetworkObjects() *schema.Resource {
 				Optional: true,
 				Computed: true,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -93,5 +97,15 @@ func dataSourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m
 		})
 		return diags
 	}
+
+	if err := d.Set("type", item.Type); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
 	return diags
 }
