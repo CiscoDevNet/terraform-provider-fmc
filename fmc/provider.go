@@ -63,6 +63,7 @@ func Provider() *schema.Provider {
 			"fmc_network_group_objects": resourceNetworkGroupObjects(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
+			"fmc_devices":         dataSourceDevices(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
