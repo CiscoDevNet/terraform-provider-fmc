@@ -7,14 +7,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var network_type string = "Network"
+var fqdn_type string = "FQDN"
 
-func resourceNetworkObjects() *schema.Resource {
+func resourceFQDNObjects() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceNetworkObjectsCreate,
-		ReadContext:   resourceNetworkObjectsRead,
-		UpdateContext: resourceNetworkObjectsUpdate,
-		DeleteContext: resourceNetworkObjectsDelete,
+		CreateContext: resourceFQDNObjectsCreate,
+		ReadContext:   resourceFQDNObjectsRead,
+		UpdateContext: resourceFQDNObjectsUpdate,
+		DeleteContext: resourceFQDNObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
@@ -28,50 +28,51 @@ func resourceNetworkObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"type": {
+			"dns_resolution": {
 				Type:     schema.TypeString,
-				Computed: true,
+				Required: true,
 			},
 		},
 	}
 }
 
-func resourceNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFQDNObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateNetworkObject(ctx, &NetworkObject{
-		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
-		Value:       d.Get("value").(string),
-		Type:        network_type,
+	res, err := c.CreateFQDNObject(ctx, &FQDNObject{
+		Name:          d.Get("name").(string),
+		Description:   d.Get("description").(string),
+		Value:         d.Get("value").(string),
+		DNSResolution: d.Get("dns_resolution").(string),
+		Type:          fqdn_type,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create network object",
+			Summary:  "unable to create fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNetworkObjectsRead(ctx, d, m)
+	return resourceFQDNObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetNetworkObject(ctx, id)
+	item, err := c.GetFQDNObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -79,7 +80,7 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -88,7 +89,7 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("description", item.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -97,49 +98,48 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("value", item.Value); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
-
-	if err := d.Set("type", item.Type); err != nil {
+	if err := d.Set("dns_resolution", item.Value); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
-
 	return diags
 }
 
-func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFQDNObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdateNetworkObject(ctx, id, &NetworkObjectUpdateInput{
-			Name:        d.Get("name").(string),
-			Description: d.Get("description").(string),
-			Value:       d.Get("value").(string),
-			Type:        network_type,
-			ID:          id,
+	if d.HasChanges("name", "description", "value", "dns_resolution") {
+		_, err := c.UpdateFQDNObject(ctx, id, &FQDNObjectUpdateInput{
+			Name:          d.Get("name").(string),
+			Description:   d.Get("description").(string),
+			Value:         d.Get("value").(string),
+			DNSResolution: d.Get("dns_resolution").(string),
+			Type:          fqdn_type,
+			ID:            id,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unable to update network object",
+				Summary:  "unable to update fqdn object",
 				Detail:   err.Error(),
 			})
 			return diags
 		}
 	}
-	return resourceNetworkObjectsRead(ctx, d, m)
+	return resourceFQDNObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFQDNObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -147,11 +147,11 @@ func resourceNetworkObjectsDelete(ctx context.Context, d *schema.ResourceData, m
 
 	id := d.Id()
 
-	err := c.DeleteNetworkObject(ctx, id)
+	err := c.DeleteFQDNObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to delete network object",
+			Summary:  "unable to delete fqdn object",
 			Detail:   err.Error(),
 		})
 		return diags

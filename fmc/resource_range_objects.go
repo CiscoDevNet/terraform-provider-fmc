@@ -7,20 +7,20 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var url_type string = "Url"
+var range_type string = "Range"
 
-func resourceURLObjects() *schema.Resource {
+func resourceRangeObjects() *schema.Resource {
 	return &schema.Resource{
-		CreateContext: resourceURLObjectsCreate,
-		ReadContext:   resourceURLObjectsRead,
-		UpdateContext: resourceURLObjectsUpdate,
-		DeleteContext: resourceURLObjectsDelete,
+		CreateContext: resourceRangeObjectsCreate,
+		ReadContext:   resourceRangeObjectsRead,
+		UpdateContext: resourceRangeObjectsUpdate,
+		DeleteContext: resourceRangeObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"url": {
+			"value": {
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -32,42 +32,42 @@ func resourceURLObjects() *schema.Resource {
 	}
 }
 
-func resourceURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceRangeObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateURLObject(ctx, &URLObject{
+	res, err := c.CreateRangeObject(ctx, &RangeObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Url:         d.Get("url").(string),
-		Type:        url_type,
+		Value:       d.Get("value").(string),
+		Type:        range_type,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create url object",
+			Summary:  "unable to create network object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceURLObjectsRead(ctx, d, m)
+	return resourceRangeObjectsRead(ctx, d, m)
 }
 
-func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetURLObject(ctx, id)
+	item, err := c.GetRangeObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object",
+			Summary:  "unable to read network object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -75,7 +75,7 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object",
+			Summary:  "unable to read network object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -84,16 +84,16 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 	if err := d.Set("description", item.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object",
+			Summary:  "unable to read network object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 
-	if err := d.Set("url", item.URL); err != nil {
+	if err := d.Set("value", item.Value); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object",
+			Summary:  "unable to read network object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -101,31 +101,31 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 	return diags
 }
 
-func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceRangeObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "url") {
-		_, err := c.UpdateURLObject(ctx, id, &URLObjectUpdateInput{
+	if d.HasChanges("name", "description", "value") {
+		_, err := c.UpdateRangeObject(ctx, id, &RangeObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
-			Url:         d.Get("url").(string),
-			Type:        url_type,
+			Value:       d.Get("value").(string),
+			Type:        range_type,
 			ID:          id,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unable to update url object",
+				Summary:  "unable to update network object",
 				Detail:   err.Error(),
 			})
 			return diags
 		}
 	}
-	return resourceURLObjectsRead(ctx, d, m)
+	return resourceRangeObjectsRead(ctx, d, m)
 }
 
-func resourceURLObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceRangeObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -133,11 +133,11 @@ func resourceURLObjectsDelete(ctx context.Context, d *schema.ResourceData, m int
 
 	id := d.Id()
 
-	err := c.DeleteURLObject(ctx, id)
+	err := c.DeleteRangeObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to delete url object",
+			Summary:  "unable to delete network object",
 			Detail:   err.Error(),
 		})
 		return diags

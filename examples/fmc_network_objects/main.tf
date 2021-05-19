@@ -6,23 +6,27 @@ terraform {
   }
 }
 
-resource "fmc_network_objects" "new" {
-  name        = "terraform_network_object_100"
-  value       = "1.0.0.0/24"
-  description = "just"
-  type        = "Network"
+provider "fmc" {
+  fmc_username = "api"
+  fmc_password = "CXsecurity!@34"
+  fmc_host = "10.106.107.228"
+  fmc_insecure_skip_verify = true
 }
 
-resource "fmc_network_objects" "new_3" {
-  name        = "terraform_network_object_111"
-  value       = "1.0.0.0/24"
-  description = "My First Terraform Network Object"
-  type        = "Network"
+data "fmc_network_objects" "PrivateVLAN" {
+  name = "VLAN825-Private"
 }
 
-output "new_fmc_network_object" {
-  value = fmc_network_objects.new
+resource "fmc_network_objects" "PrivateVLANDR" {
+  name        = "${data.fmc_network_objects.PrivateVLAN.name}-DRsite"
+  value       = data.fmc_network_objects.PrivateVLAN.value
+  description = "testing terraform"
 }
+
+output "existing_fmc_network_object" {
+  value = data.fmc_network_objects.PrivateVLAN.id
+}
+
 output "new_fmc_network_object_3" {
-  value = fmc_network_objects.new_3
+  value = fmc_network_objects.PrivateVLANDR.id
 }
