@@ -13,13 +13,13 @@ provider "fmc" {
   fmc_insecure_skip_verify = true
 }
 
-data "fmc_url_objects" "new" {
+data "fmc_url_objects" "CiscoTest" {
   name = "CiscoTest"
 }
 
-resource "fmc_url_objects" "new" {
+resource "fmc_url_objects" "MakingNew" {
   name        = "MakingNew"
-  url       = data.url_objects.CiscoTest.URL
+  url       = data.fmc_url_objects.CiscoTest.URL
   description = "Will it work"
 }
 
