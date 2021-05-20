@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 )
@@ -16,6 +17,16 @@ type Client struct {
 	domainBaseURL      string
 	accessToken        string
 	DomainUUID         string
+}
+
+type ErrorResponse struct {
+	Error struct {
+		Category string `json:"category"`
+		Messages []struct {
+			Description string `json:"description"`
+		} `json:"messages"`
+		Severity string `json:"severity"`
+	} `json:"error"`
 }
 
 func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
@@ -75,7 +86,18 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 		status = http.StatusOK
 	}
 	if r.StatusCode != status {
-		return fmt.Errorf("wrong status code: %d", r.StatusCode)
+		defer r.Body.Close()
+
+		errorRes := ErrorResponse{}
+		err = json.NewDecoder(r.Body).Decode(&errorRes)
+		if err != nil {
+			if body, err := ioutil.ReadAll(r.Body); err != nil {
+				return fmt.Errorf("wrong status code: %d, could not read error body as error json and string", r.StatusCode)
+			} else {
+				return fmt.Errorf("wrong status code: %d, could not read error body as error json, error body: %s", r.StatusCode, body)
+			}
+		}
+		return fmt.Errorf("wrong status code: %d, error category: %s, error severity: %s, error messages: %v", r.StatusCode, errorRes.Error.Category, errorRes.Error.Severity, errorRes.Error.Messages)
 	}
 	//TODO: Handle 429 if any
 	log.Printf("Status code: %d", r.StatusCode)
