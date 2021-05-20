@@ -44,14 +44,14 @@ func (v *Client) GetSyslogAlertByName(ctx context.Context, name string) (*Syslog
 		return nil, fmt.Errorf("getting syslog alert by name: %s - %s", url, err.Error())
 	}
 
-	for _, device := range syslogAlerts.Items {
-		if device.Name == name {
+	for _, syslogAlert := range syslogAlerts.Items {
+		if syslogAlert.Name == name {
 			return &SyslogAlert{
-				ID:   device.ID,
-				Name: device.Name,
-				Type: device.Type,
+				ID:   syslogAlert.ID,
+				Name: syslogAlert.Name,
+				Type: syslogAlert.Type,
 			}, nil
 		}
 	}
-	return nil, fmt.Errorf("no device found with name %s", name)
+	return nil, fmt.Errorf("no syslog alert found with name %s", name)
 }
