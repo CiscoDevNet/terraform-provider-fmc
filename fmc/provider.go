@@ -48,13 +48,15 @@ func Provider() *schema.Provider {
 				DefaultFunc: schema.EnvDefaultFunc("FMC_BASE_URL", nil),
 			},
 			"fmc_insecure_skip_verify": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  false,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     false,
+				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", nil),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"fmc_url_objects":           resourceURLObjects(),
+			"fmc_port_objects":          resourcePortObjects(),
 			"fmc_network_objects":       resourceNetworkObjects(),
 			"fmc_host_objects":          resourceHostObjects(),
 			"fmc_range_objects":         resourceRangeObjects(),
@@ -70,6 +72,7 @@ func Provider() *schema.Provider {
 			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
 			"fmc_security_zones":  dataSourceSecurityZones(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
+			"fmc_port_objects":    dataSourcePortObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
