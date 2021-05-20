@@ -26,13 +26,13 @@ type DevicesResponse struct {
 	} `json:"paging"`
 }
 
-type DeviceResponse struct {
+type Device struct {
 	ID   string
 	Type string
 	Name string
 }
 
-func (v *Client) GetDeviceByName(ctx context.Context, name string) (*DeviceResponse, error) {
+func (v *Client) GetDeviceByName(ctx context.Context, name string) (*Device, error) {
 	url := fmt.Sprintf("%s/devices/devicerecords", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -46,7 +46,7 @@ func (v *Client) GetDeviceByName(ctx context.Context, name string) (*DeviceRespo
 
 	for _, device := range devices.Items {
 		if device.Name == name {
-			return &DeviceResponse{
+			return &Device{
 				ID:   device.ID,
 				Name: device.Name,
 				Type: device.Type,
