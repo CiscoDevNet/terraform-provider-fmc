@@ -8,6 +8,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
+var url_object_group_type string = "Url"
+
 func resourceURLObjectGroup() *schema.Resource {
 	return &schema.Resource{
 		CreateContext: resourceURLObjectGroupCreate,
@@ -28,19 +30,19 @@ func resourceURLObjectGroup() *schema.Resource {
 				Required: true,
 			},
 			"objects": {
-				Type:     schema.TypeSet,
-				Required: true,
+				Type:     schema.TypeList,
+				Optional: true,
 				Elem: &schema.Resource {
 					Schema: map[string]*schema.Schema{
-						"id": &schema.Schema{
+						"id": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
-						"type": &schema.Schema{
+						"type": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"name": &schema.Schema{
+						"name": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -48,15 +50,15 @@ func resourceURLObjectGroup() *schema.Resource {
 				},
 			},
 			"literals": {
-				Type:     schema.TypeSet,
-				Required: false,
+				Type:     schema.TypeList,
+				Optional: true,
 				Elem: &schema.Resource {
 					Schema: map[string]*schema.Schema{
-						"type": &schema.Schema{
+						"type": {
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"url": &schema.Schema{
+						"url": {
 							Type:     schema.TypeString,
 							Computed: true,
 						},
@@ -74,37 +76,46 @@ func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	objects := d.Get("objects").(*schema.Set)
-	var allobjects map[interface{}]struct{}
-	for i, vRaw := range objects.List() {
-		val := vRaw.(map[string]interface{})
+	var objs []URLObjectGroupObjects
+	var lits []URLObjectGroupLiterals
 
-		allobjects = append(allobjects, i{
-			ID:		val["id"].(string),
-			Name:	val["name"].(string),
-			Type:	val["type"].(string),
-		})
+	if inputObjs, ok := d.GetOk("objects"); ok {
+		for _, obj := range inputObjs.([]interface{}) {
+			obji := obj.(map[string]interface{})
+			objs = append(objs, URLObjectGroupObjects{
+				ID:   obji["id"].(string),
+				Name: obji["name"].(string),
+				Type: obji["type"].(string),
+			})
+		}
 	}
-	d.Objects = allobjects
 
-
+	if inputLits, ok := d.GetOk("literals"); ok {
+		for _, lit := range inputLits.([]interface{}) {
+			liti := lit.(map[string]interface{})
+			lits = append(lits, URLObjectGroupLiterals{
+				URL: liti["url"].(string),
+				Type:  liti["type"].(string),
+			})
+		}
+	}
 	res, err := c.CreateURLObjectGroup(ctx, &URLObjectGroup{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
-		Type:        d.Get("type").(string),
-		Objects:     d.Get("Objects").(interface{}),
+		Type:        url_object_group_type,
+		Objects:     objs,
+		Literals:    lits,
 	})
-
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create url group",
+			Summary:  "unable to create network group object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceURLObjectsRead(ctx, d, m)
+	return resourceNetworkGroupObjectsRead(ctx, d, m)
 }
 
 func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
@@ -126,7 +137,7 @@ func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object group name",
+			Summary:  "unable to read url object group",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -135,28 +146,56 @@ func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("description", item.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object group description",
+			Summary:  "unable to read url object group",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 
-	if err := d.Set("objects", item.URL); err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read url object group: objects",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
 	if err := d.Set("type", item.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read url object group type",
+			Summary:  "unable to read url object group",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
+
+	objects := make([]interface{}, len(item.Objects))
+	for _, obj := range item.Objects {
+		obji := make(map[string]interface{})
+		obji["id"] = obj.ID
+		obji["name"] = obj.Name
+		obji["type"] = obj.Type
+		objects = append(objects, obji)
+	}
+
+	if err := d.Set("objects", objects); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network group object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	literals := make([]interface{}, len(item.Literals))
+	for _, lit := range item.Literals {
+		liti := make(map[string]interface{})
+		liti["url"] = lit.URL
+		liti["type"] = lit.Type
+		literals = append(literals, liti)
+	}
+
+	if err := d.Set("literals", literals); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network group object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
 	return diags
 }
 
@@ -164,18 +203,43 @@ func resourceURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "objects", "type") {
+	if d.HasChanges("name", "description", "objects", "literals") {
+		var objs []URLObjectGroupObjects
+		var lits []URLObjectGroupLiterals
+
+		if inputObjs, ok := d.GetOk("objects"); ok {
+			for _, obj := range inputObjs.([]interface{}) {
+				obji := obj.(map[string]interface{})
+				objs = append(objs, URLObjectGroupObjects{
+					ID:   obji["id"].(string),
+					Name: obji["name"].(string),
+					Type: obji["type"].(string),
+				})
+			}
+		}
+
+		if inputLits, ok := d.GetOk("literals"); ok {
+			for _, lit := range inputLits.([]interface{}) {
+				liti := lit.(map[string]interface{})
+				lits = append(lits, URLObjectGroupLiterals{
+					URL: liti["url"].(string),
+					Type:  liti["type"].(string),
+				})
+			}
+		}
 		_, err := c.UpdateURLObjectGroup(ctx, id, &URLObjectGroupUpdateInput{
+			ID:          d.Id(),
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
-			Objects:       d.Get("Objects").(interface{}),
-			Type:        d.Get("type").(string),
-			ID:          id,
+			Type:        url_object_group_type,
+			Objects:     objs,
+			Literals:    lits,
 		})
+
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unable to update url object",
+				Summary:  "unable to update url object group",
 				Detail:   err.Error(),
 			})
 			return diags
@@ -208,3 +272,4 @@ func resourceURLObjectGroupDelete(ctx context.Context, d *schema.ResourceData, m
 
 	return diags
 }
+
