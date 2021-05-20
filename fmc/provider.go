@@ -64,6 +64,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceDevices(),
+			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
