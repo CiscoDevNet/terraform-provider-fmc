@@ -61,6 +61,7 @@ func Provider() *schema.Provider {
 			"fmc_fqdn_objects":          resourceFQDNObjects(),
 			"fmc_icmpv4_objects":        resourceICMPV4Objects(),
 			"fmc_network_group_objects": resourceNetworkGroupObjects(),
+			"fmc_access_policies":       resourceAccessPolicies(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceDevices(),
