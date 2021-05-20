@@ -68,6 +68,7 @@ func Provider() *schema.Provider {
 			"fmc_ips_policies":    dataSourceIPSPolicies(),
 			"fmc_file_policies":   dataSourceFilePolicies(),
 			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
+			"fmc_security_zones":  dataSourceSecurityZones(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
