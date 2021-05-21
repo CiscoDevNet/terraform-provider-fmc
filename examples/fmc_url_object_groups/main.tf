@@ -18,8 +18,8 @@ data "fmc_url_objects" "CiscoTest" {
 }
 
 resource "fmc_url_objects" "MakingNew" {
-  name        = "MakingNew"
-  url       = data.fmc_url_objects.CiscoTest.URL
+  name        = "MNStuff"
+  url       = data.fmc_url_objects.CiscoTest.url
   description = "Will it work"
 }
 
@@ -35,7 +35,7 @@ resource "fmc_url_object_group" "TestURLGroup" {
       type = fmc_url_objects.MakingNew.type
   }
   literals {
-      value = "www.cisco.com"
+      url = "www.cisco.com"
       type = "Url"
   }
 }
@@ -45,7 +45,7 @@ output "existing_fmc_url_object" {
 }
 
 output "new_fmc_url_object" {
-  value = data.fmc_url_objects.MakingNew
+  value = fmc_url_objects.MakingNew
 }
 
 output "new_fmc_url_object_group" {

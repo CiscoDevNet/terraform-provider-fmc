@@ -1,6 +1,5 @@
 package fmc
 
-import "C"
 import (
 	"context"
 
@@ -23,11 +22,11 @@ func resourceURLObjectGroup() *schema.Resource {
 			},
 			"description": {
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"type": {
 				Type:     schema.TypeString,
-				Required: true,
+				Computed: true,
 			},
 			"objects": {
 				Type:     schema.TypeList,
@@ -36,11 +35,11 @@ func resourceURLObjectGroup() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:     schema.TypeString,
-							Computed: true,
+							Required: true,
 						},
 						"type": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"name": {
 							Type:     schema.TypeString,
@@ -56,11 +55,11 @@ func resourceURLObjectGroup() *schema.Resource {
 					Schema: map[string]*schema.Schema{
 						"type": {
 							Type:     schema.TypeString,
-							Optional: true,
+							Required: true,
 						},
 						"url": {
 							Type:     schema.TypeString,
-							Computed: true,
+							Required: true,
 						},
 					},
 				},
@@ -115,7 +114,7 @@ func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNetworkGroupObjectsRead(ctx, d, m)
+	return resourceURLObjectGroupRead(ctx, d, m)
 }
 
 func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
