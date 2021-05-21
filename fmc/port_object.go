@@ -77,7 +77,7 @@ type PortObjectsResponse struct {
 }
 
 func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort string) (*PortObjectResponse, error) {
-	url := fmt.Sprintf("%s/object/protocolportobjects?expanded=false&filter=nameOrPort:%s", v.domainBaseURL, nameOrPort)
+	url := fmt.Sprintf("%s/object/protocolportobjects?expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrPort)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting port object by name/port: %s - %s", url, err.Error())
