@@ -29,9 +29,9 @@ data "fmc_network_objects" "dest" {
     name = "VLAN825-Private"
 }
 
-# data "fmc_port_objects" "http" {
-#     name = "HTTP"
-# }
+data "fmc_port_objects" "http" {
+    name = "HTTPS"
+}
 
 data "fmc_ips_policies" "ips_policy" {
     name = "Connectivity Over Security"
@@ -67,12 +67,42 @@ resource "fmc_access_rules" "access_rule" {
     send_events_to_fmc = true
     log_files = true
     log_end = true
-    source_zones = [ data.fmc_security_zones.inside.id ]
-    destination_zones = [ data.fmc_security_zones.outside.id ]
-    source_networks = [ data.fmc_network_objects.source.id ]
-    destination_networks = [ data.fmc_network_objects.dest.id ]
-    # destination_ports = [ data.fmc_port_objects.http.id ]
-    urls = [ fmc_url_objects.dest_url.id ]
+    source_zones {
+        source_zone {
+            id = data.fmc_security_zones.inside.id
+            type =  data.fmc_security_zones.inside.type
+        }
+    }
+    destination_zones {
+        destination_zone {
+            id = data.fmc_security_zones.outside.id
+            type =  data.fmc_security_zones.outside.type
+        }
+    }
+    source_networks {
+        source_network {
+            id = data.fmc_network_objects.source.id
+            type =  data.fmc_network_objects.source.type
+        }
+    }
+    destination_networks {
+        destination_network {
+            id = data.fmc_network_objects.dest.id
+            type =  data.fmc_network_objects.dest.type
+        }
+    }
+    destination_ports {
+        destination_port {
+            id = data.fmc_port_objects.http.id
+            type =  data.fmc_port_objects.http.type
+        }
+    }
+    urls {
+        url {
+            id = fmc_url_objects.dest_url.id
+            type = "Url"
+        }
+    }
     ips_policy = data.fmc_ips_policies.ips_policy.id
     syslog_config = data.fmc_syslog_alerts.syslog_alert.id
     comments = [ "Hello", "world" ]

@@ -94,50 +94,176 @@ func resourceAccessRules() *schema.Resource {
 			"source_zones": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source_zone": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"destination_zones": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destination_zone": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"source_networks": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source_network": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"destination_networks": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destination_network": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"source_ports": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source_port": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"destination_ports": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"destination_port": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"urls": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"url": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+									"type": {
+										Type:     schema.TypeString,
+										Required: true,
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 			"ips_policy": {
@@ -175,9 +301,12 @@ func resourceAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m in
 	}
 	for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "urls"} {
 		if inputEntries, ok := d.GetOk(objType); ok {
-			for _, ent := range inputEntries.([]interface{}) {
+			entries := inputEntries.([]interface{})[0].(map[string]interface{})[objType[:len(objType)-1]]
+			for _, ent := range entries.([]interface{}) {
+				entry := ent.(map[string]interface{})
 				*dynamicObjects[i] = append(*dynamicObjects[i], AccessRuleSubConfig{
-					ID: ent.(string),
+					ID:   entry["id"].(string),
+					Type: entry["type"].(string),
 				})
 			}
 		}
@@ -301,11 +430,18 @@ func resourceAccessRulesRead(ctx context.Context, d *schema.ResourceData, m inte
 	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "urls"}
 
 	for i, objs := range dynamicObjects {
-		response := make([]string, 0)
+		mainResponse := make([]map[string]interface{}, 0)
+		subResponse := make(map[string]interface{})
+		response := make([]map[string]interface{}, 0)
 		for _, obj := range *objs {
-			response = append(response, obj.ID)
+			responseObj := make(map[string]interface{})
+			responseObj["id"] = obj.ID
+			responseObj["type"] = obj.Type
+			response = append(response, responseObj)
 		}
-		if err := d.Set(dynamicObjectNames[i], response); err != nil {
+		subResponse[dynamicObjectNames[i][:len(dynamicObjectNames[i])-1]] = response
+		mainResponse = append(mainResponse, subResponse)
+		if err := d.Set(dynamicObjectNames[i], mainResponse); err != nil {
 			return returnWithDiag(diags, err)
 		}
 	}
