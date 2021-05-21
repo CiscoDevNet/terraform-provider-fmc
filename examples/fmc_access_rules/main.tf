@@ -57,10 +57,10 @@ resource "fmc_access_policies" "access_policy" {
     default_action_syslog_config_id = data.fmc_syslog_alerts.syslog_alert.id
 }
 
-resource "fmc_access_rules" "access_rule" {
+resource "fmc_access_rules" "access_rule_1" {
     acp = fmc_access_policies.access_policy.id
     section = "mandatory"
-    name = "Test rule"
+    name = "Test rule 1"
     action = "allow"
     enabled = true
     enable_syslog = true
@@ -113,11 +113,11 @@ resource "fmc_access_rules" "access_rule" {
     new_comments = [ "New", "comment" ]
 }
 
-resource "fmc_access_rules" "access_rule_1" {
+resource "fmc_access_rules" "access_rule_2" {
     acp = fmc_access_policies.access_policy.id
     section = "mandatory"
-    insert_before = 1 # Wont work as assumed since terraform does not 
-    name = "Test rule high priority"
+    insert_before = 2 # Wont work as assumed since terraform does not 
+    name = "Test rule 2"
     action = "allow"
     enabled = true
     enable_syslog = true
@@ -168,16 +168,79 @@ resource "fmc_access_rules" "access_rule_1" {
     ips_policy = data.fmc_ips_policies.ips_policy.id
     syslog_config = data.fmc_syslog_alerts.syslog_alert.id
     new_comments = [ "New comment" ]
+    depends_on = [
+        fmc_access_rules.access_rule_1
+    ]
+}
+
+resource "fmc_access_rules" "access_rule_3" {
+    acp = fmc_access_policies.access_policy.id
+    section = "mandatory"
+    # insert_before = 1 # Wont work as assumed since terraform does not 
+    name = "Test rule 3"
+    action = "allow"
+    enabled = true
+    enable_syslog = true
+    syslog_severity = "alert"
+    send_events_to_fmc = true
+    log_files = true
+    log_end = true
+    source_zones {
+        source_zone {
+            id = data.fmc_security_zones.inside.id
+            type =  data.fmc_security_zones.inside.type
+        }
+        # source_zone {
+        #     id = data.fmc_security_zones.outside.id
+        #     type =  data.fmc_security_zones.outside.type
+        # }
+    }
+    destination_zones {
+        destination_zone {
+            id = data.fmc_security_zones.outside.id
+            type =  data.fmc_security_zones.outside.type
+        }
+    }
+    source_networks {
+        source_network {
+            id = data.fmc_network_objects.source.id
+            type =  data.fmc_network_objects.source.type
+        }
+    }
+    destination_networks {
+        destination_network {
+            id = data.fmc_network_objects.dest.id
+            type =  data.fmc_network_objects.dest.type
+        }
+    }
+    destination_ports {
+        destination_port {
+            id = data.fmc_port_objects.http.id
+            type =  data.fmc_port_objects.http.type
+        }
+    }
+    urls {
+        url {
+            id = fmc_url_objects.dest_url.id
+            type = "Url"
+        }
+    }
+    ips_policy = data.fmc_ips_policies.ips_policy.id
+    syslog_config = data.fmc_syslog_alerts.syslog_alert.id
+    new_comments = [ "New comment" ]
+    depends_on = [
+        fmc_access_rules.access_rule_2
+    ]
 }
 
 output "new_fmc_access_policy" {
     value = fmc_access_policies.access_policy
 }
 
-output "new_fmc_access_rule" {
-    value = fmc_access_rules.access_rule
-}
-
 output "new_fmc_access_rule_1" {
     value = fmc_access_rules.access_rule_1
+}
+
+output "new_fmc_access_rule_3" {
+    value = fmc_access_rules.access_rule_3
 }
