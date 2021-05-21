@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var port_type string = "Port" //TODO: Check if this is correct, or needs to be PortProtocolObject
+var port_type string = "ProtocolPortObject"
 
 func resourcePortObjects() *schema.Resource {
 	return &schema.Resource{
