@@ -59,6 +59,31 @@ type AccessRule struct {
 	Newcomments         []string             `json:"newComments"`
 }
 
+type AccessRuleUpdate struct {
+	ID                  string               `json:"id"`
+	Name                string               `json:"name"`
+	Type                string               `json:"type"`
+	Action              string               `json:"action"`
+	Syslogseverity      string               `json:"syslogSeverity"`
+	Enablesyslog        bool                 `json:"enableSyslog"`
+	Enabled             bool                 `json:"enabled"`
+	Sendeventstofmc     bool                 `json:"sendEventsToFMC"`
+	Logfiles            bool                 `json:"logFiles"`
+	Logbegin            bool                 `json:"logBegin"`
+	Logend              bool                 `json:"logEnd"`
+	Sourcezones         AccessRuleSubConfigs `json:"sourceZones"`
+	Destinationzones    AccessRuleSubConfigs `json:"destinationZones"`
+	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks"`
+	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks"`
+	Sourceports         AccessRuleSubConfigs `json:"sourcePorts"`
+	Destinationports    AccessRuleSubConfigs `json:"destinationPorts"`
+	Urls                AccessRuleSubConfigs `json:"urls"`
+	Ipspolicy           AccessRuleSubConfig  `json:"ipsPolicy"`
+	Filepolicy          AccessRuleSubConfig  `json:"filePolicy"`
+	Syslogconfig        AccessRuleSubConfig  `json:"syslogConfig"`
+	Newcomments         []string             `json:"newComments"`
+}
+
 type AccessRuleResponseObject struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -129,8 +154,29 @@ type AccessRuleResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/policy/accesspolicies/{containerUUID}/accessrules?bulk=true ( Bulk POST operation on access rules. )
 
-func (v *Client) CreateAccessRule(ctx context.Context, acp_id string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
-	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules", v.domainBaseURL, acp_id)
+func (v *Client) CreateAccessRule(ctx context.Context, acpId, section, insertBefore, insertAfter string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
+	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules", v.domainBaseURL, acpId)
+	initialSet := false
+	if section != "" {
+		url = fmt.Sprintf("%s?section=%s", url, section)
+		initialSet = true
+	}
+	if insertBefore != "" {
+		if initialSet {
+			url = fmt.Sprintf("%s&insertBefore=%s", url, insertBefore)
+		} else {
+			url = fmt.Sprintf("%s?insertBefore=%s", url, insertBefore)
+			initialSet = true
+		}
+	}
+	if insertAfter != "" {
+		if initialSet {
+			url = fmt.Sprintf("%s&insertAfter=%s", url, insertAfter)
+		} else {
+			url = fmt.Sprintf("%s?insertAfter=%s", url, insertAfter)
+			initialSet = true
+		}
+	}
 	body, err := json.Marshal(&accessPolicy)
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
@@ -147,8 +193,8 @@ func (v *Client) CreateAccessRule(ctx context.Context, acp_id string, accessPoli
 	return item, nil
 }
 
-func (v *Client) GetAccessRule(ctx context.Context, acp_id string, id string) (*AccessRuleResponse, error) {
-	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acp_id, id)
+func (v *Client) GetAccessRule(ctx context.Context, acpId string, id string) (*AccessRuleResponse, error) {
+	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
@@ -161,8 +207,26 @@ func (v *Client) GetAccessRule(ctx context.Context, acp_id string, id string) (*
 	return item, nil
 }
 
-func (v *Client) DeleteAccessRule(ctx context.Context, acp_id string, id string) error {
-	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acp_id, id)
+func (v *Client) UpdateAccessRule(ctx context.Context, acpId, id string, accessPolicy *AccessRuleUpdate) (*AccessRuleResponse, error) {
+	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
+	body, err := json.Marshal(&accessPolicy)
+	if err != nil {
+		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
+	}
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
+	}
+	item := &AccessRuleResponse{}
+	err = v.DoRequest(req, item, http.StatusOK)
+	if err != nil {
+		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
+	}
+	return item, nil
+}
+
+func (v *Client) DeleteAccessRule(ctx context.Context, acpId string, id string) error {
+	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
 		return fmt.Errorf("deleting access rules: %s - %s", url, err.Error())
