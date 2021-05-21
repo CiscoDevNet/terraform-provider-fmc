@@ -33,6 +33,15 @@ type URLObjectResponse struct {
 	Links struct {
 		Self string `json:"self"`
 	} `json:"links"`
+	Items []struct {
+		Links struct {
+			Self   string `json:"self"`
+			Parent string `json:"parent"`
+		} `json:"links"`
+		Type string `json:"type"`
+		ID   string `json:"id"`
+		Name string `json:"name"`
+	} `json:"items"`
 	Type        string `json:"type"`
 	URL         string `json:"url"`
 	Overridable bool   `json:"overridable"`
@@ -51,6 +60,28 @@ type URLObjectResponse struct {
 	} `json:"metadata"`
 	// } `json:"items"`
 }
+
+func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue string) (*URLObjectResponse, error) {
+	url := fmt.Sprintf("%s/object/urls?expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("getting url object by name/value: %s - %s", url, err.Error())
+	}
+	resp := &URLObjectResponse{}
+	err = v.DoRequest(req, resp, http.StatusOK)
+	if err != nil {
+		return nil, fmt.Errorf("getting url object by name/value: %s - %s", url, err.Error())
+	}
+	switch l := len(resp.Items); {
+	case l > 1:
+		return nil, fmt.Errorf("duplicates found, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+	case l == 0:
+		return nil, fmt.Errorf("no url objects found, length of response is: %d, expected 1, please check your filter", l)
+	}
+	return v.GetURLObject(ctx, resp.Items[0].ID)
+}
+
+
 
 func (v *Client) CreateURLObject(ctx context.Context, object *URLObject) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls", v.domainBaseURL)

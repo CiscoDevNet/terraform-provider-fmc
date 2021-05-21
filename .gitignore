@@ -6,3 +6,7 @@ terraform.tfstate.backup
 .terraform
 *.log
 *.bak
+/.idea/fmc-terraform.iml
+/.idea/modules.xml
+/.idea/vcs.xml
+/.idea/.gitignore

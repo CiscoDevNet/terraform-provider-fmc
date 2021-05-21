@@ -56,6 +56,7 @@ func Provider() *schema.Provider {
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"fmc_url_objects":           resourceURLObjects(),
+			"fmc_url_object_group":      resourceURLObjectGroup(),
 			"fmc_port_objects":          resourcePortObjects(),
 			"fmc_network_objects":       resourceNetworkObjects(),
 			"fmc_host_objects":          resourceHostObjects(),
@@ -73,6 +74,7 @@ func Provider() *schema.Provider {
 			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
 			"fmc_security_zones":  dataSourceSecurityZones(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
+			"fmc_url_objects": dataSourceURLObjects(),
 			"fmc_port_objects":    dataSourcePortObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
