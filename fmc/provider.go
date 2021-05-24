@@ -66,6 +66,7 @@ func Provider() *schema.Provider {
 			"fmc_access_rules":          resourceAccessRules(),
 			"fmc_access_policies":       resourceAccessPolicies(),
 			"fmc_network_group_objects": resourceNetworkGroupObjects(),
+			"fmc_port_group_objects":    resourcePortGroupObjects(),
 			"fmc_ftd_nat_policies":      resourceNatPolicies(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{

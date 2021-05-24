@@ -26,17 +26,6 @@ type ICMPV4Object struct {
 }
 
 type ICMPV4ObjectResponse struct {
-	Metadata struct {
-		Timestamp int `json:"timestamp"`
-		Lastuser  struct {
-			Name string `json:"name"`
-		} `json:"lastUser"`
-		Domain struct {
-			Name string `json:"name"`
-			ID   string `json:"id"`
-		} `json:"domain"`
-		Parenttype string `json:"parentType"`
-	} `json:"metadata"`
 	Links struct {
 		Self   string `json:"self"`
 		Parent string `json:"parent"`
