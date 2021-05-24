@@ -66,6 +66,7 @@ func Provider() *schema.Provider {
 			"fmc_access_rules":          resourceAccessRules(),
 			"fmc_access_policies":       resourceAccessPolicies(),
 			"fmc_network_group_objects": resourceNetworkGroupObjects(),
+			"fmc_ftd_nat_policies":      resourceNatPolicies(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceDevices(),
@@ -74,7 +75,7 @@ func Provider() *schema.Provider {
 			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
 			"fmc_security_zones":  dataSourceSecurityZones(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
-			"fmc_url_objects": dataSourceURLObjects(),
+			"fmc_url_objects":     dataSourceURLObjects(),
 			"fmc_port_objects":    dataSourcePortObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
