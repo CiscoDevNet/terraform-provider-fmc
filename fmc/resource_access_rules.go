@@ -418,15 +418,6 @@ func resourceAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m in
 	return resourceAccessRulesRead(ctx, d, m)
 }
 
-func returnWithDiag(diags diag.Diagnostics, err error) diag.Diagnostics {
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Error,
-		Summary:  "Error in access rule",
-		Detail:   err.Error(),
-	})
-	return diags
-}
-
 func resourceAccessRulesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
