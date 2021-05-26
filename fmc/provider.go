@@ -78,6 +78,7 @@ func Provider() *schema.Provider {
 			"fmc_syslog_alerts":   dataSourceSyslogAlerts(),
 			"fmc_security_zones":  dataSourceSecurityZones(),
 			"fmc_network_objects": dataSourceNetworkObjects(),
+			"fmc_host_objects":    dataSourceHostObjects(),
 			"fmc_url_objects":     dataSourceURLObjects(),
 			"fmc_port_objects":    dataSourcePortObjects(),
 		},
