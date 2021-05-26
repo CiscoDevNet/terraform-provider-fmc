@@ -28,6 +28,10 @@ func resourceHostObjects() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"type": {
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -47,7 +51,7 @@ func resourceHostObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create network object",
+			Summary:  "unable to create host object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -67,7 +71,7 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read host object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -75,7 +79,7 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read host object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -84,7 +88,7 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err := d.Set("description", item.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read host object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -93,7 +97,15 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	if err := d.Set("value", item.Value); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read network object",
+			Summary:  "unable to read host object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+	if err := d.Set("type", item.Type); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read host object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -116,7 +128,7 @@ func resourceHostObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unable to update network object",
+				Summary:  "unable to update host object",
 				Detail:   err.Error(),
 			})
 			return diags
@@ -137,7 +149,7 @@ func resourceHostObjectsDelete(ctx context.Context, d *schema.ResourceData, m in
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to delete network object",
+			Summary:  "unable to delete host object",
 			Detail:   err.Error(),
 		})
 		return diags
