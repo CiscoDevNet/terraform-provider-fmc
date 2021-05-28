@@ -17,11 +17,11 @@ description: |-
 
 ### Required
 
-- **name** (String)
+- **name** (String) Name of the FTD device.
 
 ### Read-Only
 
 - **id** (String) The ID of this resource.
-- **type** (String)
+- **type** (String) Type of this resource.
 
 
