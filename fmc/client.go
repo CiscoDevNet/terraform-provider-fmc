@@ -1,22 +1,27 @@
 package fmc
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
+
+	"golang.org/x/time/rate"
 )
 
 type Client struct {
-	insecureSkipVerify bool
-	user               string
-	password           string
-	host               string
-	domainBaseURL      string
-	accessToken        string
-	DomainUUID         string
+	user          string
+	password      string
+	host          string
+	domainBaseURL string
+	accessToken   string
+	DomainUUID    string
+	Client        *http.Client
+	Ratelimiter   *rate.Limiter
 }
 
 type ErrorResponse struct {
@@ -31,10 +36,15 @@ type ErrorResponse struct {
 
 func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 	return &Client{
-		insecureSkipVerify: insecureSkipVerify,
-		user:               user,
-		password:           password,
-		host:               host,
+		user:     user,
+		password: password,
+		host:     host,
+		Client: &http.Client{Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: insecureSkipVerify,
+			},
+		}},
+		Ratelimiter: rate.NewLimiter(rate.Every(time.Minute), 120),
 	}
 }
 
@@ -47,12 +57,7 @@ func (v *Client) Login() error {
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(v.user, v.password)
 
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: v.insecureSkipVerify},
-	}
-	c := &http.Client{Transport: tr}
-
-	res, err := c.Do(req)
+	res, err := v.Client.Do(req)
 	if err != nil {
 		return (err)
 	}
@@ -70,14 +75,16 @@ func (v *Client) Login() error {
 }
 
 func (v *Client) DoRequest(req *http.Request, item interface{}, status int) error {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: v.insecureSkipVerify},
-	}
-	c := &http.Client{Transport: tr}
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("X-Auth-Access-Token", v.accessToken)
 
-	r, err := c.Do(req)
+	ctx := context.Background()
+	err := v.Ratelimiter.Wait(ctx) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return err
+	}
+
+	r, err := v.Client.Do(req)
 
 	if err != nil {
 		return err
