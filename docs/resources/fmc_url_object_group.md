@@ -23,32 +23,32 @@ description: |-
 
 - **description** (String)
 - **id** (String) The ID of this resource.
-- **literals** (Block List) (see [below for nested schema](#nestedblock--literals))
-- **objects** (Block List) (see [below for nested schema](#nestedblock--objects))
+- **literals** (Block List) List of literals to add (see [below for nested schema](#nestedblock--literals))
+- **objects** (Block List) List of URL objects to add (see [below for nested schema](#nestedblock--objects))
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 <a id="nestedblock--literals"></a>
 ### Nested Schema for `literals`
 
-Required:
-
-- **type** (String)
-- **url** (String)
+>Required:
+>
+>- **url** (String) The actual url value.
+>- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--objects"></a>
 ### Nested Schema for `objects`
 
-Required:
-
-- **id** (String) The ID of this resource.
-- **type** (String)
-
-Read-Only:
-
-- **name** (String)
+>Required:
+>
+> - **id** (String) The ID of this resource.
+> - **type** (String) The type of this resource.
+>
+> Read-Only:
+>
+> - **name** (String) The name of this resource.
 
 

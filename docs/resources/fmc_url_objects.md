@@ -17,9 +17,9 @@ description: |-
 
 ### Required
 
-- **description** (String)
-- **name** (String)
-- **url** (String)
+- **name** (String) Name of this resource.
+- **url** (String) URL of this resource.
+- **description** (String) Description of this resource.
 
 ### Optional
 
@@ -27,6 +27,6 @@ description: |-
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 

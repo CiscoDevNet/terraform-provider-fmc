@@ -17,9 +17,9 @@ description: |-
 
 ### Required
 
-- **description** (String)
-- **name** (String)
-- **value** (String)
+- **name** (String) Name of the range object.
+- **value** (String) Value of the range object.
+- **description** (String) Description of the range object.
 
 ### Optional
 

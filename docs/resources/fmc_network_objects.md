@@ -17,9 +17,9 @@ description: |-
 
 ### Required
 
-- **description** (String)
-- **name** (String)
-- **value** (String)
+- **name** (String) Name of the network object.
+- **value** (String) Name of the network object.
+- **description** (String) Description of the network object.
 
 ### Optional
 
@@ -27,6 +27,6 @@ description: |-
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 
