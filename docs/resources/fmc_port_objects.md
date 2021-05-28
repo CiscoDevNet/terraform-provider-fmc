@@ -17,11 +17,11 @@ description: |-
 
 ### Required
 
-- **description** (String)
-- **name** (String)
-- **overridable** (Boolean)
-- **port** (String)
-- **protocol** (String)
+- **description** (String) Description of this resource.
+- **name** (String) Name of this resource.
+- **overridable** (Boolean) Sets this resource as overridable.
+- **port** (String) Port of this resource.
+- **protocol** (String) Protocol of this resource.
 
 ### Optional
 
@@ -29,6 +29,6 @@ description: |-
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 

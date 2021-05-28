@@ -17,10 +17,10 @@ description: |-
 
 ### Required
 
-- **description** (String)
-- **dns_resolution** (String)
-- **name** (String)
-- **value** (String)
+- **description** (String) Description for this resource.
+- **dns_resolution** (String) DNS resolution, IPV4_ONLY, IPV6_ONLY or IPV4_AND_IPV6.
+- **name** (String) Name of this resource.
+- **value** (String) Value of this resource.
 
 ### Optional
 

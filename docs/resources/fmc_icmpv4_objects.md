@@ -17,16 +17,16 @@ description: |-
 
 ### Required
 
-- **icmp_type** (String)
-- **name** (String)
+- **icmp_type** (String) ICMP type for this resource.
+- **name** (String) Name of this resource.
 
 ### Optional
 
-- **code** (Number)
+- **code** (Number) ICMP code for this resource.
 - **id** (String) The ID of this resource.
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 

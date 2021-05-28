@@ -21,24 +21,24 @@ description: |-
 
 ### Optional
 
-- **description** (String)
+- **description** (String) Description for this resource.
 - **id** (String) The ID of this resource.
-- **objects** (Block List) (see [below for nested schema](#nestedblock--objects))
+- **objects** (Block List) The objects to add (see [below for nested schema](#nestedblock--objects))
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 <a id="nestedblock--objects"></a>
 ### Nested Schema for `objects`
 
-Required:
-
-- **id** (String) The ID of this resource.
-- **type** (String)
-
-Read-Only:
-
-- **name** (String)
+>Required:
+>
+>- **id** (String) The ID of this resource.
+>- **type** (String) The type of this resource.
+>
+>Read-Only:
+>
+>- **name** (String) The name of this resource.
 
 
