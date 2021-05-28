@@ -32,13 +32,13 @@ description: |-
 <a id="nestedblock--objects"></a>
 ### Nested Schema for `objects`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
->
->Read-Only:
->
->- **name** (String) The name of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
+
+Read-Only:
+
+- **name** (String) The name of this resource.
 
 

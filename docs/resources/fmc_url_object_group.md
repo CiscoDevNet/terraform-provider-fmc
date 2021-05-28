@@ -33,22 +33,22 @@ description: |-
 <a id="nestedblock--literals"></a>
 ### Nested Schema for `literals`
 
->Required:
->
->- **url** (String) The actual url value.
->- **type** (String) The type of this resource.
+Required:
+
+- **url** (String) The actual url value.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--objects"></a>
 ### Nested Schema for `objects`
 
->Required:
->
-> - **id** (String) The ID of this resource.
-> - **type** (String) The type of this resource.
->
-> Read-Only:
->
-> - **name** (String) The name of this resource.
+Required:
+
+ - **id** (String) The ID of this resource.
+ - **type** (String) The type of this resource.
+
+ Read-Only:
+
+ - **name** (String) The name of this resource.
 
 

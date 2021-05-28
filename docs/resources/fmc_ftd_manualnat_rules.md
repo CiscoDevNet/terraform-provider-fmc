@@ -55,94 +55,94 @@ description: |-
 <a id="nestedblock--destination_interface"></a>
 ### Nested Schema for `destination_interface`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--original_destination"></a>
 ### Nested Schema for `original_destination`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--original_destination_port"></a>
 ### Nested Schema for `original_destination_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--original_source"></a>
 ### Nested Schema for `original_source`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--original_source_port"></a>
 ### Nested Schema for `original_source_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--pat_options"></a>
 ### Nested Schema for `pat_options`
 
->Optional:
->
->- **extended_pat_table** (Boolean) Enable extended PAT table.
->- **include_reserve_ports** (Boolean) Include reserve ports.
->- **interface_pat** (Boolean) Enable Interface PAT.
+Optional:
+
+- **extended_pat_table** (Boolean) Enable extended PAT table.
+- **include_reserve_ports** (Boolean) Include reserve ports.
+- **interface_pat** (Boolean) Enable Interface PAT.
 .- **pat_pool_address** (Block List, Max: 1) PAT Pool for this resource (see [below for nested schema](#nestedblock--pat_options--pat_pool_address))
->- **round_robin** (Boolean) Enable round robin.
+- **round_robin** (Boolean) Enable round robin.
 
 <a id="nestedblock--pat_options--pat_pool_address"></a>
 ### Nested Schema for `pat_options.pat_pool_address`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--source_interface"></a>
 ### Nested Schema for `source_interface`
 
->Required:
+Required:
 
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--translated_destination"></a>
 ### Nested Schema for `translated_destination`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--translated_destination_port"></a>
 ### Nested Schema for `translated_destination_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--translated_source"></a>
@@ -150,16 +150,16 @@ description: |-
 
 Required:
 
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 <a id="nestedblock--translated_source_port"></a>
 ### Nested Schema for `translated_source_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 

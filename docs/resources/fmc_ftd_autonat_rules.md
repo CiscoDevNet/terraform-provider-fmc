@@ -46,66 +46,66 @@ description: |-
 <a id="nestedblock--destination_interface"></a>
 ### Nested Schema for `destination_interface`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String)
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String)
 
 
 <a id="nestedblock--original_network"></a>
 ### Nested Schema for `original_network`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String)
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String)
 
 
 <a id="nestedblock--original_port"></a>
 ### Nested Schema for `original_port`
 
->Required:
->
->- **port** (Number)
->- **protocol** (String)
+Required:
+
+- **port** (Number)
+- **protocol** (String)
 
 
 <a id="nestedblock--pat_options"></a>
 ### Nested Schema for `pat_options`
 
->Optional:
->
->- **extended_pat_table** (Boolean)
->- **include_reserve_ports** (Boolean)
->- **interface_pat** (Boolean)
->- **pat_pool_address** (Block List, Max: 1) (see [below for nested schema](#nestedblock--pat_options--pat_pool_address))
->- **round_robin** (Boolean)
+Optional:
+
+- **extended_pat_table** (Boolean)
+- **include_reserve_ports** (Boolean)
+- **interface_pat** (Boolean)
+- **pat_pool_address** (Block List, Max: 1) (see [below for nested schema](#nestedblock--pat_options--pat_pool_address))
+- **round_robin** (Boolean)
 
 <a id="nestedblock--pat_options--pat_pool_address"></a>
 ### Nested Schema for `pat_options.pat_pool_address`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String)
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String)
 
 
 
 <a id="nestedblock--source_interface"></a>
 ### Nested Schema for `source_interface`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String)
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String)
 
 
 <a id="nestedblock--translated_network"></a>
 ### Nested Schema for `translated_network`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String)
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String)
 
 
