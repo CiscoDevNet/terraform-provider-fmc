@@ -23,9 +23,9 @@ description: |-
 
 - **default_action** (String) Default action for this resource, "BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY" or "INHERIT_FROM_PARENT".
 - **default_action_base_intrusion_policy_id** (String) Default action base policy ID to inherit from for this resource.
-- **default_action_log_begin** (Boolean) Enable logging at the beginning of the connection for this resource.
-- **default_action_log_end** (Boolean) Enable logging at the end of the connection for this resource.
-- **default_action_send_events_to_fmc** (String) Enable sending events to FMC for this resource.
+- **default_action_log_begin** (String) Enable logging at the beginning of the connection for this resource, "true" or "false".
+- **default_action_log_end** (String) Enable logging at the end of the connection for this resource, "true" or "false".
+- **default_action_send_events_to_fmc** (String) Enable sending events to FMC for this resource, "true" or "false".
 - **default_action_syslog_config_id** (String) Syslog configuration ID for this resource.
 - **description** (String) Description of this resource.
 - **id** (String) The ID of this resource.
