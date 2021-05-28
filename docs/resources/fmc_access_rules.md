@@ -53,118 +53,118 @@ description: |-
 <a id="nestedblock--destination_networks"></a>
 ### Nested Schema for `destination_networks`
 
->Required:
->
->- **destination_network** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_networks--destination_network))
+Required:
+
+- **destination_network** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_networks--destination_network))
 
 <a id="nestedblock--destination_networks--destination_network"></a>
 ### Nested Schema for `destination_networks.destination_network`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--destination_ports"></a>
 ### Nested Schema for `destination_ports`
 
->Required:
->
->- **destination_port** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_ports--destination_port))
+Required:
+
+- **destination_port** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_ports--destination_port))
 
 <a id="nestedblock--destination_ports--destination_port"></a>
 ### Nested Schema for `destination_ports.destination_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--destination_zones"></a>
 ### Nested Schema for `destination_zones`
 
->Required:
->
->- **destination_zone** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_zones--destination_zone))
+Required:
+
+- **destination_zone** (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_zones--destination_zone))
 
 <a id="nestedblock--destination_zones--destination_zone"></a>
 ### Nested Schema for `destination_zones.destination_zone`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--source_networks"></a>
 ### Nested Schema for `source_networks`
 
->Required:
->
->- **source_network** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_networks--source_network))
+Required:
+
+- **source_network** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_networks--source_network))
 
 <a id="nestedblock--source_networks--source_network"></a>
 ### Nested Schema for `source_networks.source_network`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--source_ports"></a>
 ### Nested Schema for `source_ports`
 
->Required:
->
->- **source_port** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_ports--source_port))
+Required:
+
+- **source_port** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_ports--source_port))
 
 <a id="nestedblock--source_ports--source_port"></a>
 ### Nested Schema for `source_ports.source_port`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--source_zones"></a>
 ### Nested Schema for `source_zones`
 
->Required:
->
->- **source_zone** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_zones--source_zone))
+Required:
+
+- **source_zone** (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_zones--source_zone))
 
 <a id="nestedblock--source_zones--source_zone"></a>
 ### Nested Schema for `source_zones.source_zone`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
 
 <a id="nestedblock--urls"></a>
 ### Nested Schema for `urls`
 
->Required:
->
->- **url** (Block List, Min: 1) (see [below for nested schema](#nestedblock--urls--url))
+Required:
+
+- **url** (Block List, Min: 1) (see [below for nested schema](#nestedblock--urls--url))
 
 <a id="nestedblock--urls--url"></a>
 ### Nested Schema for `urls.url`
 
->Required:
->
->- **id** (String) The ID of this resource.
->- **type** (String) The type of this resource.
+Required:
+
+- **id** (String) The ID of this resource.
+- **type** (String) The type of this resource.
 
 
