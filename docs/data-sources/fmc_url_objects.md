@@ -18,11 +18,11 @@ description: |-
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **name** (String)
-- **url** (String)
+- **name** (String) The name of this resource.
+- **url** (String) The URL of this resource.
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 

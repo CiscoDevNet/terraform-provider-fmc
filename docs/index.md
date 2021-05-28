@@ -17,10 +17,10 @@ description: |-
 
 ### Required
 
-- **fmc_host** (String)
-- **fmc_password** (String, Sensitive)
-- **fmc_username** (String, Sensitive)
+- **fmc_host** (String) Hostname/IP address of the FMC
+- **fmc_username** (String, Sensitive) Username for the user to login to FMC
+- **fmc_password** (String, Sensitive) Password for the user to login to FMC
 
 ### Optional
 
-- **fmc_insecure_skip_verify** (Boolean)
+- **fmc_insecure_skip_verify** (Boolean) Skip certificate checks if the certificate is not public CA signed, or if using IP address

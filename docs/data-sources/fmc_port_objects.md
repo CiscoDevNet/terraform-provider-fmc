@@ -18,12 +18,12 @@ description: |-
 ### Optional
 
 - **id** (String) The ID of this resource.
-- **name** (String)
-- **port** (String)
-- **protocol** (String)
+- **name** (String) The name of this resource.
+- **port** (String) The port of this resource.
+- **protocol** (String) The protocol of this resource.
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 

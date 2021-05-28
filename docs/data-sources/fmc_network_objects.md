@@ -17,12 +17,14 @@ description: |-
 
 ### Optional
 
+Any one of the below resources is necessary. Only one will be considered if multiple are provided.
+
 - **id** (String) The ID of this resource.
-- **name** (String)
-- **value** (String)
+- **name** (String) The name of this resource.
+- **value** (String) The value of this resource.
 
 ### Read-Only
 
-- **type** (String)
+- **type** (String) The type of this resource.
 
 
