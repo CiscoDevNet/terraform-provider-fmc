@@ -17,20 +17,24 @@ func resourceFQDNObjects() *schema.Resource {
 		DeleteContext: resourceFQDNObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of this resource",
 			},
 			"value": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The value of this resource",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The description for this resource",
 			},
 			"dns_resolution": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: `DNS resolution, "IPV4_ONLY", "IPV6_ONLY" or "IPV4_AND_IPV6"`,
 			},
 		},
 	}

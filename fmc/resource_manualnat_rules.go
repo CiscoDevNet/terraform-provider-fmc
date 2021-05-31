@@ -20,9 +20,10 @@ func resourceManualNatRules() *schema.Resource {
 		DeleteContext: resourceManualNatRulesDelete,
 		Schema: map[string]*schema.Schema{
 			"nat_policy": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The ID of the NAT policy this resource belongs to",
 			},
 			"section": {
 				Type:     schema.TypeString,
@@ -42,6 +43,7 @@ func resourceManualNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				Description: `Section, "after_auto" or "before_auto"`,
 			},
 			"target_index": {
 				Type:     schema.TypeString,
@@ -55,19 +57,23 @@ func resourceManualNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be greater than 0, got: %q and error: %s", key, v, err))
 					return
 				},
+				Description: "Target index to place this resource",
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The description of this resource",
 			},
 			"enabled": {
-				Type:     schema.TypeBool,
-				Optional: true,
-				Default:  true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enable this resource",
 			},
 			"nat_type": {
 				Type:     schema.TypeString,
@@ -83,6 +89,7 @@ func resourceManualNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				Description: `The type of this resource, "static" or "dynamic"`,
 			},
 			"source_interface": {
 				Type:     schema.TypeList,
@@ -91,15 +98,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Source interface for this resource",
 			},
 			"destination_interface": {
 				Type:     schema.TypeList,
@@ -108,19 +118,23 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Destination interface for this resource",
 			},
 			"interface_in_original_destination": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Interface is the original destination",
 			},
 			"original_destination": {
 				Type:     schema.TypeList,
@@ -129,15 +143,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Original destination for this resource",
 			},
 			"original_destination_port": {
 				Type:     schema.TypeList,
@@ -146,15 +163,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Original destination port for this resource",
 			},
 			"original_source": {
 				Type:     schema.TypeList,
@@ -163,15 +183,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Original source for this resource",
 			},
 			"original_source_port": {
 				Type:     schema.TypeList,
@@ -180,15 +203,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Original source port for this resource",
 			},
 			"translated_destination": {
 				Type:     schema.TypeList,
@@ -197,15 +223,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Translated destination for this resource",
 			},
 			"translated_destination_port": {
 				Type:     schema.TypeList,
@@ -214,19 +243,23 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Translated destination port for this resource",
 			},
 			"interface_in_translated_source": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Interface is the translated source",
 			},
 			"translated_source": {
 				Type:     schema.TypeList,
@@ -235,15 +268,18 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Translated source for this resource",
 			},
 			"translated_source_port": {
 				Type:     schema.TypeList,
@@ -252,43 +288,53 @@ func resourceManualNatRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Translated source port for this resource",
 			},
 			"unidirectional": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Make this resource unidirectional",
 			},
 			"fallthrough": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable fallthrough",
 			},
 			"translate_dns": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable translate DNS",
 			},
 			"no_proxy_arp": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Disable proxy ARP",
 			},
 			"perform_route_lookup": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable perform route lookup",
 			},
 			"net_to_net": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable Net to Net",
 			},
 			"ipv6": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable IPv6",
 			},
 			"pat_options": {
 				Type:     schema.TypeList,
@@ -303,12 +349,14 @@ func resourceManualNatRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
@@ -331,6 +379,7 @@ func resourceManualNatRules() *schema.Resource {
 						},
 					},
 				},
+				Description: "PAT Options for this resource",
 			},
 		},
 	}
