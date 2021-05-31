@@ -21,6 +21,10 @@ data "fmc_security_zones" "outside" {
     name = "outside"
 }
 
+data "fmc_host_objects" "CUCMPub" {
+  name = "CUCM-Pub"
+}
+
 data "fmc_network_objects" "private" {
     name = "VLAN825-Private"
 }
@@ -104,8 +108,8 @@ resource "fmc_ftd_manualnat_rules" "new_rule_before_1" {
         type = data.fmc_network_objects.public.type
     }
     translated_destination {
-        id = data.fmc_network_objects.public.id
-        type = data.fmc_network_objects.public.type
+        id = data.fmc_host_objects.CUCMPub.id
+        type = data.fmc_host_objects.CUCMPub.type
     }
     interface_in_original_destination = true
     interface_in_translated_source = true

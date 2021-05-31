@@ -29,6 +29,10 @@ data "fmc_network_objects" "public" {
     name = "VLAN825-Public"
 }
 
+data "fmc_host_objects" "CUCMPub" {
+  name = "CUCM-Pub"
+}
+
 resource "fmc_ftd_nat_policies" "nat_policy" {
     name = "Terraform NAT Policy"
     description = "New NAT policy!"
@@ -76,8 +80,8 @@ resource "fmc_ftd_autonat_rules" "new_rule_2" {
         type = data.fmc_security_zones.outside.type
     }
     original_network {
-        id = data.fmc_network_objects.public.id
-        type = data.fmc_network_objects.public.type
+        id = data.fmc_host_objects.CUCMPub.id
+        type = data.fmc_host_objects.CUCMPub.type
     }
     translated_network_is_destination_interface = false
     pat_options {
