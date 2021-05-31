@@ -17,16 +17,19 @@ func resourceNetworkGroupObjects() *schema.Resource {
 		DeleteContext: resourceNetworkGroupObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of this resource",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The description of this resource",
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of this resource",
 			},
 			"objects": {
 				Type:     schema.TypeList,
@@ -34,19 +37,23 @@ func resourceNetworkGroupObjects() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of this resource",
 						},
 					},
 				},
+				Description: "List of network objects to add",
 			},
 			"literals": {
 				Type:     schema.TypeList,
@@ -54,15 +61,18 @@ func resourceNetworkGroupObjects() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"value": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The value of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "List of network literals to add",
 			},
 		},
 	}

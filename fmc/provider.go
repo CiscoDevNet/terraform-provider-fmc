@@ -35,23 +35,27 @@ func Provider() *schema.Provider {
 				Required:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_USERNAME", nil),
+				Description: "Username for the user to login to FMC",
 			},
 			"fmc_password": {
 				Type:        schema.TypeString,
 				Required:    true,
 				Sensitive:   true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_PASSWORD", nil),
+				Description: "Password for the user to login to FMC",
 			},
 			"fmc_host": {
 				Type:        schema.TypeString,
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_BASE_URL", nil),
+				Description: "Hostname/IP address of the FMC",
 			},
 			"fmc_insecure_skip_verify": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Default:     false,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", nil),
+				Description: "Skip certificate checks if the certificate is not public CA signed, or if using IP address",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{

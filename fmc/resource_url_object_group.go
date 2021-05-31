@@ -17,57 +17,66 @@ func resourceURLObjectGroup() *schema.Resource {
 		DeleteContext: resourceURLObjectGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of this resource",
 			},
 			"description": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "The description of this resource",
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of this resource",
 			},
 			"objects": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource {
+				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
 						},
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 						"name": {
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The name of this resource",
 						},
 					},
 				},
+				Description: "List of URL objects to add",
 			},
 			"literals": {
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource {
+				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"type": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
 						},
 						"url": {
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The value URL for this resource",
 						},
 					},
 				},
+				Description: "List of URL literals to add",
 			},
 		},
 	}
 }
-
 
 func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
@@ -93,8 +102,8 @@ func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m
 		for _, lit := range inputLits.([]interface{}) {
 			liti := lit.(map[string]interface{})
 			lits = append(lits, URLObjectGroupLiterals{
-				URL: liti["url"].(string),
-				Type:  liti["type"].(string),
+				URL:  liti["url"].(string),
+				Type: liti["type"].(string),
 			})
 		}
 	}
@@ -221,8 +230,8 @@ func resourceURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m
 			for _, lit := range inputLits.([]interface{}) {
 				liti := lit.(map[string]interface{})
 				lits = append(lits, URLObjectGroupLiterals{
-					URL: liti["url"].(string),
-					Type:  liti["type"].(string),
+					URL:  liti["url"].(string),
+					Type: liti["type"].(string),
 				})
 			}
 		}
@@ -271,4 +280,3 @@ func resourceURLObjectGroupDelete(ctx context.Context, d *schema.ResourceData, m
 
 	return diags
 }
-

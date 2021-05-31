@@ -20,9 +20,10 @@ func resourceAccessRules() *schema.Resource {
 		DeleteContext: resourceAccessRulesDelete,
 		Schema: map[string]*schema.Schema{
 			"acp": {
-				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
+				Description: "The ID of the ACP this resource belongs to",
 			},
 			"section": {
 				Type:     schema.TypeString,
@@ -42,6 +43,7 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				Description: `Section for this resource, "mandatory" or "default"`,
 			},
 			"insert_before": {
 				Type:     schema.TypeInt,
@@ -55,6 +57,7 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be greater than 0, got: %q", key, v))
 					return
 				},
+				Description: "The rule number before which to insert this resource",
 			},
 			"insert_after": {
 				Type:     schema.TypeInt,
@@ -68,14 +71,17 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be greater than 0, got: %q", key, v))
 					return
 				},
+				Description: "The rule number after which to insert this resource",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The name of the resource",
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of this resource",
 			},
 			"action": {
 				Type:     schema.TypeString,
@@ -94,6 +100,7 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				Description: `Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"`,
 			},
 			"syslog_severity": {
 				Type:     schema.TypeString,
@@ -112,30 +119,37 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				Description: `Syslog severity for this resource, "ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE" or "WARNING"`,
 			},
 			"enable_syslog": {
-				Type:     schema.TypeBool,
-				Required: true,
+				Type:        schema.TypeBool,
+				Required:    true,
+				Description: "Enable syslog for this resource",
 			},
 			"enabled": {
-				Type:     schema.TypeBool,
-				Required: true,
+				Type:        schema.TypeBool,
+				Required:    true,
+				Description: "Enable the resource",
 			},
 			"send_events_to_fmc": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable sending events to FMC for this resource",
 			},
 			"log_files": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable logging to files for this resource",
 			},
 			"log_begin": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable logging at the beginning of connection for this resource",
 			},
 			"log_end": {
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable logging at the end of connection for this resource",
 			},
 			"source_zones": {
 				Type:     schema.TypeList,
@@ -149,18 +163,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Source zones for this resource",
 			},
 			"destination_zones": {
 				Type:     schema.TypeList,
@@ -174,18 +191,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Destination zones for this resource",
 			},
 			"source_networks": {
 				Type:     schema.TypeList,
@@ -199,18 +219,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Source networks for this resource",
 			},
 			"destination_networks": {
 				Type:     schema.TypeList,
@@ -224,18 +247,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Destination networks for this resource",
 			},
 			"source_ports": {
 				Type:     schema.TypeList,
@@ -249,18 +275,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Source ports for this resource",
 			},
 			"destination_ports": {
 				Type:     schema.TypeList,
@@ -274,18 +303,21 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "Destination ports for this resource",
 			},
 			"urls": {
 				Type:     schema.TypeList,
@@ -299,30 +331,36 @@ func resourceAccessRules() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
 									},
 									"type": {
-										Type:     schema.TypeString,
-										Required: true,
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
 									},
 								},
 							},
 						},
 					},
 				},
+				Description: "URLs for this resource",
 			},
 			"ips_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "IPS policy for this resource",
 			},
 			"file_policy": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "File policy for this resource",
 			},
 			"syslog_config": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Syslog configuration ID for this resource",
 			},
 			"new_comments": {
 				Type:     schema.TypeList,
@@ -330,6 +368,7 @@ func resourceAccessRules() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+				Description: "New comments to be added for this resource",
 			},
 		},
 	}
