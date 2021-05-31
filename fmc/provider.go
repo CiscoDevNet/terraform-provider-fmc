@@ -70,6 +70,7 @@ func Provider() *schema.Provider {
 			"fmc_ftd_nat_policies":      resourceNatPolicies(),
 			"fmc_ftd_autonat_rules":     resourceAutoNatRules(),
 			"fmc_ftd_manualnat_rules":   resourceManualNatRules(),
+			"fmc_ftd_deploy":            resourceFtdDeploy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceDevices(),
