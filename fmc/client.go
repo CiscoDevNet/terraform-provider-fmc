@@ -92,6 +92,13 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	if status == 0 {
 		status = http.StatusOK
 	}
+
+	// Handle 401 by logging in again
+	if r.StatusCode == http.StatusUnauthorized {
+		v.Login()
+		return v.DoRequest(req, item, status)
+	}
+
 	if r.StatusCode != status {
 		defer r.Body.Close()
 
@@ -108,6 +115,7 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	}
 	//TODO: Handle 429 if any
 	log.Printf("Status code: %d", r.StatusCode)
+
 	if item != nil {
 		defer r.Body.Close()
 		err = json.NewDecoder(r.Body).Decode(item)
