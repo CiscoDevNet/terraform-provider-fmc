@@ -44,7 +44,11 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 				InsecureSkipVerify: insecureSkipVerify,
 			},
 		}},
-		Ratelimiter: rate.NewLimiter(rate.Every(time.Minute), 120),
+		// Rate Limit at 120 requests per minute (1 per 500ms).
+		// No need to use token bucket since we can assume each API call will take atleast 500ms.
+		// If token bucket needs to be set, it needs to be calculated correctly. Setting it to 120 will cause many requests to get 429 if more than 120 requests are issues in the same minute making this limiter useless.
+		// It can cause issues if API calls happen at more than 120 per minute, at which time the token bucket would be emptied and within the same minute, tokens filling at 1 per 500ms would exceed our limit of 120/min.
+		Ratelimiter: rate.NewLimiter(rate.Every(500*time.Millisecond), 0),
 	}
 }
 
