@@ -1,22 +1,27 @@
 package fmc
 
 import (
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
+
+	"golang.org/x/time/rate"
 )
 
 type Client struct {
-	insecureSkipVerify bool
-	user               string
-	password           string
-	host               string
-	domainBaseURL      string
-	accessToken        string
-	DomainUUID         string
+	user          string
+	password      string
+	host          string
+	domainBaseURL string
+	accessToken   string
+	DomainUUID    string
+	Client        *http.Client
+	Ratelimiter   *rate.Limiter
 }
 
 type ErrorResponse struct {
@@ -31,10 +36,19 @@ type ErrorResponse struct {
 
 func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 	return &Client{
-		insecureSkipVerify: insecureSkipVerify,
-		user:               user,
-		password:           password,
-		host:               host,
+		user:     user,
+		password: password,
+		host:     host,
+		Client: &http.Client{Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: insecureSkipVerify,
+			},
+		}},
+		// Rate Limit at 120 requests per minute (1 per 500ms).
+		// No need to use token bucket, leaving it at 1 since we can assume each API call will take atleast 500ms.
+		// If token bucket needs to be set, it needs to be calculated correctly. Setting it to 120 will cause many requests to get 429 if more than 120 requests are issues in the same minute making this limiter useless.
+		// It can cause issues if API calls happen at more than 120 per minute, at which time the token bucket would be emptied and within the same minute, tokens filling at 1 per 500ms would exceed our limit of 120/min.
+		Ratelimiter: rate.NewLimiter(rate.Every(500*time.Millisecond), 1),
 	}
 }
 
@@ -47,12 +61,7 @@ func (v *Client) Login() error {
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(v.user, v.password)
 
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: v.insecureSkipVerify},
-	}
-	c := &http.Client{Transport: tr}
-
-	res, err := c.Do(req)
+	res, err := v.Client.Do(req)
 	if err != nil {
 		return (err)
 	}
@@ -70,14 +79,16 @@ func (v *Client) Login() error {
 }
 
 func (v *Client) DoRequest(req *http.Request, item interface{}, status int) error {
-	tr := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: v.insecureSkipVerify},
-	}
-	c := &http.Client{Transport: tr}
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("X-Auth-Access-Token", v.accessToken)
 
-	r, err := c.Do(req)
+	ctx := context.Background()
+	err := v.Ratelimiter.Wait(ctx) // This is a blocking call. Honors the rate limit
+	if err != nil {
+		return err
+	}
+
+	r, err := v.Client.Do(req)
 
 	if err != nil {
 		return err
@@ -85,6 +96,13 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	if status == 0 {
 		status = http.StatusOK
 	}
+
+	// Handle 401 by logging in again
+	if r.StatusCode == http.StatusUnauthorized {
+		v.Login()
+		return v.DoRequest(req, item, status)
+	}
+
 	if r.StatusCode != status {
 		defer r.Body.Close()
 
@@ -101,6 +119,7 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	}
 	//TODO: Handle 429 if any
 	log.Printf("Status code: %d", r.StatusCode)
+
 	if item != nil {
 		defer r.Body.Close()
 		err = json.NewDecoder(r.Body).Decode(item)
