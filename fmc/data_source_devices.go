@@ -9,19 +9,29 @@ import (
 
 func dataSourceDevices() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for FTD Devices in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_devices\" \"device\" {\n" +
+			"	name = \"ftd.adyah.cisco\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceDevicesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The ID of this resource",
 			},
 			"name": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Name of the FTD device",
 			},
 			"type": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of this resource",
 			},
 		},
 	}
