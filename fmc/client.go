@@ -1,7 +1,6 @@
 package fmc
 
 import (
-	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -10,18 +9,18 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/time/rate"
+	"github.com/juju/ratelimit"
 )
 
 type Client struct {
-	user          string
-	password      string
-	host          string
-	domainBaseURL string
-	accessToken   string
-	DomainUUID    string
-	Client        *http.Client
-	Ratelimiter   *rate.Limiter
+	user              string
+	password          string
+	host              string
+	domainBaseURL     string
+	accessToken       string
+	DomainUUID        string
+	Client            *http.Client
+	RatelimiterBucket *ratelimit.Bucket
 }
 
 type ErrorResponse struct {
@@ -44,11 +43,8 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 				InsecureSkipVerify: insecureSkipVerify,
 			},
 		}},
-		// Rate Limit at 120 requests per minute (1 per 500ms).
-		// No need to use token bucket, leaving it at 1 since we can assume each API call will take atleast 500ms.
-		// If token bucket needs to be set, it needs to be calculated correctly. Setting it to 120 will cause many requests to get 429 if more than 120 requests are issues in the same minute making this limiter useless.
-		// It can cause issues if API calls happen at more than 120 per minute, at which time the token bucket would be emptied and within the same minute, tokens filling at 1 per 500ms would exceed our limit of 120/min.
-		Ratelimiter: rate.NewLimiter(rate.Every(500*time.Millisecond), 1),
+		// Rate Limit at 120 requests per minute using token bucket that fills at a minute's interval.
+		RatelimiterBucket: ratelimit.NewBucketWithQuantum(time.Minute, 120, 120),
 	}
 }
 
@@ -82,11 +78,7 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("X-Auth-Access-Token", v.accessToken)
 
-	ctx := context.Background()
-	err := v.Ratelimiter.Wait(ctx) // This is a blocking call. Honors the rate limit
-	if err != nil {
-		return err
-	}
+	v.RatelimiterBucket.Wait(1) // This is a blocking call. Honors the rate limit by taking 1 token for this request.
 
 	r, err := v.Client.Do(req)
 
