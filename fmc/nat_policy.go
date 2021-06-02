@@ -19,9 +19,6 @@ type NatPolicyResponse struct {
 	Rules struct {
 		Reftype string `json:"refType"`
 		Type    string `json:"type"`
-		Links   struct {
-			Self string `json:"self"`
-		} `json:"links"`
 	} `json:"rules"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -29,12 +26,6 @@ type NatPolicyResponse struct {
 }
 
 type NatPoliciesResponse struct {
-	Paging struct {
-		Pages  int `json:"pages"`
-		Offset int `json:"offset"`
-		Limit  int `json:"limit"`
-		Count  int `json:"count"`
-	} `json:"paging"`
 	Items []struct {
 		Name        string `json:"name"`
 		Description string `json:"description"`
@@ -58,12 +49,19 @@ func (v *Client) GetNatPolicyByName(ctx context.Context, name string) (*NatPolic
 		return nil, fmt.Errorf("getting nat policy by name/value: %s - %s", url, err.Error())
 	}
 	switch l := len(resp.Items); {
+	case l == 1:
+		return v.GetNatPolicy(ctx, resp.Items[0].ID)
 	case l > 1:
-		return nil, fmt.Errorf("duplicates found, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+		for _, item := range resp.Items {
+			if item.Name == name {
+				return v.GetNatPolicy(ctx, item.ID)
+			}
+		}
+		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
 	case l == 0:
 		return nil, fmt.Errorf("no nat policies found, length of response is: %d, expected 1, please check your filter", l)
 	}
-	return v.GetNatPolicy(ctx, resp.Items[0].ID)
+	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
 
 // /fmc_config/v1/domain/DomainUUID/policy/ftdnatpolicies?bulk=true ( Bulk POST operation on nat policies. )

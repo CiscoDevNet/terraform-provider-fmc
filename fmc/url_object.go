@@ -26,39 +26,21 @@ type URLObject struct {
 }
 
 type URLObjectResponse struct {
-	// Links struct {
-	// 	Self string `json:"self"`
-	// } `json:"links"`
-	// Items []struct {
-	Links struct {
-		Self string `json:"self"`
-	} `json:"links"`
-	Items []struct {
-		Links struct {
-			Self   string `json:"self"`
-			Parent string `json:"parent"`
-		} `json:"links"`
-		Type string `json:"type"`
-		ID   string `json:"id"`
-		Name string `json:"name"`
-	} `json:"items"`
 	Type        string `json:"type"`
 	URL         string `json:"url"`
 	Overridable bool   `json:"overridable"`
 	Description string `json:"description"`
 	Name        string `json:"name"`
 	ID          string `json:"id"`
-	Metadata    struct {
-		Timestamp int `json:"timestamp"`
-		LastUser  struct {
-			Name string `json:"name"`
-		} `json:"lastUser"`
-		Domain struct {
-			Name string `json:"name"`
-			ID   string `json:"id"`
-		} `json:"domain"`
-	} `json:"metadata"`
-	// } `json:"items"`
+}
+
+type URLObjectsResponse struct {
+	Items []struct {
+		Type string `json:"type"`
+		ID   string `json:"id"`
+		URL  string `json:"url"`
+		Name string `json:"name"`
+	} `json:"items"`
 }
 
 func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue string) (*URLObjectResponse, error) {
@@ -67,21 +49,26 @@ func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue stri
 	if err != nil {
 		return nil, fmt.Errorf("getting url object by name/value: %s - %s", url, err.Error())
 	}
-	resp := &URLObjectResponse{}
+	resp := &URLObjectsResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting url object by name/value: %s - %s", url, err.Error())
 	}
 	switch l := len(resp.Items); {
+	case l == 1:
+		return v.GetURLObject(ctx, resp.Items[0].ID)
 	case l > 1:
-		return nil, fmt.Errorf("duplicates found, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+		for _, item := range resp.Items {
+			if item.Name == nameOrValue || item.URL == nameOrValue {
+				return v.GetURLObject(ctx, item.ID)
+			}
+		}
+		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
 	case l == 0:
 		return nil, fmt.Errorf("no url objects found, length of response is: %d, expected 1, please check your filter", l)
 	}
-	return v.GetURLObject(ctx, resp.Items[0].ID)
+	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
-
-
 
 func (v *Client) CreateURLObject(ctx context.Context, object *URLObject) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls", v.domainBaseURL)
