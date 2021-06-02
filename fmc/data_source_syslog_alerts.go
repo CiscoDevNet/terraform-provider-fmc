@@ -9,6 +9,13 @@ import (
 
 func dataSourceSyslogAlerts() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Syslog Alert Configuration in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_security_zones\" \"inside\" {\n" +
+			"	name = \"inside\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceSyslogAlertsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

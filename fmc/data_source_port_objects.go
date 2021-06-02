@@ -9,6 +9,14 @@ import (
 
 func dataSourcePortObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Port Objects in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_port_objects\" \"existing\" {\n" +
+			"	name = \"DNS_over_TCP\"\n" +
+			"}\n" +
+			"```\n" +
+			"Any one of the id, name or port can be specified. The first filter in the order of id, name and port will be used, and the rest will be ignored if multiple are specified.",
 		ReadContext: dataSourcePortObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

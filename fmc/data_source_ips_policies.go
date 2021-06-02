@@ -9,6 +9,13 @@ import (
 
 func dataSourceIPSPolicies() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for IPS Policy in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_ips_policies\" \"ips_policy\" {\n" +
+			"	name = \"Connectivity Over Security\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceIPSPoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

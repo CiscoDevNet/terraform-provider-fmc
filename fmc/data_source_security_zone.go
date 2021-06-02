@@ -9,6 +9,13 @@ import (
 
 func dataSourceSecurityZones() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Security Zones in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_security_zones\" \"inside\" {\n" +
+			"	name = \"inside\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceSecurityZonesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
