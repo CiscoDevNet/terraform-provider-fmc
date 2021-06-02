@@ -33,12 +33,12 @@ func resourcePortObjects() *schema.Resource {
 			},
 			"overridable": {
 				Type:        schema.TypeBool,
-				Required:    true,
+				Optional:    true,
 				Description: "Sets this resource as overridable",
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The description of this resource",
 			},
 			"type": {
@@ -62,7 +62,7 @@ func resourcePortObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 		Port:        d.Get("port").(string),
 		Protocol:    d.Get("protocol").(string),
 		Overridable: d.Get("overridable").(bool),
-		Type:        d.Get("type").(string),
+		Type:        port_type,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

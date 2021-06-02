@@ -24,9 +24,9 @@ resource "fmc_network_objects" "PrivateVLANDR" {
 }
 
 output "existing_fmc_network_object" {
-  value = data.fmc_network_objects.PrivateVLAN.id
+  value = data.fmc_network_objects.PrivateVLAN
 }
 
 output "new_fmc_network_object_3" {
-  value = fmc_network_objects.PrivateVLANDR.id
+  value = fmc_network_objects.PrivateVLANDR
 }

@@ -28,10 +28,6 @@ type PortObject struct {
 }
 
 type PortObjectResponse struct {
-	Links struct {
-		Self   string `json:"self"`
-		Parent string `json:"parent"`
-	} `json:"links"`
 	Type        string `json:"type"`
 	Port        string `json:"port"`
 	Protocol    string `json:"protocol"`
@@ -39,41 +35,15 @@ type PortObjectResponse struct {
 	Description string `json:"description"`
 	Name        string `json:"name"`
 	ID          string `json:"id"`
-	Metadata    struct {
-		Timestamp int `json:"timestamp"`
-		LastUser  struct {
-			Name string `json:"name"`
-		} `json:"lastUser"`
-		Domain struct {
-			Name string `json:"name"`
-			ID   string `json:"id"`
-		} `json:"domain"`
-		IPType     string `json:"ipType"`
-		ParentType string `json:"parentType"`
-	} `json:"metadata"`
-	// } `json:"items"`
 }
 
 type PortObjectsResponse struct {
-	Links struct {
-		Self string `json:"self"`
-	} `json:"links"`
 	Items []struct {
-		Links struct {
-			Self   string `json:"self"`
-			Parent string `json:"parent"`
-		} `json:"links"`
 		Type string `json:"type"`
 		ID   string `json:"id"`
+		Port string `json:"port"`
 		Name string `json:"name"`
 	} `json:"items"`
-	Paging struct {
-		Offset int      `json:"offset"`
-		Limit  int      `json:"limit"`
-		Count  int      `json:"count"`
-		Next   []string `json:"next"`
-		Pages  int      `json:"pages"`
-	} `json:"paging"`
 }
 
 func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort string) (*PortObjectResponse, error) {
@@ -88,12 +58,19 @@ func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort strin
 		return nil, fmt.Errorf("getting port object by name/port: %s - %s", url, err.Error())
 	}
 	switch l := len(resp.Items); {
+	case l == 1:
+		return v.GetPortObject(ctx, resp.Items[0].ID)
 	case l > 1:
-		return nil, fmt.Errorf("duplicates found, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+		for _, item := range resp.Items {
+			if item.Name == nameOrPort || item.Port == nameOrPort {
+				return v.GetPortObject(ctx, item.ID)
+			}
+		}
+		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
 	case l == 0:
 		return nil, fmt.Errorf("no port objects found, length of response is: %d, expected 1, please check your filter", l)
 	}
-	return v.GetPortObject(ctx, resp.Items[0].ID)
+	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
 
 func (v *Client) CreatePortObject(ctx context.Context, object *PortObject) (*PortObjectResponse, error) {
