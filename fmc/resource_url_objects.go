@@ -28,7 +28,7 @@ func resourceURLObjects() *schema.Resource {
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The description of this resource",
 			},
 			"type": {
