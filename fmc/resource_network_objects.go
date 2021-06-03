@@ -11,6 +11,17 @@ var network_type string = "Network"
 
 func resourceNetworkObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Network Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_network_objects\" \"PrivateVLANDR\" {\n" +
+			"  name        = \"VLAN-Private-DRsite\"\n" +
+			"  value       = \"10.10.10.0/24\"\n" +
+			"  description = \"Terraform DR network object\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceNetworkObjectsCreate,
 		ReadContext:   resourceNetworkObjectsRead,
 		UpdateContext: resourceNetworkObjectsUpdate,

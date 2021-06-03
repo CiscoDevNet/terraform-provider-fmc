@@ -9,6 +9,13 @@ import (
 
 func dataSourceFilePolicies() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for File Policies in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_file_policies\" \"file_policy\" {\n" +
+			"	name = \"AMP Policy\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceFilePoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

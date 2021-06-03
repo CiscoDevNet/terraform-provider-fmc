@@ -11,6 +11,28 @@ var network_group_type string = "NetworkGroup"
 
 func resourceNetworkGroupObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Network Group Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_network_group_objects\" \"PrivateGroup\" {\n" +
+			"  name = \"PrivateGroup\"\n" +
+			"  description = \"Terraform private group\"\n" +
+			"  objects {\n" +
+			"      id = data.fmc_network_objects.PrivateVLAN.id\n" +
+			"      type = data.fmc_network_objects.PrivateVLAN.type\n" +
+			"  }\n" +
+			"  objects {\n" +
+			"      id = fmc_network_objects.PrivateVLANDR.id\n" +
+			"      type = fmc_network_objects.PrivateVLANDR.type\n" +
+			"  }\n" +
+			"  literals {\n" +
+			"      value = \"10.10.10.10\"\n" +
+			"      type = \"Host\"\n" +
+			"  }\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceNetworkGroupObjectsCreate,
 		ReadContext:   resourceNetworkGroupObjectsRead,
 		UpdateContext: resourceNetworkGroupObjectsUpdate,

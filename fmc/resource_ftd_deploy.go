@@ -10,6 +10,17 @@ import (
 
 func resourceFtdDeploy() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for deploying changes to FTD in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_ftd_deploy\" \"ftd\" {\n" +
+			"    device = data.fmc_devices.ftd.id\n" +
+			"    ignore_warning = false\n" +
+			"    force_deploy = false\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceFtdDeployCreate,
 		ReadContext:   resourceFtdDeployRead,
 		UpdateContext: resourceFtdDeployCreate,

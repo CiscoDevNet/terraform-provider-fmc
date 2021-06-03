@@ -9,6 +9,14 @@ import (
 
 func dataSourceURLObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for URL Objects in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_url_objects\" \"existing\" {\n" +
+			"	name = \"DNAC\"\n" +
+			"}\n" +
+			"```\n" +
+			"Any one of the id, name or value can be specified. The first filter in the order of id, name and value will be used, and the rest will be ignored if multiple are specified.",
 		ReadContext: dataSourceURLObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

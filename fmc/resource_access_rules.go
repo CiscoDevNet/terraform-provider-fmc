@@ -14,6 +14,128 @@ var access_policies_type string = "AccessRule"
 
 func resourceAccessRules() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Access Rules in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_access_rules\" \"access_rule_1\" {\n" +
+			"    acp = fmc_access_policies.access_policy.id\n" +
+			"    section = \"mandatory\"\n" +
+			"    name = \"Test rule 1\"\n" +
+			"    action = \"allow\"\n" +
+			"    enabled = true\n" +
+			"    enable_syslog = true\n" +
+			"    syslog_severity = \"alert\"\n" +
+			"    send_events_to_fmc = true\n" +
+			"    log_files = true\n" +
+			"    log_end = true\n" +
+			"    source_zones {\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    destination_zones {\n" +
+			"        destination_zone {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    source_networks {\n" +
+			"        source_network {\n" +
+			"            id = data.fmc_network_objects.source.id\n" +
+			"            type =  data.fmc_network_objects.source.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    destination_networks {\n" +
+			"        destination_network {\n" +
+			"            id = data.fmc_network_objects.dest.id\n" +
+			"            type =  data.fmc_network_objects.dest.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    destination_ports {\n" +
+			"        destination_port {\n" +
+			"            id = data.fmc_port_objects.http.id\n" +
+			"            type =  data.fmc_port_objects.http.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    urls {\n" +
+			"        url {\n" +
+			"            id = fmc_url_objects.dest_url.id\n" +
+			"            type = \"Url\"\n" +
+			"        }\n" +
+			"    }\n" +
+			"    ips_policy = data.fmc_ips_policies.ips_policy.id\n" +
+			"    syslog_config = data.fmc_syslog_alerts.syslog_alert.id\n" +
+			"    new_comments = [ \"New\", \"comment\" ]\n" +
+			"}\n" +
+			"\n" +
+			"resource \"fmc_access_rules\" \"access_rule_2\" {\n" +
+			"    acp = fmc_access_policies.access_policy.id\n" +
+			"    section = \"mandatory\"\n" +
+			"    insert_before = 2 # Wont work as assumed since terraform does not \n" +
+			"    name = \"Test rule 2\"\n" +
+			"    action = \"allow\"\n" +
+			"    enabled = true\n" +
+			"    enable_syslog = true\n" +
+			"    syslog_severity = \"alert\"\n" +
+			"    send_events_to_fmc = true\n" +
+			"    log_files = true\n" +
+			"    log_end = true\n" +
+			"    source_zones {\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        # source_zone {\n" +
+			"        #     id = data.fmc_security_zones.outside.id\n" +
+			"        #     type =  data.fmc_security_zones.outside.type\n" +
+			"        # }\n" +
+			"    }\n" +
+			"    destination_zones {\n" +
+			"        destination_zone {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    source_networks {\n" +
+			"        source_network {\n" +
+			"            id = data.fmc_network_objects.source.id\n" +
+			"            type =  data.fmc_network_objects.source.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    destination_networks {\n" +
+			"        destination_network {\n" +
+			"            id = data.fmc_network_objects.dest.id\n" +
+			"            type =  data.fmc_network_objects.dest.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    destination_ports {\n" +
+			"        destination_port {\n" +
+			"            id = data.fmc_port_objects.http.id\n" +
+			"            type =  data.fmc_port_objects.http.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"    urls {\n" +
+			"        url {\n" +
+			"            id = fmc_url_objects.dest_url.id\n" +
+			"            type = \"Url\"\n" +
+			"        }\n" +
+			"    }\n" +
+			"    ips_policy = data.fmc_ips_policies.ips_policy.id\n" +
+			"    syslog_config = data.fmc_syslog_alerts.syslog_alert.id\n" +
+			"    new_comments = [ \"New comment\" ]\n" +
+			"    depends_on = [\n" +
+			"        fmc_access_rules.access_rule_1\n" +
+			"    ]\n" +
+			"}\n" +
+			"```\n" +
+			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
 		CreateContext: resourceAccessRulesCreate,
 		ReadContext:   resourceAccessRulesRead,
 		UpdateContext: resourceAccessRulesUpdate,

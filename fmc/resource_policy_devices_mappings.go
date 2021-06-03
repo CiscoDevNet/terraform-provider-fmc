@@ -11,8 +11,25 @@ var policy_devices_mappings_type string = "PolicyAssignment"
 
 func resourcePolicyDevicesAssignments() *schema.Resource {
 	return &schema.Resource{
-		Description: "**Note** This resource cannot be deleted, devices can only be reassigned to another policy.\n" +
-			"So, terraform will silenty succeed in deleting the resource even though the mapping is not deleted.",
+		Description: "Resource for Policy Device Assignments in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_policy_devices_assignments\" \"policy_assignment\" {\n" +
+			"    name = \"Terraform Test - FTD\"\n" +
+			"    description = \"Testing\"\n" +
+			"    policy {\n" +
+			"        id = fmc_access_policies.access_policy.id\n" +
+			"        type = fmc_access_policies.access_policy.type\n" +
+			"    }\n" +
+			"    target_devices {\n" +
+			"        id = data.fmc_devices.device.id\n" +
+			"        type = data.fmc_devices.device.type\n" +
+			"    }\n" +
+			"}\n" +
+			"```\n" +
+			"**Note** You cannot delete a policy assignment, only reassign the devices to another policy. So, the delete operation on terraform does nothing, but the assignment is not deleted until you have manually moved the devices to another policy.",
 		CreateContext: resourcePolicyDevicesAssignmentsCreate,
 		ReadContext:   resourcePolicyDevicesAssignmentsRead,
 		UpdateContext: resourcePolicyDevicesAssignmentsUpdate,

@@ -47,7 +47,7 @@ func Provider() *schema.Provider {
 			"fmc_host": {
 				Type:        schema.TypeString,
 				Required:    true,
-				DefaultFunc: schema.EnvDefaultFunc("FMC_BASE_URL", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FMC_HOST", nil),
 				Description: "Hostname/IP address of the FMC",
 			},
 			"fmc_insecure_skip_verify": {

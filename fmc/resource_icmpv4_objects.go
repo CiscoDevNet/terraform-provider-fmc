@@ -11,6 +11,17 @@ var icmpv4_type string = "ICMPV4Object"
 
 func resourceICMPV4Objects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for ICMPv4 Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_icmpv4_objects\" \"wrong-proto\" {\n" +
+			"  name        = \"wrong-proto\"\n" +
+			"  icmp_type = \"3\"\n" +
+			"  code  = 2\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceICMPV4ObjectsCreate,
 		ReadContext:   resourceICMPV4ObjectsRead,
 		UpdateContext: resourceICMPV4ObjectsUpdate,

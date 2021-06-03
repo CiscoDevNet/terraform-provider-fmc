@@ -9,6 +9,14 @@ import (
 
 func dataSourceHostObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Host Objects in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_host_objects\" \"existing_host\" {\n" +
+			"	name = \"CUCM-Pub\"\n" +
+			"}\n" +
+			"```\n" +
+			"Any one of the id, name or value can be specified. The first filter in the order of id, name and value will be used, and the rest will be ignored if multiple are specified.",
 		ReadContext: dataSourceHostObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

@@ -14,6 +14,90 @@ var manualnat_rules_type string = "FTDManualNatRule"
 
 func resourceManualNatRules() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Manual NAT Rules in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_ftd_manualnat_rules\" \"new_rule\" {\n" +
+			"    nat_policy = fmc_ftd_nat_policies.nat_policy.id\n" +
+			"    description = \"Testing Manual NAT priv-pub\"\n" +
+			"    nat_type = \"static\"\n" +
+			"    source_interface {\n" +
+			"        id = data.fmc_security_zones.inside.id\n" +
+			"        type = data.fmc_security_zones.inside.type\n" +
+			"    }\n" +
+			"    destination_interface {\n" +
+			"        id = data.fmc_security_zones.outside.id\n" +
+			"        type = data.fmc_security_zones.outside.type\n" +
+			"    }\n" +
+			"    original_source {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    translated_destination {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    interface_in_original_destination = true\n" +
+			"    interface_in_translated_source = true\n" +
+			"    ipv6 = true\n" +
+			"}\n" +
+			"\n" +
+			"resource \"fmc_ftd_manualnat_rules\" \"new_rule_after\" {\n" +
+			"    nat_policy = fmc_ftd_nat_policies.nat_policy.id\n" +
+			"    description = \"Testing Manual NAT priv-pub\"\n" +
+			"    nat_type = \"static\"\n" +
+			"    section = \"after_auto\"\n" +
+			"    source_interface {\n" +
+			"        id = data.fmc_security_zones.inside.id\n" +
+			"        type = data.fmc_security_zones.inside.type\n" +
+			"    }\n" +
+			"    destination_interface {\n" +
+			"        id = data.fmc_security_zones.outside.id\n" +
+			"        type = data.fmc_security_zones.outside.type\n" +
+			"    }\n" +
+			"    original_source {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    translated_destination {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    interface_in_original_destination = true\n" +
+			"    interface_in_translated_source = true\n" +
+			"    ipv6 = true\n" +
+			"}\n" +
+			"\n" +
+			"resource \"fmc_ftd_manualnat_rules\" \"new_rule_before_1\" {\n" +
+			"    nat_policy = fmc_ftd_nat_policies.nat_policy.id\n" +
+			"    description = \"Testing Manual NAT before priv-pub\"\n" +
+			"    nat_type = \"static\"\n" +
+			"    section = \"before_auto\"\n" +
+			"    target_index = 1\n" +
+			"    source_interface {\n" +
+			"        id = data.fmc_security_zones.inside.id\n" +
+			"        type = data.fmc_security_zones.inside.type\n" +
+			"    }\n" +
+			"    destination_interface {\n" +
+			"        id = data.fmc_security_zones.outside.id\n" +
+			"        type = data.fmc_security_zones.outside.type\n" +
+			"    }\n" +
+			"    original_source {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    translated_destination {\n" +
+			"        id = data.fmc_host_objects.CUCMPub.id\n" +
+			"        type = data.fmc_host_objects.CUCMPub.type\n" +
+			"    }\n" +
+			"    interface_in_original_destination = true\n" +
+			"    interface_in_translated_source = true\n" +
+			"    ipv6 = true\n" +
+			"}\n" +
+			"```\n" +
+			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
 		CreateContext: resourceManualNatRulesCreate,
 		ReadContext:   resourceManualNatRulesRead,
 		UpdateContext: resourceManualNatRulesUpdate,

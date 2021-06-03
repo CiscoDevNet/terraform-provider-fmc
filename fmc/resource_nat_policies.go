@@ -11,6 +11,16 @@ var nat_policy_type string = "FTDNatPolicy"
 
 func resourceNatPolicies() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for NAT Policies in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_ftd_nat_policies\" \"nat_policy\" {\n" +
+			"    name = \"Terraform NAT Policy\"\n" +
+			"    description = \"New NAT policy!\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceNatPoliciesCreate,
 		ReadContext:   resourceNatPoliciesRead,
 		DeleteContext: resourceNatPoliciesDelete,
