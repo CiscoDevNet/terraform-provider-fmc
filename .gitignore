@@ -10,4 +10,5 @@ terraform.tfstate.backup
 /.idea/modules.xml
 /.idea/vcs.xml
 /.idea/.gitignore
-docs/
+docs/*
+!docs/index.md
