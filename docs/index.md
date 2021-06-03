@@ -10,7 +10,33 @@ description: |-
 
 This provider can be used to manage the FMC configuration.
 
+## Features 
+You can manage the following resources with this provider:
+- Network, Host, Range, FQDN objects
+- Network object groups
+- ICMPv4 objects
+- URL objects
+- URL object groups
+- Port objects
+- Port object groups
+
+- Access Policies
+- Access Rules
+- NAT Policies
+- Auto NAT and Manual NAT Rules
+
+- Policy Device Mappings
+- Deployment to FTD
+
+Further, the provider provides the below data sources:
+- FTD devices
+- File and IPS policies
+- Security zones
+- Syslog alert configurations
+
 ## Example
+An example provider initialization is shown below:
+
 ```hcl
 provider "fmc" {
     fmc_username = "terraform_user"
