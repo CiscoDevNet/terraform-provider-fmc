@@ -11,6 +11,28 @@ var url_object_group_type string = "Url"
 
 func resourceURLObjectGroup() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for URL Object Groups in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_url_object_group\" \"URLGroup\" {\n" +
+			"    name = \"URLGroup\"\n" +
+			"    description = \"Websites\"\n" +
+			"    objects {\n" +
+			"        id = data.fmc_url_objects.cisco-home.id\n" +
+			"        type = data.fmc_url_objects.cisco-home.type\n" +
+			"    }\n" +
+			"    objects {\n" +
+			"        id = fmc_url_objects.cisco-tac.id\n" +
+			"        type = fmc_url_objects.cisco-tac.type\n" +
+			"    }\n" +
+			"    literals {\n" +
+			"        url = \"https://www.terraform.io/\"\n" +
+			"        type = \"Url\"\n" +
+			"    }\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceURLObjectGroupCreate,
 		ReadContext:   resourceURLObjectGroupRead,
 		UpdateContext: resourceURLObjectGroupUpdate,

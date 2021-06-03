@@ -11,6 +11,17 @@ var url_type string = "Url"
 
 func resourceURLObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for URL Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_url_objects\" \"cisco-home\" {\n" +
+			"    name        = \"cisco-home\"\n" +
+			"    url       = \"https://www.cisco.com/\"\n" +
+			"    description = \"Cisco home page\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceURLObjectsCreate,
 		ReadContext:   resourceURLObjectsRead,
 		UpdateContext: resourceURLObjectsUpdate,

@@ -15,6 +15,21 @@ var access_policy_default_syslog_alert_type string = "SyslogAlert"
 
 func resourceAccessPolicies() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Access Control Policies in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_access_policies\" \"access_policy\" {\n" +
+			"    name = \"Terraform Access Policy\"\n" +
+			"    # default_action = \"block\" # Cannot have block with base IPS policy\n" +
+			"    default_action = \"permit\"\n" +
+			"    default_action_base_intrusion_policy_id = data.fmc_ips_policies.ips_policy.id\n" +
+			"    default_action_send_events_to_fmc = \"true\"\n" +
+			"    default_action_log_end = \"true\"\n" +
+			"    default_action_syslog_config_id = data.fmc_syslog_alerts.syslog_alert.id\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceAccessPoliciesCreate,
 		ReadContext:   resourceAccessPoliciesRead,
 		DeleteContext: resourceAccessPoliciesDelete,

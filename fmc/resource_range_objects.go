@@ -11,6 +11,17 @@ var range_type string = "Range"
 
 func resourceRangeObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Network Range Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_range_objects\" \"servers\" {\n" +
+			"    name        = \"k8s-cluster\"\n" +
+			"    value       = \"10.10.10.10-10.10.10.16\"\n" +
+			"    description = \"K8s Prod Cluster\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceRangeObjectsCreate,
 		ReadContext:   resourceRangeObjectsRead,
 		UpdateContext: resourceRangeObjectsUpdate,

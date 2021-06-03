@@ -11,6 +11,17 @@ var host_type string = "Host"
 
 func resourceHostObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Host Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_host_objects\" \"host\" {\n" +
+			"    name        = \"Web Server\"\n" +
+			"    value       = \"10.10.10.10\"\n" +
+			"    description = \"K8s primary\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceHostObjectsCreate,
 		ReadContext:   resourceHostObjectsRead,
 		UpdateContext: resourceHostObjectsUpdate,

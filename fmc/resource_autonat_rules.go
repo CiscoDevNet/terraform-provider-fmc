@@ -13,6 +13,69 @@ var autonat_rules_type string = "AutoNatRule"
 
 func resourceAutoNatRules() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Auto NAT Rules in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_ftd_autonat_rules\" \"new_rule\" {\n" +
+			"    nat_policy = fmc_ftd_nat_policies.nat_policy.id\n" +
+			"    description = \"Testing Auto NAT priv-pub\"\n" +
+			"    nat_type = \"static\"\n" +
+			"    source_interface {\n" +
+			"        id = data.fmc_security_zones.inside.id\n" +
+			"        type = data.fmc_security_zones.inside.type\n" +
+			"    }\n" +
+			"    destination_interface {\n" +
+			"        id = data.fmc_security_zones.outside.id\n" +
+			"        type = data.fmc_security_zones.outside.type\n" +
+			"    }\n" +
+			"    original_network {\n" +
+			"        id = data.fmc_network_objects.private.id\n" +
+			"        type = data.fmc_network_objects.private.type\n" +
+			"    }\n" +
+			"    translated_network {\n" +
+			"        id = data.fmc_network_objects.public.id\n" +
+			"        type = data.fmc_network_objects.public.type\n" +
+			"    }\n" +
+			"    translated_network_is_destination_interface = false\n" +
+			"    original_port {\n" +
+			"        port = 53\n" +
+			"        protocol = \"udp\"\n" +
+			"    }\n" +
+			"    translated_port = 5353\n" +
+			"    ipv6 = true\n" +
+			"}\n" +
+			"\n" +
+			"resource \"fmc_ftd_autonat_rules\" \"new_rule_2\" {\n" +
+			"    nat_policy = fmc_ftd_nat_policies.nat_policy.id\n" +
+			"    description = \"Testing Auto NAT pub-priv\"\n" +
+			"    nat_type = \"dynamic\"\n" +
+			"    source_interface {\n" +
+			"        id = data.fmc_security_zones.inside.id\n" +
+			"        type = data.fmc_security_zones.inside.type\n" +
+			"    }\n" +
+			"    destination_interface {\n" +
+			"        id = data.fmc_security_zones.outside.id\n" +
+			"        type = data.fmc_security_zones.outside.type\n" +
+			"    }\n" +
+			"    original_network {\n" +
+			"        id = data.fmc_host_objects.CUCMPub.id\n" +
+			"        type = data.fmc_host_objects.CUCMPub.type\n" +
+			"    }\n" +
+			"    translated_network_is_destination_interface = false\n" +
+			"    pat_options {\n" +
+			"        pat_pool_address {\n" +
+			"            id = data.fmc_network_objects.private.id\n" +
+			"            type = data.fmc_network_objects.private.type\n" +
+			"        }\n" +
+			"        extended_pat_table = true\n" +
+			"        round_robin = true\n" +
+			"    }\n" +
+			"    ipv6 = true\n" +
+			"}\n" +
+			"```\n" +
+			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
 		CreateContext: resourceAutoNatRulesCreate,
 		ReadContext:   resourceAutoNatRulesRead,
 		UpdateContext: resourceAutoNatRulesUpdate,

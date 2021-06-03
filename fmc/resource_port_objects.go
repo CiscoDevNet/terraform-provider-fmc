@@ -11,6 +11,17 @@ var port_type string = "ProtocolPortObject"
 
 func resourcePortObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Port Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_port_objects\" \"http\" {\n" +
+			"    name = \"HTTP\"\n" +
+			"    port = \"80\"\n" +
+			"    protocol = \"TCP\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourcePortObjectsCreate,
 		ReadContext:   resourcePortObjectsRead,
 		UpdateContext: resourcePortObjectsUpdate,

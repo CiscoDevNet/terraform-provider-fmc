@@ -11,6 +11,18 @@ var fqdn_type string = "FQDN"
 
 func resourceFQDNObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for FQDN Objects in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_fqdn_objects\" \"new\" {\n" +
+			"  name        = \"Cisco\"\n" +
+			"  value       = \"cisco.com\"\n" +
+			"  description = \"Cisco domain\"\n" +
+			"  dns_resolution = \"IPV4_ONLY\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourceFQDNObjectsCreate,
 		ReadContext:   resourceFQDNObjectsRead,
 		UpdateContext: resourceFQDNObjectsUpdate,

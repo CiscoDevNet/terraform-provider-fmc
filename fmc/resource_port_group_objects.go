@@ -11,6 +11,24 @@ var port_group_type string = "PortObjectGroup"
 
 func resourcePortGroupObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Port Group Objects in FMC\n" +
+			"\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"## Example\n" +
+			"resource \"fmc_port_group_objects\" \"port-group\" {\n" +
+			"    name = \"TCP-ICMP\"\n" +
+			"    description = \"Combo ports\"\n" +
+			"    objects {\n" +
+			"        id = fmc_port_objects.http.id\n" +
+			"        type = fmc_port_objects.http.type\n" +
+			"    }\n" +
+			"    objects {\n" +
+			"        id = fmc_icmpv4_objects.wrong-proto.id\n" +
+			"        type = fmc_icmpv4_objects.wrong-proto.type\n" +
+			"    }\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourcePortGroupObjectsCreate,
 		ReadContext:   resourcePortGroupObjectsRead,
 		UpdateContext: resourcePortGroupObjectsUpdate,
