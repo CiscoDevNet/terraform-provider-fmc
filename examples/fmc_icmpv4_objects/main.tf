@@ -7,10 +7,10 @@ terraform {
 }
 
 provider "fmc" {
-  fmc_username = "jay"
-  fmc_password = "CXsecurity!@34"
-  fmc_host = "10.106.36.90"
-  fmc_insecure_skip_verify = true
+  fmc_username = var.fmc_username
+  fmc_password = var.fmc_password
+  fmc_host = var.fmc_host
+  fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
 
