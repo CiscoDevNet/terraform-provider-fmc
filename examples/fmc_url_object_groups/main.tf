@@ -7,10 +7,10 @@ terraform {
 }
 
 provider "fmc" {
-  fmc_username = "admin"
-  fmc_password = "n3m3s!sVPN"
-  fmc_host = "10.122.149.160"
-  fmc_insecure_skip_verify = true
+  fmc_username = var.fmc_username
+  fmc_password = var.fmc_password
+  fmc_host = var.fmc_host
+  fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
 data "fmc_url_objects" "CiscoTest" {
