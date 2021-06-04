@@ -23,11 +23,11 @@ data "fmc_syslog_alerts" "syslog_alert" {
 
 resource "fmc_access_policies" "access_policy" {
     name = "Terraform Access Policy"
-    # default_action = "block" # Cannot have block with base IPS policy
-    default_action = "permit"
-    default_action_base_intrusion_policy_id = data.fmc_ips_policies.ips_policy.id
-    default_action_send_events_to_fmc = "true"
-    default_action_log_end = "true"
+    default_action = "block" # Cannot have block with base IPS policy
+    # default_action = "permit"
+    # default_action_base_intrusion_policy_id = data.fmc_ips_policies.ips_policy.id
+    default_action_send_events_to_fmc = true
+    default_action_log_begin = true
     default_action_syslog_config_id = data.fmc_syslog_alerts.syslog_alert.id
 }
 

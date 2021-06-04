@@ -8,24 +8,20 @@ import (
 	"net/http"
 )
 
-type AccessPolicyDefaultActionIntrusionPolicy struct {
-	ID   string `json:"id"`
-	Type string `json:"type"`
-}
-
-type AccessPolicyDefaultActionSyslogConfig struct {
+type AccessPolicySubConfig struct {
 	ID   string `json:"id"`
 	Type string `json:"type"`
 }
 
 type AccessPolicyDefaultAction struct {
-	Intrusionpolicy AccessPolicyDefaultActionIntrusionPolicy `json:"intrusionPolicy"`
-	Syslogconfig    AccessPolicyDefaultActionSyslogConfig    `json:"syslogConfig"`
-	Type            string                                   `json:"type"`
-	Logbegin        string                                   `json:"logBegin"`
-	Logend          string                                   `json:"logEnd"`
-	Sendeventstofmc string                                   `json:"sendEventsToFMC"`
-	Action          string                                   `json:"action"`
+	Intrusionpolicy *AccessPolicySubConfig `json:"intrusionPolicy,omitempty"`
+	Syslogconfig    *AccessPolicySubConfig `json:"syslogConfig,omitempty"`
+	Type            string                 `json:"type"`
+	Logbegin        bool                   `json:"logBegin"`
+	Logend          bool                   `json:"logEnd"`
+	Sendeventstofmc bool                   `json:"sendEventsToFMC"`
+	Action          string                 `json:"action"`
+	ID              string                 `json:"id,omitempty"`
 	// Variableset struct {
 	// 	ID   string `json:"id"`
 	// 	Type string `json:"type"`
@@ -37,6 +33,7 @@ type AccessPolicyDefaultAction struct {
 }
 
 type AccessPolicy struct {
+	ID            string                    `json:"id,omitempty"`
 	Type          string                    `json:"type"`
 	Name          string                    `json:"name"`
 	Description   string                    `json:"description"`
@@ -52,9 +49,10 @@ type AccessPolicyResponse struct {
 			Self string `json:"self"`
 		} `json:"links"`
 	} `json:"rules"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ID          string `json:"id"`
+	Name          string                    `json:"name"`
+	Description   string                    `json:"description"`
+	ID            string                    `json:"id"`
+	Defaultaction AccessPolicyDefaultAction `json:"defaultAction"`
 }
 
 type AccessPoliciesResponse struct {
@@ -122,6 +120,24 @@ func (v *Client) GetAccessPolicy(ctx context.Context, id string) (*AccessPolicyR
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting access policies: %s - %s", url, err.Error())
+	}
+	return item, nil
+}
+
+func (v *Client) UpdateAccessPolicy(ctx context.Context, acp_id string, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {
+	url := fmt.Sprintf("%s/policy/accesspolicies/%s", v.domainBaseURL, acp_id)
+	body, err := json.Marshal(&accessPolicy)
+	if err != nil {
+		return nil, fmt.Errorf("updating access policies: %s - %s", url, err.Error())
+	}
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("updating access policies: %s - %s", url, err.Error())
+	}
+	item := &AccessPolicyResponse{}
+	err = v.DoRequest(req, item, http.StatusOK)
+	if err != nil {
+		return nil, fmt.Errorf("updating access policies: %s - %s,%+v", url, err.Error(), accessPolicy)
 	}
 	return item, nil
 }
