@@ -32,18 +32,17 @@ func resourceAccessPolicies() *schema.Resource {
 			"```",
 		CreateContext: resourceAccessPoliciesCreate,
 		ReadContext:   resourceAccessPoliciesRead,
+		UpdateContext: resourceAccessPoliciesUpdate,
 		DeleteContext: resourceAccessPoliciesDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The name of this resource",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The description of this resource",
 			},
 			"type": {
@@ -51,10 +50,14 @@ func resourceAccessPolicies() *schema.Resource {
 				Computed:    true,
 				Description: "The type of this resource",
 			},
+			"default_action_id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The ID of default action of this resource",
+			},
 			"default_action": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				StateFunc: func(val interface{}) string {
 					return strings.ToUpper(val.(string))
 				},
@@ -74,37 +77,31 @@ func resourceAccessPolicies() *schema.Resource {
 			"default_action_base_intrusion_policy_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Default action base policy ID to inherit from for this resource",
 			},
 			"default_action_send_events_to_fmc": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Enable sending events to FMC for this resource, "true" or "false"`,
 			},
 			"default_action_log_begin": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Enable logging at the beginning of the connection for this resource, "true" or "false`,
 			},
 			"default_action_log_end": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeBool,
 				Optional:    true,
-				ForceNew:    true,
 				Description: `Enable logging at the end of the connection for this resource, "true" or "false"`,
 			},
 			"default_action_syslog_config_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "Syslog configuration ID for this resource",
 			},
 			"default_action_type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				ForceNew:    true,
 				Description: "The type of default action of this resource",
 			},
 		},
@@ -117,22 +114,31 @@ func resourceAccessPoliciesCreate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
+	var intrusionPolicy, syslogConfig *AccessPolicySubConfig
+	if val, ok := d.GetOk("default_action_base_intrusion_policy_id"); ok {
+		intrusionPolicy = &AccessPolicySubConfig{
+			ID:   val.(string),
+			Type: access_policy_default_action_type,
+		}
+	}
+
+	if val, ok := d.GetOk("default_action_syslog_config_id"); ok {
+		syslogConfig = &AccessPolicySubConfig{
+			ID:   val.(string),
+			Type: access_policy_default_syslog_alert_type,
+		}
+	}
+
 	res, err := c.CreateAccessPolicy(ctx, &AccessPolicy{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Defaultaction: AccessPolicyDefaultAction{
-			Type: access_policy_default_action_type,
-			Intrusionpolicy: AccessPolicyDefaultActionIntrusionPolicy{
-				ID:   d.Get("default_action_base_intrusion_policy_id").(string),
-				Type: access_policy_default_action_type,
-			},
-			Syslogconfig: AccessPolicyDefaultActionSyslogConfig{
-				ID:   d.Get("default_action_syslog_config_id").(string),
-				Type: access_policy_default_syslog_alert_type,
-			},
-			Logbegin:        d.Get("default_action_log_begin").(string),
-			Logend:          d.Get("default_action_log_end").(string),
-			Sendeventstofmc: d.Get("default_action_send_events_to_fmc").(string),
+			Type:            access_policy_default_action_type,
+			Intrusionpolicy: intrusionPolicy,
+			Syslogconfig:    syslogConfig,
+			Logbegin:        d.Get("default_action_log_begin").(bool),
+			Logend:          d.Get("default_action_log_end").(bool),
+			Sendeventstofmc: d.Get("default_action_send_events_to_fmc").(bool),
 			Action:          strings.ToUpper(d.Get("default_action").(string)),
 		},
 		Type: access_policy_type,
@@ -192,7 +198,74 @@ func resourceAccessPoliciesRead(ctx context.Context, d *schema.ResourceData, m i
 		return diags
 	}
 
+	if err := d.Set("default_action", item.Defaultaction.Action); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read access policy",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("default_action_id", item.Defaultaction.ID); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read access policy",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
 	return diags
+}
+
+func resourceAccessPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	// Warning or errors can be collected in a slice type
+	// var diags diag.Diagnostics
+	var diags diag.Diagnostics
+	if d.HasChanges("name", "description", "type", "default_action", "default_action_base_intrusion_policy_id", "default_action_send_events_to_fmc", "default_action_log_begin", "default_action_log_end", "default_action_syslog_config_id", "default_action_type") {
+		var intrusionPolicy, syslogConfig *AccessPolicySubConfig
+		if val, ok := d.GetOk("default_action_base_intrusion_policy_id"); ok {
+			intrusionPolicy = &AccessPolicySubConfig{
+				ID:   val.(string),
+				Type: access_policy_default_action_type,
+			}
+		}
+
+		if val, ok := d.GetOk("default_action_syslog_config_id"); ok {
+			syslogConfig = &AccessPolicySubConfig{
+				ID:   val.(string),
+				Type: access_policy_default_syslog_alert_type,
+			}
+		}
+		res, err := c.UpdateAccessPolicy(ctx, d.Id(), &AccessPolicy{
+			ID:          d.Id(),
+			Name:        d.Get("name").(string),
+			Description: d.Get("description").(string),
+			Defaultaction: AccessPolicyDefaultAction{
+				ID:              d.Get("default_action_id").(string),
+				Type:            access_policy_default_action_type,
+				Intrusionpolicy: intrusionPolicy,
+				Syslogconfig:    syslogConfig,
+				Logbegin:        d.Get("default_action_log_begin").(bool),
+				Logend:          d.Get("default_action_log_end").(bool),
+				Sendeventstofmc: d.Get("default_action_send_events_to_fmc").(bool),
+				Action:          strings.ToUpper(d.Get("default_action").(string)),
+			},
+			Type: access_policy_type,
+		})
+		if err != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to create access policy",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
+		d.SetId(res.ID)
+	}
+	return resourceAccessPoliciesRead(ctx, d, m)
 }
 
 func resourceAccessPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
