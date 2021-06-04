@@ -23,18 +23,17 @@ func resourceNatPolicies() *schema.Resource {
 			"```",
 		CreateContext: resourceNatPoliciesCreate,
 		ReadContext:   resourceNatPoliciesRead,
+		UpdateContext: resourceNatPoliciesUpdate,
 		DeleteContext: resourceNatPoliciesDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The name of this resource",
 			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The description of this resource",
 			},
 			"type": {
@@ -113,6 +112,30 @@ func resourceNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m inte
 	}
 
 	return diags
+}
+
+func resourceNatPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+	// Warning or errors can be collected in a slice type
+	// var diags diag.Diagnostics
+	var diags diag.Diagnostics
+
+	res, err := c.UpdateNatPolicy(ctx, d.Id(), &NatPolicy{
+		Name:        d.Get("name").(string),
+		Description: d.Get("description").(string),
+		Type:        nat_policy_type,
+		ID:          d.Id(),
+	})
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to update nat policy",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+	d.SetId(res.ID)
+	return resourceNatPoliciesRead(ctx, d, m)
 }
 
 func resourceNatPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

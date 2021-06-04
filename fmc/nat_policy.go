@@ -12,6 +12,7 @@ type NatPolicy struct {
 	Type        string `json:"type"`
 	Name        string `json:"name"`
 	Description string `json:"description"`
+	ID          string `json:"id,omitempty"`
 }
 
 type NatPolicyResponse struct {
@@ -26,15 +27,7 @@ type NatPolicyResponse struct {
 }
 
 type NatPoliciesResponse struct {
-	Items []struct {
-		Name        string `json:"name"`
-		Description string `json:"description"`
-		Rules       struct {
-		} `json:"rules"`
-		ID      string `json:"id"`
-		Type    string `json:"type"`
-		Version string `json:"version"`
-	} `json:"items"`
+	Items []NatPolicyResponse `json:"items"`
 }
 
 func (v *Client) GetNatPolicyByName(ctx context.Context, name string) (*NatPolicyResponse, error) {
@@ -94,6 +87,24 @@ func (v *Client) GetNatPolicy(ctx context.Context, id string) (*NatPolicyRespons
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting nat policies: %s - %s", url, err.Error())
+	}
+	return item, nil
+}
+
+func (v *Client) UpdateNatPolicy(ctx context.Context, natId string, natPolicy *NatPolicy) (*NatPolicyResponse, error) {
+	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s", v.domainBaseURL, natId)
+	body, err := json.Marshal(&natPolicy)
+	if err != nil {
+		return nil, fmt.Errorf("update nat policies: %s - %s", url, err.Error())
+	}
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("update nat policies: %s - %s", url, err.Error())
+	}
+	item := &NatPolicyResponse{}
+	err = v.DoRequest(req, item, http.StatusOK)
+	if err != nil {
+		return nil, fmt.Errorf("update nat policies: %s - %s", url, err.Error())
 	}
 	return item, nil
 }
