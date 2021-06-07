@@ -23,7 +23,7 @@ Once you have that, follow the below steps to add this provider to your terrafor
 
 ### 1b. Any Windows build
 
-- Download the file release.zip (or release.tgz if you have winrar/7zip) from Releases.
+- Download the file release.zip from Releases.
 - Open the ZIP file and extract the hashicorp.com folder to `%APPDAT%\terraform.d\plugins\` directory
 - Once done, the should look like `%APPDAT%\terraform.d\plugins\hashicorp.com\cisco\fmc\0.2\`
 
