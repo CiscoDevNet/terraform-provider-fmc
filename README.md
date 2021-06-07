@@ -11,7 +11,7 @@ Once you have that, follow the below steps to add this provider to your terrafor
 ### 1a. Windows build 17063 or later
 
 - Download the latest `release.tgz` from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
-- Extract the `hashicorp.com` folder to `%APPDATA%\terraform.d\plugins/`
+- Extract the `hashicorp.com` folder to `%APPDATA%\terraform.d\plugins\`
   - Open a command prompt where the file is downloaded
   - Run the below commands
 
