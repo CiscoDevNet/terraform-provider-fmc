@@ -69,3 +69,11 @@ Initializing provider plugins...
 ```
 
 That's it! You have successfully installed the FMC terraform provider. Head on to examples to see what you can do with them!
+Provider documentation is present [here](https://wwwin-github.cisco.com/TFProvider/fmc-terraform/tree/doc-do-not-merge/docs) for now.
+
+**Note** When refreshing, planning, applying or destroying from terraform, remember to add `--parallelism=1` to the command, otherwise FMC will block parallel operations on the API. Issue tracked [here](https://gitlab-sjc.cisco.com/tfprovider/fmc-terraform/issues/17).
+Ex:
+`terraform refresh --parallelism=1`
+`terraform plan --parallelism=1`
+`terraform apply --parallelism=1`
+`terraform destroy --parallelism=1`
