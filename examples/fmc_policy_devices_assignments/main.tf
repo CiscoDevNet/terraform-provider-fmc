@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     fmc = {
-      source = "hashicorp.com/edu/fmc"
+      source = "hashicorp.com/cisco/fmc"
     }
   }
 }

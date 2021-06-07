@@ -1,6 +1,6 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
 HOSTNAME=hashicorp.com
-NAMESPACE=edu
+NAMESPACE=cisco
 NAME=fmc
 BINARY=terraform-provider-${NAME}
 VERSION=0.2
@@ -9,25 +9,27 @@ OS_ARCH=$(shell go env GOOS)_$(shell go env GOARCH)
 default: install
 
 build:
-	go build -o ${BINARY}
+	go build -o ${BINARY}_${VERSION}_${OS_ARCH}
 
-release:
-	GOOS=darwin GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_darwin_amd64
-	GOOS=freebsd GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_freebsd_386
-	GOOS=freebsd GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_freebsd_amd64
-	GOOS=freebsd GOARCH=arm go build -o ./bin/${BINARY}_${VERSION}_freebsd_arm
-	GOOS=linux GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_linux_386
-	GOOS=linux GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_linux_amd64
-	GOOS=linux GOARCH=arm go build -o ./bin/${BINARY}_${VERSION}_linux_arm
-	GOOS=openbsd GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_openbsd_386
-	GOOS=openbsd GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_openbsd_amd64
-	GOOS=solaris GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_solaris_amd64
-	GOOS=windows GOARCH=386 go build -o ./bin/${BINARY}_${VERSION}_windows_386
-	GOOS=windows GOARCH=amd64 go build -o ./bin/${BINARY}_${VERSION}_windows_amd64
+PLATFORMS := linux/amd64 windows/amd64 darwin/amd64
+
+temp = $(subst /, ,$@)
+OS = $(word 1, $(temp))
+ARCH = $(word 2, $(temp))
+
+release: $(PLATFORMS)
+	tar cvzf release.tgz release
+	zip -r release.zip release
+
+$(PLATFORMS):
+	mkdir -p ./release/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS}_${ARCH}
+	GOOS=${OS} GOARCH=${ARCH} go build -o ./release/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS}_${ARCH}/${BINARY}_${VERSION}_${OS}_${ARCH}
+
+.PHONY: release $(PLATFORMS)
 
 install: build
 	mkdir -p ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
-	mv ${BINARY} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
+	mv ${BINARY}_${VERSION}_${OS_ARCH} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 generate:
 	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
