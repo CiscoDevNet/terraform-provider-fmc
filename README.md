@@ -10,8 +10,8 @@ Once you have that, follow the below steps to add this provider to your terrafor
 
 ### 1a. Windows build 17063 or later
 
-- Download the latest `release.tgz` from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
-- Extract the `hashicorp.com` folder to `%APPDATA%\terraform.d\plugins\`
+- Download the latest [`release.tgz`](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest/download/release.tgz) from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
+- Extract the `hashicorp.com` folder to `%APPDATA%\terraform.d\plugins/`
   - Open a command prompt where the file is downloaded
   - Run the below commands
 
@@ -23,13 +23,13 @@ Once you have that, follow the below steps to add this provider to your terrafor
 
 ### 1b. Any Windows build
 
-- Download the latest `release.zip` from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
+- Download the latest [`release.tgz`](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest/download/release.zip) from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
 - Open the ZIP file and extract the hashicorp.com folder to `%APPDAT%\terraform.d\plugins\` directory
 - Once done, the should look like `%APPDAT%\terraform.d\plugins\hashicorp.com\cisco\fmc\0.2\`
 
 ### 1c. macOS/Linux
 
-- Download the latest `release.tgz` from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
+- Download the latest [`release.tgz`](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest/download/release.tgz) from [Releases](https://wwwin-github.cisco.com//tfprovider/fmc-terraform/releases/latest).
 - Extract the `hashicorp.com` folder to `~/.terraform.d/plugins/`
   - Open a Terminal where the file is downloaded
   - Run the below commands
