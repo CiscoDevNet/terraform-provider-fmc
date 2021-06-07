@@ -12,3 +12,5 @@ terraform.tfstate.backup
 /.idea/.gitignore
 docs/*
 !docs/index.md
+release/
+release.*
