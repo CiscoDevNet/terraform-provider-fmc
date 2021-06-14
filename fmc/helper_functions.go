@@ -17,7 +17,7 @@ func returnWithDiag(diags diag.Diagnostics, err error) diag.Diagnostics {
 }
 
 func convertTo1ListGeneric(items interface{}) []interface{} {
-	list := append(make([]interface{}, 1), items)
+	list := append(make([]interface{}, 0), items)
 	return list
 }
 
