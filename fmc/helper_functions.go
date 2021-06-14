@@ -22,10 +22,10 @@ func convertTo1ListGeneric(items interface{}) []interface{} {
 }
 
 func convertMapStringToGeneric(items interface{}) map[string]interface{} {
-	if item, err := items.(map[string]interface{}); !err {
+	if item, err := ToMap(items, "json"); err == nil {
 		return item
 	}
-	if item, err := ToMap(items, "json"); err == nil {
+	if item, err := items.(map[string]interface{}); !err {
 		return item
 	}
 	panic(fmt.Errorf("cannot convert %T to map string generic", items))
