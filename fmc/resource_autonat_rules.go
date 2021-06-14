@@ -470,14 +470,16 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	pat_options := make(map[string]interface{})
-	pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
-	pat_options["interface_pat"] = item.Patoptions.Interfacepat
-	pat_options["include_reserve_ports"] = item.Patoptions.Interfacepat
-	pat_options["extended_pat_table"] = item.Patoptions.Interfacepat
-	pat_options["round_robin"] = item.Patoptions.Interfacepat
-	if err := d.Set("pat_options", convertTo1ListGeneric(pat_options)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Patoptions != (AutoNatRulePatOptions{}) {
+		pat_options := make(map[string]interface{})
+		pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
+		pat_options["interface_pat"] = item.Patoptions.Interfacepat
+		pat_options["include_reserve_ports"] = item.Patoptions.Interfacepat
+		pat_options["extended_pat_table"] = item.Patoptions.Interfacepat
+		pat_options["round_robin"] = item.Patoptions.Interfacepat
+		if err := d.Set("pat_options", convertTo1ListGeneric(pat_options)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 
 	return diags
