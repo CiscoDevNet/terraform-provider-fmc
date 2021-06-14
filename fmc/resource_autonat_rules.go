@@ -111,6 +111,12 @@ func resourceAutoNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				StateFunc: func(val interface{}) string {
+					return strings.ToUpper(val.(string))
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 				Description: `The type of this resource, "static" or "dynamic"`,
 			},
 			"source_interface": {
@@ -229,6 +235,12 @@ func resourceAutoNatRules() *schema.Resource {
 								}
 								errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 								return
+							},
+							StateFunc: func(val interface{}) string {
+								return strings.ToUpper(val.(string))
+							},
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								return strings.EqualFold(old, new)
 							},
 						},
 					},
