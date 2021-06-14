@@ -111,6 +111,12 @@ func resourceAutoNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				StateFunc: func(val interface{}) string {
+					return strings.ToUpper(val.(string))
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 				Description: `The type of this resource, "static" or "dynamic"`,
 			},
 			"source_interface": {
@@ -229,6 +235,12 @@ func resourceAutoNatRules() *schema.Resource {
 								}
 								errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 								return
+							},
+							StateFunc: func(val interface{}) string {
+								return strings.ToUpper(val.(string))
+							},
+							DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+								return strings.EqualFold(old, new)
 							},
 						},
 					},
@@ -418,7 +430,8 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	if err := d.Set("description", item.Description); err != nil {
+	// See https://gitlab-sjc.cisco.com/tfprovider/fmc-terraform/issues/33 , API does not return this field.
+	if err := d.Set("description", d.Get("description")); err != nil {
 		return returnWithDiag(diags, err)
 	}
 
@@ -426,27 +439,37 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	if err := d.Set("source_interface", convertTo1ListMapStringGeneric(item.Sourceinterface)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Sourceinterface != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("source_interface", convertTo1ListMapStringGeneric(item.Sourceinterface)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("destination_interface", convertTo1ListMapStringGeneric(item.Destinationinterface)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Destinationinterface != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("destination_interface", convertTo1ListMapStringGeneric(item.Destinationinterface)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("original_network", convertTo1ListMapStringGeneric(item.Originalnetwork)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Originalnetwork != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("original_network", convertTo1ListMapStringGeneric(item.Originalnetwork)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("translated_network", convertTo1ListMapStringGeneric(item.Translatednetwork)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Translatednetwork != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("translated_network", convertTo1ListMapStringGeneric(item.Translatednetwork)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 	if err := d.Set("translated_network_is_destination_interface", item.Interfaceintranslatednetwork); err != nil {
 		return returnWithDiag(diags, err)
 	}
 
-	original_port := make(map[string]interface{})
-	original_port["port"] = item.Originalport
-	original_port["protocol"] = item.Serviceprotocol
-	if err := d.Set("original_port", convertTo1ListGeneric(original_port)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Originalport != 0 && item.Serviceprotocol != "" {
+		original_port := make(map[string]interface{})
+		original_port["port"] = item.Originalport
+		original_port["protocol"] = item.Serviceprotocol
+		if err := d.Set("original_port", convertTo1ListGeneric(original_port)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 
 	if err := d.Set("translated_port", item.Translatedport); err != nil {
@@ -469,14 +492,16 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	pat_options := make(map[string]interface{})
-	pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
-	pat_options["interface_pat"] = item.Patoptions.Interfacepat
-	pat_options["include_reserve_ports"] = item.Patoptions.Interfacepat
-	pat_options["extended_pat_table"] = item.Patoptions.Interfacepat
-	pat_options["round_robin"] = item.Patoptions.Interfacepat
-	if err := d.Set("pat_options", convertTo1ListGeneric(pat_options)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Patoptions != (AutoNatRulePatOptions{}) {
+		pat_options := make(map[string]interface{})
+		pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
+		pat_options["interface_pat"] = item.Patoptions.Interfacepat
+		pat_options["include_reserve_ports"] = item.Patoptions.Interfacepat
+		pat_options["extended_pat_table"] = item.Patoptions.Extendedpat
+		pat_options["round_robin"] = item.Patoptions.Roundrobin
+		if err := d.Set("pat_options", convertTo1ListGeneric(pat_options)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 
 	return diags

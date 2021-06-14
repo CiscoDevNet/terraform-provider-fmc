@@ -165,6 +165,9 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 				Description: `Section for this resource, "mandatory" or "default"`,
 			},
 			"insert_before": {
@@ -222,6 +225,9 @@ func resourceAccessRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 				Description: `Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"`,
 			},
 			"syslog_severity": {
@@ -240,6 +246,9 @@ func resourceAccessRules() *schema.Resource {
 					}
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
 				},
 				Description: `Syslog severity for this resource, "ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE" or "WARNING"`,
 			},
