@@ -439,27 +439,37 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	if err := d.Set("source_interface", convertTo1ListMapStringGeneric(item.Sourceinterface)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Sourceinterface != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("source_interface", convertTo1ListMapStringGeneric(item.Sourceinterface)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("destination_interface", convertTo1ListMapStringGeneric(item.Destinationinterface)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Destinationinterface != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("destination_interface", convertTo1ListMapStringGeneric(item.Destinationinterface)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("original_network", convertTo1ListMapStringGeneric(item.Originalnetwork)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Originalnetwork != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("original_network", convertTo1ListMapStringGeneric(item.Originalnetwork)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
-	if err := d.Set("translated_network", convertTo1ListMapStringGeneric(item.Translatednetwork)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Translatednetwork != (AutoNatRuleSubConfig{}) {
+		if err := d.Set("translated_network", convertTo1ListMapStringGeneric(item.Translatednetwork)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 	if err := d.Set("translated_network_is_destination_interface", item.Interfaceintranslatednetwork); err != nil {
 		return returnWithDiag(diags, err)
 	}
 
-	original_port := make(map[string]interface{})
-	original_port["port"] = item.Originalport
-	original_port["protocol"] = item.Serviceprotocol
-	if err := d.Set("original_port", convertTo1ListGeneric(original_port)); err != nil {
-		return returnWithDiag(diags, err)
+	if item.Originalport != 0 && item.Serviceprotocol != "" {
+		original_port := make(map[string]interface{})
+		original_port["port"] = item.Originalport
+		original_port["protocol"] = item.Serviceprotocol
+		if err := d.Set("original_port", convertTo1ListGeneric(original_port)); err != nil {
+			return returnWithDiag(diags, err)
+		}
 	}
 
 	if err := d.Set("translated_port", item.Translatedport); err != nil {
