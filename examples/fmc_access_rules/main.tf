@@ -116,7 +116,7 @@ resource "fmc_access_rules" "access_rule_1" {
 resource "fmc_access_rules" "access_rule_2" {
     acp = fmc_access_policies.access_policy.id
     section = "mandatory"
-    insert_before = 2 # Wont work as assumed since terraform does not 
+    insert_before = 1 # Wont work as assumed since terraform does not 
     name = "Test rule 2"
     action = "allow"
     enabled = true
@@ -176,7 +176,7 @@ resource "fmc_access_rules" "access_rule_2" {
 resource "fmc_access_rules" "access_rule_3" {
     acp = fmc_access_policies.access_policy.id
     section = "mandatory"
-    # insert_before = 1 # Wont work as assumed since terraform does not 
+    insert_before = 2 # Wont work as assumed since terraform does not 
     name = "Test rule 3"
     action = "allow"
     enabled = true
