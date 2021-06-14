@@ -127,6 +127,9 @@ func resourceManualNatRules() *schema.Resource {
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
 				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
+				},
 				Description: `Section, "after_auto" or "before_auto"`,
 			},
 			"target_index": {
@@ -172,6 +175,12 @@ func resourceManualNatRules() *schema.Resource {
 					}
 					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
 					return
+				},
+				StateFunc: func(val interface{}) string {
+					return strings.ToUpper(val.(string))
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					return strings.EqualFold(old, new)
 				},
 				Description: `The type of this resource, "static" or "dynamic"`,
 			},
@@ -575,8 +584,10 @@ func resourceManualNatRulesRead(ctx context.Context, d *schema.ResourceData, m i
 	dynamicObjectNames := []string{"source_interface", "destination_interface", "original_destination", "original_destination_port", "original_source", "original_source_port", "translated_destination", "translated_destination_port", "translated_source", "translated_source_port"}
 
 	for i, objs := range dynamicObjects {
-		if err := d.Set(dynamicObjectNames[i], convertTo1ListMapStringGeneric(objs)); err != nil {
-			return returnWithDiag(diags, err)
+		if *objs != (ManualNatRuleSubConfig{}) {
+			if err := d.Set(dynamicObjectNames[i], convertTo1ListMapStringGeneric(objs)); err != nil {
+				return returnWithDiag(diags, err)
+			}
 		}
 	}
 
