@@ -418,7 +418,8 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 		return returnWithDiag(diags, err)
 	}
 
-	if err := d.Set("description", item.Description); err != nil {
+	// See https://gitlab-sjc.cisco.com/tfprovider/fmc-terraform/issues/33 , API does not return this field.
+	if err := d.Set("description", d.Get("description")); err != nil {
 		return returnWithDiag(diags, err)
 	}
 
