@@ -17,8 +17,6 @@ func resourcePolicyDevicesAssignments() *schema.Resource {
 			"An example is shown below: \n" +
 			"```hcl\n" +
 			"resource \"fmc_policy_devices_assignments\" \"policy_assignment\" {\n" +
-			"    name = \"Terraform Test - FTD\"\n" +
-			"    description = \"Testing\"\n" +
 			"    policy {\n" +
 			"        id = fmc_access_policies.access_policy.id\n" +
 			"        type = fmc_access_policies.access_policy.type\n" +
