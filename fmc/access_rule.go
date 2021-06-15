@@ -36,53 +36,31 @@ type AccessRuleDefaultAction struct {
 }
 
 type AccessRule struct {
+	ID                  string               `json:"id,omitempty"`
 	Name                string               `json:"name"`
 	Type                string               `json:"type"`
 	Action              string               `json:"action"`
-	Syslogseverity      string               `json:"syslogSeverity"`
+	Syslogseverity      string               `json:"syslogSeverity,omitempty"`
 	Enablesyslog        bool                 `json:"enableSyslog"`
 	Enabled             bool                 `json:"enabled"`
 	Sendeventstofmc     bool                 `json:"sendEventsToFMC"`
 	Logfiles            bool                 `json:"logFiles"`
 	Logbegin            bool                 `json:"logBegin"`
 	Logend              bool                 `json:"logEnd"`
-	Sourcezones         AccessRuleSubConfigs `json:"sourceZones"`
-	Destinationzones    AccessRuleSubConfigs `json:"destinationZones"`
-	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks"`
-	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks"`
-	Sourceports         AccessRuleSubConfigs `json:"sourcePorts"`
-	Destinationports    AccessRuleSubConfigs `json:"destinationPorts"`
-	Urls                AccessRuleSubConfigs `json:"urls"`
-	Ipspolicy           AccessRuleSubConfig  `json:"ipsPolicy"`
-	Filepolicy          AccessRuleSubConfig  `json:"filePolicy"`
-	Syslogconfig        AccessRuleSubConfig  `json:"syslogConfig"`
-	Newcomments         []string             `json:"newComments"`
+	Sourcezones         AccessRuleSubConfigs `json:"sourceZones,omitempty"`
+	Destinationzones    AccessRuleSubConfigs `json:"destinationZones,omitempty"`
+	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks,omitempty"`
+	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
+	Sourceports         AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
+	Destinationports    AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
+	Urls                AccessRuleSubConfigs `json:"urls,omitempty"`
+	Ipspolicy           *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
+	Filepolicy          *AccessRuleSubConfig `json:"filePolicy,omitempty"`
+	Syslogconfig        *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
+	Newcomments         []string             `json:"newComments,omitempty"`
 }
 
-type AccessRuleUpdate struct {
-	ID                  string               `json:"id"`
-	Name                string               `json:"name"`
-	Type                string               `json:"type"`
-	Action              string               `json:"action"`
-	Syslogseverity      string               `json:"syslogSeverity"`
-	Enablesyslog        bool                 `json:"enableSyslog"`
-	Enabled             bool                 `json:"enabled"`
-	Sendeventstofmc     bool                 `json:"sendEventsToFMC"`
-	Logfiles            bool                 `json:"logFiles"`
-	Logbegin            bool                 `json:"logBegin"`
-	Logend              bool                 `json:"logEnd"`
-	Sourcezones         AccessRuleSubConfigs `json:"sourceZones"`
-	Destinationzones    AccessRuleSubConfigs `json:"destinationZones"`
-	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks"`
-	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks"`
-	Sourceports         AccessRuleSubConfigs `json:"sourcePorts"`
-	Destinationports    AccessRuleSubConfigs `json:"destinationPorts"`
-	Urls                AccessRuleSubConfigs `json:"urls"`
-	Ipspolicy           AccessRuleSubConfig  `json:"ipsPolicy"`
-	Filepolicy          AccessRuleSubConfig  `json:"filePolicy"`
-	Syslogconfig        AccessRuleSubConfig  `json:"syslogConfig"`
-	Newcomments         []string             `json:"newComments"`
-}
+type AccessRuleUpdate AccessRule
 
 type AccessRuleResponseObject struct {
 	Name        string `json:"name"`
@@ -188,7 +166,7 @@ func (v *Client) CreateAccessRule(ctx context.Context, acpId, section, insertBef
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
-		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
+		return nil, fmt.Errorf("creating access rules: %s - %s, %s", url, err.Error(), body)
 	}
 	return item, nil
 }

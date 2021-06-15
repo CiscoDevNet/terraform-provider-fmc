@@ -254,7 +254,7 @@ func resourceAccessRules() *schema.Resource {
 			},
 			"enable_syslog": {
 				Type:        schema.TypeBool,
-				Required:    true,
+				Optional:    true,
 				Description: "Enable syslog for this resource",
 			},
 			"enabled": {
@@ -527,6 +527,19 @@ func resourceAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m in
 			}
 		}
 	}
+
+	var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
+	dynamicSimpleObjects := []*AccessRuleSubConfig{
+		ipsPolicy, filePolicy, syslogConfig,
+	}
+	for i, objType := range []string{"ips_policy", "file_policy", "syslog_config"} {
+		if inputEntry, ok := d.GetOk(objType); ok {
+			dynamicSimpleObjects[i] = &AccessRuleSubConfig{
+				ID: inputEntry.(string),
+			}
+		}
+	}
+
 	comments := []string{}
 	for _, comment := range d.Get("new_comments").([]interface{}) {
 		comments = append(comments, comment.(string))
@@ -570,16 +583,10 @@ func resourceAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m in
 		Urls: AccessRuleSubConfigs{
 			Objects: urls,
 		},
-		Ipspolicy: AccessRuleSubConfig{
-			ID: d.Get("ips_policy").(string),
-		},
-		Filepolicy: AccessRuleSubConfig{
-			ID: d.Get("file_policy").(string),
-		},
-		Syslogconfig: AccessRuleSubConfig{
-			ID: d.Get("syslog_config").(string),
-		},
-		Newcomments: comments,
+		Ipspolicy:    ipsPolicy,
+		Filepolicy:   filePolicy,
+		Syslogconfig: syslogConfig,
+		Newcomments:  comments,
 	})
 	if err != nil {
 		return returnWithDiag(diags, err)
@@ -687,6 +694,19 @@ func resourceAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m in
 				}
 			}
 		}
+
+		var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
+		dynamicSimpleObjects := []*AccessRuleSubConfig{
+			ipsPolicy, filePolicy, syslogConfig,
+		}
+		for i, objType := range []string{"ips_policy", "file_policy", "syslog_config"} {
+			if inputEntry, ok := d.GetOk(objType); ok {
+				dynamicSimpleObjects[i] = &AccessRuleSubConfig{
+					ID: inputEntry.(string),
+				}
+			}
+		}
+
 		comments := []string{}
 		for _, comment := range d.Get("new_comments").([]interface{}) {
 			comments = append(comments, comment.(string))
@@ -724,16 +744,10 @@ func resourceAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m in
 			Urls: AccessRuleSubConfigs{
 				Objects: urls,
 			},
-			Ipspolicy: AccessRuleSubConfig{
-				ID: d.Get("ips_policy").(string),
-			},
-			Filepolicy: AccessRuleSubConfig{
-				ID: d.Get("file_policy").(string),
-			},
-			Syslogconfig: AccessRuleSubConfig{
-				ID: d.Get("syslog_config").(string),
-			},
-			Newcomments: comments,
+			Ipspolicy:    ipsPolicy,
+			Filepolicy:   filePolicy,
+			Syslogconfig: syslogConfig,
+			Newcomments:  comments,
 		})
 		if err != nil {
 			return returnWithDiag(diags, err)
