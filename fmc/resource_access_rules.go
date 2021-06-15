@@ -28,7 +28,7 @@ func resourceAccessRules() *schema.Resource {
 			"    enable_syslog = true\n" +
 			"    syslog_severity = \"alert\"\n" +
 			"    send_events_to_fmc = true\n" +
-			"    log_files = true\n" +
+			"    log_files = false\n" +
 			"    log_end = true\n" +
 			"    source_zones {\n" +
 			"        source_zone {\n" +
@@ -78,14 +78,14 @@ func resourceAccessRules() *schema.Resource {
 			"resource \"fmc_access_rules\" \"access_rule_2\" {\n" +
 			"    acp = fmc_access_policies.access_policy.id\n" +
 			"    section = \"mandatory\"\n" +
-			"    insert_before = 2 # Wont work as assumed since terraform does not \n" +
+			"    insert_before = 1 # Wont work as assumed since terraform does not \n" +
 			"    name = \"Test rule 2\"\n" +
 			"    action = \"allow\"\n" +
 			"    enabled = true\n" +
 			"    enable_syslog = true\n" +
 			"    syslog_severity = \"alert\"\n" +
 			"    send_events_to_fmc = true\n" +
-			"    log_files = true\n" +
+			"    log_files = false\n" +
 			"    log_end = true\n" +
 			"    source_zones {\n" +
 			"        source_zone {\n" +
@@ -270,7 +270,7 @@ func resourceAccessRules() *schema.Resource {
 			"log_files": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Description: "Enable logging to files for this resource",
+				Description: "Enable logging files for this resource",
 			},
 			"log_begin": {
 				Type:        schema.TypeBool,
