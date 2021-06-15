@@ -36,8 +36,6 @@ resource "fmc_access_policies" "access_policy" {
 }
 
 resource "fmc_policy_devices_assignments" "policy_assignment" {
-    name = "Terraform Test - FTD"
-    description = "Testing"
     policy {
         id = fmc_access_policies.access_policy.id
         type = fmc_access_policies.access_policy.type

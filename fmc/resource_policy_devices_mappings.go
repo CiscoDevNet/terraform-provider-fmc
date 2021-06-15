@@ -37,12 +37,12 @@ func resourcePolicyDevicesAssignments() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "The name of this resource",
 			},
 			"description": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "The description of this resource",
 			},
 			"policy": {
@@ -175,7 +175,7 @@ func resourcePolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Resourc
 		return diags
 	}
 
-	policy := make([]interface{}, 1)
+	policy := make([]interface{}, 0)
 	policyObj := make(map[string]interface{})
 	policyObj["id"] = item.Policy.ID
 	policyObj["type"] = item.Policy.Type
@@ -190,7 +190,7 @@ func resourcePolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Resourc
 		return diags
 	}
 
-	devices := make([]interface{}, len(item.Targets))
+	devices := make([]interface{}, 0)
 	for _, obj := range item.Targets {
 		device := make(map[string]interface{})
 		device["id"] = obj.ID
