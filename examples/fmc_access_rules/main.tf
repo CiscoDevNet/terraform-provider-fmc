@@ -66,7 +66,7 @@ resource "fmc_access_rules" "access_rule_1" {
     enable_syslog = true
     syslog_severity = "alert"
     send_events_to_fmc = true
-    log_files = true
+    log_files = false
     log_end = true
     source_zones {
         source_zone {
@@ -123,7 +123,7 @@ resource "fmc_access_rules" "access_rule_2" {
     enable_syslog = true
     syslog_severity = "alert"
     send_events_to_fmc = true
-    log_files = true
+    log_files = false
     log_end = true
     source_zones {
         source_zone {
@@ -183,7 +183,7 @@ resource "fmc_access_rules" "access_rule_3" {
     enable_syslog = true
     syslog_severity = "alert"
     send_events_to_fmc = true
-    log_files = true
+    log_files = false
     log_end = true
     source_zones {
         source_zone {
