@@ -7,10 +7,20 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/juju/ratelimit"
 )
+
+// Mutex lock to disable parallelism on create/update/delete APIs
+var nonReadMutex = &sync.Mutex{}
+
+// Unlimiting GET requests did not seem to help with time, rather worsened the situation. So, back to only 1 for all requests.
+var callSemaphore = make(semaphore, 1)
+
+// Rate Limit at 100 requests per minute using token bucket that fills at a minute's interval.
+var rateLimiterBucket = ratelimit.NewBucketWithQuantum(time.Minute, 100, 100)
 
 type Client struct {
 	user              string
@@ -18,9 +28,11 @@ type Client struct {
 	host              string
 	domainBaseURL     string
 	accessToken       string
-	DomainUUID        string
-	Client            *http.Client
-	RatelimiterBucket *ratelimit.Bucket
+	domainUUID        string
+	client            *http.Client
+	ratelimiterBucket *ratelimit.Bucket
+	nonReadMutex      *sync.Mutex
+	callSemaphore     semaphore
 }
 
 type ErrorResponse struct {
@@ -38,13 +50,14 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 		user:     user,
 		password: password,
 		host:     host,
-		Client: &http.Client{Transport: &http.Transport{
+		client: &http.Client{Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: insecureSkipVerify,
 			},
 		}},
-		// Rate Limit at 120 requests per minute using token bucket that fills at a minute's interval.
-		RatelimiterBucket: ratelimit.NewBucketWithQuantum(time.Minute, 120, 120),
+		ratelimiterBucket: rateLimiterBucket,
+		nonReadMutex:      nonReadMutex,
+		callSemaphore:     callSemaphore,
 	}
 }
 
@@ -57,10 +70,11 @@ func (v *Client) Login() error {
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBasicAuth(v.user, v.password)
 
-	res, err := v.Client.Do(req)
+	res, err := v.client.Do(req)
 	if err != nil {
 		return (err)
 	}
+
 	defer res.Body.Close()
 	if res.StatusCode == 401 {
 		return fmt.Errorf("wrong username or password %d %v", res.StatusCode, req.URL)
@@ -69,8 +83,8 @@ func (v *Client) Login() error {
 	}
 
 	v.accessToken = res.Header.Get("X-Auth-Access-Token")
-	v.DomainUUID = res.Header.Get("DOMAIN_UUID")
-	v.domainBaseURL = fmt.Sprintf("https://%s/api/fmc_config/v1/domain/%s", v.host, v.DomainUUID)
+	v.domainUUID = res.Header.Get("DOMAIN_UUID")
+	v.domainBaseURL = fmt.Sprintf("https://%s/api/fmc_config/v1/domain/%s", v.host, v.domainUUID)
 	return nil
 }
 
@@ -78,13 +92,25 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
 	req.Header.Set("X-Auth-Access-Token", v.accessToken)
 
-	v.RatelimiterBucket.Wait(1) // This is a blocking call. Honors the rate limit by taking 1 token for this request.
+	v.ratelimiterBucket.Wait(1) // This is a blocking call. Honors the rate limit by taking 1 token for this request.
 
-	r, err := v.Client.Do(req)
+	var r *http.Response
+	var err error
+
+	v.callSemaphore.Lock()
+	if req.Method == "GET" {
+		r, err = v.client.Do(req)
+	} else {
+		v.nonReadMutex.Lock()
+		r, err = v.client.Do(req)
+		v.nonReadMutex.Unlock()
+	}
+	v.callSemaphore.Unlock()
 
 	if err != nil {
 		return err
 	}
+
 	if status == 0 {
 		status = http.StatusOK
 	}
@@ -95,6 +121,11 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 		return v.DoRequest(req, item, status)
 	}
 
+	// Handle 429 by sending it again, will go through the same token rate limiter
+	if r.StatusCode == http.StatusTooManyRequests {
+		return v.DoRequest(req, item, status)
+	}
+
 	if r.StatusCode != status {
 		defer r.Body.Close()
 
@@ -102,14 +133,13 @@ func (v *Client) DoRequest(req *http.Request, item interface{}, status int) erro
 		err = json.NewDecoder(r.Body).Decode(&errorRes)
 		if err != nil {
 			if body, err := ioutil.ReadAll(r.Body); err != nil {
-				return fmt.Errorf("wrong status code: %d, could not read error body as error json and string", r.StatusCode)
+				return fmt.Errorf("wrong status code: %d, could not read error body as error json and string, headers: %+v", r.StatusCode, r.Header)
 			} else {
-				return fmt.Errorf("wrong status code: %d, could not read error body as error json, error body: %s", r.StatusCode, body)
+				return fmt.Errorf("wrong status code: %d, could not read error body as error json, body: %s, headers: %+v", r.StatusCode, body, r.Header)
 			}
 		}
 		return fmt.Errorf("wrong status code: %d, error category: %s, error severity: %s, error messages: %v", r.StatusCode, errorRes.Error.Category, errorRes.Error.Severity, errorRes.Error.Messages)
 	}
-	//TODO: Handle 429 if any
 	log.Printf("Status code: %d", r.StatusCode)
 
 	if item != nil {
