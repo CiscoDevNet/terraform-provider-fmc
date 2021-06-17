@@ -192,7 +192,7 @@ func resourceFmcNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceD
 		return diags
 	}
 
-	objects := make([]interface{}, len(item.Objects))
+	objects := make([]interface{}, 0, len(item.Objects))
 	for _, obj := range item.Objects {
 		obji := make(map[string]interface{})
 		obji["id"] = obj.ID
@@ -210,7 +210,7 @@ func resourceFmcNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceD
 		return diags
 	}
 
-	literals := make([]interface{}, len(item.Literals))
+	literals := make([]interface{}, 0, len(item.Literals))
 	for _, lit := range item.Literals {
 		liti := make(map[string]interface{})
 		liti["value"] = lit.Value

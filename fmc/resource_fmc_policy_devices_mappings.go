@@ -173,7 +173,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 		return diags
 	}
 
-	policy := make([]interface{}, 0)
+	policy := make([]interface{}, 0, 1)
 	policyObj := make(map[string]interface{})
 	policyObj["id"] = item.Policy.ID
 	policyObj["type"] = item.Policy.Type
@@ -188,7 +188,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 		return diags
 	}
 
-	devices := make([]interface{}, 0)
+	devices := make([]interface{}, 0, len(item.Targets))
 	for _, obj := range item.Targets {
 		device := make(map[string]interface{})
 		device["id"] = obj.ID
