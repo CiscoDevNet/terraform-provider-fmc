@@ -191,7 +191,7 @@ func resourceFmcURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, 
 		return diags
 	}
 
-	objects := make([]interface{}, len(item.Objects))
+	objects := make([]interface{}, 0, len(item.Objects))
 	for _, obj := range item.Objects {
 		obji := make(map[string]interface{})
 		obji["id"] = obj.ID
@@ -209,7 +209,7 @@ func resourceFmcURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, 
 		return diags
 	}
 
-	literals := make([]interface{}, len(item.Literals))
+	literals := make([]interface{}, 0, len(item.Literals))
 	for _, lit := range item.Literals {
 		liti := make(map[string]interface{})
 		liti["url"] = lit.URL

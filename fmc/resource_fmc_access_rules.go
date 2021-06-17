@@ -652,8 +652,8 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 
 	for i, objs := range dynamicObjects {
 		mainResponse := make([]map[string]interface{}, 0)
-		subResponse := make(map[string]interface{})
-		response := make([]map[string]interface{}, 0)
+		subResponse := make(map[string]interface{}, len(*objs))
+		response := make([]map[string]interface{}, 0, len(*objs))
 		for _, obj := range *objs {
 			responseObj := make(map[string]interface{})
 			responseObj["id"] = obj.ID

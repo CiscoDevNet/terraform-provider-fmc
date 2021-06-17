@@ -157,7 +157,7 @@ func resourceFmcPortGroupObjectsRead(ctx context.Context, d *schema.ResourceData
 		return diags
 	}
 
-	objects := make([]interface{}, len(item.Objects))
+	objects := make([]interface{}, 0, len(item.Objects))
 	for _, obj := range item.Objects {
 		obji := make(map[string]interface{})
 		obji["id"] = obj.ID
