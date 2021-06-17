@@ -27,7 +27,7 @@ type DeployableDeviceResponse struct {
 	} `json:"device"`
 }
 
-func (v *Client) GetDeployableDevice(ctx context.Context, device_id string) (*DeployableDeviceResponse, error) {
+func (v *Client) GetFmcDeployableDevice(ctx context.Context, device_id string) (*DeployableDeviceResponse, error) {
 	url := fmt.Sprintf("%s/deployment/deployabledevices?expanded=true", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

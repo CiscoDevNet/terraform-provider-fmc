@@ -57,7 +57,7 @@ func resourceURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m int
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateURLObject(ctx, &URLObject{
+	res, err := c.CreateFmcURLObject(ctx, &URLObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Url:         d.Get("url").(string),
@@ -82,7 +82,7 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetURLObject(ctx, id)
+	item, err := c.GetFmcURLObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -135,7 +135,7 @@ func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m int
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "url") {
-		_, err := c.UpdateURLObject(ctx, id, &URLObjectUpdateInput{
+		_, err := c.UpdateFmcURLObject(ctx, id, &URLObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Url:         d.Get("url").(string),
@@ -162,7 +162,7 @@ func resourceURLObjectsDelete(ctx context.Context, d *schema.ResourceData, m int
 
 	id := d.Id()
 
-	err := c.DeleteURLObject(ctx, id)
+	err := c.DeleteFmcURLObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

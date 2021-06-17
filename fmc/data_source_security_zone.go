@@ -42,7 +42,7 @@ func dataSourceSecurityZonesRead(ctx context.Context, d *schema.ResourceData, m 
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	securityZone, err := c.GetSecurityZoneByName(ctx, d.Get("name").(string))
+	securityZone, err := c.GetFmcSecurityZoneByName(ctx, d.Get("name").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

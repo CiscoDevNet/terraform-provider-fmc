@@ -32,7 +32,7 @@ type FilePolicy struct {
 	Name string
 }
 
-func (v *Client) GetFilePolicyByName(ctx context.Context, name string) (*FilePolicy, error) {
+func (v *Client) GetFmcFilePolicyByName(ctx context.Context, name string) (*FilePolicy, error) {
 	url := fmt.Sprintf("%s/policy/filepolicies", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

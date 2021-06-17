@@ -57,7 +57,7 @@ func resourceHostObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateHostObject(ctx, &HostObject{
+	res, err := c.CreateFmcHostObject(ctx, &HostObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Value:       d.Get("value").(string),
@@ -82,7 +82,7 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetHostObject(ctx, id)
+	item, err := c.GetFmcHostObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -133,7 +133,7 @@ func resourceHostObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdateHostObject(ctx, id, &HostObjectUpdateInput{
+		_, err := c.UpdateFmcHostObject(ctx, id, &HostObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Value:       d.Get("value").(string),
@@ -160,7 +160,7 @@ func resourceHostObjectsDelete(ctx context.Context, d *schema.ResourceData, m in
 
 	id := d.Id()
 
-	err := c.DeleteHostObject(ctx, id)
+	err := c.DeleteFmcHostObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

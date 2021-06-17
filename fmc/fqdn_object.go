@@ -57,7 +57,7 @@ type FQDNObjectResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/object/fqdns?bulk=true ( Bulk POST operation on fqdn objects. )
 
-func (v *Client) CreateFQDNObject(ctx context.Context, object *FQDNObject) (*FQDNObjectResponse, error) {
+func (v *Client) CreateFmcFQDNObject(ctx context.Context, object *FQDNObject) (*FQDNObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/fqdns", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -75,7 +75,7 @@ func (v *Client) CreateFQDNObject(ctx context.Context, object *FQDNObject) (*FQD
 	return item, nil
 }
 
-func (v *Client) GetFQDNObject(ctx context.Context, id string) (*FQDNObjectResponse, error) {
+func (v *Client) GetFmcFQDNObject(ctx context.Context, id string) (*FQDNObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/fqdns/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -89,7 +89,7 @@ func (v *Client) GetFQDNObject(ctx context.Context, id string) (*FQDNObjectRespo
 	return item, nil
 }
 
-func (v *Client) UpdateFQDNObject(ctx context.Context, id string, object *FQDNObjectUpdateInput) (*FQDNObjectResponse, error) {
+func (v *Client) UpdateFmcFQDNObject(ctx context.Context, id string, object *FQDNObjectUpdateInput) (*FQDNObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/fqdns/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -107,7 +107,7 @@ func (v *Client) UpdateFQDNObject(ctx context.Context, id string, object *FQDNOb
 	return item, nil
 }
 
-func (v *Client) DeleteFQDNObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcFQDNObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/fqdns/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

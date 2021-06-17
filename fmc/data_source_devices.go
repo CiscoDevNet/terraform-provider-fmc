@@ -42,7 +42,7 @@ func dataSourceDevicesRead(ctx context.Context, d *schema.ResourceData, m interf
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	device, err := c.GetDeviceByName(ctx, d.Get("name").(string))
+	device, err := c.GetFmcDeviceByName(ctx, d.Get("name").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

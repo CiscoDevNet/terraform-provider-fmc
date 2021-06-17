@@ -70,7 +70,7 @@ type AutoNatRuleResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/policy/ftdnatpolicies/{containerUUID}/autonatrules?bulk=true ( Bulk POST operation on auto nat rules. )
 
-func (v *Client) CreateAutoNatRule(ctx context.Context, natId string, autoNatRule *AutoNatRule) (*AutoNatRuleResponse, error) {
+func (v *Client) CreateFmcAutoNatRule(ctx context.Context, natId string, autoNatRule *AutoNatRule) (*AutoNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/autonatrules", v.domainBaseURL, natId)
 	body, err := json.Marshal(&autoNatRule)
 	if err != nil {
@@ -88,7 +88,7 @@ func (v *Client) CreateAutoNatRule(ctx context.Context, natId string, autoNatRul
 	return item, nil
 }
 
-func (v *Client) GetAutoNatRule(ctx context.Context, natId string, id string) (*AutoNatRuleResponse, error) {
+func (v *Client) GetFmcAutoNatRule(ctx context.Context, natId string, id string) (*AutoNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/autonatrules/%s", v.domainBaseURL, natId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -102,7 +102,7 @@ func (v *Client) GetAutoNatRule(ctx context.Context, natId string, id string) (*
 	return item, nil
 }
 
-func (v *Client) UpdateAutoNatRule(ctx context.Context, natId, id string, autoNatRule *AutoNatRule) (*AutoNatRuleResponse, error) {
+func (v *Client) UpdateFmcAutoNatRule(ctx context.Context, natId, id string, autoNatRule *AutoNatRule) (*AutoNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/autonatrules/%s", v.domainBaseURL, natId, id)
 	body, err := json.Marshal(&autoNatRule)
 	if err != nil {
@@ -120,7 +120,7 @@ func (v *Client) UpdateAutoNatRule(ctx context.Context, natId, id string, autoNa
 	return item, nil
 }
 
-func (v *Client) DeleteAutoNatRule(ctx context.Context, natId string, id string) error {
+func (v *Client) DeleteFmcAutoNatRule(ctx context.Context, natId string, id string) error {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/autonatrules/%s", v.domainBaseURL, natId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

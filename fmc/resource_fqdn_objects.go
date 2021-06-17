@@ -58,7 +58,7 @@ func resourceFQDNObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateFQDNObject(ctx, &FQDNObject{
+	res, err := c.CreateFmcFQDNObject(ctx, &FQDNObject{
 		Name:          d.Get("name").(string),
 		Description:   d.Get("description").(string),
 		Value:         d.Get("value").(string),
@@ -84,7 +84,7 @@ func resourceFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetFQDNObject(ctx, id)
+	item, err := c.GetFmcFQDNObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -135,7 +135,7 @@ func resourceFQDNObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "value", "dns_resolution") {
-		_, err := c.UpdateFQDNObject(ctx, id, &FQDNObjectUpdateInput{
+		_, err := c.UpdateFmcFQDNObject(ctx, id, &FQDNObjectUpdateInput{
 			Name:          d.Get("name").(string),
 			Description:   d.Get("description").(string),
 			Value:         d.Get("value").(string),
@@ -163,7 +163,7 @@ func resourceFQDNObjectsDelete(ctx context.Context, d *schema.ResourceData, m in
 
 	id := d.Id()
 
-	err := c.DeleteFQDNObject(ctx, id)
+	err := c.DeleteFmcFQDNObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

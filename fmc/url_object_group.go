@@ -8,14 +8,13 @@ import (
 	"net/http"
 )
 
-
 type URLObjectGroupUpdateInput struct {
-	Type        string `json:"type"`
-	Objects      []URLObjectGroupObjects  `json:"objects"`
-	Literals     []URLObjectGroupLiterals `json:"literals"`
-	Description string `json:"description"`
-	Name       string `json:"name"`
-	ID          string `json:"id"`
+	Type        string                   `json:"type"`
+	Objects     []URLObjectGroupObjects  `json:"objects"`
+	Literals    []URLObjectGroupLiterals `json:"literals"`
+	Description string                   `json:"description"`
+	Name        string                   `json:"name"`
+	ID          string                   `json:"id"`
 }
 
 type URLObjectGroupObjects struct {
@@ -25,30 +24,29 @@ type URLObjectGroupObjects struct {
 }
 
 type URLObjectGroupLiterals struct {
-	Type  string `json:"type"`
-	URL string `json:"url"`
+	Type string `json:"type"`
+	URL  string `json:"url"`
 }
 
-
 type URLObjectGroup struct {
-	Type        string `json:"type"`
-	Objects         interface{} `json:"objects"`
-	Literals interface{}   `json:"literals"`
-	Description string `json:"description"`
-	Name       string `json:"name"`
+	Type        string      `json:"type"`
+	Objects     interface{} `json:"objects"`
+	Literals    interface{} `json:"literals"`
+	Description string      `json:"description"`
+	Name        string      `json:"name"`
 }
 
 type URLObjectGroupResponse struct {
 	Links struct {
-		Self   string `json:"self"`
+		Self string `json:"self"`
 	} `json:"links"`
-	Type        string `json:"type"`
+	Type        string                   `json:"type"`
 	Literals    []URLObjectGroupLiterals `json:"literals"`
 	Objects     []URLObjectGroupObjects  `json:"objects"`
-	Overridable bool   `json:"overridable"`
-	Description string `json:"description"`
-	Name        string `json:"name"`
-	ID          string `json:"id"`
+	Overridable bool                     `json:"overridable"`
+	Description string                   `json:"description"`
+	Name        string                   `json:"name"`
+	ID          string                   `json:"id"`
 	Metadata    struct {
 		Timestamp int `json:"timestamp"`
 		LastUser  struct {
@@ -71,7 +69,7 @@ type URLObjectGroupResponse struct {
 // }
 // POST /fmc_config/v1/domain/DomainUUID/object/networks
 
-func (v *Client) CreateURLObjectGroup(ctx context.Context, object *URLObjectGroup) (*URLObjectGroupResponse, error) {
+func (v *Client) CreateFmcURLObjectGroup(ctx context.Context, object *URLObjectGroup) (*URLObjectGroupResponse, error) {
 	url := fmt.Sprintf("%s/object/urlgroups", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -89,7 +87,7 @@ func (v *Client) CreateURLObjectGroup(ctx context.Context, object *URLObjectGrou
 	return item, nil
 }
 
-func (v *Client) GetURLObjectGroup(ctx context.Context, id string) (*URLObjectGroupResponse, error) {
+func (v *Client) GetFmcURLObjectGroup(ctx context.Context, id string) (*URLObjectGroupResponse, error) {
 	url := fmt.Sprintf("%s/object/urlgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -103,7 +101,7 @@ func (v *Client) GetURLObjectGroup(ctx context.Context, id string) (*URLObjectGr
 	return item, nil
 }
 
-func (v *Client) UpdateURLObjectGroup(ctx context.Context, id string, object *URLObjectGroupUpdateInput) (*URLObjectGroupResponse, error) {
+func (v *Client) UpdateFmcURLObjectGroup(ctx context.Context, id string, object *URLObjectGroupUpdateInput) (*URLObjectGroupResponse, error) {
 	url := fmt.Sprintf("%s/object/urlgroups/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -121,7 +119,7 @@ func (v *Client) UpdateURLObjectGroup(ctx context.Context, id string, object *UR
 	return item, nil
 }
 
-func (v *Client) DeleteURLObjectGroup(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcURLObjectGroup(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/urlgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

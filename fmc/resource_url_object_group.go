@@ -129,7 +129,7 @@ func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m
 			})
 		}
 	}
-	res, err := c.CreateURLObjectGroup(ctx, &URLObjectGroup{
+	res, err := c.CreateFmcURLObjectGroup(ctx, &URLObjectGroup{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Type:        url_object_group_type,
@@ -155,7 +155,7 @@ func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetURLObjectGroup(ctx, id)
+	item, err := c.GetFmcURLObjectGroup(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -257,7 +257,7 @@ func resourceURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m
 				})
 			}
 		}
-		_, err := c.UpdateURLObjectGroup(ctx, id, &URLObjectGroupUpdateInput{
+		_, err := c.UpdateFmcURLObjectGroup(ctx, id, &URLObjectGroupUpdateInput{
 			ID:          d.Id(),
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
@@ -286,7 +286,7 @@ func resourceURLObjectGroupDelete(ctx context.Context, d *schema.ResourceData, m
 
 	id := d.Id()
 
-	err := c.DeleteURLObjectGroup(ctx, id)
+	err := c.DeleteFmcURLObjectGroup(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

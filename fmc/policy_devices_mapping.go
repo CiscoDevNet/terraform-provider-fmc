@@ -34,7 +34,7 @@ type PolicyDevicesAssignment struct {
 
 // /fmc_config/v1/domain/DomainUUID/assignment/policyassignments?bulk=true ( Bulk POST operation on device policy assignments. )
 
-func (v *Client) CreatePolicyDevicesAssignment(ctx context.Context, object *PolicyDevicesAssignment) (*PolicyDevicesAssignment, error) {
+func (v *Client) CreateFmcPolicyDevicesAssignment(ctx context.Context, object *PolicyDevicesAssignment) (*PolicyDevicesAssignment, error) {
 	url := fmt.Sprintf("%s/assignment/policyassignments", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -52,7 +52,7 @@ func (v *Client) CreatePolicyDevicesAssignment(ctx context.Context, object *Poli
 	return item, nil
 }
 
-func (v *Client) GetPolicyDevicesAssignment(ctx context.Context, id string) (*PolicyDevicesAssignment, error) {
+func (v *Client) GetFmcPolicyDevicesAssignment(ctx context.Context, id string) (*PolicyDevicesAssignment, error) {
 	url := fmt.Sprintf("%s/assignment/policyassignments/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -66,7 +66,7 @@ func (v *Client) GetPolicyDevicesAssignment(ctx context.Context, id string) (*Po
 	return item, nil
 }
 
-func (v *Client) UpdatePolicyDevicesAssignment(ctx context.Context, id string, object *PolicyDevicesAssignment) (*PolicyDevicesAssignment, error) {
+func (v *Client) UpdateFmcPolicyDevicesAssignment(ctx context.Context, id string, object *PolicyDevicesAssignment) (*PolicyDevicesAssignment, error) {
 	url := fmt.Sprintf("%s/assignment/policyassignments/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {

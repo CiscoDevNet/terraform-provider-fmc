@@ -52,7 +52,7 @@ func resourceRangeObjectsCreate(ctx context.Context, d *schema.ResourceData, m i
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateRangeObject(ctx, &RangeObject{
+	res, err := c.CreateFmcRangeObject(ctx, &RangeObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Value:       d.Get("value").(string),
@@ -77,7 +77,7 @@ func resourceRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m int
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetRangeObject(ctx, id)
+	item, err := c.GetFmcRangeObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -120,7 +120,7 @@ func resourceRangeObjectsUpdate(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdateRangeObject(ctx, id, &RangeObjectUpdateInput{
+		_, err := c.UpdateFmcRangeObject(ctx, id, &RangeObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Value:       d.Get("value").(string),
@@ -147,7 +147,7 @@ func resourceRangeObjectsDelete(ctx context.Context, d *schema.ResourceData, m i
 
 	id := d.Id()
 
-	err := c.DeleteRangeObject(ctx, id)
+	err := c.DeleteFmcRangeObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

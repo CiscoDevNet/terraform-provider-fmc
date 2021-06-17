@@ -551,7 +551,7 @@ func resourceAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m in
 	if entry, ok := d.GetOk("insert_after"); ok {
 		insertAfter = strconv.Itoa(entry.(int))
 	}
-	res, err := c.CreateAccessRule(ctx, d.Get("acp").(string), strings.ToLower(d.Get("section").(string)), insertBefore, insertAfter, &AccessRule{
+	res, err := c.CreateFmcAccessRule(ctx, d.Get("acp").(string), strings.ToLower(d.Get("section").(string)), insertBefore, insertAfter, &AccessRule{
 		Name:            d.Get("name").(string),
 		Type:            access_policies_type,
 		Action:          strings.ToUpper(d.Get("action").(string)),
@@ -601,7 +601,7 @@ func resourceAccessRulesRead(ctx context.Context, d *schema.ResourceData, m inte
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	item, err := c.GetAccessRule(ctx, d.Get("acp").(string), d.Id())
+	item, err := c.GetFmcAccessRule(ctx, d.Get("acp").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}
@@ -711,7 +711,7 @@ func resourceAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m in
 		for _, comment := range d.Get("new_comments").([]interface{}) {
 			comments = append(comments, comment.(string))
 		}
-		res, err := c.UpdateAccessRule(ctx, d.Get("acp").(string), d.Id(), &AccessRuleUpdate{
+		res, err := c.UpdateFmcAccessRule(ctx, d.Get("acp").(string), d.Id(), &AccessRuleUpdate{
 			ID:              d.Id(),
 			Name:            d.Get("name").(string),
 			Type:            access_policies_type,
@@ -763,7 +763,7 @@ func resourceAccessRulesDelete(ctx context.Context, d *schema.ResourceData, m in
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	err := c.DeleteAccessRule(ctx, d.Get("acp").(string), d.Id())
+	err := c.DeleteFmcAccessRule(ctx, d.Get("acp").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}

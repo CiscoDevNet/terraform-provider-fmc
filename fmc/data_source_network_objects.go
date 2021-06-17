@@ -67,11 +67,11 @@ func dataSourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m
 	}
 	switch {
 	case okId:
-		item, err = c.GetNetworkObject(ctx, idInput.(string))
+		item, err = c.GetFmcNetworkObject(ctx, idInput.(string))
 	case okName:
-		item, err = c.GetNetworkObjectByNameOrValue(ctx, nameInput.(string))
+		item, err = c.GetFmcNetworkObjectByNameOrValue(ctx, nameInput.(string))
 	case okValue:
-		item, err = c.GetNetworkObjectByNameOrValue(ctx, valueInput.(string))
+		item, err = c.GetFmcNetworkObjectByNameOrValue(ctx, valueInput.(string))
 	default:
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

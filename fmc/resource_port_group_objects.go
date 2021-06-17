@@ -96,7 +96,7 @@ func resourcePortGroupObjectsCreate(ctx context.Context, d *schema.ResourceData,
 		}
 	}
 
-	res, err := c.CreatePortGroupObject(ctx, &PortGroupObject{
+	res, err := c.CreateFmcPortGroupObject(ctx, &PortGroupObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Type:        port_group_type,
@@ -121,7 +121,7 @@ func resourcePortGroupObjectsRead(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetPortGroupObject(ctx, id)
+	item, err := c.GetFmcPortGroupObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -196,7 +196,7 @@ func resourcePortGroupObjectsUpdate(ctx context.Context, d *schema.ResourceData,
 			}
 		}
 
-		_, err := c.UpdatePortGroupObject(ctx, id, &PortGroupObjectUpdateInput{
+		_, err := c.UpdateFmcPortGroupObject(ctx, id, &PortGroupObjectUpdateInput{
 			ID:          d.Id(),
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
@@ -224,7 +224,7 @@ func resourcePortGroupObjectsDelete(ctx context.Context, d *schema.ResourceData,
 
 	id := d.Id()
 
-	err := c.DeletePortGroupObject(ctx, id)
+	err := c.DeleteFmcPortGroupObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

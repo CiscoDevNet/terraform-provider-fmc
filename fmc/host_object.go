@@ -71,7 +71,7 @@ type HostObjectsResponse struct {
 	} `json:"paging"`
 }
 
-func (v *Client) GetHostObjectByNameOrValue(ctx context.Context, nameOrValue string) (*HostObjectResponse, error) {
+func (v *Client) GetFmcHostObjectByNameOrValue(ctx context.Context, nameOrValue string) (*HostObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/hosts?expanded=true&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -84,11 +84,11 @@ func (v *Client) GetHostObjectByNameOrValue(ctx context.Context, nameOrValue str
 	}
 	switch l := len(resp.Items); {
 	case l == 1:
-		return v.GetHostObject(ctx, resp.Items[0].ID)
+		return v.GetFmcHostObject(ctx, resp.Items[0].ID)
 	case l > 1:
 		for _, item := range resp.Items {
 			if item.Name == nameOrValue || item.Value == nameOrValue {
-				return v.GetHostObject(ctx, item.ID)
+				return v.GetFmcHostObject(ctx, item.ID)
 			}
 		}
 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
@@ -100,7 +100,7 @@ func (v *Client) GetHostObjectByNameOrValue(ctx context.Context, nameOrValue str
 
 // /fmc_config/v1/domain/DomainUUID/object/hosts?bulk=true ( Bulk POST operation on host objects. )
 
-func (v *Client) CreateHostObject(ctx context.Context, object *HostObject) (*HostObjectResponse, error) {
+func (v *Client) CreateFmcHostObject(ctx context.Context, object *HostObject) (*HostObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/hosts", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -118,7 +118,7 @@ func (v *Client) CreateHostObject(ctx context.Context, object *HostObject) (*Hos
 	return item, nil
 }
 
-func (v *Client) GetHostObject(ctx context.Context, id string) (*HostObjectResponse, error) {
+func (v *Client) GetFmcHostObject(ctx context.Context, id string) (*HostObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/hosts/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -132,7 +132,7 @@ func (v *Client) GetHostObject(ctx context.Context, id string) (*HostObjectRespo
 	return item, nil
 }
 
-func (v *Client) UpdateHostObject(ctx context.Context, id string, object *HostObjectUpdateInput) (*HostObjectResponse, error) {
+func (v *Client) UpdateFmcHostObject(ctx context.Context, id string, object *HostObjectUpdateInput) (*HostObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/hosts/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -150,7 +150,7 @@ func (v *Client) UpdateHostObject(ctx context.Context, id string, object *HostOb
 	return item, nil
 }
 
-func (v *Client) DeleteHostObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcHostObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/hosts/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

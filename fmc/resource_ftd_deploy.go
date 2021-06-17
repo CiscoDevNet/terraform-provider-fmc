@@ -49,7 +49,7 @@ func resourceFtdDeployCreate(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	device_id := d.Get("device").(string)
-	device, err := c.GetDeployableDevice(ctx, device_id)
+	device, err := c.GetFmcDeployableDevice(ctx, device_id)
 	if err != nil {
 		d.SetId(fmt.Sprintf("Device not in deployable state! No devices found for deployment with ID: %s", device_id))
 		diags = append(diags, diag.Diagnostic{

@@ -67,7 +67,7 @@ func resourcePortObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreatePortObject(ctx, &PortObject{
+	res, err := c.CreateFmcPortObject(ctx, &PortObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Port:        d.Get("port").(string),
@@ -94,7 +94,7 @@ func resourcePortObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetPortObject(ctx, id)
+	item, err := c.GetFmcPortObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -156,7 +156,7 @@ func resourcePortObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdatePortObject(ctx, id, &PortObjectUpdateInput{
+		_, err := c.UpdateFmcPortObject(ctx, id, &PortObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Port:        d.Get("port").(string),
@@ -185,7 +185,7 @@ func resourcePortObjectsDelete(ctx context.Context, d *schema.ResourceData, m in
 
 	id := d.Id()
 
-	err := c.DeletePortObject(ctx, id)
+	err := c.DeleteFmcPortObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

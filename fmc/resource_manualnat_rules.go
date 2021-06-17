@@ -513,7 +513,7 @@ func resourceManualNatRulesCreate(ctx context.Context, d *schema.ResourceData, m
 			Roundrobin:     pat_options["round_robin"].(bool),
 		}
 	}
-	res, err := c.CreateManualNatRule(ctx, d.Get("nat_policy").(string), strings.ToLower(d.Get("section").(string)), d.Get("target_index").(string), &ManualNatRule{
+	res, err := c.CreateFmcManualNatRule(ctx, d.Get("nat_policy").(string), strings.ToLower(d.Get("section").(string)), d.Get("target_index").(string), &ManualNatRule{
 		Type:                           manualnat_rules_type,
 		Description:                    d.Get("description").(string),
 		Enabled:                        d.Get("enabled").(bool),
@@ -552,7 +552,7 @@ func resourceManualNatRulesRead(ctx context.Context, d *schema.ResourceData, m i
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	item, err := c.GetManualNatRule(ctx, d.Get("nat_policy").(string), d.Id())
+	item, err := c.GetFmcManualNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}
@@ -629,7 +629,7 @@ func resourceManualNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 				Roundrobin:     pat_options["round_robin"].(bool),
 			}
 		}
-		res, err := c.UpdateManualNatRule(ctx, d.Get("nat_policy").(string), d.Id(), &ManualNatRule{
+		res, err := c.UpdateFmcManualNatRule(ctx, d.Get("nat_policy").(string), d.Id(), &ManualNatRule{
 			ID:                             d.Id(),
 			Type:                           manualnat_rules_type,
 			Description:                    d.Get("description").(string),
@@ -670,7 +670,7 @@ func resourceManualNatRulesDelete(ctx context.Context, d *schema.ResourceData, m
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	err := c.DeleteManualNatRule(ctx, d.Get("nat_policy").(string), d.Id())
+	err := c.DeleteFmcManualNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}

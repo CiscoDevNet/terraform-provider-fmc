@@ -51,7 +51,7 @@ type RangeObjectResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/object/ranges?bulk=true ( Bulk POST operation on range objects. )
 
-func (v *Client) CreateRangeObject(ctx context.Context, object *RangeObject) (*RangeObjectResponse, error) {
+func (v *Client) CreateFmcRangeObject(ctx context.Context, object *RangeObject) (*RangeObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/ranges", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -69,7 +69,7 @@ func (v *Client) CreateRangeObject(ctx context.Context, object *RangeObject) (*R
 	return item, nil
 }
 
-func (v *Client) GetRangeObject(ctx context.Context, id string) (*RangeObjectResponse, error) {
+func (v *Client) GetFmcRangeObject(ctx context.Context, id string) (*RangeObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/ranges/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -83,7 +83,7 @@ func (v *Client) GetRangeObject(ctx context.Context, id string) (*RangeObjectRes
 	return item, nil
 }
 
-func (v *Client) UpdateRangeObject(ctx context.Context, id string, object *RangeObjectUpdateInput) (*RangeObjectResponse, error) {
+func (v *Client) UpdateFmcRangeObject(ctx context.Context, id string, object *RangeObjectUpdateInput) (*RangeObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/ranges/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -101,7 +101,7 @@ func (v *Client) UpdateRangeObject(ctx context.Context, id string, object *Range
 	return item, nil
 }
 
-func (v *Client) DeleteRangeObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcRangeObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/ranges/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

@@ -120,7 +120,7 @@ func resourcePolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.Resou
 		}
 	}
 
-	res, err := c.CreatePolicyDevicesAssignment(ctx, &PolicyDevicesAssignment{
+	res, err := c.CreateFmcPolicyDevicesAssignment(ctx, &PolicyDevicesAssignment{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Policy:      policy,
@@ -146,7 +146,7 @@ func resourcePolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Resourc
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetPolicyDevicesAssignment(ctx, id)
+	item, err := c.GetFmcPolicyDevicesAssignment(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -234,7 +234,7 @@ func resourcePolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.Resou
 			}
 		}
 
-		_, err := c.UpdatePolicyDevicesAssignment(ctx, id, &PolicyDevicesAssignment{
+		_, err := c.UpdateFmcPolicyDevicesAssignment(ctx, id, &PolicyDevicesAssignment{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Policy:      policy,

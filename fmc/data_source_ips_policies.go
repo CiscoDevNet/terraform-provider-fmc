@@ -42,7 +42,7 @@ func dataSourceIPSPoliciesRead(ctx context.Context, d *schema.ResourceData, m in
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	ipsPolicy, err := c.GetIPSPolicyByName(ctx, d.Get("name").(string))
+	ipsPolicy, err := c.GetFmcIPSPolicyByName(ctx, d.Get("name").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

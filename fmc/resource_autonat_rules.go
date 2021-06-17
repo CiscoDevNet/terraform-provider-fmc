@@ -388,7 +388,7 @@ func resourceAutoNatRulesCreate(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
-	res, err := c.CreateAutoNatRule(ctx, d.Get("nat_policy").(string), &AutoNatRule{
+	res, err := c.CreateFmcAutoNatRule(ctx, d.Get("nat_policy").(string), &AutoNatRule{
 		Type:                         autonat_rules_type,
 		Description:                  d.Get("description").(string),
 		Nattype:                      strings.ToUpper(d.Get("nat_type").(string)),
@@ -421,7 +421,7 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	item, err := c.GetAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id())
+	item, err := c.GetFmcAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}
@@ -551,7 +551,7 @@ func resourceAutoNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m i
 				Roundrobin:     pat_options["round_robin"].(bool),
 			}
 		}
-		res, err := c.UpdateAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id(), &AutoNatRule{
+		res, err := c.UpdateFmcAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id(), &AutoNatRule{
 			ID:                           d.Id(),
 			Type:                         autonat_rules_type,
 			Description:                  d.Get("description").(string),
@@ -586,7 +586,7 @@ func resourceAutoNatRulesDelete(ctx context.Context, d *schema.ResourceData, m i
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	err := c.DeleteAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id())
+	err := c.DeleteFmcAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}

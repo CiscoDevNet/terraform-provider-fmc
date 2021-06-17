@@ -42,7 +42,7 @@ func dataSourceFilePoliciesRead(ctx context.Context, d *schema.ResourceData, m i
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	filePolicy, err := c.GetFilePolicyByName(ctx, d.Get("name").(string))
+	filePolicy, err := c.GetFmcFilePolicyByName(ctx, d.Get("name").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

@@ -32,7 +32,7 @@ type Device struct {
 	Name string
 }
 
-func (v *Client) GetDeviceByName(ctx context.Context, name string) (*Device, error) {
+func (v *Client) GetFmcDeviceByName(ctx context.Context, name string) (*Device, error) {
 	url := fmt.Sprintf("%s/devices/devicerecords", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

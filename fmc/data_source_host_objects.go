@@ -67,11 +67,11 @@ func dataSourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 	switch {
 	case okId:
-		item, err = c.GetHostObject(ctx, idInput.(string))
+		item, err = c.GetFmcHostObject(ctx, idInput.(string))
 	case okName:
-		item, err = c.GetHostObjectByNameOrValue(ctx, nameInput.(string))
+		item, err = c.GetFmcHostObjectByNameOrValue(ctx, nameInput.(string))
 	case okValue:
-		item, err = c.GetHostObjectByNameOrValue(ctx, valueInput.(string))
+		item, err = c.GetFmcHostObjectByNameOrValue(ctx, valueInput.(string))
 	default:
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

@@ -74,11 +74,11 @@ func dataSourcePortObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	}
 	switch {
 	case okId:
-		item, err = c.GetPortObject(ctx, idInput.(string))
+		item, err = c.GetFmcPortObject(ctx, idInput.(string))
 	case okName:
-		item, err = c.GetPortObjectByNameOrPort(ctx, nameInput.(string))
+		item, err = c.GetFmcPortObjectByNameOrPort(ctx, nameInput.(string))
 	case okPort:
-		item, err = c.GetPortObjectByNameOrPort(ctx, portInput.(string))
+		item, err = c.GetFmcPortObjectByNameOrPort(ctx, portInput.(string))
 	default:
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

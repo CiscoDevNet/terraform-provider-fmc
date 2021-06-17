@@ -132,7 +132,7 @@ type AccessRuleResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/policy/accesspolicies/{containerUUID}/accessrules?bulk=true ( Bulk POST operation on access rules. )
 
-func (v *Client) CreateAccessRule(ctx context.Context, acpId, section, insertBefore, insertAfter string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
+func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insertBefore, insertAfter string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules", v.domainBaseURL, acpId)
 	initialSet := false
 	if section != "" {
@@ -171,7 +171,7 @@ func (v *Client) CreateAccessRule(ctx context.Context, acpId, section, insertBef
 	return item, nil
 }
 
-func (v *Client) GetAccessRule(ctx context.Context, acpId string, id string) (*AccessRuleResponse, error) {
+func (v *Client) GetFmcAccessRule(ctx context.Context, acpId string, id string) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -185,7 +185,7 @@ func (v *Client) GetAccessRule(ctx context.Context, acpId string, id string) (*A
 	return item, nil
 }
 
-func (v *Client) UpdateAccessRule(ctx context.Context, acpId, id string, accessPolicy *AccessRuleUpdate) (*AccessRuleResponse, error) {
+func (v *Client) UpdateFmcAccessRule(ctx context.Context, acpId, id string, accessPolicy *AccessRuleUpdate) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	body, err := json.Marshal(&accessPolicy)
 	if err != nil {
@@ -203,7 +203,7 @@ func (v *Client) UpdateAccessRule(ctx context.Context, acpId, id string, accessP
 	return item, nil
 }
 
-func (v *Client) DeleteAccessRule(ctx context.Context, acpId string, id string) error {
+func (v *Client) DeleteFmcAccessRule(ctx context.Context, acpId string, id string) error {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

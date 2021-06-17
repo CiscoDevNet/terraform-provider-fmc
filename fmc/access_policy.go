@@ -63,7 +63,7 @@ type AccessPoliciesResponse struct {
 	} `json:"items"`
 }
 
-func (v *Client) GetAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
+func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -76,11 +76,11 @@ func (v *Client) GetAccessPolicyByName(ctx context.Context, name string) (*Acces
 	}
 	switch l := len(resp.Items); {
 	case l == 1:
-		return v.GetAccessPolicy(ctx, resp.Items[0].ID)
+		return v.GetFmcAccessPolicy(ctx, resp.Items[0].ID)
 	case l > 1:
 		for _, item := range resp.Items {
 			if item.Name == name {
-				return v.GetAccessPolicy(ctx, item.ID)
+				return v.GetFmcAccessPolicy(ctx, item.ID)
 			}
 		}
 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
@@ -92,7 +92,7 @@ func (v *Client) GetAccessPolicyByName(ctx context.Context, name string) (*Acces
 
 // /fmc_config/v1/domain/DomainUUID/policy/accesspolicies?bulk=true ( Bulk POST operation on access policies. )
 
-func (v *Client) CreateAccessPolicy(ctx context.Context, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {
+func (v *Client) CreateFmcAccessPolicy(ctx context.Context, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies", v.domainBaseURL)
 	body, err := json.Marshal(&accessPolicy)
 	if err != nil {
@@ -110,7 +110,7 @@ func (v *Client) CreateAccessPolicy(ctx context.Context, accessPolicy *AccessPol
 	return item, nil
 }
 
-func (v *Client) GetAccessPolicy(ctx context.Context, id string) (*AccessPolicyResponse, error) {
+func (v *Client) GetFmcAccessPolicy(ctx context.Context, id string) (*AccessPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -124,7 +124,7 @@ func (v *Client) GetAccessPolicy(ctx context.Context, id string) (*AccessPolicyR
 	return item, nil
 }
 
-func (v *Client) UpdateAccessPolicy(ctx context.Context, acp_id string, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {
+func (v *Client) UpdateFmcAccessPolicy(ctx context.Context, acp_id string, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s", v.domainBaseURL, acp_id)
 	body, err := json.Marshal(&accessPolicy)
 	if err != nil {
@@ -142,7 +142,7 @@ func (v *Client) UpdateAccessPolicy(ctx context.Context, acp_id string, accessPo
 	return item, nil
 }
 
-func (v *Client) DeleteAccessPolicy(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcAccessPolicy(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

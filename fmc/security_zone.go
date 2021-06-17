@@ -32,7 +32,7 @@ type SecurityZone struct {
 	Name string
 }
 
-func (v *Client) GetSecurityZoneByName(ctx context.Context, name string) (*SecurityZone, error) {
+func (v *Client) GetFmcSecurityZoneByName(ctx context.Context, name string) (*SecurityZone, error) {
 	url := fmt.Sprintf("%s/object/securityzones", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

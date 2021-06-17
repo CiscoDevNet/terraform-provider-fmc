@@ -130,7 +130,7 @@ func resourceNetworkGroupObjectsCreate(ctx context.Context, d *schema.ResourceDa
 		}
 	}
 
-	res, err := c.CreateNetworkGroupObject(ctx, &NetworkGroupObject{
+	res, err := c.CreateFmcNetworkGroupObject(ctx, &NetworkGroupObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Type:        network_group_type,
@@ -156,7 +156,7 @@ func resourceNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceData
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetNetworkGroupObject(ctx, id)
+	item, err := c.GetFmcNetworkGroupObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -258,7 +258,7 @@ func resourceNetworkGroupObjectsUpdate(ctx context.Context, d *schema.ResourceDa
 				})
 			}
 		}
-		_, err := c.UpdateNetworkGroupObject(ctx, id, &NetworkGroupObjectUpdateInput{
+		_, err := c.UpdateFmcNetworkGroupObject(ctx, id, &NetworkGroupObjectUpdateInput{
 			ID:          d.Id(),
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
@@ -287,7 +287,7 @@ func resourceNetworkGroupObjectsDelete(ctx context.Context, d *schema.ResourceDa
 
 	id := d.Id()
 
-	err := c.DeleteNetworkGroupObject(ctx, id)
+	err := c.DeleteFmcNetworkGroupObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

@@ -41,7 +41,7 @@ type ICMPV4ObjectResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/object/icmpv4objects?bulk=true ( Bulk POST operation on icmv4 objects. )
 
-func (v *Client) CreateICMPV4Object(ctx context.Context, object *ICMPV4Object) (*ICMPV4ObjectResponse, error) {
+func (v *Client) CreateFmcICMPV4Object(ctx context.Context, object *ICMPV4Object) (*ICMPV4ObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/icmpv4objects", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	//panic(fmt.Sprintf("Body of request: %s", body))
@@ -60,7 +60,7 @@ func (v *Client) CreateICMPV4Object(ctx context.Context, object *ICMPV4Object) (
 	return item, nil
 }
 
-func (v *Client) GetICMPV4Object(ctx context.Context, id string) (*ICMPV4ObjectResponse, error) {
+func (v *Client) GetFmcICMPV4Object(ctx context.Context, id string) (*ICMPV4ObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/icmpv4objects/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -74,7 +74,7 @@ func (v *Client) GetICMPV4Object(ctx context.Context, id string) (*ICMPV4ObjectR
 	return item, nil
 }
 
-func (v *Client) UpdateICMPV4Object(ctx context.Context, id string, object *ICMPV4ObjectUpdateInput) (*ICMPV4ObjectResponse, error) {
+func (v *Client) UpdateFmcICMPV4Object(ctx context.Context, id string, object *ICMPV4ObjectUpdateInput) (*ICMPV4ObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/icmpv4objects/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -92,7 +92,7 @@ func (v *Client) UpdateICMPV4Object(ctx context.Context, id string, object *ICMP
 	return item, nil
 }
 
-func (v *Client) DeleteICMPV4Object(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcICMPV4Object(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/icmpv4objects/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

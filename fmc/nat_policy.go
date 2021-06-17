@@ -30,7 +30,7 @@ type NatPoliciesResponse struct {
 	Items []NatPolicyResponse `json:"items"`
 }
 
-func (v *Client) GetNatPolicyByName(ctx context.Context, name string) (*NatPolicyResponse, error) {
+func (v *Client) GetFmcNatPolicyByName(ctx context.Context, name string) (*NatPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -43,11 +43,11 @@ func (v *Client) GetNatPolicyByName(ctx context.Context, name string) (*NatPolic
 	}
 	switch l := len(resp.Items); {
 	case l == 1:
-		return v.GetNatPolicy(ctx, resp.Items[0].ID)
+		return v.GetFmcNatPolicy(ctx, resp.Items[0].ID)
 	case l > 1:
 		for _, item := range resp.Items {
 			if item.Name == name {
-				return v.GetNatPolicy(ctx, item.ID)
+				return v.GetFmcNatPolicy(ctx, item.ID)
 			}
 		}
 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
@@ -59,7 +59,7 @@ func (v *Client) GetNatPolicyByName(ctx context.Context, name string) (*NatPolic
 
 // /fmc_config/v1/domain/DomainUUID/policy/ftdnatpolicies?bulk=true ( Bulk POST operation on nat policies. )
 
-func (v *Client) CreateNatPolicy(ctx context.Context, accessPolicy *NatPolicy) (*NatPolicyResponse, error) {
+func (v *Client) CreateFmcNatPolicy(ctx context.Context, accessPolicy *NatPolicy) (*NatPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies", v.domainBaseURL)
 	body, err := json.Marshal(&accessPolicy)
 	if err != nil {
@@ -77,7 +77,7 @@ func (v *Client) CreateNatPolicy(ctx context.Context, accessPolicy *NatPolicy) (
 	return item, nil
 }
 
-func (v *Client) GetNatPolicy(ctx context.Context, id string) (*NatPolicyResponse, error) {
+func (v *Client) GetFmcNatPolicy(ctx context.Context, id string) (*NatPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -91,7 +91,7 @@ func (v *Client) GetNatPolicy(ctx context.Context, id string) (*NatPolicyRespons
 	return item, nil
 }
 
-func (v *Client) UpdateNatPolicy(ctx context.Context, natId string, natPolicy *NatPolicy) (*NatPolicyResponse, error) {
+func (v *Client) UpdateFmcNatPolicy(ctx context.Context, natId string, natPolicy *NatPolicy) (*NatPolicyResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s", v.domainBaseURL, natId)
 	body, err := json.Marshal(&natPolicy)
 	if err != nil {
@@ -109,7 +109,7 @@ func (v *Client) UpdateNatPolicy(ctx context.Context, natId string, natPolicy *N
 	return item, nil
 }
 
-func (v *Client) DeleteNatPolicy(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcNatPolicy(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

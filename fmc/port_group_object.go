@@ -43,7 +43,7 @@ type PortGroupObjectResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/object/portobjectgroups?bulk=true ( Bulk POST operation on port group objects. )
 
-func (v *Client) CreatePortGroupObject(ctx context.Context, object *PortGroupObject) (*PortGroupObjectResponse, error) {
+func (v *Client) CreateFmcPortGroupObject(ctx context.Context, object *PortGroupObject) (*PortGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/portobjectgroups", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -61,7 +61,7 @@ func (v *Client) CreatePortGroupObject(ctx context.Context, object *PortGroupObj
 	return item, nil
 }
 
-func (v *Client) GetPortGroupObject(ctx context.Context, id string) (*PortGroupObjectResponse, error) {
+func (v *Client) GetFmcPortGroupObject(ctx context.Context, id string) (*PortGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/portobjectgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -75,7 +75,7 @@ func (v *Client) GetPortGroupObject(ctx context.Context, id string) (*PortGroupO
 	return item, nil
 }
 
-func (v *Client) UpdatePortGroupObject(ctx context.Context, id string, object *PortGroupObjectUpdateInput) (*PortGroupObjectResponse, error) {
+func (v *Client) UpdateFmcPortGroupObject(ctx context.Context, id string, object *PortGroupObjectUpdateInput) (*PortGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/portobjectgroups/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -93,7 +93,7 @@ func (v *Client) UpdatePortGroupObject(ctx context.Context, id string, object *P
 	return item, nil
 }
 
-func (v *Client) DeletePortGroupObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcPortGroupObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/portobjectgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

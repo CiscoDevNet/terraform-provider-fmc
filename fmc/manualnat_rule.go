@@ -81,7 +81,7 @@ type ManualNatRuleResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/policy/ftdnatpolicies/{containerUUID}/manualnatrules?bulk=true ( Bulk POST operation on manual nat rules. )
 
-func (v *Client) CreateManualNatRule(ctx context.Context, natId, section, targetIndex string, manualNatRule *ManualNatRule) (*ManualNatRuleResponse, error) {
+func (v *Client) CreateFmcManualNatRule(ctx context.Context, natId, section, targetIndex string, manualNatRule *ManualNatRule) (*ManualNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/manualnatrules", v.domainBaseURL, natId)
 	initialSet := false
 	if section != "" {
@@ -112,7 +112,7 @@ func (v *Client) CreateManualNatRule(ctx context.Context, natId, section, target
 	return item, nil
 }
 
-func (v *Client) GetManualNatRule(ctx context.Context, natId string, id string) (*ManualNatRuleResponse, error) {
+func (v *Client) GetFmcManualNatRule(ctx context.Context, natId string, id string) (*ManualNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/manualnatrules/%s", v.domainBaseURL, natId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -126,7 +126,7 @@ func (v *Client) GetManualNatRule(ctx context.Context, natId string, id string) 
 	return item, nil
 }
 
-func (v *Client) UpdateManualNatRule(ctx context.Context, natId, id string, manualNatRule *ManualNatRule) (*ManualNatRuleResponse, error) {
+func (v *Client) UpdateFmcManualNatRule(ctx context.Context, natId, id string, manualNatRule *ManualNatRule) (*ManualNatRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/manualnatrules/%s", v.domainBaseURL, natId, id)
 	body, err := json.Marshal(&manualNatRule)
 	if err != nil {
@@ -144,7 +144,7 @@ func (v *Client) UpdateManualNatRule(ctx context.Context, natId, id string, manu
 	return item, nil
 }
 
-func (v *Client) DeleteManualNatRule(ctx context.Context, natId string, id string) error {
+func (v *Client) DeleteFmcManualNatRule(ctx context.Context, natId string, id string) error {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/manualnatrules/%s", v.domainBaseURL, natId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

@@ -46,7 +46,7 @@ type PortObjectsResponse struct {
 	} `json:"items"`
 }
 
-func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort string) (*PortObjectResponse, error) {
+func (v *Client) GetFmcPortObjectByNameOrPort(ctx context.Context, nameOrPort string) (*PortObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/protocolportobjects?expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrPort)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -59,11 +59,11 @@ func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort strin
 	}
 	switch l := len(resp.Items); {
 	case l == 1:
-		return v.GetPortObject(ctx, resp.Items[0].ID)
+		return v.GetFmcPortObject(ctx, resp.Items[0].ID)
 	case l > 1:
 		for _, item := range resp.Items {
 			if item.Name == nameOrPort || item.Port == nameOrPort {
-				return v.GetPortObject(ctx, item.ID)
+				return v.GetFmcPortObject(ctx, item.ID)
 			}
 		}
 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
@@ -73,7 +73,7 @@ func (v *Client) GetPortObjectByNameOrPort(ctx context.Context, nameOrPort strin
 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
 
-func (v *Client) CreatePortObject(ctx context.Context, object *PortObject) (*PortObjectResponse, error) {
+func (v *Client) CreateFmcPortObject(ctx context.Context, object *PortObject) (*PortObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/protocolportobjects", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -91,7 +91,7 @@ func (v *Client) CreatePortObject(ctx context.Context, object *PortObject) (*Por
 	return item, nil
 }
 
-func (v *Client) GetPortObject(ctx context.Context, id string) (*PortObjectResponse, error) {
+func (v *Client) GetFmcPortObject(ctx context.Context, id string) (*PortObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/protocolportobjects/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -105,7 +105,7 @@ func (v *Client) GetPortObject(ctx context.Context, id string) (*PortObjectRespo
 	return item, nil
 }
 
-func (v *Client) UpdatePortObject(ctx context.Context, id string, object *PortObjectUpdateInput) (*PortObjectResponse, error) {
+func (v *Client) UpdateFmcPortObject(ctx context.Context, id string, object *PortObjectUpdateInput) (*PortObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/protocolportobjects/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -123,7 +123,7 @@ func (v *Client) UpdatePortObject(ctx context.Context, id string, object *PortOb
 	return item, nil
 }
 
-func (v *Client) DeletePortObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcPortObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/protocolportobjects/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

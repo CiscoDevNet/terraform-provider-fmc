@@ -61,7 +61,7 @@ type NetworkGroupObjectResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/object/networkgroups?bulk=true ( Bulk POST operation on network objects. )
 
-func (v *Client) CreateNetworkGroupObject(ctx context.Context, object *NetworkGroupObject) (*NetworkGroupObjectResponse, error) {
+func (v *Client) CreateFmcNetworkGroupObject(ctx context.Context, object *NetworkGroupObject) (*NetworkGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networkgroups", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -79,7 +79,7 @@ func (v *Client) CreateNetworkGroupObject(ctx context.Context, object *NetworkGr
 	return item, nil
 }
 
-func (v *Client) GetNetworkGroupObject(ctx context.Context, id string) (*NetworkGroupObjectResponse, error) {
+func (v *Client) GetFmcNetworkGroupObject(ctx context.Context, id string) (*NetworkGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networkgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -93,7 +93,7 @@ func (v *Client) GetNetworkGroupObject(ctx context.Context, id string) (*Network
 	return item, nil
 }
 
-func (v *Client) UpdateNetworkGroupObject(ctx context.Context, id string, object *NetworkGroupObjectUpdateInput) (*NetworkGroupObjectResponse, error) {
+func (v *Client) UpdateFmcNetworkGroupObject(ctx context.Context, id string, object *NetworkGroupObjectUpdateInput) (*NetworkGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networkgroups/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -111,7 +111,7 @@ func (v *Client) UpdateNetworkGroupObject(ctx context.Context, id string, object
 	return item, nil
 }
 
-func (v *Client) DeleteNetworkGroupObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcNetworkGroupObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/networkgroups/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

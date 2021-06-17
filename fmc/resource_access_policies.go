@@ -129,7 +129,7 @@ func resourceAccessPoliciesCreate(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
-	res, err := c.CreateAccessPolicy(ctx, &AccessPolicy{
+	res, err := c.CreateFmcAccessPolicy(ctx, &AccessPolicy{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Defaultaction: AccessPolicyDefaultAction{
@@ -162,7 +162,7 @@ func resourceAccessPoliciesRead(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetAccessPolicy(ctx, id)
+	item, err := c.GetFmcAccessPolicy(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -239,7 +239,7 @@ func resourceAccessPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m
 				Type: access_policy_default_syslog_alert_type,
 			}
 		}
-		res, err := c.UpdateAccessPolicy(ctx, d.Id(), &AccessPolicy{
+		res, err := c.UpdateFmcAccessPolicy(ctx, d.Id(), &AccessPolicy{
 			ID:          d.Id(),
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
@@ -276,7 +276,7 @@ func resourceAccessPoliciesDelete(ctx context.Context, d *schema.ResourceData, m
 
 	id := d.Id()
 
-	err := c.DeleteAccessPolicy(ctx, id)
+	err := c.DeleteFmcAccessPolicy(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

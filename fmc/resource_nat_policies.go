@@ -51,7 +51,7 @@ func resourceNatPoliciesCreate(ctx context.Context, d *schema.ResourceData, m in
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateNatPolicy(ctx, &NatPolicy{
+	res, err := c.CreateFmcNatPolicy(ctx, &NatPolicy{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Type:        nat_policy_type,
@@ -75,7 +75,7 @@ func resourceNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetNatPolicy(ctx, id)
+	item, err := c.GetFmcNatPolicy(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -120,7 +120,7 @@ func resourceNatPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m in
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.UpdateNatPolicy(ctx, d.Id(), &NatPolicy{
+	res, err := c.UpdateFmcNatPolicy(ctx, d.Id(), &NatPolicy{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Type:        nat_policy_type,
@@ -146,7 +146,7 @@ func resourceNatPoliciesDelete(ctx context.Context, d *schema.ResourceData, m in
 
 	id := d.Id()
 
-	if err := c.DeleteNatPolicy(ctx, id); err != nil {
+	if err := c.DeleteFmcNatPolicy(ctx, id); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to delete nat policy",

@@ -32,7 +32,7 @@ type IPSPolicy struct {
 	Name string
 }
 
-func (v *Client) GetIPSPolicyByName(ctx context.Context, name string) (*IPSPolicy, error) {
+func (v *Client) GetFmcIPSPolicyByName(ctx context.Context, name string) (*IPSPolicy, error) {
 	url := fmt.Sprintf("%s/policy/intrusionpolicies", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

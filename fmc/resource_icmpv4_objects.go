@@ -62,7 +62,7 @@ func resourceICMPV4ObjectsCreate(ctx context.Context, d *schema.ResourceData, m 
 		intcode := inputCode.(int)
 		code = &intcode
 	}
-	res, err := c.CreateICMPV4Object(ctx, &ICMPV4Object{
+	res, err := c.CreateFmcICMPV4Object(ctx, &ICMPV4Object{
 		Name:     d.Get("name").(string),
 		Icmptype: d.Get("icmp_type").(string),
 		Code:     code,
@@ -87,7 +87,7 @@ func resourceICMPV4ObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetICMPV4Object(ctx, id)
+	item, err := c.GetFmcICMPV4Object(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -143,7 +143,7 @@ func resourceICMPV4ObjectsUpdate(ctx context.Context, d *schema.ResourceData, m 
 		code = &intcode
 	}
 	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdateICMPV4Object(ctx, id, &ICMPV4ObjectUpdateInput{
+		_, err := c.UpdateFmcICMPV4Object(ctx, id, &ICMPV4ObjectUpdateInput{
 			Name:     d.Get("name").(string),
 			Icmptype: d.Get("icmp_type").(string),
 			Code:     code,
@@ -170,7 +170,7 @@ func resourceICMPV4ObjectsDelete(ctx context.Context, d *schema.ResourceData, m 
 
 	id := d.Id()
 
-	err := c.DeleteICMPV4Object(ctx, id)
+	err := c.DeleteFmcICMPV4Object(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

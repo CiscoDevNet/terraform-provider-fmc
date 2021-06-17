@@ -57,7 +57,7 @@ func resourceNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	res, err := c.CreateNetworkObject(ctx, &NetworkObject{
+	res, err := c.CreateFmcNetworkObject(ctx, &NetworkObject{
 		Name:        d.Get("name").(string),
 		Description: d.Get("description").(string),
 		Value:       d.Get("value").(string),
@@ -82,7 +82,7 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetNetworkObject(ctx, id)
+	item, err := c.GetFmcNetworkObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -135,7 +135,7 @@ func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m
 	var diags diag.Diagnostics
 	id := d.Id()
 	if d.HasChanges("name", "description", "value") {
-		_, err := c.UpdateNetworkObject(ctx, id, &NetworkObjectUpdateInput{
+		_, err := c.UpdateFmcNetworkObject(ctx, id, &NetworkObjectUpdateInput{
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			Value:       d.Get("value").(string),
@@ -162,7 +162,7 @@ func resourceNetworkObjectsDelete(ctx context.Context, d *schema.ResourceData, m
 
 	id := d.Id()
 
-	err := c.DeleteNetworkObject(ctx, id)
+	err := c.DeleteFmcNetworkObject(ctx, id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

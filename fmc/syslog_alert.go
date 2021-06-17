@@ -32,7 +32,7 @@ type SyslogAlert struct {
 	Name string
 }
 
-func (v *Client) GetSyslogAlertByName(ctx context.Context, name string) (*SyslogAlert, error) {
+func (v *Client) GetFmcSyslogAlertByName(ctx context.Context, name string) (*SyslogAlert, error) {
 	url := fmt.Sprintf("%s/policy/syslogalerts", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {

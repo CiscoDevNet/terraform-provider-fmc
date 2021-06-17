@@ -43,7 +43,7 @@ type URLObjectsResponse struct {
 	} `json:"items"`
 }
 
-func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue string) (*URLObjectResponse, error) {
+func (v *Client) GetFmcURLObjectByNameOrValue(ctx context.Context, nameOrValue string) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls?expanded=false&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -56,11 +56,11 @@ func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue stri
 	}
 	switch l := len(resp.Items); {
 	case l == 1:
-		return v.GetURLObject(ctx, resp.Items[0].ID)
+		return v.GetFmcURLObject(ctx, resp.Items[0].ID)
 	case l > 1:
 		for _, item := range resp.Items {
 			if item.Name == nameOrValue || item.URL == nameOrValue {
-				return v.GetURLObject(ctx, item.ID)
+				return v.GetFmcURLObject(ctx, item.ID)
 			}
 		}
 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
@@ -70,7 +70,7 @@ func (v *Client) GetURLObjectByNameOrValue(ctx context.Context, nameOrValue stri
 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
 
-func (v *Client) CreateURLObject(ctx context.Context, object *URLObject) (*URLObjectResponse, error) {
+func (v *Client) CreateFmcURLObject(ctx context.Context, object *URLObject) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -85,7 +85,7 @@ func (v *Client) CreateURLObject(ctx context.Context, object *URLObject) (*URLOb
 	return item, err
 }
 
-func (v *Client) GetURLObject(ctx context.Context, id string) (*URLObjectResponse, error) {
+func (v *Client) GetFmcURLObject(ctx context.Context, id string) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
@@ -96,7 +96,7 @@ func (v *Client) GetURLObject(ctx context.Context, id string) (*URLObjectRespons
 	return item, err
 }
 
-func (v *Client) UpdateURLObject(ctx context.Context, id string, object *URLObjectUpdateInput) (*URLObjectResponse, error) {
+func (v *Client) UpdateFmcURLObject(ctx context.Context, id string, object *URLObjectUpdateInput) (*URLObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/urls/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -111,7 +111,7 @@ func (v *Client) UpdateURLObject(ctx context.Context, id string, object *URLObje
 	return item, err
 }
 
-func (v *Client) DeleteURLObject(ctx context.Context, id string) error {
+func (v *Client) DeleteFmcURLObject(ctx context.Context, id string) error {
 	url := fmt.Sprintf("%s/object/urls/%s", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {

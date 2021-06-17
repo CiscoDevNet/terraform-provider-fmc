@@ -67,11 +67,11 @@ func dataSourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m int
 	}
 	switch {
 	case okId:
-		item, err = c.GetURLObject(ctx, idInput.(string))
+		item, err = c.GetFmcURLObject(ctx, idInput.(string))
 	case okName:
-		item, err = c.GetURLObjectByNameOrValue(ctx, nameInput.(string))
+		item, err = c.GetFmcURLObjectByNameOrValue(ctx, nameInput.(string))
 	case okValue:
-		item, err = c.GetURLObjectByNameOrValue(ctx, valueInput.(string))
+		item, err = c.GetFmcURLObjectByNameOrValue(ctx, valueInput.(string))
 	default:
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
