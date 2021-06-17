@@ -40,7 +40,7 @@ func testAccCheckFmcNetworkObjectDestroy(s *terraform.State) error {
 
 		id := rs.Primary.ID
 		ctx := context.Background()
-		err := c.DeleteNetworkObject(ctx, id)
+		err := c.DeleteFmcNetworkObject(ctx, id)
 
 		// Object is already deleted
 		if err != nil && !strings.Contains(fmt.Sprint(err), "404") {
