@@ -47,11 +47,6 @@ func resourceFmcPortObjects() *schema.Resource {
 				Optional:    true,
 				Description: "Sets this resource as overridable",
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The description of this resource",
-			},
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -69,7 +64,6 @@ func resourceFmcPortObjectsCreate(ctx context.Context, d *schema.ResourceData, m
 
 	res, err := c.CreateFmcPortObject(ctx, &PortObject{
 		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
 		Port:        d.Get("port").(string),
 		Protocol:    d.Get("protocol").(string),
 		Overridable: d.Get("overridable").(bool),
@@ -112,15 +106,6 @@ func resourceFmcPortObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 		return diags
 	}
 
-	if err := d.Set("description", item.Description); err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read port object",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
-
 	if err := d.Set("port", item.Port); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -155,10 +140,9 @@ func resourceFmcPortObjectsUpdate(ctx context.Context, d *schema.ResourceData, m
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "value") {
+	if d.HasChanges("name", "port", "protocol", "overridable") {
 		_, err := c.UpdateFmcPortObject(ctx, id, &PortObjectUpdateInput{
 			Name:        d.Get("name").(string),
-			Description: d.Get("description").(string),
 			Port:        d.Get("port").(string),
 			Protocol:    d.Get("protocol").(string),
 			Overridable: d.Get("overridable").(bool),
