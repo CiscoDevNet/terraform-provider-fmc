@@ -7,14 +7,27 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var (
-	testAccProviders map[string]*schema.Provider
-	testAccProvider  *schema.Provider
-)
+var testAccProviders map[string]*schema.Provider
+var testAccProvider *schema.Provider
 
-// testAccPreCheck validates the necessary test API keys exist
-// in the testing environment
-func TestAccPreCheck(t *testing.T) {
+func init() {
+	testAccProvider = Provider()
+	testAccProviders = map[string]*schema.Provider{
+		"fmc": testAccProvider,
+	}
+}
+
+func TestProvider(t *testing.T) {
+	if err := Provider().InternalValidate(); err != nil {
+		t.Fatalf("err: %s", err)
+	}
+}
+
+func TestProvider_impl(t *testing.T) {
+	var _ *schema.Provider = Provider()
+}
+
+func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("FMC_HOST"); v == "" {
 		t.Fatal("FMC_HOST must be set for acceptance tests")
 	}
@@ -27,20 +40,4 @@ func TestAccPreCheck(t *testing.T) {
 	if v := os.Getenv("FMC_INSECURE_SKIP_VERIFY"); v == "" {
 		t.Fatal("FMC_INSECURE_SKIP_VERIFY must be set for acceptance tests")
 	}
-}
-
-func init() {
-	testAccProvider = Provider()
-	testAccProviders = map[string]*schema.Provider{
-		"fmc": testAccProvider,
-	}
-}
-
-func TestAccProvider(t *testing.T) {
-	if err := Provider().InternalValidate(); err != nil {
-		t.Fatalf("err: %s", err)
-	}
-}
-
-func TestAccProviderConfigure(t *testing.T) {
 }
