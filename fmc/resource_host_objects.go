@@ -9,7 +9,7 @@ import (
 
 var host_type string = "Host"
 
-func resourceHostObjects() *schema.Resource {
+func resourceFmcHostObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Host Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourceHostObjects() *schema.Resource {
 			"    description = \"K8s primary\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceHostObjectsCreate,
-		ReadContext:   resourceHostObjectsRead,
-		UpdateContext: resourceHostObjectsUpdate,
-		DeleteContext: resourceHostObjectsDelete,
+		CreateContext: resourceFmcHostObjectsCreate,
+		ReadContext:   resourceFmcHostObjectsRead,
+		UpdateContext: resourceFmcHostObjectsUpdate,
+		DeleteContext: resourceFmcHostObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -51,7 +51,7 @@ func resourceHostObjects() *schema.Resource {
 	}
 }
 
-func resourceHostObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcHostObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -72,10 +72,10 @@ func resourceHostObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceHostObjectsRead(ctx, d, m)
+	return resourceFmcHostObjectsRead(ctx, d, m)
 }
 
-func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcHostObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -128,7 +128,7 @@ func resourceHostObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourceHostObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcHostObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -149,10 +149,10 @@ func resourceHostObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 			return diags
 		}
 	}
-	return resourceHostObjectsRead(ctx, d, m)
+	return resourceFmcHostObjectsRead(ctx, d, m)
 }
 
-func resourceHostObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcHostObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

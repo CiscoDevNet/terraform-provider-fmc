@@ -9,7 +9,7 @@ import (
 
 var nat_policy_type string = "FTDNatPolicy"
 
-func resourceNatPolicies() *schema.Resource {
+func resourceFmcNatPolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for NAT Policies in FMC\n" +
 			"\n" +
@@ -21,10 +21,10 @@ func resourceNatPolicies() *schema.Resource {
 			"    description = \"New NAT policy!\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceNatPoliciesCreate,
-		ReadContext:   resourceNatPoliciesRead,
-		UpdateContext: resourceNatPoliciesUpdate,
-		DeleteContext: resourceNatPoliciesDelete,
+		CreateContext: resourceFmcNatPoliciesCreate,
+		ReadContext:   resourceFmcNatPoliciesRead,
+		UpdateContext: resourceFmcNatPoliciesUpdate,
+		DeleteContext: resourceFmcNatPoliciesDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -45,7 +45,7 @@ func resourceNatPolicies() *schema.Resource {
 	}
 }
 
-func resourceNatPoliciesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNatPoliciesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -65,10 +65,10 @@ func resourceNatPoliciesCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNatPoliciesRead(ctx, d, m)
+	return resourceFmcNatPoliciesRead(ctx, d, m)
 }
 
-func resourceNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -114,7 +114,7 @@ func resourceNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourceNatPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNatPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -135,10 +135,10 @@ func resourceNatPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m in
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNatPoliciesRead(ctx, d, m)
+	return resourceFmcNatPoliciesRead(ctx, d, m)
 }
 
-func resourceNatPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNatPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

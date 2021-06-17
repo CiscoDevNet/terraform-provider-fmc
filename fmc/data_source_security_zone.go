@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceSecurityZones() *schema.Resource {
+func dataSourceFmcSecurityZones() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for Security Zones in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -16,7 +16,7 @@ func dataSourceSecurityZones() *schema.Resource {
 			"	name = \"inside\"\n" +
 			"}\n" +
 			"```",
-		ReadContext: dataSourceSecurityZonesRead,
+		ReadContext: dataSourceFmcSecurityZonesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -37,7 +37,7 @@ func dataSourceSecurityZones() *schema.Resource {
 	}
 }
 
-func dataSourceSecurityZonesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcSecurityZonesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

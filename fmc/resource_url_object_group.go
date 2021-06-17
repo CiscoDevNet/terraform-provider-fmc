@@ -9,7 +9,7 @@ import (
 
 var url_object_group_type string = "Url"
 
-func resourceURLObjectGroup() *schema.Resource {
+func resourceFmcURLObjectGroup() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for URL Object Groups in FMC\n" +
 			"\n" +
@@ -33,10 +33,10 @@ func resourceURLObjectGroup() *schema.Resource {
 			"    }\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceURLObjectGroupCreate,
-		ReadContext:   resourceURLObjectGroupRead,
-		UpdateContext: resourceURLObjectGroupUpdate,
-		DeleteContext: resourceURLObjectGroupDelete,
+		CreateContext: resourceFmcURLObjectGroupCreate,
+		ReadContext:   resourceFmcURLObjectGroupRead,
+		UpdateContext: resourceFmcURLObjectGroupUpdate,
+		DeleteContext: resourceFmcURLObjectGroupDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -100,7 +100,7 @@ func resourceURLObjectGroup() *schema.Resource {
 	}
 }
 
-func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -145,10 +145,10 @@ func resourceURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceURLObjectGroupRead(ctx, d, m)
+	return resourceFmcURLObjectGroupRead(ctx, d, m)
 }
 
-func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -229,7 +229,7 @@ func resourceURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func resourceURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -275,10 +275,10 @@ func resourceURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData, m
 			return diags
 		}
 	}
-	return resourceURLObjectGroupRead(ctx, d, m)
+	return resourceFmcURLObjectGroupRead(ctx, d, m)
 }
 
-func resourceURLObjectGroupDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectGroupDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

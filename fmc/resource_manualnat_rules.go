@@ -12,7 +12,7 @@ import (
 
 var manualnat_rules_type string = "FTDManualNatRule"
 
-func resourceManualNatRules() *schema.Resource {
+func resourceFmcManualNatRules() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Manual NAT Rules in FMC\n" +
 			"\n" +
@@ -98,10 +98,10 @@ func resourceManualNatRules() *schema.Resource {
 			"}\n" +
 			"```\n" +
 			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
-		CreateContext: resourceManualNatRulesCreate,
-		ReadContext:   resourceManualNatRulesRead,
-		UpdateContext: resourceManualNatRulesUpdate,
-		DeleteContext: resourceManualNatRulesDelete,
+		CreateContext: resourceFmcManualNatRulesCreate,
+		ReadContext:   resourceFmcManualNatRulesRead,
+		UpdateContext: resourceFmcManualNatRulesUpdate,
+		DeleteContext: resourceFmcManualNatRulesDelete,
 		Schema: map[string]*schema.Schema{
 			"nat_policy": {
 				Type:        schema.TypeString,
@@ -478,7 +478,7 @@ func resourceManualNatRules() *schema.Resource {
 	}
 }
 
-func resourceManualNatRulesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcManualNatRulesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -543,10 +543,10 @@ func resourceManualNatRulesCreate(ctx context.Context, d *schema.ResourceData, m
 		return returnWithDiag(diags, err)
 	}
 	d.SetId(res.ID)
-	return resourceManualNatRulesRead(ctx, d, m)
+	return resourceFmcManualNatRulesRead(ctx, d, m)
 }
 
-func resourceManualNatRulesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcManualNatRulesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -594,7 +594,7 @@ func resourceManualNatRulesRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func resourceManualNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcManualNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -661,10 +661,10 @@ func resourceManualNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 		d.SetId(res.ID)
 	}
-	return resourceManualNatRulesRead(ctx, d, m)
+	return resourceFmcManualNatRulesRead(ctx, d, m)
 }
 
-func resourceManualNatRulesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcManualNatRulesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

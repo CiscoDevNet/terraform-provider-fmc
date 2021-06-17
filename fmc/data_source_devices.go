@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceDevices() *schema.Resource {
+func dataSourceFmcDevices() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for FTD Devices in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -16,7 +16,7 @@ func dataSourceDevices() *schema.Resource {
 			"	name = \"ftd.adyah.cisco\"\n" +
 			"}\n" +
 			"```",
-		ReadContext: dataSourceDevicesRead,
+		ReadContext: dataSourceFmcDevicesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -37,7 +37,7 @@ func dataSourceDevices() *schema.Resource {
 	}
 }
 
-func dataSourceDevicesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcDevicesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

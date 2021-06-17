@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceFilePolicies() *schema.Resource {
+func dataSourceFmcFilePolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for File Policies in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -16,7 +16,7 @@ func dataSourceFilePolicies() *schema.Resource {
 			"	name = \"AMP Policy\"\n" +
 			"}\n" +
 			"```",
-		ReadContext: dataSourceFilePoliciesRead,
+		ReadContext: dataSourceFmcFilePoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -37,7 +37,7 @@ func dataSourceFilePolicies() *schema.Resource {
 	}
 }
 
-func dataSourceFilePoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcFilePoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

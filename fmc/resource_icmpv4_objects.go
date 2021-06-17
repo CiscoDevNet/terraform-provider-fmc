@@ -9,7 +9,7 @@ import (
 
 var icmpv4_type string = "ICMPV4Object"
 
-func resourceICMPV4Objects() *schema.Resource {
+func resourceFmcICMPV4Objects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for ICMPv4 Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourceICMPV4Objects() *schema.Resource {
 			"  code  = 2\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceICMPV4ObjectsCreate,
-		ReadContext:   resourceICMPV4ObjectsRead,
-		UpdateContext: resourceICMPV4ObjectsUpdate,
-		DeleteContext: resourceICMPV4ObjectsDelete,
+		CreateContext: resourceFmcICMPV4ObjectsCreate,
+		ReadContext:   resourceFmcICMPV4ObjectsRead,
+		UpdateContext: resourceFmcICMPV4ObjectsUpdate,
+		DeleteContext: resourceFmcICMPV4ObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -51,7 +51,7 @@ func resourceICMPV4Objects() *schema.Resource {
 	}
 }
 
-func resourceICMPV4ObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcICMPV4ObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -77,10 +77,10 @@ func resourceICMPV4ObjectsCreate(ctx context.Context, d *schema.ResourceData, m 
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceICMPV4ObjectsRead(ctx, d, m)
+	return resourceFmcICMPV4ObjectsRead(ctx, d, m)
 }
 
-func resourceICMPV4ObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcICMPV4ObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -133,7 +133,7 @@ func resourceICMPV4ObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	return diags
 }
 
-func resourceICMPV4ObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcICMPV4ObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -159,10 +159,10 @@ func resourceICMPV4ObjectsUpdate(ctx context.Context, d *schema.ResourceData, m 
 			return diags
 		}
 	}
-	return resourceICMPV4ObjectsRead(ctx, d, m)
+	return resourceFmcICMPV4ObjectsRead(ctx, d, m)
 }
 
-func resourceICMPV4ObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcICMPV4ObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceIPSPolicies() *schema.Resource {
+func dataSourceFmcIPSPolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for IPS Policy in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -16,7 +16,7 @@ func dataSourceIPSPolicies() *schema.Resource {
 			"	name = \"Connectivity Over Security\"\n" +
 			"}\n" +
 			"```",
-		ReadContext: dataSourceIPSPoliciesRead,
+		ReadContext: dataSourceFmcIPSPoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -37,7 +37,7 @@ func dataSourceIPSPolicies() *schema.Resource {
 	}
 }
 
-func dataSourceIPSPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcIPSPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

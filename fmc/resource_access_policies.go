@@ -13,7 +13,7 @@ var access_policy_type string = "AccessPolicy"
 var access_policy_default_action_type string = "AccessPolicyDefaultAction"
 var access_policy_default_syslog_alert_type string = "SyslogAlert"
 
-func resourceAccessPolicies() *schema.Resource {
+func resourceFmcAccessPolicies() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Access Control Policies in FMC\n" +
 			"\n" +
@@ -30,10 +30,10 @@ func resourceAccessPolicies() *schema.Resource {
 			"    default_action_syslog_config_id = data.fmc_syslog_alerts.syslog_alert.id\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceAccessPoliciesCreate,
-		ReadContext:   resourceAccessPoliciesRead,
-		UpdateContext: resourceAccessPoliciesUpdate,
-		DeleteContext: resourceAccessPoliciesDelete,
+		CreateContext: resourceFmcAccessPoliciesCreate,
+		ReadContext:   resourceFmcAccessPoliciesRead,
+		UpdateContext: resourceFmcAccessPoliciesUpdate,
+		DeleteContext: resourceFmcAccessPoliciesDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -108,7 +108,7 @@ func resourceAccessPolicies() *schema.Resource {
 	}
 }
 
-func resourceAccessPoliciesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAccessPoliciesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -152,10 +152,10 @@ func resourceAccessPoliciesCreate(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceAccessPoliciesRead(ctx, d, m)
+	return resourceFmcAccessPoliciesRead(ctx, d, m)
 }
 
-func resourceAccessPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAccessPoliciesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -219,7 +219,7 @@ func resourceAccessPoliciesRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func resourceAccessPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAccessPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -265,10 +265,10 @@ func resourceAccessPoliciesUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 		d.SetId(res.ID)
 	}
-	return resourceAccessPoliciesRead(ctx, d, m)
+	return resourceFmcAccessPoliciesRead(ctx, d, m)
 }
 
-func resourceAccessPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAccessPoliciesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

@@ -9,7 +9,7 @@ import (
 
 var port_type string = "ProtocolPortObject"
 
-func resourcePortObjects() *schema.Resource {
+func resourceFmcPortObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Port Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourcePortObjects() *schema.Resource {
 			"    protocol = \"TCP\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourcePortObjectsCreate,
-		ReadContext:   resourcePortObjectsRead,
-		UpdateContext: resourcePortObjectsUpdate,
-		DeleteContext: resourcePortObjectsDelete,
+		CreateContext: resourceFmcPortObjectsCreate,
+		ReadContext:   resourceFmcPortObjectsRead,
+		UpdateContext: resourceFmcPortObjectsUpdate,
+		DeleteContext: resourceFmcPortObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -61,7 +61,7 @@ func resourcePortObjects() *schema.Resource {
 	}
 }
 
-func resourcePortObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPortObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -84,10 +84,10 @@ func resourcePortObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourcePortObjectsRead(ctx, d, m)
+	return resourceFmcPortObjectsRead(ctx, d, m)
 }
 
-func resourcePortObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPortObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -151,7 +151,7 @@ func resourcePortObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourcePortObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPortObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -174,10 +174,10 @@ func resourcePortObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 			return diags
 		}
 	}
-	return resourcePortObjectsRead(ctx, d, m)
+	return resourceFmcPortObjectsRead(ctx, d, m)
 }
 
-func resourcePortObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPortObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

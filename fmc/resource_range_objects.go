@@ -9,7 +9,7 @@ import (
 
 var range_type string = "Range"
 
-func resourceRangeObjects() *schema.Resource {
+func resourceFmcRangeObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Network Range Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourceRangeObjects() *schema.Resource {
 			"    description = \"K8s Prod Cluster\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceRangeObjectsCreate,
-		ReadContext:   resourceRangeObjectsRead,
-		UpdateContext: resourceRangeObjectsUpdate,
-		DeleteContext: resourceRangeObjectsDelete,
+		CreateContext: resourceFmcRangeObjectsCreate,
+		ReadContext:   resourceFmcRangeObjectsRead,
+		UpdateContext: resourceFmcRangeObjectsUpdate,
+		DeleteContext: resourceFmcRangeObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -46,7 +46,7 @@ func resourceRangeObjects() *schema.Resource {
 	}
 }
 
-func resourceRangeObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcRangeObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -67,10 +67,10 @@ func resourceRangeObjectsCreate(ctx context.Context, d *schema.ResourceData, m i
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceRangeObjectsRead(ctx, d, m)
+	return resourceFmcRangeObjectsRead(ctx, d, m)
 }
 
-func resourceRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -115,7 +115,7 @@ func resourceRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m int
 	return diags
 }
 
-func resourceRangeObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcRangeObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -136,10 +136,10 @@ func resourceRangeObjectsUpdate(ctx context.Context, d *schema.ResourceData, m i
 			return diags
 		}
 	}
-	return resourceRangeObjectsRead(ctx, d, m)
+	return resourceFmcRangeObjectsRead(ctx, d, m)
 }
 
-func resourceRangeObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcRangeObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

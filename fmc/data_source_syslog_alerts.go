@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceSyslogAlerts() *schema.Resource {
+func dataSourceFmcSyslogAlerts() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for Syslog Alert Configuration in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -16,7 +16,7 @@ func dataSourceSyslogAlerts() *schema.Resource {
 			"	name = \"inside\"\n" +
 			"}\n" +
 			"```",
-		ReadContext: dataSourceSyslogAlertsRead,
+		ReadContext: dataSourceFmcSyslogAlertsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -37,7 +37,7 @@ func dataSourceSyslogAlerts() *schema.Resource {
 	}
 }
 
-func dataSourceSyslogAlertsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcSyslogAlertsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

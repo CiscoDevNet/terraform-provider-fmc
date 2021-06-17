@@ -9,7 +9,7 @@ import (
 
 var url_type string = "Url"
 
-func resourceURLObjects() *schema.Resource {
+func resourceFmcURLObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for URL Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourceURLObjects() *schema.Resource {
 			"    description = \"Cisco home page\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceURLObjectsCreate,
-		ReadContext:   resourceURLObjectsRead,
-		UpdateContext: resourceURLObjectsUpdate,
-		DeleteContext: resourceURLObjectsDelete,
+		CreateContext: resourceFmcURLObjectsCreate,
+		ReadContext:   resourceFmcURLObjectsRead,
+		UpdateContext: resourceFmcURLObjectsUpdate,
+		DeleteContext: resourceFmcURLObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -51,7 +51,7 @@ func resourceURLObjects() *schema.Resource {
 	}
 }
 
-func resourceURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -72,10 +72,10 @@ func resourceURLObjectsCreate(ctx context.Context, d *schema.ResourceData, m int
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceURLObjectsRead(ctx, d, m)
+	return resourceFmcURLObjectsRead(ctx, d, m)
 }
 
-func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -130,7 +130,7 @@ func resourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m inter
 	return diags
 }
 
-func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -151,10 +151,10 @@ func resourceURLObjectsUpdate(ctx context.Context, d *schema.ResourceData, m int
 			return diags
 		}
 	}
-	return resourceURLObjectsRead(ctx, d, m)
+	return resourceFmcURLObjectsRead(ctx, d, m)
 }
 
-func resourceURLObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcURLObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

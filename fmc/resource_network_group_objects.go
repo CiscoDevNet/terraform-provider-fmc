@@ -9,7 +9,7 @@ import (
 
 var network_group_type string = "NetworkGroup"
 
-func resourceNetworkGroupObjects() *schema.Resource {
+func resourceFmcNetworkGroupObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Network Group Objects in FMC\n" +
 			"\n" +
@@ -33,10 +33,10 @@ func resourceNetworkGroupObjects() *schema.Resource {
 			"  }\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceNetworkGroupObjectsCreate,
-		ReadContext:   resourceNetworkGroupObjectsRead,
-		UpdateContext: resourceNetworkGroupObjectsUpdate,
-		DeleteContext: resourceNetworkGroupObjectsDelete,
+		CreateContext: resourceFmcNetworkGroupObjectsCreate,
+		ReadContext:   resourceFmcNetworkGroupObjectsRead,
+		UpdateContext: resourceFmcNetworkGroupObjectsUpdate,
+		DeleteContext: resourceFmcNetworkGroupObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -100,7 +100,7 @@ func resourceNetworkGroupObjects() *schema.Resource {
 	}
 }
 
-func resourceNetworkGroupObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkGroupObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -146,10 +146,10 @@ func resourceNetworkGroupObjectsCreate(ctx context.Context, d *schema.ResourceDa
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNetworkGroupObjectsRead(ctx, d, m)
+	return resourceFmcNetworkGroupObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -230,7 +230,7 @@ func resourceNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceData
 	return diags
 }
 
-func resourceNetworkGroupObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkGroupObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -276,10 +276,10 @@ func resourceNetworkGroupObjectsUpdate(ctx context.Context, d *schema.ResourceDa
 			return diags
 		}
 	}
-	return resourceNetworkGroupObjectsRead(ctx, d, m)
+	return resourceFmcNetworkGroupObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkGroupObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkGroupObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

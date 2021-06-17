@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourceURLObjects() *schema.Resource {
+func dataSourceFmcURLObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for URL Objects in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -17,7 +17,7 @@ func dataSourceURLObjects() *schema.Resource {
 			"}\n" +
 			"```\n" +
 			"Any one of the id, name or value can be specified. The first filter in the order of id, name and value will be used, and the rest will be ignored if multiple are specified.",
-		ReadContext: dataSourceURLObjectsRead,
+		ReadContext: dataSourceFmcURLObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -46,7 +46,7 @@ func dataSourceURLObjects() *schema.Resource {
 	}
 }
 
-func dataSourceURLObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcURLObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

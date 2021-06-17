@@ -9,7 +9,7 @@ import (
 
 var policy_devices_mappings_type string = "PolicyAssignment"
 
-func resourcePolicyDevicesAssignments() *schema.Resource {
+func resourceFmcPolicyDevicesAssignments() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Policy Device Assignments in FMC\n" +
 			"\n" +
@@ -28,10 +28,10 @@ func resourcePolicyDevicesAssignments() *schema.Resource {
 			"}\n" +
 			"```\n" +
 			"**Note** You cannot delete a policy assignment, only reassign the devices to another policy. So, the delete operation on terraform does nothing, but the assignment is not deleted until you have manually moved the devices to another policy.",
-		CreateContext: resourcePolicyDevicesAssignmentsCreate,
-		ReadContext:   resourcePolicyDevicesAssignmentsRead,
-		UpdateContext: resourcePolicyDevicesAssignmentsUpdate,
-		DeleteContext: resourcePolicyDevicesAssignmentsDelete,
+		CreateContext: resourceFmcPolicyDevicesAssignmentsCreate,
+		ReadContext:   resourceFmcPolicyDevicesAssignmentsRead,
+		UpdateContext: resourceFmcPolicyDevicesAssignmentsUpdate,
+		DeleteContext: resourceFmcPolicyDevicesAssignmentsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -92,7 +92,7 @@ func resourcePolicyDevicesAssignments() *schema.Resource {
 	}
 }
 
-func resourcePolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -136,10 +136,10 @@ func resourcePolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.Resou
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourcePolicyDevicesAssignmentsRead(ctx, d, m)
+	return resourceFmcPolicyDevicesAssignmentsRead(ctx, d, m)
 }
 
-func resourcePolicyDevicesAssignmentsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -207,7 +207,7 @@ func resourcePolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Resourc
 	return diags
 }
 
-func resourcePolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -250,10 +250,10 @@ func resourcePolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.Resou
 			return diags
 		}
 	}
-	return resourcePolicyDevicesAssignmentsRead(ctx, d, m)
+	return resourceFmcPolicyDevicesAssignmentsRead(ctx, d, m)
 }
 
-func resourcePolicyDevicesAssignmentsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPolicyDevicesAssignmentsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
@@ -261,7 +261,7 @@ func resourcePolicyDevicesAssignmentsDelete(ctx context.Context, d *schema.Resou
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
 		Summary:  "Devices mapping cannot be deleted, it will be deleted on reassignment",
-		Detail:   "This resource cannot be deleted",
+		Detail:   "This resourceFmc cannot be deleted",
 	})
 
 	// d.SetId("") is automatically called assuming delete returns no errors, but

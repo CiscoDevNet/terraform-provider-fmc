@@ -9,7 +9,7 @@ import (
 
 var fqdn_type string = "FQDN"
 
-func resourceFQDNObjects() *schema.Resource {
+func resourceFmcFQDNObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for FQDN Objects in FMC\n" +
 			"\n" +
@@ -23,10 +23,10 @@ func resourceFQDNObjects() *schema.Resource {
 			"  dns_resolution = \"IPV4_ONLY\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceFQDNObjectsCreate,
-		ReadContext:   resourceFQDNObjectsRead,
-		UpdateContext: resourceFQDNObjectsUpdate,
-		DeleteContext: resourceFQDNObjectsDelete,
+		CreateContext: resourceFmcFQDNObjectsCreate,
+		ReadContext:   resourceFmcFQDNObjectsRead,
+		UpdateContext: resourceFmcFQDNObjectsUpdate,
+		DeleteContext: resourceFmcFQDNObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -52,7 +52,7 @@ func resourceFQDNObjects() *schema.Resource {
 	}
 }
 
-func resourceFQDNObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFQDNObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -74,10 +74,10 @@ func resourceFQDNObjectsCreate(ctx context.Context, d *schema.ResourceData, m in
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceFQDNObjectsRead(ctx, d, m)
+	return resourceFmcFQDNObjectsRead(ctx, d, m)
 }
 
-func resourceFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -130,7 +130,7 @@ func resourceFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourceFQDNObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFQDNObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -152,10 +152,10 @@ func resourceFQDNObjectsUpdate(ctx context.Context, d *schema.ResourceData, m in
 			return diags
 		}
 	}
-	return resourceFQDNObjectsRead(ctx, d, m)
+	return resourceFmcFQDNObjectsRead(ctx, d, m)
 }
 
-func resourceFQDNObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFQDNObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

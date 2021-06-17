@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func dataSourcePortObjects() *schema.Resource {
+func dataSourceFmcPortObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Data source for Port Objects in FMC\n\n" +
 			"An example is shown below: \n" +
@@ -17,7 +17,7 @@ func dataSourcePortObjects() *schema.Resource {
 			"}\n" +
 			"```\n" +
 			"Any one of the id, name or port can be specified. The first filter in the order of id, name and port will be used, and the rest will be ignored if multiple are specified.",
-		ReadContext: dataSourcePortObjectsRead,
+		ReadContext: dataSourceFmcPortObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
@@ -52,7 +52,7 @@ func dataSourcePortObjects() *schema.Resource {
 	}
 }
 
-func dataSourcePortObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceFmcPortObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

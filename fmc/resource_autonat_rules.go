@@ -11,7 +11,7 @@ import (
 
 var autonat_rules_type string = "AutoNatRule"
 
-func resourceAutoNatRules() *schema.Resource {
+func resourceFmcAutoNatRules() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Auto NAT Rules in FMC\n" +
 			"\n" +
@@ -76,10 +76,10 @@ func resourceAutoNatRules() *schema.Resource {
 			"}\n" +
 			"```\n" +
 			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
-		CreateContext: resourceAutoNatRulesCreate,
-		ReadContext:   resourceAutoNatRulesRead,
-		UpdateContext: resourceAutoNatRulesUpdate,
-		DeleteContext: resourceAutoNatRulesDelete,
+		CreateContext: resourceFmcAutoNatRulesCreate,
+		ReadContext:   resourceFmcAutoNatRulesRead,
+		UpdateContext: resourceFmcAutoNatRulesUpdate,
+		DeleteContext: resourceFmcAutoNatRulesDelete,
 		Schema: map[string]*schema.Schema{
 			"nat_policy": {
 				Type:        schema.TypeString,
@@ -344,7 +344,7 @@ func resourceAutoNatRules() *schema.Resource {
 	}
 }
 
-func resourceAutoNatRulesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAutoNatRulesCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -412,10 +412,10 @@ func resourceAutoNatRulesCreate(ctx context.Context, d *schema.ResourceData, m i
 		return returnWithDiag(diags, err)
 	}
 	d.SetId(res.ID)
-	return resourceAutoNatRulesRead(ctx, d, m)
+	return resourceFmcAutoNatRulesRead(ctx, d, m)
 }
 
-func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -507,7 +507,7 @@ func resourceAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m int
 	return diags
 }
 
-func resourceAutoNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAutoNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -577,10 +577,10 @@ func resourceAutoNatRulesUpdate(ctx context.Context, d *schema.ResourceData, m i
 		}
 		d.SetId(res.ID)
 	}
-	return resourceAutoNatRulesRead(ctx, d, m)
+	return resourceFmcAutoNatRulesRead(ctx, d, m)
 }
 
-func resourceAutoNatRulesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcAutoNatRulesDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type

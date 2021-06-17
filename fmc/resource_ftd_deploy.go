@@ -8,7 +8,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func resourceFtdDeploy() *schema.Resource {
+func resourceFmcFtdDeploy() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for deploying changes to FTD in FMC\n" +
 			"\n" +
@@ -21,10 +21,10 @@ func resourceFtdDeploy() *schema.Resource {
 			"    force_deploy = false\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceFtdDeployCreate,
-		ReadContext:   resourceFtdDeployRead,
-		UpdateContext: resourceFtdDeployCreate,
-		DeleteContext: resourceFtdDeployDelete,
+		CreateContext: resourceFmcFtdDeployCreate,
+		ReadContext:   resourceFmcFtdDeployRead,
+		UpdateContext: resourceFmcFtdDeployCreate,
+		DeleteContext: resourceFmcFtdDeployDelete,
 		Schema: map[string]*schema.Schema{
 			"device": {
 				Type:     schema.TypeString,
@@ -42,7 +42,7 @@ func resourceFtdDeploy() *schema.Resource {
 	}
 }
 
-func resourceFtdDeployCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFtdDeployCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -78,7 +78,7 @@ func resourceFtdDeployCreate(ctx context.Context, d *schema.ResourceData, m inte
 	return diags
 }
 
-func resourceFtdDeployRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFtdDeployRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	_ = m.(*Client)
 	// Invalidate state
 	d.SetId("")
@@ -87,7 +87,7 @@ func resourceFtdDeployRead(ctx context.Context, d *schema.ResourceData, m interf
 	return diags
 }
 
-func resourceFtdDeployDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcFtdDeployDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	_ = m.(*Client)
 	// Invalidate state
 	d.SetId("")

@@ -9,7 +9,7 @@ import (
 
 var network_type string = "Network"
 
-func resourceNetworkObjects() *schema.Resource {
+func resourceFmcNetworkObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Network Objects in FMC\n" +
 			"\n" +
@@ -22,10 +22,10 @@ func resourceNetworkObjects() *schema.Resource {
 			"  description = \"Terraform DR network object\"\n" +
 			"}\n" +
 			"```",
-		CreateContext: resourceNetworkObjectsCreate,
-		ReadContext:   resourceNetworkObjectsRead,
-		UpdateContext: resourceNetworkObjectsUpdate,
-		DeleteContext: resourceNetworkObjectsDelete,
+		CreateContext: resourceFmcNetworkObjectsCreate,
+		ReadContext:   resourceFmcNetworkObjectsRead,
+		UpdateContext: resourceFmcNetworkObjectsUpdate,
+		DeleteContext: resourceFmcNetworkObjectsDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -51,7 +51,7 @@ func resourceNetworkObjects() *schema.Resource {
 	}
 }
 
-func resourceNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
@@ -72,10 +72,10 @@ func resourceNetworkObjectsCreate(ctx context.Context, d *schema.ResourceData, m
 		return diags
 	}
 	d.SetId(res.ID)
-	return resourceNetworkObjectsRead(ctx, d, m)
+	return resourceFmcNetworkObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
@@ -130,7 +130,7 @@ func resourceNetworkObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	return diags
 }
 
-func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
@@ -151,10 +151,10 @@ func resourceNetworkObjectsUpdate(ctx context.Context, d *schema.ResourceData, m
 			return diags
 		}
 	}
-	return resourceNetworkObjectsRead(ctx, d, m)
+	return resourceFmcNetworkObjectsRead(ctx, d, m)
 }
 
-func resourceNetworkObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcNetworkObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
