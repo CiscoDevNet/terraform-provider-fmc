@@ -79,6 +79,7 @@ func Provider() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),
+			"fmc_access_policies": dataSourceFmcAccessPolicies(),
 			"fmc_ips_policies":    dataSourceFmcIPSPolicies(),
 			"fmc_file_policies":   dataSourceFmcFilePolicies(),
 			"fmc_syslog_alerts":   dataSourceFmcSyslogAlerts(),
