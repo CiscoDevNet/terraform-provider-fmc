@@ -199,7 +199,6 @@ func resourceFmcURLObjectGroupRead(ctx context.Context, d *schema.ResourceData, 
 	for _, obj := range item.Objects {
 		obji := make(map[string]interface{})
 		obji["id"] = obj.ID
-		obji["name"] = obj.Name
 		obji["type"] = obj.Type
 		objects = append(objects, obji)
 	}
