@@ -250,7 +250,6 @@ func resourceFmcURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData
 				obji := obj.(map[string]interface{})
 				objs = append(objs, URLObjectGroupObjects{
 					ID:   obji["id"].(string),
-					Name: obji["name"].(string),
 					Type: obji["type"].(string),
 				})
 			}
