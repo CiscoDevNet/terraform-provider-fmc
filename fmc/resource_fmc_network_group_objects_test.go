@@ -14,7 +14,6 @@ func TestAccFmcNetworkGroupObjectBasic(t *testing.T) {
 	net1 := "1.1.1.0/24"
 	net2 := "1.1.2.0/24"
 	name := "test_network_group"
-	description := "Test network group"
 	literal := "1.1.1.1"
 
 	resource.Test(t, resource.TestCase{
@@ -23,7 +22,7 @@ func TestAccFmcNetworkGroupObjectBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcNetworkGroupObjectDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, description, literal),
+				Config: testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, literal),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcNetworkGroupObjectExists("fmc_network_group_objects.test"),
 				),
@@ -53,7 +52,7 @@ func testAccCheckFmcNetworkGroupObjectDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, description, literal string) string {
+func testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, literal string) string {
 	return fmt.Sprintf(`
 	resource "fmc_network_objects" "test1" {
 		name        = "test1"
@@ -64,11 +63,9 @@ func testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, description,
 	resource "fmc_network_objects" "test2" {
 		name        = "test2"
 		value       = "%s"
-		description = "testing 2"
 	}	  
     resource "fmc_network_group_objects" "test" {
 		name = "%s"
-		description = "%s"
 		objects {
 			id = fmc_network_objects.test1.id
 			type = fmc_network_objects.test1.type
@@ -82,7 +79,7 @@ func testAccCheckFmcNetworkGroupObjectConfigBasic(net1, net2, name, description,
 			type = "Host"
 		}
 	}
-    `, net1, net2, name, description, literal)
+    `, net1, net2, name, literal)
 }
 
 func testAccCheckFmcNetworkGroupObjectExists(n string) resource.TestCheckFunc {
