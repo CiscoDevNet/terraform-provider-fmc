@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var policy_devices_mappings_type string = "PolicyAssignment"
+var policy_devices_assignments_type string = "PolicyAssignment"
 
 func resourceFmcPolicyDevicesAssignments() *schema.Resource {
 	return &schema.Resource{
@@ -125,12 +125,12 @@ func resourceFmcPolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.Re
 		Description: d.Get("description").(string),
 		Policy:      policy,
 		Targets:     devices,
-		Type:        policy_devices_mappings_type,
+		Type:        policy_devices_assignments_type,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create policy devices mapping",
+			Summary:  "unable to create policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -150,7 +150,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read policy devices mapping",
+			Summary:  "unable to read policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -158,7 +158,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read policy devices mapping",
+			Summary:  "unable to read policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -167,7 +167,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err := d.Set("description", item.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read policy devices mapping",
+			Summary:  "unable to read policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -182,7 +182,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err := d.Set("policy", policy); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read policy devices mapping",
+			Summary:  "unable to read policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -199,7 +199,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err := d.Set("target_devices", devices); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read policy devices mapping",
+			Summary:  "unable to read policy devices assignment",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -239,12 +239,12 @@ func resourceFmcPolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.Re
 			Description: d.Get("description").(string),
 			Policy:      policy,
 			Targets:     devices,
-			Type:        policy_devices_mappings_type,
+			Type:        policy_devices_assignments_type,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
-				Summary:  "unable to create policy devices mapping",
+				Summary:  "unable to create policy devices assignment",
 				Detail:   err.Error(),
 			})
 			return diags
@@ -260,8 +260,8 @@ func resourceFmcPolicyDevicesAssignmentsDelete(ctx context.Context, d *schema.Re
 
 	diags = append(diags, diag.Diagnostic{
 		Severity: diag.Warning,
-		Summary:  "Devices mapping cannot be deleted, it will be deleted on reassignment",
-		Detail:   "This resourceFmc cannot be deleted",
+		Summary:  "Devices assignment cannot be deleted, it will be deleted on reassignment",
+		Detail:   "This resource cannot be deleted",
 	})
 
 	// d.SetId("") is automatically called assuming delete returns no errors, but
