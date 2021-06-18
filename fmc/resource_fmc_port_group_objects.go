@@ -64,11 +64,6 @@ func resourceFmcPortGroupObjects() *schema.Resource {
 							Required:    true,
 							Description: "The type of this resource",
 						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of this resource",
-						},
 					},
 				},
 				Description: "The list of port groups to add",
@@ -90,7 +85,6 @@ func resourceFmcPortGroupObjectsCreate(ctx context.Context, d *schema.ResourceDa
 			obji := obj.(map[string]interface{})
 			objs = append(objs, PortGroupObjectObjects{
 				ID:   obji["id"].(string),
-				Name: obji["name"].(string),
 				Type: obji["type"].(string),
 			})
 		}
@@ -190,7 +184,6 @@ func resourceFmcPortGroupObjectsUpdate(ctx context.Context, d *schema.ResourceDa
 				obji := obj.(map[string]interface{})
 				objs = append(objs, PortGroupObjectObjects{
 					ID:   obji["id"].(string),
-					Name: obji["name"].(string),
 					Type: obji["type"].(string),
 				})
 			}

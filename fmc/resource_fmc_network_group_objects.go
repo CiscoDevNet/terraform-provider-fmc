@@ -68,11 +68,6 @@ func resourceFmcNetworkGroupObjects() *schema.Resource {
 							Required:    true,
 							Description: "The type of this resource",
 						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of this resource",
-						},
 					},
 				},
 				Description: "List of network objects to add",
@@ -114,7 +109,6 @@ func resourceFmcNetworkGroupObjectsCreate(ctx context.Context, d *schema.Resourc
 			obji := obj.(map[string]interface{})
 			objs = append(objs, NetworkGroupObjectObjects{
 				ID:   obji["id"].(string),
-				Name: obji["name"].(string),
 				Type: obji["type"].(string),
 			})
 		}
