@@ -97,6 +97,11 @@ func resourceFmcURLObjectGroup() *schema.Resource {
 							Required:    true,
 							Description: "The value URL for this resource",
 						},
+						"type": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The type of this resource",
+						},
 					},
 				},
 				Description: "List of URL literals to add",
