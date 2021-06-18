@@ -205,7 +205,6 @@ func resourceFmcNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceD
 	for _, obj := range item.Objects {
 		obji := make(map[string]interface{})
 		obji["id"] = obj.ID
-		obji["name"] = obj.Name
 		obji["type"] = obj.Type
 		objects = append(objects, obji)
 	}
