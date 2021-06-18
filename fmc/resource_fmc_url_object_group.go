@@ -68,11 +68,6 @@ func resourceFmcURLObjectGroup() *schema.Resource {
 							Required:    true,
 							Description: "The type of this resource",
 						},
-						"name": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The name of this resource",
-						},
 					},
 				},
 				Description: "List of URL objects to add",
@@ -82,11 +77,6 @@ func resourceFmcURLObjectGroup() *schema.Resource {
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"type": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The type of this resource",
-						},
 						"url": {
 							Type:        schema.TypeString,
 							Required:    true,
@@ -114,7 +104,6 @@ func resourceFmcURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData
 			obji := obj.(map[string]interface{})
 			objs = append(objs, URLObjectGroupObjects{
 				ID:   obji["id"].(string),
-				Name: obji["name"].(string),
 				Type: obji["type"].(string),
 			})
 		}
@@ -125,7 +114,7 @@ func resourceFmcURLObjectGroupCreate(ctx context.Context, d *schema.ResourceData
 			liti := lit.(map[string]interface{})
 			lits = append(lits, URLObjectGroupLiterals{
 				URL:  liti["url"].(string),
-				Type: liti["type"].(string),
+				Type: url_type,
 			})
 		}
 	}
@@ -253,7 +242,7 @@ func resourceFmcURLObjectGroupUpdate(ctx context.Context, d *schema.ResourceData
 				liti := lit.(map[string]interface{})
 				lits = append(lits, URLObjectGroupLiterals{
 					URL:  liti["url"].(string),
-					Type: liti["type"].(string),
+					Type: url_type,
 				})
 			}
 		}
