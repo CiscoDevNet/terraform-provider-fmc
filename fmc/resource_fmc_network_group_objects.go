@@ -47,6 +47,21 @@ func resourceFmcNetworkGroupObjects() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "The description of this resource",
+				Default:     " ",
+				StateFunc: func(val interface{}) string {
+					state := val.(string)
+					if val == nil || state == "" || state == " " {
+						return " "
+					}
+					return state
+				},
+				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
+					// Fix for bug in the FMC API which returns " " for empty description
+					if (new == " " && old == "") || (old == " " && new == "") {
+						return true
+					}
+					return old == new
+				},
 			},
 			"type": {
 				Type:        schema.TypeString,
