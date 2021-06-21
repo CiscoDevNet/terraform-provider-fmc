@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -148,11 +149,20 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	id := d.Id()
 	item, err := c.GetFmcPolicyDevicesAssignment(ctx, id)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read policy devices assignment",
-			Detail:   err.Error(),
-		})
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Warning,
+				Summary:  "Policy device assignment not found, deleted",
+				Detail:   err.Error(),
+			})
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read policy devices assignment",
+				Detail:   err.Error(),
+			})
+		}
 		return diags
 	}
 	if err := d.Set("name", item.Name); err != nil {
