@@ -58,6 +58,20 @@ func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device string) st
 	data "fmc_devices" "device" {
 		name = "%s"
 	}
+	resource "fmc_access_policies" "access_policy" {
+		name = "Pre Test Access Policy"
+		default_action = "block"
+	}
+	resource "fmc_policy_devices_assignments" "pre-test" {
+		policy {
+			id = fmc_access_policies.access_policy.id
+			type = fmc_access_policies.access_policy.type
+		}
+		target_devices {
+			id = data.fmc_devices.device.id
+			type = data.fmc_devices.device.type
+		}
+	}
 	resource "fmc_policy_devices_assignments" "test" {
 		policy {
 			id = data.fmc_access_policies.access_policy.id
@@ -67,6 +81,7 @@ func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device string) st
 			id = data.fmc_devices.device.id
 			type = data.fmc_devices.device.type
 		}
+		depends_on = [ fmc_policy_devices_assignments.pre-test ]
 	}
     `, policy, device)
 }
