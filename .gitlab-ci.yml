@@ -41,3 +41,4 @@ release:
     paths:
       - release.tgz
       - release.zip
+  when: manual
