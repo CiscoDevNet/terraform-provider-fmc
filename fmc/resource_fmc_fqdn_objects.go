@@ -134,7 +134,7 @@ func resourceFmcFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 		})
 		return diags
 	}
-	if err := d.Set("dns_resolution", item.Value); err != nil {
+	if err := d.Set("dns_resolution", item.DNSResolution); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read fqdn object",
