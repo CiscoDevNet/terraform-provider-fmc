@@ -11,7 +11,8 @@ import (
 )
 
 func TestAccFmcPolicyDeviceAssignmentsBasic(t *testing.T) {
-	policy := "FTD"
+	newPolicy := "FTD-Test"
+	revertPolicy := "FTD"
 	device := "ftd.adyah.cisco"
 
 	resource.Test(t, resource.TestCase{
@@ -20,10 +21,11 @@ func TestAccFmcPolicyDeviceAssignmentsBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcPolicyDeviceAssignmentsDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device),
+				Config: testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(newPolicy, revertPolicy, device),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcPolicyDeviceAssignmentsExists("fmc_policy_devices_assignments.test"),
 				),
+				ExpectNonEmptyPlan: true,
 			},
 		},
 	})
@@ -50,8 +52,12 @@ func testAccCheckFmcPolicyDeviceAssignmentsDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device string) string {
+func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(newPolicy, revertPolicy, device string) string {
 	return fmt.Sprintf(`
+	resource "fmc_access_policies" "access_policy" {
+		name = "%s"
+		default_action = "block"
+	}
 	data "fmc_access_policies" "access_policy" {
 		name = "%s"
 	}
@@ -60,6 +66,16 @@ func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device string) st
 	}
 	resource "fmc_policy_devices_assignments" "test" {
 		policy {
+			id = fmc_access_policies.access_policy.id
+			type = fmc_access_policies.access_policy.type
+		}
+		target_devices {
+			id = data.fmc_devices.device.id
+			type = data.fmc_devices.device.type
+		}
+	}
+	resource "fmc_policy_devices_assignments" "test-revert" {
+		policy {
 			id = data.fmc_access_policies.access_policy.id
 			type = data.fmc_access_policies.access_policy.type
 		}
@@ -67,8 +83,9 @@ func testAccCheckFmcPolicyDeviceAssignmentsConfigBasic(policy, device string) st
 			id = data.fmc_devices.device.id
 			type = data.fmc_devices.device.type
 		}
+		depends_on = [ fmc_policy_devices_assignments.test ]
 	}
-    `, policy, device)
+    `, newPolicy, revertPolicy, device)
 }
 
 func testAccCheckFmcPolicyDeviceAssignmentsExists(n string) resource.TestCheckFunc {
