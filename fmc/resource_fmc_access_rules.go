@@ -529,12 +529,12 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
-	dynamicSimpleObjects := []*AccessRuleSubConfig{
-		ipsPolicy, filePolicy, syslogConfig,
+	dynamicSimpleObjects := []**AccessRuleSubConfig{
+		&ipsPolicy, &filePolicy, &syslogConfig,
 	}
 	for i, objType := range []string{"ips_policy", "file_policy", "syslog_config"} {
 		if inputEntry, ok := d.GetOk(objType); ok {
-			dynamicSimpleObjects[i] = &AccessRuleSubConfig{
+			*dynamicSimpleObjects[i] = &AccessRuleSubConfig{
 				ID: inputEntry.(string),
 			}
 		}
@@ -669,6 +669,19 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		}
 	}
 
+	dynamicSimpleObjects := []*AccessRuleResponseObject{
+		&item.Ipspolicy, &item.Filepolicy, &item.Syslogconfig,
+	}
+	for i, objType := range []string{"ips_policy", "file_policy", "syslog_config"} {
+		id := &dynamicSimpleObjects[i].ID
+		if *id == "" {
+			id = nil
+		}
+		if err := d.Set(objType, id); err != nil {
+			return returnWithDiag(diags, err)
+		}
+	}
+
 	return diags
 }
 
@@ -696,12 +709,12 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 		}
 
 		var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
-		dynamicSimpleObjects := []*AccessRuleSubConfig{
-			ipsPolicy, filePolicy, syslogConfig,
+		dynamicSimpleObjects := []**AccessRuleSubConfig{
+			&ipsPolicy, &filePolicy, &syslogConfig,
 		}
 		for i, objType := range []string{"ips_policy", "file_policy", "syslog_config"} {
 			if inputEntry, ok := d.GetOk(objType); ok {
-				dynamicSimpleObjects[i] = &AccessRuleSubConfig{
+				*dynamicSimpleObjects[i] = &AccessRuleSubConfig{
 					ID: inputEntry.(string),
 				}
 			}

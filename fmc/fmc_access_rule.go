@@ -10,7 +10,7 @@ import (
 
 type AccessRuleSubConfig struct {
 	ID   string `json:"id"`
-	Type string `json:"type"`
+	Type string `json:"type,omitempty"`
 }
 
 type AccessRuleSubConfigs struct {
@@ -127,6 +127,7 @@ type AccessRuleResponse struct {
 	Variableset AccessRuleResponseObject `json:"variableSet"`
 	Logfiles    bool                     `json:"logFiles"`
 	Filepolicy  AccessRuleResponseObject `json:"filePolicy"`
+	Ipspolicy   AccessRuleResponseObject `json:"ipsPolicy"`
 	Name        string                   `json:"name"`
 }
 
