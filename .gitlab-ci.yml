@@ -1,0 +1,88 @@
+image: golang:latest
+
+variables:
+  # Please edit to your GitLab project
+  REPO_NAME: gitlab-sjc.cisco.com/tfprovider/fmc-terraform
+
+# The problem is that to be able to use go get, one needs to put
+# the repository in the $GOPATH. So for example if your gitlab domain
+# is gitlab.com, and that your repository is namespace/project, and
+# the default GOPATH being /go, then you'd need to have your
+# repository in /go/src/gitlab.com/namespace/project
+# Thus, making a symbolic link corrects this.
+before_script:
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - cd $GOPATH/src/$REPO_NAME
+
+stages:
+  - test
+  - test-acc
+  - build
+  - release
+
+test:
+  stage: test
+  script:
+    - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+    - make test
+
+test-acc:
+  stage: test-acc
+  when: manual
+  script:
+    - cd /usr/local/share/ca-certificates
+    - openssl s_client -showcerts -verify 5 -connect $FMC_HOST:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".pem"; print >out}'; for cert in *.pem; do newname=$(openssl x509 -noout -subject -in $cert | sed -nE 's/.*CN ?= ?(.*)/\1/; s/[ ,.*]/_/g; s/__/_/g; s/_-_/-/; s/^_//g;p' | tr '[:upper:]' '[:lower:]').crt; echo "${newname}"; mv "${cert}" "${newname}"; done
+    - update-ca-certificates
+    - cd $GOPATH/src/$REPO_NAME
+    - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+    - make testacc
+
+build:
+  stage: build
+  script:
+    - apt update && apt install zip -y
+    - make release
+  artifacts:
+    paths:
+      - release.tgz
+      - release.zip
+
+tag:
+  stage: build
+  only:
+    - release
+    - master
+  image: 
+    name: alpine/git
+    entrypoint: [""]
+  script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - git config user.email "${GITLAB_USER_EMAIL}"
+    - git config user.name "${GITLAB_USER_NAME}"
+    - git tag -a "Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
+    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)"
+
+release:
+  when: manual
+  only:
+    - tags
+    - release
+    - master
+  image: inetprocess/gitlab-release
+  stage: release
+  dependencies: 
+    - build
+    - tag
+  script:
+    - gitlab-release --message 'Automatic release' release.*
