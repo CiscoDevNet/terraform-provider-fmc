@@ -64,9 +64,9 @@ tag:
   script:
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git remote add origin https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/${CI_PROJECT_PATH}
+    - git remote add tag_origin https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/${CI_PROJECT_PATH}
     - git tag -a "Release_$(date +%Y-%m-%d)" -m "Auto-Release"
-    - git push origin "Release_$(date +%Y-%m-%d)"
+    - git push tag_origin "Release_$(date +%Y-%m-%d)"
 
 release:
   when: manual
