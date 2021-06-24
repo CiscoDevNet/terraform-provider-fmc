@@ -20,12 +20,20 @@ before_script:
 
 stages:
   - test
-  - build-test
+  - test-acc
   - build
   - release
 
 test:
   stage: test
+  script:
+    - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
+    - go fmt $(go list ./... | grep -v /vendor/)
+    - go vet $(go list ./... | grep -v /vendor/)
+    - make test
+
+test-acc:
+  stage: test-acc
   when: manual
   script:
     - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
@@ -33,14 +41,10 @@ test:
     - go vet $(go list ./... | grep -v /vendor/)
     - make testacc
 
-build-test:
-  stage: build-test
-  script:
-    - make
-
 build:
   stage: build
   script:
+    - apt update && apt install zip -y
     - make release
   artifacts:
     paths:
