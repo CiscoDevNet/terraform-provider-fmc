@@ -69,9 +69,8 @@ tag:
     - chmod 700 ~/.ssh
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git remote add tag_origin git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH}.git
     - git tag -a "Release_$(date +%Y-%m-%d)" -m "Auto-Release"
-    - git push tag_origin "Release_$(date +%Y-%m-%d)"
+    - git push git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH} "Release_$(date +%Y-%m-%d)"
 
 release:
   when: manual
