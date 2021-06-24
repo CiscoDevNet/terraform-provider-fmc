@@ -11,9 +11,6 @@ variables:
 # repository in /go/src/gitlab.com/namespace/project
 # Thus, making a symbolic link corrects this.
 before_script:
-  - cd /usr/local/share/ca-certificates
-  - openssl s_client -showcerts -verify 5 -connect $FMC_HOST:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".pem"; print >out}'; for cert in *.pem; do newname=$(openssl x509 -noout -subject -in $cert | sed -nE 's/.*CN ?= ?(.*)/\1/; s/[ ,.*]/_/g; s/__/_/g; s/_-_/-/; s/^_//g;p' | tr '[:upper:]' '[:lower:]').crt; echo "${newname}"; mv "${cert}" "${newname}"; done
-  - update-ca-certificates
   - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
   - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
   - cd $GOPATH/src/$REPO_NAME
@@ -36,6 +33,10 @@ test-acc:
   stage: test-acc
   when: manual
   script:
+    - cd /usr/local/share/ca-certificates
+    - openssl s_client -showcerts -verify 5 -connect $FMC_HOST:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".pem"; print >out}'; for cert in *.pem; do newname=$(openssl x509 -noout -subject -in $cert | sed -nE 's/.*CN ?= ?(.*)/\1/; s/[ ,.*]/_/g; s/__/_/g; s/_-_/-/; s/^_//g;p' | tr '[:upper:]' '[:lower:]').crt; echo "${newname}"; mv "${cert}" "${newname}"; done
+    - update-ca-certificates
+    - cd $GOPATH/src/$REPO_NAME
     - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
     - go fmt $(go list ./... | grep -v /vendor/)
     - go vet $(go list ./... | grep -v /vendor/)
