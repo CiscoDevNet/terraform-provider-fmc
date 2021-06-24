@@ -62,9 +62,14 @@ tag:
     name: alpine/git
     entrypoint: [""]
   script:
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git remote add tag_origin https://oauth2:${GITLAB_ACCESS_TOKEN}@gitlab.com/${CI_PROJECT_PATH}
+    - git remote add tag_origin git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH}.git
     - git tag -a "Release_$(date +%Y-%m-%d)" -m "Auto-Release"
     - git push tag_origin "Release_$(date +%Y-%m-%d)"
 
