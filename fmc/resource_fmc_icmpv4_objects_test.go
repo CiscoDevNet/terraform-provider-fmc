@@ -11,7 +11,7 @@ import (
 )
 
 func TestAccFmcICMPV4ObjectBasic(t *testing.T) {
-	name := "test_ipv4_obj"
+	name := "test_icmpv4_obj"
 	icmp_type := "3"
 	code := 2
 
