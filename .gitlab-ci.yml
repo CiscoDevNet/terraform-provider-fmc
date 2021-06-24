@@ -82,13 +82,12 @@ tag:
 release:
   when: manual
   only:
+    - tags
     - test
     - release
     - master
   image: inetprocess/gitlab-release
   stage: release
-  only:
-    - tags
   dependencies: 
     - build
     - tag
