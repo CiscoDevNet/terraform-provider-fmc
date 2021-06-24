@@ -69,6 +69,7 @@ tag:
     - chmod 700 ~/.ssh
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
+    - git tag
     - git tag -a "Release_$(date +%Y-%m-%d)" -m "Auto-Release"
     - git push git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH} "Release_$(date +%Y-%m-%d)"
 
