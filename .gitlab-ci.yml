@@ -73,6 +73,7 @@ tag:
     - git config user.name "${GITLAB_USER_NAME}"
     - git tag
     - git tag -a "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_BRANCH}"
+    - ssh -vvvv git@gitlab-sjc.cisco.com
     - git push git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH} "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)"
 
 release:
