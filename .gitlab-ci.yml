@@ -46,10 +46,9 @@ build:
 
 tag:
   stage: build
-  when: manual
-  rules:
-    - if: $CI_COMMIT_BRANCH == "release"
-      when: always
+  only:
+    - release
+    - master
   image: 
     name: alpine/git
     entrypoint: [""]
@@ -61,10 +60,10 @@ tag:
     - git push origin "Release_$(date +%Y-%m-%d)"
 
 release:
-  when: never
-  rules:
-    - if: $CI_COMMIT_BRANCH == "release" || $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-      when: manual
+  when: manual
+  only:
+    - release
+    - master
   image: inetprocess/gitlab-release
   stage: release
   only:
