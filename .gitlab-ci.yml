@@ -71,11 +71,8 @@ tag:
     - chmod 644 ~/.ssh/known_hosts
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git tag
-    - git tag -a "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_BRANCH}"
-    - ssh -vvvv git@gitlab-sjc.cisco.com
-    - echo git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)"
-    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)"
+    - git tag -a "Release_$(git branch --show-current)_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for $(git branch --show-current)"
+    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "Release_$(git branch --show-current)_$(date +%Y-%m-%d-%H-%M)"
 
 release:
   when: manual
