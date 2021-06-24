@@ -70,8 +70,8 @@ tag:
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
     - git tag
-    - git tag -a "Release_$(date +%Y-%m-%d)" -m "Auto-Release"
-    - git push git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH} "Release_$(date +%Y-%m-%d)"
+    - git tag -a "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_BRANCH}"
+    - git push git@gitlab-sjc.cisco.com:tfprovider/${CI_PROJECT_PATH} "Release_${CI_COMMIT_BRANCH}_$(date +%Y-%m-%d-%H-%M)"
 
 release:
   when: manual
