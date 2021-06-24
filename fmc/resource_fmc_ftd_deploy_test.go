@@ -66,16 +66,7 @@ func testAccCheckFmcFtdDeployConfigBasic(device string) string {
 
 func testAccCheckFmcFtdDeployExists(n string) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
-		rs, ok := s.RootModule().Resources[n]
-
-		if !ok {
-			return fmt.Errorf("Not found: %s", n)
-		}
-
-		if rs.Primary.ID == "" {
-			return fmt.Errorf("No ID set")
-		}
-
+		// FTD deploy does not create a resource that is saved in state.
 		return nil
 	}
 }
