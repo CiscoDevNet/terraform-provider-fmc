@@ -23,6 +23,8 @@ stages:
 
 test:
   stage: test
+  only:
+    - branches
   script:
     - 'echo "Config: host: $FMC_HOST, user: $FMC_USERNAME, insecure: $FMC_INSECURE_SKIP_VERIFY"'
     - go fmt $(go list ./... | grep -v /vendor/)
@@ -31,6 +33,8 @@ test:
 
 test-acc:
   stage: test-acc
+  only:
+    - branches
   when: manual
   script:
     - cd /usr/local/share/ca-certificates
@@ -77,8 +81,6 @@ release:
   when: manual
   only:
     - tags
-    - release
-    - master
   image: inetprocess/gitlab-release
   stage: release
   dependencies: 
