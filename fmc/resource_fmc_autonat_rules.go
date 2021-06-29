@@ -389,10 +389,14 @@ func resourceFmcAutoNatRulesCreate(ctx context.Context, d *schema.ResourceData, 
 	}
 	if pat_o := d.Get("pat_options").([]interface{}); len(pat_o) > 0 {
 		pat_options := pat_o[0].(map[string]interface{})
-		pat_pool_options := pat_options["pat_pool_address"].([]interface{})[0].(map[string]interface{})
-		pat_pool := AutoNatRuleSubConfig{
-			ID:   pat_pool_options["id"].(string),
-			Type: pat_pool_options["type"].(string),
+		pat_pool_address_list := pat_options["pat_pool_address"].([]interface{})
+		var pat_pool *AutoNatRuleSubConfig
+		if len(pat_pool_address_list) != 0 {
+			pat_pool_address := pat_pool_address_list[0].(map[string]interface{})
+			pat_pool = &AutoNatRuleSubConfig{
+				ID:   pat_pool_address["id"].(string),
+				Type: pat_pool_address["type"].(string),
+			}
 		}
 		patOptions = &AutoNatRulePatOptions{
 			Patpooladdress: pat_pool,
@@ -509,9 +513,11 @@ func resourceFmcAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m 
 
 	if item.Patoptions != (AutoNatRulePatOptions{}) {
 		pat_options := make(map[string]interface{})
-		pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
+		if item.Patoptions.Patpooladdress != nil && *item.Patoptions.Patpooladdress != (AutoNatRuleSubConfig{}) {
+			pat_options["pat_pool_address"] = convertTo1ListMapStringGeneric(item.Patoptions.Patpooladdress)
+		}
 		pat_options["interface_pat"] = item.Patoptions.Interfacepat
-		pat_options["include_reserve_ports"] = item.Patoptions.Interfacepat
+		pat_options["include_reserve_ports"] = item.Patoptions.Includereserve
 		pat_options["extended_pat_table"] = item.Patoptions.Extendedpat
 		pat_options["round_robin"] = item.Patoptions.Roundrobin
 		if err := d.Set("pat_options", convertTo1ListGeneric(pat_options)); err != nil {
@@ -553,10 +559,14 @@ func resourceFmcAutoNatRulesUpdate(ctx context.Context, d *schema.ResourceData, 
 		}
 		if pat_o := d.Get("pat_options").([]interface{}); len(pat_o) > 0 {
 			pat_options := pat_o[0].(map[string]interface{})
-			pat_pool_options := pat_options["pat_pool_address"].([]interface{})[0].(map[string]interface{})
-			pat_pool := AutoNatRuleSubConfig{
-				ID:   pat_pool_options["id"].(string),
-				Type: pat_pool_options["type"].(string),
+			pat_pool_address_list := pat_options["pat_pool_address"].([]interface{})
+			var pat_pool *AutoNatRuleSubConfig
+			if len(pat_pool_address_list) != 0 {
+				pat_pool_address := pat_pool_address_list[0].(map[string]interface{})
+				pat_pool = &AutoNatRuleSubConfig{
+					ID:   pat_pool_address["id"].(string),
+					Type: pat_pool_address["type"].(string),
+				}
 			}
 			patOptions = &AutoNatRulePatOptions{
 				Patpooladdress: pat_pool,
