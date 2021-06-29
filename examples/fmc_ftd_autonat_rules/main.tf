@@ -33,6 +33,10 @@ data "fmc_host_objects" "CUCMPub" {
   name = "CUCM-Pub"
 }
 
+data "fmc_host_objects" "CUCMPubDR" {
+  name = "CUCM-Pub-DR"
+}
+
 resource "fmc_ftd_nat_policies" "nat_policy" {
     name = "Terraform NAT Policy"
     description = "New NAT policy!"
@@ -90,6 +94,29 @@ resource "fmc_ftd_autonat_rules" "new_rule_2" {
             type = data.fmc_network_objects.private.type
         }
         extended_pat_table = true
+        round_robin = true
+    }
+    ipv6 = true
+}
+
+resource "fmc_ftd_autonat_rules" "new_rule_3" {
+    nat_policy = fmc_ftd_nat_policies.nat_policy.id
+    description = "Testing Auto NAT pub-priv without PAT pool"
+    nat_type = "dynamic"
+    source_interface {
+        id = data.fmc_security_zones.outside.id
+        # type = data.fmc_security_zones.outside.type
+    }
+    destination_interface {
+        id = data.fmc_security_zones.outside.id
+        # type = data.fmc_security_zones.outside.type
+    }
+    original_network {
+        id = data.fmc_host_objects.CUCMPubDR.id
+        # type = data.fmc_host_objects.CUCMPubDR.type
+    }
+    pat_options {
+        interface_pat = true
         round_robin = true
     }
     ipv6 = true

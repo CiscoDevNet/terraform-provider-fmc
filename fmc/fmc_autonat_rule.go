@@ -15,7 +15,7 @@ type AutoNatRuleSubConfig struct {
 }
 
 type AutoNatRulePatOptions struct {
-	Patpooladdress AutoNatRuleSubConfig `json:"patPoolAddress"`
+	Patpooladdress *AutoNatRuleSubConfig `json:"patPoolAddress"`
 	// Blockallocation bool                 `json:"blockAllocation"`
 	// Flatportrange   bool                 `json:"flatPortRange"`
 	Includereserve bool `json:"includeReserve"`
