@@ -67,9 +67,10 @@ func resourceFmcFtdDeployCreate(ctx context.Context, d *schema.ResourceData, m i
 		Devicelist:    []string{device_id},
 	}
 	if err := c.DeployToFTD(ctx, object); err != nil {
+		d.SetId(fmt.Sprintf("Error in deployment, there might be another deployment in progress for device Name: %s ID: %s", device.Name, device_id))
 		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "Error in deployment",
+			Severity: diag.Warning,
+			Summary:  "Error in deployment, there might be another deployment in progress!",
 			Detail:   err.Error(),
 		})
 		return diags
