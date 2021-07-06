@@ -20,7 +20,6 @@ stages:
   - test-acc
   - tag
   - manual-build
-  - build
   - release
 
 test:
@@ -78,26 +77,27 @@ manual_build:
       - release.tgz
       - release.zip
 
-build:
-  stage: build
-  only:
-    - tags
-  script:
-    - apt update && apt install zip -y
-    - make release
-  artifacts:
-    paths:
-      - release.tgz
-      - release.zip
-
 release:
-  when: manual
+  stage: release
+  image:
+    name: goreleaser/goreleaser
+    entrypoint: ['']
   only:
     - tags
-  image: inetprocess/gitlab-release
-  stage: release
-  dependencies: 
-    - build
-    - tag
+  variables:
+    # Disable shallow cloning so that goreleaser can diff between tags to
+    # generate a changelog.
+    GIT_DEPTH: 0
   script:
-    - gitlab-release --message 'Automatic release' release.*
+    # Install GPG tools and import private key
+    - apk add --no-cache gnupg
+    - gpg-agent --daemon --default-cache-ttl 7200
+    - echo -e "${GPG_PRIVATE_KEY}" | gpg --import --batch --no-tty
+    # Test if passphrase is correct by using it to sign
+    - echo "hello world" > temp.txt
+    - pkill -9 gpg-agent && source <(gpg-agent --daemon --default-cache-ttl 7200) && gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${PASSPHRASE}" temp.txt
+    - rm temp.txt
+    # Export fingerprint
+    - "GPG_FINGERPRINT=$(gpg --with-colons --list-keys | awk -F: '/^pub/ { print $5 }')"
+    # Release
+    - goreleaser release --rm-dist
