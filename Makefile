@@ -1,6 +1,6 @@
 TEST?=$$(go list ./... | grep -v 'vendor')
-HOSTNAME=hashicorp.com
-NAMESPACE=cisco
+HOSTNAME=registry.terraform.io
+NAMESPACE=CiscoDevNet
 NAME=fmc
 BINARY=terraform-provider-${NAME}
 VERSION=0.2
