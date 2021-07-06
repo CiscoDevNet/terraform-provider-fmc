@@ -95,7 +95,7 @@ release:
     - echo -e "${GPG_PRIVATE_KEY}" | gpg --import --batch --no-tty
     # Test if passphrase is correct by using it to sign
     - echo "hello world" > temp.txt
-    - gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${PASSPHRASE}" temp.txt
+    - pkill -9 gpg-agent && source <(gpg-agent --daemon --default-cache-ttl 7200) && gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${PASSPHRASE}" temp.txt
     - rm temp.txt
     # Export fingerprint
     - "GPG_FINGERPRINT=$(gpg --with-colons --list-keys | awk -F: '/^pub/ { print $5 }')"
