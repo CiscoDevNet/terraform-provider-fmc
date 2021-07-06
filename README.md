@@ -53,7 +53,8 @@ Note: Check examples for more detail.
 terraform {
   required_providers {
     fmc = {
-      source = "hashicorp.com/cisco/fmc"
+      source = "CiscoDevNet/fmc"
+      # version = "0.1.1"
     }
   }
 }
