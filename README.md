@@ -10,7 +10,6 @@ Go ahead and install terraform on your machine. You can get more instructions fo
 
 Follow the below steps to add this provider to your terraform plugins directory. This is only needed for development. For normal use, let the terraform download it from Hashicorp registry.
 
-
 - Download the latest suitable release from [Releases](https://github.com/CiscoDevNet/terraform-provider-fmc/releases/latest).
 - Follow the [document here](https://www.terraform.io/docs/cli/config/config-file.html#provider-installation) to install the same.
 
@@ -38,7 +37,6 @@ terraform {
 Initializing the backend...
 
 Initializing provider plugins...
-<<<<<<< README.md
 - Finding latest version of ciscodevnet/fmc...
 - Installing ciscodevnet/fmc v0.1.1...
 - Installed ciscodevnet/fmc v0.1.1 (signed by a HashiCorp partner, key ID 6EC4A79DAB7CB6D0)
