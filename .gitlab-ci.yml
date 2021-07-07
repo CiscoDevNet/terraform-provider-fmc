@@ -63,8 +63,8 @@ tag:
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
     - export CURR_TAG=$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=0; print $0}')
-    - git tag -a "${CURR_TAG}-Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
-    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "${CURR_TAG}-Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)"
+    - git tag -a "${CURR_TAG}-${CI_COMMIT_REF_NAME}$(date +%Y%m%d%H%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
+    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "${CURR_TAG}${CI_COMMIT_REF_NAME}$(date +%Y%m%d%H%M)"
 
 manual_build:
   stage: manual-build
@@ -79,7 +79,7 @@ manual_build:
     # generate a changelog.
     GIT_DEPTH: 0
   script:
-    - goreleaser build --snapshot --skip-publish --rm-dist -f .goreleaser.gitlab.manual.yml
+    - goreleaser release --snapshot --rm-dist -f .goreleaser.gitlab.manual.yml
   artifacts:
     paths:
       - dist/*.zip
