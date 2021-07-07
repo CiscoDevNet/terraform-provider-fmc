@@ -20,6 +20,7 @@ stages:
   - test-acc
   - tag
   - manual-build
+  - build
   - release
 
 test:
@@ -61,24 +62,31 @@ tag:
     - chmod 644 ~/.ssh/known_hosts
     - git config user.email "${GITLAB_USER_EMAIL}"
     - git config user.name "${GITLAB_USER_NAME}"
-    - git tag -a "Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
-    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)"
+    - export CURR_TAG=$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=0; print $0}')
+    - git tag -a "${CURR_TAG}-Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
+    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "${CURR_TAG}-Release_${CI_COMMIT_REF_NAME}_$(date +%Y-%m-%d-%H-%M)"
 
 manual_build:
   stage: manual-build
   when: manual
+  image:
+    name: goreleaser/goreleaser
+    entrypoint: ['']
   only:
     - branches
+  variables:
+    # Disable shallow cloning so that goreleaser can diff between tags to
+    # generate a changelog.
+    GIT_DEPTH: 0
   script:
-    - apt update && apt install zip -y
-    - make release
+    - goreleaser build --snapshot --skip-publish --rm-dist -f .goreleaser.gitlab.manual.yml
   artifacts:
     paths:
-      - release.tgz
-      - release.zip
+      - dist/*.zip
+      - dist/*SHA256SUMS*
 
-release:
-  stage: release
+build:
+  stage: build
   image:
     name: goreleaser/goreleaser
     entrypoint: ['']
@@ -98,6 +106,20 @@ release:
     - pkill -9 gpg-agent && source <(gpg-agent --daemon --default-cache-ttl 7200) && gpg --detach-sig --yes -v --output=/dev/null --pinentry-mode loopback --passphrase "${PASSPHRASE}" temp.txt
     - rm temp.txt
     # Export fingerprint
-    - "GPG_FINGERPRINT=$(gpg --with-colons --list-keys | awk -F: '/^pub/ { print $5 }')"
+    - "export GPG_FINGERPRINT=$(gpg --with-colons --list-keys | awk -F: '/^pub/ { print $5 }')"
     # Release
-    - goreleaser release --rm-dist
+    - goreleaser release --rm-dist -f .goreleaser.gitlab.yml
+  artifacts:
+    paths:
+      - dist/*.zip
+      - dist/*SHA256SUMS*
+
+release:
+  only:
+    - tags
+  image: inetprocess/gitlab-release
+  stage: release
+  dependencies: 
+    - build
+  script:
+    - gitlab-release --message 'Automatic release' dist/*
