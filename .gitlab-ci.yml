@@ -64,7 +64,7 @@ tag:
     - git config user.name "${GITLAB_USER_NAME}"
     - export CURR_TAG=$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=0; print $0}')
     - git tag -a "${CURR_TAG}-${CI_COMMIT_REF_NAME}$(date +%Y%m%d%H%M)" -m "Auto-Release for ${CI_COMMIT_REF_NAME}"
-    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "${CURR_TAG}${CI_COMMIT_REF_NAME}$(date +%Y%m%d%H%M)"
+    - git push git@gitlab-sjc.cisco.com:${CI_PROJECT_PATH} "${CURR_TAG}-${CI_COMMIT_REF_NAME}$(date +%Y%m%d%H%M)"
 
 manual_build:
   stage: manual-build
