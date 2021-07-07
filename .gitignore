@@ -12,4 +12,5 @@ terraform.tfstate.backup
 /.idea/.gitignore
 release/
 release.*
+!release.yml
 dist/
