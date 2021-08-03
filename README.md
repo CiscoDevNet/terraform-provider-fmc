@@ -1,5 +1,7 @@
 # FMC Provider for terraform
 
+> **Note:** this Terraform provider is now publically available on the [Terraform Registry](https://registry.terraform.io/providers/CiscoDevNet/fmc/latest).
+
 This project is a terraform provider which interacts with the FMC APIs making it manageable statefully from terraform.
 
 ## 0. Prerequisites
