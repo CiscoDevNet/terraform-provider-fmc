@@ -50,6 +50,15 @@ module "fmc" {
 
 # outputs 
 
-output "FMCv_EIP" {
+output "fmc_ip" {
   value = module.fmc.FMCv_EIPs[0]
+}
+
+output "fmc_username" {
+    // default value, can't be changed
+    value = "admin"
+}
+
+output "fmc_password" { 
+  value = var.fmc_password
 }

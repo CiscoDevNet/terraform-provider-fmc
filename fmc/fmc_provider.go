@@ -3,7 +3,6 @@ package fmc
 import (
 	"context"
 	"errors"
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -52,9 +51,8 @@ func Provider() *schema.Provider {
 			},
 			"fmc_insecure_skip_verify": {
 				Type:        schema.TypeBool,
-				Optional:    true,
-				Default:     false,
-				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", nil),
+				Optional: 	 true,
+				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", false),
 				Description: "Skip certificate checks if the certificate is not public CA signed, or if using IP address",
 			},
 		},
