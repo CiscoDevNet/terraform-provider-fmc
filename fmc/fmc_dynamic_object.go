@@ -15,6 +15,14 @@ type DynamicObject struct {
 	ObjectType 	string `json:"objectType"`
 }
 
+type DynamicObjectUpdated struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Type        string `json:"type"`
+	ObjectType 	string `json:"objectType"`
+	ID          string `json:"id"`
+}
+
 type DynamicObjectResponse struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -84,7 +92,7 @@ func (v *Client) GetFmcDynamicObject(ctx context.Context, id string) (*DynamicOb
 	return item, nil
 }
 
-func (v *Client) UpdateFmcDynamicObject(ctx context.Context, id string, object *DynamicObject) (*DynamicObjectResponse, error) {
+func (v *Client) UpdateFmcDynamicObject(ctx context.Context, id string, object *DynamicObjectUpdated) (*DynamicObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/dynamicobjects/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {

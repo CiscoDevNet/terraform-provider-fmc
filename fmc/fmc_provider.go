@@ -74,6 +74,7 @@ func Provider() *schema.Provider {
 			"fmc_ftd_manualnat_rules":        resourceFmcManualNatRules(),
 			"fmc_policy_devices_assignments": resourceFmcPolicyDevicesAssignments(),
 			"fmc_ftd_deploy":                 resourceFmcFtdDeploy(),
+			"fmc_dynamic_object": 			  resourceFmcDynamicObjects(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),
