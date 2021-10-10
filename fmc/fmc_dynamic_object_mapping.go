@@ -6,12 +6,16 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
+	"os"
 )
+
+type DynamicObjectMappingObject struct {
+	ID string `json:"id"`
+}
 
 type DynamicObjectMapping struct {
 	Mappings []string `json:"mappings"`
-	DynamicObject DynamicObjectUpdated `json:"dynamicObject"`
+	DynamicObject DynamicObjectMappingObject `json:"dynamicObject"`
 }
 
 type DynamicObjectMappingRequest struct {
@@ -25,49 +29,53 @@ type DynamicObjectMappingsResponse struct {
 	} `json:"items"`
 }
 
-func (v *Client) CreateFmcDynamicObjectMapping(ctx context.Context, dynamicObjectId string, mappings []string) (string, error) {
+func (v *Client) CreateFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMapping *DynamicObjectMapping) error {
 	url := fmt.Sprintf("%s/object/dynamicobjectmappings", v.domainBaseURL)
 	body, err := json.Marshal(& DynamicObjectMappingRequest{
 		Add: []DynamicObjectMapping{
 			{
-				DynamicObject: DynamicObjectUpdated{
-					ID: dynamicObjectId,
+				DynamicObject: DynamicObjectMappingObject{
+					ID: dynamicObjectMapping.DynamicObject.ID,
 				},
-				Mappings: mappings,
+				Mappings: dynamicObjectMapping.Mappings,
 			},
 		},
+		Remove: []DynamicObjectMapping{},
 	})
 	if err != nil {
-		return "", fmt.Errorf("creating dynamic object: %s - %s", url, err.Error())
+		return fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
 	}
+
+	os.WriteFile("/tmp/dat1", body, 0644)
 
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
 	if err != nil {
-		return "", fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
+		return fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
 	}
 	resp := &DynamicObjectMapping{}
-	err = v.DoRequest(req, resp, http.StatusOK)
+	err = v.DoRequest(req, resp, http.StatusCreated)
 	if err != nil {
-		return "", fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
+		return fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
 	}
 
-	return generateDynamicObjectMappingId(dynamicObjectId, mappings), nil
+	return nil
 }
 
-func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjectId string, mappings []string) error {
+func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMapping *DynamicObjectMapping) error {
 	url := fmt.Sprintf("%s/object/dynamicobjectmappings", v.domainBaseURL)
 	body, err := json.Marshal(& DynamicObjectMappingRequest{
 		Remove: []DynamicObjectMapping{
 			{
-				DynamicObject: DynamicObjectUpdated{
-					ID: dynamicObjectId,
+				DynamicObject: DynamicObjectMappingObject{
+					ID: dynamicObjectMapping.DynamicObject.ID,
 				},
-				Mappings: mappings,
+				Mappings: dynamicObjectMapping.Mappings,
 			},
 		},
+		Add: []DynamicObjectMapping{},
 	})
 	if err != nil {
-		return fmt.Errorf("deleting dynamic object: %s - %s", url, err.Error())
+		return fmt.Errorf("deleting dynamic object mapping: %s - %s", url, err.Error())
 	}
 
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
@@ -75,7 +83,7 @@ func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjec
 		return fmt.Errorf("deleting dynamic object mapping: %s - %s", url, err.Error())
 	}
 	resp := &DynamicObjectMapping{}
-	err = v.DoRequest(req, resp, http.StatusOK)
+	err = v.DoRequest(req, resp, http.StatusCreated)
 	if err != nil {
 		return fmt.Errorf("deleting dynamic object mapping: %s - %s", url, err.Error())
 	}
@@ -83,13 +91,9 @@ func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjec
 	return nil
 }
 
-func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, id string) (*DynamicObjectMapping, error) {
-	parsedDynamicObjectMapping, err := parseDynamicObjectMappingId(id)
-	if err != nil {
-		return nil, err
-	}
+func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMapping *DynamicObjectMapping) (*DynamicObjectMapping, error) {
 
-	url := fmt.Sprintf("%s/object/dynamicobjects/%s/mappings", v.domainBaseURL, parsedDynamicObjectMapping.DynamicObject.ID)
+	url := fmt.Sprintf("%s/object/dynamicobjects/%s/mappings", v.domainBaseURL, dynamicObjectMapping.DynamicObject.ID)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting dynamic object mapping: %s - %s", url, err.Error())
@@ -100,35 +104,32 @@ func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, id string) (*Dy
 		return nil, fmt.Errorf("getting dynamic object mapping: %s - %s", url, err.Error())
 	}
 
+	if resp.Items == nil || len(resp.Items) < 1 {
+		return &DynamicObjectMapping{
+			Mappings: []string{},
+			DynamicObject: DynamicObjectMappingObject{
+				ID: dynamicObjectMapping.DynamicObject.ID,
+			},
+		}, nil
+	}
+
+	// convert array to a map in order to simplify search
+	mappingsTable := make(map[string]string)
 	for _, item := range resp.Items {
-		if item.Mapping == parsedDynamicObjectMapping.Mappings {
-			return &DynamicObjectMapping{
-				DynamicObject: parsedDynamicObjectMapping.DynamicObject,
-				Mappings: item.Mapping,
-			}, nil
+		mappingsTable[item.Mapping] = item.Mapping
+	}
+
+	existingMappings := []string{}
+	for _, item := range dynamicObjectMapping.Mappings {
+		if _, exists := mappingsTable[item] ; exists {
+			existingMappings = append(existingMappings, item)
 		}
 	}
 
 	return &DynamicObjectMapping{
-		DynamicObject: parsedDynamicObjectMapping.DynamicObject,
-		Mappings: "",
-	}, nil
-}
-
-func generateDynamicObjectMappingId(dynamicObjectId string, mappings string) string {
-	return fmt.Sprintf("%s-%s", dynamicObjectId, mappings)
-}
-
-func parseDynamicObjectMappingId(id string) (*DynamicObjectMapping, error) {
-	substrings := strings.Split(id, "-")
-	if len(substrings) != 2  {
-		return nil, fmt.Errorf("unable to parse dynamic object mapping id")
-	}
-
-	return &DynamicObjectMapping{
-		DynamicObject: DynamicObjectUpdated{
-			ID: substrings[0],
+		Mappings: existingMappings,
+		DynamicObject: DynamicObjectMappingObject{
+			ID: dynamicObjectMapping.DynamicObject.ID,
 		},
-		Mappings: substrings[1],
 	}, nil
 }

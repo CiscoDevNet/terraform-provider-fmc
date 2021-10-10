@@ -2,8 +2,10 @@ package fmc
 
 import (
 	"context"
+	"fmt"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"strings"
 )
 
 
@@ -35,10 +37,14 @@ func resourceFmcDynamicObjectMapping() *schema.Resource {
 				Description: "ID of dynamic object to be used for mapping",
 			},
 			"mappings": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeList,
 				Required:    true,
 				ForceNew:    true,
-				Description: "IP or list of IPs to be mapped to dynamic object",
+				Description: "List of IPs to be mapped to dynamic object",
+				MinItems: 1,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
@@ -51,11 +57,21 @@ func resourceFmcDynamicObjectMappingRead(ctx context.Context, d *schema.Resource
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetFmcDynamicObjectMapping(ctx, id)
+	dynamicObjectMapping, err := parseDynamicObjectMappingId(id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create dynamic object",
+			Summary:  "unable to read dynamic object mapping",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	item, err := c.GetFmcDynamicObjectMapping(ctx, dynamicObjectMapping)
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read dynamic object mapping",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -69,7 +85,6 @@ func resourceFmcDynamicObjectMappingRead(ctx context.Context, d *schema.Resource
 		})
 		return diags
 	}
-
 	if err := d.Set("mappings", item.Mappings); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -88,18 +103,28 @@ func resourceFmcDynamicObjectMappingCreate(ctx context.Context, d *schema.Resour
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	id, err := c.CreateFmcDynamicObjectMapping(ctx,
-		d.Get("dynamic_object_id").(string),
-		d.Get("mappings").(string))
+	mappings := []string{}
+	for _, mapping := range d.Get("mappings").([]interface{}) {
+		mappings = append(mappings, mapping.(string))
+	}
+
+	err := c.CreateFmcDynamicObjectMapping(ctx,
+		&DynamicObjectMapping{
+			DynamicObject: DynamicObjectMappingObject{
+				ID: d.Get("dynamic_object_id").(string),
+			},
+			Mappings: mappings,
+		})
+
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create dynamic object",
+			Summary:  "unable to create dynamic object mapping",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
-	d.SetId(id)
+	d.SetId(generateDynamicObjectMappingId(d.Get("dynamic_object_id").(string), mappings))
 	return diags
 }
 
@@ -109,8 +134,18 @@ func resourceFmcDynamicObjectMappingDelete(ctx context.Context, d *schema.Resour
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	err := c.DeleteFmcDynamicObjectMapping(ctx, d.Get("dynamic_object_id").(string),
-		d.Get("mappings").(string))
+	id := d.Id()
+	dynamicObjectMapping, err := parseDynamicObjectMappingId(id)
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read dynamic object mapping",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	err = c.DeleteFmcDynamicObjectMapping(ctx, dynamicObjectMapping)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -125,4 +160,22 @@ func resourceFmcDynamicObjectMappingDelete(ctx context.Context, d *schema.Resour
 	d.SetId("")
 
 	return diags
+}
+
+func generateDynamicObjectMappingId(dynamicObjectId string, mappings []string) string {
+	return fmt.Sprintf("%s+%s", dynamicObjectId, strings.Join(mappings, "+"))
+}
+
+func parseDynamicObjectMappingId(id string) (*DynamicObjectMapping, error) {
+	substrings := strings.Split(id, "+")
+	if len(substrings) < 2 {
+		return nil, fmt.Errorf("unable to parse dynamic object mapping id")
+	}
+
+	return &DynamicObjectMapping{
+		DynamicObject: DynamicObjectMappingObject{
+			ID: substrings[0],
+		},
+		Mappings: substrings[1:],
+	}, nil
 }
