@@ -8,7 +8,6 @@ import (
 	"strings"
 )
 
-
 func resourceFmcDynamicObjectMapping() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for Dynamic Object Mapping in FMC\n" +
@@ -28,7 +27,7 @@ func resourceFmcDynamicObjectMapping() *schema.Resource {
 			"```",
 		CreateContext: resourceFmcDynamicObjectMappingCreate,
 		DeleteContext: resourceFmcDynamicObjectMappingDelete,
-		ReadContext: resourceFmcDynamicObjectMappingRead,
+		ReadContext:   resourceFmcDynamicObjectMappingRead,
 		Schema: map[string]*schema.Schema{
 			"dynamic_object_id": {
 				Type:        schema.TypeString,
@@ -41,7 +40,7 @@ func resourceFmcDynamicObjectMapping() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "List of IPs to be mapped to dynamic object",
-				MinItems: 1,
+				MinItems:    1,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},

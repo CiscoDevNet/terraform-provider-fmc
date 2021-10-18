@@ -12,14 +12,14 @@ type DynamicObject struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Type        string `json:"type"`
-	ObjectType 	string `json:"objectType"`
+	ObjectType  string `json:"objectType"`
 }
 
 type DynamicObjectUpdated struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Type        string `json:"type"`
-	ObjectType 	string `json:"objectType"`
+	ObjectType  string `json:"objectType"`
 	ID          string `json:"id"`
 }
 
@@ -27,7 +27,7 @@ type DynamicObjectResponse struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
 	Type        string `json:"type"`
-	ObjectType 	string `json:"objectType"`
+	ObjectType  string `json:"objectType"`
 	ID          string `json:"id"`
 }
 

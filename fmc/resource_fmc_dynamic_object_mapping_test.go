@@ -1,9 +1,9 @@
 package fmc
 
 import (
+	"context"
 	"fmt"
 	"testing"
-	"context"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -40,7 +40,7 @@ func testAccCheckFmcDynamicObjectMappingCreate(mappings []string) resource.TestC
 
 			// check if mapping was created for an object
 			ctx := context.Background()
-		 	dynamicObjectMappings, err := c.GetFmcDynamicObjectMapping(ctx, &DynamicObjectMapping{
+			dynamicObjectMappings, err := c.GetFmcDynamicObjectMapping(ctx, &DynamicObjectMapping{
 				DynamicObject: DynamicObjectMappingObject{
 					ID: rs.Primary.Attributes["dynamic_object_id"],
 				},
@@ -55,8 +55,6 @@ func testAccCheckFmcDynamicObjectMappingCreate(mappings []string) resource.TestC
 				return fmt.Errorf("mapping was not created properly. Expected: %v, got: %v", mappings, dynamicObjectMappings.Mappings)
 			}
 		}
-
-
 
 		return nil
 	}
@@ -93,5 +91,3 @@ func testAccCheckFmcDynamicObjectMappingsConfigBasic(mappings string) string {
 
     `, name, mappings)
 }
-
-

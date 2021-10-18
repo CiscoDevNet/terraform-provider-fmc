@@ -14,24 +14,24 @@ type DynamicObjectMappingObject struct {
 }
 
 type DynamicObjectMapping struct {
-	Mappings []string `json:"mappings"`
+	Mappings      []string                   `json:"mappings"`
 	DynamicObject DynamicObjectMappingObject `json:"dynamicObject"`
 }
 
 type DynamicObjectMappingRequest struct {
-	Add []DynamicObjectMapping `json:"add"`
+	Add    []DynamicObjectMapping `json:"add"`
 	Remove []DynamicObjectMapping `json:"remove"`
 }
 
 type DynamicObjectMappingsResponse struct {
-	Items []struct{
+	Items []struct {
 		Mapping string `json:"mapping"`
 	} `json:"items"`
 }
 
 func (v *Client) CreateFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMapping *DynamicObjectMapping) error {
 	url := fmt.Sprintf("%s/object/dynamicobjectmappings", v.domainBaseURL)
-	body, err := json.Marshal(& DynamicObjectMappingRequest{
+	body, err := json.Marshal(&DynamicObjectMappingRequest{
 		Add: []DynamicObjectMapping{
 			{
 				DynamicObject: DynamicObjectMappingObject{
@@ -63,7 +63,7 @@ func (v *Client) CreateFmcDynamicObjectMapping(ctx context.Context, dynamicObjec
 
 func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMapping *DynamicObjectMapping) error {
 	url := fmt.Sprintf("%s/object/dynamicobjectmappings", v.domainBaseURL)
-	body, err := json.Marshal(& DynamicObjectMappingRequest{
+	body, err := json.Marshal(&DynamicObjectMappingRequest{
 		Remove: []DynamicObjectMapping{
 			{
 				DynamicObject: DynamicObjectMappingObject{
@@ -121,7 +121,7 @@ func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMa
 
 	existingMappings := []string{}
 	for _, item := range dynamicObjectMapping.Mappings {
-		if _, exists := mappingsTable[item] ; exists {
+		if _, exists := mappingsTable[item]; exists {
 			existingMappings = append(existingMappings, item)
 		}
 	}

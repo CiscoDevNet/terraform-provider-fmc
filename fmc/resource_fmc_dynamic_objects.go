@@ -155,7 +155,7 @@ func resourceFmcDynamicObjectsUpdate(ctx context.Context, d *schema.ResourceData
 			Description: d.Get("description").(string),
 			ObjectType:  d.Get("object_type").(string),
 			Type:        network_type,
-			ID: 		id,
+			ID:          id,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{

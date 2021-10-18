@@ -25,7 +25,7 @@ func TestAccFmcDynamicObjectBasic(t *testing.T) {
 				Config: testAccCheckFmcDynamicObjectConfigBasic(name, objectType, description),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcDynamicObjectExists("fmc_dynamic_object.test", map[string]string{
-						"name": name,
+						"name":        name,
 						"description": description,
 					}),
 				),
@@ -34,7 +34,7 @@ func TestAccFmcDynamicObjectBasic(t *testing.T) {
 				Config: testAccCheckFmcDynamicObjectConfigBasic(name, objectType, descriptionUpdated),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcDynamicObjectExists("fmc_dynamic_object.test", map[string]string{
-						"name": name,
+						"name":        name,
 						"description": descriptionUpdated,
 					}),
 				),

@@ -51,7 +51,7 @@ func Provider() *schema.Provider {
 			},
 			"fmc_insecure_skip_verify": {
 				Type:        schema.TypeBool,
-				Optional: 	 true,
+				Optional:    true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", false),
 				Description: "Skip certificate checks if the certificate is not public CA signed, or if using IP address",
 			},
@@ -74,8 +74,9 @@ func Provider() *schema.Provider {
 			"fmc_ftd_manualnat_rules":        resourceFmcManualNatRules(),
 			"fmc_policy_devices_assignments": resourceFmcPolicyDevicesAssignments(),
 			"fmc_ftd_deploy":                 resourceFmcFtdDeploy(),
-			"fmc_dynamic_object": 			  resourceFmcDynamicObjects(),
-			"fmc_dynamic_object_mapping": 	  resourceFmcDynamicObjectMapping(),
+			"fmc_dynamic_object":             resourceFmcDynamicObjects(),
+			"fmc_dynamic_object_mapping":     resourceFmcDynamicObjectMapping(),
+			"fmc_security_zone":              resourceFmcSecurityZone(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),
