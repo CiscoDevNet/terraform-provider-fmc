@@ -2,6 +2,8 @@ package fmc
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -61,6 +63,75 @@ func resourceFmcTimeRangeObject() *schema.Resource {
 					return old == new
 				},
 			},
+			"recurrence_list": {
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"range_start_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "Start date for this recurrence (time in RFC3339 format)",
+						},
+						"range_end_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "End date for this recurrence (time in RFC3339 format)",
+						},
+						"range_start_day": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "Start day for this recurrence (time in RFC3339 format)",
+						},
+						"range_end_day": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "End day for this recurrence (time in RFC3339 format)",
+						},
+						"daily_start_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "Daily start time for this recurrence (time in RFC3339 format)",
+						},
+						"daily_end_time": {
+							Type:        schema.TypeString,
+							Optional:    true,
+							Default: 	 "",
+							Description: "Daily end time for this recurrence (time in RFC3339 format)",
+						},
+						"days": {
+							Type: schema.TypeList,
+							Optional: true,
+							Elem: &schema.Schema{
+								Type: schema.TypeString,
+							},
+						},
+						"recurrence_type": {
+							Type:        schema.TypeString,
+							Required: true,
+							Description: "Type of recurrence. Allowed values: \"DAILY_INTERVAL\", \"RANGE\"",
+							ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+								v := strings.ToUpper(val.(string))
+								allowedValues := []string{"DAILY_INTERVAL", "RANGE"}
+								for _, allowed := range allowedValues {
+									if v == allowed {
+										return
+									}
+								}
+								errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
+								return
+							},
+						},
+
+					},
+				},
+				Description: "List of URL objects to add",
+			},
 		},
 	}
 }
@@ -70,6 +141,24 @@ func resourceFmcTimeRangeObjectCreate(ctx context.Context, d *schema.ResourceDat
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
+
+	var recurrences []TimeRangeRecurrence
+	if inputObjs, ok := d.GetOk("recurrence_list"); ok {
+		for _, obj := range inputObjs.([]interface{}) {
+			obji := obj.(map[string]interface{})
+			recurrences = append(recurrences, TimeRangeRecurrence{
+				StartTime: obji["range_start_time"].(string),
+				EndTime: obji["range_end_time"].(string),
+				StartDay: obji["range_start_day"].(string),
+				EndDay: obji["range_end_day"].(string),
+				DailyStartTime: obji["daily_start_time"].(string),
+				DailyEndTime: obji["daily_end_time"].(string),
+				RecurrenceType: obji[""],
+				//Days: obji["days"].([]string),
+
+			})
+		}
+	}
 
 	res, err := c.CreateFmcTimeRangeObject(ctx, &TimeRangeObjectInput{
 		Name:               d.Get("name").(string),
