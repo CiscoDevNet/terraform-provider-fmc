@@ -20,4 +20,21 @@ resource "fmc_time_range_object" "test" {
   description 		     = "Test time range"
   effective_start_date = "2019-09-19T15:53"
   effective_end_date   = "2019-09-21T17:53"
+  
+  recurrence {
+    recurrence_type  = "DAILY_INTERVAL"
+    days             = ["MON", "TUE"]
+    daily_start_time = "09:00"
+    daily_end_time   = "11:00"
+  }
+
+  recurrence {
+    recurrence_type = "RANGE"
+
+    start_time = "09:00"
+    start_day  = "MON" 
+    end_time   = "11:00"
+    end_day    = "FRI"
+  }
 }
+

@@ -63,30 +63,30 @@ func resourceFmcTimeRangeObject() *schema.Resource {
 					return old == new
 				},
 			},
-			"recurrence_list": {
+			"recurrence": {
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"range_start_time": {
+						"start_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default: 	 "",
 							Description: "Start date for this recurrence (time in RFC3339 format)",
 						},
-						"range_end_time": {
+						"end_time": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default: 	 "",
 							Description: "End date for this recurrence (time in RFC3339 format)",
 						},
-						"range_start_day": {
+						"start_day": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default: 	 "",
 							Description: "Start day for this recurrence (time in RFC3339 format)",
 						},
-						"range_end_day": {
+						"end_day": {
 							Type:        schema.TypeString,
 							Optional:    true,
 							Default: 	 "",
@@ -109,6 +109,7 @@ func resourceFmcTimeRangeObject() *schema.Resource {
 							Optional: true,
 							Elem: &schema.Schema{
 								Type: schema.TypeString,
+								Default: "",
 							},
 						},
 						"recurrence_type": {
@@ -143,20 +144,43 @@ func resourceFmcTimeRangeObjectCreate(ctx context.Context, d *schema.ResourceDat
 	var diags diag.Diagnostics
 
 	var recurrences []TimeRangeRecurrence
-	if inputObjs, ok := d.GetOk("recurrence_list"); ok {
+	if inputObjs, ok := d.GetOk("recurrence"); ok {
 		for _, obj := range inputObjs.([]interface{}) {
 			obji := obj.(map[string]interface{})
-			recurrences = append(recurrences, TimeRangeRecurrence{
-				StartTime: obji["range_start_time"].(string),
-				EndTime: obji["range_end_time"].(string),
-				StartDay: obji["range_start_day"].(string),
-				EndDay: obji["range_end_day"].(string),
+
+			days := []string{}
+			if obji["days"] != nil  {
+				for _, day := range obji["days"].([]interface{}) {
+					days = append(days, day.(string))
+				}
+			}
+
+			recurrence := TimeRangeRecurrence{
+				StartTime: obji["start_time"].(string),
+				EndTime: obji["end_time"].(string),
+				StartDay: obji["start_day"].(string),
+				EndDay: obji["end_day"].(string),
 				DailyStartTime: obji["daily_start_time"].(string),
 				DailyEndTime: obji["daily_end_time"].(string),
-				RecurrenceType: obji[""],
-				//Days: obji["days"].([]string),
+				RecurrenceType: obji["recurrence_type"].(string),
+				Days: days,
+			}
 
-			})
+			// there is a bug in FMC API: when type is set to DAILY_INTERVAL -
+			// start day and end day are not required, but API throws an error
+			// if they were not passed, however when passed during creation,
+			// start day and end day are not returned by API in GET requests
+			if recurrence.RecurrenceType == "DAILY_INTERVAL" {
+				// if days array is empty for DAILY_INTERVAL recurrence type
+				// - API will throw an error, it's invalid request anyway, but
+				// this additional check will prevent provider panic
+				if len(days) > 1 {
+					recurrence.StartDay = days[0]
+					recurrence.EndDay = days[len(days) - 1]
+				}
+			}
+
+			recurrences = append(recurrences, recurrence)
 		}
 	}
 
@@ -165,6 +189,7 @@ func resourceFmcTimeRangeObjectCreate(ctx context.Context, d *schema.ResourceDat
 		Description:        d.Get("description").(string),
 		EffectiveStartDate: d.Get("effective_start_date").(string),
 		EffectiveEndDate:   d.Get("effective_end_date").(string),
+		RecurrenceList: 	recurrences,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -230,6 +255,33 @@ func resourceFmcTimeRangeObjectRead(ctx context.Context, d *schema.ResourceData,
 		return diags
 	}
 
+	if item.RecurrenceList != nil {
+		recurrenceList := []interface{}{}
+
+		for _, recurrence := range item.RecurrenceList {
+
+			recurrenceList = append(recurrenceList, map[string]interface{}{
+				"start_time": recurrence.StartTime,
+				"end_time":   recurrence.EndTime,
+				"start_day":  recurrence.StartDay,
+				"end_day":    recurrence.EndDay,
+				"daily_start_time": recurrence.DailyStartTime,
+				"daily_end_time":   recurrence.DailyEndTime,
+				"recurrence_type":  recurrence.RecurrenceType,
+				"days":             recurrence.Days,
+			})
+		}
+
+		if err := d.Set("recurrence", recurrenceList); err != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read time range object",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
+	}
+
 	return diags
 }
 
@@ -237,13 +289,55 @@ func resourceFmcTimeRangeObjectUpdate(ctx context.Context, d *schema.ResourceDat
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "effective_start_date", "effective_end_date") {
+	if d.HasChanges("name", "description", "effective_start_date", "effective_end_date", "recurrence_list") {
+		var recurrences []TimeRangeRecurrence
+		if inputObjs, ok := d.GetOk("recurrence"); ok {
+			for _, obj := range inputObjs.([]interface{}) {
+				obji := obj.(map[string]interface{})
+
+				days := []string{}
+				if obji["days"] != nil  {
+					for _, day := range obji["days"].([]interface{}) {
+						days = append(days, day.(string))
+					}
+				}
+
+				recurrence := TimeRangeRecurrence{
+					StartTime: obji["start_time"].(string),
+					EndTime: obji["end_time"].(string),
+					StartDay: obji["start_day"].(string),
+					EndDay: obji["end_day"].(string),
+					DailyStartTime: obji["daily_start_time"].(string),
+					DailyEndTime: obji["daily_end_time"].(string),
+					RecurrenceType: obji["recurrence_type"].(string),
+					Days: days,
+				}
+
+				// there is a bug in FMC API: when type is set to DAILY_INTERVAL -
+				// start day and end day are not required, but API throws an error
+				// if they were not passed, however when passed during creation,
+				// start day and end day are not returned by API in GET requests
+				if recurrence.RecurrenceType == "DAILY_INTERVAL" {
+					// if days array is empty for DAILY_INTERVAL recurrence type
+					// - API will throw an error, it's invalid request anyway, but
+					// this additional check will prevent provider panic
+					if len(days) > 1 {
+						recurrence.StartDay = days[0]
+						recurrence.EndDay = days[len(days) - 1]
+					}
+				}
+
+				recurrences = append(recurrences, recurrence)
+			}
+		}
+
 		_, err := c.UpdateFmcTimeRangeObject(ctx, id, &TimeRangeObject{
 			Name:               d.Get("name").(string),
 			Description:        d.Get("description").(string),
 			EffectiveStartDate: d.Get("effective_start_date").(string),
 			EffectiveEndDate:   d.Get("effective_end_date").(string),
 			ID:                 id,
+			RecurrenceList: 	recurrences,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
