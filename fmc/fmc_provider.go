@@ -78,6 +78,7 @@ func Provider() *schema.Provider {
 			"fmc_dynamic_object_mapping":     resourceFmcDynamicObjectMapping(),
 			"fmc_security_zone":              resourceFmcSecurityZone(),
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
+			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),
