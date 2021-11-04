@@ -133,11 +133,15 @@ type AccessRuleResponse struct {
 
 // /fmc_config/v1/domain/DomainUUID/policy/accesspolicies/{containerUUID}/accessrules?bulk=true ( Bulk POST operation on access rules. )
 
-func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insertBefore, insertAfter string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
+func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insertBefore, insertAfter, category string, accessPolicy *AccessRule) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules", v.domainBaseURL, acpId)
 	initialSet := false
 	if section != "" {
 		url = fmt.Sprintf("%s?section=%s", url, section)
+		initialSet = true
+	}
+	if category != "" {
+		url = fmt.Sprintf("%s?category=%s", url, category)
 		initialSet = true
 	}
 	if insertBefore != "" {
