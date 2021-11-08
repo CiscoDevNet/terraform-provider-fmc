@@ -264,6 +264,7 @@ resource "fmc_access_rules" "access_rule_2" {
 ### Optional
 
 - **action** (String) Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"
+- **category** (String) The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource
 - **destination_networks** (Block List, Max: 1) Destination networks for this resource (see [below for nested schema](#nestedblock--destination_networks))
 - **destination_ports** (Block List, Max: 1) Destination ports for this resource (see [below for nested schema](#nestedblock--destination_ports))
 - **destination_zones** (Block List, Max: 1) Destination zones for this resource (see [below for nested schema](#nestedblock--destination_zones))

@@ -45,5 +45,23 @@ resource "fmc_time_range_object" "test" {
 
 - **description** (String) The description of this resource
 - **id** (String) The ID of this resource.
+- **recurrence** (Block List) List of URL objects to add (see [below for nested schema](#nestedblock--recurrence))
+
+<a id="nestedblock--recurrence"></a>
+### Nested Schema for `recurrence`
+
+Required:
+
+- **recurrence_type** (String) Type of recurrence. Allowed values: "DAILY_INTERVAL", "RANGE"
+
+Optional:
+
+- **daily_end_time** (String) Daily end time for this recurrence (time in RFC3339 format)
+- **daily_start_time** (String) Daily start time for this recurrence (time in RFC3339 format)
+- **days** (List of String)
+- **end_day** (String) End day for this recurrence (time in RFC3339 format)
+- **end_time** (String) End date for this recurrence (time in RFC3339 format)
+- **start_day** (String) Start day for this recurrence (time in RFC3339 format)
+- **start_time** (String) Start date for this recurrence (time in RFC3339 format)
 
 
