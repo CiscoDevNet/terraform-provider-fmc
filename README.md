@@ -14,6 +14,7 @@ Follow the below steps to add this provider to your terraform plugins directory.
 
 - Download the latest suitable release from [Releases](https://github.com/CiscoDevNet/terraform-provider-fmc/releases/latest).
 - Follow the [document here](https://www.terraform.io/docs/cli/config/config-file.html#provider-installation) to install the same.
+- Install [tfplugindocs](https://github.com/hashicorp/terraform-plugin-docs) and run "make generate" to regenerate provider documentation. 
 
 ## 2. Usage
 

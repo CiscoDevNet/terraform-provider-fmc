@@ -53,7 +53,7 @@ func testAccCheckFmcAccessPoliciesCategoryDestroy(s *terraform.State) error {
 func testAccCheckFmcAccessPoliciesCategoryConfigBasic(name string) string {
 	return fmt.Sprintf(`
 resource "fmc_access_policies" "access_policy" {
-    name = "Terraform Access Policy for Category Testing""
+    name = "Terraform Access Policy for Category Testing"
     default_action = "block" 
 }
 

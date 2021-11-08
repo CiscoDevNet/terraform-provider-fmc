@@ -32,7 +32,7 @@ install: build
 	mv ${BINARY}_${VERSION}_${OS_ARCH} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 generate:
-	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+	tfplugindocs
 
 test: 
 	go test -i $(TEST) || exit 1                                                   
