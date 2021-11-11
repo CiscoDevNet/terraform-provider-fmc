@@ -41,7 +41,7 @@ provider "aws" {
 # resources 
 
 module "fmc" { 
-    source = "../../secure-firewall/FMC/AWS/Standalone/" 
+    source = "./fmc/" 
 
     password = var.fmc_password
     key_name = var.fmc_vm_key_name
