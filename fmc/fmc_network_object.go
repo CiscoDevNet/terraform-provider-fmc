@@ -44,7 +44,7 @@ type NetworkObjectsResponse struct {
 }
 
 func (v *Client) GetFmcNetworkObjectByNameOrValue(ctx context.Context, nameOrValue string) (*NetworkObjectResponse, error) {
-	url := fmt.Sprintf("%s/object/networks?expanded=true&limit=1000&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
+	url := fmt.Sprintf("%s/object/networks?expanded=true&filter=nameOrValue:%s", v.domainBaseURL, nameOrValue)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting network object by name/value: %s - %s", url, err.Error())
