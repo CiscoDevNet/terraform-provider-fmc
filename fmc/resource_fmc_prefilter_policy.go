@@ -60,11 +60,6 @@ func resourceFmcPrefilterPolicy() *schema.Resource {
 				MinItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						//"log_end": {
-						//	Type:        schema.TypeBool,
-						//	Optional: true,
-						//	Description: "Log end",
-						//},
 						"log_begin": {
 							Type:        schema.TypeBool,
 							Optional:    true,
@@ -115,7 +110,6 @@ func resourceFmcPrefilterPolicyCreate(ctx context.Context, d *schema.ResourceDat
 
 		defaultAction = PrefilterPolicyDefaultActionInput{
 			LogBegin: entry["log_begin"].(bool),
-			//LogEnd:          entry["log_end"].(bool),
 			SendEventsToFMC: entry["send_events_to_fmc"].(bool),
 			Action:          entry["action"].(string),
 		}
@@ -174,7 +168,6 @@ func resourceFmcPrefilterPolicyRead(ctx context.Context, d *schema.ResourceData,
 
 	defaultActionsList := []interface{}{
 		map[string]interface{}{
-			//"log_end": item.DefaultAction.LogEnd,
 			"log_begin":          item.DefaultAction.LogBegin,
 			"send_events_to_fmc": item.DefaultAction.SendEventsToFMC,
 			"action":             item.DefaultAction.Action,
@@ -201,7 +194,6 @@ func resourceFmcPrefilterPolicyUpdate(ctx context.Context, d *schema.ResourceDat
 
 			defaultAction = PrefilterPolicyDefaultAction{
 				LogBegin: entry["log_begin"].(bool),
-				//LogEnd:          entry["log_end"].(bool),
 				SendEventsToFMC: entry["send_events_to_fmc"].(bool),
 				Action:          entry["action"].(string),
 				ID:              entry["id"].(string),
