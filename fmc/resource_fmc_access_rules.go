@@ -147,12 +147,6 @@ func resourceFmcAccessRules() *schema.Resource {
 				ForceNew:    true,
 				Description: "The ID of the ACP this resource belongs to",
 			},
-			"category": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource",
-			},
 			"section": {
 				Type:     schema.TypeString,
 				Optional: true,
@@ -557,8 +551,7 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 	if entry, ok := d.GetOk("insert_after"); ok {
 		insertAfter = strconv.Itoa(entry.(int))
 	}
-
-	res, err := c.CreateFmcAccessRule(ctx, d.Get("acp").(string), strings.ToLower(d.Get("section").(string)), insertBefore, insertAfter, d.Get("category").(string), &AccessRule{
+	res, err := c.CreateFmcAccessRule(ctx, d.Get("acp").(string), strings.ToLower(d.Get("section").(string)), insertBefore, insertAfter, &AccessRule{
 		Name:            d.Get("name").(string),
 		Type:            access_policies_type,
 		Action:          strings.ToUpper(d.Get("action").(string)),
@@ -642,10 +635,6 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		return returnWithDiag(diags, err)
 	}
 	if err := d.Set("log_end", item.Logend); err != nil {
-		return returnWithDiag(diags, err)
-	}
-	// seems that category is not returned within API response, so that's the only way
-	if err := d.Set("category",  d.Get("category").(string)); err != nil {
 		return returnWithDiag(diags, err)
 	}
 
