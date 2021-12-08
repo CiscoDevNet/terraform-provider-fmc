@@ -11,14 +11,12 @@ import (
 var prefilterPolicyType string = "PrefilterPolicy"
 
 type PrefilterPolicyDefaultActionInput struct {
-	//LogEnd          bool `json:"logEnd"`
 	LogBegin        bool   `json:"logBegin"`
 	SendEventsToFMC bool   `json:"sendEventsToFMC"`
 	Action          string `json:"action"`
 }
 
 type PrefilterPolicyDefaultAction struct {
-	//LogEnd          bool `json:"logEnd"`
 	LogBegin        bool   `json:"logBegin"`
 	SendEventsToFMC bool   `json:"sendEventsToFMC"`
 	Action          string `json:"action"`
