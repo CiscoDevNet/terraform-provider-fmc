@@ -11,7 +11,7 @@ default: install
 build:
 	go build -o ${BINARY}_${VERSION}_${OS_ARCH}
 
-PLATFORMS := linux/amd64 windows/amd64 darwin/amd64
+PLATFORMS := linux/amd64 windows/amd64 darwin/amd64 darwin/arm64
 
 temp = $(subst /, ,$@)
 OS = $(word 1, $(temp))
