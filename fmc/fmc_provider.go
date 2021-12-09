@@ -53,8 +53,7 @@ func Provider() *schema.Provider {
 			"fmc_insecure_skip_verify": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default:     false,
-				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FMC_INSECURE_SKIP_VERIFY", false),
 				Description: "Skip certificate checks if the certificate is not public CA signed, or if using IP address",
 			},
 		},
@@ -76,6 +75,12 @@ func Provider() *schema.Provider {
 			"fmc_ftd_manualnat_rules":        resourceFmcManualNatRules(),
 			"fmc_policy_devices_assignments": resourceFmcPolicyDevicesAssignments(),
 			"fmc_ftd_deploy":                 resourceFmcFtdDeploy(),
+			"fmc_dynamic_object":             resourceFmcDynamicObjects(),
+			"fmc_dynamic_object_mapping":     resourceFmcDynamicObjectMapping(),
+			"fmc_security_zone":              resourceFmcSecurityZone(),
+			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
+			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
+			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),
@@ -88,6 +93,7 @@ func Provider() *schema.Provider {
 			"fmc_host_objects":    dataSourceFmcHostObjects(),
 			"fmc_url_objects":     dataSourceFmcURLObjects(),
 			"fmc_port_objects":    dataSourceFmcPortObjects(),
+			"fmc_dynamic_objects": dataSourceFmcDynamicObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

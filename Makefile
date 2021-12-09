@@ -32,12 +32,20 @@ install: build
 	mv ${BINARY}_${VERSION}_${OS_ARCH} ~/.terraform.d/plugins/${HOSTNAME}/${NAMESPACE}/${NAME}/${VERSION}/${OS_ARCH}
 
 generate:
-	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
+	tfplugindocs
 
 test: 
 	go test -i $(TEST) || exit 1                                                   
 	echo $(TEST) | xargs -t -n4 go test $(TESTARGS) -timeout=30s -parallel=4                    
 
 testacc: 
-	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m   
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
+
+testinfra-testacc:
+	FMC_INSECURE_SKIP_VERIFY=true \
+	FMC_USERNAME="$$(cd testinfra; terraform output --raw fmc_username)" \
+	FMC_PASSWORD="$$(cd testinfra; terraform output --raw fmc_password)" \
+	FMC_HOST="$$(cd testinfra; terraform output --raw fmc_ip)" \
+	$(info $$FMC_HOST is [${FMC_HOST}]) \
+	TF_ACC=1 go test $(TEST) -v $(TESTARGS) -timeout 120m
 
