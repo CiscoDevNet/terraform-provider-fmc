@@ -54,6 +54,7 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 			TLSClientConfig: &tls.Config{
 				InsecureSkipVerify: insecureSkipVerify,
 			},
+			Proxy: http.ProxyFromEnvironment,
 		}},
 		ratelimiterBucket: rateLimiterBucket,
 		nonReadMutex:      nonReadMutex,
