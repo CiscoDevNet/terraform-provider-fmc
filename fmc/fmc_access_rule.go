@@ -25,14 +25,6 @@ type AccessRuleDefaultAction struct {
 	Logend          string              `json:"logEnd"`
 	Sendeventstofmc string              `json:"sendEventsToFMC"`
 	Action          string              `json:"action"`
-	// Variableset struct {
-	// 	ID   string `json:"id"`
-	// 	Type string `json:"type"`
-	// } `json:"variableSet"`
-	// Snmpconfig struct {
-	// 	ID   string `json:"id"`
-	// 	Type string `json:"type"`
-	// } `json:"snmpConfig"`
 }
 
 type AccessRule struct {
@@ -53,6 +45,8 @@ type AccessRule struct {
 	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
 	Sourceports         AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
 	Destinationports    AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
+	DestinationDynamicObjects AccessRuleSubConfigs `json:"destinationDynamicObjects,omitempty"`
+	SourceDynamicObjects      AccessRuleSubConfigs `json:"sourceDynamicObjects,omitempty"`
 	Urls                AccessRuleSubConfigs `json:"urls,omitempty"`
 	Ipspolicy           *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
 	Filepolicy          *AccessRuleSubConfig `json:"filePolicy,omitempty"`
@@ -123,6 +117,12 @@ type AccessRuleResponse struct {
 	Sourceports struct {
 		Objects []AccessRuleResponseObject `json:"objects"`
 	} `json:"sourcePorts"`
+	DestinationDynamicObjects struct {
+		Objects []AccessRuleResponseObject `json:"objects"`
+	} `json:"destinationDynamicObjects"`
+	SourceDynamicObjects struct {
+		Objects []AccessRuleResponseObject `json:"objects"`
+	} `json:"sourceDynamicObjects"`
 	Version     string                   `json:"version"`
 	Variableset AccessRuleResponseObject `json:"variableSet"`
 	Logfiles    bool                     `json:"logFiles"`
