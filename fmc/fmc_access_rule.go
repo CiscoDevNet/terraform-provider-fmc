@@ -28,30 +28,30 @@ type AccessRuleDefaultAction struct {
 }
 
 type AccessRule struct {
-	ID                  string               `json:"id,omitempty"`
-	Name                string               `json:"name"`
-	Type                string               `json:"type"`
-	Action              string               `json:"action"`
-	Syslogseverity      string               `json:"syslogSeverity,omitempty"`
-	Enablesyslog        bool                 `json:"enableSyslog"`
-	Enabled             bool                 `json:"enabled"`
-	Sendeventstofmc     bool                 `json:"sendEventsToFMC"`
-	Logfiles            bool                 `json:"logFiles"`
-	Logbegin            bool                 `json:"logBegin"`
-	Logend              bool                 `json:"logEnd"`
-	Sourcezones         AccessRuleSubConfigs `json:"sourceZones,omitempty"`
-	Destinationzones    AccessRuleSubConfigs `json:"destinationZones,omitempty"`
-	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks,omitempty"`
-	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
-	Sourceports         AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
-	Destinationports    AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
+	ID                        string               `json:"id,omitempty"`
+	Name                      string               `json:"name"`
+	Type                      string               `json:"type"`
+	Action                    string               `json:"action"`
+	Syslogseverity            string               `json:"syslogSeverity,omitempty"`
+	Enablesyslog              bool                 `json:"enableSyslog"`
+	Enabled                   bool                 `json:"enabled"`
+	Sendeventstofmc           bool                 `json:"sendEventsToFMC"`
+	Logfiles                  bool                 `json:"logFiles"`
+	Logbegin                  bool                 `json:"logBegin"`
+	Logend                    bool                 `json:"logEnd"`
+	Sourcezones               AccessRuleSubConfigs `json:"sourceZones,omitempty"`
+	Destinationzones          AccessRuleSubConfigs `json:"destinationZones,omitempty"`
+	Sourcenetworks            AccessRuleSubConfigs `json:"sourceNetworks,omitempty"`
+	Destinationnetworks       AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
+	Sourceports               AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
+	Destinationports          AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
+	Urls                      AccessRuleSubConfigs `json:"urls,omitempty"`
 	DestinationDynamicObjects AccessRuleSubConfigs `json:"destinationDynamicObjects,omitempty"`
 	SourceDynamicObjects      AccessRuleSubConfigs `json:"sourceDynamicObjects,omitempty"`
-	Urls                AccessRuleSubConfigs `json:"urls,omitempty"`
-	Ipspolicy           *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
-	Filepolicy          *AccessRuleSubConfig `json:"filePolicy,omitempty"`
-	Syslogconfig        *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
-	Newcomments         []string             `json:"newComments,omitempty"`
+	Ipspolicy                 *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
+	Filepolicy                *AccessRuleSubConfig `json:"filePolicy,omitempty"`
+	Syslogconfig              *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
+	Newcomments               []string             `json:"newComments,omitempty"`
 }
 
 type AccessRuleUpdate AccessRule
