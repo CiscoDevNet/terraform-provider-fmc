@@ -65,18 +65,18 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 
 func CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host string, insecureSkipVerify bool) *Client {
 	return &Client{
-			is_cdfmc:     true,
-			accessToken:  cdotoken,
-			domainUUID:   cdfmcdomainuuid,
-			host:         host,
-			client: &http.Client{Transport: &http.Transport{
-					TLSClientConfig: &tls.Config{
-							InsecureSkipVerify: insecureSkipVerify,
-					},
-			}},
-			ratelimiterBucket: rateLimiterBucket,
-			nonReadMutex:      nonReadMutex,
-			callSemaphore:     callSemaphore,
+		is_cdfmc:     true,
+		accessToken:  cdotoken,
+		domainUUID:   cdfmcdomainuuid,
+		host:         host,
+		client: &http.Client{Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+						InsecureSkipVerify: insecureSkipVerify,
+				},
+		}},
+		ratelimiterBucket: rateLimiterBucket,
+		nonReadMutex:      nonReadMutex,
+		callSemaphore:     callSemaphore,
 	}
 }
 
