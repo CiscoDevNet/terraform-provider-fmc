@@ -29,6 +29,7 @@ type Client struct {
 	domainBaseURL     string
 	accessToken       string
 	domainUUID        string
+	is_cdfmc          bool
 	client            *http.Client
 	ratelimiterBucket *ratelimit.Bucket
 	nonReadMutex      *sync.Mutex
@@ -47,6 +48,7 @@ type ErrorResponse struct {
 
 func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 	return &Client{
+		is_cdfmc: false,
 		user:     user,
 		password: password,
 		host:     host,
@@ -61,36 +63,58 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 	}
 }
 
+func CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host string, insecureSkipVerify bool) *Client {
+	return &Client{
+			is_cdfmc:     true,
+			accessToken:  cdotoken,
+			domainUUID:   cdfmcdomainuuid,
+			host:         host,
+			client: &http.Client{Transport: &http.Transport{
+					TLSClientConfig: &tls.Config{
+							InsecureSkipVerify: insecureSkipVerify,
+					},
+			}},
+			ratelimiterBucket: rateLimiterBucket,
+			nonReadMutex:      nonReadMutex,
+			callSemaphore:     callSemaphore,
+	}
+}
+
 func (v *Client) Login() error {
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/fmc_platform/v1/auth/generatetoken", v.host), nil)
-	if err != nil {
-		return (err)
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.SetBasicAuth(v.user, v.password)
+	if v.is_cdfmc == false {
+		req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/fmc_platform/v1/auth/generatetoken", v.host), nil)
+		if err != nil {
+		        return (err)
+		}
+		req.Header.Set("Content-Type", "application/json")
+		req.SetBasicAuth(v.user, v.password)	
+		res, err := v.client.Do(req)
+		if err != nil {
+		        return (err)
+		}	
+		defer res.Body.Close()
+		if res.StatusCode == 401 {
+			return fmt.Errorf("wrong username or password %d %v", res.StatusCode, req.URL)
+		} else if res.StatusCode != http.StatusNoContent {
+			return fmt.Errorf("cannot login unknown error, status code: %d %v", res.StatusCode, req.URL)
+		}
 
-	res, err := v.client.Do(req)
-	if err != nil {
-		return (err)
+		v.accessToken = res.Header.Get("X-Auth-Access-Token")
+		v.domainUUID = res.Header.Get("DOMAIN_UUID")
 	}
 
-	defer res.Body.Close()
-	if res.StatusCode == 401 {
-		return fmt.Errorf("wrong username or password %d %v", res.StatusCode, req.URL)
-	} else if res.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("cannot login unknown error, status code: %d %v", res.StatusCode, req.URL)
-	}
-
-	v.accessToken = res.Header.Get("X-Auth-Access-Token")
-	v.domainUUID = res.Header.Get("DOMAIN_UUID")
 	v.domainBaseURL = fmt.Sprintf("https://%s/api/fmc_config/v1/domain/%s", v.host, v.domainUUID)
 	return nil
 }
 
 func (v *Client) DoRequest(req *http.Request, item interface{}, status int) error {
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
-	req.Header.Set("X-Auth-Access-Token", v.accessToken)
+	if v.is_cdfmc == false {
+		req.Header.Set("X-Auth-Access-Token", v.accessToken)
+	} else {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", v.accessToken))
+	}
 
 	v.ratelimiterBucket.Wait(1) // This is a blocking call. Honors the rate limit by taking 1 token for this request.
 

@@ -64,7 +64,12 @@ type AccessPoliciesResponse struct {
 }
 
 func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
-	url := fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+	var url string
+	if v.is_cdfmc == false {
+        url = fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+	} else {
+        url = fmt.Sprintf("%s/policy/accesspolicies?expanded=false&name=%s", v.domainBaseURL, name)
+	}
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())
