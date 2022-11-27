@@ -12,8 +12,8 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	username := d.Get("fmc_username").(string)
 	password := d.Get("fmc_password").(string)
 	iscdfmc := d.Get("is_cdfmc").(bool)
-    cdotoken := d.Get("cdo_token").(string)
-    cdfmcdomainuuid := d.Get("cdfmc_domain_uuid").(string)
+	cdotoken := d.Get("cdo_token").(string)
+	cdfmcdomainuuid := d.Get("cdfmc_domain_uuid").(string)
 	host := d.Get("fmc_host").(string)
 	insecureSkipVerify := d.Get("fmc_insecure_skip_verify").(bool)
 	var diags diag.Diagnostics
