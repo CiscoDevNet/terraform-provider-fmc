@@ -121,7 +121,7 @@ func (v *Client) GetFmcManualNatRule(ctx context.Context, natId string, id strin
 	item := &ManualNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting manual nat rules: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting manual nat rules: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

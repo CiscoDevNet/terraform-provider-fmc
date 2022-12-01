@@ -610,7 +610,11 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 
 	item, err := c.GetFmcAccessRule(ctx, d.Get("acp").(string), d.Id())
 	if err != nil {
-		return returnWithDiag(diags, err)
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			return returnWithDiag(diags, err)
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		return returnWithDiag(diags, err)

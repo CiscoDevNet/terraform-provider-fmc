@@ -69,7 +69,7 @@ func (v *Client) GetFmcICMPV4Object(ctx context.Context, id string) (*ICMPV4Obje
 	item := &ICMPV4ObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

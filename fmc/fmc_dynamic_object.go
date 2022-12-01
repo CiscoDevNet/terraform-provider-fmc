@@ -87,7 +87,7 @@ func (v *Client) GetFmcDynamicObject(ctx context.Context, id string) (*DynamicOb
 	item := &DynamicObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting dynamic objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting dynamic objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }
