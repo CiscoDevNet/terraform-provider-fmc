@@ -94,6 +94,7 @@ func Provider() *schema.Provider {
 			"fmc_url_objects":     dataSourceFmcURLObjects(),
 			"fmc_port_objects":    dataSourceFmcPortObjects(),
 			"fmc_dynamic_objects": dataSourceFmcDynamicObjects(),
+			"fmc_ise_sgt_objects": dataFmcIseSGTObjects(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
