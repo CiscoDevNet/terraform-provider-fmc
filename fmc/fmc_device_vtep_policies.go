@@ -39,6 +39,7 @@ type VTEPPolicyResponse struct {
 		Self string `json:"self"`
 	} `json:"links"`
 	ID          string      `json:"id"`
+	Name        string      `json:"name"`
 	NveEnable   bool        `json:"nveEnable"`
 	VTEPEntries []VTEPEntry `json:"vtepEntries"`
 	Type        string      `json:"type"`
@@ -64,33 +65,46 @@ type VTEPPolicy struct {
 }
 
 // /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/vteppolicies/{objectId}
-func (v *Client) GetVTEPPoliciesByName(ctx context.Context, acpId, name string) (*VTEPPolicyResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vteppolicies/%s", v.domainBaseURL, acpId, name)
+func (v *Client) GetVTEPPoliciesByName(ctx context.Context, id, name string) (*VTEPPolicyResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vteppolicies", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting vteppolicies by name: %s - %s", url, err.Error())
 	}
-	vtepPoliciesResponse := &VTEPPolicyResponse{}
-	err = v.DoRequest(req, vtepPoliciesResponse, http.StatusOK)
+	resp := &VTEPPoliciesResponse{}
+	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting vteppolicies by name: %s - %s", url, err.Error())
 	}
-	return vtepPoliciesResponse, fmt.Errorf("no vteppolicies found with name %s", name)
+	switch l := len(resp.Items); {
+	case l == 1:
+		return v.GetVTEPPolicies(ctx, resp.Items[0].ID)
+	case l > 1:
+		for _, item := range resp.Items {
+			if item.Name == name {
+				return v.GetVTEPPolicies(ctx, item.ID)
+			}
+		}
+		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+	case l == 0:
+		return nil, fmt.Errorf("no access policies found, length of response is: %d, expected 1, please check your filter", l)
+	}
+	return nil, fmt.Errorf("no vteppolicies found with name %s", name)
 }
 
 // /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/vteppolicies
-func (v *Client) GetVTEPPolicies(ctx context.Context, acpId, name string) (*VTEPPoliciesResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vteppolicies", v.domainBaseURL, acpId)
+func (v *Client) GetVTEPPolicies(ctx context.Context, id string) (*VTEPPolicyResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vteppolicies", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting vteppolicies by name: %s - %s", url, err.Error())
 	}
-	vtepPoliciesResponse := &VTEPPoliciesResponse{}
-	err = v.DoRequest(req, vtepPoliciesResponse, http.StatusOK)
+	resp := &VTEPPolicyResponse{}
+	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting vteppolicies by name: %s - %s", url, err.Error())
 	}
-	return vtepPoliciesResponse, fmt.Errorf("no vteppolicies found with name %s", name)
+	return resp, fmt.Errorf("no vteppolicies found with name %s", id)
 }
 
 func (v *Client) CreateVTEPPolicies(ctx context.Context, acpId string, vtepPolicy *VTEPPolicy) (*VTEPPolicyResponse, error) {

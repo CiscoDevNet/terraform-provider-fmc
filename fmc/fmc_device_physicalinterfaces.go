@@ -113,28 +113,41 @@ type Physicalinterfaces struct {
 }
 
 // api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/physicalinterfaces/{objectId}
-func (v *Client) GetPhysicalInterfacesByName(ctx context.Context, acpId, name string) (*PhysicalinterfacesResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/physicalinterfaces/%s", v.domainBaseURL, acpId, name)
+func (v *Client) GetPhysicalInterfacesByName(ctx context.Context, id, name string) (*PhysicalinterfacesResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/physicalinterfaces", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting physicalinterfaces by name: %s - %s", url, err.Error())
 	}
-	physicalinterfacesResponse := &PhysicalinterfacesResponse{}
-	err = v.DoRequest(req, physicalinterfacesResponse, http.StatusOK)
+	resp := &PhysicalinterfacesRes{}
+	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting physicalinterfaces by name: %s - %s", url, err.Error())
 	}
-	return physicalinterfacesResponse, fmt.Errorf("no device found with name %s", name)
+	switch l := len(resp.Items); {
+	case l == 1:
+		return v.GetPhysicalInterfaces(ctx, resp.Items[0].ID)
+	case l > 1:
+		for _, item := range resp.Items {
+			if item.Name == name {
+				return v.GetPhysicalInterfaces(ctx, item.ID)
+			}
+		}
+		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+	case l == 0:
+		return nil, fmt.Errorf("no access policies found, length of response is: %d, expected 1, please check your filter", l)
+	}
+	return nil, fmt.Errorf("no device found with name %s", name)
 }
 
 // api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/physicalinterfaces
-func (v *Client) GetPhysicalInterfaces(ctx context.Context, acpId string) (*PhysicalinterfacesRes, error) {
+func (v *Client) GetPhysicalInterfaces(ctx context.Context, acpId string) (*PhysicalinterfacesResponse, error) {
 	url := fmt.Sprintf("%s/devices/devicerecords/%s/physicalinterfaces", v.domainBaseURL, acpId)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting physicalinterfaces by name: %s - %s", url, err.Error())
 	}
-	physicalinterfacesResponse := &PhysicalinterfacesRes{}
+	physicalinterfacesResponse := &PhysicalinterfacesResponse{}
 	err = v.DoRequest(req, physicalinterfacesResponse, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting physicalinterfaces by name: %s - %s", url, err.Error())

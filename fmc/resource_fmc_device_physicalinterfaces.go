@@ -2,7 +2,6 @@ package fmc
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -12,24 +11,22 @@ var physical_interface_type string = "PhysicalInterface"
 
 func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 	return &schema.Resource{
-		Description: "Resource for access policy category in FMC\n" +
+		Description: "Resource for device physical interfaces in FMC\n" +
 			"\n" +
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
 			"resource \"fmc_access_policies_category\" \"category\" {\n" +
 			"    name        		  = \"test-time-range\"\n" +
-			"    access_policy_id     = \"BB62F664-7168-4C8E-B4CE-F70D522889D2\"\n" +
+			"    id     = \"BB62F664-7168-4C8E-B4CE-F70D522889D2\"\n" +
 			"}\n" +
 			"```",
 		UpdateContext: resourceFmcDevicePhysicalInterfacesUpdate,
 		ReadContext:   resourceFmcDevicePhysicalInterfacesRead,
-		//ReadAllContext: resourceFmcDevicePhysicalInterfacesReadAll,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The name of this physical interfaces",
 			},
 			"id": {
@@ -37,6 +34,30 @@ func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 				Description: "Id of physical interfaces",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of this physical interfaces",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "enabled of this physical interfaces",
+			},
+			"MTU": {
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "MTU of this physical interfaces",
+			},
+			"mode": {
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "mode of this physical interfaces",
+				MinItems:    1,
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 		},
 	}
@@ -72,27 +93,6 @@ func resourceFmcDevicePhysicalInterfacesRead(ctx context.Context, d *schema.Reso
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read time range object",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
-
-	return diags
-}
-
-func resourceFmcDevicePhysicalInterfacesReadAll(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	c := m.(*Client)
-
-	// Warning or errors can be collected in a slice type
-	var diags diag.Diagnostics
-
-	id := d.Id()
-	items, err := c.GetPhysicalInterfaces(ctx, id)
-	fmt.Println(items)
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read physicalinterfaces",
 			Detail:   err.Error(),
 		})
 		return diags
