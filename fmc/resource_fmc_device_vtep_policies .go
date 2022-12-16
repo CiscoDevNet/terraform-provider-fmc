@@ -2,8 +2,6 @@ package fmc
 
 import (
 	"context"
-	"fmt"
-	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -18,178 +16,77 @@ func resourceFmcDeviceVTEPPolicies() *schema.Resource {
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_access_rules\" \"access_rule_1\" {\n" +
-			"    acp = fmc_access_policies.access_policy.id\n" +
-			"    section = \"mandatory\"\n" +
-			"    name = \"Test rule 1\"\n" +
-			"    action = \"allow\"\n" +
-			"    enabled = true\n" +
-			"    enable_syslog = true\n" +
-			"    syslog_severity = \"alert\"\n" +
-			"    send_events_to_fmc = true\n" +
-			"    log_files = false\n" +
-			"    log_end = true\n" +
-			"```\n" +
-			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
+			"resource \"fmc_VTEP_policy\" \"fmc_VTEP_policy_1\" {\n" +
+			"    id = vtepPolicyUUID\n" +
+			"    name = \"vtepPolic1\"\n" +
+			"    type = \"VTEPPolicy\"\n" +
+			"    nveEnable = false\n" +
+			"    vtepEntries {\n" +
+			"        sourceInterface {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        sourceInterface {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"\n" +
+			"resource \"fmc_VTEP_policy\" \"fmc_VTEP_policy_2\" {\n" +
+			"    id = vtepPolicyUUID1\n" +
+			"    name = \"vtepPolicy2\"\n" +
+			"    type = \"VTEPPolicy\"\n" +
+			"    nveEnable = false\n" +
+			"    vtepEntries {\n" +
+			"        sourceInterface {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        sourceInterface {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"\n" +
+			"}\n" +
+			"```\n",
 		CreateContext: resourceFmcDeviceVTEPPoliciesCreate,
 		ReadContext:   resourceFmcDeviceVTEPPoliciessRead,
 		UpdateContext: resourceFmcDeviceVTEPPoliciessUpdate,
 		DeleteContext: resourceFmcDeviceVTEPPoliciesDelete,
 		Schema: map[string]*schema.Schema{
-			"acp": {
+			"id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
-				Description: "The ID of the ACP this resource belongs to",
-			},
-			"category": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				ForceNew:    true,
-				Description: "The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource",
-			},
-			"section": {
-				Type:     schema.TypeString,
-				Optional: true,
-				ForceNew: true,
-				StateFunc: func(val interface{}) string {
-					return strings.ToLower(val.(string))
-				},
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := strings.ToLower(val.(string))
-					allowedValues := []string{"mandatory", "default"}
-					for _, allowed := range allowedValues {
-						if v == allowed {
-							return
-						}
-					}
-					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
-					return
-				},
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					return strings.EqualFold(old, new)
-				},
-				Description: `Section for this resource, "mandatory" or "default"`,
-			},
-			"insert_before": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(int)
-					if v > 0 {
-						return
-					}
-					errs = append(errs, fmt.Errorf("%q must be greater than 0, got: %q", key, v))
-					return
-				},
-				Description: "The rule number before which to insert this resource",
-			},
-			"insert_after": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				ForceNew: true,
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := val.(int)
-					if v > 0 {
-						return
-					}
-					errs = append(errs, fmt.Errorf("%q must be greater than 0, got: %q", key, v))
-					return
-				},
-				Description: "The rule number after which to insert this resource",
+				Computed:    true,
+				Description: "The ID of this policy",
 			},
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The name of the resourceFmc",
+				Description: "The name of the policy",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The description of this physical interfaces",
 			},
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
-				Description: "The type of this resource",
+				Description: "The type of this policy",
 			},
-			"action": {
-				Type:     schema.TypeString,
-				Optional: true,
-				StateFunc: func(val interface{}) string {
-					return strings.ToUpper(val.(string))
-				},
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := strings.ToUpper(val.(string))
-					allowedValues := []string{"ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE", "BLOCK_RESET_INTERACTIVE"}
-					for _, allowed := range allowedValues {
-						if v == allowed {
-							return
-						}
-					}
-					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
-					return
-				},
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					return strings.EqualFold(old, new)
-				},
-				Description: `Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"`,
-			},
-			"syslog_severity": {
-				Type:     schema.TypeString,
-				Optional: true,
-				StateFunc: func(val interface{}) string {
-					return strings.ToUpper(val.(string))
-				},
-				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
-					v := strings.ToUpper(val.(string))
-					allowedValues := []string{"ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE", "WARNING"}
-					for _, allowed := range allowedValues {
-						if v == allowed {
-							return
-						}
-					}
-					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
-					return
-				},
-				DiffSuppressFunc: func(k, old, new string, d *schema.ResourceData) bool {
-					return strings.EqualFold(old, new)
-				},
-				Description: `Syslog severity for this resource, "ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE" or "WARNING"`,
-			},
-			"enable_syslog": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable syslog for this resource",
-			},
-			"enabled": {
+			"nveEnable": {
 				Type:        schema.TypeBool,
 				Required:    true,
-				Description: "Enable the resourceFmc",
+				Description: "The nveEnable the policy",
 			},
-			"send_events_to_fmc": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable sending events to FMC for this resource",
-			},
-			"log_files": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable logging files for this resource",
-			},
-			"log_begin": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable logging at the beginning of connection for this resource",
-			},
-			"log_end": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "Enable logging at the end of connection for this resource",
-			},
-			"source_zones": {
+			"vtepEntries": {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"source_zone": {
+						"sourceInterface": {
 							Type:     schema.TypeList,
 							Required: true,
 							Elem: &schema.Resource{
@@ -204,33 +101,10 @@ func resourceFmcDeviceVTEPPolicies() *schema.Resource {
 										Required:    true,
 										Description: "The type of this resource",
 									},
-								},
-							},
-						},
-					},
-				},
-				Description: "Source zones for this resource",
-			},
-			"destination_zones": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"destination_zone": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
+									"description": {
 										Type:        schema.TypeString,
 										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
+										Description: "The description of this physical interfaces",
 									},
 								},
 							},
@@ -238,169 +112,6 @@ func resourceFmcDeviceVTEPPolicies() *schema.Resource {
 					},
 				},
 				Description: "Destination zones for this resource",
-			},
-			"source_networks": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"source_network": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: "Source networks for this resource",
-			},
-			"destination_networks": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"destination_network": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: "Destination networks for this resource",
-			},
-			"source_ports": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"source_port": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: "Source ports for this resource",
-			},
-			"destination_ports": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"destination_port": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: "Destination ports for this resource",
-			},
-			"urls": {
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"url": {
-							Type:     schema.TypeList,
-							Required: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"id": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The ID of this resource",
-									},
-									"type": {
-										Type:        schema.TypeString,
-										Required:    true,
-										Description: "The type of this resource",
-									},
-								},
-							},
-						},
-					},
-				},
-				Description: "URLs for this resource",
-			},
-			"ips_policy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "IPS policy for this resource",
-			},
-			"file_policy": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "File policy for this resource",
-			},
-			"syslog_config": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "Syslog configuration ID for this resource",
-			},
-			"new_comments": {
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-				Description: "New comments to be added for this resource",
 			},
 		},
 	}

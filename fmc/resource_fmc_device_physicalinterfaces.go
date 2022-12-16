@@ -11,16 +11,55 @@ var physical_interface_type string = "PhysicalInterface"
 
 func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 	return &schema.Resource{
-		Description: "Resource for device physical interfaces in FMC\n" +
+		Description: "Resource for Physical Interfaces in FMC\n" +
 			"\n" +
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_access_policies_category\" \"category\" {\n" +
-			"    name        		  = \"test-time-range\"\n" +
-			"    id     = \"BB62F664-7168-4C8E-B4CE-F70D522889D2\"\n" +
+			"resource \"fmc_physical_interfaces\" \"physical_interfaces_1\" {\n" +
+			"    id = fpphysicalinterfaceUUID1\n" +
+			"    name = \"s1p1\"\n" +
+			"    type = \"FPPhysicalInterface\"\n" +
+			"    enabled = false\n" +
+			"    MTU = 1500\n" +
+			"    mode = true\n" +
+			"    ifname = false\n" +
+			"    nveOnly = true\n" +
+			"    managementOnly = true\n" +
+			"    source_zones {\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"\n" +
+			"resource \"fmc_physical_interfaces\" \"physical_interfaces_2\" {\n" +
+			"    id = fpphysicalinterfaceUUID2\n" +
+			"    name = \"s1p2\"\n" +
+			"    type = \"FPPhysicalInterface\"\n" +
+			"    enabled = false\n" +
+			"    MTU = 1500\n" +
+			"    mode = true\n" +
+			"    ifname = false\n" +
+			"    nveOnly = true\n" +
+			"    managementOnly = true\n" +
+			"    source_zones {\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.inside.id\n" +
+			"            type =  data.fmc_security_zones.inside.type\n" +
+			"        }\n" +
+			"        source_zone {\n" +
+			"            id = data.fmc_security_zones.outside.id\n" +
+			"            type =  data.fmc_security_zones.outside.type\n" +
+			"        }\n" +
+			"    }\n" +
+			"\n" +
 			"}\n" +
-			"```",
+			"```\n",
 		UpdateContext: resourceFmcDevicePhysicalInterfacesUpdate,
 		ReadContext:   resourceFmcDevicePhysicalInterfacesRead,
 		Schema: map[string]*schema.Schema{
@@ -35,6 +74,11 @@ func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 				ForceNew:    true,
 				Description: "Id of physical interfaces",
 			},
+			"description": {
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The description of this physical interfaces",
+			},
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -42,7 +86,7 @@ func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
-				Computed:    true,
+				Optional:    true,
 				Description: "enabled of this physical interfaces",
 			},
 			"MTU": {
@@ -58,6 +102,46 @@ func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
+			},
+			"ifname": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "ifname of this physical interfaces",
+			},
+			"nveOnly": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "ifname of this physical interfaces",
+			},
+			"managementOnly": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "managementOnly of this physical interfaces",
+			},
+			"securityZone": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"id": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The ID of this resource",
+						},
+						"type": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The type of this resource",
+						},
+						"name": {
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "The name of this resource",
+						},
+					},
+				},
+				Description: "Destination zones for this resource",
 			},
 		},
 	}
