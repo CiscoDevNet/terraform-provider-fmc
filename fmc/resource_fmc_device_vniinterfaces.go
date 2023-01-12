@@ -278,7 +278,7 @@ func resourceFmcDeviceVNIInterfacesRead(ctx context.Context, d *schema.ResourceD
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	item, err := c.GetVNIInterfacesByName(ctx, d.Get("name").(string), d.Id())
+	item, err := c.GetVNIInterfaces(ctx, d.Get("device_id").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}

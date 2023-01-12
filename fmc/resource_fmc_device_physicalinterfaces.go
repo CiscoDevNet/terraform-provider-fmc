@@ -7,229 +7,223 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-var physical_interface_type string = "PhysicalInterface"
-
-func resourceFmcDevicePhysicalInterfaces() *schema.Resource {
+func resourceFmcPhysicalInterface() *schema.Resource {
 	return &schema.Resource{
-		Description: "Resource for Physical Interfaces in FMC\n" +
-			"\n" +
-			"## Example\n" +
-			"An example is shown below: \n" +
-			"```hcl\n" +
-			"resource \"fmc_physical_interfaces\" \"physical_interfaces_1\" {\n" +
-			"    id = fpphysicalinterfaceUUID1\n" +
-			"    name = \"s1p1\"\n" +
-			"    type = \"FPPhysicalInterface\"\n" +
-			"    enabled = false\n" +
-			"    MTU = 1500\n" +
-			"    mode = true\n" +
-			"    ifname = false\n" +
-			"    nveOnly = true\n" +
-			"    managementOnly = true\n" +
-			"    source_zones {\n" +
-			"        source_zone {\n" +
-			"            id = data.fmc_security_zones.inside.id\n" +
-			"            type =  data.fmc_security_zones.inside.type\n" +
-			"        }\n" +
-			"        source_zone {\n" +
-			"            id = data.fmc_security_zones.outside.id\n" +
-			"            type =  data.fmc_security_zones.outside.type\n" +
-			"        }\n" +
-			"    }\n" +
-			"\n" +
-			"resource \"fmc_physical_interfaces\" \"physical_interfaces_2\" {\n" +
-			"    id = fpphysicalinterfaceUUID2\n" +
-			"    name = \"s1p2\"\n" +
-			"    type = \"FPPhysicalInterface\"\n" +
-			"    enabled = false\n" +
-			"    MTU = 1500\n" +
-			"    mode = true\n" +
-			"    ifname = false\n" +
-			"    nveOnly = true\n" +
-			"    managementOnly = true\n" +
-			"    source_zones {\n" +
-			"        source_zone {\n" +
-			"            id = data.fmc_security_zones.inside.id\n" +
-			"            type =  data.fmc_security_zones.inside.type\n" +
-			"        }\n" +
-			"        source_zone {\n" +
-			"            id = data.fmc_security_zones.outside.id\n" +
-			"            type =  data.fmc_security_zones.outside.type\n" +
-			"        }\n" +
-			"    }\n" +
-			"\n" +
-			"}\n" +
-			"```\n",
-		UpdateContext: resourceFmcDevicePhysicalInterfacesUpdate,
-		ReadContext:   resourceFmcDevicePhysicalInterfacesRead,
+		// CreateContext: resourceFmcPhysicalInterfaceCreate,
+		ReadContext:   resourceFmcPhysicalInterfaceRead,
+		UpdateContext: resourceFmcPhysicalInterfaceUpdate,
+		DeleteContext: resourceFmcPhysicalInterfaceDelete,
 		Schema: map[string]*schema.Schema{
-			"name": {
-				Type:        schema.TypeString,
-				Required:    true,
-				Description: "The name of this physical interfaces",
-			},
-			"id": {
+			"device_id": {
 				Type:        schema.TypeString,
 				Required:    true,
 				ForceNew:    true,
-				Description: "Id of physical interfaces",
+				Description: "The ID of the device this resource needs",
 			},
-			"description": {
+			"physicalinterface_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "The description of this physical interfaces",
-			},
-			"type": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "Type of this physical interfaces",
-			},
-			"enabled": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "enabled of this physical interfaces",
-			},
-			"MTU": {
-				Type:        schema.TypeInt,
-				Computed:    true,
-				Description: "MTU of this physical interfaces",
-			},
-			"mode": {
-				Type:        schema.TypeList,
-				Computed:    true,
-				Description: "mode of this physical interfaces",
-				MinItems:    1,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
+				ForceNew:    true,
+				Description: "The ID of the physical interface this resource needs",
 			},
 			"ifname": {
 				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "ifname of this physical interfaces",
+				Required:    true,
+				Description: "Name of chosen interface",
 			},
-			"nveOnly": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "ifname of this physical interfaces",
-			},
-			"managementOnly": {
-				Type:        schema.TypeBool,
-				Optional:    true,
-				Description: "managementOnly of this physical interfaces",
-			},
-			"securityZone": {
+			"security_zone": {
 				Type:     schema.TypeList,
 				Optional: true,
-				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The ID of this resource",
+							Description: "The ID of SZ",
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The type of this resource",
-						},
-						"name": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "The name of this resource",
+							Optional:    true,
+							Default:     "SecurityZone",
+							Description: "The type of SZ",
 						},
 					},
 				},
-				Description: "Destination zones for this resource",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "Enable this resource",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of this resource",
+			},
+			"mode": { // add method to verify
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "NONE",
+				Description: "The mode of this resource",
+			},
+			"name": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Name of the physcal interface",
+			},
+			"mtu": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Default:     1500,
+				Description: "The type of this resource",
+			},
+			"ipv4": {
+				Type:     schema.TypeList,
+				Required: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"static": {
+							Type:     schema.TypeList,
+							Optional: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"address": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "IP of the interface",
+									},
+									"netmask": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "Subnet mask of the interface",
+									},
+								},
+							},
+						},
+						"dhcp": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"enable_default_route_dhcp": {
+										Type:        schema.TypeBool,
+										Optional:    true,
+										Default:     true,
+										Description: "Dynamic IP of the interface",
+									},
+									"dhcp_route_metric": {
+										Type:     schema.TypeInt,
+										Optional: true,
+										Default:  1,
+									},
+								},
+							},
+						},
+					},
+				},
+				Description: "IPV4 information",
 			},
 		},
 	}
 }
 
-func resourceFmcDevicePhysicalInterfacesRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPhysicalInterfaceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	acpId := d.Get("acpId").(string)
-	item, err := c.GetPhysicalInterfacesByName(ctx, id, acpId)
+	item, err := c.GetFmcPhysicalInterface(ctx, d.Get("device_id").(string), id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read physicalinterfaces",
+			Summary:  "unable to read physical interface",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
-	if err := d.Set("name", item.Name); err != nil {
+	if err := d.Set("ifname", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read physicalinterfaces",
+			Summary:  "unable to read physical interface",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
 
-	if err := d.Set("acpId", acpId); err != nil {
+	if err := d.Set("type", item.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read time range object",
+			Summary:  "unable to read host object",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
-
 	return diags
 }
 
-func resourceFmcDevicePhysicalInterfacesUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func resourceFmcPhysicalInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
-	// Warning or errors can be collected in a slice type
-	// var diags diag.Diagnostics
+
 	var diags diag.Diagnostics
-	if d.HasChanges("hardware", "LLDP", "name", "managementOnly", "MTU", "mode") {
-		var hardware HardWare
-		var lldp LLDP
+	id := d.Id()
+	if d.HasChanges("ifname", "mode", "ipv4", "security_zone") {
 
-		if inputObjs, ok := d.GetOk("hardware"); ok {
-			obj := inputObjs.([]interface{})[0].(map[string]interface{})
-			hardware = HardWare{
-				Duplex:          obj["duplex"].(string),
-				Speed:           obj["speed"].(string),
-				AutoNegState:    obj["autoNegState"].(string),
-				FecMode:         obj["fecMode"].(string),
-				FlowControlSend: obj["flowControlSend"].(string),
+		var ipv4 PhysicalInterfaceIpv4
+		var szs PhysicalInterfaceSecurityZone
+
+		if inputIpv4 := d.Get("ipv4").([]interface{}); len(inputIpv4) > 0 {
+			ipv4s := inputIpv4[0].(map[string]interface{})
+			static_ipv4 := ipv4s["static"].([]interface{})[0].(map[string]interface{})
+			static := PhysicalInterfaceIpv4Static{
+				Address: static_ipv4["address"].(string),
+				Netmask: static_ipv4["netmask"].(string),
+			}
+
+			dhcp_ipv4 := ipv4s["dhcp"].([]interface{})[0].(map[string]interface{})
+			dhcp := PhysicalInterfaceIpv4Dhcp{
+				EnableDefaultRouteDHCP: dhcp_ipv4["enableDefaultRouteDHCP"].(string),
+				DhcpRouteMetric:        dhcp_ipv4["dhcpRouteMetric"].(string),
+			}
+
+			ipv4 = PhysicalInterfaceIpv4{
+				Static: static,
+				Dhcp:   dhcp,
 			}
 		}
 
-		if inputObjs, ok := d.GetOk("LLDP"); ok {
-			obj := inputObjs.([]interface{})[0].(map[string]interface{})
-			lldp = LLDP{
-				Transmit: obj["transmit"].(bool),
-				Receive:  obj["receive"].(bool),
+		if inputSzs, ok := d.GetOk("security_zone"); ok {
+			for _, sz := range inputSzs.([]interface{}) {
+				szi := sz.(map[string]interface{})
+				szs = PhysicalInterfaceSecurityZone{
+					ID:   szi["id"].(string),
+					Type: szi["type"].(string),
+				}
 			}
 		}
 
-		res, err := c.UpdatePhysicalInterfaces(ctx, d.Get("acp").(string), d.Id(), &Physicalinterfaces{
-			ID:                 d.Id(),
-			Name:               d.Get("name").(string),
-			Type:               physical_interface_type,
-			ManagementOnly:     d.Get("managementOnly").(bool),
-			MTU:                d.Get("MTU").(int),
-			Mode:               d.Get("mode").(string),
-			Enabled:            d.Get("enabled").(bool),
-			NveOnly:            d.Get("nveOnly").(bool),
-			EnableSGTPropagate: d.Get("enableSGTPropagate").(bool),
-			HardWare:           hardware,
-			LLDP:               lldp,
+		_, err := c.UpdateFmcPhysicalInterface(ctx, d.Get("device_id").(string), d.Get("physicalnterface_id").(string), &PhysicalInterface{
+			Ifname:        d.Get("ifname").(string),
+			Mode:          d.Get("mode").(string),
+			Ipv4:          ipv4,
+			Security_Zone: szs,
+			ID:            id,
 		})
 		if err != nil {
-			return returnWithDiag(diags, err)
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to update physical interface",
+				Detail:   err.Error(),
+			})
+			return diags
 		}
-		d.SetId(res.ID)
 	}
-	return resourceFmcDevicePhysicalInterfacesRead(ctx, d, m)
+	return resourceFmcPhysicalInterfaceRead(ctx, d, m)
+}
+
+func resourceFmcPhysicalInterfaceDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	var diags diag.Diagnostics
+	return diags
 }

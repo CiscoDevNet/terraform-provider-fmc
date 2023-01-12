@@ -122,27 +122,25 @@ func resourceFmcDeviceVTEPPoliciesCreate(ctx context.Context, d *schema.Resource
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
+
 	var vtepEntry []VTEPEntry
 
 	var sourceInterface SourceInterface
-
-	if inputObjs, ok := d.GetOk("sourceInterface"); ok {
-		obj := inputObjs.([]interface{})[0].(map[string]interface{})
+	if inputObjs := d.Get("vtepEntries").([]interface{}); len(inputObjs) > 0 {
+		obj := inputObjs[0].(map[string]interface{})
+		sourceInterface_entry := obj["sourceInterface"].([]interface{})[0].(map[string]interface{})
 		sourceInterface = SourceInterface{
-			ID:   obj["id"].(string),
-			Name: obj["name"].(string),
-			Type: obj["type"].(string),
+			ID:   sourceInterface_entry["id"].(string),
+			Name: sourceInterface_entry["name"].(string),
+			Type: sourceInterface_entry["type"].(string),
 		}
-	}
 
-	if inputObjs, ok := d.GetOk("vtepEntries"); ok {
-		obj := inputObjs.([]interface{})[0].(map[string]interface{})
 		vtepEntry = append(vtepEntry, VTEPEntry{
-			SourceInterface:          sourceInterface,
-			NveVtepId:                obj["nveVtepId"].(int),
-			NveDestinationPort:       obj["nveDestinationPort"].(int),
-			NveEncapsulationType:     obj["NveEncapsulationType"].(string),
-			NveNeighborDiscoveryType: obj["NveNeighborDiscoveryType"].(string),
+			SourceInterface:      sourceInterface,
+			NveVtepId:            obj["nveVtepId"].(int),
+			NveDestinationPort:   obj["nveDestinationPort"].(int),
+			NveEncapsulationType: obj["NveEncapsulationType"].(string),
+			//NveNeighborDiscoveryType: obj["NveNeighborDiscoveryType"].(string),
 		})
 	}
 
@@ -155,6 +153,7 @@ func resourceFmcDeviceVTEPPoliciesCreate(ctx context.Context, d *schema.Resource
 		return returnWithDiag(diags, err)
 	}
 	d.SetId(res.ID)
+
 	return resourceFmcDeviceVTEPPoliciessRead(ctx, d, m)
 }
 
@@ -163,8 +162,7 @@ func resourceFmcDeviceVTEPPoliciessRead(ctx context.Context, d *schema.ResourceD
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-
-	item, err := c.GetVTEPPoliciesByName(ctx, d.Get("acp").(string), d.Id())
+	item, err := c.GetVTEPPolicies(ctx, d.Get("device_id").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}
@@ -185,24 +183,21 @@ func resourceFmcDeviceVTEPPoliciessUpdate(ctx context.Context, d *schema.Resourc
 		var vtepEntry []VTEPEntry
 
 		var sourceInterface SourceInterface
-
-		if inputObjs, ok := d.GetOk("sourceInterface"); ok {
-			obj := inputObjs.([]interface{})[0].(map[string]interface{})
+		if inputObjs := d.Get("vtepEntries").([]interface{}); len(inputObjs) > 0 {
+			obj := inputObjs[0].(map[string]interface{})
+			sourceInterface_entry := obj["sourceInterface"].([]interface{})[0].(map[string]interface{})
 			sourceInterface = SourceInterface{
-				ID:   obj["id"].(string),
-				Name: obj["name"].(string),
-				Type: obj["type"].(string),
+				ID:   sourceInterface_entry["id"].(string),
+				Name: sourceInterface_entry["name"].(string),
+				Type: sourceInterface_entry["type"].(string),
 			}
-		}
 
-		if inputObjs, ok := d.GetOk("vtepEntries"); ok {
-			obj := inputObjs.([]interface{})[0].(map[string]interface{})
 			vtepEntry = append(vtepEntry, VTEPEntry{
-				SourceInterface:          sourceInterface,
-				NveVtepId:                obj["nveVtepId"].(int),
-				NveDestinationPort:       obj["nveDestinationPort"].(int),
-				NveEncapsulationType:     obj["NveEncapsulationType"].(string),
-				NveNeighborDiscoveryType: obj["NveNeighborDiscoveryType"].(string),
+				SourceInterface:      sourceInterface,
+				NveVtepId:            obj["nveVtepId"].(int),
+				NveDestinationPort:   obj["nveDestinationPort"].(int),
+				NveEncapsulationType: obj["NveEncapsulationType"].(string),
+				//NveNeighborDiscoveryType: obj["NveNeighborDiscoveryType"].(string),
 			})
 		}
 

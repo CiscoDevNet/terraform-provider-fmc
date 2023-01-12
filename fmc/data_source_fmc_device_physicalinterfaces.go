@@ -42,7 +42,7 @@ func dataSourceFmcDevicePhysicalInterfacesRead(ctx context.Context, d *schema.Re
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	physicalinterfaces, err := c.GetPhysicalInterfacesByName(ctx, d.Get("actId").(string), d.Get("name").(string))
+	physicalinterfaces, err := c.GetFmcPhysicalInterface(ctx, d.Get("device_id").(string), d.Id())
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

@@ -42,7 +42,7 @@ func dataSourceFmcVNIInterfacesRead(ctx context.Context, d *schema.ResourceData,
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	resp, err := c.GetVNIInterfacesByName(ctx, d.Get("vniId").(string), d.Get("name").(string))
+	resp, err := c.GetVNIInterfaces(ctx, d.Get("device_id").(string), d.Id())
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
