@@ -14,10 +14,26 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
-data "fmc_devices" "device" {
-    name = "ftd.adyah.cisco"
+# data "fmc_access_policies" "access_policy" {
+#     name = "test"
+# }
+
+data "fmc_access_policies" "access_policy" {
+    name = "test"
 }
 
-output "existing_device" {
-    value = data.fmc_devices.device
+resource "fmc_devices" "device"{
+  name = "ftd2"
+  hostname = "10.0.2.12"
+  regkey = "cisco"
+  type = "Device"
+  license_caps = [ "MALWARE" ]
+  access_policy {
+      id = data.fmc_access_policies.access_policy.id
+      type = data.fmc_access_policies.access_policy.type
+  }
+}
+
+output "fmc_devicess" {
+    value = fmc_devices.device
 }

@@ -63,8 +63,34 @@ type AccessPoliciesResponse struct {
 	} `json:"items"`
 }
 
+// func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
+// 	url := fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+// 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())
+// 	}
+// 	resp := &AccessPoliciesResponse{}
+// 	err = v.DoRequest(req, resp, http.StatusOK)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())
+// 	}
+// 	switch l := len(resp.Items); {
+// 	case l == 1:
+// 		return v.GetFmcAccessPolicy(ctx, resp.Items[0].ID)
+// 	case l > 1:
+// 		for _, item := range resp.Items {
+// 			if item.Name == name {
+// 				return v.GetFmcAccessPolicy(ctx, item.ID)
+// 			}
+// 		}
+// 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+// 	case l == 0:
+// 		return nil, fmt.Errorf("no access policies found, length of response is: %d, expected 1, please check your filter", l)
+// 	}
+// 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
+// }
 func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
-	url := fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+	url := fmt.Sprintf("%s/policy/accesspolicies?name=%s", v.domainBaseURL, name)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())
@@ -89,7 +115,6 @@ func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*Ac
 	}
 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
-
 // /fmc_config/v1/domain/DomainUUID/policy/accesspolicies?bulk=true ( Bulk POST operation on access policies. )
 
 func (v *Client) CreateFmcAccessPolicy(ctx context.Context, accessPolicy *AccessPolicy) (*AccessPolicyResponse, error) {

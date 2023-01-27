@@ -14,20 +14,33 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
-data "fmc_network_objects" "PrivateVLAN" {
-  name = "VLAN825-Private"
+resource "fmc_network_objects" "range1" {
+  name        = "Sample_Range1"
+  value       = "192.168.1.0/24"
+  description = "Sample Range 1"
 }
 
-resource "fmc_network_objects" "PrivateVLANDR" {
-  name        = "${data.fmc_network_objects.PrivateVLAN.name}-DRsite"
-  value       = data.fmc_network_objects.PrivateVLAN.value
-  description = "testing terraform"
+resource "fmc_network_objects" "range2" {
+  name        = "Sample_Range2"
+  value       = "192.168.2.0/24"
+  description = "Sample Range 2"
 }
 
-output "existing_fmc_network_object" {
-  value = data.fmc_network_objects.PrivateVLAN
+resource "fmc_network_objects" "range3" {
+  name        = "Sample_Range3"
+  value       = "192.168.3.0/24"
+  description = "Sample Range 3"
 }
 
-output "new_fmc_network_object_3" {
-  value = fmc_network_objects.PrivateVLANDR
+resource "fmc_network_group_objects" "group" {
+  name = "Sample_Ntwk_Grp"
+  description = "Testing Group objects"
+  objects {
+    id = fmc_network_objects.range1.id
+    type = fmc_network_objects.range1.type
+  }
+  objects {
+    id = fmc_network_objects.range3.id
+    type = fmc_network_objects.range3.type
+  }
 }
