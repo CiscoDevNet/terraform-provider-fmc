@@ -61,7 +61,7 @@ func resourceFmcPhysicalInterface() *schema.Resource {
 				Computed:    true,
 				Description: "The type of this resource",
 			},
-			"mode": { // add method to verify
+			"mode": { // add method to verify 
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "NONE",
@@ -80,45 +80,47 @@ func resourceFmcPhysicalInterface() *schema.Resource {
 			},
 			"ipv4": {
 				Type:     schema.TypeList,
-				Required: true,
+				Required:    true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"static": {
-							Type:     schema.TypeList,
-							Optional: true,
-							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"address": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "IP of the interface",
-									},
-									"netmask": {
-										Type:        schema.TypeString,
-										Optional:    true,
-										Description: "Subnet mask of the interface",
-									},
-								},
-							},
-						},
+                            Type:        schema.TypeList,
+                            Optional:    true,
+                            Elem: &schema.Resource{
+                                Schema: map[string]*schema.Schema{
+                                    "address": {
+                                        Type:        schema.TypeString,
+                                        Optional:    true,
+                                        Description: "IP of the interface",
+                                    },
+                                    "netmask": {
+                                        Type:        schema.TypeString,
+                                        Optional:    true,
+                                        Description: "Subnet mask of the interface",
+                                    },
+                        },
+                        
+                    },
+                },
 						"dhcp": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:        schema.TypeList,
+							Required:    true,
 							Elem: &schema.Resource{
-								Schema: map[string]*schema.Schema{
-									"enable_default_route_dhcp": {
-										Type:        schema.TypeBool,
-										Optional:    true,
+                                Schema: map[string]*schema.Schema{
+                                    "enable_default_route_dhcp": {
+                                        Type:        schema.TypeBool,
+                                        Optional:    true,
 										Default:     true,
-										Description: "Dynamic IP of the interface",
-									},
-									"dhcp_route_metric": {
-										Type:     schema.TypeInt,
-										Optional: true,
-										Default:  1,
-									},
-								},
-							},
+                                        Description: "Dynamic IP of the interface",
+                                    },
+                                    "dhcp_route_metric": {
+                                        Type:        schema.TypeInt,
+                                        Optional:    true,
+										Default: 	 1,
+                                    },
+                        },
+                        
+                    },
 						},
 					},
 				},
@@ -135,7 +137,7 @@ func resourceFmcPhysicalInterfaceRead(ctx context.Context, d *schema.ResourceDat
 	var diags diag.Diagnostics
 
 	id := d.Id()
-	item, err := c.GetFmcPhysicalInterface(ctx, d.Get("device_id").(string), id)
+	item, err := c.GetFmcPhysicalInterface(ctx,d.Get("device_id").(string) ,id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -166,50 +168,58 @@ func resourceFmcPhysicalInterfaceRead(ctx context.Context, d *schema.ResourceDat
 
 func resourceFmcPhysicalInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
-
+	
 	var diags diag.Diagnostics
+
 	id := d.Id()
 	if d.HasChanges("ifname", "mode", "ipv4", "security_zone") {
+		
+		// var ipv4s []PhysicalInterfaceIpv4
+		var szs []PhysicalInterfaceSecurityZone
+		var statics []PhysicalInterfaceIpv4Static
+		var dhcps []PhysicalInterfaceIpv4Dhcp
+		
+	// Snippet needs correction
+		if inputIpv4, ok := d.GetOk("ipv4"); ok {
+            for _, _ = range inputIpv4.([]interface{}) {
+				if inputStatic, ok := d.GetOk("static"); ok {
+					for _, static := range inputStatic.([]interface{}) {
+						statici := static.(map[string]interface{})
+						statics = append(statics, PhysicalInterfaceIpv4Static{
+							Address:   statici["address"].(string),
+							Netmask:   statici["netmask"].(string),
+				})
+					}
+				}
 
-		var ipv4 PhysicalInterfaceIpv4
-		var szs PhysicalInterfaceSecurityZone
-
-		if inputIpv4 := d.Get("ipv4").([]interface{}); len(inputIpv4) > 0 {
-			ipv4s := inputIpv4[0].(map[string]interface{})
-			static_ipv4 := ipv4s["static"].([]interface{})[0].(map[string]interface{})
-			static := PhysicalInterfaceIpv4Static{
-				Address: static_ipv4["address"].(string),
-				Netmask: static_ipv4["netmask"].(string),
-			}
-
-			dhcp_ipv4 := ipv4s["dhcp"].([]interface{})[0].(map[string]interface{})
-			dhcp := PhysicalInterfaceIpv4Dhcp{
-				EnableDefaultRouteDHCP: dhcp_ipv4["enableDefaultRouteDHCP"].(string),
-				DhcpRouteMetric:        dhcp_ipv4["dhcpRouteMetric"].(string),
-			}
-
-			ipv4 = PhysicalInterfaceIpv4{
-				Static: static,
-				Dhcp:   dhcp,
-			}
-		}
+				if inputDhcp, ok := d.GetOk("dhcp"); ok {
+					for _, dhcp := range inputDhcp.([]interface{}) {
+						dhcpi := dhcp.(map[string]interface{})
+						dhcps = append(dhcps, PhysicalInterfaceIpv4Dhcp{
+							EnableDefaultRouteDHCP:  dhcpi["enableDefaultRouteDHCP"].(string),
+							DhcpRouteMetric:   		 dhcpi["dhcpRouteMetric"].(string),
+				})
+					}
+				}
+        }
+	}
 
 		if inputSzs, ok := d.GetOk("security_zone"); ok {
 			for _, sz := range inputSzs.([]interface{}) {
 				szi := sz.(map[string]interface{})
-				szs = PhysicalInterfaceSecurityZone{
+				szs = append(szs, PhysicalInterfaceSecurityZone{
 					ID:   szi["id"].(string),
 					Type: szi["type"].(string),
-				}
+				})
 			}
 		}
 
 		_, err := c.UpdateFmcPhysicalInterface(ctx, d.Get("device_id").(string), d.Get("physicalnterface_id").(string), &PhysicalInterface{
-			Ifname:        d.Get("ifname").(string),
-			Mode:          d.Get("mode").(string),
-			Ipv4:          ipv4,
+			Ifname:       d.Get("ifname").(string),
+			Mode: 		  d.Get("mode").(string),
+			//Ipv4: 		  ipv4s,
 			Security_Zone: szs,
-			ID:            id,
+			ID:           id,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
@@ -223,7 +233,8 @@ func resourceFmcPhysicalInterfaceUpdate(ctx context.Context, d *schema.ResourceD
 	return resourceFmcPhysicalInterfaceRead(ctx, d, m)
 }
 
+
 func resourceFmcPhysicalInterfaceDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	var diags diag.Diagnostics
 	return diags
-}
+	}

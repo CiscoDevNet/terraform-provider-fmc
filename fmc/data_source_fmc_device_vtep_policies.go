@@ -18,16 +18,16 @@ func dataSourceFmcVTEPPoliciess() *schema.Resource {
 			"```",
 		ReadContext: dataSourceFmcVTEPPoliciesRead,
 		Schema: map[string]*schema.Schema{
-			"id": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The ID of this VTEP Policies",
-			},
-			"name": {
+			"device_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				Description: "Name of the VTEP Policies",
+				Description: "The ID of this VTEP Policies",
 			},
+			// "name": {
+			// 	Type:        schema.TypeString,
+			// 	Required:    true,
+			// 	Description: "Name of the VTEP Policies",
+			// },
 			"type": {
 				Type:        schema.TypeString,
 				Computed:    true,
@@ -42,7 +42,7 @@ func dataSourceFmcVTEPPoliciesRead(ctx context.Context, d *schema.ResourceData, 
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	resp, err := c.GetVTEPPolicies(ctx, d.Get("device_id").(string), d.Id())
+	resp, err := c.GetVTEPPolicies(ctx, d.Get("device_id").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -54,6 +54,15 @@ func dataSourceFmcVTEPPoliciesRead(ctx context.Context, d *schema.ResourceData, 
 	}
 
 	d.SetId(resp.ID)
+
+	// if err := d.Set("name", resp.Name); err != nil {
+	// 	diags = append(diags, diag.Diagnostic{
+	// 		Severity: diag.Error,
+	// 		Summary:  "unable to read VTEP Policies",
+	// 		Detail:   err.Error(),
+	// 	})
+	// 	return diags
+	// }
 
 	if err := d.Set("type", resp.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{

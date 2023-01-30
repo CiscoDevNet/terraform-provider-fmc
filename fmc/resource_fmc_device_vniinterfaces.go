@@ -60,8 +60,10 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 			"\n" +
 			"}\n" +
 			"```\n",
+		CreateContext: resourceFmcDeviceVNIInterfacesCreate,
 		UpdateContext: resourceFmcDeviceVNIInterfacesUpdate,
 		ReadContext:   resourceFmcDeviceVNIInterfacesRead,
+		DeleteContext: resourceFmcDeviceVNIInterfacesDelete,
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -70,8 +72,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 			},
 			"id": {
 				Type:        schema.TypeString,
-				Required:    true,
-				ForceNew:    true,
+				Computed:    true,
 				Description: "Id of VNI interfaces",
 			},
 			"description": {
@@ -79,7 +80,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				Required:    true,
 				Description: "The description of this VNI interfaces",
 			},
-			"vniId": {
+			"vni_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "The description of this VNI interfaces",
@@ -94,7 +95,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				Optional:    true,
 				Description: "enabled of this VNI interfaces",
 			},
-			"MTU": {
+			"mtu": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "MTU of this VNI interfaces",
@@ -103,7 +104,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				Type:        schema.TypeList,
 				Computed:    true,
 				Description: "mode of this VNI interfaces",
-				MinItems:    1,
+				//MinItems:    1,
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
@@ -113,47 +114,47 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				Computed:    true,
 				Description: "ifname of this VNI interfaces",
 			},
-			"enableSGTPropagate": {
+			"enable_sgt_propagate": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "enableSGTPropagate of this VNI interfaces",
 			},
-			"managementOnly": {
+			"management_only": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "managementOnly of this VNI interfaces",
 			},
-			"enableAntiSpoofing": {
+			"enable_anti_spoofing": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "enableAntiSpoofing of this VNI interfaces",
 			},
-			"activeMACAddress": {
+			"active_mac_address": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "activeMACAddress of this VNI interfaces",
 			},
-			"fragmentReassembly": {
+			"fragment_reassembly": {
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: "activeMACAddress of this VNI interfaces",
 			},
-			"standbyMACAddress": {
+			"standby_mac_address": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "standbyMACAddress of this VNI interfaces",
 			},
-			"enableDNSLookup": {
+			"enable_dns_lookup": {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "enableDNSLookup of this VNI interfaces",
 			},
-			"enableProxy": {
+			"enable_proxy": {
 				Type:        schema.TypeBool,
 				Computed:    true,
 				Description: "enableProxy of this VNI interfaces",
 			},
-			"vtepID": {
+			"vtep_id": {
 				Type:        schema.TypeInt,
 				Computed:    true,
 				Description: "vtepID of this VNI interfaces",
@@ -163,13 +164,13 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				Computed:    true,
 				Description: "vtepID of this VNI interfaces",
 			},
-			"fmcAccessConfig": {
+			"fmc_access_config": {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"allowedNetworks": {
+						"allowed_networks": {
 							Type:     schema.TypeList,
 							Required: true,
 							Elem: &schema.Resource{
@@ -192,7 +193,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 								},
 							},
 						},
-						"enableAccess": {
+						"enable_access": {
 							Type:        schema.TypeBool,
 							Computed:    true,
 							Description: "enableAccess of this resource",
@@ -201,7 +202,7 @@ func resourceFmcDeviceVNIInterfaces() *schema.Resource {
 				},
 				Description: "fmcAccessConfig for this resource",
 			},
-			"securityZone": {
+			"security_zone": {
 				Type:     schema.TypeList,
 				Optional: true,
 				MaxItems: 1,
@@ -263,7 +264,7 @@ func resourceFmcDeviceVNIInterfacesCreate(ctx context.Context, d *schema.Resourc
 		VNIID:                          d.Get("vniId").(int),
 		MulticastGroupAddress:          d.Get("multicastGroupAddress").(string),
 		VTEPID:                         d.Get("vtepID").(int),
-		Enabled:                        d.Get("enables").(bool),
+		Enabled:                        d.Get("enabled").(bool),
 	})
 	if err != nil {
 		return returnWithDiag(diags, err)
@@ -278,7 +279,7 @@ func resourceFmcDeviceVNIInterfacesRead(ctx context.Context, d *schema.ResourceD
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
-	item, err := c.GetVNIInterfaces(ctx, d.Get("device_id").(string), d.Id())
+	item, err := c.GetVNIInterfaces(ctx, d.Get("name").(string), d.Id())
 	if err != nil {
 		return returnWithDiag(diags, err)
 	}

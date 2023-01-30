@@ -145,9 +145,37 @@ type FTDVNIInterfaces struct {
 	FmcAccessConfig                FmcAccessConfig                `json:"fmcAccessConfig"`
 }
 
+// /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/vniinterfaces/{objectId}
+// func (v *Client) GetVNIInterfacesByName(ctx context.Context, id, name string) (*FTDVNIInterfaceResponse, error) {
+// 	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces?expanded=false&filter=name:", v.domainBaseURL, id)
+// 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("getting vniinterfaces by name: %s - %s", url, err.Error())
+// 	}
+// 	resp := &FTDVNIInterfacesResponse{}
+// 	err = v.DoRequest(req, resp, http.StatusOK)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("getting vniinterfaces by name: %s - %s", url, err.Error())
+// 	}
+// 	switch l := len(resp.Items); {
+// 	case l == 1:
+// 		return v.GetVNIInterfaces(ctx, resp.Items[0].ID)
+// 	case l > 1:
+// 		for _, item := range resp.Items {
+// 			if item.Name == name {
+// 				return v.GetVNIInterfaces(ctx, item.ID)
+// 			}
+// 		}
+// 		return nil, fmt.Errorf("duplicates found, no exact match, length of response is: %d, expected 1, please search using a unique id, name or value", l)
+// 	case l == 0:
+// 		return nil, fmt.Errorf("no vni interface found, length of response is: %d, expected 1, please check your filter", l)
+// 	}
+// 	return nil, fmt.Errorf("no vni interface found found with name %s", name)
+// }
+
 // /api/fmc_config/v1/domain/{domainUUID}/devices/devicerecords/{containerUUID}/vniinterfaces
-func (v *Client) GetVNIInterfaces(ctx context.Context, deviceID string, name string) (*FTDVNIInterfaceResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces?expanded=true", v.domainBaseURL, deviceID)
+func (v *Client) GetVNIInterfaces(ctx context.Context, id string, name string) (*FTDVNIInterfaceResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting vniinterfaces by name: %s - %s", url, err.Error())
@@ -168,11 +196,11 @@ func (v *Client) GetVNIInterfaces(ctx context.Context, deviceID string, name str
 		}
 	}
 
-	return nil, fmt.Errorf("no vniinterfaces found with name %s", name)
+	return nil, fmt.Errorf("no vniinterfaces found with name %s",name)
 }
 
-func (v *Client) CreateVNIInterfaces(ctx context.Context, deviceID string, ftdVNIInterfaces *FTDVNIInterfaces) (*FTDVNIInterfaceResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, deviceID)
+func (v *Client) CreateVNIInterfaces(ctx context.Context, acpId string, ftdVNIInterfaces *FTDVNIInterfaces) (*FTDVNIInterfaceResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, acpId)
 	body, err := json.Marshal(&ftdVNIInterfaces)
 	if err != nil {
 		return nil, fmt.Errorf("creating vni interfaces: %s - %s", url, err.Error())
@@ -189,8 +217,8 @@ func (v *Client) CreateVNIInterfaces(ctx context.Context, deviceID string, ftdVN
 	return item, nil
 }
 
-func (v *Client) UpdateVNIInterfaces(ctx context.Context, deviceID string, ftdVNIInterfaces *FTDVNIInterfaces) (*FTDVNIInterfaceResponse, error) {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, deviceID)
+func (v *Client) UpdateVNIInterfaces(ctx context.Context, acpId string, ftdVNIInterfaces *FTDVNIInterfaces) (*FTDVNIInterfaceResponse, error) {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, acpId)
 	body, err := json.Marshal(&ftdVNIInterfaces)
 	if err != nil {
 		return nil, fmt.Errorf("updating vni interfaces: %s - %s", url, err.Error())
@@ -207,8 +235,8 @@ func (v *Client) UpdateVNIInterfaces(ctx context.Context, deviceID string, ftdVN
 	return item, nil
 }
 
-func (v *Client) DeleteVNIInterfaces(ctx context.Context, deviceID string) error {
-	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, deviceID)
+func (v *Client) DeleteVNIInterfaces(ctx context.Context, acpId string) error {
+	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, acpId)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
 	if err != nil {
 		return fmt.Errorf("deleting vni interfaces: %s - %s", url, err.Error())

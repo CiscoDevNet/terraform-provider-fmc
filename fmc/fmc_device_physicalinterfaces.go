@@ -9,20 +9,20 @@ import (
 )
 
 type PhysicalInterface struct {
-	Ifname        string                        `json:"ifname"`
-	ID            string                        `json:"id"`
-	Type          string                        `json:"type"`
-	Mode          string                        `json:"mode"`
-	Enabled       bool                          `json:"enabled"`
-	Ipv4          PhysicalInterfaceIpv4         `json:"ipv4"`
-	Security_Zone PhysicalInterfaceSecurityZone `json:"securityZone"`
-	Description   string                        `json:"description"`
-	Name          string                        `json:"name"`
+	Ifname        string                          `json:"ifname"`
+	ID            string                          `json:"id"`
+	Type          string                          `json:"type"`
+	Mode          string                          `json:"mode"`
+	Enabled       bool                            `json:"enabled"`
+	Ipv4          []PhysicalInterfaceIpv4         `json:"ipv4"`
+	Security_Zone []PhysicalInterfaceSecurityZone `json:"securityZone"`
+	Description   string                          `json:"description"`
+	Name          string                          `json:"name"`
 }
 
 type PhysicalInterfaceIpv4 struct {
-	Static PhysicalInterfaceIpv4Static `json:"static"`
-	Dhcp   PhysicalInterfaceIpv4Dhcp   `json:"dhcp"`
+	Static []PhysicalInterfaceIpv4Static `json:"static"`
+	Dhcp   []PhysicalInterfaceIpv4Dhcp   `json:"dhcp"`
 }
 type PhysicalInterfaceSecurityZone struct {
 	ID   string `json:"id"`
@@ -115,4 +115,8 @@ func (v *Client) UpdateFmcPhysicalInterface(ctx context.Context, deviceID string
 		return nil, fmt.Errorf("getting physical interfaces: %s - %s", url, err.Error())
 	}
 	return item, nil
+}
+
+func (v *Client) DeleteFmcPhysicalInterface() {
+
 }

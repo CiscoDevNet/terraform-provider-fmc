@@ -1,0 +1,129 @@
+terraform plan
+╷
+│ Warning: Provider development overrides are in effect
+│ 
+│ The following provider development overrides are set in the CLI configuration:
+│  - ciscodevnet/fmc in /home/xx/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64
+│ 
+│ The behavior may therefore not match any released version of the provider and applying changes may cause the state to become
+│ incompatible with published releases.
+╵
+data.fmc_devices.device: Reading...
+data.fmc_devices.device: Read complete after 0s [id=44f50b70-8d96-11ed-92d0-9639253443f0]
+data.fmc_device_physical_interfaces.device_physical_interfaces: Reading...
+data.fmc_device_vni_interface.vni: Reading...
+data.fmc_device_physical_interfaces.device_physical_interfaces: Read complete after 0s [id=02E8B76C-CB94-0ed3-0000-008589935642]
+data.fmc_device_vni_interface.vni: Read complete after 1s [id=02E8B76C-CB94-0ed3-0000-025769803836]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  # fmc_device_physical_interfaces.physical_interfaces will be created
+  + resource "fmc_device_physical_interfaces" "physical_interfaces" {
+      + device_id            = "44f50b70-8d96-11ed-92d0-9639253443f0"
+      + enabled              = true
+      + id                   = (known after apply)
+      + ifname               = "TenGigabitEthernet0/0"
+      + mode                 = "NONE"
+      + mtu                  = 1500
+      + name                 = "testing_ashish"
+      + physicalinterface_id = "02E8B76C-CB94-0ed3-0000-008589935642"
+      + type                 = (known after apply)
+
+      + ipv4 {
+          + dhcp {
+              + dhcp_route_metric         = 1
+              + enable_default_route_dhcp = true
+            }
+        }
+    }
+
+  # fmc_device_vni_interface.vni_interfaces will be created
+  + resource "fmc_device_vni_interface" "vni_interfaces" {
+      + active_mac_address  = (known after apply)
+      + description         = "Not applicable"
+      + enable_proxy        = (known after apply)
+      + enabled             = true
+      + fragment_reassembly = (known after apply)
+      + id                  = (known after apply)
+      + ifname              = (known after apply)
+      + mode                = (known after apply)
+      + mtu                 = (known after apply)
+      + name                = "VNI9"
+      + priority            = (known after apply)
+      + type                = (known after apply)
+      + vni_id              = 5
+      + vtep_id             = (known after apply)
+    }
+
+Plan: 2 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+  + existing_device    = {
+      + id   = "44f50b70-8d96-11ed-92d0-9639253443f0"
+      + name = "10.100.0.218"
+      + type = "Device"
+    }
+  + name               = {
+      + device_id            = "44f50b70-8d96-11ed-92d0-9639253443f0"
+      + enabled              = true
+      + id                   = (known after apply)
+      + ifname               = "TenGigabitEthernet0/0"
+      + ipv4                 = [
+          + {
+              + dhcp   = [
+                  + {
+                      + dhcp_route_metric         = 1
+                      + enable_default_route_dhcp = true
+                    },
+                ]
+              + static = []
+            },
+        ]
+      + mode                 = "NONE"
+      + mtu                  = 1500
+      + name                 = "testing_ashish"
+      + physicalinterface_id = "02E8B76C-CB94-0ed3-0000-008589935642"
+      + security_zone        = []
+      + type                 = (known after apply)
+    }
+  + physical_interface = {
+      + id   = "02E8B76C-CB94-0ed3-0000-008589935642"
+      + name = "TenGigabitEthernet0/0"
+    }
+  + vni                = {
+      + id   = "02E8B76C-CB94-0ed3-0000-025769803836"
+      + name = "vni1234"
+      + type = "VNIInterface"
+    }
+  + vni_interfaces     = {
+      + active_mac_address   = (known after apply)
+      + description          = "Not applicable"
+      + enable_anti_spoofing = null
+      + enable_dns_lookup    = null
+      + enable_proxy         = (known after apply)
+      + enable_sgt_propagate = null
+      + enabled              = true
+      + fmc_access_config    = []
+      + fragment_reassembly  = (known after apply)
+      + id                   = (known after apply)
+      + ifname               = (known after apply)
+      + management_only      = null
+      + mode                 = (known after apply)
+      + mtu                  = (known after apply)
+      + name                 = "VNI9"
+      + priority             = (known after apply)
+      + security_zone        = []
+      + standby_mac_address  = null
+      + type                 = (known after apply)
+      + vni_id               = 5
+      + vtep_id              = (known after apply)
+    }
+
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run
+"terraform apply" now.

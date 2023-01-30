@@ -20,7 +20,7 @@ func dataSourceFmcVNIInterfaces() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Type:        schema.TypeString,
-				Computed:    true,
+				Required:    true,
 				Description: "The ID of this VTEP Policies",
 			},
 			"name": {
@@ -42,7 +42,8 @@ func dataSourceFmcVNIInterfacesRead(ctx context.Context, d *schema.ResourceData,
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	resp, err := c.GetVNIInterfaces(ctx, d.Get("device_id").(string), d.Id())
+	//resp, err := c.GetVNIInterfacesByName(ctx, d.Get("id").(string), d.Get("name").(string))
+	resp, err := c.GetVNIInterfaces(ctx, d.Get("id").(string), d.Get("name").(string))
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
