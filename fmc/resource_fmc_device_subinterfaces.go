@@ -21,10 +21,14 @@ func resourceFmcSubInterface() *schema.Resource {
 				Description: "The ID of the device this resource needs",
 			},
 			"subinterface_id": {
-				Type:        schema.TypeString,
+				Type:        schema.TypeInt,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The ID of the physical interface this resource needs",
+			},
+			"vlan_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The ID of the device this resource needs",
 			},
 			"ifname": {
 				Type:        schema.TypeString,
@@ -34,21 +38,22 @@ func resourceFmcSubInterface() *schema.Resource {
 			"security_zone": {
 				Type:     schema.TypeList,
 				Optional: true,
+				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"id": {
 							Type:        schema.TypeString,
 							Required:    true,
-							Description: "The ID of SZ",
+							Description: "The ID of this resource",
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Optional:    true,
-							Default:     "SecurityZone",
-							Description: "The type of SZ",
+							Required:    true,
+							Description: "The type of this resource",
 						},
 					},
 				},
+				Description: "Security Zone for this resource",
 			},
 			"enabled": {
 				Type:        schema.TypeBool,
@@ -80,7 +85,7 @@ func resourceFmcSubInterface() *schema.Resource {
 			},
 			"ipv4": {
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"static": {
@@ -107,15 +112,14 @@ func resourceFmcSubInterface() *schema.Resource {
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"enable_default_route_dhcp": {
-										Type:        schema.TypeBool,
+										Type:        schema.TypeString,
 										Optional:    true,
-										Default:     true,
 										Description: "Dynamic IP of the interface",
 									},
 									"dhcp_route_metric": {
 										Type:     schema.TypeInt,
 										Optional: true,
-										Default:  1,
+										Description: "DHCP of the interface",
 									},
 								},
 							},
@@ -167,42 +171,31 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 	c := m.(*Client)
 
 	var diags diag.Diagnostics
-	id := d.Id()
-	var ipv4 *SubInterfaceIpv4
-	var szs SubInterfaceSecurityZone
+	var patOptions *SubInterfaceIpv4
+	// var szs SubInterfaceSecurityZone
+	var securityZone *SubInterfaceSecurityZone
+	dynamicObjects := []**SubInterfaceSecurityZone{
+		&securityZone,
+	}
 
-	if ip_v4 := d.Get("ipv4").([]interface{}); len(ip_v4) > 0 {
-		ip_v42 := ip_v4[0].(map[string]interface{})
-		ipv4_static_list := ip_v42["static"].([]interface{})
-		var ipv4_static *SubInterfaceIpv4Static
-		if len(ipv4_static_list) != 0 {
-			ipv4_static_address := ipv4_static_list[0].(map[string]interface{})
-			ipv4_static = &SubInterfaceIpv4Static{
-				Address:  ipv4_static_address["address"].(string),
-				Netmask: ipv4_static_address["netmask"].(string),
-			}
+	if pat_o := d.Get("ipv4").([]interface{}); len(pat_o) > 0 {
+		pat_options := pat_o[0].(map[string]interface{})
+		pat_pool_options := pat_options["dhcp"].([]interface{})[0].(map[string]interface{})
+		pat_pool := SubInterfaceIpv4Dhcp{
+			EnableDefaultRouteDHCP:   pat_pool_options["enable_default_route_dhcp"].(string),
+			DhcpRouteMetric: pat_pool_options["dhcp_route_metric"].(int),
 		}
-		ipv4_dhcp_list := ip_v42["dhcp"].([]interface{})
-		var ipv4_dhcp *SubInterfaceIpv4Dhcp
-		if len(ipv4_dhcp_list) != 0 {
-			ipv4_dhcp_address := ipv4_dhcp_list[0].(map[string]interface{})
-			ipv4_dhcp = &SubInterfaceIpv4Dhcp{
-				EnableDefaultRouteDHCP:  ipv4_dhcp_address["enable_default_route_dhcp"].(string),
-				DhcpRouteMetric: ipv4_dhcp_address["dhcp_route_metric"].(string),
-			}
-		}
-		ipv4 = &SubInterfaceIpv4{
-			Static: ipv4_static,
-			Dhcp: ipv4_dhcp,
+		patOptions = &SubInterfaceIpv4{
+			Dhcp: pat_pool,
 		}
 	}
 
-	if inputSzs, ok := d.GetOk("security_zone"); ok {
-		for _, sz := range inputSzs.([]interface{}) {
-			szi := sz.(map[string]interface{})
-			szs = SubInterfaceSecurityZone{
-				ID:   szi["id"].(string),
-				Type: szi["type"].(string),
+	for i, objType := range []string{"security_zone"} {
+		if inputEntries, ok := d.GetOk(objType); ok {
+			entry := inputEntries.([]interface{})[0].(map[string]interface{})
+			*dynamicObjects[i] = &SubInterfaceSecurityZone{
+				ID:   entry["id"].(string),
+				Type: entry["type"].(string),
 			}
 		}
 	}
@@ -210,9 +203,12 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 	_, err := c.CreateFmcSubInterface(ctx, d.Get("device_id").(string), &SubInterface{
 		Ifname:        d.Get("ifname").(string),
 		Mode:          d.Get("mode").(string),
-		Ipv4:          ipv4,
-		Security_Zone: szs,
-		ID:            id,
+		Ipv4:          patOptions,
+		VlanID: 	   d.Get("vlan_id").(int),
+		SubInterfaceID: d.Get("subinterface_id").(int),
+		Enabled:       d.Get("enabled").(bool),
+		Security_Zone: securityZone,
+		MTU: d.Get("mtu").(int),
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -232,40 +228,18 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 	if d.HasChanges("ifname", "mode", "ipv4", "security_zone") {
 
 		var ipv4 *SubInterfaceIpv4
-		var szs SubInterfaceSecurityZone
-
-		if ip_v4 := d.Get("ipv4").([]interface{}); len(ip_v4) > 0 {
-			ip_v42 := ip_v4[0].(map[string]interface{})
-			ipv4_static_list := ip_v42["static"].([]interface{})
-			var ipv4_static *SubInterfaceIpv4Static
-			if len(ipv4_static_list) != 0 {
-				ipv4_static_address := ipv4_static_list[0].(map[string]interface{})
-				ipv4_static = &SubInterfaceIpv4Static{
-					Address:  ipv4_static_address["address"].(string),
-					Netmask: ipv4_static_address["netmask"].(string),
-				}
-			}
-			ipv4_dhcp_list := ip_v42["dhcp"].([]interface{})
-			var ipv4_dhcp *SubInterfaceIpv4Dhcp
-			if len(ipv4_dhcp_list) != 0 {
-				ipv4_dhcp_address := ipv4_dhcp_list[0].(map[string]interface{})
-				ipv4_dhcp = &SubInterfaceIpv4Dhcp{
-					EnableDefaultRouteDHCP:  ipv4_dhcp_address["enable_default_route_dhcp"].(string),
-					DhcpRouteMetric: ipv4_dhcp_address["dhcp_route_metric"].(string),
-				}
-			}
-			ipv4 = &SubInterfaceIpv4{
-				Static: ipv4_static,
-				Dhcp: ipv4_dhcp,
-			}
+		var securityZone *SubInterfaceSecurityZone
+		dynamicObjects := []**SubInterfaceSecurityZone{
+			&securityZone,
 		}
 
-		if inputSzs, ok := d.GetOk("security_zone"); ok {
-			for _, sz := range inputSzs.([]interface{}) {
-				szi := sz.(map[string]interface{})
-				szs = SubInterfaceSecurityZone{
-					ID:   szi["id"].(string),
-					Type: szi["type"].(string),
+
+		for i, objType := range []string{"security_zone"} {
+			if inputEntries, ok := d.GetOk(objType); ok {
+				entry := inputEntries.([]interface{})[0].(map[string]interface{})
+				*dynamicObjects[i] = &SubInterfaceSecurityZone{
+					ID:   entry["id"].(string),
+					Type: entry["type"].(string),
 				}
 			}
 		}
@@ -274,7 +248,7 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 			Ifname:        d.Get("ifname").(string),
 			Mode:          d.Get("mode").(string),
 			Ipv4:          ipv4,
-			Security_Zone: szs,
+			Security_Zone: securityZone,
 			ID:            id,
 		})
 		if err != nil {

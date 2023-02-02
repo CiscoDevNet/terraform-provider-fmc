@@ -13,16 +13,19 @@ type SubInterface struct {
 	ID            string                        `json:"id"`
 	Type          string                        `json:"type"`
 	Mode          string                        `json:"mode"`
+	SubInterfaceID          int                        `json:"subIntfId"`
+	VlanID          int                        `json:"vlanId"`
+	MTU 			int                        `json:"MTU"`
 	Enabled       bool                          `json:"enabled"`
 	Ipv4          *SubInterfaceIpv4         `json:"ipv4"`
-	Security_Zone SubInterfaceSecurityZone `json:"securityZone"`
+	Security_Zone *SubInterfaceSecurityZone `json:"securityZone"`
 	Description   string                        `json:"description"`
 	Name          string                        `json:"name"`
 }
 
 type SubInterfaceIpv4 struct {
-	Static *SubInterfaceIpv4Static `json:"static"`
-	Dhcp   *SubInterfaceIpv4Dhcp   `json:"dhcp"`
+	Static SubInterfaceIpv4Static `json:"static"`
+	Dhcp   SubInterfaceIpv4Dhcp   `json:"dhcp"`
 }
 type SubInterfaceSecurityZone struct {
 	ID   string `json:"id"`
@@ -36,7 +39,7 @@ type SubInterfaceIpv4Static struct {
 
 type SubInterfaceIpv4Dhcp struct {
 	EnableDefaultRouteDHCP string `json:"enableDefaultRouteDHCP"`
-	DhcpRouteMetric        string `json:"dhcpRouteMetric"`
+	DhcpRouteMetric        int `json:"dhcpRouteMetric"`
 }
 
 type SubInterfaceResponse struct {

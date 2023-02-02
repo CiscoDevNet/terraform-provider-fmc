@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 )
 
 type AccessPolicySubConfig struct {
@@ -63,6 +64,33 @@ type AccessPoliciesResponse struct {
 	} `json:"items"`
 }
 
+type VersionResponse struct {
+	Items []struct {
+		ServerVersion string `json:"serverVersion"`
+		Model   string `json:"model"`
+	} `json:"items"`
+}
+// var version float64
+
+func (v *Client) GetVersions(ctx context.Context) (float64){
+	var version_1 float64
+	url := fmt.Sprintf("https://%s/api/fmc_platform/v1/info/serverversion", v.host)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return -1
+	}
+	resp := &VersionResponse{}
+	err = v.DoRequest(req, resp, http.StatusOK)
+	if err != nil {
+		return -1
+	}
+	temp := resp.Items[0].ServerVersion
+	temp = temp[:3]
+	version_1, _ = strconv.ParseFloat(temp, 8)
+
+	return version_1
+}
+
 // func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
 // 	url := fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
 // 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
@@ -89,8 +117,16 @@ type AccessPoliciesResponse struct {
 // 	}
 // 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 // }
-func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
-	url := fmt.Sprintf("%s/policy/accesspolicies?name=%s", v.domainBaseURL, name)
+
+func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string, version float64) (*AccessPolicyResponse, error) {
+	var url_1 string
+	if version < 7.2 {
+        url_1 = fmt.Sprintf("%s/policy/accesspolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+    } else {
+        url_1 = fmt.Sprintf("%s/policy/accesspolicies?name=%s", v.domainBaseURL, name)
+    }
+	
+	url := url_1
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())

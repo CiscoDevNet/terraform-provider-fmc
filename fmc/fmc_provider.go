@@ -85,6 +85,7 @@ func Provider() *schema.Provider {
 			// "fmc_device_physical_interfaces": resourceFmcDevicePhysicalInterfaces(),
 			"fmc_device_vtep_policies": resourceFmcDeviceVTEPPolicies(),
 			"fmc_devices":         resourceFmcDevices(),
+			"fmc_device_sub_interfaces": resourceFmcSubInterface(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":         dataSourceFmcDevices(),

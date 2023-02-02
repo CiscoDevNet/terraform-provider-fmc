@@ -42,7 +42,8 @@ func dataSourceFmcAccessPoliciesRead(ctx context.Context, d *schema.ResourceData
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
-	accessPolicy, err := c.GetFmcAccessPolicyByName(ctx, d.Get("name").(string))
+	version := c.GetVersions(ctx)
+	accessPolicy, err := c.GetFmcAccessPolicyByName(ctx, d.Get("name").(string), version)
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

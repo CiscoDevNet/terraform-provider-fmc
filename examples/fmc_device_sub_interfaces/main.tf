@@ -15,43 +15,44 @@ provider "fmc" {
 }
 
 data "fmc_devices" "device" {
-    name = "ftd2"
+    name = "ftd1"
 }
 
 data "fmc_security_zones" "outside" {
     name = "outside"
 }
 
-data "fmc_device_sub_interfaces" "sub_interfaces" {
-    device_id   = data.fmc_devices.device.id
-    name = "TenGigabitEthernet0/0"
-}
-# resource "fmc_physical_interfaces" "physical_interfaces" {
-#     physicalinterface_id = data.fmc_device_physical_interfaces.physical_interfaces.id
-#     ifname = "ljkgjfh"
+# data "fmc_device_sub_interfaces" "sub_interfaces" {
 #     device_id   = data.fmc_devices.device.id
-#     name = "outside2022"
-#     mode = "NONE"
-#     mtu = 1500
-#     enabled = true
-#     security_zone {
-#             id   =  data.fmc_security_zones.outside.id
-#             type =  data.fmc_security_zones.outside.type
-#     }
-#     ipv4{
-#         dhcp{
-#           enable_default_route_dhcp = true
-#           dhcp_route_metric = 1
-#         }
-#     }
+#     name = "GigabitEthernet0/0"
 # }
-
-# output "new_physical_interfaces" {
-#     value = fmc_device_physical_interfaces.physical_interfaces
-# }
-
-output "old_physical_interfaces" {
-    value = data.fmc_device_sub_interfaces.sub_interfaces
+resource "fmc_device_sub_interfaces" "physical_interfaces" {
+    device_id   = data.fmc_devices.device.id
+    ifname = "ljkgjfh"
+    subinterface_id = 12345
+    vlan_id = 30
+    name = "GigabitEthernet0/0"
+    mode = "NONE"
+    mtu = 1500
+    enabled = true
+    # security_zone {
+    #   id   =  data.fmc_security_zones.outside.id
+    #   type =  data.fmc_security_zones.outside.type
+    # }
+    # ipv4{
+    #     dhcp{
+    #       enable_default_route_dhcp = "true"
+    #       dhcp_route_metric = 1
+    #     }
+    # }
 }
+
+output "new_physical_interfaces" {
+    value = fmc_device_sub_interfaces.physical_interfaces
+}
+
+# output "old_physical_interfaces" {
+#     value = data.fmc_device_sub_interfaces.sub_interfaces
+# }
 
 

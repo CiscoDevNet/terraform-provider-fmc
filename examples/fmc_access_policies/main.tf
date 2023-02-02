@@ -23,7 +23,7 @@ provider "fmc" {
 # }
 
 data "fmc_access_policies" "access_policy" {
-    name = "test"
+    name = "kadadhic"
 }
 
 # resource "fmc_access_policies" "access_policy" {

@@ -14,16 +14,12 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
-# data "fmc_access_policies" "access_policy" {
-#     name = "test"
-# }
-
 data "fmc_access_policies" "access_policy" {
-    name = "test"
+    name = "test-1"
 }
 
 resource "fmc_devices" "device"{
-  name = "ftd2"
+  name = "ftd2KDS"
   hostname = "10.0.2.12"
   regkey = "cisco"
   type = "Device"
