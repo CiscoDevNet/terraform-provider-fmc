@@ -58,11 +58,14 @@ provider "fmc" {
 ### Required
 
 - **fmc_host** (String) Hostname/IP address of the FMC
-- **fmc_password** (String, Sensitive) Password for the user to login to FMC
-- **fmc_username** (String, Sensitive) Username for the user to login to FMC
 
 ### Optional
 
+- **fmc_password** (String, Sensitive) Password for the user to login to FMC
+- **fmc_username** (String, Sensitive) Username for the user to login to FMC
+- **is_cdfmc** (Bool) set to true if is a cloud-delivered Firepower Management Center (cdFMC) with Cisco Defence Orchestrator(CDO)
+- **cdo_token** (String, Sensitive) The CDO Api token to manage cdFMC
+- **cdfmc_domain_uuid** (String, Sensitive) The domain uuid to use API of cdFMC the default domain for global is e276abec-e0f2-11e3-8169-6d9ed49b625f
 - **fmc_insecure_skip_verify** (Boolean) Skip certificate checks if the certificate is not public CA signed, or if using IP address
 
 ## Tutorials
