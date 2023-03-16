@@ -30,6 +30,9 @@ jobs:
         with:
           go-version: 1.17
       -
+        name: tests
+        run: cd fmc && go test -v
+      -
         name: Import GPG key
         id: import_gpg
         uses: paultyng/ghaction-import-gpg@v2.1.0
