@@ -64,7 +64,6 @@ type AccessPoliciesResponse struct {
 }
 
 func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
-	var url string
 	url := fmt.Sprintf("%s/policy/accesspolicies?name=%s&expanded=false", v.domainBaseURL, name)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
