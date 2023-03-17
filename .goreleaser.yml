@@ -10,7 +10,6 @@ builds:
     # usage by users in CI/CD systems like Terraform Cloud where
     # they are unable to install libraries.
     - CGO_ENABLED=0
-    - GPG_TTY=$(tty)
   mod_timestamp: '{{ .CommitTimestamp }}'
   flags:
     - -trimpath
@@ -50,6 +49,7 @@ signs:
       - "${signature}"
       - "--detach-sign"
       - "${artifact}"
+      - "--no-tty" #  in some cases because GnuPG sometimes prints warnings to the TTY even if --batch is used. 
 release:
   # If you want to manually examine the release before its live, uncomment this line:
   # draft: true
