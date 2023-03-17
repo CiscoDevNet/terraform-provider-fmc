@@ -49,7 +49,6 @@ signs:
       - "${signature}"
       - "--detach-sign"
       - "${artifact}"
-      - "--no-tty" #  in some cases because GnuPG sometimes prints warnings to the TTY even if --batch is used. 
 release:
   # If you want to manually examine the release before its live, uncomment this line:
   # draft: true
