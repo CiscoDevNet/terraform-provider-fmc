@@ -19,4 +19,4 @@ jobs:
           go-version: 1.17
       -
         name: tests
-        run: cd fmc && go test -v
+        run: export TF_ACC=1 fmc && go test -v
