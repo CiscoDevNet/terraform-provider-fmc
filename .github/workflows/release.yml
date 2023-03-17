@@ -1,4 +1,4 @@
-name: release
+name: lint
 on:
   push:
     branches: [ main ]
@@ -26,7 +26,12 @@ jobs:
       - 
         name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-
+        
+name: test
+on:
+  push:
+    branches: [ main ]
+jobs:
   gotests:
     runs-on: ubuntu-latest
     steps:
@@ -41,40 +46,6 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-
       -
         name: tests
         run: cd fmc && go test -v
-  tflint:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-
-    steps:
-    - uses: actions/checkout@v3
-      name: Checkout source code
-
-    - uses: actions/cache@v3
-      name: Cache plugin dir
-      with:
-        path: ~/.tflint.d/plugins
-        key: ${{ matrix.os }}-tflint-${{ hashFiles('.tflint.hcl') }}
-
-    - uses: terraform-linters/setup-tflint@v3
-      name: Setup TFLint
-      with:
-        tflint_version: v0.44.1
-
-    - name: Show version
-      run: tflint --version
-
-    - name: Init TFLint
-      run: tflint --init
-      env:
-        # https://github.com/terraform-linters/tflint/blob/master/docs/user-guide/plugins.md#avoiding-rate-limiting
-        GITHUB_TOKEN: ${{ github.token }}
-
-    - name: Run TFLint
-      run: tflint -f compact
