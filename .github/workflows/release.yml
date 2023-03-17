@@ -29,4 +29,4 @@ jobs:
 
       -
         name: tests
-        run: export TF_ACC=1 && cd fmc && go test -v
+        run: cd fmc && go test -v
