@@ -44,3 +44,4 @@ jobs:
       -
         name: tests
         run: cd fmc && go test -v
+
