@@ -9,10 +9,18 @@ import (
 	"net/http"
 )
 
-type PhysicalInterfaceSecurityZone struct {
-	ID   string `json:"id"`
-	Type string `json:"type"`
+// IPv6 Structs
+type IPv6Address struct {
+	Address      string `json:"address,omitempty"`
+	Prefix       int    `json:"prefix,omitempty"`
+	EnforceEUI64 bool   `json:"enforceEUI64,omitempty"`
 }
+
+type IPv6 struct {
+	Addresses []IPv6Address `json:"addresses,omitempty"`
+}
+
+// IPv4 Structs
 
 type IPv4DHCP struct {
 	Enable      bool `json:"enableDefaultRouteDHCP,omitempty"`
@@ -27,6 +35,11 @@ type IPv4Static struct {
 type IPv4 struct {
 	Static *IPv4Static `json:"static,omitempty"`
 	DHCP   *IPv4DHCP   `json:"dhcp,omitempty"`
+}
+
+type PhysicalInterfaceSecurityZone struct {
+	ID   string `json:"id"`
+	Type string `json:"type"`
 }
 
 type PhysicalInterfaceResponse struct {
@@ -50,6 +63,7 @@ type PhysicalInterfaceRequest struct {
 	Mode         string                        `json:"mode"`
 	SecurityZone PhysicalInterfaceSecurityZone `json:"securityZone"`
 	IPv4         IPv4                          `json:"ipv4"`
+	IPv6         IPv6                          `json:"ipv6"`
 }
 
 type PhysicalInterfacesResponse struct {

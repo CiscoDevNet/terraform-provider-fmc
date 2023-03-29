@@ -2,7 +2,6 @@ package fmc
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"log"
@@ -78,6 +77,22 @@ func resourcePhyInterface() *schema.Resource {
 				Optional:    true,
 				Description: "IPv4 DHCP Route Metric",
 			},
+
+			"ipv6_address": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "IPv6 address",
+			},
+			"ipv6_prefix": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "IPv6 netmask",
+			},
+			"ipv6_enforce_eui": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "IPv6 EnforceEUI64",
+			},
 		},
 	}
 }
@@ -130,13 +145,21 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	mtu := d.Get("mtu").(int)
 	mode := d.Get("mode").(string)
 	securityZoneId := d.Get("security_zone_id").(string)
+
+	log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
+
 	ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 	ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
 	ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
 	ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
 
-	log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
 	log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
+
+	ipv6Address := d.Get("ipv6_address").(string)
+	ipv6Prefix := d.Get("ipv6_prefix").(int)
+	ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
+
+	log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
 
 	c := m.(*Client)
 
@@ -146,6 +169,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		ID:   securityZoneId,
 		Type: "SecurityZone",
 	}
+	log.Printf("PhysicalInterfaceSecurityZone=%s", PhysicalInterfaceSecurityZone)
 
 	var IPv4Static = IPv4Static{
 		Address: ipv4StaticAddress,
@@ -165,9 +189,20 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		IPv4.Static = &IPv4Static
 	}
 
-	log.Printf("PhysicalInterfaceSecurityZone=%s", PhysicalInterfaceSecurityZone)
-	body, _ := json.Marshal(&IPv4)
-	log.Printf("IPv4=%s", body)
+	log.Printf("IPv4=%s", IPv4)
+
+	var IPv6Add []IPv6Address
+
+	if len(ipv6Address) > 0 {
+		IPv6Add = append(IPv6Add, IPv6Address{
+			Address:      ipv6Address,
+			Prefix:       ipv6Prefix,
+			EnforceEUI64: ipv6EnforceEUI,
+		})
+	}
+
+	var IPv6 = IPv6{Addresses: IPv6Add}
+	log.Printf("IPv6Address=%s", IPv6Add)
 
 	physicalInterfaceResponse, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
 		ID:           physicalInterfaceId,
@@ -178,6 +213,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		MTU:          mtu,
 		SecurityZone: PhysicalInterfaceSecurityZone,
 		IPv4:         IPv4,
+		IPv6:         IPv6,
 	})
 
 	if err != nil {
