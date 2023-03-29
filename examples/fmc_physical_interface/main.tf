@@ -9,7 +9,7 @@ data "fmc_device_physical_interfaces" "device_physical_interface" {
 }
 
 data "fmc_security_zones" "my_security_zone" {
-  name = "TEST"
+  name = "TEST2"
 }
 
 output "existing_device" {
@@ -29,10 +29,14 @@ resource "fmc_device_physical_interfaces" "my_fmc_device_physical_interfaces" {
     physical_interface_id= data.fmc_device_physical_interfaces.device_physical_interface.id
     name =   data.fmc_device_physical_interfaces.device_physical_interface.name
     security_zone_id= data.fmc_security_zones.my_security_zone.id
-    if_name = "IFNameChangedDuringDemoSameer"
-    description = "DescAddedByDuringDemoSameer"
+    if_name = "IFNameChangedDuringDemo"
+    description = "DescAddedByDuringDemo"
     mtu =  1700
     mode = "NONE"
+    ipv4_static_address = "10.20.220.45"
+    ipv4_static_netmask = 24
+    ipv4_dhcp_enabled = false
+    ipv4_dhcp_route_metric = 1
  }
 
 

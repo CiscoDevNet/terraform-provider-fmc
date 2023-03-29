@@ -14,6 +14,21 @@ type PhysicalInterfaceSecurityZone struct {
 	Type string `json:"type"`
 }
 
+type IPv4DHCP struct {
+	Enable      bool `json:"enableDefaultRouteDHCP,omitempty"`
+	RouteMetric int  `json:"dhcpRouteMetric,omitempty"`
+}
+
+type IPv4Static struct {
+	Address string `json:"address,omitempty"`
+	Netmask int    `json:"netmask,omitempty"`
+}
+
+type IPv4 struct {
+	Static *IPv4Static `json:"static,omitempty"`
+	DHCP   *IPv4DHCP   `json:"dhcp,omitempty"`
+}
+
 type PhysicalInterfaceResponse struct {
 	Type         string                        `json:"type"`
 	Ifname       string                        `json:"ifname"`
@@ -34,6 +49,7 @@ type PhysicalInterfaceRequest struct {
 	MTU          int                           `json:"MTU"`
 	Mode         string                        `json:"mode"`
 	SecurityZone PhysicalInterfaceSecurityZone `json:"securityZone"`
+	IPv4         IPv4                          `json:"ipv4"`
 }
 
 type PhysicalInterfacesResponse struct {
