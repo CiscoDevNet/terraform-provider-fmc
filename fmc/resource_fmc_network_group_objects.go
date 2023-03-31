@@ -251,7 +251,6 @@ func resourceFmcNetworkGroupObjectsUpdate(ctx context.Context, d *schema.Resourc
 				obji := obj.(map[string]interface{})
 				objs = append(objs, NetworkGroupObjectObjects{
 					ID:   obji["id"].(string),
-					Name: obji["name"].(string),
 					Type: obji["type"].(string),
 				})
 			}

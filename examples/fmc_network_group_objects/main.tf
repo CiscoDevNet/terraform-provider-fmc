@@ -24,6 +24,9 @@ resource "fmc_network_objects" "PrivateVLANDR" {
   description = "testing terraform"
 }
 
+data "fmc_network_group_objects" "test"{
+  name = "test-group"
+}
 resource "fmc_network_group_objects" "TestPrivateGroup" {
   name = "TestPrivateGroup"
   description = "Testing groups"
@@ -48,7 +51,9 @@ output "existing_fmc_network_object" {
 output "new_fmc_network_object" {
   value = fmc_network_objects.PrivateVLANDR
 }
-
 output "new_fmc_network_group_object" {
   value = fmc_network_group_objects.TestPrivateGroup
+}
+output "data_new_fmc_network_group_object" {
+  value = data.fmc_network_group_objects.test
 }
