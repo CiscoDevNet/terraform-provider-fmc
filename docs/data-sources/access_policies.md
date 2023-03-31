@@ -29,11 +29,11 @@ data "fmc_access_policies" "acp" {
 
 ### Required
 
-- **name** (String) Name of the FTD accessPolicy
+- `name` (String) Name of the FTD accessPolicy
 
 ### Read-Only
 
-- **id** (String) The ID of this resource
-- **type** (String) Type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) Type of this resource
 
 

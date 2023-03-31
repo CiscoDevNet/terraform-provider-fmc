@@ -50,24 +50,24 @@ resource "fmc_port_group_objects" "port-group" {
 
 ### Required
 
-- **name** (String) The name of this resource
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
-- **objects** (Block List) The list of port groups to add (see [below for nested schema](#nestedblock--objects))
+- `description` (String) The description of this resource
+- `objects` (Block List) The list of port groups to add (see [below for nested schema](#nestedblock--objects))
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 <a id="nestedblock--objects"></a>
 ### Nested Schema for `objects`
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

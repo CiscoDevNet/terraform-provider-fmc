@@ -33,11 +33,11 @@ resource "fmc_access_policies_category" "category" {
 
 ### Required
 
-- **access_policy_id** (String) Id of access policy this category belongs to
-- **name** (String) The name of this category
+- `access_policy_id` (String) Id of access policy this category belongs to
+- `name` (String) The name of this category
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 
