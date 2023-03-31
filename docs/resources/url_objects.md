@@ -35,16 +35,16 @@ resource "fmc_url_objects" "cisco-home" {
 
 ### Required
 
-- **name** (String) The name of this resource
-- **url** (String) The URL for this resource
+- `name` (String) The name of this resource
+- `url` (String) The URL for this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `description` (String) The description of this resource
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 

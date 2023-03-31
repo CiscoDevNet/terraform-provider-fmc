@@ -32,12 +32,12 @@ Any one of the id, name or value can be specified. The first filter in the order
 
 ### Optional
 
-- **id** (String) The ID of this resource
-- **name** (String) The name of this resource
-- **url** (String) The URL of this resource
+- `id` (String) The ID of this resource
+- `name` (String) The name of this resource
+- `url` (String) The URL of this resource
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `type` (String) The type of this resource
 
 
