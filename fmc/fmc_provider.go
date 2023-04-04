@@ -26,11 +26,11 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 		return client, diags
 	}
-	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == ""{
+	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
 		client := CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
-				return nil, diag.FromErr(err)
+			return nil, diag.FromErr(err)
 		}
 		return client, diags
 	}
@@ -115,18 +115,19 @@ func Provider() *schema.Provider {
 			"fmc_devices":         resourceFmcDevices(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"fmc_devices":         dataSourceFmcDevices(),
-			"fmc_access_policies": dataSourceFmcAccessPolicies(),
-			"fmc_ips_policies":    dataSourceFmcIPSPolicies(),
-			"fmc_file_policies":   dataSourceFmcFilePolicies(),
-			"fmc_syslog_alerts":   dataSourceFmcSyslogAlerts(),
-			"fmc_security_zones":  dataSourceFmcSecurityZones(),
-			"fmc_network_objects": dataSourceFmcNetworkObjects(),
-			"fmc_host_objects":    dataSourceFmcHostObjects(),
-			"fmc_url_objects":     dataSourceFmcURLObjects(),
-			"fmc_port_objects":    dataSourceFmcPortObjects(),
-			"fmc_dynamic_objects": dataSourceFmcDynamicObjects(),
-			"fmc_network_group_objects":dataSourceFmcNetworkGroupObjects(),
+			"fmc_devices":               dataSourceFmcDevices(),
+			"fmc_access_policies":       dataSourceFmcAccessPolicies(),
+			"fmc_ips_policies":          dataSourceFmcIPSPolicies(),
+			"fmc_file_policies":         dataSourceFmcFilePolicies(),
+			"fmc_syslog_alerts":         dataSourceFmcSyslogAlerts(),
+			"fmc_security_zones":        dataSourceFmcSecurityZones(),
+			"fmc_network_objects":       dataSourceFmcNetworkObjects(),
+			"fmc_host_objects":          dataSourceFmcHostObjects(),
+			"fmc_url_objects":           dataSourceFmcURLObjects(),
+			"fmc_port_objects":          dataSourceFmcPortObjects(),
+			"fmc_dynamic_objects":       dataSourceFmcDynamicObjects(),
+			"fmc_network_group_objects": dataSourceFmcNetworkGroupObjects(),
+			"fmc_nat_policies":          dataSourceFmcNatPolicies(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
