@@ -37,10 +37,6 @@ Further, the provider provides the below data sources:
 - Security zones
 - Syslog alert configurations
 
-## Note:
-This new version 0.2.4 uses a different url for access policy get operation than before. It uses **"name=xxx"** instead of **"filter=name:xxx"** in its **query parameters.**
-Kindly verify the url for access policy **GET** operation based on the version of Cisco Secure Firewall Management Center (FMC) you are using before upgrading.
-
 ## Example
 
 An example provider initialization is shown below:
