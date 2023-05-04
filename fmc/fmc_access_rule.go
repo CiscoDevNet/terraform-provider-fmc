@@ -48,6 +48,7 @@ type AccessRule struct {
 	Urls                      AccessRuleSubConfigs `json:"urls,omitempty"`
 	DestinationDynamicObjects AccessRuleSubConfigs `json:"destinationDynamicObjects,omitempty"`
 	SourceDynamicObjects      AccessRuleSubConfigs `json:"sourceDynamicObjects,omitempty"`
+	SourceSecurityGroupTags   AccessRuleSubConfigs `json:"sourceSecurityGroupTags,omitempty"`
 	Ipspolicy                 *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
 	Filepolicy                *AccessRuleSubConfig `json:"filePolicy,omitempty"`
 	Syslogconfig              *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
@@ -123,6 +124,13 @@ type AccessRuleResponse struct {
 	SourceDynamicObjects struct {
 		Objects []AccessRuleResponseObject `json:"objects"`
 	} `json:"sourceDynamicObjects"`
+	SourceSecurityGroupTags struct {
+		Objects  []AccessRuleResponseObject `json:"objects"`
+		Literals []struct {
+			Tag  string `json:"tag"`
+			Name string `json:"name"`
+		} `json:"literals"`
+	} `json:"sourceSecurityGroupTags"`
 	Version     string                   `json:"version"`
 	Variableset AccessRuleResponseObject `json:"variableSet"`
 	Logfiles    bool                     `json:"logFiles"`

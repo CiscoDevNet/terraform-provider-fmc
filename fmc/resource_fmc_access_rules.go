@@ -540,6 +540,34 @@ func resourceFmcAccessRules() *schema.Resource {
 				},
 				Description: "URLs for this resource",
 			},
+			"source_security_group_tags": {
+				Type:     schema.TypeList,
+				Optional: true,
+				MaxItems: 1,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"source_security_group_tag": {
+							Type:     schema.TypeList,
+							Required: true,
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"id": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The ID of this resource",
+									},
+									"type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this resource",
+									},
+								},
+							},
+						},
+					},
+				},
+				Description: "Source Security Group Tags",
+			},
 			"ips_policy": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -572,12 +600,11 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
-
-	var sourceZones, destinationZones, sourceNetworks, destinationNetworks, sourcePorts, destinationPorts, destinationDynamicObjects, sourceDynamicObjects, urls []AccessRuleSubConfig
+	var sourceZones, destinationZones, sourceNetworks, destinationNetworks, sourcePorts, destinationPorts, destinationDynamicObjects, sourceDynamicObjects, urls, sourceSecurityGroupTag []AccessRuleSubConfig
 	dynamicObjects := []*[]AccessRuleSubConfig{
-		&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls,
+		&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls, &sourceSecurityGroupTag,
 	}
-	for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports","destination_dynamic_objects","source_dynamic_objects", "urls"} {
+	for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"} {
 		if inputEntries, ok := d.GetOk(objType); ok {
 			entries := inputEntries.([]interface{})[0].(map[string]interface{})[objType[:len(objType)-1]]
 			for _, ent := range entries.([]interface{}) {
@@ -652,6 +679,9 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 		Urls: AccessRuleSubConfigs{
 			Objects: urls,
 		},
+		SourceSecurityGroupTags: AccessRuleSubConfigs{
+			Objects: sourceSecurityGroupTag,
+		},
 		Ipspolicy:    ipsPolicy,
 		Filepolicy:   filePolicy,
 		Syslogconfig: syslogConfig,
@@ -719,11 +749,12 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		&item.Sourceports.Objects,
 		&item.Destinationports.Objects,
 		&item.SourceDynamicObjects.Objects,
+		&item.SourceSecurityGroupTags.Objects,
 		&item.DestinationDynamicObjects.Objects,
 		&item.Urls.Objects,
 	}
 
-	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls"}
+	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"}
 
 	for i, objs := range dynamicObjects {
 		mainResponse := make([]map[string]interface{}, 0)
@@ -765,12 +796,12 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
-	if d.HasChanges("name", "type", "action", "syslog_severity", "enable_syslog", "enabled", "send_events_to_fmc", "log_files", "log_begin", "log_end", "source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "ips_policy", "file_policy", "syslog_config", "new_comments") {
-		var sourceZones, destinationZones, sourceNetworks, destinationNetworks, sourcePorts, destinationPorts, destinationDynamicObjects, sourceDynamicObjects, urls []AccessRuleSubConfig
+	if d.HasChanges("name", "type", "action", "syslog_severity", "enable_syslog", "enabled", "send_events_to_fmc", "log_files", "log_begin", "log_end", "source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "ips_policy", "file_policy", "syslog_config", "new_comments") {
+		var sourceZones, destinationZones, sourceNetworks, destinationNetworks, sourcePorts, destinationPorts, destinationDynamicObjects, sourceDynamicObjects, urls, sourceSecurityGroupTag []AccessRuleSubConfig
 		dynamicObjects := []*[]AccessRuleSubConfig{
-			&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls,
+			&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls, &sourceSecurityGroupTag,
 		}
-		for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls"} {
+		for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"} {
 			if inputEntries, ok := d.GetOk(objType); ok {
 				entries := inputEntries.([]interface{})[0].(map[string]interface{})[objType[:len(objType)-1]]
 				for _, ent := range entries.([]interface{}) {
@@ -837,6 +868,9 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 			},
 			Urls: AccessRuleSubConfigs{
 				Objects: urls,
+			},
+			SourceSecurityGroupTags: AccessRuleSubConfigs{
+				Objects: sourceSecurityGroupTag,
 			},
 			Ipspolicy:    ipsPolicy,
 			Filepolicy:   filePolicy,
