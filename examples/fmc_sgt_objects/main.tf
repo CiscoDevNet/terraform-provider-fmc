@@ -93,12 +93,15 @@ resource "fmc_access_rules" "access_rule_1" {
 
     source_security_group_tags {
         source_security_group_tag {
-            id = data.fmc_sgt_objects.sgt1.id
-            type = data.fmc_sgt_objects.sgt1.type
-        }
-        source_security_group_tag {
             id = data.fmc_sgt_objects.sgt2.id
             type = data.fmc_sgt_objects.sgt2.type
+        }
+    }
+
+    destination_security_group_tags {
+        destination_security_group_tag {
+            id = data.fmc_sgt_objects.sgt1.id
+            type = data.fmc_sgt_objects.sgt1.type
         }
     }
 
