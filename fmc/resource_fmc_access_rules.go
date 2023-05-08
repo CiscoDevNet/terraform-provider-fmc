@@ -632,7 +632,7 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 	dynamicObjects := []*[]AccessRuleSubConfig{
 		&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls, &sourceSecurityGroupTag, &destinationSecurityGroupTag,
 	}
-	for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"} {
+	for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "destination_security_group_tags"} {
 		if inputEntries, ok := d.GetOk(objType); ok {
 			entries := inputEntries.([]interface{})[0].(map[string]interface{})[objType[:len(objType)-1]]
 			for _, ent := range entries.([]interface{}) {
@@ -786,7 +786,7 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		&item.Urls.Objects,
 	}
 
-	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"}
+	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "destination_security_group_tags"}
 
 	for i, objs := range dynamicObjects {
 		mainResponse := make([]map[string]interface{}, 0)
@@ -828,12 +828,12 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
-	if d.HasChanges("name", "type", "action", "syslog_severity", "enable_syslog", "enabled", "send_events_to_fmc", "log_files", "log_begin", "log_end", "source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "ips_policy", "file_policy", "syslog_config", "new_comments") {
+	if d.HasChanges("name", "type", "action", "syslog_severity", "enable_syslog", "enabled", "send_events_to_fmc", "log_files", "log_begin", "log_end", "source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "destination_security_group_tags", "ips_policy", "file_policy", "syslog_config", "new_comments") {
 		var sourceZones, destinationZones, sourceNetworks, destinationNetworks, sourcePorts, destinationPorts, destinationDynamicObjects, sourceDynamicObjects, urls, sourceSecurityGroupTag, destinationSecurityGroupTag []AccessRuleSubConfig
 		dynamicObjects := []*[]AccessRuleSubConfig{
 			&sourceZones, &destinationZones, &sourceNetworks, &destinationNetworks, &sourcePorts, &destinationPorts, &destinationDynamicObjects, &sourceDynamicObjects, &urls, &sourceSecurityGroupTag, &destinationSecurityGroupTag,
 		}
-		for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags"} {
+		for i, objType := range []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "destination_security_group_tags"} {
 			if inputEntries, ok := d.GetOk(objType); ok {
 				entries := inputEntries.([]interface{})[0].(map[string]interface{})[objType[:len(objType)-1]]
 				for _, ent := range entries.([]interface{}) {
