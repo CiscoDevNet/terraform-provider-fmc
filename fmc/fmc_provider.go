@@ -26,11 +26,11 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 		return client, diags
 	}
-	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == ""{
+	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
 		client := CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
-				return nil, diag.FromErr(err)
+			return nil, diag.FromErr(err)
 		}
 		return client, diags
 	}
@@ -128,6 +128,9 @@ func Provider() *schema.Provider {
 			"fmc_dynamic_objects": dataSourceFmcDynamicObjects(),
 			"fmc_network_group_objects":dataSourceFmcNetworkGroupObjects(),
 			"fmc_staticIPv4_route":dataSourceFmcStaticIPv4Route(),
+      "fmc_nat_policies":          dataSourceFmcNatPolicies(),
+			"fmc_device_physical_interfaces": resourcePhyInterface(),
+			"fmc_devices":         resourceFmcDevices(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

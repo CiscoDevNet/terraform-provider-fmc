@@ -29,11 +29,11 @@ data "fmc_ips_policies" "ips_policy" {
 
 ### Required
 
-- **name** (String) Name of the IPS policy
+- `name` (String) Name of the IPS policy
 
 ### Read-Only
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
