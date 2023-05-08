@@ -32,13 +32,13 @@ Any one of the id, name or port can be specified. The first filter in the order 
 
 ### Optional
 
-- **id** (String) The ID of this resource
-- **name** (String) The name of this resource
-- **port** (String) The port of this resource
-- **protocol** (String) The protocol of this resource
+- `id` (String) The ID of this resource
+- `name` (String) The name of this resource
+- `port` (String) The port of this resource
+- `protocol` (String) The protocol of this resource
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `type` (String) The type of this resource
 
 

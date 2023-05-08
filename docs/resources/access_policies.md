@@ -43,23 +43,23 @@ resource "fmc_access_policies" "access_policy" {
 
 ### Required
 
-- **name** (String) The name of this resource
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **default_action** (String) Default action for this resource, "BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY" or "INHERIT_FROM_PARENT".
-- **default_action_base_intrusion_policy_id** (String) Default action base policy ID to inherit from for this resource
-- **default_action_log_begin** (Boolean) Enable logging at the beginning of the connection for this resource, "true" or "false
-- **default_action_log_end** (Boolean) Enable logging at the end of the connection for this resource, "true" or "false"
-- **default_action_send_events_to_fmc** (Boolean) Enable sending events to FMC for this resource, "true" or "false"
-- **default_action_syslog_config_id** (String) Syslog configuration ID for this resource
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `default_action` (String) Default action for this resource, "BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY" or "INHERIT_FROM_PARENT".
+- `default_action_base_intrusion_policy_id` (String) Default action base policy ID to inherit from for this resource
+- `default_action_log_begin` (Boolean) Enable logging at the beginning of the connection for this resource, "true" or "false
+- `default_action_log_end` (Boolean) Enable logging at the end of the connection for this resource, "true" or "false"
+- `default_action_send_events_to_fmc` (Boolean) Enable sending events to FMC for this resource, "true" or "false"
+- `default_action_syslog_config_id` (String) Syslog configuration ID for this resource
+- `description` (String) The description of this resource
 
 ### Read-Only
 
-- **default_action_id** (String) The ID of default action of this resource
-- **default_action_type** (String) The type of default action of this resource
-- **type** (String) The type of this resource
+- `default_action_id` (String) The ID of default action of this resource
+- `default_action_type` (String) The type of default action of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 
