@@ -112,11 +112,11 @@ func Provider() *schema.Provider {
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
 			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
 			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
-			"fmc_device_physical_interfaces": resourcePhyInterface(),
+			"fmc_ips_policies":               resourceFmcIPSPolicies(),
+      "fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_vni":                 resourceVNI(),
 			"fmc_devices":                    resourceFmcDevices(),
       "fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
-
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":                    dataSourceFmcDevices(),
@@ -136,7 +136,6 @@ func Provider() *schema.Provider {
 			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
       "fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
 		},
-
 		ConfigureContextFunc: providerConfigure,
 	}
 }
