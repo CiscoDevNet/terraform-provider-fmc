@@ -24,26 +24,31 @@ type VNIsResponse struct {
 type VNIRequest struct {
 	ID                    string          `json:"id,omitempty"`
 	Name                  string          `json:"name,omitempty"`
+	Enabled               bool 			  `json:"enabled"`
 	Ifname                string          `json:"ifname"`
 	Description           string          `json:"description"`
 	Priority              int             `json:"priority"`
 	VniId                 int             `json:"vniId"`
-	MulticastGroupAddress string          `json:"multicastGroupAddress"`
-	SegmentId             int             `json:"segmentId"`
-	EnableProxy           bool            `json:"enableProxy"`
+	VtepID				  int             `json:"vtepID"`
+	MulticastGroupAddress string          `json:"multicastGroupAddress,omitempty"`
+	SegmentId             int             `json:"segmentId,omitempty"`
+	EnableProxy           bool            `json:"enableProxy,omitempty"`
 	SecurityZone          VNISecurityZone `json:"securityZone"`
 	IPv4                  IPv4            `json:"ipv4,omitempty"`
+	Type				  string 			`json:"type"`
 }
 
 type VNIResponse struct {
 	Type                  string          `json:"type"`
 	ID                    string          `json:"id"`
 	Name                  string          `json:"name"`
+	Enabled               bool 			  `json:"enabled"`
 	Description           string          `json:"description"`
 	SegmentId             int             `json:"segmentId"`
 	VNIID                 int             `json:"vniId"`
-	EnableProxy           bool            `json:"enableProxy"`
-	MulticastGroupAddress string          `json:"multicastGroupAddress"`
+	VtepID				  int             `json:"vtepID"`
+	EnableProxy           bool            `json:"enableProxy,omitempty"`
+	MulticastGroupAddress string          `json:"multicastGroupAddress,omitempty"`
 	Priority              int             `json:"priority"`
 	Ifname                string          `json:"ifname"`
 	SecurityZone          VNISecurityZone `json:"securityZone"`
@@ -121,6 +126,7 @@ func (v *Client) GetFmcVNIDetails(ctx context.Context, deviceID string, vnid str
 		SecurityZone:          vni.SecurityZone,
 		SegmentId:             vni.SegmentId,
 		VNIID:                 vni.VNIID,
+		VtepID:				   vni.VtepID,
 	}, nil
 
 }
@@ -133,30 +139,23 @@ This method creates the VNI
 func (v *Client) CreateFmcVNI(ctx context.Context, deviceID string, object *VNIRequest) (*VNIResponse, error) {
 
 	url := fmt.Sprintf("%s/devices/devicerecords/%s/vniinterfaces", v.domainBaseURL, deviceID)
-
 	log.Printf("Create VNI URL=%s", url)
-
 	body, err := json.Marshal(&object)
-
 	log.Printf("Create VNI Request=%s", body)
-
+	
+	
 	if err != nil {
 		return nil, fmt.Errorf("invalid request json : %s - %s", url, err.Error())
 	}
-
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
-
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for VNI: %s - %s", url, err.Error())
 	}
-
 	vni := &VNIResponse{}
 	err = v.DoRequest(req, vni, http.StatusCreated)
-
 	if err != nil {
 		return nil, fmt.Errorf("error while cretaing VNI: %s - %s", url, err.Error())
 	}
-
 	log.Printf("VNI interface created, response=%s", vni.ID)
 
 	return vni, nil
