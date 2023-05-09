@@ -120,7 +120,7 @@ func (v *Client) GetFmcAccessPolicy(ctx context.Context, id string) (*AccessPoli
 	item := &AccessPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting access policies: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting access policies: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

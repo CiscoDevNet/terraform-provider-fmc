@@ -61,7 +61,7 @@ func (v *Client) GetFmcPolicyDevicesAssignment(ctx context.Context, id string) (
 	item := &PolicyDevicesAssignment{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
 	}
 	return item, nil
 }
