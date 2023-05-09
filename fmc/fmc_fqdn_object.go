@@ -63,7 +63,7 @@ func (v *Client) GetFmcFQDNObject(ctx context.Context, id string) (*FQDNObjectRe
 	item := &FQDNObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

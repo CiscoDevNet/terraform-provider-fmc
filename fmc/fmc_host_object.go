@@ -127,7 +127,7 @@ func (v *Client) GetFmcHostObject(ctx context.Context, id string) (*HostObjectRe
 	item := &HostObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

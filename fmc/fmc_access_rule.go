@@ -185,7 +185,7 @@ func (v *Client) GetFmcAccessRule(ctx context.Context, acpId string, id string) 
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

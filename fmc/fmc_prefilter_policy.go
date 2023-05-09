@@ -67,7 +67,7 @@ func (v *Client) GetFmcPrefilterPolicy(ctx context.Context, id string) (*Prefilt
 	item := &PrefilterPolicy{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting prefilter policy: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting prefilter policy: %s - %s", url, err.Error())
 	}
 	return item, nil
 }
