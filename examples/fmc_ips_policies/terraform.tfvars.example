@@ -1,0 +1,4 @@
+fmc_username = "admin"
+fmc_password = "Password@123"
+fmc_host = "0.0.0.0"
+fmc_insecure_skip_verify = true
