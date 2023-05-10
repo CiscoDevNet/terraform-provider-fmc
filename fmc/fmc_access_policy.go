@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type AccessPolicySubConfig struct {
@@ -64,8 +65,9 @@ type AccessPoliciesResponse struct {
 }
 
 func (v *Client) GetFmcAccessPolicyByName(ctx context.Context, name string) (*AccessPolicyResponse, error) {
+	encodedName := url.QueryEscape(name)
 	var url string
-	url = fmt.Sprintf("%s/policy/accesspolicies?name=%s&expanded=false", v.domainBaseURL, name)
+	url = fmt.Sprintf("%s/policy/accesspolicies?name=%s&expanded=false", v.domainBaseURL, encodedName)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting access policy by name/value: %s - %s", url, err.Error())
