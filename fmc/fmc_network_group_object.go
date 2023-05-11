@@ -58,9 +58,51 @@ type NetworkGroupObjectResponse struct {
 		} `json:"domain"`
 	} `json:"metadata"`
 }
-
+type NetworkGroupObjectsResponse struct {
+	Links struct {
+		Self string `json:"self"`
+	} `json:"links"`
+	Items []struct {
+		ID     string `json:"id"`
+		Type   string `json:"type"`
+		Links  struct {
+			Self string `json:"self"`
+		} `json:"links"`
+		Name string `json:"name"`
+	} `json:"items"`
+	Paging struct {
+		Offset int `json:"offset"`
+		Limit  int `json:"limit"`
+		Count  int `json:"count"`
+		Pages  int `json:"pages"`
+	} `json:"paging"`
+}
 // /fmc_config/v1/domain/DomainUUID/object/networkgroups?bulk=true ( Bulk POST operation on network objects. )
+func (v *Client) GetFmcNetworkGroupObjectByName(ctx context.Context, name string) (*NetworkGroupObjectResponse, error) {
+	url := fmt.Sprintf("%s/object/networkgroups", v.domainBaseURL)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("getting network group object: %s - %s", url, err.Error())
+	}
+	networkGroupObjects := &NetworkGroupObjectsResponse{}
+	err = v.DoRequest(req, networkGroupObjects, http.StatusOK)
 
+	if err != nil {
+		return nil, fmt.Errorf("getting network group object: %s - %s", url, err.Error())
+	}
+
+	for _, NetworkGroupObjects := range networkGroupObjects.Items {
+		if NetworkGroupObjects.Name == name {
+			return &NetworkGroupObjectResponse{
+				ID:   NetworkGroupObjects.ID,
+				Name: NetworkGroupObjects.Name,
+				Type: NetworkGroupObjects.Type,
+			}, nil
+		}
+	}
+
+	return nil, fmt.Errorf("no network group found with name %s", name)
+}
 func (v *Client) CreateFmcNetworkGroupObject(ctx context.Context, object *NetworkGroupObject) (*NetworkGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networkgroups", v.domainBaseURL)
 	body, err := json.Marshal(&object)
@@ -88,7 +130,7 @@ func (v *Client) GetFmcNetworkGroupObject(ctx context.Context, id string) (*Netw
 	item := &NetworkGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

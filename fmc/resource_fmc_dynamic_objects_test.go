@@ -86,12 +86,10 @@ func testAccCheckFmcDynamicObjectExists(n string, properties map[string]string) 
 			return fmt.Errorf("No ID set")
 		}
 
-		if properties != nil {
-			for key, value := range properties {
+		for key, value := range properties {
 				if rs.Primary.Attributes[key] != value {
 					return fmt.Errorf("attribute mismatch for key: %s. Expected: %s, got: %s", key, value, rs.Primary.Attributes[key])
 				}
-			}
 		}
 
 		//

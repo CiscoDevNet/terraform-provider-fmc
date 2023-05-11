@@ -98,7 +98,12 @@ func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMa
 	resp := &DynamicObjectMappingsResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting dynamic object mapping: %s - %s", url, err.Error())
+		return &DynamicObjectMapping{
+			Mappings: []string{},
+			DynamicObject: DynamicObjectMappingObject{
+				ID: dynamicObjectMapping.DynamicObject.ID,
+			},
+		}, fmt.Errorf("getting dynamic object mapping: %s - %s", url, err.Error())
 	}
 
 	if resp.Items == nil || len(resp.Items) < 1 {

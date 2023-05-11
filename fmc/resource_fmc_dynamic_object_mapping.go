@@ -68,12 +68,16 @@ func resourceFmcDynamicObjectMappingRead(ctx context.Context, d *schema.Resource
 
 	item, err := c.GetFmcDynamicObjectMapping(ctx, dynamicObjectMapping)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read dynamic object mapping",
-			Detail:   err.Error(),
-		})
-		return diags
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read dynamic object mapping",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 
 	if err := d.Set("dynamic_object_id", item.DynamicObject.ID); err != nil {

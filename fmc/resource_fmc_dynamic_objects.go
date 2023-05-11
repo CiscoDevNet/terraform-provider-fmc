@@ -35,6 +35,11 @@ func resourceFmcDynamicObjects() *schema.Resource {
 				ForceNew:    true,
 				Description: "The name of this resource",
 			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of this resource",
+			},
 			"object_type": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -108,12 +113,16 @@ func resourceFmcDynamicObjectsRead(ctx context.Context, d *schema.ResourceData, 
 	id := d.Id()
 	item, err := c.GetFmcDynamicObject(ctx, id)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read dynamic object",
-			Detail:   err.Error(),
-		})
-		return diags
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read dynamic object",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -132,7 +141,14 @@ func resourceFmcDynamicObjectsRead(ctx context.Context, d *schema.ResourceData, 
 		})
 		return diags
 	}
-
+	if err := d.Set("type", dynamicObjectType); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read dynamic object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
 	if err := d.Set("object_type", item.ObjectType); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
@@ -154,7 +170,7 @@ func resourceFmcDynamicObjectsUpdate(ctx context.Context, d *schema.ResourceData
 			Name:        d.Get("name").(string),
 			Description: d.Get("description").(string),
 			ObjectType:  d.Get("object_type").(string),
-			Type:        network_type,
+			Type:        dynamicObjectType,
 			ID:          id,
 		})
 		if err != nil {

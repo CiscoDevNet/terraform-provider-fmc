@@ -35,12 +35,15 @@ resource "fmc_ftd_deploy" "ftd" {
 
 ### Required
 
-- **device** (String)
+- `device` (String)
 
 ### Optional
 
-- **force_deploy** (Boolean)
-- **id** (String) The ID of this resource.
-- **ignore_warning** (Boolean)
+- `force_deploy` (Boolean)
+- `ignore_warning` (Boolean)
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 

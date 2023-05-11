@@ -11,11 +11,14 @@ import (
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	username := d.Get("fmc_username").(string)
 	password := d.Get("fmc_password").(string)
+	iscdfmc := d.Get("is_cdfmc").(bool)
+	cdotoken := d.Get("cdo_token").(string)
+	cdfmcdomainuuid := d.Get("cdfmc_domain_uuid").(string)
 	host := d.Get("fmc_host").(string)
 	insecureSkipVerify := d.Get("fmc_insecure_skip_verify").(bool)
 	var diags diag.Diagnostics
 
-	if username != "" && password != "" && host != "" {
+	if iscdfmc == false && username != "" && password != "" && host != "" && cdotoken == "" && cdfmcdomainuuid == "" {
 		client := NewClient(username, password, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
@@ -23,7 +26,15 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 		return client, diags
 	}
-	return nil, diag.FromErr(errors.New("missing fmc username, password or base url"))
+	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
+		client := CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host, insecureSkipVerify)
+		err := client.Login()
+		if err != nil {
+			return nil, diag.FromErr(err)
+		}
+		return client, diags
+	}
+	return nil, diag.FromErr(errors.New("missing fmc username, password, cdo token , cdfmc domain_uuid or base url"))
 }
 
 // Provider
@@ -32,16 +43,16 @@ func Provider() *schema.Provider {
 		Schema: map[string]*schema.Schema{
 			"fmc_username": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("FMC_USERNAME", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FMC_USERNAME", ""),
 				Description: "Username for the user to login to FMC",
 			},
 			"fmc_password": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Sensitive:   true,
-				DefaultFunc: schema.EnvDefaultFunc("FMC_PASSWORD", nil),
+				DefaultFunc: schema.EnvDefaultFunc("FMC_PASSWORD", ""),
 				Description: "Password for the user to login to FMC",
 			},
 			"fmc_host": {
@@ -49,6 +60,26 @@ func Provider() *schema.Provider {
 				Required:    true,
 				DefaultFunc: schema.EnvDefaultFunc("FMC_HOST", nil),
 				Description: "Hostname/IP address of the FMC",
+			},
+			"is_cdfmc": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("IS_CDFMC", false),
+				Description: "set to true if is a cloud-delivered Firepower Management Center (cdFMC) with Cisco Defence Orchestrator(CDO)",
+			},
+			"cdo_token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("CDO_TOKEN", ""),
+				Description: "The CDO Api token to manage cdFMC",
+			},
+			"cdfmc_domain_uuid": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Sensitive:   true,
+				DefaultFunc: schema.EnvDefaultFunc("CDFMC_DOMAIN_UUID", ""),
+				Description: "The domain uuid to use API of cdFMC the default domain for global is e276abec-e0f2-11e3-8169-6d9ed49b625f",
 			},
 			"fmc_insecure_skip_verify": {
 				Type:        schema.TypeBool,
@@ -81,21 +112,34 @@ func Provider() *schema.Provider {
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
 			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
 			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
+			"fmc_sgt_objects":                resourceFmcSGTObjects(),
+      "fmc_device_physical_interfaces": resourcePhyInterface(),
+			"fmc_device_vni":                 resourceVNI(),
+			"fmc_devices":                    resourceFmcDevices(),
+      "fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
 		},
+
 		DataSourcesMap: map[string]*schema.Resource{
-			"fmc_devices":         dataSourceFmcDevices(),
-			"fmc_access_policies": dataSourceFmcAccessPolicies(),
-			"fmc_ips_policies":    dataSourceFmcIPSPolicies(),
-			"fmc_file_policies":   dataSourceFmcFilePolicies(),
-			"fmc_syslog_alerts":   dataSourceFmcSyslogAlerts(),
-			"fmc_security_zones":  dataSourceFmcSecurityZones(),
-			"fmc_network_objects": dataSourceFmcNetworkObjects(),
-			"fmc_host_objects":    dataSourceFmcHostObjects(),
-			"fmc_url_objects":     dataSourceFmcURLObjects(),
-			"fmc_port_objects":    dataSourceFmcPortObjects(),
-			"fmc_dynamic_objects": dataSourceFmcDynamicObjects(),
-			"fmc_ise_sgt_objects": dataFmcIseSGTObjects(),
+			"fmc_devices":                    dataSourceFmcDevices(),
+			"fmc_access_policies":            dataSourceFmcAccessPolicies(),
+			"fmc_ips_policies":               dataSourceFmcIPSPolicies(),
+			"fmc_file_policies":              dataSourceFmcFilePolicies(),
+			"fmc_syslog_alerts":              dataSourceFmcSyslogAlerts(),
+			"fmc_security_zones":             dataSourceFmcSecurityZones(),
+			"fmc_network_objects":            dataSourceFmcNetworkObjects(),
+			"fmc_host_objects":               dataSourceFmcHostObjects(),
+			"fmc_url_objects":                dataSourceFmcURLObjects(),
+			"fmc_port_objects":               dataSourceFmcPortObjects(),
+			"fmc_dynamic_objects":            dataSourceFmcDynamicObjects(),
+			"fmc_network_group_objects":      dataSourceFmcNetworkGroupObjects(),
+			"fmc_device_vni":                 dataSourceFmcVNI(),
+			"fmc_nat_policies":               dataSourceFmcNatPolicies(),
+			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
+      "fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
+      "fmc_sgt_objects":                dataFmcSGTObjects(),
+      "fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
 		},
+
 		ConfigureContextFunc: providerConfigure,
 	}
 }

@@ -35,28 +35,31 @@ resource "fmc_prefilter_policy" "prefilter_policy" {
 
 ### Required
 
-- **default_action** (Block List, Min: 1, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--default_action))
-- **name** (String) The name of this resource
+- `default_action` (Block List, Min: 1, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--default_action))
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `description` (String) The description of this resource
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--default_action"></a>
 ### Nested Schema for `default_action`
 
 Required:
 
-- **action** (String) Action. Should be BLOCK_TUNNELS or ANALYZE_TUNNELS
+- `action` (String) Action. Should be BLOCK_TUNNELS or ANALYZE_TUNNELS
 
 Optional:
 
-- **log_begin** (Boolean) Log begin
-- **send_events_to_fmc** (Boolean) Send events to FMC
+- `log_begin` (Boolean) Log begin
+- `send_events_to_fmc` (Boolean) Send events to FMC
 
 Read-Only:
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 
