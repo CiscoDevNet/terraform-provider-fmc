@@ -35,17 +35,17 @@ resource "fmc_port_objects" "http" {
 
 ### Required
 
-- **name** (String) The name of this resource
-- **port** (String) Port for this resource
-- **protocol** (String) Protocol for this resource
+- `name` (String) The name of this resource
+- `port` (String) Port for this resource
+- `protocol` (String) Protocol for this resource
 
 ### Optional
 
-- **id** (String) The ID of this resource.
-- **overridable** (Boolean) Sets this resource as overridable
+- `overridable` (Boolean) Sets this resource as overridable
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 

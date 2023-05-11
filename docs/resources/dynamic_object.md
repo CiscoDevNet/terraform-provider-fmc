@@ -35,12 +35,15 @@ resource "fmc_dynamic_object" "test" {
 
 ### Required
 
-- **name** (String) The name of this resource
-- **object_type** (String) Type of Dynamic Object. Allowed values: IP
+- `name` (String) The name of this resource
+- `object_type` (String) Type of Dynamic Object. Allowed values: IP
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `description` (String) The description of this resource
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 
