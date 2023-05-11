@@ -137,6 +137,7 @@ func Provider() *schema.Provider {
 			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
       "fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
       "fmc_sgt_objects":                dataFmcSGTObjects(),
+      "fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
 		},
 
 		ConfigureContextFunc: providerConfigure,
