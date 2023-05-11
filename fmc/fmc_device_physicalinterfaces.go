@@ -44,6 +44,7 @@ type PhysicalInterfaceSecurityZone struct {
 
 type PhysicalInterfaceResponse struct {
 	Type         string                        `json:"type"`
+	Enabled 	 bool						   `json:"enabled"`
 	Ifname       string                        `json:"ifname"`
 	Description  string                        `json:"description"`
 	ID           string                        `json:"id"`
@@ -56,6 +57,7 @@ type PhysicalInterfaceResponse struct {
 type PhysicalInterfaceRequest struct {
 	Type         string                        `json:"type"`
 	Ifname       string                        `json:"ifname"`
+	Enabled 	 bool						   `json:"enabled"`
 	Description  string                        `json:"description"`
 	ID           string                        `json:"id"`
 	Name         string                        `json:"name"`
@@ -97,6 +99,7 @@ func (v *Client) GetFmcPhysicalInterface(ctx context.Context, deviceID string, n
 			return &PhysicalInterfaceResponse{
 				ID:           PhysicalInterface.ID,
 				Name:         PhysicalInterface.Name,
+				Enabled:      PhysicalInterface.Enabled,
 				Ifname:       PhysicalInterface.Ifname,
 				Type:         PhysicalInterface.Type,
 				Description:  PhysicalInterface.Description,
@@ -130,6 +133,7 @@ func (v *Client) GetFmcPhysicalInterfaceByID(ctx context.Context, deviceID strin
 		return &PhysicalInterfaceResponse{
 			ID:           physicalInterface.ID,
 			Name:         physicalInterface.Name,
+			Enabled:      physicalInterface.Enabled,
 			Ifname:       physicalInterface.Ifname,
 			Type:         physicalInterface.Type,
 			Description:  physicalInterface.Description,
@@ -163,7 +167,10 @@ func (v *Client) UpdateFmcPhysicalInterface(ctx context.Context, deviceID string
 	if err != nil {
 		return nil, fmt.Errorf("getting physical interfaces: %s - %s", url, err.Error())
 	}
-	log.Printf("Physical interface updated, response=%s", item)
+	// log.Printf("Physical interface updated, response=%s", item)
 
 	return item, nil
+}
+func (v *Client) DeleteFmcPhysicalInterface() {
+	
 }

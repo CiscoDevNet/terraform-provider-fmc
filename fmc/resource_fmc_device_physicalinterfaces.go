@@ -36,6 +36,12 @@ func resourcePhyInterface() *schema.Resource {
 				Optional:    true,
 				Description: "Physical Interface description",
 			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default: true,
+				Description: "enabled",
+			},
 			"if_name": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -118,7 +124,7 @@ func resourcePhyInterfaceRead(ctx context.Context, d *schema.ResourceData, m int
 
 	physicalInterfaces, err := c.GetFmcPhysicalInterfaceByID(ctx, deviceId, physicalInterfaceId)
 
-	log.Printf("FPR: Physical Interface Details PhysicalInterfaceId=%s Name=%s IFName=%s Type=%s", physicalInterfaces.ID, physicalInterfaces.Name, physicalInterfaces.Ifname, physicalInterfaces.Type)
+	// log.Printf("FPR: Physical Interface Details PhysicalInterfaceId=%s Name=%s IFName=%s Type=%s", physicalInterfaces.ID, physicalInterfaces.Name, physicalInterfaces.Ifname, physicalInterfaces.Type)
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -151,15 +157,16 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 	ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
 	ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
+	enabled := d.Get("enabled").(bool)
 	ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
 
-	log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
+	// log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
 
 	ipv6Address := d.Get("ipv6_address").(string)
 	ipv6Prefix := d.Get("ipv6_prefix").(int)
 	ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
 
-	log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
+	// log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
 
 	c := m.(*Client)
 
@@ -175,7 +182,6 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		Address: ipv4StaticAddress,
 		Netmask: ipv4StaticNetmask,
 	}
-
 	var IPv4DHCP = IPv4DHCP{
 		Enable:      ipv4DhcpEnabled,
 		RouteMetric: ipv4DhcpRouteMetric,
@@ -189,7 +195,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		IPv4.Static = &IPv4Static
 	}
 
-	log.Printf("IPv4=%s", IPv4)
+	// log.Printf("IPv4=%s", IPv4)
 
 	var IPv6Add []IPv6Address
 
@@ -202,11 +208,13 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	var IPv6 = IPv6{Addresses: IPv6Add}
-	log.Printf("IPv6Address=%s", IPv6Add)
+	// log.Printf("IPv6Address=%s", IPv6Add)
 
-	physicalInterfaceResponse, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+
+	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
 		ID:           physicalInterfaceId,
 		Ifname:       iFName,
+		Enabled:	  enabled,
 		Mode:         mode,
 		Name:         name,
 		Description:  description,
@@ -226,47 +234,16 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		return diags
 	}
 
-	log.Printf("FPU: Updated physical interface=%s", physicalInterfaceResponse)
+	// log.Printf("FPU: Updated physical interface=%s", physicalInterfaceResponse)
 
 	return resourcePhyInterfaceRead(ctx, d, m)
 }
 
 func resourcePhyInterfaceDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Printf("FPD: Deleting physical interface details, Delete will reset the physical interface")
-
-	deviceId := d.Get("device_id").(string)
-	physicalInterfaceId := d.Get("physical_interface_id").(string)
-
 	var diags diag.Diagnostics
 
-	name := d.Get("name").(string)
-
-	c := m.(*Client)
-
-	var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
-		ID:   "",
-		Type: "SecurityZone",
-	}
-	physicalInterfaceResponse, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
-		ID:           physicalInterfaceId,
-		Ifname:       "-",
-		Mode:         "NONE",
-		Name:         name,
-		Description:  "",
-		SecurityZone: PhysicalInterfaceSecurityZone,
-	})
-
-	if err != nil {
-		log.Printf("FPU: err=%s", err)
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to reset physical interface",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
-
-	log.Printf("FPD: Physical interface reseted with value=%s", physicalInterfaceResponse)
-
-	return resourcePhyInterfaceRead(ctx, d, m)
+	// d.SetId("") is automatically called assuming delete returns no errors, but
+	// it is added here for explicitness.
+	d.SetId("")
+	return diags
 }
