@@ -112,13 +112,14 @@ func Provider() *schema.Provider {
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
 			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
 			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
-			"fmc_device_physical_interfaces": resourcePhyInterface(),
+			"fmc_sgt_objects":                resourceFmcSGTObjects(),
+      "fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_vni":                 resourceVNI(),
 			"fmc_devices":                    resourceFmcDevices(),
-      		"fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
+      "fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
 			"fmc_standard_acl":               resourceFmcStandardAcl(),
-
 		},
+
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":                    dataSourceFmcDevices(),
 			"fmc_access_policies":            dataSourceFmcAccessPolicies(),
@@ -135,8 +136,11 @@ func Provider() *schema.Provider {
 			"fmc_device_vni":                 dataSourceFmcVNI(),
 			"fmc_nat_policies":               dataSourceFmcNatPolicies(),
 			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
-      		"fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
+      "fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
 			"fmc_standard_acl":               dataSourceFmcStandardAcl(),
+      "fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
+      "fmc_sgt_objects":                dataFmcSGTObjects(),
+      "fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
 		},
 
 		ConfigureContextFunc: providerConfigure,
