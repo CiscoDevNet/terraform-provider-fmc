@@ -74,7 +74,7 @@ func (v *Client) GetFmcTimeRangeObject(ctx context.Context, id string) (*TimeRan
 	item := &TimeRangeObject{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

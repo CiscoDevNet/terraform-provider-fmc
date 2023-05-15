@@ -151,19 +151,15 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 	if err != nil {
 		if strings.Contains(err.Error(), "404") {
 			d.SetId("")
-			diags = append(diags, diag.Diagnostic{
-				Severity: diag.Warning,
-				Summary:  "Policy device assignment not found, deleted",
-				Detail:   err.Error(),
-			})
 		} else {
 			diags = append(diags, diag.Diagnostic{
 				Severity: diag.Error,
 				Summary:  "unable to read policy devices assignment",
 				Detail:   err.Error(),
 			})
+			return diags
 		}
-		return diags
+		
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{

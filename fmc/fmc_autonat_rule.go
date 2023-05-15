@@ -97,7 +97,7 @@ func (v *Client) GetFmcAutoNatRule(ctx context.Context, natId string, id string)
 	item := &AutoNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting auto nat rules: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting auto nat rules: %s - %s", url, err.Error())
 	}
 	return item, nil
 }
