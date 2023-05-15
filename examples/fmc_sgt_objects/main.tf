@@ -7,25 +7,23 @@ terraform {
   }
 }
 
-
-
 provider "fmc" {
-    fmc_username = "admin"
-    fmc_password = "P@ssw123"
-    fmc_host = "192.168.25.174"
-    fmc_insecure_skip_verify = true
+  fmc_username = var.fmc_username
+  fmc_password = var.fmc_password
+  fmc_host = var.fmc_host
+  fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
 # Create the security group tag
 resource "fmc_sgt_objects" "my_sgt1" {
-  name = "another_one"
-  description = "bites the dust"
+  name = "sgt_objct-1"
+  description = "Applied via TF"
   tag = "26"
 }
 
 resource "fmc_sgt_objects" "my_sgt2" {
-  name = "and_another_one"
-  description = "gone and another one bites the dust"
+  name = "sgt_objct-2"
+  description = "Applied via TF"
   tag = "27"
 }
 
