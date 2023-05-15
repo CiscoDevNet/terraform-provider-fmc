@@ -240,10 +240,42 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 }
 
 func resourcePhyInterfaceDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	log.Printf("FPD: Deleting physical interface details, Delete will reset the physical interface")
+
+	deviceId := d.Get("device_id").(string)
+	physicalInterfaceId := d.Get("physical_interface_id").(string)
+
 	var diags diag.Diagnostics
 
-	// d.SetId("") is automatically called assuming delete returns no errors, but
-	// it is added here for explicitness.
-	d.SetId("")
-	return diags
+	name := d.Get("name").(string)
+	mtu := d.Get("mtu").(int)
+
+	c := m.(*Client)
+
+	// var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
+	// 	ID:   "",
+	// 	Type: "",
+	// }
+	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+		ID:           physicalInterfaceId,
+		Ifname:       "",
+		Mode:         "NONE",
+		Name:         name,
+		MTU:          mtu,
+		// Description:  "",
+		// SecurityZone: PhysicalInterfaceSecurityZone,
+	})
+
+	if err != nil {
+		log.Printf("FPU: err=%s", err)
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to reset physical interface",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+	// log.Printf("FPD: Physical interface reseted with value=%s", physicalInterfaceResponse)
+
+	return resourcePhyInterfaceRead(ctx, d, m)
 }
