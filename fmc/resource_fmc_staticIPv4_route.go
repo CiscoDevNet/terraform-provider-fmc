@@ -273,19 +273,6 @@ func resourceFmcStaticIPv4RouteRead(ctx context.Context, d *schema.ResourceData,
 		return diags
 	}
 
-	for _, j := range item.SelectedNetworks{
-		if j != (ObjectItem{}) {
-			if err := d.Set("selected_networks", convertTo1ListMapStringGeneric(item.SelectedNetworks)); err != nil {
-				diags = append(diags, diag.Diagnostic{
-					Severity: diag.Error,
-					Summary:  "unable to read route",
-					Detail:   err.Error(),
-				})
-				return diags
-			}
-		}
-	}
-
 	if item.Gateway != (ObjectItems{}) {
 		gateway_options := make(map[string]interface{})
 		if item.Gateway.Objects != nil && *item.Gateway.Objects != (ObjectItem{}) {

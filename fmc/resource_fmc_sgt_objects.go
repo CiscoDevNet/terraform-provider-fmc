@@ -158,7 +158,7 @@ func resourceFmcSGTObjectsUpdate(ctx context.Context, d *schema.ResourceData, m 
 			return diags
 		}
 	}
-	return resourceFmcSecurityZoneRead(ctx, d, m)
+	return resourceFmcSGTObjectsRead(ctx, d, m)
 }
 
 func resourceFmcSGTObjectsDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {

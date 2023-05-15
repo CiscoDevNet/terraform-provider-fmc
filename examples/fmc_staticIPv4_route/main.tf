@@ -30,7 +30,7 @@ data "fmc_host_objects" "igw" {
 
 resource "fmc_staticIPv4_route" "route1" {
   device_id  = data.fmc_devices.device1.id
-  interface_name = "outside"
+  interface_name = "outside" # Such interface should be configured on the device first.
   metric_value = 23
   is_tunneled = false
   selected_networks {
@@ -79,9 +79,6 @@ output "route2"{
 }
 
 # EXAMPLE OF DATA BLOCK
-
-
-
 # data "fmc_staticIPv4_route" "route"{
 #   device_id  = data.fmc_devices.device1.id
 #   network_name = "rand-net"
