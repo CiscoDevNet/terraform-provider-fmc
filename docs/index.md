@@ -45,7 +45,7 @@ An example provider initialization is shown below:
 provider "fmc" {
     fmc_username = "terraform_user"
     fmc_password = "SecurePasswordFromTfvars"
-    fmc_host = "10.10.10.2"
+    fmc_host = "<FMC IP Address"
     fmc_insecure_skip_verify = false
 }
 ```
