@@ -78,7 +78,7 @@ func (v *Client) GetFmcRangeObject(ctx context.Context, id string) (*RangeObject
 	item := &RangeObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

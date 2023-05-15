@@ -74,7 +74,7 @@ func (v *Client) GetFmcSecurityZone(ctx context.Context, id string) (*SecurityZo
 	securityZone := &SecurityZone{}
 	err = v.DoRequest(req, securityZone, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting security zone by name: %s - %s", url, err.Error())
+		return securityZone, fmt.Errorf("getting security zone by name: %s - %s", url, err.Error())
 	}
 
 	return securityZone, nil

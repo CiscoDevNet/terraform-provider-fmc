@@ -29,11 +29,11 @@ data "fmc_dynamic_object" "dyobj" {
 
 ### Required
 
-- **name** (String) Name of the file policy
+- `name` (String) Name of the file policy
 
 ### Read-Only
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

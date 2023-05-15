@@ -33,11 +33,11 @@ resource "fmc_security_zone" "test" {
 
 ### Required
 
-- **interface_mode** (String) Interface mode for this security zone
-- **name** (String) The name of security zone
+- `interface_mode` (String) Interface mode for this security zone
+- `name` (String) The name of security zone
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 

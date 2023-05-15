@@ -57,29 +57,29 @@ resource "fmc_url_object_group" "URLGroup" {
 
 ### Required
 
-- **name** (String) The name of this resource
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
-- **literals** (Block List) List of URL literals to add (see [below for nested schema](#nestedblock--literals))
-- **objects** (Block List) List of URL objects to add (see [below for nested schema](#nestedblock--objects))
+- `description` (String) The description of this resource
+- `literals` (Block List) List of URL literals to add (see [below for nested schema](#nestedblock--literals))
+- `objects` (Block List) List of URL objects to add (see [below for nested schema](#nestedblock--objects))
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 <a id="nestedblock--literals"></a>
 ### Nested Schema for `literals`
 
 Required:
 
-- **url** (String) The value URL for this resource
+- `url` (String) The value URL for this resource
 
 Read-Only:
 
-- **type** (String) The type of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--objects"></a>
@@ -87,7 +87,7 @@ Read-Only:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

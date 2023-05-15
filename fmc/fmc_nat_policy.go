@@ -86,7 +86,7 @@ func (v *Client) GetFmcNatPolicy(ctx context.Context, id string) (*NatPolicyResp
 	item := &NatPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting nat policies: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting nat policies: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

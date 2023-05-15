@@ -57,26 +57,26 @@ resource "fmc_network_group_objects" "PrivateGroup" {
 
 ### Required
 
-- **name** (String) The name of this resource
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
-- **literals** (Block List) List of network literals to add (see [below for nested schema](#nestedblock--literals))
-- **objects** (Block List) List of network objects to add (see [below for nested schema](#nestedblock--objects))
+- `description` (String) The description of this resource
+- `literals` (Block List) List of network literals to add (see [below for nested schema](#nestedblock--literals))
+- `objects` (Block List) List of network objects to add (see [below for nested schema](#nestedblock--objects))
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 <a id="nestedblock--literals"></a>
 ### Nested Schema for `literals`
 
 Required:
 
-- **type** (String) The type of this resource
-- **value** (String) The value of this resource
+- `type` (String) The type of this resource
+- `value` (String) The value of this resource
 
 
 <a id="nestedblock--objects"></a>
@@ -84,7 +84,7 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

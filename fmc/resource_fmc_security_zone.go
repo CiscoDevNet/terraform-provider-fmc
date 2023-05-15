@@ -86,12 +86,16 @@ func resourceFmcSecurityZoneRead(ctx context.Context, d *schema.ResourceData, m 
 	id := d.Id()
 	item, err := c.GetFmcSecurityZone(ctx, id)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read security zone",
-			Detail:   err.Error(),
-		})
-		return diags
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read security zone",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{

@@ -35,16 +35,16 @@ resource "fmc_icmpv4_objects" "wrong-proto" {
 
 ### Required
 
-- **icmp_type** (String) The ICMP type for this resource
-- **name** (String) The name of this resource
+- `icmp_type` (String) The ICMP type for this resource
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **code** (Number) The ICMP code for this resource
-- **id** (String) The ID of this resource.
+- `code` (Number) The ICMP code for this resource
 
 ### Read-Only
 
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 

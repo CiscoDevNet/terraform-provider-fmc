@@ -28,7 +28,7 @@ func (v *Client) GetFmcAccessPoliciesCategory(ctx context.Context, id, accessPol
 	resp := &AccessPolicyCategoryResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting access policy category: %s - %s", url, err.Error())
+		return resp, fmt.Errorf("getting access policy category: %s - %s", url, err.Error())
 	}
 
 	return resp, nil
