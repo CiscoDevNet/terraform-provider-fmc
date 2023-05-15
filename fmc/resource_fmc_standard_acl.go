@@ -18,7 +18,6 @@ func resourceFmcStandardAcl() *schema.Resource {
 			"    name = \"ACL-1\"\n" +
 			"    action = \"DENY\"\n" +
 			"    object_id = data.fmc_network_objects.any.id\n" +
-			"    literal_type = \"Host\"\n" +
 			"    literal_value = \"1.1.1.1\"\n" +
 			"}\n" +
 			"```\n" +
@@ -48,11 +47,6 @@ func resourceFmcStandardAcl() *schema.Resource {
 				Optional:    true,
 				Description: "The value of this resource",
 			},
-			"literal_type": {
-				Type:        schema.TypeString,
-				Optional:    true,
-				Description: "The value of this resource",
-			},
 			"literal_value": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -76,12 +70,11 @@ func resourceFmcStandardAclCreate(ctx context.Context, d *schema.ResourceData, m
         })
     }
 
-    litType := d.Get("literal_type").(string)
     litValue := d.Get("literal_value").(string)
     var Lit_input []Literal_nw
-    if len(litType) > 0 && len(litValue) > 0 {
+    if len(litValue) > 0 {
         Lit_input = append(Lit_input, Literal_nw{
-            Type:      litType,
+            Type:      "Host",
             Value:     litValue,
         })
     }
@@ -160,17 +153,16 @@ func resourceFmcStandardAclUpdate(ctx context.Context, d *schema.ResourceData, m
         })
     }
 
-    litType := d.Get("literal_type").(string)
     litValue := d.Get("literal_value").(string)
     var Lit_input []Literal_nw
-    if len(litType) > 0 && len(litValue) > 0 {
+    if len(litValue) > 0 {
         Lit_input = append(Lit_input, Literal_nw{
-            Type:      litType,
+            Type:      "Host",
             Value:     litValue,
         })
     }
 
-	if d.HasChanges("name", "object_id", "action","literal_value","literal_type" ) {
+	if d.HasChanges("name", "object_id", "action","literal_value" ) {
 		res, err := c.UpdateFmcStandardAcl(ctx, d.Id(), &StandardAcl{
 			ID:   d.Id(),
 			Name: d.Get("name").(string),

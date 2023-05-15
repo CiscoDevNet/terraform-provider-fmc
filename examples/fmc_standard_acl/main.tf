@@ -26,10 +26,9 @@ data "fmc_host_objects" "test" {
 }
 resource "fmc_standard_acl" "create1"{
     count = 3
-    name = "kadahic${count.index+1}"
+    name = "Test${count.index+1}"
     action = "DENY"
     object_id = data.fmc_network_objects.any.id
-    literal_type = "Host"
     literal_value = "1.1.1.1"
 }
 # output "existing_acl" {
