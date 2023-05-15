@@ -12,16 +12,11 @@ var tag_type string = "SecurityGroupTag"
 func resourceFmcSGTObjects() *schema.Resource {
 	return &schema.Resource{
 		Description: `
-			resource "fmc_prefilter_policy" "prefilter_policy" {
-				name        = "Prefilter Policy"
-				description = "Terraform Prefilter Policy description"
-				default_action { 
-					log_end = true
-					log_begin = true
-					send_events_to_fmc = true
-					action = "BLOCK_TUNNELS"
-				}
-			}`,
+		resource "fmc_sgt_objects" "my_sgt1" {
+			name = "sgt_objct-1"
+			description = "Applied via TF"
+			tag = "26"
+		}`,
 		CreateContext: resourceFmcSGTObjectsCreate,
 		ReadContext:   resourceFmcSGTObjectsRead,
 		UpdateContext: resourceFmcSGTObjectsUpdate,
@@ -88,7 +83,7 @@ func resourceFmcSGTObjectsCreate(ctx context.Context, d *schema.ResourceData, m 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to create network object 1",
+			Summary:  "unable to create SGT object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -120,7 +115,7 @@ func resourceFmcSGTObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	if err := d.Set("name", securityGroupTag.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read ise security group object",
+			Summary:  "unable to set name of security group object",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -129,7 +124,7 @@ func resourceFmcSGTObjectsRead(ctx context.Context, d *schema.ResourceData, m in
 	if err := d.Set("type", securityGroupTag.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read ise security group object",
+			Summary:  "unable to set the type of the security group tag",
 			Detail:   err.Error(),
 		})
 		return diags
