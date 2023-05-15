@@ -265,8 +265,10 @@ resource "fmc_access_rules" "access_rule_2" {
 
 - `action` (String) Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"
 - `category` (String) The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource
+- `destination_dynamic_objects` (Block List, Max: 1) Destination dynamic objects ports for this resource (see [below for nested schema](#nestedblock--destination_dynamic_objects))
 - `destination_networks` (Block List, Max: 1) Destination networks for this resource (see [below for nested schema](#nestedblock--destination_networks))
 - `destination_ports` (Block List, Max: 1) Destination ports for this resource (see [below for nested schema](#nestedblock--destination_ports))
+- `destination_security_group_tags` (Block List, Max: 1) Destination SGTs (see [below for nested schema](#nestedblock--destination_security_group_tags))
 - `destination_zones` (Block List, Max: 1) Destination zones for this resource (see [below for nested schema](#nestedblock--destination_zones))
 - `enable_syslog` (Boolean) Enable syslog for this resource
 - `file_policy` (String) File policy for this resource
@@ -279,8 +281,10 @@ resource "fmc_access_rules" "access_rule_2" {
 - `new_comments` (List of String) New comments to be added for this resource
 - `section` (String) Section for this resource, "mandatory" or "default"
 - `send_events_to_fmc` (Boolean) Enable sending events to FMC for this resource
+- `source_dynamic_objects` (Block List, Max: 1) Source dynamic objects for this resource (see [below for nested schema](#nestedblock--source_dynamic_objects))
 - `source_networks` (Block List, Max: 1) Source networks for this resource (see [below for nested schema](#nestedblock--source_networks))
 - `source_ports` (Block List, Max: 1) Source ports for this resource (see [below for nested schema](#nestedblock--source_ports))
+- `source_security_group_tags` (Block List, Max: 1) Source SGTs (see [below for nested schema](#nestedblock--source_security_group_tags))
 - `source_zones` (Block List, Max: 1) Source zones for this resource (see [below for nested schema](#nestedblock--source_zones))
 - `syslog_config` (String) Syslog configuration ID for this resource
 - `syslog_severity` (String) Syslog severity for this resource, "ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE" or "WARNING"
@@ -290,6 +294,23 @@ resource "fmc_access_rules" "access_rule_2" {
 
 - `id` (String) The ID of this resource.
 - `type` (String) The type of this resource
+
+<a id="nestedblock--destination_dynamic_objects"></a>
+### Nested Schema for `destination_dynamic_objects`
+
+Required:
+
+- `destination_dynamic_object` (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_dynamic_objects--destination_dynamic_object))
+
+<a id="nestedblock--destination_dynamic_objects--destination_dynamic_object"></a>
+### Nested Schema for `destination_dynamic_objects.destination_dynamic_object`
+
+Required:
+
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
+
+
 
 <a id="nestedblock--destination_networks"></a>
 ### Nested Schema for `destination_networks`
@@ -325,6 +346,23 @@ Required:
 
 
 
+<a id="nestedblock--destination_security_group_tags"></a>
+### Nested Schema for `destination_security_group_tags`
+
+Required:
+
+- `destination_security_group_tag` (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_security_group_tags--destination_security_group_tag))
+
+<a id="nestedblock--destination_security_group_tags--destination_security_group_tag"></a>
+### Nested Schema for `destination_security_group_tags.destination_security_group_tag`
+
+Required:
+
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
+
+
+
 <a id="nestedblock--destination_zones"></a>
 ### Nested Schema for `destination_zones`
 
@@ -334,6 +372,23 @@ Required:
 
 <a id="nestedblock--destination_zones--destination_zone"></a>
 ### Nested Schema for `destination_zones.destination_zone`
+
+Required:
+
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
+
+
+
+<a id="nestedblock--source_dynamic_objects"></a>
+### Nested Schema for `source_dynamic_objects`
+
+Required:
+
+- `source_dynamic_object` (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_dynamic_objects--source_dynamic_object))
+
+<a id="nestedblock--source_dynamic_objects--source_dynamic_object"></a>
+### Nested Schema for `source_dynamic_objects.source_dynamic_object`
 
 Required:
 
@@ -368,6 +423,23 @@ Required:
 
 <a id="nestedblock--source_ports--source_port"></a>
 ### Nested Schema for `source_ports.source_port`
+
+Required:
+
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
+
+
+
+<a id="nestedblock--source_security_group_tags"></a>
+### Nested Schema for `source_security_group_tags`
+
+Required:
+
+- `source_security_group_tag` (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_security_group_tags--source_security_group_tag))
+
+<a id="nestedblock--source_security_group_tags--source_security_group_tag"></a>
+### Nested Schema for `source_security_group_tags.source_security_group_tag`
 
 Required:
 

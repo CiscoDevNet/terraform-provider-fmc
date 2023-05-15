@@ -45,5 +45,6 @@ resource "fmc_dynamic_object" "test" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 
