@@ -25,7 +25,7 @@ data "fmc_network_objects" "rand"{
   name = "rand-net"
 }
 data "fmc_host_objects" "igw" {
-  name = "igw-kd"
+  name = "igw"
 }
 
 resource "fmc_staticIPv4_route" "route1" {
