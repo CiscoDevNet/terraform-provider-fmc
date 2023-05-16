@@ -47,7 +47,6 @@ func testAccCheckFmcNWAnalysisPolicyDestroy(s *terraform.State) error {
 		}
 	}
 
-	Log.Debug("FMC Network Analysis Policy destroyed.")
 	return nil
 }
 
@@ -75,7 +74,7 @@ func testAccCheckFmcNWAnalysisPolicyExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("No ID set")
 		}
-		Log.Debug(rs, ok)
+
 		return nil
 	}
 }
