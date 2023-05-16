@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 )
 
 type NatPolicy struct {
@@ -31,7 +32,7 @@ type NatPoliciesResponse struct {
 }
 
 func (v *Client) GetFmcNatPolicyByName(ctx context.Context, name string) (*NatPolicyResponse, error) {
-	url := fmt.Sprintf("%s/policy/ftdnatpolicies?expanded=false&filter=name:%s", v.domainBaseURL, name)
+	url := fmt.Sprintf("%s/policy/ftdnatpolicies?expanded=false&filter=name:%s", v.domainBaseURL, url.QueryEscape(name))
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting nat policy by name/value: %s - %s", url, err.Error())

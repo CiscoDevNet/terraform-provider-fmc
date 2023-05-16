@@ -3,30 +3,20 @@
 page_title: "fmc_sgt_objects Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  resource "fmc_prefilter_policy" "prefilter_policy" {
-              name        = "Prefilter Policy"
-              description = "Terraform Prefilter Policy description"
-              default_action { 
-                  log_end = true
-                  log_begin = true
-                  send_events_to_fmc = true
-                  action = "BLOCK_TUNNELS"
-              }
-          }
+  resource "fmc_sgt_objects" "my_sgt1" {
+          name = "sgt_objct-1"
+          description = "Applied via TF"
+          tag = "26"
+      }
 ---
 
 # fmc_sgt_objects (Resource)
 
-resource "fmc_prefilter_policy" "prefilter_policy" {
-				name        = "Prefilter Policy"
-				description = "Terraform Prefilter Policy description"
-				default_action { 
-					log_end = true
-					log_begin = true
-					send_events_to_fmc = true
-					action = "BLOCK_TUNNELS"
-				}
-			}
+resource "fmc_sgt_objects" "my_sgt1" {
+			name = "sgt_objct-1"
+			description = "Applied via TF"
+			tag = "26"
+		}
 
 
 
