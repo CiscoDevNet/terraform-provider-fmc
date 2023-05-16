@@ -120,6 +120,7 @@ func Provider() *schema.Provider {
 			"fmc_extended_acl":               resourceFmcExtendedAcl(),
 			"fmc_sgt_objects":                resourceFmcSGTObjects(),
 			"fmc_standard_acl":               resourceFmcStandardAcl(),
+			"fmc_network_analysis_policy":    resourceFmcNetworkAnalysisPolicy(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
@@ -143,6 +144,7 @@ func Provider() *schema.Provider {
 			"fmc_standard_acl":               dataSourceFmcStandardAcl(),
 			"fmc_sgt_objects":                dataFmcSGTObjects(),
 			"fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
+			"fmc_network_analysis_policy":    dataSourceFmcNetworkAnalysisPolicy(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
