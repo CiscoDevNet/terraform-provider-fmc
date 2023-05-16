@@ -14,7 +14,6 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
-# Create the security group tag
 resource "fmc_network_analysis_policy" "test" {
   name = "test-NWA-policy"
   description = "NWA-policy created by Terraform"
