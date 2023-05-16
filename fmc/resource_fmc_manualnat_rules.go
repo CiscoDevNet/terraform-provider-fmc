@@ -286,7 +286,7 @@ func resourceFmcManualNatRules() *schema.Resource {
 			},
 			"original_source": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{

@@ -216,7 +216,7 @@ func resourceFmcAccessRules() *schema.Resource {
 			},
 			"action": {
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 				StateFunc: func(val interface{}) string {
 					return strings.ToUpper(val.(string))
 				},
