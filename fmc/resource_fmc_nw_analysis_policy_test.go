@@ -43,7 +43,6 @@ func testAccCheckFmcNWAnalysisPolicyDestroy(s *terraform.State) error {
 
 		// Object is already deleted
 		if err != nil && !strings.Contains(fmt.Sprint(err), "404") {
-			Log.Debug("Does it error here?")
 			return err
 		}
 	}
@@ -70,12 +69,10 @@ func testAccCheckFmcNWAnalysisPolicyExists(n string) resource.TestCheckFunc {
 		rs, ok := s.RootModule().Resources[n]
 
 		if !ok {
-			Log.Debug("Does it error here123?")
 			return fmt.Errorf("Not found: %s", n)
 		}
 
 		if rs.Primary.ID == "" {
-			Log.Debug("Does it error here456?")
 			return fmt.Errorf("No ID set")
 		}
 		Log.Debug(rs, ok)

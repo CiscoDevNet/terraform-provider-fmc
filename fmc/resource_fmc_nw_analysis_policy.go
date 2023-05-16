@@ -74,7 +74,7 @@ func resourceFmcNetworkAnalysisPolicy() *schema.Resource {
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Optional:    true,
+							Computed:    true,
 							Description: "Type of base policy",
 						},
 						"id": {
@@ -109,7 +109,6 @@ func resourceFmcNetworkAnalysisPolicyCreate(ctx context.Context, d *schema.Resou
 	}
 
 	// get snort_engine and if it's empty set it to SNORT3
-
 	var se string
 	if d.Get("snort_engine").(string) == "" {
 		se = "SNORT3"
