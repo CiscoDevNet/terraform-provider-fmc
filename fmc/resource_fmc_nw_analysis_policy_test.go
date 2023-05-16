@@ -74,6 +74,7 @@ func testAccCheckFmcNWAnalysisPolicyExists(n string) resource.TestCheckFunc {
 		if rs.Primary.ID == "" {
 			return fmt.Errorf("No ID set")
 		}
+
 		return nil
 	}
 }
