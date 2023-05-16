@@ -137,7 +137,7 @@ func Provider() *schema.Provider {
 			"fmc_network_group_objects":      dataSourceFmcNetworkGroupObjects(),
 			"fmc_extended_acl":               dataSourceFmcExtendedAcl(),
 			"fmc_device_vni":                 dataSourceFmcVNI(),
-			"fmc_nat_policies":               dataSourceFmcNatPolicies(),
+			"fmc_ftd_nat_policies":           dataSourceFmcNatPolicies(),
 			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
 			"fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
 			"fmc_standard_acl":               dataSourceFmcStandardAcl(),

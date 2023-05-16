@@ -11,7 +11,6 @@ description: |-
       name = "ACL-1"
       action = "DENY"
       object_id = data.fmc_network_objects.any.id
-      literal_type = "Host"
       literal_value = "1.1.1.1"
   }
   
@@ -29,7 +28,6 @@ resource "fmc_standard_acl" "acl1" {
     name = "ACL-1"
     action = "DENY"
     object_id = data.fmc_network_objects.any.id
-    literal_type = "Host"
     literal_value = "1.1.1.1"
 }
 ```
@@ -47,7 +45,6 @@ resource "fmc_standard_acl" "acl1" {
 ### Optional
 
 - `action` (String) The type this resource
-- `literal_type` (String) The value of this resource
 - `literal_value` (String) The value of this resource
 - `object_id` (String) The value of this resource
 
