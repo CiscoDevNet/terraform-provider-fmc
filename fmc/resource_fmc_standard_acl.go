@@ -57,55 +57,54 @@ func resourceFmcStandardAcl() *schema.Resource {
 }
 
 func resourceFmcStandardAclCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-    c := m.(*Client)
-    // Warning or errors can be collected in a slice type
-    // var diags diag.Diagnostics
-    var diags diag.Diagnostics
-    
-    objectID := d.Get("object_id").(string)
-    var Object_input []Object_nw
-    if len(objectID) > 0 {
-        Object_input = append(Object_input, Object_nw{
-            ID:      objectID,
-        })
-    }
+	c := m.(*Client)
+	// Warning or errors can be collected in a slice type
+	// var diags diag.Diagnostics
+	var diags diag.Diagnostics
 
-    litValue := d.Get("literal_value").(string)
-    var Lit_input []Literal_nw
-    if len(litValue) > 0 {
-        Lit_input = append(Lit_input, Literal_nw{
-            Type:      "Host",
-            Value:     litValue,
-        })
-    }
+	objectID := d.Get("object_id").(string)
+	var Object_input []Object_nw
+	if len(objectID) > 0 {
+		Object_input = append(Object_input, Object_nw{
+			ID: objectID,
+		})
+	}
 
-    // var Network_in = Network{Objects: Object_input, Literals: Lit_input }
+	litValue := d.Get("literal_value").(string)
+	var Lit_input []Literal_nw
+	if len(litValue) > 0 {
+		Lit_input = append(Lit_input, Literal_nw{
+			Type:  "Host",
+			Value: litValue,
+		})
+	}
 
-    res, err := c.CreateFmcStandardAcl(ctx, &StandardAcl{
-        Name: d.Get("name").(string),
-        Type: "StandardAccessList",
-        Entries: []ObjectEntries{
-            {
-            Action: d.Get("action").(string),
-            Networks: Network{
-                Objects: Object_input,
-                Literals: Lit_input,
-            },
-            },
-        },
-    })
-    if err != nil {
-        diags = append(diags, diag.Diagnostic{
-            Severity: diag.Error,
-            Summary:  "unable to create standard access list",
-            Detail:   err.Error(),
-        })
-        return diags
-    }
-    d.SetId(res.ID)
-    return resourceFmcStandardAclRead(ctx, d, m)
+	// var Network_in = Network{Objects: Object_input, Literals: Lit_input }
+
+	res, err := c.CreateFmcStandardAcl(ctx, &StandardAcl{
+		Name: d.Get("name").(string),
+		Type: "StandardAccessList",
+		Entries: []ObjectEntries{
+			{
+				Action: d.Get("action").(string),
+				Networks: Network{
+					Objects:  Object_input,
+					Literals: Lit_input,
+				},
+			},
+		},
+	})
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to create standard access list",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+	d.SetId(res.ID)
+	return resourceFmcStandardAclRead(ctx, d, m)
 }
-
 
 func resourceFmcStandardAclRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	c := m.(*Client)
@@ -146,34 +145,34 @@ func resourceFmcStandardAclUpdate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 	objectID := d.Get("object_id").(string)
-    var Object_input []Object_nw
-    if len(objectID) > 0 {
-        Object_input = append(Object_input, Object_nw{
-            ID:      objectID,
-        })
-    }
+	var Object_input []Object_nw
+	if len(objectID) > 0 {
+		Object_input = append(Object_input, Object_nw{
+			ID: objectID,
+		})
+	}
 
-    litValue := d.Get("literal_value").(string)
-    var Lit_input []Literal_nw
-    if len(litValue) > 0 {
-        Lit_input = append(Lit_input, Literal_nw{
-            Type:      "Host",
-            Value:     litValue,
-        })
-    }
+	litValue := d.Get("literal_value").(string)
+	var Lit_input []Literal_nw
+	if len(litValue) > 0 {
+		Lit_input = append(Lit_input, Literal_nw{
+			Type:  "Host",
+			Value: litValue,
+		})
+	}
 
-	if d.HasChanges("name", "object_id", "action","literal_value" ) {
+	if d.HasChanges("name", "object_id", "action", "literal_value") {
 		res, err := c.UpdateFmcStandardAcl(ctx, d.Id(), &StandardAcl{
 			ID:   d.Id(),
 			Name: d.Get("name").(string),
 			Type: "StandardAccessList",
 			Entries: []ObjectEntries{
 				{
-				Action: d.Get("action").(string),
-				Networks: Network{
-                Objects: Object_input,
-                Literals: Lit_input,
-           		 },
+					Action: d.Get("action").(string),
+					Networks: Network{
+						Objects:  Object_input,
+						Literals: Lit_input,
+					},
 				},
 			},
 		})

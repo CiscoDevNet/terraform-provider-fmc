@@ -11,17 +11,14 @@ output "security_zone" {
   value = data.fmc_security_zones.my_security_zone
 }
 
-
-# data "fmc_device_vni" "device_vni" {
-#     device_id = data.fmc_devices.device.id
-#     name = "vni1"
-# }
+data "fmc_device_vni" "device_vni" {
+    device_id = data.fmc_devices.device.id
+    name = "vni1"
+}
  
- 
-# output "fmc_device_vni" {
-#     value = data.fmc_device_vni.device_vni
-# }
-
+output "fmc_device_vni" {
+    value = data.fmc_device_vni.device_vni
+}
 
 resource "fmc_device_vni" "my_fmc_device_vni" {
     device_id = data.fmc_devices.device.id

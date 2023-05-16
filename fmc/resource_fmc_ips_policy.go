@@ -9,7 +9,18 @@ import (
 
 func resourceFmcIPSPolicies() *schema.Resource {
 	return &schema.Resource{
-		Description:   " ",
+		Description: "Resource for Intrusion Policies in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_ips_policies\" \"ips_policy\" {\n" +
+			"    name = \"test\"\n" +
+			"    inspection_mode = \"DETECTION\"\n" +
+			"    basepolicy_id = <basepolicy-id>\n" +
+			"}\n" +
+			"```",
+
 		CreateContext: resourceFmcIPSPoliciesCreate,
 		ReadContext:   resourceFmcIPSPoliciesRead,
 		UpdateContext: resourceFmcIPSPoliciesUpdate,

@@ -9,7 +9,19 @@ import (
 
 func resourceFmcExtendedAcl() *schema.Resource {
 	return &schema.Resource{
-		Description:   " ",
+		Description: "Resource for Extended ACL in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_extended_acl\" \"acl1\" {\n" +
+			"    name = \"ACL-1\"\n" +
+			"    action = \"DENY\"\n" +
+			"    log_level = \"ERROR\"\n" +
+			"     logging = \"PER_ACCESS_LIST_ENTRY\"\n" +
+			"     log_interval= \"545\"\n" +
+			"}\n" +
+			"```\n",
 		CreateContext: resourceFmcExtendedAclCreate,
 		ReadContext:   resourceFmcExtendedAclRead,
 		UpdateContext: resourceFmcExtendedAclUpdate,
