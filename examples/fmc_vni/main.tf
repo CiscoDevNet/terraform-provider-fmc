@@ -29,7 +29,7 @@ resource "fmc_device_vni" "my_fmc_device_vni" {
     description = "Description Updated"
     security_zone_id= data.fmc_security_zones.my_security_zone.id
     priority = 3
-    vnid = 11 //data.fmc_device_vni.device_vni.vnid
+    vnid = 11 
     multicast_groupaddress =  "224.0.0.34"
     segment_id = 4011
     enable_proxy = false
