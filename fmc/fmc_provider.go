@@ -106,7 +106,7 @@ func Provider() *schema.Provider {
 			"fmc_ftd_manualnat_rules":        resourceFmcManualNatRules(),
 			"fmc_policy_devices_assignments": resourceFmcPolicyDevicesAssignments(),
 			"fmc_ftd_deploy":                 resourceFmcFtdDeploy(),
-			"fmc_dynamic_object":             resourceFmcDynamicObjects(),
+			"fmc_dynamic_objects":            resourceFmcDynamicObjects(),
 			"fmc_dynamic_object_mapping":     resourceFmcDynamicObjectMapping(),
 			"fmc_security_zone":              resourceFmcSecurityZone(),
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),

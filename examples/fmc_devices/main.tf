@@ -22,6 +22,10 @@ output "existing_device" {
     value = data.fmc_devices.device
 }
 
+data "fmc_access_policies" "access_policy"{
+  name="test-acp"
+}
+
 resource "fmc_devices" "device"{
   name = "FTD"
   hostname = "<Device IP>"
