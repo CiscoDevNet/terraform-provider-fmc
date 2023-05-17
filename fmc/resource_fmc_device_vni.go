@@ -10,6 +10,34 @@ import (
 
 func resourceVNI() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for VNI Interfaces in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_device_vni\" \"my_fmc_device_vni\" {\n" +
+			"	 device_id = \"<ID of the ftd>\"\n" +
+			"	 security_zone_id = \"<ID of the security zone>\"\n" +
+			"	 if_name = \"Inside\"\n" +
+			"	 description = \"<description>\"\n" +
+			"	 priority = 3\n" +
+			"	 vnid = 11\n" +
+			"	 multicast_groupaddress = \"224.0.0.34\"\n" +
+			"	 segment_id = 4011\n" +
+			"	 enable_proxy= false\n" +
+			"	 ipv4 {\n" +
+			"	 	static {\n" +
+			"		 address = \"3.3.3.3\"\n" +
+			"	     netmask = 4\n" +
+			"}\n" +
+			"		dhcp {\n" +
+			"	     enable_default_route_dhcp = false \n" +
+			"		 dhcp_route_metric = 0\n" +
+			"  		}\n" +
+			"    }\n" +
+			"}\n" +
+			"```",
+
 		CreateContext: resourceVNICreate,
 		ReadContext:   resourceVNIRead,
 		UpdateContext: resourceVNIUpdate,
@@ -237,9 +265,9 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 		EnableProxy:           d.Get("enable_proxy").(bool),
 		SecurityZone:          securityZone,
 		IPv4:                  ipv4,
-		VtepID:				   vtepid,
-		Type:	"VNIInterface",
-		Enabled :      		d.Get("enabled").(bool),    
+		VtepID:                vtepid,
+		Type:                  "VNIInterface",
+		Enabled:               d.Get("enabled").(bool),
 	})
 
 	if err != nil {
@@ -353,9 +381,9 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 			EnableProxy:           d.Get("enable_proxy").(bool),
 			SecurityZone:          securityZone,
 			IPv4:                  ipv4,
-			VtepID:				   vtepid,
-			Type:	"VNIInterface",
-			Enabled :      		d.Get("enabled").(bool), 
+			VtepID:                vtepid,
+			Type:                  "VNIInterface",
+			Enabled:               d.Get("enabled").(bool),
 		})
 
 		if err != nil {

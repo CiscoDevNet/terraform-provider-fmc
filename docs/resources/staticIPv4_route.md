@@ -73,15 +73,15 @@ resource "fmc_staticIPv4_route" "route1" {
 ### Required
 
 - `device_id` (String) The ID of this resource
+- `gateway` (Block List, Min: 1, Max: 1) The gateway for this resource (see [below for nested schema](#nestedblock--gateway))
 - `interface_name` (String) Name of the interface
+- `metric_value` (Number) The metric value to send
+- `selected_networks` (Block List, Min: 1, Max: 1) Route tracking information (see [below for nested schema](#nestedblock--selected_networks))
 
 ### Optional
 
-- `gateway` (Block List, Max: 1) The gateway for this resource (see [below for nested schema](#nestedblock--gateway))
 - `is_tunneled` (Boolean) If the route is tunneled or not
-- `metric_value` (Number) The metric value to send
 - `route_tracking` (Block List, Max: 1) Route tracking information (see [below for nested schema](#nestedblock--route_tracking))
-- `selected_networks` (Block List, Max: 1) Route tracking information (see [below for nested schema](#nestedblock--selected_networks))
 
 ### Read-Only
 
@@ -101,23 +101,29 @@ Required:
 Required:
 
 - `id` (String) The ID of this resource
+
+Optional:
+
 - `name` (String) The name of this resource
 - `type` (String) The type of this resource
 
-
-
-<a id="nestedblock--route_tracking"></a>
-### Nested Schema for `route_tracking`
-
-Required:
-
-- `id` (String) The ID of this resource
-- `name` (String) The name of this resource
-- `type` (String) The type of this resource
 
 
 <a id="nestedblock--selected_networks"></a>
 ### Nested Schema for `selected_networks`
+
+Required:
+
+- `id` (String) The ID of this resource
+
+Optional:
+
+- `name` (String) The name of this resource
+- `type` (String) The type of this resource
+
+
+<a id="nestedblock--route_tracking"></a>
+### Nested Schema for `route_tracking`
 
 Required:
 

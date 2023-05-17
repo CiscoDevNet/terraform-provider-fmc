@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -45,10 +46,10 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 		DeleteContext: resourceFmcStaticIPv4RouteDelete,
 		Schema: map[string]*schema.Schema{
 			"device_id": {
-                Type:        schema.TypeString,
-                Required:    true,
-                Description: "The ID of this resource",
-            },
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "The ID of this resource",
+			},
 			"interface_name": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -56,7 +57,7 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 			},
 			"metric_value": {
 				Type:        schema.TypeInt,
-				Optional:    true,
+				Required:    true,
 				Description: "The metric value to send",
 			},
 			"type": {
@@ -67,7 +68,7 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 			"is_tunneled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: false,
+				Default:     false,
 				Description: "If the route is tunneled or not",
 			},
 			"route_tracking": {
@@ -97,7 +98,7 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 			},
 			"selected_networks": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -108,12 +109,12 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "The type of this resource",
 						},
 						"name": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "The name of this resource",
 						},
 					},
@@ -122,7 +123,7 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 			},
 			"gateway": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -138,12 +139,12 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 									},
 									"type": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Optional:    true,
 										Description: "The type of this resource",
 									},
 									"name": {
 										Type:        schema.TypeString,
-										Required:    true,
+										Optional:    true,
 										Description: "The name of this resource",
 									},
 								},
@@ -151,7 +152,7 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 						},
 					},
 				},
-				Description:"The gateway for this resource",
+				Description: "The gateway for this resource",
 			},
 		},
 	}
@@ -162,8 +163,8 @@ func resourceFmcStaticIPv4RouteCreate(ctx context.Context, d *schema.ResourceDat
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
-	
-	var gateway *ObjectItems 
+
+	var gateway *ObjectItems
 	if gate_o := d.Get("gateway").([]interface{}); len(gate_o) > 0 {
 		gateway_options := gate_o[0].(map[string]interface{})
 		gateway_list := gateway_options["object"].([]interface{})
@@ -189,9 +190,9 @@ func resourceFmcStaticIPv4RouteCreate(ctx context.Context, d *schema.ResourceDat
 			entry := inputEntries.([]interface{})[0].(map[string]interface{})
 			*dynamicObjects2[i] = []ObjectItem{
 				{
-				ID:   entry["id"].(string),
-				Type: entry["type"].(string),
-				Name: entry["name"].(string),
+					ID:   entry["id"].(string),
+					Type: entry["type"].(string),
+					Name: entry["name"].(string),
 				},
 			}
 		}
@@ -211,13 +212,13 @@ func resourceFmcStaticIPv4RouteCreate(ctx context.Context, d *schema.ResourceDat
 		}
 	}
 	res, err := c.CreateFmcStaticIPv4Route(ctx, d.Get("device_id").(string), &StaticIpv4Route{
-		InterfaceName:   d.Get("interface_name").(string),
-		Type:            static_route_type,
-		Tunneled:        d.Get("is_tunneled").(bool),
-		MetricValue:     d.Get("metric_value").(int),
+		InterfaceName:    d.Get("interface_name").(string),
+		Type:             static_route_type,
+		Tunneled:         d.Get("is_tunneled").(bool),
+		MetricValue:      d.Get("metric_value").(int),
 		SelectedNetworks: selectedNetworks,
-		Gateway: gateway,
-		RouteTracking: routeTracking,
+		Gateway:          gateway,
+		RouteTracking:    routeTracking,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -307,8 +308,8 @@ func resourceFmcStaticIPv4RouteUpdate(ctx context.Context, d *schema.ResourceDat
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 	if d.HasChanges("interface_name", "is_tunneled", "metric_value", "gateway", "selected_networks") {
-	
-		var gateway *ObjectItems 
+
+		var gateway *ObjectItems
 		if gate_o := d.Get("gateway").([]interface{}); len(gate_o) > 0 {
 			gateway_options := gate_o[0].(map[string]interface{})
 			gateway_list := gateway_options["object"].([]interface{})
@@ -334,9 +335,9 @@ func resourceFmcStaticIPv4RouteUpdate(ctx context.Context, d *schema.ResourceDat
 				entry := inputEntries.([]interface{})[0].(map[string]interface{})
 				*dynamicObjects2[i] = []ObjectItem{
 					{
-					ID:   entry["id"].(string),
-					Type: entry["type"].(string),
-					Name: entry["name"].(string),
+						ID:   entry["id"].(string),
+						Type: entry["type"].(string),
+						Name: entry["name"].(string),
 					},
 				}
 			}
@@ -356,14 +357,14 @@ func resourceFmcStaticIPv4RouteUpdate(ctx context.Context, d *schema.ResourceDat
 			}
 		}
 		res, err := c.UpdateFmcStaticIPv4Response(ctx, d.Get("device_id").(string), d.Id(), &StaticIpv4Route{
-			ID:              d.Id(),
-			InterfaceName:   d.Get("interface_name").(string),
-			Type:            static_route_type,
-			Tunneled:        d.Get("is_tunneled").(bool),
-			MetricValue:     d.Get("metric_value").(int),
+			ID:               d.Id(),
+			InterfaceName:    d.Get("interface_name").(string),
+			Type:             static_route_type,
+			Tunneled:         d.Get("is_tunneled").(bool),
+			MetricValue:      d.Get("metric_value").(int),
 			SelectedNetworks: selectedNetworks,
-			Gateway: gateway,
-			RouteTracking: routeTracking,
+			Gateway:          gateway,
+			RouteTracking:    routeTracking,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{

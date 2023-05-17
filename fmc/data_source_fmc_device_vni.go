@@ -10,6 +10,13 @@ import (
 
 func dataSourceFmcVNI() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for VNI Interface in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_device_vni\" \"test-vni\" {\n" +
+			"	name = \"TEST-VNI\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceVNIRead,
 		Schema: map[string]*schema.Schema{
 			"device_id": {

@@ -3,30 +3,40 @@
 page_title: "fmc_prefilter_policy Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
+  Resource for Network Analysis Policy in FMC
+  Example
+  An example is shown below:
+  hcl
   resource "fmc_prefilter_policy" "prefilter_policy" {
-              name        = "Prefilter Policy"
-              description = "Terraform Prefilter Policy description"
-              default_action { 
-                  log_end = true
-                  log_begin = true
-                  send_events_to_fmc = true
-                  action = "BLOCK_TUNNELS"
-              }
+      name        = "Prefilter Policy"
+      description = "Terraform Prefilter Policy description"
+      default_action {
+          log_end = true
+          log_begin = true
+          send_events_to_fmc = true
+          action = "BLOCK_TUNNELS"
           }
+      }
 ---
 
 # fmc_prefilter_policy (Resource)
 
+Resource for Network Analysis Policy in FMC
+
+## Example
+An example is shown below: 
+```hcl
 resource "fmc_prefilter_policy" "prefilter_policy" {
-				name        = "Prefilter Policy"
-				description = "Terraform Prefilter Policy description"
-				default_action { 
-					log_end = true
-					log_begin = true
-					send_events_to_fmc = true
-					action = "BLOCK_TUNNELS"
-				}
-			}
+	name        = "Prefilter Policy"
+	description = "Terraform Prefilter Policy description"
+	default_action {
+		log_end = true
+		log_begin = true
+		send_events_to_fmc = true
+		action = "BLOCK_TUNNELS"
+		}
+	}
+```
 
 
 

@@ -3,12 +3,24 @@
 page_title: "fmc_network_group_objects Data Source - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Data source for Network Group Objects in FMC
+  An example is shown below:
+  hcl
+  data "fmc_network_group_objects" "test" {
+      name = "test-object"
+  }
 ---
 
 # fmc_network_group_objects (Data Source)
 
+Data source for Network Group Objects in FMC
 
+An example is shown below: 
+```hcl
+data "fmc_network_group_objects" "test" {
+	name = "test-object"
+}
+```
 
 
 

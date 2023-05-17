@@ -3,12 +3,24 @@
 page_title: "fmc_device_physical_interfaces Data Source - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Data source for Physical Interfaces in FMC
+  An example is shown below:
+  hcl
+  data "fmc_device_physical_interfaces" "test-phy-interfaces" {
+      name = "TEST-PHY"
+  }
 ---
 
 # fmc_device_physical_interfaces (Data Source)
 
+Data source for Physical Interfaces in FMC
 
+An example is shown below: 
+```hcl
+data "fmc_device_physical_interfaces" "test-phy-interfaces" {
+	name = "TEST-PHY"
+}
+```
 
 
 
