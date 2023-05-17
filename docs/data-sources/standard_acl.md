@@ -3,12 +3,24 @@
 page_title: "fmc_standard_acl Data Source - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Data source for Standard accesslist in FMC
+  An example is shown below:
+  hcl
+  data "fmc_standard_acl" "std-acl" {
+      name = "STD-ACL"
+  }
 ---
 
 # fmc_standard_acl (Data Source)
 
+Data source for Standard accesslist in FMC
 
+An example is shown below: 
+```hcl
+data "fmc_standard_acl" "std-acl" {
+	name = "STD-ACL"
+}
+```
 
 
 

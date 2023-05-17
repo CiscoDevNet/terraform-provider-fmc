@@ -17,7 +17,7 @@ func resourceFmcIPSPolicies() *schema.Resource {
 			"resource \"fmc_ips_policies\" \"ips_policy\" {\n" +
 			"    name = \"test\"\n" +
 			"    inspection_mode = \"DETECTION\"\n" +
-			"    basepolicy_id = <basepolicy-id>\n" +
+			"    basepolicy_id = \"<basepolicy-id>\"\n" +
 			"}\n" +
 			"```",
 

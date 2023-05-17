@@ -258,12 +258,12 @@ resource "fmc_access_rules" "access_rule_2" {
 ### Required
 
 - `acp` (String) The ID of the ACP this resource belongs to
+- `action` (String) Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"
 - `enabled` (Boolean) Enable the resourceFmc
 - `name` (String) The name of the resourceFmc
 
 ### Optional
 
-- `action` (String) Action for this resource, "ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE" or "BLOCK_RESET_INTERACTIVE"
 - `category` (String) The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource
 - `destination_dynamic_objects` (Block List, Max: 1) Destination dynamic objects ports for this resource (see [below for nested schema](#nestedblock--destination_dynamic_objects))
 - `destination_networks` (Block List, Max: 1) Destination networks for this resource (see [below for nested schema](#nestedblock--destination_networks))

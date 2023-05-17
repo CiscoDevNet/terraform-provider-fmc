@@ -19,7 +19,7 @@ func resourceFmcExtendedAcl() *schema.Resource {
 			"    action = \"DENY\"\n" +
 			"    log_level = \"ERROR\"\n" +
 			"     logging = \"PER_ACCESS_LIST_ENTRY\"\n" +
-			"     log_interval= \"545\"\n" +
+			"     log_interval= 545\n" +
 			"}\n" +
 			"```\n",
 		CreateContext: resourceFmcExtendedAclCreate,

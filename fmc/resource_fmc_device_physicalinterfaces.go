@@ -22,14 +22,14 @@ func resourcePhyInterface() *schema.Resource {
 			"	 security_zone_id = \"<ID of the security zone>\"\n" +
 			"	 if_name = \"Inside\"\n" +
 			"	 description = \"<description>\"\n" +
-			"	 mtu = \"1700\"\n" +
+			"	 mtu = 1700\n" +
 			"	 mode = \"NONE\"\n" +
 			"	 ipv4_static_address = \"10.20.220.45\"\n" +
-			"	 ipv4_static_netmask = \"24\"\n" +
+			"	 ipv4_static_netmask = 24\n" +
 			"	 ipv4_dhcp_enabled = \"false\"\n" +
-			"	 ipv4_dhcp_route_metric = \"1\"\n" +
+			"	 ipv4_dhcp_route_metric = 1\n" +
 			"	 ipv6_address = \"2001:1234:5678:1234::\"\n" +
-			"	 ipv6_prefix = \"32\"\n" +
+			"	 ipv6_prefix = 32\n" +
 			"	 ipv6_enforce_eui = \"false\"\n" +
 			"}\n" +
 			"```",

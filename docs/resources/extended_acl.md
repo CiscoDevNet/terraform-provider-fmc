@@ -3,12 +3,34 @@
 page_title: "fmc_extended_acl Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Resource for Extended ACL in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_extended_acl" "acl1" {
+      name = "ACL-1"
+      action = "DENY"
+      log_level = "ERROR"
+       logging = "PER_ACCESS_LIST_ENTRY"
+       log_interval= 545
+  }
 ---
 
 # fmc_extended_acl (Resource)
 
+Resource for Extended ACL in FMC
 
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_extended_acl" "acl1" {
+    name = "ACL-1"
+    action = "DENY"
+    log_level = "ERROR"
+     logging = "PER_ACCESS_LIST_ENTRY"
+     log_interval= 545
+}
+```
 
 
 

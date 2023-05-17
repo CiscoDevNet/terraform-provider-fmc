@@ -20,11 +20,21 @@ func resourceVNI() *schema.Resource {
 			"	 security_zone_id = \"<ID of the security zone>\"\n" +
 			"	 if_name = \"Inside\"\n" +
 			"	 description = \"<description>\"\n" +
-			"	 priority = \"3\"\n" +
-			"	 vnid = \"11\"\n" +
+			"	 priority = 3\n" +
+			"	 vnid = 11\n" +
 			"	 multicast_groupaddress = \"224.0.0.34\"\n" +
-			"	  segment_id = \"4011\"\n" +
-			"	  enable_proxy= \"false\"\n" +
+			"	 segment_id = 4011\n" +
+			"	 enable_proxy= false\n" +
+			"	 ipv4 {\n" +
+			"	 	static {\n" +
+			"		 address = \"3.3.3.3\"\n" +
+			"	     netmask = 4\n" +
+			"}\n" +
+			"		dhcp {\n" +
+			"	     enable_default_route_dhcp = false \n" +
+			"		 dhcp_route_metric = 0\n" +
+			"  		}\n" +
+			"    }\n" +
 			"}\n" +
 			"```",
 

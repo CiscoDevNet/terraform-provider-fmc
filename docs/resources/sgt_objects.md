@@ -3,20 +3,30 @@
 page_title: "fmc_sgt_objects Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  resource "fmc_sgt_objects" "my_sgt1" {
-          name = "sgt_objct-1"
-          description = "Applied via TF"
-          tag = "26"
-      }
+  Resource for Security Group Tag in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_sgt_objects" "sgt" {
+      name = "test"
+      description = <description>
+      tag = "27"
+  }
 ---
 
 # fmc_sgt_objects (Resource)
 
-resource "fmc_sgt_objects" "my_sgt1" {
-			name = "sgt_objct-1"
-			description = "Applied via TF"
-			tag = "26"
-		}
+Resource for Security Group Tag in FMC
+
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_sgt_objects" "sgt" {
+    name = "test"
+    description = <description>
+    tag = "27"
+}
+```
 
 
 

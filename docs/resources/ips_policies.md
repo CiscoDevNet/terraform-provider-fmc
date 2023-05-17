@@ -3,12 +3,30 @@
 page_title: "fmc_ips_policies Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Resource for Intrusion Policies in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_ips_policies" "ips_policy" {
+      name = "test"
+      inspection_mode = "DETECTION"
+      basepolicy_id = "<basepolicy-id>"
+  }
 ---
 
 # fmc_ips_policies (Resource)
 
+Resource for Intrusion Policies in FMC
 
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_ips_policies" "ips_policy" {
+    name = "test"
+    inspection_mode = "DETECTION"
+    basepolicy_id = "<basepolicy-id>"
+}
+```
 
 
 
