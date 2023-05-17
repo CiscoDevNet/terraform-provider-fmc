@@ -3,12 +3,24 @@
 page_title: "fmc_device_vni Data Source - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Data source for VNI Interface in FMC
+  An example is shown below:
+  hcl
+  data "fmc_device_vni" "test-vni" {
+      name = "TEST-VNI"
+  }
 ---
 
 # fmc_device_vni (Data Source)
 
+Data source for VNI Interface in FMC
 
+An example is shown below: 
+```hcl
+data "fmc_device_vni" "test-vni" {
+	name = "TEST-VNI"
+}
+```
 
 
 

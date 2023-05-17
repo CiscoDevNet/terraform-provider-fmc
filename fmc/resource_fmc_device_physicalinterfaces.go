@@ -2,13 +2,37 @@ package fmc
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 func resourcePhyInterface() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Physical Interfaces in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_device_physical_interfaces\" \"physical_interface\" {\n" +
+			"    name = \"<name>\"\n" +
+			"	 device_id = \"<ID of the ftd>\"\n" +
+			"	 physical_interface_id = \"<ID of the physical interface>\"\n" +
+			"	 security_zone_id = \"<ID of the security zone>\"\n" +
+			"	 if_name = \"Inside\"\n" +
+			"	 description = \"<description>\"\n" +
+			"	 mtu = 1700\n" +
+			"	 mode = \"NONE\"\n" +
+			"	 ipv4_static_address = \"10.20.220.45\"\n" +
+			"	 ipv4_static_netmask = 24\n" +
+			"	 ipv4_dhcp_enabled = \"false\"\n" +
+			"	 ipv4_dhcp_route_metric = 1\n" +
+			"	 ipv6_address = \"2001:1234:5678:1234::\"\n" +
+			"	 ipv6_prefix = 32\n" +
+			"	 ipv6_enforce_eui = \"false\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourcePhyInterfaceCreate,
 		ReadContext:   resourcePhyInterfaceRead,
 		UpdateContext: resourcePhyInterfaceUpdate,
@@ -39,7 +63,7 @@ func resourcePhyInterface() *schema.Resource {
 			"enabled": {
 				Type:        schema.TypeBool,
 				Optional:    true,
-				Default: true,
+				Default:     true,
 				Description: "enabled",
 			},
 			"if_name": {
@@ -210,11 +234,10 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	var IPv6 = IPv6{Addresses: IPv6Add}
 	// log.Printf("IPv6Address=%s", IPv6Add)
 
-
 	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
 		ID:           physicalInterfaceId,
 		Ifname:       iFName,
-		Enabled:	  enabled,
+		Enabled:      enabled,
 		Mode:         mode,
 		Name:         name,
 		Description:  description,
@@ -257,11 +280,11 @@ func resourcePhyInterfaceDelete(ctx context.Context, d *schema.ResourceData, m i
 	// 	Type: "",
 	// }
 	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
-		ID:           physicalInterfaceId,
-		Ifname:       "",
-		Mode:         "NONE",
-		Name:         name,
-		MTU:          mtu,
+		ID:     physicalInterfaceId,
+		Ifname: "",
+		Mode:   "NONE",
+		Name:   name,
+		MTU:    mtu,
 		// Description:  "",
 		// SecurityZone: PhysicalInterfaceSecurityZone,
 	})

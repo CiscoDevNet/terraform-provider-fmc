@@ -3,12 +3,34 @@
 page_title: "fmc_extended_acl Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Resource for Extended ACL in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_extended_acl" "acl1" {
+      name = "ACL-1"
+      action = "DENY"
+      log_level = "ERROR"
+       logging = "PER_ACCESS_LIST_ENTRY"
+       log_interval= 545
+  }
 ---
 
 # fmc_extended_acl (Resource)
 
+Resource for Extended ACL in FMC
 
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_extended_acl" "acl1" {
+    name = "ACL-1"
+    action = "DENY"
+    log_level = "ERROR"
+     logging = "PER_ACCESS_LIST_ENTRY"
+     log_interval= 545
+}
+```
 
 
 
@@ -17,17 +39,17 @@ description: |-
 
 ### Required
 
+- `action` (String) The action of this resource
+- `log_interval` (Number) The log interval of this resource
+- `log_level` (String) The loglevel of this resource
+- `logging` (String) The logging of this resource
 - `name` (String) The name of this resource
 
 ### Optional
 
-- `action` (String) The action of this resource
 - `destination_network_literal_type` (String) Destination Network Literal Type
 - `destination_network_literal_value` (String) Destination Network Literal Value
 - `destination_network_object_id` (String) Destination Network Object ID
-- `log_interval` (Number) The log interval of this resource
-- `log_level` (String) The loglevel of this resource
-- `logging` (String) The logging of this resource
 - `source_network_literal_type` (String) Source Network Literal Type
 - `source_network_literal_value` (String) Source Network Literal Value
 - `source_network_object_id` (String) Source Network Object ID

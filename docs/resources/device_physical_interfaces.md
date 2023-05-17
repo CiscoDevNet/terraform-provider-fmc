@@ -3,12 +3,54 @@
 page_title: "fmc_device_physical_interfaces Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Resource for Physical Interfaces in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_device_physical_interfaces" "physical_interface" {
+      name = "<name>"
+       device_id = "<ID of the ftd>"
+       physical_interface_id = "<ID of the physical interface>"
+       security_zone_id = "<ID of the security zone>"
+       if_name = "Inside"
+       description = "<description>"
+       mtu = 1700
+       mode = "NONE"
+       ipv4_static_address = "10.20.220.45"
+       ipv4_static_netmask = 24
+       ipv4_dhcp_enabled = "false"
+       ipv4_dhcp_route_metric = 1
+       ipv6_address = "2001:1234:5678:1234::"
+       ipv6_prefix = 32
+       ipv6_enforce_eui = "false"
+  }
 ---
 
 # fmc_device_physical_interfaces (Resource)
 
+Resource for Physical Interfaces in FMC
 
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_device_physical_interfaces" "physical_interface" {
+    name = "<name>"
+	 device_id = "<ID of the ftd>"
+	 physical_interface_id = "<ID of the physical interface>"
+	 security_zone_id = "<ID of the security zone>"
+	 if_name = "Inside"
+	 description = "<description>"
+	 mtu = 1700
+	 mode = "NONE"
+	 ipv4_static_address = "10.20.220.45"
+	 ipv4_static_netmask = 24
+	 ipv4_dhcp_enabled = "false"
+	 ipv4_dhcp_route_metric = 1
+	 ipv6_address = "2001:1234:5678:1234::"
+	 ipv6_prefix = 32
+	 ipv6_enforce_eui = "false"
+}
+```
 
 
 

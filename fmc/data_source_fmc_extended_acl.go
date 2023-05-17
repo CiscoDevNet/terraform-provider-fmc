@@ -9,7 +9,13 @@ import (
 
 func dataSourceFmcExtendedAcl() *schema.Resource {
 	return &schema.Resource{
-		Description: " ",
+		Description: "Data source for Extended accesslist in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_extended_acl\" \"extended-acl\" {\n" +
+			"	name = \"TEST-ACL\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourceFmcExtendedAclRead,
 		Schema: map[string]*schema.Schema{
 			"id": {

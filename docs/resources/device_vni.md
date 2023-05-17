@@ -3,12 +3,62 @@
 page_title: "fmc_device_vni Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
-  
+  Resource for VNI Interfaces in FMC
+  Example
+  An example is shown below:
+  hcl
+  resource "fmc_device_vni" "my_fmc_device_vni" {
+       device_id = "<ID of the ftd>"
+       security_zone_id = "<ID of the security zone>"
+       if_name = "Inside"
+       description = "<description>"
+       priority = 3
+       vnid = 11
+       multicast_groupaddress = "224.0.0.34"
+       segment_id = 4011
+       enable_proxy= false
+       ipv4 {
+          static {
+           address = "3.3.3.3"
+           netmask = 4
+  }
+          dhcp {
+           enable_default_route_dhcp = false 
+           dhcp_route_metric = 0
+          }
+      }
+  }
 ---
 
 # fmc_device_vni (Resource)
 
+Resource for VNI Interfaces in FMC
 
+## Example
+An example is shown below: 
+```hcl
+resource "fmc_device_vni" "my_fmc_device_vni" {
+	 device_id = "<ID of the ftd>"
+	 security_zone_id = "<ID of the security zone>"
+	 if_name = "Inside"
+	 description = "<description>"
+	 priority = 3
+	 vnid = 11
+	 multicast_groupaddress = "224.0.0.34"
+	 segment_id = 4011
+	 enable_proxy= false
+	 ipv4 {
+	 	static {
+		 address = "3.3.3.3"
+	     netmask = 4
+}
+		dhcp {
+	     enable_default_route_dhcp = false 
+		 dhcp_route_metric = 0
+  		}
+    }
+}
+```
 
 
 

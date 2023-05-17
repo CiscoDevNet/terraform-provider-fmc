@@ -11,12 +11,19 @@ var tag_type string = "SecurityGroupTag"
 
 func resourceFmcSGTObjects() *schema.Resource {
 	return &schema.Resource{
-		Description: `
-		resource "fmc_sgt_objects" "my_sgt1" {
-			name = "sgt_objct-1"
-			description = "Applied via TF"
-			tag = "26"
-		}`,
+
+		Description: "Resource for Security Group Tag in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_sgt_objects\" \"sgt\" {\n" +
+			"    name = \"test\"\n" +
+			"    description = <description>\n" +
+			"    tag = \"27\"\n" +
+			"}\n" +
+			"```",
+
 		CreateContext: resourceFmcSGTObjectsCreate,
 		ReadContext:   resourceFmcSGTObjectsRead,
 		UpdateContext: resourceFmcSGTObjectsUpdate,
