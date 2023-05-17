@@ -29,7 +29,8 @@ func resourceFmcDevices() *schema.Resource {
 			"	}\n" +
 			"}\n" +
 			"```\n" +
-			"**Note** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.",
+			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n"+
+			"**Note:** Please use a depends_on block to create multiple devices from the same plan such that second device only starts registering after device one is finished.",
 		CreateContext: resourceFmcDeviceCreate,
 		ReadContext:   resourceFmcDeviceRead,
 		UpdateContext: resourceFmcDeviceUpdate,
@@ -37,7 +38,7 @@ func resourceFmcDevices() *schema.Resource {
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "The name of FTD",
 			},
 			"hostname": {
@@ -70,7 +71,7 @@ func resourceFmcDevices() *schema.Resource {
 			},
 			"access_policy": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
