@@ -70,7 +70,7 @@ func (v *Client) GetFmcPortGroupObject(ctx context.Context, id string) (*PortGro
 	item := &PortGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

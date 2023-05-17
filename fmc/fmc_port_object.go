@@ -100,7 +100,7 @@ func (v *Client) GetFmcPortObject(ctx context.Context, id string) (*PortObjectRe
 	item := &PortObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -71,12 +72,17 @@ func resourceFmcAccessPoliciesCategoryRead(ctx context.Context, d *schema.Resour
 
 	item, err := c.GetFmcAccessPoliciesCategory(ctx, id, accessPolicyID)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read access policy category",
-			Detail:   err.Error(),
-		})
-		return diags
+		// return error 400 when missing or return error 404 when parent access policy is missing and indeed category too
+		if strings.Contains(err.Error(), "400") || strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read access policy category",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{

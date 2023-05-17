@@ -29,11 +29,11 @@ data "fmc_security_zones" "inside" {
 
 ### Required
 
-- **name** (String) The name of this resource
+- `name` (String) The name of this resource
 
 ### Read-Only
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

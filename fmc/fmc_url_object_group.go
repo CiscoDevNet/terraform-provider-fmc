@@ -96,7 +96,7 @@ func (v *Client) GetFmcURLObjectGroup(ctx context.Context, id string) (*URLObjec
 	item := &URLObjectGroupResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

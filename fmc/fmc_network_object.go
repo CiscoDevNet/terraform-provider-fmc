@@ -99,7 +99,7 @@ func (v *Client) GetFmcNetworkObject(ctx context.Context, id string) (*NetworkOb
 	item := &NetworkObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
 	return item, nil
 }

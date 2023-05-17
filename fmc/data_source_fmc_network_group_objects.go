@@ -9,6 +9,14 @@ import (
 
 func dataSourceFmcNetworkGroupObjects() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Network Group Objects in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_network_group_objects\" \"test\" {\n" +
+			"	name = \"test-object\"\n" +
+			"}\n" +
+			"```",
+
 		ReadContext: dataSourceNetworkGroupObjectsRead,
 		Schema: map[string]*schema.Schema{
 			"name": {
