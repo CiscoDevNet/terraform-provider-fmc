@@ -39,22 +39,22 @@ func resourceFmcExtendedAcl() *schema.Resource {
 			},
 			"action": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The action of this resource",
 			},
 			"log_level": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The loglevel of this resource",
 			},
 			"logging": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Required:    true,
 				Description: "The logging of this resource",
 			},
 			"log_interval": {
 				Type:        schema.TypeInt,
-				Optional:    true,
+				Required:    true,
 				Description: "The log interval of this resource",
 			},
 			"source_port_object_id": {
