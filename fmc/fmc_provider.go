@@ -114,8 +114,8 @@ func Provider() *schema.Provider {
 			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
 			"fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_vni":                 resourceVNI(),
-			"fmc_devices":         resourceFmcDevices(),
-
+			"fmc_devices":                    resourceFmcDevices(),
+			"fmc_device_vtep":                resourceVTEP(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"fmc_devices":               dataSourceFmcDevices(),
@@ -132,6 +132,7 @@ func Provider() *schema.Provider {
 			"fmc_network_group_objects": dataSourceFmcNetworkGroupObjects(),
 			"fmc_device_vni":            dataSourceFmcVNI(),
 			"fmc_nat_policies":          dataSourceFmcNatPolicies(),
+			"fmc_device_vtep_policies":  dataSourceFmcVTEPPolicies(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
