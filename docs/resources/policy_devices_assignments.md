@@ -48,26 +48,23 @@ resource "fmc_policy_devices_assignments" "policy_assignment" {
 
 ### Required
 
-- **policy** (Block List, Min: 1, Max: 1) Policy (ACP/NAT) for this resource (see [below for nested schema](#nestedblock--policy))
-- **target_devices** (Block List, Min: 1) Target devices for this resource (see [below for nested schema](#nestedblock--target_devices))
-
-### Optional
-
-- **id** (String) The ID of this resource.
+- `policy` (Block List, Min: 1, Max: 1) Policy (ACP/NAT) for this resource (see [below for nested schema](#nestedblock--policy))
+- `target_devices` (Block List, Min: 1) Target devices for this resource (see [below for nested schema](#nestedblock--target_devices))
 
 ### Read-Only
 
-- **description** (String) The description of this resource
-- **name** (String) The name of this resource
-- **type** (String) The type of this resource
+- `description` (String) The description of this resource
+- `id` (String) The ID of this resource.
+- `name` (String) The name of this resource
+- `type` (String) The type of this resource
 
 <a id="nestedblock--policy"></a>
 ### Nested Schema for `policy`
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--target_devices"></a>
@@ -75,7 +72,7 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

@@ -14,6 +14,10 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
+data "fmc_nat_policies" "existing-nat-policy"{
+  name="test"
+}
+
 resource "fmc_ftd_nat_policies" "nat_policy" {
     name = "Terraform NAT Policy"
     description = "New NAT policy!"
@@ -21,4 +25,8 @@ resource "fmc_ftd_nat_policies" "nat_policy" {
 
 output "new_ftd_nat_policy" {
     value = fmc_ftd_nat_policies.nat_policy
+}
+
+output "existing-nat" {
+    value = data.fmc_nat_policies.existing-nat-policy
 }
