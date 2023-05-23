@@ -7,33 +7,38 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type SourceInterface struct {
 	ID   string `json:"id"`
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Name string `json:"name,omitempty"`
+	Type string `json:"type,omitempty"`
 }
 
-type NveNeighborAddress struct {
-	Literal struct {
-		Type  string `json:"type"`
-		Value string `json:"value"`
-	} `json:"literal"`
-	Object struct {
-		Overridable bool   `json:"overridable"`
-		ID          string `json:"id"`
-		Name        string `json:"name"`
-		Type        string `json:"type"`
-	} `json:"object"`
+type Literal struct {
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
 }
+type Object struct {
+	Overridable bool   `json:"overridable,omitempty"`
+	ID          string `json:"id,omitempty"`
+	Name        string `json:"name,omitempty"`
+	Type        string `json:"type,omitempty"`
+}
+type NveNeighborAddress struct {
+	Literal Literal `json:"literal,omitempty"`
+	Object  Object  `json:"object,omitempty"`
+}
+
+
 type VTEPEntry struct {
 	SourceInterface      SourceInterface    `json:"sourceInterface"`
-	NveNeighborAddress   NveNeighborAddress `json:"nveNeighborAddress"`
+	NveNeighborAddress   NveNeighborAddress `json:"nveNeighborAddress,omitempty"`
 	NveVtepId            int                `json:"nveVtepId"`
 	NveDestinationPort   int                `json:"nveDestinationPort"`
-	NveEncapsulationType string             `json:"nveEncapsulationType"`
-	// NveNeighborDiscoveryType string             `json:"nveNeighborDiscoveryType"`
+	NveEncapsulationType string             `json:"nveEncapsulationType,omitempty"`
+	NveNeighborDiscoveryType string         `json:"nveNeighborDiscoveryType,omitempty"`
 }
 type VTEPPolicyResponse struct {
 	Links struct {
@@ -145,8 +150,11 @@ func (v *Client) CreateFmcVTEP(ctx context.Context, deviceID string, object *VTE
 		return nil, fmt.Errorf("invalid request json : %s - %s", url, err.Error())
 	}
 
-	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
-
+	s2 := strings.ReplaceAll(string(body),`"literal":{},`,"" )
+	s2 = strings.ReplaceAll(string(s2),`"nveNeighborAddress":{"object":{}},`,"" )
+	jsonValue := []byte(s2)
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(jsonValue))
+	
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for VTEP: %s - %s", url, err.Error())
 	}
@@ -181,8 +189,10 @@ func (v *Client) UpdateFmcVTEP(ctx context.Context, deviceID string, id string, 
 	if err != nil {
 		return nil, fmt.Errorf("invalid request json : %s - %s", url, err.Error())
 	}
-
-	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(body))
+	s2 := strings.ReplaceAll(string(body),`"literal":{},`,"" )
+	s2 = strings.ReplaceAll(string(s2),`"nveNeighborAddress":{"object":{}},`,"" )
+	jsonValue := []byte(s2)
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewBuffer(jsonValue))
 
 	if err != nil {
 		return nil, fmt.Errorf("error while Updating context for VTEP: %s - %s", url, err.Error())
