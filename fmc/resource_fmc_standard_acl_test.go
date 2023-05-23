@@ -11,6 +11,8 @@ import (
 )
 
 func TestAccFmcStandardAclBasic(t *testing.T) {
+	nwObjName := "any-ipv4"
+	aclName := "Test1"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,7 +20,7 @@ func TestAccFmcStandardAclBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcStandardAclDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcStandardAclConfigBasic(),
+				Config: testAccCheckFmcStandardAclConfigBasic(nwObjName, aclName),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcStandardAclExists("fmc_standard_acl.test"),
 				),
@@ -48,18 +50,18 @@ func testAccCheckFmcStandardAclDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcStandardAclConfigBasic() string {
+func testAccCheckFmcStandardAclConfigBasic(nwObjName string, aclName string) string {
 	return fmt.Sprintf(`
 	data "fmc_network_objects" "any" {
-		name = "any-ipv4"
+		name = "%s"
 	}
 
 	resource "fmc_standard_acl" "test" {
-		name = "Test1"
+		name = "%s"
 		action = "DENY"
 		object_id = data.fmc_network_objects.any.id
 	}
-    `)
+    `, nwObjName, aclName)
 }
 
 func testAccCheckFmcStandardAclExists(n string) resource.TestCheckFunc {

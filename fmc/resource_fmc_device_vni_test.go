@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccFmcVNICreateBasic(t *testing.T) {
+	device := "ftd.adyah.cisco"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,7 +19,7 @@ func TestAccFmcVNICreateBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcVNICreateDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcVNICreateConfigBasic(),
+				Config: testAccCheckFmcVNICreateConfigBasic(device),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcVNICreateExists("fmc_device_vni.test"),
 				),
@@ -37,7 +38,7 @@ func testAccCheckFmcVNICreateDestroy(s *terraform.State) error {
 
 		id := rs.Primary.ID
 		ctx := context.Background()
-		_,err := c.DeleteFmcVNIDetails(ctx, rs.Primary.Attributes["device_id"], id)
+		_, err := c.DeleteFmcVNIDetails(ctx, rs.Primary.Attributes["device_id"], id)
 
 		// Object is already deleted
 		if err != nil && !strings.Contains(fmt.Sprint(err), "404") {
@@ -48,21 +49,22 @@ func testAccCheckFmcVNICreateDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcVNICreateConfigBasic() string {
+func testAccCheckFmcVNICreateConfigBasic(device string) string {
 	return fmt.Sprintf(`
 	data "fmc_devices" "device" {
-		name = "FTD1"
+		name = "%s"
 	}
 	
-	data "fmc_security_zones" "my_security_zone" {
-	  name = "outside"
+	resource "fmc_security_zone" "my_security_zone" {
+	  name = "vni-zone"
+	  interface_mode = "ROUTED"
 	}
 	
 	resource "fmc_device_vni" "test" {
 		device_id = data.fmc_devices.device.id
 		if_name = "VNI1"
 		description = "Description Updated"
-		security_zone_id= data.fmc_security_zones.my_security_zone.id
+		security_zone_id= fmc_security_zone.my_security_zone.id
 		priority = 3
 		vnid = 11 
 		multicast_groupaddress =  "224.0.0.34"
@@ -79,7 +81,7 @@ func testAccCheckFmcVNICreateConfigBasic() string {
 		  }
 		}
 	}
-    `)
+    `, device)
 }
 
 func testAccCheckFmcVNICreateExists(n string) resource.TestCheckFunc {
