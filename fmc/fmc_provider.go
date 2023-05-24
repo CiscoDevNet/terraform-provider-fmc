@@ -116,6 +116,7 @@ func Provider() *schema.Provider {
 			"fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_vni":                 resourceVNI(),
 			"fmc_devices":                    resourceFmcDevices(),
+			"fmc_device_vtep":                resourceVTEP(),
 			"fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
 			"fmc_extended_acl":               resourceFmcExtendedAcl(),
 			"fmc_sgt_objects":                resourceFmcSGTObjects(),
@@ -145,6 +146,7 @@ func Provider() *schema.Provider {
 			"fmc_sgt_objects":                dataFmcSGTObjects(),
 			"fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
 			"fmc_network_analysis_policy":    dataSourceFmcNetworkAnalysisPolicy(),
+      "fmc_device_vtep_policies":  dataSourceFmcVTEPPolicies(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
