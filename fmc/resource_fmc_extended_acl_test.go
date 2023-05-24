@@ -11,6 +11,8 @@ import (
 )
 
 func TestAccFmcExtendedAclBasic(t *testing.T) {
+	hostObjectName := "acl-host-object"
+	hostObjectValue := "10.10.0.2"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,7 +20,7 @@ func TestAccFmcExtendedAclBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcExtendedAclDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcExtendedAclConfigBasic(),
+				Config: testAccCheckFmcExtendedAclConfigBasic(hostObjectName, hostObjectValue),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcExtendedAclExists("fmc_extended_acl.new_acl"),
 				),
@@ -48,10 +50,11 @@ func testAccCheckFmcExtendedAclDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcExtendedAclConfigBasic() string {
+func testAccCheckFmcExtendedAclConfigBasic(hostObjectName, hostObjectValue string) string {
 	return fmt.Sprintf(`
-	data "fmc_host_objects" "test"{
-		name="test-object"
+	resource "fmc_host_objects" "test"{
+		name="%s"
+		value="%s"
 	  }
 	  
 	  data "fmc_port_objects" "test"{
@@ -68,16 +71,14 @@ func testAccCheckFmcExtendedAclConfigBasic() string {
 		source_port_literal_port="12311"
 		source_port_literal_protocol="6"
 	  
-		source_network_object_id = data.fmc_host_objects.test.id
+		source_network_object_id = fmc_host_objects.test.id
 		source_network_literal_type="Host"
 		source_network_literal_value="172.16.1.2"
 	  
-		destination_network_object_id = data.fmc_host_objects.test.id
+		destination_network_object_id = fmc_host_objects.test.id
 		destination_network_literal_type="Host"
 		destination_network_literal_value="172.16.1.2"
-	  }
-	  
-    `)
+	  }`, hostObjectName, hostObjectValue)
 }
 
 func testAccCheckFmcExtendedAclExists(n string) resource.TestCheckFunc {
