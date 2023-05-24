@@ -7,12 +7,11 @@ description: |-
   Example
   An example is shown below:
   hcl
-  resource "fmc_devicese" "device1" {
+  resource "fmc_devices" "device1" {
       name = "ftd"
       hostname = "<IP ADDR OF HOST>"
       regkey = "<Reg key used in FTD>"
       metric_value = 22
-      type = "Device"
       license_caps = [
           "MALWARE"
       ]
@@ -33,12 +32,11 @@ Resource for adding device in FMC
 ## Example
 An example is shown below: 
 ```hcl
-resource "fmc_devicese" "device1" {
+resource "fmc_devices" "device1" {
     name = "ftd"
     hostname = "<IP ADDR OF HOST>"
     regkey = "<Reg key used in FTD>"
     metric_value = 22
-    type = "Device"
     license_caps = [
 		"MALWARE"
     ]
@@ -50,7 +48,6 @@ resource "fmc_devicese" "device1" {
 ```
 **Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.
 **Note:** Please use a depends_on block to create multiple devices from the same plan such that second device only starts registering after device one is finished.
-
 
 
 
@@ -67,12 +64,13 @@ resource "fmc_devicese" "device1" {
 
 - `license_caps` (List of String) License caps for this resource
 - `name` (String) The name of FTD
-- `nat_id` (String) NAT_ID is required if configured in FTD
-- `type` (String) The type of this resource
+- `nat_id` (String) NAT_ID is required, if configured in FTD
+- `performance_tier` (String) Select the desired performace tier
 
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `type` (String) The type of this resource
 
 <a id="nestedblock--access_policy"></a>
 ### Nested Schema for `access_policy`
@@ -80,6 +78,9 @@ resource "fmc_devicese" "device1" {
 Required:
 
 - `id` (String) The ID of this resource
+
+Optional:
+
 - `type` (String) The type of this resource
 
 
