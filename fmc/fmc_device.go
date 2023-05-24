@@ -27,8 +27,9 @@ type DevicesResponse struct {
 		Name         string            `json:"name"`
 		HostName     string            `json:"hostName"`
 		NatID        string            `json:"natID,omitempty"`
-		RegKey       string            `json:"regKey"`
+		RegKey       string            `json:"regKey,omitempty"`
 		AccessPolicy *AccessPolicyItem `json:"accessPolicy"`
+		PerformanceTier string         `json:"performanceTier,omitempty"`
 	} `json:"items"`
 	Paging struct {
 		Offset int `json:"offset"`
@@ -48,17 +49,9 @@ type DeviceResponse struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
 	HostName    string `json:"hostName"`
-	// Metadata    struct {
-	// 	Lastuser struct {
-	// 		Name string `json:"name"`
-	// 	} `json:"lastUser"`
-	// 	Domain struct {
-	// 		Name string `json:"name"`
-	// 		ID   string `json:"id"`
-	// 	} `json:"domain"`
-	// } `json:"metadata"`
-	RegKey       string           `json:"regKey"`
+	RegKey       string           `json:"regKey,omitempty"`
 	NatID        string           `json:"natID,omitempty"`
+	PerformanceTier string         `json:"performanceTier,omitempty"`
 	AccessPolicy AccessPolicyItem `json:"accessPolicy"`
 }
 
@@ -68,8 +61,9 @@ type Device struct {
 	Name         string            `json:"name"`
 	HostName     string            `json:"hostName"`
 	NatID        string            `json:"natID,omitempty"`
-	RegKey       string            `json:"regKey"`
+	RegKey       string            `json:"regKey,omitempty"`
 	AccessPolicy *AccessPolicyItem `json:"accessPolicy"`
+	PerformanceTier string         `json:"performanceTier,omitempty"`
 	LicenseCaps  []string          `json:"license_caps,omitempty"`
 }
 
@@ -95,6 +89,7 @@ func (v *Client) GetFmcDeviceByName(ctx context.Context, name string) (*Device, 
 				Type:   device.Type,
 				NatID:  device.NatID,
 				RegKey: device.RegKey,
+				// AccessPolicy: device.AccessPolicy,
 			}, nil
 		}
 	}
