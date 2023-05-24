@@ -62,8 +62,8 @@ func (l *logger) debug(v ...interface{}) {
 			l.responsesLogger.SetPrefix("")
 			l.responsesLogger.SetFlags(0)
 			l.responsesLogger.Println()
-		} else if (v[len(v)-1]).(string) == "url" {
-			l.urlLogger.SetPrefix("[DEBUG URL] ")
+		} else {
+			l.urlLogger.SetPrefix("[DEBUG USER] ")
 			l.urlLogger.Println(v...)
 		}
 	}
@@ -71,15 +71,19 @@ func (l *logger) debug(v ...interface{}) {
 
 func (l *logger) info(v ...interface{}) {
 	if LogEnabled() {
+
 		if (v[len(v)-1]).(string) == "request" {
 			l.requestsLogger.SetPrefix("[INFO REQ] ")
 			l.requestsLogger.Println(v...)
 		} else if (v[len(v)-1]).(string) == "response" {
 			l.responsesLogger.SetPrefix("[INFO RES] ")
 			l.responsesLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "url" {
-			l.urlLogger.SetPrefix("[INFO URL] ")
-			l.urlLogger.Println(v...)
+			l.responsesLogger.SetPrefix("")
+			l.responsesLogger.SetFlags(0)
+			l.responsesLogger.Println()
+		} else {
+			l.requestsLogger.SetPrefix("[INFO USER] ")
+			l.requestsLogger.Println(v...)
 		}
 	}
 }
@@ -92,8 +96,11 @@ func (l *logger) warn(v ...interface{}) {
 		} else if (v[len(v)-1]).(string) == "response" {
 			l.responsesLogger.SetPrefix("[WARN RES] ")
 			l.responsesLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "url" {
-			l.urlLogger.SetPrefix("[WARN URL] ")
+			l.responsesLogger.SetPrefix("")
+			l.responsesLogger.SetFlags(0)
+			l.responsesLogger.Println()
+		} else {
+			l.urlLogger.SetPrefix("[WARN USER] ")
 			l.urlLogger.Println(v...)
 		}
 	}
@@ -107,8 +114,11 @@ func (l *logger) error(v ...interface{}) {
 		} else if (v[len(v)-1]).(string) == "response" {
 			l.responsesLogger.SetPrefix("[ERROR RES] ")
 			l.responsesLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "url" {
-			l.urlLogger.SetPrefix("[ERROR URL] ")
+			l.responsesLogger.SetPrefix("")
+			l.responsesLogger.SetFlags(0)
+			l.responsesLogger.Println()
+		} else {
+			l.urlLogger.SetPrefix("[ERROR USER] ")
 			l.urlLogger.Println(v...)
 		}
 	}
