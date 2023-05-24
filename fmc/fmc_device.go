@@ -3,13 +3,13 @@ package fmc
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"encoding/json"
 	"time"
 )
 
-type AccessPolicyItem struct{
+type AccessPolicyItem struct {
 	ID   string `json:"id"`
 	Type string `json:"type"`
 }
@@ -24,11 +24,11 @@ type DevicesResponse struct {
 		Links struct {
 			Self string `json:"self"`
 		} `json:"links"`
-		Name string `json:"name"`
-		HostName        string `json:"hostName"`
-		NatID string	`json:"natID,omitempty"`
-		RegKey string	`json:"regKey"`
-		AccessPolicy  *AccessPolicyItem `json:"accessPolicy"`
+		Name         string            `json:"name"`
+		HostName     string            `json:"hostName"`
+		NatID        string            `json:"natID,omitempty"`
+		RegKey       string            `json:"regKey"`
+		AccessPolicy *AccessPolicyItem `json:"accessPolicy"`
 	} `json:"items"`
 	Paging struct {
 		Offset int `json:"offset"`
@@ -47,7 +47,7 @@ type DeviceResponse struct {
 	Description string `json:"description"`
 	ID          string `json:"id"`
 	Name        string `json:"name"`
-	HostName        string `json:"hostName"`
+	HostName    string `json:"hostName"`
 	// Metadata    struct {
 	// 	Lastuser struct {
 	// 		Name string `json:"name"`
@@ -57,20 +57,20 @@ type DeviceResponse struct {
 	// 		ID   string `json:"id"`
 	// 	} `json:"domain"`
 	// } `json:"metadata"`
-	RegKey string `json:"regKey"`
-	NatID string	`json:"natID,omitempty"`
-	AccessPolicy  AccessPolicyItem `json:"accessPolicy"`
+	RegKey       string           `json:"regKey"`
+	NatID        string           `json:"natID,omitempty"`
+	AccessPolicy AccessPolicyItem `json:"accessPolicy"`
 }
 
 type Device struct {
-	ID   string	`json:"id"`
-	Type string	`json:"type"`
-	Name string	`json:"name"`
-	HostName string `json:"hostName"`
-	NatID string	`json:"natID,omitempty"`
-	RegKey string	`json:"regKey"`
+	ID           string            `json:"id"`
+	Type         string            `json:"type"`
+	Name         string            `json:"name"`
+	HostName     string            `json:"hostName"`
+	NatID        string            `json:"natID,omitempty"`
+	RegKey       string            `json:"regKey"`
 	AccessPolicy *AccessPolicyItem `json:"accessPolicy"`
-	LicenseCaps  []string   `json:"license_caps,omitempty"` 
+	LicenseCaps  []string          `json:"license_caps,omitempty"`
 }
 
 func (v *Client) GetFmcDeviceByName(ctx context.Context, name string) (*Device, error) {
@@ -79,6 +79,7 @@ func (v *Client) GetFmcDeviceByName(ctx context.Context, name string) (*Device, 
 	if err != nil {
 		return nil, fmt.Errorf("getting device by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	devices := &DevicesResponse{}
 	err = v.DoRequest(req, devices, http.StatusOK)
 	if err != nil {
@@ -87,11 +88,12 @@ func (v *Client) GetFmcDeviceByName(ctx context.Context, name string) (*Device, 
 
 	for _, device := range devices.Items {
 		if device.Name == name {
+			Log.debug(device, "response")
 			return &Device{
-				ID:   device.ID,
-				Name: device.Name,
-				Type: device.Type,
-				NatID: device.NatID,
+				ID:     device.ID,
+				Name:   device.Name,
+				Type:   device.Type,
+				NatID:  device.NatID,
 				RegKey: device.RegKey,
 			}, nil
 		}
@@ -109,12 +111,15 @@ func (v *Client) CreateFmcDevice(ctx context.Context, device *Device) (*DeviceRe
 	if err != nil {
 		return nil, fmt.Errorf("adding device2: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &DeviceResponse{}
 	err = v.DoRequest(req, item, http.StatusAccepted)
 	if err != nil {
 		return nil, fmt.Errorf("adding device3: %s - %s", url, err.Error())
 	}
 	time.Sleep(300 * time.Second)
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -124,11 +129,14 @@ func (v *Client) GetFmcDevice(ctx context.Context, id string) (*DeviceResponse, 
 	if err != nil {
 		return nil, fmt.Errorf("getting device1: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(req, "request")
 	item := &DeviceResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting device2: %s - %s - id: %s", url, err.Error(),id)
+		return nil, fmt.Errorf("getting device2: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -142,11 +150,14 @@ func (v *Client) UpdateFmcDevice(ctx context.Context, id string, device *Device)
 	if err != nil {
 		return nil, fmt.Errorf("updating device2: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &DeviceResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("Updating device3: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -156,6 +167,8 @@ func (v *Client) DeleteFmcDevice(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting Device: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

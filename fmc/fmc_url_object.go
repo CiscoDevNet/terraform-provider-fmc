@@ -80,8 +80,11 @@ func (v *Client) CreateFmcURLObject(ctx context.Context, object *URLObject) (*UR
 	if err != nil {
 		return nil, fmt.Errorf("creating url objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
+	Log.debug(item, "response")
+	Log.line()
 	return item, err
 }
 
@@ -91,8 +94,11 @@ func (v *Client) GetFmcURLObject(ctx context.Context, id string) (*URLObjectResp
 	if err != nil {
 		return nil, fmt.Errorf("getting url objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
+	Log.debug(item, "response")
+	Log.line()
 	return item, err
 }
 
@@ -106,8 +112,11 @@ func (v *Client) UpdateFmcURLObject(ctx context.Context, id string, object *URLO
 	if err != nil {
 		return nil, fmt.Errorf("updating url objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
+	Log.debug(item, "response")
+	Log.line()
 	return item, err
 }
 
@@ -117,6 +126,8 @@ func (v *Client) DeleteFmcURLObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting url objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

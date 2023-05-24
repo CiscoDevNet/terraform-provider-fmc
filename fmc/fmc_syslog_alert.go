@@ -38,6 +38,7 @@ func (v *Client) GetFmcSyslogAlertByName(ctx context.Context, name string) (*Sys
 	if err != nil {
 		return nil, fmt.Errorf("getting syslog alert by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	syslogAlerts := &SyslogAlertsResponse{}
 	err = v.DoRequest(req, syslogAlerts, http.StatusOK)
 	if err != nil {
@@ -46,6 +47,8 @@ func (v *Client) GetFmcSyslogAlertByName(ctx context.Context, name string) (*Sys
 
 	for _, syslogAlert := range syslogAlerts.Items {
 		if syslogAlert.Name == name {
+			Log.debug(syslogAlert, "response")
+			Log.line()
 			return &SyslogAlert{
 				ID:   syslogAlert.ID,
 				Name: syslogAlert.Name,

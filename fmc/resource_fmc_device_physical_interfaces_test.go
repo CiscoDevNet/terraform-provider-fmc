@@ -11,6 +11,7 @@ import (
 )
 
 func TestAccFmcPhysicalInterfacesCreateBasic(t *testing.T) {
+	device := "ftd.adyah.cisco"
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
@@ -18,7 +19,7 @@ func TestAccFmcPhysicalInterfacesCreateBasic(t *testing.T) {
 		CheckDestroy: testAccCheckFmcPhysicalInterfacesCreateDestroy,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccCheckFmcPhysicalInterfacesCreateConfigBasic(),
+				Config: testAccCheckFmcPhysicalInterfacesCreateConfigBasic(device),
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckFmcPhysicalInterfacesCreateExists("fmc_device_physical_interfaces.my_fmc_device_physical_interfaces"),
 				),
@@ -57,10 +58,10 @@ func testAccCheckFmcPhysicalInterfacesCreateDestroy(s *terraform.State) error {
 	return nil
 }
 
-func testAccCheckFmcPhysicalInterfacesCreateConfigBasic() string {
+func testAccCheckFmcPhysicalInterfacesCreateConfigBasic(device string) string {
 	return fmt.Sprintf(`
 	data "fmc_devices" "device" {
-		name = "FTD1"
+		name = "%s"
 	}
 	
 	data "fmc_device_physical_interfaces" "device_physical_interface" {
@@ -68,14 +69,15 @@ func testAccCheckFmcPhysicalInterfacesCreateConfigBasic() string {
 		name = "TenGigabitEthernet0/0"
 	}
 
-	data "fmc_security_zones" "my_security_zone" {
-	  name = "outside"
+	resource "fmc_security_zone" "my_security_zone" {
+	  name = "physical-interface-zone"
+	  interface_mode = "ROUTED"
 	}
 	resource "fmc_device_physical_interfaces" "my_fmc_device_physical_interfaces" {
 		device_id = data.fmc_devices.device.id
    		physical_interface_id= data.fmc_device_physical_interfaces.device_physical_interface.id
     	name =   data.fmc_device_physical_interfaces.device_physical_interface.name
-    	security_zone_id= data.fmc_security_zones.my_security_zone.id
+    	security_zone_id= fmc_security_zone.my_security_zone.id
     	if_name = "logical-name"
     	description = "Physical Interface"
     	mtu =  1700
@@ -88,7 +90,7 @@ func testAccCheckFmcPhysicalInterfacesCreateConfigBasic() string {
     	ipv6_prefix = 32
     	ipv6_enforce_eui = false
 	}
-    `)
+    `, device)
 }
 
 func testAccCheckFmcPhysicalInterfacesCreateExists(n string) resource.TestCheckFunc {

@@ -9,11 +9,11 @@ import (
 )
 
 type StandardAclResponse struct {
-	Type        string `json:"type"`
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	ID          string `json:"id"`
-	Entries []ObjectEntries `json:"entries"`
+	Type        string          `json:"type"`
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	ID          string          `json:"id"`
+	Entries     []ObjectEntries `json:"entries"`
 }
 
 type StandardAclResponses struct {
@@ -28,18 +28,18 @@ type StandardAcl struct {
 }
 
 type ObjectEntries struct {
-	Action   string    `json:"action,omitempty"`
+	Action   string  `json:"action,omitempty"`
 	Networks Network `json:"networks,omitempty"`
 }
 
 type Network struct {
-	Objects []Object_nw `json:"objects"`
+	Objects  []Object_nw  `json:"objects"`
 	Literals []Literal_nw `json:"literals"`
 }
 
 type Literal_nw struct {
-	Type    string  `json:"type,omitempty"`
-	Value   string `json:"value,omitempty"`
+	Type  string `json:"type,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type Object_nw struct {
@@ -52,6 +52,7 @@ func (v *Client) GetFmcStandardAclByName(ctx context.Context, name string) (*Sta
 	if err != nil {
 		return nil, fmt.Errorf("getting standard ACL by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	acls := &StandardAclResponses{}
 	err = v.DoRequest(req, acls, http.StatusOK)
 	if err != nil {
@@ -60,6 +61,8 @@ func (v *Client) GetFmcStandardAclByName(ctx context.Context, name string) (*Sta
 
 	for _, acl := range acls.Items {
 		if acl.Name == name {
+			Log.debug(acl, "response")
+			Log.line()
 			return &StandardAcl{
 				ID:   acl.ID,
 				Name: acl.Name,
@@ -80,11 +83,14 @@ func (v *Client) CreateFmcStandardAcl(ctx context.Context, object *StandardAcl) 
 	if err != nil {
 		return nil, fmt.Errorf("Creating standard acl: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &StandardAclResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("Creating standard acl: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 func (v *Client) GetFmcStandardAcl(ctx context.Context, id string) (*StandardAclResponse, error) {
@@ -93,15 +99,18 @@ func (v *Client) GetFmcStandardAcl(ctx context.Context, id string) (*StandardAcl
 	if err != nil {
 		return nil, fmt.Errorf("getting std acl1: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(req, "request")
 	item := &StandardAclResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting std acl2: %s - %s - id: %s", url, err.Error(),id)
+		return nil, fmt.Errorf("getting std acl2: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
-func (v *Client) UpdateFmcStandardAcl(ctx context.Context,  id string, object *StandardAcl) (*StandardAclResponse, error) {
+func (v *Client) UpdateFmcStandardAcl(ctx context.Context, id string, object *StandardAcl) (*StandardAclResponse, error) {
 	url := fmt.Sprintf("%s/object/standardaccesslists/%s", v.domainBaseURL, id)
 	body, err := json.Marshal(&object)
 	if err != nil {
@@ -111,11 +120,14 @@ func (v *Client) UpdateFmcStandardAcl(ctx context.Context,  id string, object *S
 	if err != nil {
 		return nil, fmt.Errorf("updating acl2: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &StandardAclResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("Updating acl 3: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 func (v *Client) DeleteFmcStandardAcl(ctx context.Context, id string) error {
@@ -124,6 +136,8 @@ func (v *Client) DeleteFmcStandardAcl(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting standard acl : %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

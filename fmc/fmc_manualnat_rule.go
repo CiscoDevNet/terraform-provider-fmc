@@ -104,11 +104,14 @@ func (v *Client) CreateFmcManualNatRule(ctx context.Context, natId, section, tar
 	if err != nil {
 		return nil, fmt.Errorf("creating manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ManualNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -118,11 +121,14 @@ func (v *Client) GetFmcManualNatRule(ctx context.Context, natId string, id strin
 	if err != nil {
 		return nil, fmt.Errorf("getting manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ManualNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -136,11 +142,14 @@ func (v *Client) UpdateFmcManualNatRule(ctx context.Context, natId, id string, m
 	if err != nil {
 		return nil, fmt.Errorf("creating manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ManualNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("creating manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -150,6 +159,8 @@ func (v *Client) DeleteFmcManualNatRule(ctx context.Context, natId string, id st
 	if err != nil {
 		return fmt.Errorf("deleting manual nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
