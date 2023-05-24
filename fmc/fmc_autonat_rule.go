@@ -77,6 +77,7 @@ func (v *Client) CreateFmcAutoNatRule(ctx context.Context, natId string, autoNat
 		return nil, fmt.Errorf("creating auto nat rules: %s - %s", url, err.Error())
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
+	Log.debug(req, "request")
 	if err != nil {
 		return nil, fmt.Errorf("creating auto nat rules: %s - %s", url, err.Error())
 	}
@@ -85,6 +86,8 @@ func (v *Client) CreateFmcAutoNatRule(ctx context.Context, natId string, autoNat
 	if err != nil {
 		return nil, fmt.Errorf("creating auto nat rules: %s - %s\n%s", url, err.Error(), body)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -94,11 +97,14 @@ func (v *Client) GetFmcAutoNatRule(ctx context.Context, natId string, id string)
 	if err != nil {
 		return nil, fmt.Errorf("getting auto nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AutoNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting auto nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -112,20 +118,25 @@ func (v *Client) UpdateFmcAutoNatRule(ctx context.Context, natId, id string, aut
 	if err != nil {
 		return nil, fmt.Errorf("creating auto nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AutoNatRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("creating auto nat rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
 func (v *Client) DeleteFmcAutoNatRule(ctx context.Context, natId string, id string) error {
 	url := fmt.Sprintf("%s/policy/ftdnatpolicies/%s/autonatrules/%s", v.domainBaseURL, natId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	Log.debug(req, "request")
 	if err != nil {
 		return fmt.Errorf("deleting auto nat rules: %s - %s", url, err.Error())
 	}
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

@@ -14,6 +14,7 @@ func dataSourceFmcStaticIPv4Route() *schema.Resource {
             "```hcl\n" +
             "data \"fmc_staticIPv4_route\" \"route\" {\n" +
             "   device_id = \"<device ID>\"\n" +
+            "   network_name = \"Random-net\"\n" +
             "}\n" +
             "```",
         ReadContext: dataSourceFmcStaticIPv4RouteRead,

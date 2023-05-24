@@ -102,6 +102,7 @@ func (v *Client) CreateFmcAccessPolicy(ctx context.Context, accessPolicy *Access
 		return nil, fmt.Errorf("creating access policies: %s - %s", url, err.Error())
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
+	Log.debug(req, "request")
 	if err != nil {
 		return nil, fmt.Errorf("creating access policies: %s - %s", url, err.Error())
 	}
@@ -110,6 +111,8 @@ func (v *Client) CreateFmcAccessPolicy(ctx context.Context, accessPolicy *Access
 	if err != nil {
 		return nil, fmt.Errorf("creating access policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -119,11 +122,14 @@ func (v *Client) GetFmcAccessPolicy(ctx context.Context, id string) (*AccessPoli
 	if err != nil {
 		return nil, fmt.Errorf("getting access policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting access policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -151,6 +157,8 @@ func (v *Client) DeleteFmcAccessPolicy(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting access policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

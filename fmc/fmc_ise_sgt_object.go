@@ -16,7 +16,7 @@ type IseSGTObjectsResponse struct {
 		Links struct {
 			Self string `json:"self"`
 		} `json:"links"`
-		Type  string `json:"type"`
+		Type string `json:"type"`
 	} `json:"items"`
 	Paging struct {
 		Offset int `json:"offset"`
@@ -38,6 +38,7 @@ func (v *Client) GetFmcIseSGTObjectsByName(ctx context.Context, name string) (*I
 	if err != nil {
 		return nil, fmt.Errorf("getting ise security group tags object by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	iseSGTObjects := &IseSGTObjectsResponse{}
 	err = v.DoRequest(req, iseSGTObjects, http.StatusOK)
 	if err != nil {
@@ -46,6 +47,8 @@ func (v *Client) GetFmcIseSGTObjectsByName(ctx context.Context, name string) (*I
 
 	for _, iseSGTObject := range iseSGTObjects.Items {
 		if iseSGTObject.Name == name {
+			Log.debug(iseSGTObject, "response")
+			Log.line()
 			return &IseSGTObject{
 				ID:   iseSGTObject.ID,
 				Name: iseSGTObject.Name,

@@ -18,7 +18,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	insecureSkipVerify := d.Get("fmc_insecure_skip_verify").(bool)
 	var diags diag.Diagnostics
 
-	if iscdfmc == false && username != "" && password != "" && host != "" && cdotoken == "" && cdfmcdomainuuid == "" {
+	if !iscdfmc && username != "" && password != "" && host != "" && cdotoken == "" && cdfmcdomainuuid == "" {
 		client := NewClient(username, password, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
@@ -26,7 +26,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 		return client, diags
 	}
-	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
+	if iscdfmc && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
 		client := CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
@@ -116,6 +116,7 @@ func Provider() *schema.Provider {
 			"fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_vni":                 resourceVNI(),
 			"fmc_devices":                    resourceFmcDevices(),
+			"fmc_device_vtep":                resourceVTEP(),
 			"fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
 			"fmc_extended_acl":               resourceFmcExtendedAcl(),
 			"fmc_sgt_objects":                resourceFmcSGTObjects(),
@@ -145,6 +146,7 @@ func Provider() *schema.Provider {
 			"fmc_sgt_objects":                dataFmcSGTObjects(),
 			"fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
 			"fmc_network_analysis_policy":    dataSourceFmcNetworkAnalysisPolicy(),
+      "fmc_device_vtep_policies":  dataSourceFmcVTEPPolicies(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

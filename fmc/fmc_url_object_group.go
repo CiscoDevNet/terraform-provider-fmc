@@ -79,11 +79,14 @@ func (v *Client) CreateFmcURLObjectGroup(ctx context.Context, object *URLObjectG
 	if err != nil {
 		return nil, fmt.Errorf("creating url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectGroupResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -93,11 +96,14 @@ func (v *Client) GetFmcURLObjectGroup(ctx context.Context, id string) (*URLObjec
 	if err != nil {
 		return nil, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectGroupResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -111,11 +117,14 @@ func (v *Client) UpdateFmcURLObjectGroup(ctx context.Context, id string, object 
 	if err != nil {
 		return nil, fmt.Errorf("updating url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &URLObjectGroupResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -125,6 +134,8 @@ func (v *Client) DeleteFmcURLObjectGroup(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting url group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

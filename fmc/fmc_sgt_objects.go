@@ -43,6 +43,7 @@ func (v *Client) GetFmcSGTObjectsByName(ctx context.Context, name string) (*Secu
 	if err != nil {
 		return nil, fmt.Errorf("getting security group tags by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	securityGroupTags := &SecurityGroupTagsResponse{}
 	err = v.DoRequest(req, securityGroupTags, http.StatusOK)
 	if err != nil {
@@ -51,6 +52,8 @@ func (v *Client) GetFmcSGTObjectsByName(ctx context.Context, name string) (*Secu
 
 	for _, securityGroupTag := range securityGroupTags.Items {
 		if securityGroupTag.Name == name {
+			Log.debug(securityGroupTag, "response")
+			Log.line()
 			return &SecurityGroupTagResponse{
 				ID:   securityGroupTag.ID,
 				Name: securityGroupTag.Name,
@@ -68,12 +71,15 @@ func (v *Client) GetFmcSGTObjects(ctx context.Context, id string) (*SecurityGrou
 	if err != nil {
 		return nil, fmt.Errorf("getting security group tags by id: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	securityGroupTag := &SecurityGroupTagResponse{}
 	err = v.DoRequest(req, securityGroupTag, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting security group tags by id: %s - %s", url, err.Error())
 	}
 
+	Log.debug(securityGroupTag, "response")
+	Log.line()
 	return securityGroupTag, nil
 }
 
@@ -87,12 +93,14 @@ func (v *Client) CreateFmcSGTObjects(ctx context.Context, object *SecurityGroupT
 	if err != nil {
 		return nil, fmt.Errorf("creating security group tags: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &SecurityGroupTagResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting security group tags: %s - %s", url, err.Error())
 	}
-
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -106,11 +114,14 @@ func (v *Client) UpdateFmcSGTObjects(ctx context.Context, id string, object *Sec
 	if err != nil {
 		return nil, fmt.Errorf("updating SGT objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &SecurityGroupTagResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting SGT objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -120,6 +131,8 @@ func (v *Client) DeleteFmcSGTObjects(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting sgt objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

@@ -70,11 +70,14 @@ func (v *Client) CreateFmcNatPolicy(ctx context.Context, accessPolicy *NatPolicy
 	if err != nil {
 		return nil, fmt.Errorf("creating nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NatPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -84,11 +87,14 @@ func (v *Client) GetFmcNatPolicy(ctx context.Context, id string) (*NatPolicyResp
 	if err != nil {
 		return nil, fmt.Errorf("getting nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NatPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -102,11 +108,14 @@ func (v *Client) UpdateFmcNatPolicy(ctx context.Context, natId string, natPolicy
 	if err != nil {
 		return nil, fmt.Errorf("update nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NatPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("update nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -116,6 +125,8 @@ func (v *Client) DeleteFmcNatPolicy(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

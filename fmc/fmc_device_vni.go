@@ -24,29 +24,29 @@ type VNIsResponse struct {
 type VNIRequest struct {
 	ID                    string          `json:"id,omitempty"`
 	Name                  string          `json:"name,omitempty"`
-	Enabled               bool 			  `json:"enabled"`
+	Enabled               bool            `json:"enabled"`
 	Ifname                string          `json:"ifname"`
 	Description           string          `json:"description"`
 	Priority              int             `json:"priority"`
 	VniId                 int             `json:"vniId"`
-	VtepID				  int             `json:"vtepID"`
+	VtepID                int             `json:"vtepID"`
 	MulticastGroupAddress string          `json:"multicastGroupAddress,omitempty"`
 	SegmentId             int             `json:"segmentId,omitempty"`
 	EnableProxy           bool            `json:"enableProxy,omitempty"`
 	SecurityZone          VNISecurityZone `json:"securityZone"`
 	IPv4                  IPv4            `json:"ipv4,omitempty"`
-	Type				  string 			`json:"type"`
+	Type                  string          `json:"type"`
 }
 
 type VNIResponse struct {
 	Type                  string          `json:"type"`
 	ID                    string          `json:"id"`
 	Name                  string          `json:"name"`
-	Enabled               bool 			  `json:"enabled"`
+	Enabled               bool            `json:"enabled"`
 	Description           string          `json:"description"`
 	SegmentId             int             `json:"segmentId"`
 	VNIID                 int             `json:"vniId"`
-	VtepID				  int             `json:"vtepID"`
+	VtepID                int             `json:"vtepID"`
 	EnableProxy           bool            `json:"enableProxy,omitempty"`
 	MulticastGroupAddress string          `json:"multicastGroupAddress,omitempty"`
 	Priority              int             `json:"priority"`
@@ -69,6 +69,7 @@ func (v *Client) GetFmcVNI(ctx context.Context, deviceID string, name string) (*
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for getting VNIs: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	vni := &VNIsResponse{}
 	err = v.DoRequest(req, vni, http.StatusOK)
@@ -78,7 +79,8 @@ func (v *Client) GetFmcVNI(ctx context.Context, deviceID string, name string) (*
 	}
 	for _, VNI := range vni.Items {
 		log.Printf("VNI.ID=%s  VNI.Name=%s  VNI.Type=%s", VNI.ID, VNI.Name, VNI.Type)
-
+		Log.debug(VNI, "response")
+		Log.line()
 		if VNI.Name == name {
 			return &VNIResponse{
 				ID:   VNI.ID,
@@ -106,6 +108,7 @@ func (v *Client) GetFmcVNIDetails(ctx context.Context, deviceID string, vnid str
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for getting VNI details: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	vni := &VNIResponse{}
 	err = v.DoRequest(req, vni, http.StatusOK)
@@ -114,6 +117,8 @@ func (v *Client) GetFmcVNIDetails(ctx context.Context, deviceID string, vnid str
 		return nil, fmt.Errorf("error while getting VNI by id: %s - %s", url, err.Error())
 	}
 
+	Log.debug(vni, "response")
+	Log.line()
 	return &VNIResponse{
 		ID:                    vni.ID,
 		Name:                  vni.Name,
@@ -126,7 +131,7 @@ func (v *Client) GetFmcVNIDetails(ctx context.Context, deviceID string, vnid str
 		SecurityZone:          vni.SecurityZone,
 		SegmentId:             vni.SegmentId,
 		VNIID:                 vni.VNIID,
-		VtepID:				   vni.VtepID,
+		VtepID:                vni.VtepID,
 	}, nil
 
 }
@@ -142,8 +147,7 @@ func (v *Client) CreateFmcVNI(ctx context.Context, deviceID string, object *VNIR
 	log.Printf("Create VNI URL=%s", url)
 	body, err := json.Marshal(&object)
 	log.Printf("Create VNI Request=%s", body)
-	
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("invalid request json : %s - %s", url, err.Error())
 	}
@@ -151,13 +155,15 @@ func (v *Client) CreateFmcVNI(ctx context.Context, deviceID string, object *VNIR
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for VNI: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	vni := &VNIResponse{}
 	err = v.DoRequest(req, vni, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("error while cretaing VNI: %s - %s", url, err.Error())
 	}
 	log.Printf("VNI interface created, response=%s", vni.ID)
-
+	Log.debug(vni, "response")
+	Log.line()
 	return vni, nil
 }
 
@@ -185,6 +191,7 @@ func (v *Client) UpdateFmcVNI(ctx context.Context, deviceID string, id string, o
 	if err != nil {
 		return nil, fmt.Errorf("error while Updating context for VNI: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	vni := &VNIResponse{}
 	err = v.DoRequest(req, vni, http.StatusOK)
@@ -194,7 +201,8 @@ func (v *Client) UpdateFmcVNI(ctx context.Context, deviceID string, id string, o
 	}
 
 	log.Printf("VNI interface Update, response=%s", vni.ID)
-
+	Log.debug(vni, "response")
+	Log.line()
 	return vni, nil
 }
 
@@ -214,6 +222,7 @@ func (v *Client) DeleteFmcVNIDetails(ctx context.Context, deviceID string, vnid 
 	if err != nil {
 		return nil, fmt.Errorf("error while creating context for Delete VNI details: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	vni := &VNIResponse{}
 	err = v.DoRequest(req, vni, http.StatusOK)
@@ -223,6 +232,6 @@ func (v *Client) DeleteFmcVNIDetails(ctx context.Context, deviceID string, vnid 
 	}
 
 	log.Printf("VNI interface Delete, response=%s", vni.ID)
-
+	Log.line()
 	return vni, nil
 }

@@ -30,11 +30,10 @@ resource "fmc_devices" "device"{
   name = "FTD"
   hostname = "<Device IP>"
   regkey = "cisco"
-  type = "Device"
+  performance_tier = "FTDv30"
   license_caps = [ "MALWARE"]
   access_policy {
       id = data.fmc_access_policies.access_policy.id
-      type = data.fmc_access_policies.access_policy.type
   }
 }
 

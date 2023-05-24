@@ -48,7 +48,9 @@ Initializing provider plugins...
 That's it! You have successfully installed the FMC terraform provider. Head on to examples to see what you can do with them!
 Provider documentation is present [here](https://registry.terraform.io/providers/CiscoDevNet/fmc/latest/docs).
 
-## Note: This new version 0.2.4 uses a different url for access policy get operation than before. It uses "name=xxx" instead of "filter=name:xxx" in its query parameters. Kindly verify the url for your version of access policy get operation before upgrading.
+## 3. Troubleshooting
+
+
 
 ## Tutorials
 

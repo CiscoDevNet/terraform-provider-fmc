@@ -14,18 +14,16 @@ func resourceFmcDevices() *schema.Resource {
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_devicese\" \"device1\" {\n" +
+			"resource \"fmc_devices\" \"device1\" {\n" +
 			"    name = \"ftd\"\n" +
 			"    hostname = \"<IP ADDR OF HOST>\"\n" +
 			"    regkey = \"<Reg key used in FTD>\"\n" +
 			"    metric_value = 22\n" +
-			"    type = \"Device\"\n" +
 			"    license_caps = [\n" +
 			"		\"MALWARE\"\n" +
 			"    ]\n" +
 			"    access_policy {\n" +
 			"        id = data.fmc_access_policies.access_policy.id\n" +
-			"        type = data.fmc_access_policies.access_policy.type\n" +
 			"	}\n" +
 			"}\n" +
 			"```\n" +
@@ -48,7 +46,7 @@ func resourceFmcDevices() *schema.Resource {
 			},
 			"type": {
 				Type:        schema.TypeString,
-				Optional:    true,
+				Computed:    true,
 				Description: "The type of this resource",
 			},
 			"regkey": {
@@ -59,7 +57,12 @@ func resourceFmcDevices() *schema.Resource {
 			"nat_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "NAT_ID is required if configured in FTD",
+				Description: "NAT_ID is required, if configured in FTD ",
+			},
+			"performance_tier": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Select the desired performace tier",
 			},
 			"license_caps": {
 				Type:        schema.TypeList,
@@ -82,7 +85,7 @@ func resourceFmcDevices() *schema.Resource {
 						},
 						"type": {
 							Type:        schema.TypeString,
-							Required:    true,
+							Optional:    true,
 							Description: "The type of this resource",
 						},
 					},
@@ -98,16 +101,6 @@ func resourceFmcDeviceCreate(ctx context.Context, d *schema.ResourceData, m inte
 	// Warning or errors can be collected in a slice type
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
-	// var accp []AccessPolicyItem
-	// if inputaccp, ok := d.GetOk("access_policy"); ok {
-	// 	for _, acc := range inputaccp.([]interface{}) {
-	// 		acci := acc.(map[string]interface{})
-	// 		accp = append(accp, AccessPolicyItem{
-	// 			ID:   acci["id"].(string),
-	// 			Type: acci["type"].(string),
-	// 		})
-	// 	}
-	//  }
 
 	var accpolicy *AccessPolicyItem
 	dynamicObjects2 := []**AccessPolicyItem{
@@ -133,6 +126,7 @@ func resourceFmcDeviceCreate(ctx context.Context, d *schema.ResourceData, m inte
 		HostName:     d.Get("hostname").(string),
 		NatID:        d.Get("nat_id").(string),
 		RegKey:       d.Get("regkey").(string),
+		PerformanceTier: d.Get("performance_tier").(string),
 		Type:        device_type,
 		LicenseCaps: lcap,
 		AccessPolicy:  accpolicy,
@@ -213,19 +207,15 @@ func resourceFmcDeviceRead(ctx context.Context, d *schema.ResourceData, m interf
 		return diags
 	}
 
-	if err := d.Set("regkey", item.RegKey); err != nil {
+	RegKeySet := d.Get("regkey").(string)
+
+	if err := d.Set("regkey", RegKeySet); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read device",
 			Detail:   err.Error(),
 		})
 		return diags
-	}
-
-	if item.AccessPolicy != (AccessPolicyItem{}) {
-		if err := d.Set("access_policy", convertTo1ListMapStringGeneric(item.AccessPolicy)); err != nil {
-			return returnWithDiag(diags, err)
-		}
 	}
 
 	return diags
@@ -237,32 +227,18 @@ func resourceFmcDeviceUpdate(ctx context.Context, d *schema.ResourceData, m inte
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 	if d.HasChanges("name", "hostname", "type", "license_caps") {
-	// var accpolicy *AccessPolicyItem
-	// dynamicObjects2 := []**AccessPolicyItem{
-	// 	&accpolicy,
-	// }
-	// for i, objType := range []string{"access_policy"} {
-	// 	if inputEntries, ok := d.GetOk(objType); ok {
-	// 		entry := inputEntries.([]interface{})[0].(map[string]interface{})
-	// 		*dynamicObjects2[i] = &AccessPolicyItem{
-	// 			ID:   entry["id"].(string),
-	// 			Type: entry["type"].(string),
-	// 		}
-	// 	}
-	// }
+
 	lcap := []string{}
 	for _, lic := range d.Get("license_caps").([]interface{}) {
 		lcap = append(lcap, lic.(string))
 	}
 	res, err := c.UpdateFmcDevice(ctx, d.Id(), &Device{
-		ID:          d.Id(),
-		Name:        d.Get("name").(string),
+		ID:           d.Id(),
+		Name:         d.Get("name").(string),
 		HostName:     d.Get("hostname").(string),
-		NatID:        d.Get("nat_id").(string),
-		RegKey:       d.Get("regkey").(string),
+		PerformanceTier: d.Get("performance_tier").(string),
 		Type:        device_type,
 		LicenseCaps: lcap,
-		// AccessPolicy:  accpolicy,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{

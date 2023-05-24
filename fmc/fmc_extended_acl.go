@@ -64,6 +64,7 @@ func (v *Client) GetFmcExtendedAclByName(ctx context.Context, name string) (*Ext
 	if err != nil {
 		return nil, fmt.Errorf("getting extended ACL by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	acls := &ExtendedAclResponses{}
 	err = v.DoRequest(req, acls, http.StatusOK)
 	if err != nil {
@@ -72,6 +73,8 @@ func (v *Client) GetFmcExtendedAclByName(ctx context.Context, name string) (*Ext
 
 	for _, acl := range acls.Items {
 		if acl.Name == name {
+			Log.debug(acl, "response")
+			Log.line()
 			return &ExtendedAcl{
 				ID:   acl.ID,
 				Name: acl.Name,
@@ -93,11 +96,14 @@ func (v *Client) CreateFmcExtendedAcl(ctx context.Context, object *ExtendedAcl) 
 	if err != nil {
 		return nil, fmt.Errorf("Creating extended acl: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ExtendedAclResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("Creating extended acl: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -107,11 +113,14 @@ func (v *Client) GetFmcExtendedAcl(ctx context.Context, id string) (*ExtendedAcl
 	if err != nil {
 		return nil, fmt.Errorf("getting extended acl: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(req, "request")
 	item := &ExtendedAclResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting extended acl: %s - %s - id: %s", url, err.Error(), id)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -125,11 +134,14 @@ func (v *Client) UpdateFmcExtendedAcl(ctx context.Context, id string, object *Ex
 	if err != nil {
 		return nil, fmt.Errorf("updating  extended accesslist : %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ExtendedAclResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("Updating  extended accesslist : %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -139,6 +151,8 @@ func (v *Client) DeleteFmcExtendedAcl(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting extended acl : %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

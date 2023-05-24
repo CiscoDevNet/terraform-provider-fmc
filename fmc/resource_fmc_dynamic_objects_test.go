@@ -24,7 +24,7 @@ func TestAccFmcDynamicObjectBasic(t *testing.T) {
 			{
 				Config: testAccCheckFmcDynamicObjectConfigBasic(name, objectType, description),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFmcDynamicObjectExists("fmc_dynamic_object.test", map[string]string{
+					testAccCheckFmcDynamicObjectExists("fmc_dynamic_objects.test", map[string]string{
 						"name":        name,
 						"description": description,
 					}),
@@ -33,7 +33,7 @@ func TestAccFmcDynamicObjectBasic(t *testing.T) {
 			{
 				Config: testAccCheckFmcDynamicObjectConfigBasic(name, objectType, descriptionUpdated),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckFmcDynamicObjectExists("fmc_dynamic_object.test", map[string]string{
+					testAccCheckFmcDynamicObjectExists("fmc_dynamic_objects.test", map[string]string{
 						"name":        name,
 						"description": descriptionUpdated,
 					}),
@@ -47,7 +47,7 @@ func testAccCheckFmcDynamicObjectDestroy(s *terraform.State) error {
 	c := testAccProvider.Meta().(*Client)
 
 	for _, rs := range s.RootModule().Resources {
-		if rs.Type != "fmc_dynamic_object" {
+		if rs.Type != "fmc_dynamic_objects" {
 			continue
 		}
 
@@ -66,7 +66,7 @@ func testAccCheckFmcDynamicObjectDestroy(s *terraform.State) error {
 
 func testAccCheckFmcDynamicObjectConfigBasic(name, objectType, description string) string {
 	return fmt.Sprintf(`
-    resource "fmc_dynamic_object" "test" {
+    resource "fmc_dynamic_objects" "test" {
         name        = "%s"
         object_type = "%s"
         description = "%s"
@@ -87,9 +87,9 @@ func testAccCheckFmcDynamicObjectExists(n string, properties map[string]string) 
 		}
 
 		for key, value := range properties {
-				if rs.Primary.Attributes[key] != value {
-					return fmt.Errorf("attribute mismatch for key: %s. Expected: %s, got: %s", key, value, rs.Primary.Attributes[key])
-				}
+			if rs.Primary.Attributes[key] != value {
+				return fmt.Errorf("attribute mismatch for key: %s. Expected: %s, got: %s", key, value, rs.Primary.Attributes[key])
+			}
 		}
 
 		//

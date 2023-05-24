@@ -50,11 +50,14 @@ func (v *Client) CreateFmcPrefilterPolicy(ctx context.Context, policy *Prefilter
 	if err != nil {
 		return nil, fmt.Errorf("creating prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PrefilterPolicy{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -64,11 +67,14 @@ func (v *Client) GetFmcPrefilterPolicy(ctx context.Context, id string) (*Prefilt
 	if err != nil {
 		return nil, fmt.Errorf("getting prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PrefilterPolicy{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -84,11 +90,14 @@ func (v *Client) UpdateFmcPrefilterPolicy(ctx context.Context, policy *Prefilter
 	if err != nil {
 		return nil, fmt.Errorf("updating prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PrefilterPolicy{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("updating prefilter policy: %s - %s,%+v", url, err.Error(), policy)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -98,6 +107,8 @@ func (v *Client) DeleteFmcPrefilterPolicy(ctx context.Context, id string) error 
 	if err != nil {
 		return fmt.Errorf("deleting prefilter policy: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

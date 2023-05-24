@@ -25,12 +25,14 @@ func (v *Client) GetFmcAccessPoliciesCategory(ctx context.Context, id, accessPol
 	if err != nil {
 		return nil, fmt.Errorf("getting access policy category: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &AccessPolicyCategoryResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return resp, fmt.Errorf("getting access policy category: %s - %s", url, err.Error())
 	}
-
+	Log.debug(resp, "response")
+	Log.line()
 	return resp, nil
 }
 
@@ -49,11 +51,14 @@ func (v *Client) CreateFmcAccessPoliciesCategory(ctx context.Context, accessPoli
 	if err != nil {
 		return nil, fmt.Errorf("creating access policy category: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessPolicyCategoryResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating access policy category: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -63,6 +68,8 @@ func (v *Client) DeleteFmcAccessPoliciesCategory(ctx context.Context, id, access
 	if err != nil {
 		return fmt.Errorf("deleting access policy category: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

@@ -53,11 +53,14 @@ func (v *Client) CreateFmcPortGroupObject(ctx context.Context, object *PortGroup
 	if err != nil {
 		return nil, fmt.Errorf("creating port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -67,11 +70,14 @@ func (v *Client) GetFmcPortGroupObject(ctx context.Context, id string) (*PortGro
 	if err != nil {
 		return nil, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -85,11 +91,14 @@ func (v *Client) UpdateFmcPortGroupObject(ctx context.Context, id string, object
 	if err != nil {
 		return nil, fmt.Errorf("updating port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -99,6 +108,8 @@ func (v *Client) DeleteFmcPortGroupObject(ctx context.Context, id string) error 
 	if err != nil {
 		return fmt.Errorf("deleting port group objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
