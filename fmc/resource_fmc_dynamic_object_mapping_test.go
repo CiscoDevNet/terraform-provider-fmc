@@ -79,13 +79,13 @@ func testAccCheckFmcDynamicObjectMappingsConfigBasic(mappings string) string {
 	name := randomString(5)
 
 	return fmt.Sprintf(`
-    resource "fmc_dynamic_object" "test" {
+    resource "fmc_dynamic_objects" "test" {
         name        = "%s"
         object_type = "IP"
     }
 	
     resource "fmc_dynamic_object_mapping" "test" {
-        dynamic_object_id = fmc_dynamic_object.test.id
+        dynamic_object_id = fmc_dynamic_objects.test.id
         mappings = ["%s"]
     }
 

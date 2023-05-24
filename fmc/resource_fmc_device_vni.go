@@ -10,6 +10,34 @@ import (
 
 func resourceVNI() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for VNI Interfaces in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_device_vni\" \"my_fmc_device_vni\" {\n" +
+			"	 device_id = \"<ID of the ftd>\"\n" +
+			"	 security_zone_id = \"<ID of the security zone>\"\n" +
+			"	 if_name = \"Inside\"\n" +
+			"	 description = \"<description>\"\n" +
+			"	 priority = 3\n" +
+			"	 vnid = 11\n" +
+			"	 multicast_groupaddress = \"224.0.0.34\"\n" +
+			"	 segment_id = 4011\n" +
+			"	 enable_proxy= false\n" +
+			"	 ipv4 {\n" +
+			"	 	static {\n" +
+			"		 address = \"3.3.3.3\"\n" +
+			"	     netmask = 4\n" +
+			"}\n" +
+			"		dhcp {\n" +
+			"	     enable_default_route_dhcp = false \n" +
+			"		 dhcp_route_metric = 0\n" +
+			"  		}\n" +
+			"    }\n" +
+			"}\n" +
+			"```",
+
 		CreateContext: resourceVNICreate,
 		ReadContext:   resourceVNIRead,
 		UpdateContext: resourceVNIUpdate,
@@ -19,6 +47,21 @@ func resourceVNI() *schema.Resource {
 				Type:        schema.TypeString,
 				Required:    true,
 				Description: "The Device Id of VNI",
+			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of resource",
+			},
+			"vtep_id": {
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "The Device Id of VNI",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enables VNI",
 			},
 			"if_name": {
 				Type:        schema.TypeString,
@@ -32,12 +75,12 @@ func resourceVNI() *schema.Resource {
 			},
 			"security_zone_id": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "securityZone of the VNI",
 			},
 			"priority": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "Priority of the VNI",
 			},
 			"vnid": {
@@ -47,18 +90,17 @@ func resourceVNI() *schema.Resource {
 			},
 			"multicast_groupaddress": {
 				Type:        schema.TypeString,
-				Required:    true,
+				Optional:    true,
 				Description: "MulticastGroupAddress of the VNI",
 			},
 			"segment_id": {
 				Type:        schema.TypeInt,
-				Required:    true,
+				Optional:    true,
 				Description: "SegmentId of the VNI",
 			},
-
 			"enable_proxy": {
 				Type:        schema.TypeBool,
-				Required:    true,
+				Optional:    true,
 				Description: "EnableProxy of the VNI",
 			},
 			"ipv4": {
@@ -155,11 +197,12 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 	ifname := d.Get("if_name").(string)
 	description := d.Get("description").(string)
 	security_zone_id := d.Get("security_zone_id").(string)
-	priority := d.Get("priority").(int)
+	// priority := d.Get("priority").(int)
 	vnid := d.Get("vnid").(int)
-	multicastGroupaddress := d.Get("multicast_groupaddress").(string)
-	segmentId := d.Get("segment_id").(int)
-	enableProxy := d.Get("enable_proxy").(bool)
+	vtepid := d.Get("vtep_id").(int)
+	// multicastGroupaddress := d.Get("multicast_groupaddress").(string)
+	// segmentId := d.Get("segment_id").(int)
+	// enableProxy := d.Get("enable_proxy").(bool)
 
 	var ipv4 = IPv4{}
 
@@ -201,7 +244,7 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 
 	}
 
-	log.Printf("IFname=%s Desc=%s, security_zone_id=%s, priority=%v, vnid=%v multicastGroupaddress=%s segmentId=%v enableProxy=%v", ifname, description, security_zone_id, priority, vnid, multicastGroupaddress, segmentId, enableProxy)
+	log.Printf("IFname=%s Desc=%s, security_zone_id=%s, vnid=%v", ifname, description, security_zone_id, vnid)
 
 	c := m.(*Client)
 
@@ -215,13 +258,16 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 	vniResp, err := c.CreateFmcVNI(ctx, device_id, &VNIRequest{
 		Ifname:                ifname,
 		Description:           description,
-		Priority:              priority,
+		Priority:              d.Get("priority").(int),
 		VniId:                 vnid,
-		MulticastGroupAddress: multicastGroupaddress,
-		SegmentId:             segmentId,
-		EnableProxy:           enableProxy,
+		MulticastGroupAddress: d.Get("multicast_groupaddress").(string),
+		SegmentId:             d.Get("segment_id").(int),
+		EnableProxy:           d.Get("enable_proxy").(bool),
 		SecurityZone:          securityZone,
 		IPv4:                  ipv4,
+		VtepID:                vtepid,
+		Type:                  "VNIInterface",
+		Enabled:               d.Get("enabled").(bool),
 	})
 
 	if err != nil {
@@ -255,12 +301,12 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 		ifname := d.Get("if_name").(string)
 		description := d.Get("description").(string)
 		security_zone_id := d.Get("security_zone_id").(string)
-		priority := d.Get("priority").(int)
+		// priority := d.Get("priority").(int)
 		vnid := d.Get("vnid").(int)
-		multicastGroupaddress := d.Get("multicast_groupaddress").(string)
-		segmentId := d.Get("segment_id").(int)
-		enableProxy := d.Get("enable_proxy").(bool)
-
+		// multicastGroupaddress := d.Get("multicast_groupaddress").(string)
+		// segmentId := d.Get("segment_id").(int)
+		// enableProxy := d.Get("enable_proxy").(bool)
+		vtepid := d.Get("vtep_id").(int)
 		var ipv4 = IPv4{}
 
 		if d.Get("ipv4") != nil {
@@ -303,7 +349,7 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 
 		}
 
-		log.Printf("Update vniUUID=%s IFname=%s Desc=%s, security_zone_id=%s, priority=%v, vnid=%v multicastGroupaddress=%s segmentId=%v enableProxy=%v", id, ifname, description, security_zone_id, priority, vnid, multicastGroupaddress, segmentId, enableProxy)
+		log.Printf("Update vniUUID=%s IFname=%s Desc=%s, security_zone_id=%s, vnid=%v ", id, ifname, description, security_zone_id, vnid)
 
 		c := m.(*Client)
 
@@ -328,13 +374,16 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 			Name:                  oldvni.Name,
 			Ifname:                ifname,
 			Description:           description,
-			Priority:              priority,
+			Priority:              d.Get("priority").(int),
 			VniId:                 vnid,
-			MulticastGroupAddress: multicastGroupaddress,
-			SegmentId:             segmentId,
-			EnableProxy:           enableProxy,
+			MulticastGroupAddress: d.Get("multicast_groupaddress").(string),
+			SegmentId:             d.Get("segment_id").(int),
+			EnableProxy:           d.Get("enable_proxy").(bool),
 			SecurityZone:          securityZone,
 			IPv4:                  ipv4,
+			VtepID:                vtepid,
+			Type:                  "VNIInterface",
+			Enabled:               d.Get("enabled").(bool),
 		})
 
 		if err != nil {

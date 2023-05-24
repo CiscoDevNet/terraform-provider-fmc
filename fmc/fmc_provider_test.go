@@ -40,4 +40,7 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("FMC_INSECURE_SKIP_VERIFY"); v == "" {
 		t.Fatal("FMC_INSECURE_SKIP_VERIFY must be set for acceptance tests")
 	}
+	if v := os.Getenv("FTD_HOST"); v == "" {
+		t.Fatal("FTD_HOST must be set for acceptance tests")
+	}
 }

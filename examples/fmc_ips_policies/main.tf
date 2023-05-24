@@ -15,9 +15,15 @@ provider "fmc" {
 }
 
 data "fmc_ips_policies" "ips_policy" {
-    name = "Connectivity Over Security"
+    name = "Balanced Security and Connectivity"
 }
 
 output "existing_ips_policy" {
     value = data.fmc_ips_policies.ips_policy
+}
+
+resource "fmc_ips_policies" "ips_policy"{
+name="Test-ips-policy"
+inspection_mode="DETECTION"
+basepolicy_id=data.fmc_ips_policies.ips_policy.id
 }

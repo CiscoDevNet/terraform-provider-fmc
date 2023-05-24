@@ -11,18 +11,22 @@ import (
 
 func resourceFmcPrefilterPolicy() *schema.Resource {
 	return &schema.Resource{
-		Description: `
-			resource "fmc_prefilter_policy" "prefilter_policy" {
-				name        = "Prefilter Policy"
-				description = "Terraform Prefilter Policy description"
-				default_action { 
-					log_end = true
-					log_begin = true
-					send_events_to_fmc = true
-					action = "BLOCK_TUNNELS"
-				}
-			}
-			`,
+		Description: "Resource for Network Analysis Policy in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_prefilter_policy\" \"prefilter_policy\" {\n" +
+			"	name        = \"Prefilter Policy\"\n" +
+			"	description = \"Terraform Prefilter Policy description\"\n" +
+			"	default_action {\n" +
+			"		log_end = true\n" +
+			"		log_begin = true\n" +
+			"		send_events_to_fmc = true\n" +
+			"		action = \"BLOCK_TUNNELS\"\n" +
+			"		}\n" +
+			"	}\n" +
+			"```\n",
 		CreateContext: resourceFmcPrefilterPolicyCreate,
 		ReadContext:   resourceFmcPrefilterPolicyRead,
 		UpdateContext: resourceFmcPrefilterPolicyUpdate,
@@ -109,7 +113,7 @@ func resourceFmcPrefilterPolicyCreate(ctx context.Context, d *schema.ResourceDat
 		entry := inputEntries.([]interface{})[0].(map[string]interface{})
 
 		defaultAction = PrefilterPolicyDefaultActionInput{
-			LogBegin: entry["log_begin"].(bool),
+			LogBegin:        entry["log_begin"].(bool),
 			SendEventsToFMC: entry["send_events_to_fmc"].(bool),
 			Action:          entry["action"].(string),
 		}
@@ -141,12 +145,16 @@ func resourceFmcPrefilterPolicyRead(ctx context.Context, d *schema.ResourceData,
 	id := d.Id()
 	item, err := c.GetFmcPrefilterPolicy(ctx, id)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read prefilter policy",
-			Detail:   err.Error(),
-		})
-		return diags
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read prefilter policy",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -193,7 +201,7 @@ func resourceFmcPrefilterPolicyUpdate(ctx context.Context, d *schema.ResourceDat
 			entry := inputEntries.([]interface{})[0].(map[string]interface{})
 
 			defaultAction = PrefilterPolicyDefaultAction{
-				LogBegin: entry["log_begin"].(bool),
+				LogBegin:        entry["log_begin"].(bool),
 				SendEventsToFMC: entry["send_events_to_fmc"].(bool),
 				Action:          entry["action"].(string),
 				ID:              entry["id"].(string),

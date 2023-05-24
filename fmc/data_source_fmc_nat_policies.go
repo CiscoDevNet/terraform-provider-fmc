@@ -12,7 +12,7 @@ func dataSourceFmcNatPolicies() *schema.Resource {
 		Description: "Data source for Nat Policies in FMC\n\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"data \"fmc_nat_policies\" \"natp\" {\n" +
+			"data \"fmc_ftd_nat_policies\" \"natp\" {\n" +
 			"	name = \"FTD NATP\"\n" +
 			"}\n" +
 			"```",
@@ -32,6 +32,11 @@ func dataSourceFmcNatPolicies() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 				Description: "Type of this resource",
+			},
+			"description": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Description of this resource",
 			},
 		},
 	}
@@ -65,6 +70,15 @@ func dataSourceFmcNatPoliciesRead(ctx context.Context, d *schema.ResourceData, m
 	}
 
 	if err := d.Set("type", natPolicy.Type); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read natPolicy",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("description", natPolicy.Description); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read natPolicy",

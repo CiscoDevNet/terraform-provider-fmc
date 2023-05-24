@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -101,12 +102,16 @@ func resourceFmcFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 	id := d.Id()
 	item, err := c.GetFmcFQDNObject(ctx, id)
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read fqdn object",
-			Detail:   err.Error(),
-		})
-		return diags
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read fqdn object",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{

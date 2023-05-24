@@ -2,13 +2,37 @@ package fmc
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 func resourcePhyInterface() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for Physical Interfaces in FMC\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_device_physical_interfaces\" \"physical_interface\" {\n" +
+			"    name = \"<name>\"\n" +
+			"	 device_id = \"<ID of the ftd>\"\n" +
+			"	 physical_interface_id = \"<ID of the physical interface>\"\n" +
+			"	 security_zone_id = \"<ID of the security zone>\"\n" +
+			"	 if_name = \"Inside\"\n" +
+			"	 description = \"<description>\"\n" +
+			"	 mtu = 1700\n" +
+			"	 mode = \"NONE\"\n" +
+			"	 ipv4_static_address = \"10.20.220.45\"\n" +
+			"	 ipv4_static_netmask = 24\n" +
+			"	 ipv4_dhcp_enabled = \"false\"\n" +
+			"	 ipv4_dhcp_route_metric = 1\n" +
+			"	 ipv6_address = \"2001:1234:5678:1234::\"\n" +
+			"	 ipv6_prefix = 32\n" +
+			"	 ipv6_enforce_eui = \"false\"\n" +
+			"}\n" +
+			"```",
 		CreateContext: resourcePhyInterfaceCreate,
 		ReadContext:   resourcePhyInterfaceRead,
 		UpdateContext: resourcePhyInterfaceUpdate,
@@ -35,6 +59,12 @@ func resourcePhyInterface() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Physical Interface description",
+			},
+			"enabled": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Default:     true,
+				Description: "enabled",
 			},
 			"if_name": {
 				Type:        schema.TypeString,
@@ -118,7 +148,7 @@ func resourcePhyInterfaceRead(ctx context.Context, d *schema.ResourceData, m int
 
 	physicalInterfaces, err := c.GetFmcPhysicalInterfaceByID(ctx, deviceId, physicalInterfaceId)
 
-	log.Printf("FPR: Physical Interface Details PhysicalInterfaceId=%s Name=%s IFName=%s Type=%s", physicalInterfaces.ID, physicalInterfaces.Name, physicalInterfaces.Ifname, physicalInterfaces.Type)
+	// log.Printf("FPR: Physical Interface Details PhysicalInterfaceId=%s Name=%s IFName=%s Type=%s", physicalInterfaces.ID, physicalInterfaces.Name, physicalInterfaces.Ifname, physicalInterfaces.Type)
 
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -151,15 +181,16 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 	ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
 	ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
+	enabled := d.Get("enabled").(bool)
 	ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
 
-	log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
+	// log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
 
 	ipv6Address := d.Get("ipv6_address").(string)
 	ipv6Prefix := d.Get("ipv6_prefix").(int)
 	ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
 
-	log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
+	// log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
 
 	c := m.(*Client)
 
@@ -175,7 +206,6 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		Address: ipv4StaticAddress,
 		Netmask: ipv4StaticNetmask,
 	}
-
 	var IPv4DHCP = IPv4DHCP{
 		Enable:      ipv4DhcpEnabled,
 		RouteMetric: ipv4DhcpRouteMetric,
@@ -189,7 +219,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		IPv4.Static = &IPv4Static
 	}
 
-	log.Printf("IPv4=%s", IPv4)
+	// log.Printf("IPv4=%s", IPv4)
 
 	var IPv6Add []IPv6Address
 
@@ -202,11 +232,12 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	}
 
 	var IPv6 = IPv6{Addresses: IPv6Add}
-	log.Printf("IPv6Address=%s", IPv6Add)
+	// log.Printf("IPv6Address=%s", IPv6Add)
 
-	physicalInterfaceResponse, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
 		ID:           physicalInterfaceId,
 		Ifname:       iFName,
+		Enabled:      enabled,
 		Mode:         mode,
 		Name:         name,
 		Description:  description,
@@ -226,7 +257,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		return diags
 	}
 
-	log.Printf("FPU: Updated physical interface=%s", physicalInterfaceResponse)
+	// log.Printf("FPU: Updated physical interface=%s", physicalInterfaceResponse)
 
 	return resourcePhyInterfaceRead(ctx, d, m)
 }
@@ -240,20 +271,22 @@ func resourcePhyInterfaceDelete(ctx context.Context, d *schema.ResourceData, m i
 	var diags diag.Diagnostics
 
 	name := d.Get("name").(string)
+	mtu := d.Get("mtu").(int)
 
 	c := m.(*Client)
 
-	var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
-		ID:   "",
-		Type: "SecurityZone",
-	}
-	physicalInterfaceResponse, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
-		ID:           physicalInterfaceId,
-		Ifname:       "-",
-		Mode:         "NONE",
-		Name:         name,
-		Description:  "",
-		SecurityZone: PhysicalInterfaceSecurityZone,
+	// var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
+	// 	ID:   "",
+	// 	Type: "",
+	// }
+	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+		ID:     physicalInterfaceId,
+		Ifname: "",
+		Mode:   "NONE",
+		Name:   name,
+		MTU:    mtu,
+		// Description:  "",
+		// SecurityZone: PhysicalInterfaceSecurityZone,
 	})
 
 	if err != nil {
@@ -265,8 +298,7 @@ func resourcePhyInterfaceDelete(ctx context.Context, d *schema.ResourceData, m i
 		})
 		return diags
 	}
-
-	log.Printf("FPD: Physical interface reseted with value=%s", physicalInterfaceResponse)
+	// log.Printf("FPD: Physical interface reseted with value=%s", physicalInterfaceResponse)
 
 	return resourcePhyInterfaceRead(ctx, d, m)
 }
