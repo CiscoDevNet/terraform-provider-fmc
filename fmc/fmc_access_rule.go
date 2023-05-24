@@ -184,17 +184,21 @@ func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insert
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s, %s", url, err.Error(), body)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
 func (v *Client) GetFmcAccessRule(ctx context.Context, acpId string, id string) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	Log.debug(req, "request")
 	if err != nil {
 		return nil, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
 	}
@@ -203,6 +207,8 @@ func (v *Client) GetFmcAccessRule(ctx context.Context, acpId string, id string) 
 	if err != nil {
 		return item, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -216,17 +222,21 @@ func (v *Client) UpdateFmcAccessRule(ctx context.Context, acpId, id string, acce
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
 func (v *Client) DeleteFmcAccessRule(ctx context.Context, acpId string, id string) error {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	Log.debug(req, "request")
 	if err != nil {
 		return fmt.Errorf("deleting access rules: %s - %s", url, err.Error())
 	}

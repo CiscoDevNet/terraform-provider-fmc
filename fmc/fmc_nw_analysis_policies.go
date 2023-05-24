@@ -77,11 +77,14 @@ func (v *Client) GetFmcNetworkAnalysisPolicy(ctx context.Context, id string) (*N
 	if err != nil {
 		return nil, fmt.Errorf("getting NWApolicy by id: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkAnalysisPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting NWApolicy by id: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -95,11 +98,14 @@ func (v *Client) CreateFmcNetworkAnalysisPolicy(ctx context.Context, policy *Net
 	if err != nil {
 		return nil, fmt.Errorf("creating nat policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkAnalysisPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating NWApolicy: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -115,11 +121,14 @@ func (v *Client) UpdateFmcNetworkAnalysisPolicy(ctx context.Context, id string, 
 	if err != nil {
 		return nil, fmt.Errorf("updating Network analysis policy: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkAnalysisPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("updating Network analysis policy: %s - %s,%+v", url, err.Error(), policy)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -129,6 +138,8 @@ func (v *Client) DeleteFmcNetworkAnalysisPolicy(ctx context.Context, id string) 
 	if err != nil {
 		return fmt.Errorf("deleting NWApolicies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

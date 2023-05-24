@@ -49,12 +49,14 @@ func (v *Client) CreateFmcDynamicObjectMapping(ctx context.Context, dynamicObjec
 	if err != nil {
 		return fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &DynamicObjectMapping{}
 	err = v.DoRequest(req, resp, http.StatusCreated)
 	if err != nil {
 		return fmt.Errorf("creating dynamic object mapping: %s - %s", url, err.Error())
 	}
-
+	Log.debug(resp, "response")
+	Log.line()
 	return nil
 }
 
@@ -79,11 +81,14 @@ func (v *Client) DeleteFmcDynamicObjectMapping(ctx context.Context, dynamicObjec
 	if err != nil {
 		return fmt.Errorf("deleting dynamic object mapping: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &DynamicObjectMapping{}
 	err = v.DoRequest(req, resp, http.StatusCreated)
 	if err != nil {
 		return fmt.Errorf("deleting dynamic object mapping: %s - %s", url, err.Error())
 	}
+	Log.debug(resp, "response")
+	Log.line()
 
 	return nil
 }
@@ -95,6 +100,7 @@ func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMa
 	if err != nil {
 		return nil, fmt.Errorf("getting dynamic object mapping: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &DynamicObjectMappingsResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
@@ -127,6 +133,8 @@ func (v *Client) GetFmcDynamicObjectMapping(ctx context.Context, dynamicObjectMa
 			existingMappings = append(existingMappings, item)
 		}
 	}
+	Log.debug(resp, "response")
+	Log.line()
 
 	return &DynamicObjectMapping{
 		Mappings: existingMappings,

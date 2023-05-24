@@ -33,6 +33,7 @@ func (v *Client) GetFmcDeployableDevice(ctx context.Context, device_id string) (
 	if err != nil {
 		return nil, fmt.Errorf("getting deployable devices: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	res := &struct {
 		Items []DeployableDeviceResponse `json:"items"`
 	}{}
@@ -42,6 +43,8 @@ func (v *Client) GetFmcDeployableDevice(ctx context.Context, device_id string) (
 	}
 	for _, item := range res.Items {
 		if item.Device.ID == device_id {
+			Log.debug(item, "response")
+			Log.line()
 			return &item, nil
 		}
 	}
@@ -55,6 +58,7 @@ func (v *Client) DeployToFTD(ctx context.Context, object FtdDeploy) error {
 		return fmt.Errorf("deploying to device: %s - %s", url, err.Error())
 	}
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
+	Log.debug(req, "request")
 	if err != nil {
 		return fmt.Errorf("deploying to device: %s - %s", url, err.Error())
 	}
@@ -63,5 +67,7 @@ func (v *Client) DeployToFTD(ctx context.Context, object FtdDeploy) error {
 	if err != nil {
 		return fmt.Errorf("deploying to device: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return nil
 }

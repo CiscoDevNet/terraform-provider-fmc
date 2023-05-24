@@ -52,11 +52,14 @@ func (v *Client) CreateFmcICMPV4Object(ctx context.Context, object *ICMPV4Object
 	if err != nil {
 		return nil, fmt.Errorf("creating icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ICMPV4ObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -66,11 +69,14 @@ func (v *Client) GetFmcICMPV4Object(ctx context.Context, id string) (*ICMPV4Obje
 	if err != nil {
 		return nil, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ICMPV4ObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -84,11 +90,14 @@ func (v *Client) UpdateFmcICMPV4Object(ctx context.Context, id string, object *I
 	if err != nil {
 		return nil, fmt.Errorf("updating icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &ICMPV4ObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -98,6 +107,8 @@ func (v *Client) DeleteFmcICMPV4Object(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting icmv4 objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

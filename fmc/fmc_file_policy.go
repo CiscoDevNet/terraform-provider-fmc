@@ -38,6 +38,7 @@ func (v *Client) GetFmcFilePolicyByName(ctx context.Context, name string) (*File
 	if err != nil {
 		return nil, fmt.Errorf("getting File policy by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	filePolicies := &FilePoliciesResponse{}
 	err = v.DoRequest(req, filePolicies, http.StatusOK)
 	if err != nil {
@@ -46,6 +47,8 @@ func (v *Client) GetFmcFilePolicyByName(ctx context.Context, name string) (*File
 
 	for _, filePolicy := range filePolicies.Items {
 		if filePolicy.Name == name {
+			Log.debug(filePolicy, "response")
+			Log.line()
 			return &FilePolicy{
 				ID:   filePolicy.ID,
 				Name: filePolicy.Name,

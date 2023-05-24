@@ -71,12 +71,15 @@ func (v *Client) GetFmcSecurityZone(ctx context.Context, id string) (*SecurityZo
 	if err != nil {
 		return nil, fmt.Errorf("getting security zone by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	securityZone := &SecurityZone{}
 	err = v.DoRequest(req, securityZone, http.StatusOK)
 	if err != nil {
 		return securityZone, fmt.Errorf("getting security zone by name: %s - %s", url, err.Error())
 	}
 
+	Log.debug(securityZone, "response")
+	Log.line()
 	return securityZone, nil
 }
 
@@ -90,8 +93,14 @@ func (v *Client) CreateFmcSecurityZone(ctx context.Context, zone *SecurityZoneRe
 	if err != nil {
 		return nil, fmt.Errorf("creating security zone: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &SecurityZone{}
 	err = v.DoRequest(req, item, http.StatusCreated)
+	if err != nil {
+		return nil, fmt.Errorf("creating security zone: %s - %s", url, err.Error())
+	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, err
 	//return nil, nil
 }
@@ -102,7 +111,9 @@ func (v *Client) DeleteFmcSecurityZone(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting security zone: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
 
@@ -132,7 +143,10 @@ func (v *Client) UpdateFmcSecurityZone(ctx context.Context, id string, object *S
 	if err != nil {
 		return nil, fmt.Errorf("updating security zone: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &SecurityZone{}
 	err = v.DoRequest(req, item, http.StatusOK)
+	Log.debug(item, "response")
+	Log.line()
 	return item, err
 }

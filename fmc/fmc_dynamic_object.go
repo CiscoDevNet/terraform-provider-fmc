@@ -41,6 +41,7 @@ func (v *Client) GetFmcDynamicObjectByName(ctx context.Context, name string) (*D
 	if err != nil {
 		return nil, fmt.Errorf("getting dynamic object by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &DynamicObjectsResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
@@ -55,6 +56,8 @@ func (v *Client) GetFmcDynamicObjectByName(ctx context.Context, name string) (*D
 	case l == 0:
 		return nil, fmt.Errorf("no network objects found, length of response is: %d, expected 1, please check your filter", l)
 	}
+	Log.debug(resp, "response")
+	Log.line()
 	return nil, fmt.Errorf("this should not be reachable, this is a bug")
 }
 
@@ -70,11 +73,14 @@ func (v *Client) CreateFmcDynamicObject(ctx context.Context, object *DynamicObje
 	if err != nil {
 		return nil, fmt.Errorf("creating dynamic objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &DynamicObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating dynamic objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -84,11 +90,14 @@ func (v *Client) GetFmcDynamicObject(ctx context.Context, id string) (*DynamicOb
 	if err != nil {
 		return nil, fmt.Errorf("getting dynamic object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &DynamicObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting dynamic objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -102,11 +111,14 @@ func (v *Client) UpdateFmcDynamicObject(ctx context.Context, id string, object *
 	if err != nil {
 		return nil, fmt.Errorf("updating dynamic objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &DynamicObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("updating dynamic objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -116,6 +128,8 @@ func (v *Client) DeleteFmcDynamicObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting dynamic object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
