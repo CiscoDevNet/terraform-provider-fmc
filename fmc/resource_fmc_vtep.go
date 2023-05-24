@@ -10,6 +10,21 @@ import (
 
 func resourceVTEP() *schema.Resource {
 	return &schema.Resource{
+		Description: "Resource for configuring VTEP\n" +
+			"\n" +
+			"## Example\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"resource \"fmc_device_vtep\" \"my_fmc_device_vtep\" {\n" +
+			"    device_id = data.fmc_devices.device.id\n" +
+			"    nve_enabled = true\n" +
+			"    nve_vtep_id = 1\n" +
+			"    nve_destination_port = 6081\n" +
+			"    nve_encapsulation_type = \"GENEVE\"\n" +
+			"    source_interface_id = data.fmc_device_physical_interfaces.physical_interface1.id\n" +
+			"}\n" +
+			"```\n" +
+			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n",
 		CreateContext: resourceVTEPCreate,
 		ReadContext:   resourceVTEPRead,
 		UpdateContext: resourceVTEPUpdate,
