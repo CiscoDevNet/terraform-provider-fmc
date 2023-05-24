@@ -77,11 +77,14 @@ func (v *Client) GetFmcHostObjectByNameOrValue(ctx context.Context, nameOrValue 
 	if err != nil {
 		return nil, fmt.Errorf("getting host object by name/value: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	resp := &HostObjectsResponse{}
 	err = v.DoRequest(req, resp, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting host object by name/value: %s - %s", url, err.Error())
 	}
+	Log.debug(resp, "response")
+	Log.line()
 	switch l := len(resp.Items); {
 	case l == 1:
 		return v.GetFmcHostObject(ctx, resp.Items[0].ID)
@@ -110,11 +113,14 @@ func (v *Client) CreateFmcHostObject(ctx context.Context, object *HostObject) (*
 	if err != nil {
 		return nil, fmt.Errorf("creating host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &HostObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -124,11 +130,14 @@ func (v *Client) GetFmcHostObject(ctx context.Context, id string) (*HostObjectRe
 	if err != nil {
 		return nil, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &HostObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return item, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -142,11 +151,14 @@ func (v *Client) UpdateFmcHostObject(ctx context.Context, id string, object *Hos
 	if err != nil {
 		return nil, fmt.Errorf("updating host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &HostObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -156,6 +168,8 @@ func (v *Client) DeleteFmcHostObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting host objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

@@ -54,6 +54,7 @@ func (v *Client) GetFmcIPSPolicyByName(ctx context.Context, name string) (*IPSPo
 	if err != nil {
 		return nil, fmt.Errorf("getting IPS policy by name: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	ipsPolicies := &IPSPoliciesResponse{}
 	err = v.DoRequest(req, ipsPolicies, http.StatusOK)
 	if err != nil {
@@ -62,6 +63,8 @@ func (v *Client) GetFmcIPSPolicyByName(ctx context.Context, name string) (*IPSPo
 
 	for _, ipsPolicy := range ipsPolicies.Items {
 		if ipsPolicy.Name == name {
+			Log.debug(ipsPolicy, "response")
+			Log.line()
 			return &IPSPolicy{
 				ID:   ipsPolicy.ID,
 				Name: ipsPolicy.Name,
@@ -82,11 +85,14 @@ func (v *Client) CreateFmcIPS(ctx context.Context, ipsPolicy *IPSPolicy) (*IPSPo
 	if err != nil {
 		return nil, fmt.Errorf("creating IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &IPSPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -96,11 +102,14 @@ func (v *Client) GetFmcIPSPolicy(ctx context.Context, id string) (*IPSPolicyResp
 	if err != nil {
 		return nil, fmt.Errorf("getting IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &IPSPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -114,11 +123,14 @@ func (v *Client) UpdateFmcIPSPolicy(ctx context.Context, id string, ipsPolicy *I
 	if err != nil {
 		return nil, fmt.Errorf("updating IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &IPSPolicyResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("updating IPS policies: %s - %s,%+v", url, err.Error(), ipsPolicy)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -128,6 +140,8 @@ func (v *Client) DeleteFmcIPSPolicy(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting IPS policies: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
