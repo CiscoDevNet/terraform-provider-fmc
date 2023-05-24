@@ -132,6 +132,7 @@ func Provider() *schema.Provider {
 			"fmc_network_group_objects": dataSourceFmcNetworkGroupObjects(),
 			"fmc_device_vni":            dataSourceFmcVNI(),
 			"fmc_nat_policies":          dataSourceFmcNatPolicies(),
+			"fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
 			"fmc_device_vtep_policies":  dataSourceFmcVTEPPolicies(),
 		},
 		ConfigureContextFunc: providerConfigure,

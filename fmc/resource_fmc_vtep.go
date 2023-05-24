@@ -30,7 +30,7 @@ func resourceVTEP() *schema.Resource {
 				Required:    true,
 				Description: "Source Interface Id",
 			},
-			"nve_vtp_id": {
+			"nve_vtep_id": {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "NVE VTEP Id",
@@ -44,6 +44,31 @@ func resourceVTEP() *schema.Resource {
 				Type:        schema.TypeInt,
 				Required:    true,
 				Description: "NVE Destination port",
+			},
+			"nve_neighbor_discovery_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "NVE Discovery type",
+			},
+			"neighbor_addr_object_overridable": {
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "If Object Overridable",
+			},
+			"neighbor_addr_object_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Neighbor Address Object ID",
+			},
+			"neighbor_addr_literal_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Neighbor Address literal type",
+			},
+			"neighbor_addr_literal_value": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Neighbor Address literal value",
 			},
 		},
 	}
@@ -92,11 +117,15 @@ func resourceVTEPCreate(ctx context.Context, d *schema.ResourceData, m interface
 	device_id := d.Get("device_id").(string)
 	nve_enabled := d.Get("nve_enabled").(bool)
 	source_interface_id := d.Get("source_interface_id").(string)
-	nve_vtp_id := d.Get("nve_vtp_id").(int)
+	nve_vtep_id := d.Get("nve_vtep_id").(int)
 	nve_encapsulation_type := d.Get("nve_encapsulation_type").(string)
 	nve_destination_port := d.Get("nve_destination_port").(int)
-
-	log.Printf("device_id=%v nve_enabled=%v, source_interface_id=%v, nve_vtp_id=%v, nve_encapsulation_type=%v nve_destination_port=%v", device_id, nve_enabled, source_interface_id, nve_vtp_id, nve_encapsulation_type, nve_destination_port)
+	nve_neighbor_discovery_type := d.Get("nve_neighbor_discovery_type").(string)
+	objectOverridable := d.Get("neighbor_addr_object_overridable").(bool)
+	neighbor_addr_object_id := d.Get("neighbor_addr_object_id").(string)
+	neighbor_addr_literal_type := d.Get("neighbor_addr_literal_type").(string)
+	neighbor_addr_literal_value := d.Get("neighbor_addr_literal_value").(string)
+	log.Printf("device_id=%v nve_enabled=%v, source_interface_id=%v, nve_vtep_id=%v, nve_encapsulation_type=%v nve_destination_port=%v", device_id, nve_enabled, source_interface_id, nve_vtep_id, nve_encapsulation_type, nve_destination_port)
 
 	c := m.(*Client)
 
@@ -105,13 +134,28 @@ func resourceVTEPCreate(ctx context.Context, d *schema.ResourceData, m interface
 	var sourceInterface = SourceInterface{
 		ID: source_interface_id,
 	}
+	
+	var objects = Object{
+		Overridable:objectOverridable,
+		ID: neighbor_addr_object_id,
+	}
+	var literals = Literal{
+		Type: neighbor_addr_literal_type,
+		Value: neighbor_addr_literal_value,
+	}
+	var NveNeighborAddress = NveNeighborAddress{
+		Object: objects,
+		Literal: literals,
+	}
 	var vtepEntry [1]VTEPEntry
 
 	vtepEntry[0] = VTEPEntry{
-		NveVtepId:            nve_vtp_id,
+		NveVtepId:            nve_vtep_id,
 		NveEncapsulationType: nve_encapsulation_type,
 		NveDestinationPort:   nve_destination_port,
 		SourceInterface:      sourceInterface,
+		NveNeighborDiscoveryType: nve_neighbor_discovery_type,
+		NveNeighborAddress: NveNeighborAddress,
 	}
 	vtepResp, err := c.CreateFmcVTEP(ctx, device_id, &VTEPPolicy{
 		NveEnable:   nve_enabled,
@@ -144,13 +188,33 @@ func resourceVTEPUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		device_id := d.Get("device_id").(string)
 		nve_enabled := d.Get("nve_enabled").(bool)
 		source_interface_id := d.Get("source_interface_id").(string)
-		nve_vtp_id := d.Get("nve_vtp_id").(int)
+		nve_vtep_id := d.Get("nve_vtep_id").(int)
 		nve_encapsulation_type := d.Get("nve_encapsulation_type").(string)
 		nve_destination_port := d.Get("nve_destination_port").(int)
+		nve_neighbor_discovery_type := d.Get("nve_neighbor_discovery_type").(string)
+		objectOverridable := d.Get("neighbor_addr_object_overridable").(bool)
+		neighbor_addr_object_id := d.Get("neighbor_addr_object_id").(string)
+		neighbor_addr_literal_type := d.Get("neighbor_addr_literal_type").(string)
+		neighbor_addr_literal_value := d.Get("neighbor_addr_literal_value").(string)
 
-		log.Printf("id=%v device_id=%v nve_enabled=%v, source_interface_id=%v, nve_vtp_id=%v, nve_encapsulation_type=%v nve_destination_port=%v", id, device_id, nve_enabled, source_interface_id, nve_vtp_id, nve_encapsulation_type, nve_destination_port)
+		log.Printf("id=%v device_id=%v nve_enabled=%v, source_interface_id=%v, nve_vtep_id=%v, nve_encapsulation_type=%v nve_destination_port=%v", id, device_id, nve_enabled, source_interface_id, nve_vtep_id, nve_encapsulation_type, nve_destination_port)
 
 		c := m.(*Client)
+
+		var objects = Object{
+			Overridable:objectOverridable,
+			ID: neighbor_addr_object_id,
+		}
+	
+		var literals = Literal{
+			Type: neighbor_addr_literal_type,
+			Value: neighbor_addr_literal_value,
+		}
+	
+		var NveNeighborAddress = NveNeighborAddress{
+			Object: objects,
+			Literal: literals,
+		}
 
 		var sourceInterface = SourceInterface{
 			ID: source_interface_id,
@@ -158,10 +222,12 @@ func resourceVTEPUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		var vtepEntry [1]VTEPEntry
 
 		vtepEntry[0] = VTEPEntry{
-			NveVtepId:            nve_vtp_id,
+			NveVtepId:            nve_vtep_id,
 			NveEncapsulationType: nve_encapsulation_type,
 			NveDestinationPort:   nve_destination_port,
 			SourceInterface:      sourceInterface,
+			NveNeighborDiscoveryType: nve_neighbor_discovery_type,
+			NveNeighborAddress: NveNeighborAddress,
 		}
 		vtepResp, err := c.UpdateFmcVTEP(ctx, device_id, id, &VTEPPolicyUpdate{
 			ID:          id,
