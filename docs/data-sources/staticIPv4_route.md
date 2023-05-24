@@ -8,6 +8,7 @@ description: |-
   hcl
   data "fmc_staticIPv4_route" "route" {
      device_id = "<device ID>"
+     network_name = "Random-net"
   }
 ---
 
@@ -19,6 +20,7 @@ An example is shown below:
 ```hcl
 data "fmc_staticIPv4_route" "route" {
    device_id = "<device ID>"
+   network_name = "Random-net"
 }
 ```
 

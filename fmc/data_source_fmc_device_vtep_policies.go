@@ -10,6 +10,13 @@ import (
 
 func dataSourceFmcVTEPPolicies() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for VTEP policy on FMC\n\n" +
+            "An example is shown below: \n" +
+            "```hcl\n" +
+            "data \"fmc_device_vtep_policies\" \"vtep\" {\n" +
+            "   device_id = \"<device ID>\"\n" +
+            "}\n" +
+            "```",
 		ReadContext: dataSourceFmcVTEPPoliciesRead,
 		Schema: map[string]*schema.Schema{
 			"device_id": {
