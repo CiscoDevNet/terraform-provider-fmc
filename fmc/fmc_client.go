@@ -23,17 +23,18 @@ var callSemaphore = make(semaphore, 1)
 var rateLimiterBucket = ratelimit.NewBucketWithQuantum(time.Minute, 100, 100)
 
 type Client struct {
-	user              string
-	password          string
-	host              string
-	domainBaseURL     string
-	accessToken       string
-	domainUUID        string
-	is_cdfmc          bool
-	client            *http.Client
-	ratelimiterBucket *ratelimit.Bucket
-	nonReadMutex      *sync.Mutex
-	callSemaphore     semaphore
+	user               string
+	password           string
+	host               string
+	domainBaseURL      string
+	fmcPlatformBaseURL string
+	accessToken        string
+	domainUUID         string
+	is_cdfmc           bool
+	client             *http.Client
+	ratelimiterBucket  *ratelimit.Bucket
+	nonReadMutex       *sync.Mutex
+	callSemaphore      semaphore
 }
 
 type ErrorResponse struct {
@@ -65,14 +66,14 @@ func NewClient(user, password, host string, insecureSkipVerify bool) *Client {
 
 func CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host string, insecureSkipVerify bool) *Client {
 	return &Client{
-		is_cdfmc:     true,
-		accessToken:  cdotoken,
-		domainUUID:   cdfmcdomainuuid,
-		host:         host,
+		is_cdfmc:    true,
+		accessToken: cdotoken,
+		domainUUID:  cdfmcdomainuuid,
+		host:        host,
 		client: &http.Client{Transport: &http.Transport{
-				TLSClientConfig: &tls.Config{
-						InsecureSkipVerify: insecureSkipVerify,
-				},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: insecureSkipVerify,
+			},
 		}},
 		ratelimiterBucket: rateLimiterBucket,
 		nonReadMutex:      nonReadMutex,
@@ -85,14 +86,14 @@ func (v *Client) Login() error {
 	if v.is_cdfmc == false {
 		req, err := http.NewRequest("POST", fmt.Sprintf("https://%s/api/fmc_platform/v1/auth/generatetoken", v.host), nil)
 		if err != nil {
-		        return (err)
+			return (err)
 		}
 		req.Header.Set("Content-Type", "application/json")
-		req.SetBasicAuth(v.user, v.password)	
+		req.SetBasicAuth(v.user, v.password)
 		res, err := v.client.Do(req)
 		if err != nil {
-		        return (err)
-		}	
+			return (err)
+		}
 		defer res.Body.Close()
 		if res.StatusCode == 401 {
 			return fmt.Errorf("wrong username or password %d %v", res.StatusCode, req.URL)
@@ -105,6 +106,7 @@ func (v *Client) Login() error {
 	}
 
 	v.domainBaseURL = fmt.Sprintf("https://%s/api/fmc_config/v1/domain/%s", v.host, v.domainUUID)
+	v.fmcPlatformBaseURL = fmt.Sprintf("https://%s/api/fmc_platform/v1", v.host)
 	return nil
 }
 
