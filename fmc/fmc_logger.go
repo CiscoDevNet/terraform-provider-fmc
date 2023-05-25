@@ -53,10 +53,10 @@ func LogEnabled() bool {
 
 func (l *logger) debug(v ...interface{}) {
 	if LogEnabled() {
-		if (v[len(v)-1]).(string) == "request" {
+		if (v[len(v)-1]) == "request" {
 			l.requestsLogger.SetPrefix("[DEBUG REQ] ")
 			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "response" {
+		} else if (v[len(v)-1]) == "response" {
 			l.responsesLogger.SetPrefix("[DEBUG RES] ")
 			l.responsesLogger.Println(v...)
 			l.responsesLogger.SetPrefix("")
@@ -72,10 +72,10 @@ func (l *logger) debug(v ...interface{}) {
 func (l *logger) info(v ...interface{}) {
 	if LogEnabled() {
 
-		if (v[len(v)-1]).(string) == "request" {
+		if (v[len(v)-1]) == "request" {
 			l.requestsLogger.SetPrefix("[INFO REQ] ")
 			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "response" {
+		} else if (v[len(v)-1]) == "response" {
 			l.responsesLogger.SetPrefix("[INFO RES] ")
 			l.responsesLogger.Println(v...)
 			l.responsesLogger.SetPrefix("")
@@ -90,10 +90,10 @@ func (l *logger) info(v ...interface{}) {
 
 func (l *logger) warn(v ...interface{}) {
 	if LogEnabled() {
-		if (v[len(v)-1]).(string) == "request" {
+		if (v[len(v)-1]) == "request" {
 			l.requestsLogger.SetPrefix("[WARN REQ] ")
 			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "response" {
+		} else if (v[len(v)-1]) == "response" {
 			l.responsesLogger.SetPrefix("[WARN RES] ")
 			l.responsesLogger.Println(v...)
 			l.responsesLogger.SetPrefix("")
@@ -108,10 +108,10 @@ func (l *logger) warn(v ...interface{}) {
 
 func (l *logger) error(v ...interface{}) {
 	if LogEnabled() {
-		if (v[len(v)-1]).(string) == "request" {
+		if (v[len(v)-1]) == "request" {
 			l.requestsLogger.SetPrefix("[ERROR REQ] ")
 			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]).(string) == "response" {
+		} else if (v[len(v)-1]) == "response" {
 			l.responsesLogger.SetPrefix("[ERROR RES] ")
 			l.responsesLogger.Println(v...)
 			l.responsesLogger.SetPrefix("")
