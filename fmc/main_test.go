@@ -24,7 +24,7 @@ func TestMain(m *testing.M) {
 		panic(err)
 	}
 
-	// m.Run()
+	m.Run()
 }
 
 // Register device
@@ -32,7 +32,7 @@ func setup(c *Client) error {
 	ctx := context.Background()
 	FTD_HOST := os.Getenv("FTD_HOST")
 
-	acp, err := c.GetFmcAccessPolicyByName(ctx, "Test-ACP")
+	acp, err := c.GetFmcAccessPolicyByName(ctx, "FTD")
 
 	if err != nil {
 		// Create access policy
@@ -44,7 +44,7 @@ func setup(c *Client) error {
 		}
 
 		res, err := c.CreateFmcAccessPolicy(ctx, &AccessPolicy{
-			Name:          "Test-ACP",
+			Name:          "FTD",
 			Type:          "AccessPolicy",
 			Defaultaction: defaultAction,
 		})
