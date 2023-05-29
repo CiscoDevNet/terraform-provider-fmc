@@ -50,7 +50,8 @@ Provider documentation is present [here](https://registry.terraform.io/providers
 
 ## 3. Troubleshooting
 > **Note**: This is for debugging purposes only and it probably **will** break your terraform-provider-fmc, if using for the first time.
-> It is recommended to take a backup of the terraform-provider-fmc binary before proceeding. You can use the following command to do so: `cp ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64/terraform-provider-fmc ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64/terraform-provider-fmc.bak`
+
+> It is recommended to take a backup of the terraform-provider-fmc binary before proceeding. You can use the following command to do so:`zip -r /var/terraform_plugins.bak ~/.terraform.d/plugins`
 
 The logs are by default are logged to `outputs/reqres`.
 
@@ -76,7 +77,7 @@ go build -o terraform-provider-fmc_0.2_darwin_amd64
 
 mkdir -p ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64
 
-mv terraform-provider-fmc_0.2_darwin_amd64 ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64/terraform-provider-fmc
+mv terraform-provider-fmc_0.2_darwin_amd64 ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/`go env GOOS`_`go env GOARCH`/terraform-provider-fmc
 ```
 
 Using the above script, the new provider will be built and moved to the terraform plugins directory. Now, you can run the terraform commands as usual and see the logs in the outputs directory.
