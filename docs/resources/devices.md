@@ -17,7 +17,6 @@ description: |-
       ]
       access_policy {
           id = data.fmc_access_policies.access_policy.id
-          type = data.fmc_access_policies.access_policy.type
       }
   }
   
@@ -42,7 +41,6 @@ resource "fmc_devices" "device1" {
     ]
     access_policy {
         id = data.fmc_access_policies.access_policy.id
-        type = data.fmc_access_policies.access_policy.type
 	}
 }
 ```
