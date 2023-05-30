@@ -14,6 +14,9 @@ type logger struct {
 }
 
 var Log *logger
+var allLog bool
+var reqResLog bool
+var userLog bool
 
 func init() {
 	var err error
@@ -24,7 +27,10 @@ func init() {
 }
 
 func newLogger(prefix string, flag int) (*logger, error) {
-	if LogEnabled() {
+	allLog = allLogEnabled()
+	reqResLog = reqResLogEnabled()
+	userLog = userLogEnabled()
+	if allLog || userLog || reqResLog {
 		logDir := "outputs"
 		err := os.MkdirAll(logDir, os.ModePerm)
 		if err != nil {
@@ -47,85 +53,128 @@ func newLogger(prefix string, flag int) (*logger, error) {
 	return nil, nil
 }
 
-func LogEnabled() bool {
-	return os.Getenv("LOG") == "true"
+func reqResLogEnabled() bool {
+	return os.Getenv("LOGS") == "REQ_RES"
+}
+
+func userLogEnabled() bool {
+	return os.Getenv("LOGS") == "USER"
+}
+
+func allLogEnabled() bool {
+	return os.Getenv("LOGS") == "ALL"
 }
 
 func (l *logger) debug(v ...interface{}) {
-	if LogEnabled() {
-		if (v[len(v)-1]) == "request" {
-			l.requestsLogger.SetPrefix("[DEBUG REQ] ")
-			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]) == "response" {
-			l.responsesLogger.SetPrefix("[DEBUG RES] ")
-			l.responsesLogger.Println(v...)
-			l.responsesLogger.SetPrefix("")
-			l.responsesLogger.SetFlags(0)
-			l.responsesLogger.Println()
-		} else {
-			l.urlLogger.SetPrefix("[DEBUG USER] ")
-			l.urlLogger.Println(v...)
+	if allLog || reqResLog || userLog {
+		switch v[len(v)-1] {
+		case "request":
+			if allLog || reqResLog {
+				l.requestsLogger.SetPrefix("[DEBUG REQ] ")
+				l.requestsLogger.Println(v...)
+			}
+		case "response":
+			if allLog || reqResLog {
+				l.responsesLogger.SetPrefix("[DEBUG RES] ")
+				l.responsesLogger.Println(v...)
+				l.responsesLogger.SetPrefix("")
+				l.responsesLogger.SetFlags(0)
+				l.responsesLogger.Println()
+			}
+		default:
+			if allLog || userLog {
+				l.urlLogger.SetPrefix("[DEBUG USER] ")
+				l.urlLogger.Println(v...)
+				l.Logger.SetFlags(0)
+				l.Logger.Print("\n================================================================================================================")
+			}
 		}
 	}
 }
 
 func (l *logger) info(v ...interface{}) {
-	if LogEnabled() {
-
-		if (v[len(v)-1]) == "request" {
-			l.requestsLogger.SetPrefix("[INFO REQ] ")
-			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]) == "response" {
-			l.responsesLogger.SetPrefix("[INFO RES] ")
-			l.responsesLogger.Println(v...)
-			l.responsesLogger.SetPrefix("")
-			l.responsesLogger.SetFlags(0)
-			l.responsesLogger.Println()
-		} else {
-			l.requestsLogger.SetPrefix("[INFO USER] ")
-			l.requestsLogger.Println(v...)
+	if allLog || reqResLog || userLog {
+		switch v[len(v)-1] {
+		case "request":
+			if allLog || reqResLog {
+				l.requestsLogger.SetPrefix("[INFO REQ] ")
+				l.requestsLogger.Println(v...)
+			}
+		case "response":
+			if allLog || reqResLog {
+				l.responsesLogger.SetPrefix("[INFO RES] ")
+				l.responsesLogger.Println(v...)
+				l.responsesLogger.SetPrefix("")
+				l.responsesLogger.SetFlags(0)
+				l.responsesLogger.Println()
+			}
+		default:
+			if allLog || userLog {
+				l.urlLogger.SetPrefix("[INFO USER] ")
+				l.urlLogger.Println(v...)
+				l.Logger.SetFlags(0)
+				l.Logger.Print("\n================================================================================================================")
+			}
 		}
 	}
 }
 
 func (l *logger) warn(v ...interface{}) {
-	if LogEnabled() {
-		if (v[len(v)-1]) == "request" {
-			l.requestsLogger.SetPrefix("[WARN REQ] ")
-			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]) == "response" {
-			l.responsesLogger.SetPrefix("[WARN RES] ")
-			l.responsesLogger.Println(v...)
-			l.responsesLogger.SetPrefix("")
-			l.responsesLogger.SetFlags(0)
-			l.responsesLogger.Println()
-		} else {
-			l.urlLogger.SetPrefix("[WARN USER] ")
-			l.urlLogger.Println(v...)
+	if allLog || reqResLog || userLog {
+		switch v[len(v)-1] {
+		case "request":
+			if allLog || reqResLog {
+				l.requestsLogger.SetPrefix("[WARN REQ] ")
+				l.requestsLogger.Println(v...)
+			}
+		case "response":
+			if allLog || reqResLog {
+				l.responsesLogger.SetPrefix("[WARN RES] ")
+				l.responsesLogger.Println(v...)
+				l.responsesLogger.SetPrefix("")
+				l.responsesLogger.SetFlags(0)
+				l.responsesLogger.Println()
+			}
+		default:
+			if allLog || userLog {
+				l.urlLogger.SetPrefix("[WARN USER] ")
+				l.urlLogger.Println(v...)
+				l.Logger.SetFlags(0)
+				l.Logger.Print("\n================================================================================================================")
+			}
 		}
 	}
 }
 
 func (l *logger) error(v ...interface{}) {
-	if LogEnabled() {
-		if (v[len(v)-1]) == "request" {
-			l.requestsLogger.SetPrefix("[ERROR REQ] ")
-			l.requestsLogger.Println(v...)
-		} else if (v[len(v)-1]) == "response" {
-			l.responsesLogger.SetPrefix("[ERROR RES] ")
-			l.responsesLogger.Println(v...)
-			l.responsesLogger.SetPrefix("")
-			l.responsesLogger.SetFlags(0)
-			l.responsesLogger.Println()
-		} else {
-			l.urlLogger.SetPrefix("[ERROR USER] ")
-			l.urlLogger.Println(v...)
+	if allLog || reqResLog || userLog {
+		switch v[len(v)-1] {
+		case "request":
+			if allLog || reqResLog {
+				l.requestsLogger.SetPrefix("[ERROR REQ] ")
+				l.requestsLogger.Println(v...)
+			}
+		case "response":
+			if allLog || reqResLog {
+				l.responsesLogger.SetPrefix("[ERROR RES] ")
+				l.responsesLogger.Println(v...)
+				l.responsesLogger.SetPrefix("")
+				l.responsesLogger.SetFlags(0)
+				l.responsesLogger.Println()
+			}
+		default:
+			if allLog || userLog {
+				l.urlLogger.SetPrefix("[ERROR USER] ")
+				l.urlLogger.Println(v...)
+				l.Logger.SetFlags(0)
+				l.Logger.Print("\n================================================================================================================")
+			}
 		}
 	}
 }
 
 func (l *logger) line() {
-	if LogEnabled() {
+	if allLog || reqResLog {
 		l.Logger.SetFlags(0)
 		l.Logger.Print("================================================================================================================\n")
 	}
