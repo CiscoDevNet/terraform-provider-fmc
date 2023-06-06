@@ -133,6 +133,9 @@ func resourceFmcTimeRangeObject() *schema.Resource {
 				Description: "List of URL objects to add",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

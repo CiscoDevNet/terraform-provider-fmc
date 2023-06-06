@@ -37,6 +37,9 @@ func resourceFmcAccessPoliciesCategory() *schema.Resource {
 				Description: "Id of access policy this category belongs to",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

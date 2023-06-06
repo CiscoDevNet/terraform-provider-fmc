@@ -150,6 +150,9 @@ func resourceVNI() *schema.Resource {
 				Description: "IPV4 information",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

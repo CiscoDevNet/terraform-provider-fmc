@@ -64,6 +64,9 @@ func resourceFmcHostObjects() *schema.Resource {
 				Description: "The type of this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

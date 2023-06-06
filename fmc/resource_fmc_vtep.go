@@ -86,6 +86,9 @@ func resourceVTEP() *schema.Resource {
 				Description: "Neighbor Address literal value",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -149,28 +152,28 @@ func resourceVTEPCreate(ctx context.Context, d *schema.ResourceData, m interface
 	var sourceInterface = SourceInterface{
 		ID: source_interface_id,
 	}
-	
+
 	var objects = Object{
-		Overridable:objectOverridable,
-		ID: neighbor_addr_object_id,
+		Overridable: objectOverridable,
+		ID:          neighbor_addr_object_id,
 	}
 	var literals = Literal{
-		Type: neighbor_addr_literal_type,
+		Type:  neighbor_addr_literal_type,
 		Value: neighbor_addr_literal_value,
 	}
 	var NveNeighborAddress = NveNeighborAddress{
-		Object: objects,
+		Object:  objects,
 		Literal: literals,
 	}
 	var vtepEntry [1]VTEPEntry
 
 	vtepEntry[0] = VTEPEntry{
-		NveVtepId:            nve_vtep_id,
-		NveEncapsulationType: nve_encapsulation_type,
-		NveDestinationPort:   nve_destination_port,
-		SourceInterface:      sourceInterface,
+		NveVtepId:                nve_vtep_id,
+		NveEncapsulationType:     nve_encapsulation_type,
+		NveDestinationPort:       nve_destination_port,
+		SourceInterface:          sourceInterface,
 		NveNeighborDiscoveryType: nve_neighbor_discovery_type,
-		NveNeighborAddress: NveNeighborAddress,
+		NveNeighborAddress:       NveNeighborAddress,
 	}
 	vtepResp, err := c.CreateFmcVTEP(ctx, device_id, &VTEPPolicy{
 		NveEnable:   nve_enabled,
@@ -217,17 +220,17 @@ func resourceVTEPUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		c := m.(*Client)
 
 		var objects = Object{
-			Overridable:objectOverridable,
-			ID: neighbor_addr_object_id,
+			Overridable: objectOverridable,
+			ID:          neighbor_addr_object_id,
 		}
-	
+
 		var literals = Literal{
-			Type: neighbor_addr_literal_type,
+			Type:  neighbor_addr_literal_type,
 			Value: neighbor_addr_literal_value,
 		}
-	
+
 		var NveNeighborAddress = NveNeighborAddress{
-			Object: objects,
+			Object:  objects,
 			Literal: literals,
 		}
 
@@ -237,12 +240,12 @@ func resourceVTEPUpdate(ctx context.Context, d *schema.ResourceData, m interface
 		var vtepEntry [1]VTEPEntry
 
 		vtepEntry[0] = VTEPEntry{
-			NveVtepId:            nve_vtep_id,
-			NveEncapsulationType: nve_encapsulation_type,
-			NveDestinationPort:   nve_destination_port,
-			SourceInterface:      sourceInterface,
+			NveVtepId:                nve_vtep_id,
+			NveEncapsulationType:     nve_encapsulation_type,
+			NveDestinationPort:       nve_destination_port,
+			SourceInterface:          sourceInterface,
 			NveNeighborDiscoveryType: nve_neighbor_discovery_type,
-			NveNeighborAddress: NveNeighborAddress,
+			NveNeighborAddress:       NveNeighborAddress,
 		}
 		vtepResp, err := c.UpdateFmcVTEP(ctx, device_id, id, &VTEPPolicyUpdate{
 			ID:          id,

@@ -64,6 +64,9 @@ func resourceFmcNetworkObjects() *schema.Resource {
 				Description: "The type this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

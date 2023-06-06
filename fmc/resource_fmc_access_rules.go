@@ -620,6 +620,9 @@ func resourceFmcAccessRules() *schema.Resource {
 				Description: "New comments to be added for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

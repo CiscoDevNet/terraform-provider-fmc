@@ -71,6 +71,9 @@ func resourceFmcSGTObjects() *schema.Resource {
 				Default:     tag_type,
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
