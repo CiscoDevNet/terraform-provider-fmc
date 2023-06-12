@@ -93,6 +93,9 @@ func resourceFmcSmartLicense() *schema.Resource {
 				Description: "Set to false if you want to deregister on destroy",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

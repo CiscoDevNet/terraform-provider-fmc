@@ -155,6 +155,9 @@ func resourceFmcStaticIPv4Route() *schema.Resource {
 				Description: "The gateway for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

@@ -85,6 +85,9 @@ func resourceFmcPortGroupObjects() *schema.Resource {
 				Description: "The list of port groups to add",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

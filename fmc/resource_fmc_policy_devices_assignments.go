@@ -90,6 +90,9 @@ func resourceFmcPolicyDevicesAssignments() *schema.Resource {
 				Description: "The type of this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -159,7 +162,7 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 			})
 			return diags
 		}
-		
+
 	}
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{

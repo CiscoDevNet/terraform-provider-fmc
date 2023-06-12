@@ -53,6 +53,9 @@ func resourceFmcStandardAcl() *schema.Resource {
 				Description: "The value of this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
