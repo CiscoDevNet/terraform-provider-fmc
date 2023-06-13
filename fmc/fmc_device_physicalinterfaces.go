@@ -44,11 +44,12 @@ type PhysicalInterfaceSecurityZone struct {
 
 type PhysicalInterfaceResponse struct {
 	Type         string                        `json:"type"`
+	Enabled      bool                          `json:"enabled"`
 	Ifname       string                        `json:"ifname"`
 	Description  string                        `json:"description"`
 	ID           string                        `json:"id"`
 	Name         string                        `json:"name"`
-	MTU          int64                         `json:"mtu"`
+	MTU          int64                         `json:"MTU,omitempty"`
 	Mode         string                        `json:"mode"`
 	SecurityZone PhysicalInterfaceSecurityZone `json:"securityZone"`
 }
@@ -56,10 +57,11 @@ type PhysicalInterfaceResponse struct {
 type PhysicalInterfaceRequest struct {
 	Type         string                        `json:"type"`
 	Ifname       string                        `json:"ifname"`
+	Enabled      bool                          `json:"enabled"`
 	Description  string                        `json:"description"`
 	ID           string                        `json:"id"`
 	Name         string                        `json:"name"`
-	MTU          int                           `json:"MTU"`
+	MTU          int                           `json:"MTU,omitempty"`
 	Mode         string                        `json:"mode"`
 	SecurityZone PhysicalInterfaceSecurityZone `json:"securityZone"`
 	IPv4         IPv4                          `json:"ipv4"`
@@ -84,6 +86,7 @@ func (v *Client) GetFmcPhysicalInterface(ctx context.Context, deviceID string, n
 	if err != nil {
 		return nil, fmt.Errorf("getting physical interfaces: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	physicalInterfaces := &PhysicalInterfacesResponse{}
 	err = v.DoRequest(req, physicalInterfaces, http.StatusOK)
@@ -94,9 +97,11 @@ func (v *Client) GetFmcPhysicalInterface(ctx context.Context, deviceID string, n
 	for _, PhysicalInterface := range physicalInterfaces.Items {
 		log.Printf("PhysicalInterface.ID=%s  PhysicalInterface.Name=%s  PhysicalInterface.Type=%s", PhysicalInterface.ID, PhysicalInterface.Name, PhysicalInterface.Type)
 		if PhysicalInterface.Name == name {
+			Log.debug(PhysicalInterface, "response")
 			return &PhysicalInterfaceResponse{
 				ID:           PhysicalInterface.ID,
 				Name:         PhysicalInterface.Name,
+				Enabled:      PhysicalInterface.Enabled,
 				Ifname:       PhysicalInterface.Ifname,
 				Type:         PhysicalInterface.Type,
 				Description:  PhysicalInterface.Description,
@@ -117,6 +122,8 @@ func (v *Client) GetFmcPhysicalInterfaceByID(ctx context.Context, deviceID strin
 	if err != nil {
 		return nil, fmt.Errorf("getting physical interfaces: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
+
 	physicalInterface := &PhysicalInterfaceResponse{}
 	err = v.DoRequest(req, physicalInterface, http.StatusOK)
 
@@ -127,9 +134,11 @@ func (v *Client) GetFmcPhysicalInterfaceByID(ctx context.Context, deviceID strin
 	log.Printf("Get physical interface by name=%s", physicalInterface.Name)
 
 	if physicalInterface != nil {
+		Log.debug(physicalInterface, "response")
 		return &PhysicalInterfaceResponse{
 			ID:           physicalInterface.ID,
 			Name:         physicalInterface.Name,
+			Enabled:      physicalInterface.Enabled,
 			Ifname:       physicalInterface.Ifname,
 			Type:         physicalInterface.Type,
 			Description:  physicalInterface.Description,
@@ -148,7 +157,6 @@ func (v *Client) UpdateFmcPhysicalInterface(ctx context.Context, deviceID string
 	log.Printf("Update physical interface URL=%s", url)
 	body, err := json.Marshal(&object)
 	log.Printf("Update physical interface Request=%s", body)
-
 	if err != nil {
 		return nil, fmt.Errorf("updating physical interfaces: %s - %s", url, err.Error())
 	}
@@ -156,6 +164,7 @@ func (v *Client) UpdateFmcPhysicalInterface(ctx context.Context, deviceID string
 	if err != nil {
 		return nil, fmt.Errorf("updating physical interfaces: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 
 	item := &PhysicalInterfaceResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
@@ -163,7 +172,8 @@ func (v *Client) UpdateFmcPhysicalInterface(ctx context.Context, deviceID string
 	if err != nil {
 		return nil, fmt.Errorf("getting physical interfaces: %s - %s", url, err.Error())
 	}
-	log.Printf("Physical interface updated, response=%s", item)
+	// log.Printf("Physical interface updated, response=%s", item)
+	Log.debug(item, "response")
 
 	return item, nil
 }

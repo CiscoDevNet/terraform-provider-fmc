@@ -18,7 +18,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 	insecureSkipVerify := d.Get("fmc_insecure_skip_verify").(bool)
 	var diags diag.Diagnostics
 
-	if iscdfmc == false && username != "" && password != "" && host != "" && cdotoken == "" && cdfmcdomainuuid == "" {
+	if !iscdfmc && username != "" && password != "" && host != "" && cdotoken == "" && cdfmcdomainuuid == "" {
 		client := NewClient(username, password, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
@@ -26,7 +26,7 @@ func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}
 		}
 		return client, diags
 	}
-	if iscdfmc == true && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
+	if iscdfmc && cdotoken != "" && cdfmcdomainuuid != "" && host != "" && username == "" && password == "" {
 		client := CDFMC_NewClient(cdotoken, cdfmcdomainuuid, host, insecureSkipVerify)
 		err := client.Login()
 		if err != nil {
@@ -106,29 +106,51 @@ func Provider() *schema.Provider {
 			"fmc_ftd_manualnat_rules":        resourceFmcManualNatRules(),
 			"fmc_policy_devices_assignments": resourceFmcPolicyDevicesAssignments(),
 			"fmc_ftd_deploy":                 resourceFmcFtdDeploy(),
-			"fmc_dynamic_object":             resourceFmcDynamicObjects(),
+			"fmc_dynamic_objects":            resourceFmcDynamicObjects(),
 			"fmc_dynamic_object_mapping":     resourceFmcDynamicObjectMapping(),
 			"fmc_security_zone":              resourceFmcSecurityZone(),
 			"fmc_time_range_object":          resourceFmcTimeRangeObject(),
 			"fmc_access_policies_category":   resourceFmcAccessPoliciesCategory(),
 			"fmc_prefilter_policy":           resourceFmcPrefilterPolicy(),
+			"fmc_ips_policies":               resourceFmcIPSPolicies(),
 			"fmc_device_physical_interfaces": resourcePhyInterface(),
 			"fmc_device_sub_interface":       resourceSubInterface(),
+			"fmc_device_vni":                 resourceVNI(),
+			"fmc_devices":                    resourceFmcDevices(),
+			"fmc_device_vtep":                resourceVTEP(),
+			"fmc_staticIPv4_route":           resourceFmcStaticIPv4Route(),
+			"fmc_extended_acl":               resourceFmcExtendedAcl(),
+			"fmc_sgt_objects":                resourceFmcSGTObjects(),
+			"fmc_standard_acl":               resourceFmcStandardAcl(),
+			"fmc_network_analysis_policy":    resourceFmcNetworkAnalysisPolicy(),
+			"fmc_smart_license":              resourceFmcSmartLicense(),
 		},
+
 		DataSourcesMap: map[string]*schema.Resource{
-			"fmc_devices":               dataSourceFmcDevices(),
-			"fmc_access_policies":       dataSourceFmcAccessPolicies(),
-			"fmc_ips_policies":          dataSourceFmcIPSPolicies(),
-			"fmc_file_policies":         dataSourceFmcFilePolicies(),
-			"fmc_syslog_alerts":         dataSourceFmcSyslogAlerts(),
-			"fmc_security_zones":        dataSourceFmcSecurityZones(),
-			"fmc_network_objects":       dataSourceFmcNetworkObjects(),
-			"fmc_host_objects":          dataSourceFmcHostObjects(),
-			"fmc_url_objects":           dataSourceFmcURLObjects(),
-			"fmc_port_objects":          dataSourceFmcPortObjects(),
-			"fmc_dynamic_objects":       dataSourceFmcDynamicObjects(),
-			"fmc_network_group_objects": dataSourceFmcNetworkGroupObjects(),
-			"fmc_device_sub_interface":  dataSourceFmcSubInterface(),
+			"fmc_devices":                    dataSourceFmcDevices(),
+			"fmc_access_policies":            dataSourceFmcAccessPolicies(),
+			"fmc_ips_policies":               dataSourceFmcIPSPolicies(),
+			"fmc_file_policies":              dataSourceFmcFilePolicies(),
+			"fmc_syslog_alerts":              dataSourceFmcSyslogAlerts(),
+			"fmc_security_zones":             dataSourceFmcSecurityZones(),
+			"fmc_network_objects":            dataSourceFmcNetworkObjects(),
+			"fmc_host_objects":               dataSourceFmcHostObjects(),
+			"fmc_url_objects":                dataSourceFmcURLObjects(),
+			"fmc_port_objects":               dataSourceFmcPortObjects(),
+			"fmc_dynamic_objects":            dataSourceFmcDynamicObjects(),
+			"fmc_network_group_objects":      dataSourceFmcNetworkGroupObjects(),
+			"fmc_extended_acl":               dataSourceFmcExtendedAcl(),
+			"fmc_device_vni":                 dataSourceFmcVNI(),
+			"fmc_ftd_nat_policies":           dataSourceFmcNatPolicies(),
+			"fmc_staticIPv4_route":           dataSourceFmcStaticIPv4Route(),
+			"fmc_device_physical_interfaces": dataSourceFmcPhysicalInterface(),
+			"fmc_standard_acl":               dataSourceFmcStandardAcl(),
+			"fmc_sgt_objects":                dataFmcSGTObjects(),
+			"fmc_ise_sgt_objects":            dataFmcIseSGTObjects(),
+			"fmc_network_analysis_policy":    dataSourceFmcNetworkAnalysisPolicy(),
+			"fmc_device_vtep_policies":       dataSourceFmcVTEPPolicies(),
+			"fmc_smart_license":              dataSourceFmcSmartLicense(),
+      "fmc_device_sub_interface":       dataSourceFmcSubInterface(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}

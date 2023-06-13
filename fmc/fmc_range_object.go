@@ -61,11 +61,14 @@ func (v *Client) CreateFmcRangeObject(ctx context.Context, object *RangeObject) 
 	if err != nil {
 		return nil, fmt.Errorf("creating range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &RangeObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -75,11 +78,14 @@ func (v *Client) GetFmcRangeObject(ctx context.Context, id string) (*RangeObject
 	if err != nil {
 		return nil, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &RangeObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -93,11 +99,14 @@ func (v *Client) UpdateFmcRangeObject(ctx context.Context, id string, object *Ra
 	if err != nil {
 		return nil, fmt.Errorf("updating range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &RangeObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -107,6 +116,8 @@ func (v *Client) DeleteFmcRangeObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

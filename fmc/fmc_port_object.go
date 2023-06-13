@@ -83,11 +83,14 @@ func (v *Client) CreateFmcPortObject(ctx context.Context, object *PortObject) (*
 	if err != nil {
 		return nil, fmt.Errorf("creating port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -97,11 +100,14 @@ func (v *Client) GetFmcPortObject(ctx context.Context, id string) (*PortObjectRe
 	if err != nil {
 		return nil, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -115,11 +121,14 @@ func (v *Client) UpdateFmcPortObject(ctx context.Context, id string, object *Por
 	if err != nil {
 		return nil, fmt.Errorf("updating port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PortObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -129,6 +138,8 @@ func (v *Client) DeleteFmcPortObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting port objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

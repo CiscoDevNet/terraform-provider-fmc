@@ -180,48 +180,57 @@ resource "fmc_ftd_manualnat_rules" "new_rule_before_1" {
 
 ### Required
 
-- **nat_policy** (String) The ID of the NAT policy this resource belongs to
-- **nat_type** (String) The type of this resource, "static" or "dynamic"
+- `nat_policy` (String) The ID of the NAT policy this resource belongs to
+- `nat_type` (String) The type of this resource, "static" or "dynamic"
+- `original_source` (Block List, Min: 1, Max: 1) Original source for this resource (see [below for nested schema](#nestedblock--original_source))
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **destination_interface** (Block List, Max: 1) Destination interface for this resource (see [below for nested schema](#nestedblock--destination_interface))
-- **enabled** (Boolean) Enable this resource
-- **fallthrough** (Boolean) Enable fallthrough
-- **id** (String) The ID of this resource.
-- **interface_in_original_destination** (Boolean) Interface is the original destination
-- **interface_in_translated_source** (Boolean) Interface is the translated source
-- **ipv6** (Boolean) Enable IPv6
-- **net_to_net** (Boolean) Enable Net to Net
-- **no_proxy_arp** (Boolean) Disable proxy ARP
-- **original_destination** (Block List, Max: 1) Original destination for this resource (see [below for nested schema](#nestedblock--original_destination))
-- **original_destination_port** (Block List, Max: 1) Original destination port for this resource (see [below for nested schema](#nestedblock--original_destination_port))
-- **original_source** (Block List, Max: 1) Original source for this resource (see [below for nested schema](#nestedblock--original_source))
-- **original_source_port** (Block List, Max: 1) Original source port for this resource (see [below for nested schema](#nestedblock--original_source_port))
-- **pat_options** (Block List, Max: 1) PAT Options for this resource (see [below for nested schema](#nestedblock--pat_options))
-- **perform_route_lookup** (Boolean) Enable perform route lookup
-- **section** (String) Section, "after_auto" or "before_auto"
-- **source_interface** (Block List, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--source_interface))
-- **target_index** (String) Target index to place this resource
-- **translate_dns** (Boolean) Enable translate DNS
-- **translated_destination** (Block List, Max: 1) Translated destination for this resource (see [below for nested schema](#nestedblock--translated_destination))
-- **translated_destination_port** (Block List, Max: 1) Translated destination port for this resource (see [below for nested schema](#nestedblock--translated_destination_port))
-- **translated_source** (Block List, Max: 1) Translated source for this resource (see [below for nested schema](#nestedblock--translated_source))
-- **translated_source_port** (Block List, Max: 1) Translated source port for this resource (see [below for nested schema](#nestedblock--translated_source_port))
-- **unidirectional** (Boolean) Make this resource unidirectional
+- `description` (String) The description of this resource
+- `destination_interface` (Block List, Max: 1) Destination interface for this resource (see [below for nested schema](#nestedblock--destination_interface))
+- `enabled` (Boolean) Enable this resource
+- `fallthrough` (Boolean) Enable fallthrough
+- `interface_in_original_destination` (Boolean) Interface is the original destination
+- `interface_in_translated_source` (Boolean) Interface is the translated source
+- `ipv6` (Boolean) Enable IPv6
+- `net_to_net` (Boolean) Enable Net to Net
+- `no_proxy_arp` (Boolean) Disable proxy ARP
+- `original_destination` (Block List, Max: 1) Original destination for this resource (see [below for nested schema](#nestedblock--original_destination))
+- `original_destination_port` (Block List, Max: 1) Original destination port for this resource (see [below for nested schema](#nestedblock--original_destination_port))
+- `original_source_port` (Block List, Max: 1) Original source port for this resource (see [below for nested schema](#nestedblock--original_source_port))
+- `pat_options` (Block List, Max: 1) PAT Options for this resource (see [below for nested schema](#nestedblock--pat_options))
+- `perform_route_lookup` (Boolean) Enable perform route lookup
+- `section` (String) Section, "after_auto" or "before_auto"
+- `source_interface` (Block List, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--source_interface))
+- `target_index` (String) Target index to place this resource
+- `translate_dns` (Boolean) Enable translate DNS
+- `translated_destination` (Block List, Max: 1) Translated destination for this resource (see [below for nested schema](#nestedblock--translated_destination))
+- `translated_destination_port` (Block List, Max: 1) Translated destination port for this resource (see [below for nested schema](#nestedblock--translated_destination_port))
+- `translated_source` (Block List, Max: 1) Translated source for this resource (see [below for nested schema](#nestedblock--translated_source))
+- `translated_source_port` (Block List, Max: 1) Translated source port for this resource (see [below for nested schema](#nestedblock--translated_source_port))
+- `unidirectional` (Boolean) Make this resource unidirectional
 
 ### Read-Only
 
-- **type** (String)
+- `id` (String) The ID of this resource.
+- `type` (String)
+
+<a id="nestedblock--original_source"></a>
+### Nested Schema for `original_source`
+
+Required:
+
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
+
 
 <a id="nestedblock--destination_interface"></a>
 ### Nested Schema for `destination_interface`
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--original_destination"></a>
@@ -229,8 +238,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--original_destination_port"></a>
@@ -238,17 +247,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
-
-
-<a id="nestedblock--original_source"></a>
-### Nested Schema for `original_source`
-
-Required:
-
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--original_source_port"></a>
@@ -256,8 +256,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--pat_options"></a>
@@ -265,19 +265,19 @@ Required:
 
 Optional:
 
-- **extended_pat_table** (Boolean)
-- **include_reserve_ports** (Boolean)
-- **interface_pat** (Boolean)
-- **pat_pool_address** (Block List, Max: 1) (see [below for nested schema](#nestedblock--pat_options--pat_pool_address))
-- **round_robin** (Boolean)
+- `extended_pat_table` (Boolean)
+- `include_reserve_ports` (Boolean)
+- `interface_pat` (Boolean)
+- `pat_pool_address` (Block List, Max: 1) (see [below for nested schema](#nestedblock--pat_options--pat_pool_address))
+- `round_robin` (Boolean)
 
 <a id="nestedblock--pat_options--pat_pool_address"></a>
 ### Nested Schema for `pat_options.pat_pool_address`
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 
@@ -286,8 +286,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--translated_destination"></a>
@@ -295,8 +295,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--translated_destination_port"></a>
@@ -304,8 +304,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--translated_source"></a>
@@ -313,8 +313,8 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 
 <a id="nestedblock--translated_source_port"></a>
@@ -322,7 +322,7 @@ Required:
 
 Required:
 
-- **id** (String) The ID of this resource
-- **type** (String) The type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) The type of this resource
 
 

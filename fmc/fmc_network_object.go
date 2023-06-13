@@ -82,11 +82,14 @@ func (v *Client) CreateFmcNetworkObject(ctx context.Context, object *NetworkObje
 	if err != nil {
 		return nil, fmt.Errorf("creating network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -96,11 +99,14 @@ func (v *Client) GetFmcNetworkObject(ctx context.Context, id string) (*NetworkOb
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -114,11 +120,14 @@ func (v *Client) UpdateFmcNetworkObject(ctx context.Context, id string, object *
 	if err != nil {
 		return nil, fmt.Errorf("updating network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -128,6 +137,8 @@ func (v *Client) DeleteFmcNetworkObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

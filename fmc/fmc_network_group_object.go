@@ -63,9 +63,9 @@ type NetworkGroupObjectsResponse struct {
 		Self string `json:"self"`
 	} `json:"links"`
 	Items []struct {
-		ID     string `json:"id"`
-		Type   string `json:"type"`
-		Links  struct {
+		ID    string `json:"id"`
+		Type  string `json:"type"`
+		Links struct {
 			Self string `json:"self"`
 		} `json:"links"`
 		Name string `json:"name"`
@@ -77,6 +77,7 @@ type NetworkGroupObjectsResponse struct {
 		Pages  int `json:"pages"`
 	} `json:"paging"`
 }
+
 // /fmc_config/v1/domain/DomainUUID/object/networkgroups?bulk=true ( Bulk POST operation on network objects. )
 func (v *Client) GetFmcNetworkGroupObjectByName(ctx context.Context, name string) (*NetworkGroupObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networkgroups", v.domainBaseURL)
@@ -113,11 +114,14 @@ func (v *Client) CreateFmcNetworkGroupObject(ctx context.Context, object *Networ
 	if err != nil {
 		return nil, fmt.Errorf("creating network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -127,11 +131,14 @@ func (v *Client) GetFmcNetworkGroupObject(ctx context.Context, id string) (*Netw
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -145,11 +152,14 @@ func (v *Client) UpdateFmcNetworkGroupObject(ctx context.Context, id string, obj
 	if err != nil {
 		return nil, fmt.Errorf("updating network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &NetworkGroupObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -159,6 +169,8 @@ func (v *Client) DeleteFmcNetworkGroupObject(ctx context.Context, id string) err
 	if err != nil {
 		return fmt.Errorf("deleting network objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

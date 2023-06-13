@@ -57,11 +57,14 @@ func (v *Client) CreateFmcTimeRangeObject(ctx context.Context, object *TimeRange
 	if err != nil {
 		return nil, fmt.Errorf("creating time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &TimeRangeObject{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting time range objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -71,11 +74,14 @@ func (v *Client) GetFmcTimeRangeObject(ctx context.Context, id string) (*TimeRan
 	if err != nil {
 		return nil, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &TimeRangeObject{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -94,11 +100,14 @@ func (v *Client) UpdateFmcTimeRangeObject(ctx context.Context, id string, object
 	if err != nil {
 		return nil, fmt.Errorf("updating time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &TimeRangeObject{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -108,6 +117,8 @@ func (v *Client) DeleteFmcTimeRangeObject(ctx context.Context, id string) error 
 	if err != nil {
 		return fmt.Errorf("deleting time range object: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }

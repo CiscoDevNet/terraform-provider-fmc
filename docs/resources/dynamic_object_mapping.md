@@ -43,11 +43,11 @@ resource "fmc_dynamic_object_mapping" "test" {
 
 ### Required
 
-- **dynamic_object_id** (String) ID of dynamic object to be used for mapping
-- **mappings** (List of String) List of IPs to be mapped to dynamic object
+- `dynamic_object_id` (String) ID of dynamic object to be used for mapping
+- `mappings` (List of String) List of IPs to be mapped to dynamic object
 
-### Optional
+### Read-Only
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 

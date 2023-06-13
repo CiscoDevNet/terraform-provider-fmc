@@ -3,30 +3,40 @@
 page_title: "fmc_prefilter_policy Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
+  Resource for Network Analysis Policy in FMC
+  Example
+  An example is shown below:
+  hcl
   resource "fmc_prefilter_policy" "prefilter_policy" {
-              name        = "Prefilter Policy"
-              description = "Terraform Prefilter Policy description"
-              default_action { 
-                  log_end = true
-                  log_begin = true
-                  send_events_to_fmc = true
-                  action = "BLOCK_TUNNELS"
-              }
+      name        = "Prefilter Policy"
+      description = "Terraform Prefilter Policy description"
+      default_action {
+          log_end = true
+          log_begin = true
+          send_events_to_fmc = true
+          action = "BLOCK_TUNNELS"
           }
+      }
 ---
 
 # fmc_prefilter_policy (Resource)
 
+Resource for Network Analysis Policy in FMC
+
+## Example
+An example is shown below: 
+```hcl
 resource "fmc_prefilter_policy" "prefilter_policy" {
-				name        = "Prefilter Policy"
-				description = "Terraform Prefilter Policy description"
-				default_action { 
-					log_end = true
-					log_begin = true
-					send_events_to_fmc = true
-					action = "BLOCK_TUNNELS"
-				}
-			}
+	name        = "Prefilter Policy"
+	description = "Terraform Prefilter Policy description"
+	default_action {
+		log_end = true
+		log_begin = true
+		send_events_to_fmc = true
+		action = "BLOCK_TUNNELS"
+		}
+	}
+```
 
 
 
@@ -35,28 +45,31 @@ resource "fmc_prefilter_policy" "prefilter_policy" {
 
 ### Required
 
-- **default_action** (Block List, Min: 1, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--default_action))
-- **name** (String) The name of this resource
+- `default_action` (Block List, Min: 1, Max: 1) Source interface for this resource (see [below for nested schema](#nestedblock--default_action))
+- `name` (String) The name of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `description` (String) The description of this resource
+
+### Read-Only
+
+- `id` (String) The ID of this resource.
 
 <a id="nestedblock--default_action"></a>
 ### Nested Schema for `default_action`
 
 Required:
 
-- **action** (String) Action. Should be BLOCK_TUNNELS or ANALYZE_TUNNELS
+- `action` (String) Action. Should be BLOCK_TUNNELS or ANALYZE_TUNNELS
 
 Optional:
 
-- **log_begin** (Boolean) Log begin
-- **send_events_to_fmc** (Boolean) Send events to FMC
+- `log_begin` (Boolean) Log begin
+- `send_events_to_fmc` (Boolean) Send events to FMC
 
 Read-Only:
 
-- **id** (String) The ID of this resource.
+- `id` (String) The ID of this resource.
 
 

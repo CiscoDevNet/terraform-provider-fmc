@@ -25,39 +25,35 @@ type AccessRuleDefaultAction struct {
 	Logend          string              `json:"logEnd"`
 	Sendeventstofmc string              `json:"sendEventsToFMC"`
 	Action          string              `json:"action"`
-	// Variableset struct {
-	// 	ID   string `json:"id"`
-	// 	Type string `json:"type"`
-	// } `json:"variableSet"`
-	// Snmpconfig struct {
-	// 	ID   string `json:"id"`
-	// 	Type string `json:"type"`
-	// } `json:"snmpConfig"`
 }
 
 type AccessRule struct {
-	ID                  string               `json:"id,omitempty"`
-	Name                string               `json:"name"`
-	Type                string               `json:"type"`
-	Action              string               `json:"action"`
-	Syslogseverity      string               `json:"syslogSeverity,omitempty"`
-	Enablesyslog        bool                 `json:"enableSyslog"`
-	Enabled             bool                 `json:"enabled"`
-	Sendeventstofmc     bool                 `json:"sendEventsToFMC"`
-	Logfiles            bool                 `json:"logFiles"`
-	Logbegin            bool                 `json:"logBegin"`
-	Logend              bool                 `json:"logEnd"`
-	Sourcezones         AccessRuleSubConfigs `json:"sourceZones,omitempty"`
-	Destinationzones    AccessRuleSubConfigs `json:"destinationZones,omitempty"`
-	Sourcenetworks      AccessRuleSubConfigs `json:"sourceNetworks,omitempty"`
-	Destinationnetworks AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
-	Sourceports         AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
-	Destinationports    AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
-	Urls                AccessRuleSubConfigs `json:"urls,omitempty"`
-	Ipspolicy           *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
-	Filepolicy          *AccessRuleSubConfig `json:"filePolicy,omitempty"`
-	Syslogconfig        *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
-	Newcomments         []string             `json:"newComments,omitempty"`
+	ID                           string               `json:"id,omitempty"`
+	Name                         string               `json:"name"`
+	Type                         string               `json:"type"`
+	Action                       string               `json:"action"`
+	Syslogseverity               string               `json:"syslogSeverity,omitempty"`
+	Enablesyslog                 bool                 `json:"enableSyslog"`
+	Enabled                      bool                 `json:"enabled"`
+	Sendeventstofmc              bool                 `json:"sendEventsToFMC"`
+	Logfiles                     bool                 `json:"logFiles"`
+	Logbegin                     bool                 `json:"logBegin"`
+	Logend                       bool                 `json:"logEnd"`
+	Sourcezones                  AccessRuleSubConfigs `json:"sourceZones,omitempty"`
+	Destinationzones             AccessRuleSubConfigs `json:"destinationZones,omitempty"`
+	Sourcenetworks               AccessRuleSubConfigs `json:"sourceNetworks,omitempty"`
+	Destinationnetworks          AccessRuleSubConfigs `json:"destinationNetworks,omitempty"`
+	Sourceports                  AccessRuleSubConfigs `json:"sourcePorts,omitempty"`
+	Destinationports             AccessRuleSubConfigs `json:"destinationPorts,omitempty"`
+	Urls                         AccessRuleSubConfigs `json:"urls,omitempty"`
+	DestinationDynamicObjects    AccessRuleSubConfigs `json:"destinationDynamicObjects,omitempty"`
+	SourceDynamicObjects         AccessRuleSubConfigs `json:"sourceDynamicObjects,omitempty"`
+	SourceSecurityGroupTags      AccessRuleSubConfigs `json:"sourceSecurityGroupTags,omitempty"`
+	DestinationSecurityGroupTags AccessRuleSubConfigs `json:"destinationSecurityGroupTags,omitempty"`
+	Ipspolicy                    *AccessRuleSubConfig `json:"ipsPolicy,omitempty"`
+	Filepolicy                   *AccessRuleSubConfig `json:"filePolicy,omitempty"`
+	Syslogconfig                 *AccessRuleSubConfig `json:"syslogConfig,omitempty"`
+	Newcomments                  []string             `json:"newComments,omitempty"`
 }
 
 type AccessRuleUpdate AccessRule
@@ -123,6 +119,26 @@ type AccessRuleResponse struct {
 	Sourceports struct {
 		Objects []AccessRuleResponseObject `json:"objects"`
 	} `json:"sourcePorts"`
+	DestinationDynamicObjects struct {
+		Objects []AccessRuleResponseObject `json:"objects"`
+	} `json:"destinationDynamicObjects"`
+	SourceDynamicObjects struct {
+		Objects []AccessRuleResponseObject `json:"objects"`
+	} `json:"sourceDynamicObjects"`
+	SourceSecurityGroupTags struct {
+		Objects  []AccessRuleResponseObject `json:"objects"`
+		Literals []struct {
+			Tag  string `json:"tag"`
+			Name string `json:"name"`
+		} `json:"literals"`
+	} `json:"sourceSecurityGroupTags"`
+	DestinationSecurityGroupTags struct {
+		Objects  []AccessRuleResponseObject `json:"objects"`
+		Literals []struct {
+			Tag  string `json:"tag"`
+			Name string `json:"name"`
+		} `json:"literals"`
+	} `json:"destinationSecurityGroupTags"`
 	Version     string                   `json:"version"`
 	Variableset AccessRuleResponseObject `json:"variableSet"`
 	Logfiles    bool                     `json:"logFiles"`
@@ -168,25 +184,31 @@ func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insert
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s, %s", url, err.Error(), body)
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
 func (v *Client) GetFmcAccessRule(ctx context.Context, acpId string, id string) (*AccessRuleResponse, error) {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	Log.debug(req, "request")
 	if err != nil {
 		return nil, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
 	}
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -200,17 +222,21 @@ func (v *Client) UpdateFmcAccessRule(ctx context.Context, acpId, id string, acce
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &AccessRuleResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("creating access rules: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
 func (v *Client) DeleteFmcAccessRule(ctx context.Context, acpId string, id string) error {
 	url := fmt.Sprintf("%s/policy/accesspolicies/%s/accessrules/%s", v.domainBaseURL, acpId, id)
 	req, err := http.NewRequestWithContext(ctx, "DELETE", url, nil)
+	Log.debug(req, "request")
 	if err != nil {
 		return fmt.Errorf("deleting access rules: %s - %s", url, err.Error())
 	}

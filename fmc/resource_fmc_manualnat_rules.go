@@ -286,7 +286,7 @@ func resourceFmcManualNatRules() *schema.Resource {
 			},
 			"original_source": {
 				Type:     schema.TypeList,
-				Optional: true,
+				Required: true,
 				MaxItems: 1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
@@ -490,6 +490,9 @@ func resourceFmcManualNatRules() *schema.Resource {
 				Description: "PAT Options for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -569,7 +572,11 @@ func resourceFmcManualNatRulesRead(ctx context.Context, d *schema.ResourceData, 
 
 	item, err := c.GetFmcManualNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
-		return returnWithDiag(diags, err)
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			return returnWithDiag(diags, err)
+		}
 	}
 	if err := d.Set("type", item.Type); err != nil {
 		return returnWithDiag(diags, err)
