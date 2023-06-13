@@ -10,20 +10,28 @@ data "fmc_security_zones" "my_security_zone" {
 output "security_zone" {
   value = data.fmc_security_zones.my_security_zone
 }
+ 
+data "fmc_device_sub_interface" "fmc_device_sub_interface" {
+   name = "TenGigabitEthernet0/0"
+    device_id = data.fmc_devices.device.id
+}
 
+output "my_fmc_device_sub_interface" {
+  value = data.fmc_device_sub_interface.fmc_device_sub_interface
+}
 
 resource "fmc_device_sub_interface" "my_fmc_device_sub_interface" {
     device_id = data.fmc_devices.device.id
     name = "TenGigabitEthernet0/0"
     type = "SubInterface"
-    description = "DescriptionUpdated"
+    description = "UpdatedDescription"
     sub_interface_id = 3
-    if_name = "IFNameUpdated"
-    mtu = 1504
-    priority = 4
+    if_name = "UpdatedIFName"
+    mtu = 1505
+    priority = 5
     management_only = false
     security_zone_id = data.fmc_security_zones.my_security_zone.id
-    vlan_id = 4
+    vlan_id = 5
     enabled = true
     ipv4 {
       static {
