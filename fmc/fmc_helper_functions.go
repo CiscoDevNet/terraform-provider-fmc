@@ -63,3 +63,29 @@ func ToMap(in interface{}, tag string) (map[string]interface{}, error) {
 	}
 	return out, nil
 }
+
+func isEqual(obj1 map[string]interface{}, obj2 map[string]interface{}) bool {
+	// Compare each attribute of the objects
+	// Return true if all attributes are equal, false otherwise
+	// You can modify this function based on the structure of your objects
+
+	// Example implementation: Check if the "name" attribute is equal
+
+	// if obj1["id"] != obj2["id"] {
+	// 	return false
+	// }
+
+	if obj1["name"] != obj2["name"] {
+		return false
+	}
+
+	if obj1["description"] != obj2["description"] {
+		return false
+	}
+
+	if obj1["value"] != obj2["value"] {
+		return false
+	}
+
+	return true
+}

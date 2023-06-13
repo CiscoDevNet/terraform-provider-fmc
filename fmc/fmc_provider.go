@@ -123,6 +123,7 @@ func Provider() *schema.Provider {
 			"fmc_standard_acl":               resourceFmcStandardAcl(),
 			"fmc_network_analysis_policy":    resourceFmcNetworkAnalysisPolicy(),
 			"fmc_smart_license":              resourceFmcSmartLicense(),
+			"fmc_network_objects_bulk":       resourceFmcNetworkObjectsBulk(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
