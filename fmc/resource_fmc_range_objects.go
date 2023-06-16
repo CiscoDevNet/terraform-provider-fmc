@@ -59,6 +59,9 @@ func resourceFmcRangeObjects() *schema.Resource {
 				},
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

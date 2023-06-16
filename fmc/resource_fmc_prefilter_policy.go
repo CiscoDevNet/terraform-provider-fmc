@@ -99,6 +99,9 @@ func resourceFmcPrefilterPolicy() *schema.Resource {
 				Description: "Source interface for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

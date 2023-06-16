@@ -108,6 +108,9 @@ func resourceFmcURLObjectGroup() *schema.Resource {
 				Description: "List of URL literals to add",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

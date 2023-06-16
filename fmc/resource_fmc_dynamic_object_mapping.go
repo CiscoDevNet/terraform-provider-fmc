@@ -3,9 +3,10 @@ package fmc
 import (
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"strings"
 )
 
 func resourceFmcDynamicObjectMapping() *schema.Resource {
@@ -45,6 +46,9 @@ func resourceFmcDynamicObjectMapping() *schema.Resource {
 					Type: schema.TypeString,
 				},
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }

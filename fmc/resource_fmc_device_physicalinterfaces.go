@@ -124,6 +124,9 @@ func resourcePhyInterface() *schema.Resource {
 				Description: "IPv6 EnforceEUI64",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

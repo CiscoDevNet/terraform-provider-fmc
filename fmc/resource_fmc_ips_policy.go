@@ -53,6 +53,9 @@ func resourceFmcIPSPolicies() *schema.Resource {
 				Description: "Name of the base policy",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
