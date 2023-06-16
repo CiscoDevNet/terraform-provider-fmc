@@ -66,6 +66,16 @@ func resourceFmcDevices() *schema.Resource {
 				Optional:    true,
 				Description: "Select the desired performace tier",
 			},
+			"cdo_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDO-Host",
+			},
+			"cdo_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDO-Region",
+			},
 			"license_caps": {
 				Type:        schema.TypeList,
 				Optional:    true,
@@ -202,8 +212,8 @@ func resourceFmcDeviceRead(ctx context.Context, d *schema.ResourceData, m interf
 		})
 		return diags
 	}
-
-	if err := d.Set("nat_id", item.NatID); err != nil {
+	NatIDSet := d.Get("nat_id").(string)
+	if err := d.Set("nat_id", NatIDSet); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read device",
@@ -266,7 +276,7 @@ func resourceFmcDeviceDelete(ctx context.Context, d *schema.ResourceData, m inte
 
 	id := d.Id()
 
-	err := c.DeleteFmcDevice(ctx, id)
+	err := c.DeleteFmcDevice(ctx, m, id,d.Get("name").(string),d.Get("cdo_host").(string),d.Get("cdo_region").(string)  )
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
