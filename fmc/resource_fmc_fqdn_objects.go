@@ -65,6 +65,9 @@ func resourceFmcFQDNObjects() *schema.Resource {
 				Description: `DNS resolution, "IPV4_ONLY", "IPV6_ONLY" or "IPV4_AND_IPV6"`,
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

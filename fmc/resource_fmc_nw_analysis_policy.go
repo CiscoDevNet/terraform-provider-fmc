@@ -91,6 +91,9 @@ func resourceFmcNetworkAnalysisPolicy() *schema.Resource {
 				Description: "The snort engine of this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

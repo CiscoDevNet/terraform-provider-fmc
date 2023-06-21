@@ -490,6 +490,9 @@ func resourceFmcManualNatRules() *schema.Resource {
 				Description: "PAT Options for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

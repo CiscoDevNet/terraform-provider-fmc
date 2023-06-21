@@ -53,7 +53,6 @@ resource "fmc_policy_devices_assignments" "policy_assignment" {
 
 ### Read-Only
 
-- `description` (String) The description of this resource
 - `id` (String) The ID of this resource.
 - `name` (String) The name of this resource
 - `type` (String) The type of this resource
