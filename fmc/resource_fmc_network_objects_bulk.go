@@ -2,7 +2,9 @@ package fmc
 
 import (
 	"context"
+	"strconv"
 	"strings"
+	"time"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -172,7 +174,7 @@ func resourceFmcNetworkObjectsReadBulk(ctx context.Context, d *schema.ResourceDa
 		return returnWithDiag(diags, err)
 	}
 
-	d.SetId("network_objects")
+	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
 	return diags
 }
 
@@ -237,7 +239,6 @@ func resourceFmcNetworkObjectsUpdateBulk(ctx context.Context, d *schema.Resource
 		}
 
 		// Check if objects are deleted in the update cycle
-		id_mappings = d.Get("id_mappings").([]interface{})
 		if len(id_mappings) > len(newObjects) {
 			// Delete stuff now.
 			idMappingsMap := make(map[string]interface{})
@@ -304,7 +305,6 @@ func resourceFmcNetworkObjectsUpdateBulk(ctx context.Context, d *schema.Resource
 		}
 
 		// Check if objects are updated in the update cycle
-		id_mappings = d.Get("id_mappings").([]interface{})
 		for i := 0; i < len(id_mappings) && i < len(newObjects); i++ {
 			elem := id_mappings[i]
 			newObject := newObjects[i].(map[string]interface{})
@@ -329,7 +329,8 @@ func resourceFmcNetworkObjectsUpdateBulk(ctx context.Context, d *schema.Resource
 			}
 
 			// Rest of the code using obj
-			if !isEqual(obj, newObject) {
+			keysToCompare := []string{"name", "description", "value"}
+			if !isEqual(obj, newObject, keysToCompare...) {
 				Log.info("changed object: ", newObject)
 				_, err = c.UpdateFmcNetworkObject(ctx, id, &NetworkObjectUpdateInput{
 					Name:        newObject["name"].(string),
