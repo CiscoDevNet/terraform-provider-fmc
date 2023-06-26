@@ -175,6 +175,7 @@ func resourceFmcNetworkObjectsReadBulk(ctx context.Context, d *schema.ResourceDa
 	}
 
 	d.SetId(strconv.FormatInt(time.Now().Unix(), 10))
+
 	return diags
 }
 
