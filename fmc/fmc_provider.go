@@ -124,6 +124,7 @@ func Provider() *schema.Provider {
 			"fmc_network_analysis_policy":    resourceFmcNetworkAnalysisPolicy(),
 			"fmc_smart_license":              resourceFmcSmartLicense(),
 			"fmc_network_objects_bulk":       resourceFmcNetworkObjectsBulk(),
+			"fmc_devices_bulk":               resourceFmcDevicesBulk(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
