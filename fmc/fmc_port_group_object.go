@@ -108,7 +108,7 @@ func (v *Client) GetFmcPortGroupObjectByName(ctx context.Context, name string) (
 		}
 	}
 
-	return nil, fmt.Errorf("no network group found with name %s", name)
+	return nil, fmt.Errorf("no port group  object found with name %s", name)
 }
 
 func (v *Client) UpdateFmcPortGroupObject(ctx context.Context, id string, object *PortGroupObjectUpdateInput) (*PortGroupObjectResponse, error) {
