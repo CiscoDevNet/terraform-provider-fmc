@@ -30,6 +30,8 @@ data "fmc_device_physical_interfaces" "ccl_physical_interface" {
     device_id = data.fmc_devices.device1.id
     name = "GigabitEthernet0/0"
 }
+
+# Note this will only work on VMware, not on public cloud.
 resource "fmc_device_cluster" "cluster" {
   name = "ftd_16"
   control_device {
