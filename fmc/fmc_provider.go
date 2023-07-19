@@ -123,6 +123,7 @@ func Provider() *schema.Provider {
 			"fmc_standard_acl":               resourceFmcStandardAcl(),
 			"fmc_network_analysis_policy":    resourceFmcNetworkAnalysisPolicy(),
 			"fmc_smart_license":              resourceFmcSmartLicense(),
+			"fmc_device_cluster":             resourceFmcDeviceCluster(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
@@ -149,6 +150,7 @@ func Provider() *schema.Provider {
 			"fmc_network_analysis_policy":    dataSourceFmcNetworkAnalysisPolicy(),
 			"fmc_device_vtep_policies":       dataSourceFmcVTEPPolicies(),
 			"fmc_smart_license":              dataSourceFmcSmartLicense(),
+			"fmc_device_cluster":             dataSourceFmcDeviceCluster(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
