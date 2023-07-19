@@ -26,7 +26,7 @@ data "fmc_devices" "device2" {
 data "fmc_devices" "device3" {
     name = "FTD3"
 }
-data "fmc_device_physical_interfaces" "zero_physical_interface" {
+data "fmc_device_physical_interfaces" "ccl_physical_interface" {
     device_id = data.fmc_devices.device1.id
     name = "GigabitEthernet0/0"
 }
@@ -44,8 +44,8 @@ resource "fmc_device_cluster" "cluster" {
   }
   common_bootstrap {
     ccl_interface {
-      id = data.fmc_device_physical_interfaces.zero_physical_interface.id
-      name = data.fmc_device_physical_interfaces.zero_physical_interface.name
+      id = data.fmc_device_physical_interfaces.ccl_physical_interface.id
+      name = data.fmc_device_physical_interfaces.ccl_physical_interface.name
     }
     ccl_network = "10.10.11.0/27"
     vni_network = "10.10.10.0/27"
