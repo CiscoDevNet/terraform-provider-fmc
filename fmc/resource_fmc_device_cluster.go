@@ -13,6 +13,7 @@ func resourceFmcDeviceCluster() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for adding device in a cluster\n" +
 			"\n" +
+			"Note this will only work on VMware, not on public cloud.\n" +
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
@@ -30,8 +31,8 @@ func resourceFmcDeviceCluster() *schema.Resource {
 			"	}\n"+
 			"	common_bootstrap {\n"+
 			"	  ccl_interface {\n" +
-			"		id = data.fmc_device_physical_interfaces.zero_physical_interface.id\n" +
-			"		name = data.fmc_device_physical_interfaces.zero_physical_interface.name\n" +
+			"		id = data.fmc_device_physical_interfaces.ccl_physical_interface.id\n" +
+			"		name = data.fmc_device_physical_interfaces.ccl_physical_interface.name\n" +
 			"	  }\n" +
 			"	  ccl_network = \"10.10.11.0/27\"\n" +
 			"	  vni_network = \"10.10.10.0/27\"\n" +
