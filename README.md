@@ -48,8 +48,63 @@ Initializing provider plugins...
 That's it! You have successfully installed the FMC terraform provider. Head on to examples to see what you can do with them!
 Provider documentation is present [here](https://registry.terraform.io/providers/CiscoDevNet/fmc/latest/docs).
 
-## Note: This new version 0.2.4 uses a different url for access policy get operation than before. It uses "name=xxx" instead of "filter=name:xxx" in its query parameters. Kindly verify the url for your version of access policy get operation before upgrading.
+## 3. Troubleshooting
+> **Note**: This is for debugging purposes only and it probably **will** break your terraform-provider-fmc, if using for the first time.
 
+> It is recommended to take a backup of the terraform-provider-fmc binary before proceeding. You can use the following command to do so:`zip -r /var/terraform_plugins.bak ~/.terraform.d/plugins`
+
+The logs are by default are logged to `outputs/reqres`.
+
+The Logger is disabled by default. To enable it, set the environment variable `LOGS` to `REQ_RES` OR `USER` OR `ALL` .
+
+- If the `LOGS` are set to `REQ_RES`, the request and response of the API calls will be logged.
+- If the `LOGS` are set to `USER`, the user defined logs will be logged.
+- If the `LOGS` are set to `ALL`, both the above logs will be logged.
+
+To test your changes and see the user-defined logs, run the following script:
+
+```bash
+#! /bin/bash
+EXPORT LOGS=USER
+clear
+
+rm -rf vendor
+
+go mod vendor
+go mod tidy
+
+go build -o terraform-provider-fmc_0.2_darwin_amd64
+
+mkdir -p ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/darwin_amd64
+
+mv terraform-provider-fmc_0.2_darwin_amd64 ~/.terraform.d/plugins/registry.terraform.io/CiscoDevNet/fmc/0.2/`go env GOOS`_`go env GOARCH`/terraform-provider-fmc
+```
+
+Using the above script, the new provider will be built and moved to the terraform plugins directory. Now, you can run the terraform commands as usual and see the logs in the outputs directory.
+
+To use self-defined logs, use the following code:
+
+```go
+Log.debug("This is a debug log")
+Log.info("This is an info log")
+Log.warn("This is a warning log")
+Log.error("This is an error log")
+```
+output will be something like:
+```
+[DEBUG USER] "This is a debug log"
+
+================================================================================================================
+[INFO USER] "This is an info log"
+
+================================================================================================================
+[WARN USER] "This is a warning log"
+
+================================================================================================================
+[ERROR USER] "This is an error log"
+
+================================================================================================================
+```
 ## Tutorials
 
 The Terraform Playlist: https://www.youtube.com/playlist?list=PLyf18hdY22ESR91vJtdvY_4CNAPMR04zP 

@@ -2,13 +2,21 @@ package fmc
 
 import (
 	"context"
+	"log"
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"log"
 )
 
 func dataSourceFmcPhysicalInterface() *schema.Resource {
 	return &schema.Resource{
+		Description: "Data source for Physical Interfaces in FMC\n\n" +
+			"An example is shown below: \n" +
+			"```hcl\n" +
+			"data \"fmc_device_physical_interfaces\" \"test-phy-interfaces\" {\n" +
+			"	name = \"TEST-PHY\"\n" +
+			"}\n" +
+			"```",
 		ReadContext: dataSourcePhysicalInterfaceRead,
 		Schema: map[string]*schema.Schema{
 			"device_id": {

@@ -44,11 +44,14 @@ func (v *Client) CreateFmcPolicyDevicesAssignment(ctx context.Context, object *P
 	if err != nil {
 		return nil, fmt.Errorf("creating device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PolicyDevicesAssignment{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -58,11 +61,14 @@ func (v *Client) GetFmcPolicyDevicesAssignment(ctx context.Context, id string) (
 	if err != nil {
 		return nil, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PolicyDevicesAssignment{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -76,10 +82,13 @@ func (v *Client) UpdateFmcPolicyDevicesAssignment(ctx context.Context, id string
 	if err != nil {
 		return nil, fmt.Errorf("updating device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &PolicyDevicesAssignment{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting device policy assignments: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }

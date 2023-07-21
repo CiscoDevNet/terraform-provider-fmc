@@ -29,11 +29,11 @@ data "fmc_devices" "device" {
 
 ### Required
 
-- **name** (String) Name of the FTD device
+- `name` (String) Name of the FTD device
 
 ### Read-Only
 
-- **id** (String) The ID of this resource
-- **type** (String) Type of this resource
+- `id` (String) The ID of this resource
+- `type` (String) Type of this resource
 
 

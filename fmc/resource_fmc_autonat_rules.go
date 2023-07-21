@@ -356,6 +356,9 @@ func resourceFmcAutoNatRules() *schema.Resource {
 				Description: "PAT options for this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
@@ -442,7 +445,11 @@ func resourceFmcAutoNatRulesRead(ctx context.Context, d *schema.ResourceData, m 
 
 	item, err := c.GetFmcAutoNatRule(ctx, d.Get("nat_policy").(string), d.Id())
 	if err != nil {
-		return returnWithDiag(diags, err)
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			return returnWithDiag(diags, err)
+		}
 	}
 
 	if err := d.Set("type", item.Type); err != nil {

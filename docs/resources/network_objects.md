@@ -35,16 +35,16 @@ resource "fmc_network_objects" "PrivateVLANDR" {
 
 ### Required
 
-- **name** (String) The name of this resource
-- **value** (String) The value of this resource
+- `name` (String) The name of this resource
+- `value` (String) The value of this resource
 
 ### Optional
 
-- **description** (String) The description of this resource
-- **id** (String) The ID of this resource.
+- `description` (String) The description of this resource
 
 ### Read-Only
 
-- **type** (String) The type this resource
+- `id` (String) The ID of this resource.
+- `type` (String) The type this resource
 
 

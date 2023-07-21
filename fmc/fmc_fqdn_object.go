@@ -46,11 +46,14 @@ func (v *Client) CreateFmcFQDNObject(ctx context.Context, object *FQDNObject) (*
 	if err != nil {
 		return nil, fmt.Errorf("creating fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &FQDNObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusCreated)
 	if err != nil {
 		return nil, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -60,11 +63,14 @@ func (v *Client) GetFmcFQDNObject(ctx context.Context, id string) (*FQDNObjectRe
 	if err != nil {
 		return nil, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &FQDNObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
-		return nil, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
+		return item, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -78,11 +84,14 @@ func (v *Client) UpdateFmcFQDNObject(ctx context.Context, id string, object *FQD
 	if err != nil {
 		return nil, fmt.Errorf("updating fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	item := &FQDNObjectResponse{}
 	err = v.DoRequest(req, item, http.StatusOK)
 	if err != nil {
 		return nil, fmt.Errorf("getting fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(item, "response")
+	Log.line()
 	return item, nil
 }
 
@@ -92,6 +101,8 @@ func (v *Client) DeleteFmcFQDNObject(ctx context.Context, id string) error {
 	if err != nil {
 		return fmt.Errorf("deleting fqdn objects: %s - %s", url, err.Error())
 	}
+	Log.debug(req, "request")
 	err = v.DoRequest(req, nil, http.StatusOK)
+	Log.line()
 	return err
 }
