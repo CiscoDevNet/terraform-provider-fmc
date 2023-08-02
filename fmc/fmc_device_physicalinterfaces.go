@@ -17,6 +17,7 @@ type IPv6Address struct {
 }
 
 type IPv6 struct {
+	EnableIPv6    bool 	    `json:"enableIPV6,omitempty"`
 	Addresses []IPv6Address `json:"addresses,omitempty"`
 }
 
@@ -38,8 +39,8 @@ type IPv4 struct {
 }
 
 type PhysicalInterfaceSecurityZone struct {
-	ID   string `json:"id"`
-	Type string `json:"type"`
+	ID   string `json:"id,omitempty"`
+	Type string `json:"type,omitempty"`
 }
 
 type PhysicalInterfaceResponse struct {

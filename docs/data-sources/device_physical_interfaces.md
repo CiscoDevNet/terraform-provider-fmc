@@ -7,6 +7,7 @@ description: |-
   An example is shown below:
   hcl
   data "fmc_device_physical_interfaces" "test-phy-interfaces" {
+      device_id = "<ID of the ftd>"
       name = "TEST-PHY"
   }
 ---
@@ -18,6 +19,7 @@ Data source for Physical Interfaces in FMC
 An example is shown below: 
 ```hcl
 data "fmc_device_physical_interfaces" "test-phy-interfaces" {
+	device_id = "<ID of the ftd>"
 	name = "TEST-PHY"
 }
 ```
