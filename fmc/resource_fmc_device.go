@@ -6,7 +6,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
+
 var device_type string = "Device"
+
 func resourceFmcDevices() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for adding device in FMC\n" +
@@ -27,7 +29,7 @@ func resourceFmcDevices() *schema.Resource {
 			"	}\n" +
 			"}\n" +
 			"```\n" +
-			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n"+
+			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n" +
 			"**Note:** Please use a depends_on block to create multiple devices from the same plan such that second device only starts registering after device one is finished.",
 		CreateContext: resourceFmcDeviceCreate,
 		ReadContext:   resourceFmcDeviceRead,
@@ -64,13 +66,23 @@ func resourceFmcDevices() *schema.Resource {
 				Optional:    true,
 				Description: "Select the desired performace tier",
 			},
+			"cdo_host": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDO-Host",
+			},
+			"cdo_region": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "CDO-Region",
+			},
 			"license_caps": {
 				Type:        schema.TypeList,
 				Optional:    true,
 				Description: "License caps for this resource",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
-				  },
+				},
 			},
 			"access_policy": {
 				Type:     schema.TypeList,
@@ -92,6 +104,9 @@ func resourceFmcDevices() *schema.Resource {
 				},
 				Description: "access policy for this resource",
 			},
+		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
 		},
 	}
 }
@@ -120,16 +135,16 @@ func resourceFmcDeviceCreate(ctx context.Context, d *schema.ResourceData, m inte
 	for _, lic := range d.Get("license_caps").([]interface{}) {
 		lcap = append(lcap, lic.(string))
 	}
-	
+
 	_, err := c.CreateFmcDevice(ctx, &Device{
-		Name:        d.Get("name").(string),
-		HostName:     d.Get("hostname").(string),
-		NatID:        d.Get("nat_id").(string),
-		RegKey:       d.Get("regkey").(string),
+		Name:            d.Get("name").(string),
+		HostName:        d.Get("hostname").(string),
+		NatID:           d.Get("nat_id").(string),
+		RegKey:          d.Get("regkey").(string),
 		PerformanceTier: d.Get("performance_tier").(string),
-		Type:        device_type,
-		LicenseCaps: lcap,
-		AccessPolicy:  accpolicy,
+		Type:            device_type,
+		LicenseCaps:     lcap,
+		AccessPolicy:    accpolicy,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -197,8 +212,8 @@ func resourceFmcDeviceRead(ctx context.Context, d *schema.ResourceData, m interf
 		})
 		return diags
 	}
-
-	if err := d.Set("nat_id", item.NatID); err != nil {
+	NatIDSet := d.Get("nat_id").(string)
+	if err := d.Set("nat_id", NatIDSet); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read device",
@@ -228,27 +243,27 @@ func resourceFmcDeviceUpdate(ctx context.Context, d *schema.ResourceData, m inte
 	var diags diag.Diagnostics
 	if d.HasChanges("name", "hostname", "type", "license_caps") {
 
-	lcap := []string{}
-	for _, lic := range d.Get("license_caps").([]interface{}) {
-		lcap = append(lcap, lic.(string))
-	}
-	res, err := c.UpdateFmcDevice(ctx, d.Id(), &Device{
-		ID:           d.Id(),
-		Name:         d.Get("name").(string),
-		HostName:     d.Get("hostname").(string),
-		PerformanceTier: d.Get("performance_tier").(string),
-		Type:        device_type,
-		LicenseCaps: lcap,
-	})
-	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to add device",
-			Detail:   err.Error(),
+		lcap := []string{}
+		for _, lic := range d.Get("license_caps").([]interface{}) {
+			lcap = append(lcap, lic.(string))
+		}
+		res, err := c.UpdateFmcDevice(ctx, d.Id(), &Device{
+			ID:              d.Id(),
+			Name:            d.Get("name").(string),
+			HostName:        d.Get("hostname").(string),
+			PerformanceTier: d.Get("performance_tier").(string),
+			Type:            device_type,
+			LicenseCaps:     lcap,
 		})
-		return diags
-	}
-	d.SetId(res.ID)
+		if err != nil {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to add device",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
+		d.SetId(res.ID)
 	}
 	return resourceFmcDeviceRead(ctx, d, m)
 }
@@ -261,7 +276,7 @@ func resourceFmcDeviceDelete(ctx context.Context, d *schema.ResourceData, m inte
 
 	id := d.Id()
 
-	err := c.DeleteFmcDevice(ctx, id)
+	err := c.DeleteFmcDevice(ctx, m, id, d.Get("name").(string), d.Get("cdo_host").(string), d.Get("cdo_region").(string))
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

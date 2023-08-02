@@ -105,6 +105,9 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Description: "Destination Network Literal Value",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

@@ -108,6 +108,9 @@ func resourceFmcNetworkGroupObjects() *schema.Resource {
 				Description: "List of network literals to add",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 

@@ -120,6 +120,9 @@ func resourceFmcAccessPolicies() *schema.Resource {
 				Description: "The type of default action of this resource",
 			},
 		},
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
 	}
 }
 
