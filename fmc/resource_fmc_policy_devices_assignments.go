@@ -39,11 +39,6 @@ func resourceFmcPolicyDevicesAssignments() *schema.Resource {
 				Computed:    true,
 				Description: "The name of this resource",
 			},
-			"description": {
-				Type:        schema.TypeString,
-				Computed:    true,
-				Description: "The description of this resource",
-			},
 			"policy": {
 				Type:     schema.TypeList,
 				Required: true,
@@ -126,7 +121,6 @@ func resourceFmcPolicyDevicesAssignmentsCreate(ctx context.Context, d *schema.Re
 
 	res, err := c.CreateFmcPolicyDevicesAssignment(ctx, &PolicyDevicesAssignment{
 		Name:        d.Get("name").(string),
-		Description: d.Get("description").(string),
 		Policy:      policy,
 		Targets:     devices,
 		Type:        policy_devices_assignments_type,
@@ -173,15 +167,6 @@ func resourceFmcPolicyDevicesAssignmentsRead(ctx context.Context, d *schema.Reso
 		return diags
 	}
 
-	if err := d.Set("description", item.Description); err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read policy devices assignment",
-			Detail:   err.Error(),
-		})
-		return diags
-	}
-
 	policy := make([]interface{}, 0, 1)
 	policyObj := make(map[string]interface{})
 	policyObj["id"] = item.Policy.ID
@@ -220,7 +205,7 @@ func resourceFmcPolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.Re
 	c := m.(*Client)
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("name", "description", "policy", "target_devices") {
+	if d.HasChanges("name", "policy", "target_devices") {
 		var policy PolicyDevicesAssignmentSubConfig
 
 		if inputObjs, ok := d.GetOk("policy"); ok {
@@ -245,9 +230,7 @@ func resourceFmcPolicyDevicesAssignmentsUpdate(ctx context.Context, d *schema.Re
 
 		_, err := c.UpdateFmcPolicyDevicesAssignment(ctx, id, &PolicyDevicesAssignment{
 			Name:        d.Get("name").(string),
-			Description: d.Get("description").(string),
 			Policy:      policy,
-			Targets:     devices,
 			Type:        policy_devices_assignments_type,
 		})
 		if err != nil {
@@ -266,13 +249,42 @@ func resourceFmcPolicyDevicesAssignmentsDelete(ctx context.Context, d *schema.Re
 
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
+	c := m.(*Client)
+	var policy PolicyDevicesAssignmentSubConfig
+	id := d.Id()
+	if inputObjs, ok := d.GetOk("policy"); ok {
+		obj := inputObjs.([]interface{})[0].(map[string]interface{})
+		policy = PolicyDevicesAssignmentSubConfig{
+			ID:   obj["id"].(string),
+			Type: obj["type"].(string),
+		}
+	}
 
-	diags = append(diags, diag.Diagnostic{
-		Severity: diag.Warning,
-		Summary:  "Devices assignment cannot be deleted, it will be deleted on reassignment",
-		Detail:   "This resource cannot be deleted",
+	var devices []PolicyDevicesAssignmentSubConfig
+
+	if inputObjs, ok := d.GetOk("target_devices"); ok {
+		for _, obj := range inputObjs.([]interface{}) {
+			obji := obj.(map[string]interface{})
+			devices = append(devices, PolicyDevicesAssignmentSubConfig{
+				ID:   obji["id"].(string),
+				Type: obji["type"].(string),
+			})
+		}
+	}
+
+	_, err := c.UpdateFmcPolicyDevicesAssignment(ctx, id, &PolicyDevicesAssignment{
+		Name:        d.Get("name").(string),
+		Policy:      policy,
+		Type:        policy_devices_assignments_type,
 	})
-
+	if err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to delete policy devices assignment",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
 	// d.SetId("") is automatically called assuming delete returns no errors, but
 	// it is added here for explicitness.
 	d.SetId("")

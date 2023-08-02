@@ -276,7 +276,7 @@ func resourceFmcDeviceDelete(ctx context.Context, d *schema.ResourceData, m inte
 
 	id := d.Id()
 
-	err := c.DeleteFmcDevice(ctx, m, id,d.Get("name").(string),d.Get("cdo_host").(string),d.Get("cdo_region").(string)  )
+	err := c.DeleteFmcDevice(ctx, m, id, d.Get("name").(string), d.Get("cdo_host").(string), d.Get("cdo_region").(string))
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

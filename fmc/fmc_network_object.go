@@ -25,6 +25,10 @@ type NetworkObject struct {
 	Type        string `json:"type"`
 }
 
+type NetworkObjects struct {
+	Objects []NetworkObject `json:"objects"`
+}
+
 type NetworkObjectResponse struct {
 	Type        string `json:"type"`
 	Value       string `json:"value"`
@@ -71,6 +75,27 @@ func (v *Client) GetFmcNetworkObjectByNameOrValue(ctx context.Context, nameOrVal
 }
 
 // /fmc_config/v1/domain/DomainUUID/object/networks?bulk=true ( Bulk POST operation on network objects. )
+
+func (v *Client) CreateFmcNetworkObjectBulk(ctx context.Context, object *NetworkObjects) (*NetworkObjectsResponse, error) {
+	url := fmt.Sprintf("%s/object/networks?bulk=true", v.domainBaseURL)
+	body, err := json.Marshal(object.Objects)
+	if err != nil {
+		return nil, fmt.Errorf("creating network objects: %s - %s", url, err.Error())
+	}
+	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(body))
+	if err != nil {
+		return nil, fmt.Errorf("creating network objects: %s - %s", url, err.Error())
+	}
+	Log.debug(req, "request")
+	item := &NetworkObjectsResponse{}
+	err = v.DoRequest(req, item, http.StatusCreated)
+	if err != nil {
+		return nil, fmt.Errorf("getting network objects: %s - %s", url, err.Error())
+	}
+	Log.debug(item, "response")
+	Log.line()
+	return item, nil
+}
 
 func (v *Client) CreateFmcNetworkObject(ctx context.Context, object *NetworkObject) (*NetworkObjectResponse, error) {
 	url := fmt.Sprintf("%s/object/networks", v.domainBaseURL)

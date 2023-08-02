@@ -25,7 +25,6 @@ type PolicyDevicesAssignmentSubConfig struct {
 
 type PolicyDevicesAssignment struct {
 	Name        string                             `json:"name,omitempty"`
-	Description string                             `json:"description"`
 	ID          string                             `json:"id,omitempty"`
 	Type        string                             `json:"type"`
 	Targets     []PolicyDevicesAssignmentSubConfig `json:"targets"`
