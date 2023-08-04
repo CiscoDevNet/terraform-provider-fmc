@@ -42,7 +42,7 @@ type PortGroupObjectResponse struct {
 }
 
 type PortGroupObjectsResponse struct {
-	Items []PortGroupObjectResponse `json: "items"`
+	Items []PortGroupObjectResponse `json:"items"`
 }
 
 // /fmc_config/v1/domain/DomainUUID/object/portobjectgroups?bulk=true ( Bulk POST operation on port group objects. )

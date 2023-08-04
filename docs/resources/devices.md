@@ -11,7 +11,6 @@ description: |-
       name = "ftd"
       hostname = "<IP ADDR OF HOST>"
       regkey = "<Reg key used in FTD>"
-      metric_value = 22
       license_caps = [
           "MALWARE"
       ]
@@ -35,7 +34,6 @@ resource "fmc_devices" "device1" {
     name = "ftd"
     hostname = "<IP ADDR OF HOST>"
     regkey = "<Reg key used in FTD>"
-    metric_value = 22
     license_caps = [
 		"MALWARE"
     ]

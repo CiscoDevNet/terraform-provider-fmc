@@ -15,7 +15,7 @@ provider "fmc" {
 }
 
 data "fmc_devices" "device" {
-    name = "FTD"
+    name = "FTD1"
 }
 
 resource "fmc_security_zone" "outside" {
@@ -31,7 +31,7 @@ resource "fmc_security_zone" "outside" {
 
 resource "fmc_device_subinterfaces" "sub" {
     device_id   = data.fmc_devices.device.id
-    ifname = "Testing1"
+    ifname = "Testing12"
     subinterface_id = 12345
     vlan_id = 80
     name = "GigabitEthernet0/1"
@@ -49,14 +49,7 @@ resource "fmc_device_subinterfaces" "sub" {
     ipv6_enforce_eui = false
 
 }
-resource "fmc_device_subinterfaces" "min" {
-    device_id   = data.fmc_devices.device.id
-    subinterface_id = 12
-    name = "TenGigabitEthernet0/1"
-}
-output "new_subinterface_min" {
-    value = fmc_device_subinterfaces.min
-}
+
 output "new_subinterface_sub" {
     value = fmc_device_subinterfaces.sub
 }

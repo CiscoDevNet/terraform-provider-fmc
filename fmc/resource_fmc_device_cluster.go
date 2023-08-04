@@ -13,7 +13,7 @@ func resourceFmcDeviceCluster() *schema.Resource {
 	return &schema.Resource{
 		Description: "Resource for adding device in a cluster\n" +
 			"\n" +
-			"Note this will only work on VMware, not on public cloud.\n" +
+			"**Note: this will only work on VMware, not on public cloud.**\n" +
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
@@ -58,8 +58,10 @@ func resourceFmcDeviceCluster() *schema.Resource {
 			"		}\n" +
 			"	}\n" +
 			"  }\n" +
+			"**Note:** This feature is only supported for VMWare cloud platform.\n"+
 			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n" +
-			"**Note:** Deleting a cluster will delete all it's data nodes with control node as well.",
+			"**Note:** Deleting a cluster will delete all it's data nodes with control node as well.\n" +
+			"```",
 		CreateContext: resourceFmcDeviceClusterCreate,
 		ReadContext:   resourceFmcDeviceClusterRead,
 		UpdateContext: resourceFmcDeviceClusterUpdate,
