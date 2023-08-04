@@ -33,7 +33,7 @@ data "fmc_device_physical_interfaces" "ccl_physical_interface" {
 
 # Note this will only work on VMware, not on public cloud.
 resource "fmc_device_cluster" "cluster" {
-  name = "ftd_16"
+  name = "test-cluster"
   control_device {
     cluster_node_bootstrap {
       priority = 1

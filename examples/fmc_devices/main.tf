@@ -26,30 +26,6 @@ data "fmc_access_policies" "access_policy"{
   name="test-acp"
 }
 
-resource "fmc_devices_bulk" "device"{
-  devices {
-    name = "FTD-1"
-    hostname = "172.16.0.10"
-    regkey = "cisco"
-    performance_tier = "FTDv30"
-    license_caps = [ "MALWARE" ]
-    access_policy {
-        id = data.fmc_access_policies.access_policy.id
-    }
-  }
-
-  devices {
-    name = "FTD-2"
-    hostname = "172.16.10.20"
-    regkey = "cisco"
-    performance_tier = "FTDv30"
-    license_caps = [ "MALWARE" ]
-    access_policy {
-        id = data.fmc_access_policies.access_policy.id
-    }
-  }
-}
-
 resource "fmc_devices" "device" {
   name = "FTD-1"
   hostname = "172.16.0.10"
