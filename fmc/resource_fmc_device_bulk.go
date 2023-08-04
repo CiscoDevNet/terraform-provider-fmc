@@ -13,26 +13,37 @@ import (
 
 func resourceFmcDevicesBulk() *schema.Resource {
 	return &schema.Resource{
-		Description: "Resource for adding device in FMC\n" +
+		Description: "Resource for adding bulk devices in FMC\n" +
 			"\n" +
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_devices\" \"device1\" {\n" +
-			"    name = \"ftd\"\n" +
-			"    hostname = \"<IP ADDR OF HOST>\"\n" +
-			"    regkey = \"<Reg key used in FTD>\"\n" +
-			"    metric_value = 22\n" +
-			"    license_caps = [\n" +
-			"		\"MALWARE\"\n" +
-			"    ]\n" +
-			"    access_policy {\n" +
-			"        id = data.fmc_access_policies.access_policy.id\n" +
+			"resource \"fmc_devices_bulk\" \"devices\" {\n" +
+			"    devices {\n" +
+			"    	name = \"ftd\"\n" +
+			"    	hostname = \"<IP ADDR OF HOST>\"\n" +
+			"    	regkey = \"<Reg key used in FTD>\"\n" +
+			"    	license_caps = [\n" +
+			"			\"MALWARE\"\n" +
+			"    	]\n" +
+			"    	access_policy {\n" +
+			"        	id = data.fmc_access_policies.access_policy.id\n" +
+			"		}\n" +
+			"	}\n" +
+			"    devices {\n" +
+			"    	name = \"ftd2\"\n" +
+			"    	hostname = \"<IP ADDR OF HOST2>\"\n" +
+			"    	regkey = \"<Reg key used in FTD2>\"\n" +
+			"    	license_caps = [\n" +
+			"			\"MALWARE\"\n" +
+			"    	]\n" +
+			"    	access_policy {\n" +
+			"        	id = data.fmc_access_policies.access_policy.id\n" +
+			"		}\n" +
 			"	}\n" +
 			"}\n" +
 			"```\n" +
-			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n" +
-			"**Note:** Please use a depends_on block to create multiple devices from the same plan such that second device only starts registering after device one is finished.",
+			"**Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.\n",
 		CreateContext: resourceFmcDeviceCreateBulk,
 		ReadContext:   resourceFmcDeviceReadBulk,
 		UpdateContext: resourceFmcDeviceUpdateBulk,

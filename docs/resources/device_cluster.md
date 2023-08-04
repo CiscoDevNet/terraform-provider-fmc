@@ -4,9 +4,10 @@ page_title: "fmc_device_cluster Resource - terraform-provider-fmc"
 subcategory: ""
 description: |-
   Resource for adding device in a cluster
+  Note: this will only work on VMware, not on public cloud.
   Example
   An example is shown below:
-  ``hcl
+  hcl
    resource "fmc_device_cluster" "cluster" { 
       name = "ftd_cluster" 
       control_device {
@@ -21,8 +22,8 @@ description: |-
       }
       common_bootstrap {
         ccl_interface {
-          id = data.fmc_device_physical_interfaces.zero_physical_interface.id
-          name = data.fmc_device_physical_interfaces.zero_physical_interface.name
+          id = data.fmc_device_physical_interfaces.ccl_physical_interface.id
+          name = data.fmc_device_physical_interfaces.ccl_physical_interface.name
         }
         ccl_network = "10.10.11.0/27"
         vni_network = "10.10.10.0/27"
@@ -48,14 +49,16 @@ description: |-
           }
       }
     }
-  **Note:** If creating multiple rules during a singleterraform apply, remember to usedepends_on` to chain the rules so that terraform creates it in the same order that you intended.
-  Note: Deleting a cluster will delete all it's data nodes with control node as well.
+  **Note:** This feature is only supported for VMWare cloud platform.
+  **Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.
+  **Note:** Deleting a cluster will delete all it's data nodes with control node as well.
 ---
 
 # fmc_device_cluster (Resource)
 
 Resource for adding device in a cluster
 
+**Note: this will only work on VMware, not on public cloud.**
 ## Example
 An example is shown below: 
 ```hcl
@@ -73,8 +76,8 @@ An example is shown below:
 	}
 	common_bootstrap {
 	  ccl_interface {
-		id = data.fmc_device_physical_interfaces.zero_physical_interface.id
-		name = data.fmc_device_physical_interfaces.zero_physical_interface.name
+		id = data.fmc_device_physical_interfaces.ccl_physical_interface.id
+		name = data.fmc_device_physical_interfaces.ccl_physical_interface.name
 	  }
 	  ccl_network = "10.10.11.0/27"
 	  vni_network = "10.10.10.0/27"
@@ -100,8 +103,10 @@ An example is shown below:
 		}
 	}
   }
+**Note:** This feature is only supported for VMWare cloud platform.
 **Note:** If creating multiple rules during a single `terraform apply`, remember to use `depends_on` to chain the rules so that terraform creates it in the same order that you intended.
 **Note:** Deleting a cluster will delete all it's data nodes with control node as well.
+```
 
 
 

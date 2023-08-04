@@ -20,7 +20,6 @@ func resourceFmcDevices() *schema.Resource {
 			"    name = \"ftd\"\n" +
 			"    hostname = \"<IP ADDR OF HOST>\"\n" +
 			"    regkey = \"<Reg key used in FTD>\"\n" +
-			"    metric_value = 22\n" +
 			"    license_caps = [\n" +
 			"		\"MALWARE\"\n" +
 			"    ]\n" +
