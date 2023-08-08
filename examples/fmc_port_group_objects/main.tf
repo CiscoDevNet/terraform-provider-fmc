@@ -14,6 +14,9 @@ provider "fmc" {
   fmc_insecure_skip_verify = var.fmc_insecure_skip_verify
 }
 
+data "fmc_port_group_objects" "test"{
+  name = "test"
+}
 resource "fmc_port_objects" "shbharti_port_1" {
   name        = "shbharti_test_port_object_1"
   port        = "3943"
@@ -43,4 +46,8 @@ resource "fmc_port_group_objects" "TestPortGroup" {
 
 output "new_fmc_port_group_object" {
   value = fmc_port_group_objects.TestPortGroup
+}
+
+output "TEST" {
+  value = data.fmc_port_group_objects.test
 }
