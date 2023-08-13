@@ -12,8 +12,9 @@ func dataSourceFmcNetworkGroupObjects() *schema.Resource {
 		Description: "Data source for Network Group Objects in FMC\n\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_network_group_objects\" \"PrivateGroup\" {\n" +
-			"  name = \"PrivateGroup\"\n" +
+			"data \"fmc_network_group_objects\" \"test\" {\n" +
+			"	name = \"test-object\"\n" +
+			"}\n" +
 			"```",
 
 		ReadContext: dataSourceNetworkGroupObjectsRead,
