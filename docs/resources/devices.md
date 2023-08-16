@@ -11,7 +11,6 @@ description: |-
       name = "ftd"
       hostname = "<IP ADDR OF HOST>"
       regkey = "<Reg key used in FTD>"
-      metric_value = 22
       license_caps = [
           "MALWARE"
       ]
@@ -35,7 +34,6 @@ resource "fmc_devices" "device1" {
     name = "ftd"
     hostname = "<IP ADDR OF HOST>"
     regkey = "<Reg key used in FTD>"
-    metric_value = 22
     license_caps = [
 		"MALWARE"
     ]
@@ -60,6 +58,8 @@ resource "fmc_devices" "device1" {
 
 ### Optional
 
+- `cdo_host` (String) CDO-Host
+- `cdo_region` (String) CDO-Region
 - `license_caps` (List of String) License caps for this resource
 - `name` (String) The name of FTD
 - `nat_id` (String) NAT_ID is required, if configured in FTD
