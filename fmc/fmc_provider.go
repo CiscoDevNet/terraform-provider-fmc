@@ -156,6 +156,7 @@ func Provider() *schema.Provider {
 			"fmc_device_subinterfaces":       dataSourceFmcSubInterfaces(),
 			"fmc_port_group_objects":         dataSourceFmcPortGroupObjects(),
 			"fmc_device_cluster":             dataSourceFmcDeviceCluster(),
+			"fmc_ravpn_policy": 			  dataSourceFmcRavpn(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
