@@ -14,6 +14,7 @@ func dataSourceFmcPhysicalInterface() *schema.Resource {
 			"An example is shown below: \n" +
 			"```hcl\n" +
 			"data \"fmc_device_physical_interfaces\" \"test-phy-interfaces\" {\n" +
+			"	device_id = \"<ID of the ftd>\"\n" +
 			"	name = \"TEST-PHY\"\n" +
 			"}\n" +
 			"```",

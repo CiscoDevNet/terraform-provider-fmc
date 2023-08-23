@@ -787,13 +787,13 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		&item.Sourceports.Objects,
 		&item.Destinationports.Objects,
 		&item.SourceDynamicObjects.Objects,
+		&item.DestinationDynamicObjects.Objects,
 		&item.SourceSecurityGroupTags.Objects,
 		&item.DestinationSecurityGroupTags.Objects,
-		&item.DestinationDynamicObjects.Objects,
 		&item.Urls.Objects,
 	}
 
-	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "destination_dynamic_objects", "source_dynamic_objects", "urls", "source_security_group_tags", "destination_security_group_tags"}
+	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "source_dynamic_objects", "destination_dynamic_objects","source_security_group_tags","destination_security_group_tags", "urls"}
 
 	for i, objs := range dynamicObjects {
 		mainResponse := make([]map[string]interface{}, 0)
