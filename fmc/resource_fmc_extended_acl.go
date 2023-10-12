@@ -18,8 +18,8 @@ func resourceFmcExtendedAcl() *schema.Resource {
 			"    name = \"ACL-1\"\n" +
 			"    action = \"DENY\"\n" +
 			"    log_level = \"ERROR\"\n" +
-			"     logging = \"PER_ACCESS_LIST_ENTRY\"\n" +
-			"     log_interval= 545\n" +
+			"    logging = \"PER_ACCESS_LIST_ENTRY\"\n" +
+			"    log_interval= 545\n" +
 			"}\n" +
 			"```\n",
 		CreateContext: resourceFmcExtendedAclCreate,
@@ -62,6 +62,11 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Optional:    true,
 				Description: "Source Port Object ID",
 			},
+			"destination_port_object_id": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Destination Port Object ID",
+			},
 			"source_network_object_id": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -72,7 +77,6 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Optional:    true,
 				Description: "Destination Network Object ID",
 			},
-
 			"source_port_literal_port": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -82,6 +86,16 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Source Port Literal Protocol",
+			},
+			"destination_port_literal_port": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Destination Port Literal Port",
+			},
+			"destination_port_literal_protocol": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Destination Port Literal Protocol",
 			},
 			"source_network_literal_type": {
 				Type:        schema.TypeString,
@@ -93,7 +107,6 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Optional:    true,
 				Description: "Source Network Literal Value",
 			},
-
 			"destination_network_literal_type": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -126,6 +139,15 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
+	//Destination port object
+	DestinationPort_objectID := d.Get("destination_port_object_id").(string)
+	var DestinationPort_Object_input []Object_data
+	if len(DestinationPort_objectID) > 0 {
+		DestinationPort_Object_input = append(DestinationPort_Object_input, Object_data{
+			ID: DestinationPort_objectID,
+		})
+	}
+
 	//Source port Literal
 	SourcePort_lit_Port := d.Get("source_port_literal_port").(string)
 	SourcePort_lit_Protocol := d.Get("source_port_literal_protocol").(string)
@@ -136,6 +158,19 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 			Type:     "PortLiteral",
 			Port:     SourcePort_lit_Port,
 			Protocol: SourcePort_lit_Protocol,
+		})
+	}
+
+	//Destination port Literal
+	DestinationPort_lit_Port := d.Get("destination_port_literal_port").(string)
+	DestinationPort_lit_Protocol := d.Get("destination_port_literal_protocol").(string)
+
+	var DestinationPort_Lit_input []Literals_Port_data
+	if len(DestinationPort_lit_Port) > 0 && len(DestinationPort_lit_Protocol) > 0 {
+		DestinationPort_Lit_input = append(DestinationPort_Lit_input, Literals_Port_data{
+			Type:     "PortLiteral",
+			Port:     DestinationPort_lit_Port,
+			Protocol: DestinationPort_lit_Protocol,
 		})
 	}
 
@@ -191,6 +226,10 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 				SourcePorts: Data_Ports{
 					Objects:  SourcePort_Object_input,
 					Literals: SourcePort_Lit_input,
+				},
+				DestinationPorts: Data_Ports{
+					Objects:  DestinationPort_Object_input,
+					Literals: DestinationPort_Lit_input,
 				},
 				SourceNetworks: Data_Nw{
 					Objects:  SourceNw_Object_input,
@@ -266,6 +305,15 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
+	//Destination port object
+	DestinationPort_objectID := d.Get("destination_port_object_id").(string)
+	var DestinationPort_Object_input []Object_data
+	if len(DestinationPort_objectID) > 0 {
+		DestinationPort_Object_input = append(DestinationPort_Object_input, Object_data{
+			ID: DestinationPort_objectID,
+		})
+	}
+
 	//Source port Literal
 	SourcePort_lit_Port := d.Get("source_port_literal_port").(string)
 	SourcePort_lit_Protocol := d.Get("source_port_literal_protocol").(string)
@@ -276,6 +324,19 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 			Type:     "PortLiteral",
 			Port:     SourcePort_lit_Port,
 			Protocol: SourcePort_lit_Protocol,
+		})
+	}
+
+	//Destination port Literal
+	DestinationPort_lit_Port := d.Get("destination_port_literal_port").(string)
+	DestinationPort_lit_Protocol := d.Get("destination_port_literal_protocol").(string)
+
+	var DestinationPort_Lit_input []Literals_Port_data
+	if len(DestinationPort_lit_Port) > 0 && len(DestinationPort_lit_Protocol) > 0 {
+		DestinationPort_Lit_input = append(DestinationPort_Lit_input, Literals_Port_data{
+			Type:     "PortLiteral",
+			Port:     DestinationPort_lit_Port,
+			Protocol: DestinationPort_lit_Protocol,
 		})
 	}
 
@@ -318,7 +379,7 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 			Value: DestinationNw_litValue,
 		})
 	}
-	if d.HasChanges("name", "action", "log_level", "logging", "log_interval", "source_port_object_id", "source_network_object_id", "destination_network_object_id", "source_port_literal_port", "source_port_literal_protocol", "source_network_literal_type", "source_network_literal_value", "destination_network_literal_type", "destination_network_literal_value") {
+	if d.HasChanges("name", "action", "log_level", "logging", "log_interval", "source_port_object_id", "destination_port_object_id", "source_network_object_id", "destination_network_object_id", "source_port_literal_port", "source_port_literal_protocol", "destination_port_literal_port", "destination_port_literal_protocol", "source_network_literal_type", "source_network_literal_value", "destination_network_literal_type", "destination_network_literal_value") {
 		res, err := c.UpdateFmcExtendedAcl(ctx, d.Id(), &ExtendedAcl{
 			ID:   d.Id(),
 			Name: d.Get("name").(string),
@@ -332,6 +393,10 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 					SourcePorts: Data_Ports{
 						Objects:  SourcePort_Object_input,
 						Literals: SourcePort_Lit_input,
+					},
+					DestinationPorts: Data_Ports{
+						Objects:  DestinationPort_Object_input,
+						Literals: DestinationPort_Lit_input,
 					},
 					SourceNetworks: Data_Nw{
 						Objects:  SourceNw_Object_input,

@@ -32,6 +32,7 @@ type Entries_data struct {
 	Logging             string     `json:"logging"`
 	LogInterval         int        `json:"logInterval"`
 	SourcePorts         Data_Ports `json:"sourcePorts"`
+	DestinationPorts    Data_Ports `json:"destinationPorts"`
 	SourceNetworks      Data_Nw    `json:"sourceNetworks"`
 	DestinationNetworks Data_Nw    `json:"destinationNetworks"`
 }
