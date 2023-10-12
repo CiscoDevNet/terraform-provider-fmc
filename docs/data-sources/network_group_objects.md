@@ -33,6 +33,7 @@ data "fmc_network_group_objects" "test" {
 
 ### Read-Only
 
-- `id` (String) The ID of this resource.
+- `id` (String) The id of the network group object
+- `type` (String) The type of the network group object
 
 

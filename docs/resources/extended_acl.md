@@ -11,8 +11,8 @@ description: |-
       name = "ACL-1"
       action = "DENY"
       log_level = "ERROR"
-       logging = "PER_ACCESS_LIST_ENTRY"
-       log_interval= 545
+      logging = "PER_ACCESS_LIST_ENTRY"
+      log_interval= 545
   }
 ---
 
@@ -27,8 +27,8 @@ resource "fmc_extended_acl" "acl1" {
     name = "ACL-1"
     action = "DENY"
     log_level = "ERROR"
-     logging = "PER_ACCESS_LIST_ENTRY"
-     log_interval= 545
+    logging = "PER_ACCESS_LIST_ENTRY"
+    log_interval= 545
 }
 ```
 
@@ -50,6 +50,9 @@ resource "fmc_extended_acl" "acl1" {
 - `destination_network_literal_type` (String) Destination Network Literal Type
 - `destination_network_literal_value` (String) Destination Network Literal Value
 - `destination_network_object_id` (String) Destination Network Object ID
+- `destination_port_literal_port` (String) Destination Port Literal Port
+- `destination_port_literal_protocol` (String) Destination Port Literal Protocol
+- `destination_port_object_id` (String) Destination Port Object ID
 - `source_network_literal_type` (String) Source Network Literal Type
 - `source_network_literal_value` (String) Source Network Literal Value
 - `source_network_object_id` (String) Source Network Object ID
