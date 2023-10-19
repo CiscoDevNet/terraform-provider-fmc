@@ -24,6 +24,18 @@ func dataSourceFmcNetworkGroupObjects() *schema.Resource {
 				Required:    true,
 				Description: "Name of the network group object",
 			},
+
+			"id": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The id of the network group object",
+			},	
+
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "The type of the network group object",
+			},			
 		},
 	}
 }
@@ -50,6 +62,15 @@ func dataSourceNetworkGroupObjectsRead(ctx context.Context, d *schema.ResourceDa
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to get network group object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("type", ifc.Type); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network group object",
 			Detail:   err.Error(),
 		})
 		return diags

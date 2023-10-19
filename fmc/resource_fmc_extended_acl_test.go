@@ -70,11 +70,12 @@ func testAccCheckFmcExtendedAclConfigBasic(hostObjectName, hostObjectValue strin
 		source_port_object_id = data.fmc_port_objects.test.id
 		source_port_literal_port="12311"
 		source_port_literal_protocol="6"
-	  
+		destination_port_object_id = data.fmc_port_objects.test.id
+		destination_port_literal_port="12311"
+		destination_port_literal_protocol="6"
 		source_network_object_id = fmc_host_objects.test.id
 		source_network_literal_type="Host"
 		source_network_literal_value="172.16.1.2"
-	  
 		destination_network_object_id = fmc_host_objects.test.id
 		destination_network_literal_type="Host"
 		destination_network_literal_value="172.16.1.2"
