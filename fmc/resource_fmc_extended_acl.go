@@ -14,13 +14,29 @@ func resourceFmcExtendedAcl() *schema.Resource {
 			"## Example\n" +
 			"An example is shown below: \n" +
 			"```hcl\n" +
-			"resource \"fmc_extended_acl\" \"acl1\" {\n" +
-			"    name = \"ACL-1\"\n" +
-			"    action = \"DENY\"\n" +
-			"    log_level = \"ERROR\"\n" +
-			"    logging = \"PER_ACCESS_LIST_ENTRY\"\n" +
-			"    log_interval= 545\n" +
-			"}\n" +
+			"resource \"fmc_extended_acl\" \"new_acl\" {\n" +
+			"\tname         = \"new_acl_test\"\n" +
+			"\taction       = \"BLOCK\" //\"PERMIT\"\n" +
+			"\tlog_level    = \"ERROR\" //\"INFORMATIONAL\"\n" +
+			"\tlogging      = \"PER_ACCESS_LIST_ENTRY\"\n" +
+			"\tlog_interval = 545\n" +
+			"\n\n" +
+			"\tsource_port_object_ids       = [data.fmc_port_objects.port1.id, data.fmc_port_objects.port2.id]\n" +
+			"\tsource_port_literal_port     = \"12311\"\n" +
+			"\tsource_port_literal_protocol = \"6\"\n" +
+			"\n\n" +
+			"\tdestination_port_object_ids       = [data.fmc_port_objects.port2.id, data.fmc_port_objects.port3.id]\n" +
+			"\tdestination_port_literal_port     = \"12311\"\n" +
+			"\tdestination_port_literal_protocol = \"6\"\n" +
+			"\n\n" +
+			"\tsource_network_object_ids    = [data.fmc_network_objects.nw2.id]\n" +
+			"\tsource_network_literal_type  = \"Host\"\n" +
+			"\tsource_network_literal_value = \"172.16.1.2\"\n" +
+			"\n\n" +
+			"\tdestination_network_object_ids    = [data.fmc_network_objects.nw1.id, data.fmc_network_objects.nw2.id]\n" +
+			"\tdestination_network_literal_type  = \"Host\"\n" +
+			"\tdestination_network_literal_value = \"172.16.1.2\"\n" +
+			"}\n\n" +
 			"```\n",
 		CreateContext: resourceFmcExtendedAclCreate,
 		ReadContext:   resourceFmcExtendedAclRead,
@@ -57,25 +73,37 @@ func resourceFmcExtendedAcl() *schema.Resource {
 				Required:    true,
 				Description: "The log interval of this resource",
 			},
-			"source_port_object_id": {
-				Type:        schema.TypeString,
+			"source_port_object_ids": {
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Source Port Object ID",
+				Description: "Source Port Object IDs",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
-			"destination_port_object_id": {
-				Type:        schema.TypeString,
+			"destination_port_object_ids": {
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Destination Port Object ID",
+				Description: "Destination Port Object IDs",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
-			"source_network_object_id": {
-				Type:        schema.TypeString,
+			"source_network_object_ids": {
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Source Network Object ID",
+				Description: "Source Network Object IDs",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
-			"destination_network_object_id": {
-				Type:        schema.TypeString,
+			"destination_network_object_ids": {
+				Type:        schema.TypeList,
 				Optional:    true,
-				Description: "Destination Network Object ID",
+				Description: "Destination Network Object IDs",
+				Elem: &schema.Schema{
+					Type: schema.TypeString,
+				},
 			},
 			"source_port_literal_port": {
 				Type:        schema.TypeString,
@@ -130,21 +158,21 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	//Source port object
-	SourcePort_objectID := d.Get("source_port_object_id").(string)
-	var SourcePort_Object_input []Object_data
-	if len(SourcePort_objectID) > 0 {
-		SourcePort_Object_input = append(SourcePort_Object_input, Object_data{
-			ID: SourcePort_objectID,
+	// Source port objects
+	var source_port_objects []Object_data
+
+	for _, id := range d.Get("source_port_object_ids").([]interface{}) {
+		source_port_objects = append(source_port_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
-	//Destination port object
-	DestinationPort_objectID := d.Get("destination_port_object_id").(string)
-	var DestinationPort_Object_input []Object_data
-	if len(DestinationPort_objectID) > 0 {
-		DestinationPort_Object_input = append(DestinationPort_Object_input, Object_data{
-			ID: DestinationPort_objectID,
+	// Destination port objects
+	var dest_port_objects []Object_data
+
+	for _, id := range d.Get("destination_port_object_ids").([]interface{}) {
+		dest_port_objects = append(dest_port_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -174,12 +202,12 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
-	//Source Network Object
-	SourceNw_objectID := d.Get("source_network_object_id").(string)
-	var SourceNw_Object_input []Object_data
-	if len(SourceNw_objectID) > 0 {
-		SourceNw_Object_input = append(SourceNw_Object_input, Object_data{
-			ID: SourceNw_objectID,
+	// Source network objects
+	var source_nw_objects []Object_data
+
+	for _, id := range d.Get("source_network_object_ids").([]interface{}) {
+		source_nw_objects = append(source_nw_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -194,12 +222,12 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
-	// Destination Network Object
-	DestinationNw_objectID := d.Get("destination_network_object_id").(string)
-	var DestinationNw_Object_input []Object_data
-	if len(DestinationNw_objectID) > 0 {
-		DestinationNw_Object_input = append(DestinationNw_Object_input, Object_data{
-			ID: DestinationNw_objectID,
+	// Destination network objects
+	var dest_nw_objects []Object_data
+
+	for _, id := range d.Get("destination_network_object_ids").([]interface{}) {
+		dest_nw_objects = append(dest_nw_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -224,19 +252,19 @@ func resourceFmcExtendedAclCreate(ctx context.Context, d *schema.ResourceData, m
 				Logging:     d.Get("logging").(string),
 				LogInterval: d.Get("log_interval").(int),
 				SourcePorts: Data_Ports{
-					Objects:  SourcePort_Object_input,
+					Objects:  source_port_objects,
 					Literals: SourcePort_Lit_input,
 				},
 				DestinationPorts: Data_Ports{
-					Objects:  DestinationPort_Object_input,
+					Objects:  dest_port_objects,
 					Literals: DestinationPort_Lit_input,
 				},
 				SourceNetworks: Data_Nw{
-					Objects:  SourceNw_Object_input,
+					Objects:  source_nw_objects,
 					Literals: SourceNw_Lit_input,
 				},
 				DestinationNetworks: Data_Nw{
-					Objects:  DestinationNw_Object_input,
+					Objects:  dest_nw_objects,
 					Literals: DestinationNw_Lit_input,
 				},
 			},
@@ -273,15 +301,104 @@ func resourceFmcExtendedAclRead(ctx context.Context, d *schema.ResourceData, m i
 	if err := d.Set("type", item.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read std acl",
+			Summary:  "unable to read extended acl",
 			Detail:   err.Error(),
 		})
 		return diags
 	}
+
 	if err := d.Set("name", item.Name); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
-			Summary:  "unable to read std acl",
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("action", item.Entries[0].Action); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("log_level", item.Entries[0].LogLevel); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("logging", item.Entries[0].Logging); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("log_interval", item.Entries[0].LogInterval); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	var source_port_object_ids []string
+	for _, obj := range item.Entries[0].SourcePorts.Objects {
+		source_port_object_ids = append(source_port_object_ids, obj.ID)
+	}
+	if err := d.Set("source_port_object_ids", source_port_object_ids); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	var dest_port_object_ids []string
+	for _, obj := range item.Entries[0].DestinationPorts.Objects {
+		dest_port_object_ids = append(dest_port_object_ids, obj.ID)
+	}
+	if err := d.Set("destination_port_object_ids", dest_port_object_ids); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	var source_nw_object_ids []string
+	for _, obj := range item.Entries[0].SourceNetworks.Objects {
+		source_nw_object_ids = append(source_nw_object_ids, obj.ID)
+	}
+	if err := d.Set("source_network_object_ids", source_nw_object_ids); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	var dest_nw_object_ids []string
+	for _, obj := range item.Entries[0].DestinationNetworks.Objects {
+		dest_nw_object_ids = append(dest_nw_object_ids, obj.ID)
+	}
+	if err := d.Set("destination_network_object_ids", dest_nw_object_ids); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read extended acl",
 			Detail:   err.Error(),
 		})
 		return diags
@@ -296,21 +413,21 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 	// var diags diag.Diagnostics
 	var diags diag.Diagnostics
 
-	//Source port object
-	SourcePort_objectID := d.Get("source_port_object_id").(string)
-	var SourcePort_Object_input []Object_data
-	if len(SourcePort_objectID) > 0 {
-		SourcePort_Object_input = append(SourcePort_Object_input, Object_data{
-			ID: SourcePort_objectID,
+	// Source port objects
+	var source_port_objects []Object_data
+
+	for _, id := range d.Get("source_port_object_ids").([]interface{}) {
+		source_port_objects = append(source_port_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
-	//Destination port object
-	DestinationPort_objectID := d.Get("destination_port_object_id").(string)
-	var DestinationPort_Object_input []Object_data
-	if len(DestinationPort_objectID) > 0 {
-		DestinationPort_Object_input = append(DestinationPort_Object_input, Object_data{
-			ID: DestinationPort_objectID,
+	// Destination port objects
+	var dest_port_objects []Object_data
+
+	for _, id := range d.Get("destination_port_object_ids").([]interface{}) {
+		dest_port_objects = append(dest_port_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -340,12 +457,12 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
-	//Source Network Object
-	SourceNw_objectID := d.Get("source_network_object_id").(string)
-	var SourceNw_Object_input []Object_data
-	if len(SourceNw_objectID) > 0 {
-		SourceNw_Object_input = append(SourceNw_Object_input, Object_data{
-			ID: SourceNw_objectID,
+	// Source network objects
+	var source_nw_objects []Object_data
+
+	for _, id := range d.Get("source_network_object_ids").([]interface{}) {
+		source_nw_objects = append(source_nw_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -360,12 +477,12 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 		})
 	}
 
-	// Destination Network Object
-	DestinationNw_objectID := d.Get("destination_network_object_id").(string)
-	var DestinationNw_Object_input []Object_data
-	if len(DestinationNw_objectID) > 0 {
-		DestinationNw_Object_input = append(DestinationNw_Object_input, Object_data{
-			ID: DestinationNw_objectID,
+	// Destination network objects
+	var dest_nw_objects []Object_data
+
+	for _, id := range d.Get("destination_network_object_ids").([]interface{}) {
+		dest_nw_objects = append(dest_nw_objects, Object_data{
+			ID: id.(string),
 		})
 	}
 
@@ -379,7 +496,7 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 			Value: DestinationNw_litValue,
 		})
 	}
-	if d.HasChanges("name", "action", "log_level", "logging", "log_interval", "source_port_object_id", "destination_port_object_id", "source_network_object_id", "destination_network_object_id", "source_port_literal_port", "source_port_literal_protocol", "destination_port_literal_port", "destination_port_literal_protocol", "source_network_literal_type", "source_network_literal_value", "destination_network_literal_type", "destination_network_literal_value") {
+	if d.HasChanges("name", "action", "log_level", "logging", "log_interval", "source_port_object_ids", "destination_port_object_ids", "source_network_object_ids", "destination_network_object_ids", "source_port_literal_port", "source_port_literal_protocol", "destination_port_literal_port", "destination_port_literal_protocol", "source_network_literal_type", "source_network_literal_value", "destination_network_literal_type", "destination_network_literal_value") {
 		res, err := c.UpdateFmcExtendedAcl(ctx, d.Id(), &ExtendedAcl{
 			ID:   d.Id(),
 			Name: d.Get("name").(string),
@@ -391,19 +508,19 @@ func resourceFmcExtendedAclUpdate(ctx context.Context, d *schema.ResourceData, m
 					Logging:     d.Get("logging").(string),
 					LogInterval: d.Get("log_interval").(int),
 					SourcePorts: Data_Ports{
-						Objects:  SourcePort_Object_input,
+						Objects:  source_port_objects,
 						Literals: SourcePort_Lit_input,
 					},
 					DestinationPorts: Data_Ports{
-						Objects:  DestinationPort_Object_input,
+						Objects:  dest_port_objects,
 						Literals: DestinationPort_Lit_input,
 					},
 					SourceNetworks: Data_Nw{
-						Objects:  SourceNw_Object_input,
+						Objects:  source_nw_objects,
 						Literals: SourceNw_Lit_input,
 					},
 					DestinationNetworks: Data_Nw{
-						Objects:  DestinationNw_Object_input,
+						Objects:  dest_nw_objects,
 						Literals: DestinationNw_Lit_input,
 					},
 				},
