@@ -17,8 +17,8 @@ type IPv6Address struct {
 }
 
 type IPv6 struct {
-	EnableIPv6    bool 	    `json:"enableIPV6,omitempty"`
-	Addresses []IPv6Address `json:"addresses,omitempty"`
+	EnableIPv6 bool          `json:"enableIPV6,omitempty"`
+	Addresses  []IPv6Address `json:"addresses,omitempty"`
 }
 
 // IPv4 Structs
@@ -30,7 +30,7 @@ type IPv4DHCP struct {
 
 type IPv4Static struct {
 	Address string `json:"address,omitempty"`
-	Netmask int    `json:"netmask,omitempty"`
+	Netmask string `json:"netmask,omitempty"`
 }
 
 type IPv4 struct {

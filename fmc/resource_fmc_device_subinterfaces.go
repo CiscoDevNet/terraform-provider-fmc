@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -73,10 +74,10 @@ func resourceFmcSubInterface() *schema.Resource {
 				Computed:    true,
 				Description: "The type of this resource",
 			},
-			"mode": { 
+			"mode": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default: 	 "NONE",
+				Default:     "NONE",
 				Description: "The mode of this resource",
 			},
 			"name": {
@@ -93,7 +94,7 @@ func resourceFmcSubInterface() *schema.Resource {
 			"priority": {
 				Type:        schema.TypeInt,
 				Optional:    true,
-				Default: 	 0,
+				Default:     0,
 				Description: "The type of this resource",
 			},
 			"security_zone_id": {
@@ -193,14 +194,13 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 
 	var diags diag.Diagnostics
 
-
 	ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 	ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
 	ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
 	ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
-	
+
 	securityZoneId := d.Get("security_zone_id").(string)
-	
+
 	ipv6Address := d.Get("ipv6_address").(string)
 	ipv6Prefix := d.Get("ipv6_prefix").(int)
 	ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
@@ -215,7 +215,7 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 		})
 	}
 
-	var IPv6 = IPv6{EnableIPv6:enable_ipv6 ,Addresses: IPv6Add}
+	var IPv6 = IPv6{EnableIPv6: enable_ipv6, Addresses: IPv6Add}
 
 	var SubInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
 		ID:   securityZoneId,
@@ -223,7 +223,7 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 	}
 	var IPv4Static = IPv4Static{
 		Address: ipv4StaticAddress,
-		Netmask: ipv4StaticNetmask,
+		Netmask: strconv.Itoa(ipv4StaticNetmask),
 	}
 	var IPv4DHCP = IPv4DHCP{
 		Enable:      ipv4DhcpEnabled,
@@ -242,14 +242,14 @@ func resourceFmcSubInterfaceCreate(ctx context.Context, d *schema.ResourceData, 
 		Mode:           d.Get("mode").(string),
 		Name:           d.Get("name").(string),
 		IPv4:           IPv4,
-		VlanID: 	    d.Get("vlan_id").(int),
+		VlanID:         d.Get("vlan_id").(int),
 		SubInterfaceID: d.Get("subinterface_id").(int),
 		Enabled:        d.Get("enabled").(bool),
 		SecurityZone:   SubInterfaceSecurityZone,
 		MgmntOnly:      d.Get("management_only").(bool),
 		Priority:       d.Get("priority").(int),
 		MTU:            d.Get("mtu").(int),
-		IPv6: IPv6,
+		IPv6:           IPv6,
 	})
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
@@ -268,7 +268,7 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 
 	var diags diag.Diagnostics
 	id := d.Id()
-	if d.HasChanges("ipv6_enforce_eui","ipv6_prefix","ipv6_address","vlan_id","management_only","ifname","name", "mode", "ipv4_static_address", "security_zone_id", "ipv4_dhcp_enabled","ipv4_dhcp_route_metric", "priority", "enabled") {
+	if d.HasChanges("ipv6_enforce_eui", "ipv6_prefix", "ipv6_address", "vlan_id", "management_only", "ifname", "name", "mode", "ipv4_static_address", "ipv4_static_netmask", "security_zone_id", "ipv4_dhcp_enabled", "ipv4_dhcp_route_metric", "priority", "enabled") {
 
 		ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 		ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
@@ -283,7 +283,7 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 		}
 		var IPv4Static = IPv4Static{
 			Address: ipv4StaticAddress,
-			Netmask: ipv4StaticNetmask,
+			Netmask: strconv.Itoa(ipv4StaticNetmask),
 		}
 		var IPv4DHCP = IPv4DHCP{
 			Enable:      ipv4DhcpEnabled,
@@ -311,7 +311,7 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 			})
 		}
 
-		var IPv6 = IPv6{EnableIPv6:enable_ipv6 ,Addresses: IPv6Add}
+		var IPv6 = IPv6{EnableIPv6: enable_ipv6, Addresses: IPv6Add}
 
 		_, err := c.UpdateFmcSubInterface(ctx, d.Get("device_id").(string), id, &SubInterface{
 			ID:             id,
@@ -319,14 +319,14 @@ func resourceFmcSubInterfaceUpdate(ctx context.Context, d *schema.ResourceData, 
 			Mode:           d.Get("mode").(string),
 			Name:           d.Get("name").(string),
 			IPv4:           IPv4,
-			VlanID: 	    d.Get("vlan_id").(int),
+			VlanID:         d.Get("vlan_id").(int),
 			Enabled:        d.Get("enabled").(bool),
 			SecurityZone:   SubInterfaceSecurityZone,
 			SubInterfaceID: d.Get("subinterface_id").(int),
 			MgmntOnly:      d.Get("management_only").(bool),
 			Priority:       d.Get("priority").(int),
 			MTU:            d.Get("mtu").(int),
-			IPv6:          IPv6,
+			IPv6:           IPv6,
 		})
 		if err != nil {
 			diags = append(diags, diag.Diagnostic{
@@ -348,7 +348,7 @@ func resourceFmcSubInterfaceDelete(ctx context.Context, d *schema.ResourceData, 
 
 	id := d.Id()
 
-	err := c.DeleteFmcSubInterface(ctx, d.Get("device_id").(string) ,id)
+	err := c.DeleteFmcSubInterface(ctx, d.Get("device_id").(string), id)
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
