@@ -3,6 +3,7 @@ package fmc
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -207,7 +208,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 
 	var IPv4Static = IPv4Static{
 		Address: ipv4StaticAddress,
-		Netmask: ipv4StaticNetmask,
+		Netmask: strconv.Itoa(ipv4StaticNetmask),
 	}
 	var IPv4DHCP = IPv4DHCP{
 		Enable:      ipv4DhcpEnabled,
