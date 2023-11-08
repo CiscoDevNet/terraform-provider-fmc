@@ -32,7 +32,6 @@ func resourceFmcDynamicObjects() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The name of this resource",
 			},
 			"type": {

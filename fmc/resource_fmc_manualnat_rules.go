@@ -106,13 +106,11 @@ func resourceFmcManualNatRules() *schema.Resource {
 			"nat_policy": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The ID of the NAT policy this resource belongs to",
 			},
 			"section": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				StateFunc: func(val interface{}) string {
 					return strings.ToLower(val.(string))
 				},
@@ -135,7 +133,6 @@ func resourceFmcManualNatRules() *schema.Resource {
 			"target_index": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					v, err := strconv.Atoi(val.(string))
 					if err == nil && v > 0 {

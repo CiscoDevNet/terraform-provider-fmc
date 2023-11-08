@@ -41,7 +41,6 @@ func resourceFmcSecurityZone() *schema.Resource {
 			"interface_mode": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "Interface mode for this security zone",
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					v := strings.ToUpper(val.(string))
