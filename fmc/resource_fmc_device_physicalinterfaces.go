@@ -138,20 +138,18 @@ func resourcePhyInterfaceCreate(ctx context.Context, d *schema.ResourceData, m i
 }
 
 func resourcePhyInterfaceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-
-	log.Printf("FPR: Fetching physical interface details")
-
-	deviceId := d.Get("device_id").(string)
-	// physicalInterfaceId := d.Get("physical_interface_id").(string)
-	id := d.Id()
-
-	// log.Printf("FPR: DeviceId=%s, PhysicalInterfaceId=%s", deviceId, physicalInterfaceId)
-
 	c := m.(*Client)
 
 	var diags diag.Diagnostics
 
-	physicalInterfaces, err := c.GetFmcPhysicalInterfaceByID(ctx, deviceId, id)
+	log.Printf("FPR: Fetching physical interface details")
+
+	deviceId := d.Get("device_id").(string)
+	physicalInterfaceId := d.Get("physical_interface_id").(string)
+
+	// log.Printf("FPR: DeviceId=%s, PhysicalInterfaceId=%s", deviceId, physicalInterfaceId)
+
+	physicalInterfaces, err := c.GetFmcPhysicalInterfaceByID(ctx, deviceId, physicalInterfaceId)
 
 	// log.Printf("FPR: Physical Interface Details PhysicalInterfaceId=%s Name=%s IFName=%s Type=%s", physicalInterfaces.ID, physicalInterfaces.Name, physicalInterfaces.Ifname, physicalInterfaces.Type)
 
@@ -236,8 +234,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		log.Printf("FPU: Updating physical interface details")
 
 		deviceId := d.Get("device_id").(string)
-		// physicalInterfaceId := d.Get("physical_interface_id").(string)
-		id := d.Id()
+		physicalInterfaceId := d.Get("physical_interface_id").(string)
 		name := d.Get("name").(string)
 		iFName := d.Get("if_name").(string)
 		description := d.Get("description").(string)
@@ -245,7 +242,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		mode := d.Get("mode").(string)
 		securityZoneId := d.Get("security_zone_id").(string)
 
-		log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, id, iFName, name, description, securityZoneId)
+		log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
 
 		ipv4StaticAddress := d.Get("ipv4_static_address").(string)
 		ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
@@ -297,8 +294,8 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		var IPv6 = IPv6{Addresses: IPv6Add}
 		// log.Printf("IPv6Address=%s", IPv6Add)
 
-		res, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, id, &PhysicalInterfaceRequest{
-			ID:           id,
+		res, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+			ID:           physicalInterfaceId,
 			Ifname:       iFName,
 			Enabled:      enabled,
 			Mode:         mode,
