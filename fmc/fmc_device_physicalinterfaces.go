@@ -30,7 +30,7 @@ type IPv4DHCP struct {
 
 type IPv4Static struct {
 	Address string `json:"address,omitempty"`
-	Netmask int    `json:"netmask,omitempty"`
+	Netmask string `json:"netmask,omitempty"`
 }
 
 type IPv4 struct {

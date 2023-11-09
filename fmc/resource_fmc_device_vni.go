@@ -3,6 +3,7 @@ package fmc
 import (
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -223,7 +224,7 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 					static := statics[0].(map[string]interface{})
 					var IPv4Static = IPv4Static{
 						Address: static["address"].(string),
-						Netmask: static["netmask"].(int),
+						Netmask: strconv.Itoa(static["netmask"].(int)),
 					}
 					ipv4.Static = &IPv4Static
 					isStatic = true
@@ -324,7 +325,7 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 						static := statics[0].(map[string]interface{})
 						var IPv4Static = IPv4Static{
 							Address: static["address"].(string),
-							Netmask: static["netmask"].(int),
+							Netmask: strconv.Itoa(static["netmask"].(int)),
 						}
 						log.Printf("IPv4Static=%v", IPv4Static)
 						ipv4.Static = &IPv4Static

@@ -2,6 +2,7 @@ package fmc
 
 import (
 	"context"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -241,15 +242,21 @@ func resourceFmcStaticIPv4RouteRead(ctx context.Context, d *schema.ResourceData,
 	// Warning or errors can be collected in a slice type
 	var diags diag.Diagnostics
 
+	// Why this GetStatic IPv4 route but others FmcStaticIPv4
 	item, err := c.GetFmcStaticIPv4Route(ctx, d.Get("device_id").(string), d.Id())
 	if err != nil {
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to read route",
-			Detail:   err.Error(),
-		})
+		if strings.Contains(err.Error(), "404") {
+			d.SetId("")
+		} else {
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to read route",
+				Detail:   err.Error(),
+			})
+		}
 		return diags
 	}
+
 	if err := d.Set("interface_name", item.InterfaceName); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,

@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -229,6 +230,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 	c := m.(*Client)
 
 	var diags diag.Diagnostics
+
 
 	if d.HasChanges("name", "description", "if_name", "security_zone_id", "mode", "enabled", "ipv4StaticAddress", "ipv4StaticNetmask", "ipv4DhcpEnabled", "ipv6EnforceEUI", "ipv6_address", "ipv6_prefix", "device_id", "mtu") {
 		log.Printf("FPU: Updating physical interface details")
