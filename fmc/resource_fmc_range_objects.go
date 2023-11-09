@@ -38,6 +38,12 @@ func resourceFmcRangeObjects() *schema.Resource {
 				Required:    true,
 				Description: "The value of this resource",
 			},
+			"type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     range_type,
+				Description: "The value of this resource",
+			},
 			"description": {
 				Type:        schema.TypeString,
 				Optional:    true,
@@ -128,6 +134,15 @@ func resourceFmcRangeObjectsRead(ctx context.Context, d *schema.ResourceData, m 
 	}
 
 	if err := d.Set("value", item.Value); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read network object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("type", item.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read network object",
