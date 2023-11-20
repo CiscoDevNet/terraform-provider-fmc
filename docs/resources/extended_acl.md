@@ -6,14 +6,34 @@ description: |-
   Resource for Extended ACL in FMC
   Example
   An example is shown below:
-  hcl
-  resource "fmc_extended_acl" "acl1" {
-      name = "ACL-1"
-      action = "DENY"
-      log_level = "ERROR"
-      logging = "PER_ACCESS_LIST_ENTRY"
-      log_interval= 545
+  ```hcl
+  resource "fmcextendedacl" "newacl" {
+      name         = "newacltest"
+      action       = "BLOCK" //"PERMIT"
+      loglevel    = "ERROR" //"INFORMATIONAL"
+      logging      = "PERACCESSLISTENTRY"
+      loginterval = 545
+  source_port_object_ids       = [data.fmc_port_objects.port1.id, data.fmc_port_objects.port2.id]
+  source_port_literal_port     = "12311"
+  source_port_literal_protocol = "6"
+  
+  
+  destination_port_object_ids       = [data.fmc_port_objects.port2.id, data.fmc_port_objects.port3.id]
+  destination_port_literal_port     = "12311"
+  destination_port_literal_protocol = "6"
+  
+  
+  source_network_object_ids    = [data.fmc_network_objects.nw2.id]
+  source_network_literal_type  = "Host"
+  source_network_literal_value = "172.16.1.2"
+  
+  
+  destination_network_object_ids    = [data.fmc_network_objects.nw1.id, data.fmc_network_objects.nw2.id]
+  destination_network_literal_type  = "Host"
+  destination_network_literal_value = "172.16.1.2"
+  
   }
+  ```
 ---
 
 # fmc_extended_acl (Resource)
@@ -23,13 +43,34 @@ Resource for Extended ACL in FMC
 ## Example
 An example is shown below: 
 ```hcl
-resource "fmc_extended_acl" "acl1" {
-    name = "ACL-1"
-    action = "DENY"
-    log_level = "ERROR"
-    logging = "PER_ACCESS_LIST_ENTRY"
-    log_interval= 545
+resource "fmc_extended_acl" "new_acl" {
+	name         = "new_acl_test"
+	action       = "BLOCK" //"PERMIT"
+	log_level    = "ERROR" //"INFORMATIONAL"
+	logging      = "PER_ACCESS_LIST_ENTRY"
+	log_interval = 545
+
+
+	source_port_object_ids       = [data.fmc_port_objects.port1.id, data.fmc_port_objects.port2.id]
+	source_port_literal_port     = "12311"
+	source_port_literal_protocol = "6"
+
+
+	destination_port_object_ids       = [data.fmc_port_objects.port2.id, data.fmc_port_objects.port3.id]
+	destination_port_literal_port     = "12311"
+	destination_port_literal_protocol = "6"
+
+
+	source_network_object_ids    = [data.fmc_network_objects.nw2.id]
+	source_network_literal_type  = "Host"
+	source_network_literal_value = "172.16.1.2"
+
+
+	destination_network_object_ids    = [data.fmc_network_objects.nw1.id, data.fmc_network_objects.nw2.id]
+	destination_network_literal_type  = "Host"
+	destination_network_literal_value = "172.16.1.2"
 }
+
 ```
 
 
@@ -49,16 +90,16 @@ resource "fmc_extended_acl" "acl1" {
 
 - `destination_network_literal_type` (String) Destination Network Literal Type
 - `destination_network_literal_value` (String) Destination Network Literal Value
-- `destination_network_object_id` (String) Destination Network Object ID
+- `destination_network_object_ids` (List of String) Destination Network Object IDs
 - `destination_port_literal_port` (String) Destination Port Literal Port
 - `destination_port_literal_protocol` (String) Destination Port Literal Protocol
-- `destination_port_object_id` (String) Destination Port Object ID
+- `destination_port_object_ids` (List of String) Destination Port Object IDs
 - `source_network_literal_type` (String) Source Network Literal Type
 - `source_network_literal_value` (String) Source Network Literal Value
-- `source_network_object_id` (String) Source Network Object ID
+- `source_network_object_ids` (List of String) Source Network Object IDs
 - `source_port_literal_port` (String) Source Port Literal Port
 - `source_port_literal_protocol` (String) Source Port Literal Protocol
-- `source_port_object_id` (String) Source Port Object ID
+- `source_port_object_ids` (List of String) Source Port Object IDs
 
 ### Read-Only
 
