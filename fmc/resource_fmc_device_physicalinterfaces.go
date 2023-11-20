@@ -3,7 +3,8 @@ package fmc
 import (
 	"context"
 	"log"
-	"strconv"
+	"time"
+
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -137,17 +138,16 @@ func resourcePhyInterfaceCreate(ctx context.Context, d *schema.ResourceData, m i
 }
 
 func resourcePhyInterfaceRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+	c := m.(*Client)
+
+	var diags diag.Diagnostics
 
 	log.Printf("FPR: Fetching physical interface details")
 
 	deviceId := d.Get("device_id").(string)
 	physicalInterfaceId := d.Get("physical_interface_id").(string)
 
-	log.Printf("FPR: DeviceId=%s, PhysicalInterfaceId=%s", deviceId, physicalInterfaceId)
-
-	c := m.(*Client)
-
-	var diags diag.Diagnostics
+	// log.Printf("FPR: DeviceId=%s, PhysicalInterfaceId=%s", deviceId, physicalInterfaceId)
 
 	physicalInterfaces, err := c.GetFmcPhysicalInterfaceByID(ctx, deviceId, physicalInterfaceId)
 
@@ -162,36 +162,66 @@ func resourcePhyInterfaceRead(ctx context.Context, d *schema.ResourceData, m int
 		return diags
 	}
 
+	if err := d.Set("name", physicalInterfaces.Name); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("if_name", physicalInterfaces.Ifname); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("description", physicalInterfaces.Description); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("mode", physicalInterfaces.Mode); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("mtu", physicalInterfaces.MTU); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("security_zone_id", physicalInterfaces.SecurityZone.ID); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read security zone",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
 	d.SetId(physicalInterfaces.ID)
 
 	return diags
 }
 
 func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	log.Printf("FPU: Updating physical interface details")
-
-	deviceId := d.Get("device_id").(string)
-	physicalInterfaceId := d.Get("physical_interface_id").(string)
-	name := d.Get("name").(string)
-	iFName := d.Get("if_name").(string)
-	description := d.Get("description").(string)
-	mtu := d.Get("mtu").(int)
-	mode := d.Get("mode").(string)
-	securityZoneId := d.Get("security_zone_id").(string)
-
-	log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
-
-	ipv4StaticAddress := d.Get("ipv4_static_address").(string)
-	ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
-	ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
-	enabled := d.Get("enabled").(bool)
-	ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
-
-	// log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
-
-	ipv6Address := d.Get("ipv6_address").(string)
-	ipv6Prefix := d.Get("ipv6_prefix").(int)
-	ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
 
 	// log.Printf("ipv6_address=%s, ipv6_prefix=%s, ipv6_enforceEUI64=%s", ipv6Address, ipv6Prefix, ipv6EnforceEUI)
 
@@ -199,68 +229,99 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 
 	var diags diag.Diagnostics
 
-	var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
-		ID:   securityZoneId,
-		Type: "SecurityZone",
-	}
-	log.Printf("PhysicalInterfaceSecurityZone=%s", PhysicalInterfaceSecurityZone)
 
-	var IPv4Static = IPv4Static{
-		Address: ipv4StaticAddress,
-		Netmask: strconv.Itoa(ipv4StaticNetmask),
-	}
-	var IPv4DHCP = IPv4DHCP{
-		Enable:      ipv4DhcpEnabled,
-		RouteMetric: ipv4DhcpRouteMetric,
-	}
+	if d.HasChanges("name", "description", "if_name", "security_zone_id", "mode", "enabled", "ipv4StaticAddress", "ipv4StaticNetmask", "ipv4DhcpEnabled", "ipv6EnforceEUI", "ipv6_address", "ipv6_prefix", "device_id", "mtu") {
+		log.Printf("FPU: Updating physical interface details")
 
-	var IPv4 = IPv4{}
+		deviceId := d.Get("device_id").(string)
+		physicalInterfaceId := d.Get("physical_interface_id").(string)
+		name := d.Get("name").(string)
+		iFName := d.Get("if_name").(string)
+		description := d.Get("description").(string)
+		mtu := d.Get("mtu").(int)
+		mode := d.Get("mode").(string)
+		securityZoneId := d.Get("security_zone_id").(string)
 
-	if ipv4DhcpEnabled {
-		IPv4.DHCP = &IPv4DHCP
-	} else if len(ipv4StaticAddress) > 0 {
-		IPv4.Static = &IPv4Static
-	}
+		log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
 
-	// log.Printf("IPv4=%s", IPv4)
+		ipv4StaticAddress := d.Get("ipv4_static_address").(string)
+		ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
+		ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
+		enabled := d.Get("enabled").(bool)
+		ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)
 
-	var IPv6Add []IPv6Address
+		// log.Printf("ipv4_static_address=%s, ipv4_static_netmask=%s, ipv4_dhcp_enabled=%s, ipv4_dhcp_route_metric=%s", ipv4StaticAddress, ipv4StaticNetmask, ipv4DhcpEnabled, ipv4DhcpRouteMetric)
 
-	if len(ipv6Address) > 0 {
-		IPv6Add = append(IPv6Add, IPv6Address{
-			Address:      ipv6Address,
-			Prefix:       ipv6Prefix,
-			EnforceEUI64: ipv6EnforceEUI,
+		ipv6Address := d.Get("ipv6_address").(string)
+		ipv6Prefix := d.Get("ipv6_prefix").(int)
+		ipv6EnforceEUI := d.Get("ipv6_enforce_eui").(bool)
+
+		var PhysicalInterfaceSecurityZone = PhysicalInterfaceSecurityZone{
+			ID:   securityZoneId,
+			Type: "SecurityZone",
+		}
+		log.Printf("PhysicalInterfaceSecurityZone=%s", PhysicalInterfaceSecurityZone)
+
+		var IPv4Static = IPv4Static{
+			Address: ipv4StaticAddress,
+			Netmask: ipv4StaticNetmask,
+		}
+		var IPv4DHCP = IPv4DHCP{
+			Enable:      ipv4DhcpEnabled,
+			RouteMetric: ipv4DhcpRouteMetric,
+		}
+
+		var IPv4 = IPv4{}
+
+		if ipv4DhcpEnabled {
+			IPv4.DHCP = &IPv4DHCP
+		} else if len(ipv4StaticAddress) > 0 {
+			IPv4.Static = &IPv4Static
+		}
+
+		// log.Printf("IPv4=%s", IPv4)
+
+		var IPv6Add []IPv6Address
+
+		if len(ipv6Address) > 0 {
+			IPv6Add = append(IPv6Add, IPv6Address{
+				Address:      ipv6Address,
+				Prefix:       ipv6Prefix,
+				EnforceEUI64: ipv6EnforceEUI,
+			})
+		}
+
+		var IPv6 = IPv6{Addresses: IPv6Add}
+		// log.Printf("IPv6Address=%s", IPv6Add)
+
+		res, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
+			ID:           physicalInterfaceId,
+			Ifname:       iFName,
+			Enabled:      enabled,
+			Mode:         mode,
+			Name:         name,
+			Description:  description,
+			MTU:          mtu,
+			SecurityZone: PhysicalInterfaceSecurityZone,
+			IPv4:         IPv4,
+			IPv6:         IPv6,
 		})
-	}
 
-	var IPv6 = IPv6{Addresses: IPv6Add}
-	// log.Printf("IPv6Address=%s", IPv6Add)
+		if err != nil {
+			log.Printf("FPU: err=%s", err)
+			diags = append(diags, diag.Diagnostic{
+				Severity: diag.Error,
+				Summary:  "unable to update physical interface",
+				Detail:   err.Error(),
+			})
+			return diags
+		}
 
-	_, err := c.UpdateFmcPhysicalInterface(ctx, deviceId, physicalInterfaceId, &PhysicalInterfaceRequest{
-		ID:           physicalInterfaceId,
-		Ifname:       iFName,
-		Enabled:      enabled,
-		Mode:         mode,
-		Name:         name,
-		Description:  description,
-		MTU:          mtu,
-		SecurityZone: PhysicalInterfaceSecurityZone,
-		IPv4:         IPv4,
-		IPv6:         IPv6,
-	})
-
-	if err != nil {
-		log.Printf("FPU: err=%s", err)
-		diags = append(diags, diag.Diagnostic{
-			Severity: diag.Error,
-			Summary:  "unable to update physical interface",
-			Detail:   err.Error(),
-		})
-		return diags
+		d.SetId(res.ID)
 	}
 
 	// log.Printf("FPU: Updated physical interface=%s", physicalInterfaceResponse)
+	time.Sleep(30 * time.Second)
 
 	return resourcePhyInterfaceRead(ctx, d, m)
 }
