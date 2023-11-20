@@ -144,19 +144,16 @@ func resourceFmcAccessRules() *schema.Resource {
 			"acp": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The ID of the ACP this resource belongs to",
 			},
 			"category": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				ForceNew:    true,
 				Description: "The Category of the ACP this resource belongs to. Should be created upfront with fmc_access_policies_category resource",
 			},
 			"section": {
 				Type:     schema.TypeString,
 				Optional: true,
-				ForceNew: true,
 				StateFunc: func(val interface{}) string {
 					return strings.ToLower(val.(string))
 				},
@@ -179,7 +176,6 @@ func resourceFmcAccessRules() *schema.Resource {
 			"insert_before": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				ForceNew: true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					v := val.(int)
 					if v > 0 {
@@ -193,7 +189,6 @@ func resourceFmcAccessRules() *schema.Resource {
 			"insert_after": {
 				Type:     schema.TypeInt,
 				Optional: true,
-				ForceNew: true,
 				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
 					v := val.(int)
 					if v > 0 {
@@ -793,7 +788,7 @@ func resourceFmcAccessRulesRead(ctx context.Context, d *schema.ResourceData, m i
 		&item.Urls.Objects,
 	}
 
-	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "source_dynamic_objects", "destination_dynamic_objects","source_security_group_tags","destination_security_group_tags", "urls"}
+	dynamicObjectNames := []string{"source_zones", "destination_zones", "source_networks", "destination_networks", "source_ports", "destination_ports", "source_dynamic_objects", "destination_dynamic_objects", "source_security_group_tags", "destination_security_group_tags", "urls"}
 
 	for i, objs := range dynamicObjects {
 		mainResponse := make([]map[string]interface{}, 0)

@@ -42,7 +42,6 @@ func resourcePhyInterface() *schema.Resource {
 			"physical_interface_id": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
 				Description: "The ID of the physical interface this resource needs",
 			},
 			"device_id": {
