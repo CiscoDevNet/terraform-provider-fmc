@@ -48,5 +48,6 @@ resource "fmc_fqdn_objects" "new" {
 ### Read-Only
 
 - `id` (String) The ID of this resource.
+- `type` (String) Type of this resource
 
 

@@ -34,6 +34,11 @@ func resourceFmcFQDNObjects() *schema.Resource {
 				Required:    true,
 				Description: "The name of this resource",
 			},
+			"type": {
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Type of this resource",
+			},
 			"value": {
 				Type:        schema.TypeString,
 				Required:    true,
@@ -116,7 +121,17 @@ func resourceFmcFQDNObjectsRead(ctx context.Context, d *schema.ResourceData, m i
 			return diags
 		}
 	}
+
 	if err := d.Set("name", item.Name); err != nil {
+		diags = append(diags, diag.Diagnostic{
+			Severity: diag.Error,
+			Summary:  "unable to read fqdn object",
+			Detail:   err.Error(),
+		})
+		return diags
+	}
+
+	if err := d.Set("type", item.Type); err != nil {
 		diags = append(diags, diag.Diagnostic{
 			Severity: diag.Error,
 			Summary:  "unable to read fqdn object",
