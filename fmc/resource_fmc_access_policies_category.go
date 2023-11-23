@@ -27,11 +27,13 @@ func resourceFmcAccessPoliciesCategory() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "The name of this category",
 			},
 			"access_policy_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "Id of access policy this category belongs to",
 			},
 		},

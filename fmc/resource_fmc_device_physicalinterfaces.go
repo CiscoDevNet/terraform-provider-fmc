@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -229,8 +228,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 
 	var diags diag.Diagnostics
 
-
-	if d.HasChanges("name", "description", "if_name", "security_zone_id", "mode", "enabled", "ipv4StaticAddress", "ipv4StaticNetmask", "ipv4DhcpEnabled", "ipv6EnforceEUI", "ipv6_address", "ipv6_prefix", "device_id", "mtu") {
+	if d.HasChanges("name", "description", "if_name", "security_zone_id", "mode", "enabled", "ipv4StaticAddress", "ipv4DhcpEnabled", "ipv6EnforceEUI", "ipv6_address", "ipv6_prefix", "device_id", "mtu") {
 		log.Printf("FPU: Updating physical interface details")
 
 		deviceId := d.Get("device_id").(string)
@@ -245,7 +243,7 @@ func resourcePhyInterfaceUpdate(ctx context.Context, d *schema.ResourceData, m i
 		log.Printf("FPU: DeviceId=%s, PhysicalInterfaceId=%s, IFName=%s Name=%s, Description=%s, security_zone_id=%s", deviceId, physicalInterfaceId, iFName, name, description, securityZoneId)
 
 		ipv4StaticAddress := d.Get("ipv4_static_address").(string)
-		ipv4StaticNetmask := d.Get("ipv4_static_netmask").(int)
+		ipv4StaticNetmask := d.Get("ipv4_static_netmask").(string)
 		ipv4DhcpEnabled := d.Get("ipv4_dhcp_enabled").(bool)
 		enabled := d.Get("enabled").(bool)
 		ipv4DhcpRouteMetric := d.Get("ipv4_dhcp_route_metric").(int)

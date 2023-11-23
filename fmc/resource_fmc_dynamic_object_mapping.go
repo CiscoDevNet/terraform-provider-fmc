@@ -33,11 +33,13 @@ func resourceFmcDynamicObjectMapping() *schema.Resource {
 			"dynamic_object_id": {
 				Type:        schema.TypeString,
 				Required:    true,
+				ForceNew:    true,
 				Description: "ID of dynamic object to be used for mapping",
 			},
 			"mappings": {
 				Type:        schema.TypeList,
 				Required:    true,
+				ForceNew:    true,
 				Description: "List of IPs to be mapped to dynamic object",
 				MinItems:    1,
 				Elem: &schema.Schema{
