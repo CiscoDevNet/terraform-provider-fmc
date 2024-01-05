@@ -58,12 +58,33 @@ func resourceFmcAccessRules() *schema.Resource {
 			"            type =  data.fmc_network_objects.dest.type\n" +
 			"        }\n" +
 			"    }\n" +
-			"    destination_ports {\n" +
-			"        destination_port {\n" +
-			"            id = data.fmc_port_objects.http.id\n" +
-			"            type =  data.fmc_port_objects.http.type\n" +
-			"        }\n" +
-			"    }\n" +
+			"source_ports {\n" +
+			"	source_port {\n" +
+			"	  id   = data.fmc_port_objects.http.id\n" +
+			"	  type = data.fmc_port_objects.http.type\n" +
+			"	}\n" +
+			"	literal {\n" +
+			"	  protocol = \"6\"\n" +
+			"	  port     = \"80\"\n" +
+			"	  type     = \"PortLiteral\"\n" +
+			"	}\n" +
+			"  }\n" +
+			"  destination_ports {\n" +
+			"	destination_port {\n" +
+			"	  id   = data.fmc_port_objects.http.id\n" +
+			"	  type = data.fmc_port_objects.http.type\n" +
+			"	}\n" +
+			"	literal {\n" +
+			"	  protocol = \"6\"\n" +
+			"	  port     = \"22\"\n" +
+			"	  type     = \"PortLiteral\"\n" +
+			"	}\n" +
+			"	literal {\n" +
+			"	  protocol = \"6\"\n" +
+			"	  port     = \"80\"\n" +
+			"	  type     = \"PortLiteral\"\n" +
+			"	}\n" +
+			"}\n" +
 			"    urls {\n" +
 			"        url {\n" +
 			"            id = fmc_url_objects.dest_url.id\n" +
@@ -119,6 +140,11 @@ func resourceFmcAccessRules() *schema.Resource {
 			"        destination_port {\n" +
 			"            id = data.fmc_port_objects.http.id\n" +
 			"            type =  data.fmc_port_objects.http.type\n" +
+			"        }\n" +
+			"        literal {\n" +
+			"            protocol = \"6\"\n" +
+			"            port = \"443\"\n" +
+			"            type = \"PortLiteral\"\n" +
 			"        }\n" +
 			"    }\n" +
 			"    urls {\n" +
@@ -402,8 +428,9 @@ func resourceFmcAccessRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"source_port": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:         schema.TypeList,
+							Optional:     true,
+							AtLeastOneOf: []string{"source_ports.0.source_port", "source_ports.0.literal"},
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
@@ -419,6 +446,30 @@ func resourceFmcAccessRules() *schema.Resource {
 								},
 							},
 						},
+						"literal": {
+							Type:         schema.TypeList,
+							Optional:     true,
+							AtLeastOneOf: []string{"source_ports.0.source_port", "source_ports.0.literal"},
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"protocol": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The protocol number",
+									},
+									"port": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The port number",
+									},
+									"type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this literal(\"PortLiteral\")",
+									},
+								},
+							},
+						},
 					},
 				},
 				Description: "Source ports for this resource",
@@ -430,8 +481,9 @@ func resourceFmcAccessRules() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"destination_port": {
-							Type:     schema.TypeList,
-							Required: true,
+							Type:         schema.TypeList,
+							Optional:     true,
+							AtLeastOneOf: []string{"destination_ports.0.destination_port", "destination_ports.0.literal"},
 							Elem: &schema.Resource{
 								Schema: map[string]*schema.Schema{
 									"id": {
@@ -443,6 +495,30 @@ func resourceFmcAccessRules() *schema.Resource {
 										Type:        schema.TypeString,
 										Required:    true,
 										Description: "The type of this resource",
+									},
+								},
+							},
+						},
+						"literal": {
+							Type:         schema.TypeList,
+							Optional:     true,
+							AtLeastOneOf: []string{"destination_ports.0.destination_port", "destination_ports.0.literal"},
+							Elem: &schema.Resource{
+								Schema: map[string]*schema.Schema{
+									"protocol": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The protocol number",
+									},
+									"port": {
+										Type:        schema.TypeString,
+										Optional:    true,
+										Description: "The port number",
+									},
+									"type": {
+										Type:        schema.TypeString,
+										Required:    true,
+										Description: "The type of this literal(\"PortLiteral\")",
 									},
 								},
 							},
@@ -643,6 +719,30 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 		}
 	}
 
+	var sourcePortLiterals, destinationPortLiterals []AccessRulePortLiteralConfig
+	if inputEntries, ok := d.GetOk("source_ports"); ok {
+		entries := inputEntries.([]interface{})[0].(map[string]interface{})["literal"]
+		for _, ent := range entries.([]interface{}) {
+			entry := ent.(map[string]interface{})
+			sourcePortLiterals = append(sourcePortLiterals, AccessRulePortLiteralConfig{
+				Protocol: entry["protocol"].(string),
+				Port:     entry["port"].(string),
+				Type:     entry["type"].(string),
+			})
+		}
+	}
+	if inputEntries, ok := d.GetOk("destination_ports"); ok {
+		entries := inputEntries.([]interface{})[0].(map[string]interface{})["literal"]
+		for _, ent := range entries.([]interface{}) {
+			entry := ent.(map[string]interface{})
+			destinationPortLiterals = append(destinationPortLiterals, AccessRulePortLiteralConfig{
+				Protocol: entry["protocol"].(string),
+				Port:     entry["port"].(string),
+				Type:     entry["type"].(string),
+			})
+		}
+	}
+
 	var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
 	dynamicSimpleObjects := []**AccessRuleSubConfig{
 		&ipsPolicy, &filePolicy, &syslogConfig,
@@ -690,11 +790,13 @@ func resourceFmcAccessRulesCreate(ctx context.Context, d *schema.ResourceData, m
 		Destinationnetworks: AccessRuleSubConfigs{
 			Objects: destinationNetworks,
 		},
-		Sourceports: AccessRuleSubConfigs{
-			Objects: sourcePorts,
+		Sourceports: AccessRulePortConfigs{
+			Objects:  sourcePorts,
+			Literals: sourcePortLiterals,
 		},
-		Destinationports: AccessRuleSubConfigs{
-			Objects: destinationPorts,
+		Destinationports: AccessRulePortConfigs{
+			Objects:  destinationPorts,
+			Literals: destinationPortLiterals,
 		},
 		SourceDynamicObjects: AccessRuleSubConfigs{
 			Objects: sourceDynamicObjects,
@@ -848,6 +950,30 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 			}
 		}
 
+		var sourcePortLiterals, destinationPortLiterals []AccessRulePortLiteralConfig
+		if inputEntries, ok := d.GetOk("source_ports"); ok {
+			entries := inputEntries.([]interface{})[0].(map[string]interface{})["literal"]
+			for _, ent := range entries.([]interface{}) {
+				entry := ent.(map[string]interface{})
+				sourcePortLiterals = append(sourcePortLiterals, AccessRulePortLiteralConfig{
+					Protocol: entry["protocol"].(string),
+					Port:     entry["port"].(string),
+					Type:     entry["type"].(string),
+				})
+			}
+		}
+		if inputEntries, ok := d.GetOk("destination_ports"); ok {
+			entries := inputEntries.([]interface{})[0].(map[string]interface{})["literal"]
+			for _, ent := range entries.([]interface{}) {
+				entry := ent.(map[string]interface{})
+				destinationPortLiterals = append(destinationPortLiterals, AccessRulePortLiteralConfig{
+					Protocol: entry["protocol"].(string),
+					Port:     entry["port"].(string),
+					Type:     entry["type"].(string),
+				})
+			}
+		}
+
 		var ipsPolicy, filePolicy, syslogConfig *AccessRuleSubConfig
 		dynamicSimpleObjects := []**AccessRuleSubConfig{
 			&ipsPolicy, &filePolicy, &syslogConfig,
@@ -888,11 +1014,13 @@ func resourceFmcAccessRulesUpdate(ctx context.Context, d *schema.ResourceData, m
 			Destinationnetworks: AccessRuleSubConfigs{
 				Objects: destinationNetworks,
 			},
-			Sourceports: AccessRuleSubConfigs{
-				Objects: sourcePorts,
+			Sourceports: AccessRulePortConfigs{
+				Objects:  sourcePorts,
+				Literals: sourcePortLiterals,
 			},
-			Destinationports: AccessRuleSubConfigs{
-				Objects: destinationPorts,
+			Destinationports: AccessRulePortConfigs{
+				Objects:  destinationPorts,
+				Literals: destinationPortLiterals,
 			},
 			SourceDynamicObjects: AccessRuleSubConfigs{
 				Objects: sourceDynamicObjects,

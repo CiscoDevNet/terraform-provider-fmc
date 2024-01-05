@@ -114,10 +114,31 @@ func testAccCheckFmcAccessRuleConfigBasic(name string) string {
 				type = fmc_network_objects.dest.type
 			}
 		}
+		source_ports {
+			source_port {
+			  id   = data.fmc_port_objects.http.id
+			  type = data.fmc_port_objects.http.type
+			}
+			literal {
+			  protocol = "6"
+			  port     = "80"
+			  type     = "PortLiteral"
+			}
+		}
 		destination_ports {
 			destination_port {
-				id = data.fmc_port_objects.http.id
-				type =  data.fmc_port_objects.http.type
+			  id   = data.fmc_port_objects.http.id
+			  type = data.fmc_port_objects.http.type
+			}
+			literal {
+			  protocol = "6"
+			  port     = "22"
+			  type     = "PortLiteral"
+			}
+			literal {
+			  protocol = "6"
+			  port     = "80"
+			  type     = "PortLiteral"
 			}
 		}
 		ips_policy = data.fmc_ips_policies.ips_policy.id
