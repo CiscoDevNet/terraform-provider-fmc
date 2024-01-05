@@ -41,6 +41,7 @@ resource "fmc_range_objects" "servers" {
 ### Optional
 
 - `description` (String) The description of this resource
+- `type` (String) The value of this resource
 
 ### Read-Only
 

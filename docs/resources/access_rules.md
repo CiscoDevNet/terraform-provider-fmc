@@ -46,12 +46,33 @@ description: |-
               type =  data.fmcnetworkobjects.dest.type
           }
       }
-      destinationports {
-          destinationport {
-              id = data.fmcportobjects.http.id
-              type =  data.fmcportobjects.http.type
-          }
+  sourceports {
+      sourceport {
+        id   = data.fmcportobjects.http.id
+        type = data.fmcportobjects.http.type
       }
+      literal {
+        protocol = "6"
+        port     = "80"
+        type     = "PortLiteral"
+      }
+    }
+    destinationports {
+      destinationport {
+        id   = data.fmcportobjects.http.id
+        type = data.fmcportobjects.http.type
+      }
+      literal {
+        protocol = "6"
+        port     = "22"
+        type     = "PortLiteral"
+      }
+      literal {
+        protocol = "6"
+        port     = "80"
+        type     = "PortLiteral"
+      }
+  }
       urls {
           url {
               id = fmcurlobjects.desturl.id
@@ -106,6 +127,11 @@ description: |-
           destinationport {
               id = data.fmcportobjects.http.id
               type =  data.fmcportobjects.http.type
+          }
+          literal {
+              protocol = "6"
+              port = "443"
+              type = "PortLiteral"
           }
       }
       urls {
@@ -171,12 +197,33 @@ resource "fmc_access_rules" "access_rule_1" {
             type =  data.fmc_network_objects.dest.type
         }
     }
-    destination_ports {
-        destination_port {
-            id = data.fmc_port_objects.http.id
-            type =  data.fmc_port_objects.http.type
-        }
-    }
+source_ports {
+	source_port {
+	  id   = data.fmc_port_objects.http.id
+	  type = data.fmc_port_objects.http.type
+	}
+	literal {
+	  protocol = "6"
+	  port     = "80"
+	  type     = "PortLiteral"
+	}
+  }
+  destination_ports {
+	destination_port {
+	  id   = data.fmc_port_objects.http.id
+	  type = data.fmc_port_objects.http.type
+	}
+	literal {
+	  protocol = "6"
+	  port     = "22"
+	  type     = "PortLiteral"
+	}
+	literal {
+	  protocol = "6"
+	  port     = "80"
+	  type     = "PortLiteral"
+	}
+}
     urls {
         url {
             id = fmc_url_objects.dest_url.id
@@ -232,6 +279,11 @@ resource "fmc_access_rules" "access_rule_2" {
         destination_port {
             id = data.fmc_port_objects.http.id
             type =  data.fmc_port_objects.http.type
+        }
+        literal {
+            protocol = "6"
+            port = "443"
+            type = "PortLiteral"
         }
     }
     urls {
@@ -332,9 +384,10 @@ Required:
 <a id="nestedblock--destination_ports"></a>
 ### Nested Schema for `destination_ports`
 
-Required:
+Optional:
 
-- `destination_port` (Block List, Min: 1) (see [below for nested schema](#nestedblock--destination_ports--destination_port))
+- `destination_port` (Block List) (see [below for nested schema](#nestedblock--destination_ports--destination_port))
+- `literal` (Block List) (see [below for nested schema](#nestedblock--destination_ports--literal))
 
 <a id="nestedblock--destination_ports--destination_port"></a>
 ### Nested Schema for `destination_ports.destination_port`
@@ -343,6 +396,19 @@ Required:
 
 - `id` (String) The ID of this resource
 - `type` (String) The type of this resource
+
+
+<a id="nestedblock--destination_ports--literal"></a>
+### Nested Schema for `destination_ports.literal`
+
+Required:
+
+- `protocol` (String) The protocol number
+- `type` (String) The type of this literal("PortLiteral")
+
+Optional:
+
+- `port` (String) The port number
 
 
 
@@ -417,9 +483,23 @@ Required:
 <a id="nestedblock--source_ports"></a>
 ### Nested Schema for `source_ports`
 
+Optional:
+
+- `literal` (Block List) (see [below for nested schema](#nestedblock--source_ports--literal))
+- `source_port` (Block List) (see [below for nested schema](#nestedblock--source_ports--source_port))
+
+<a id="nestedblock--source_ports--literal"></a>
+### Nested Schema for `source_ports.literal`
+
 Required:
 
-- `source_port` (Block List, Min: 1) (see [below for nested schema](#nestedblock--source_ports--source_port))
+- `protocol` (String) The protocol number
+- `type` (String) The type of this literal("PortLiteral")
+
+Optional:
+
+- `port` (String) The port number
+
 
 <a id="nestedblock--source_ports--source_port"></a>
 ### Nested Schema for `source_ports.source_port`
