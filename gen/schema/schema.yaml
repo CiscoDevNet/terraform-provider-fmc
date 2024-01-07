@@ -1,0 +1,45 @@
+---
+name: str() # Name of the resource
+rest_endpoint: str(required=False) # REST endpoint path
+no_delete: bool(required=False) # Set to true if the DELETE request is not supported
+data_source_name_query: bool(required=False) # Set to true if the data source supports name queries
+minimum_version: str(required=False) # Define a minimum supported version
+ds_description: str(required=False) # Define a data source description
+res_description: str(required=False) # Define a resource description
+doc_category: str(required=False) # Define a documentation category
+skip_minimum_test: bool(required=False) # Do not perform a "minimum" (only mandatory attributes) test
+attributes: list(include('attribute'), required=False) # List of attributes
+test_tags: list(str(), required=False) # List of test tags, tests are only executed if an environment variable with one of these tags is configured
+test_prerequisites: str(required=False) # HCL code that is included in the acceptance tests to define prerequisites
+---
+attribute:
+  model_name: str(required=False) # Name of the attribute in the model (payload)
+  tf_name: str(required=False) # Name of the attribute in the Terraform resource, by default derived from model_name
+  type: enum('String', 'Int64', 'Float', 'Bool', 'List', 'Set', 'StringList', required=False) # Type of the attribute
+  data_path: list(str(), required=False) # Path to the attribute in the model structure
+  id: bool(required=False) # Set to true if the attribute is part of the ID
+  resource_id: bool(required=False) # Set to true if the attribute is a resource ID (and needs to be included in PUT payload)
+  reference: bool(required=False) # Set to true if the attribute is a reference being used in the path (URL) of the REST endpoint
+  mandatory: bool(required=False) # Set to true if the attribute is mandatory
+  write_only: bool(required=False) # Set to true if the attribute is write-only, meaning we cannot read the value
+  write_changes_only: bool(required=False) # Set to true if the attribute should only be written (included in PUT payload) if it has changed
+  exclude_test: bool(required=False) # Exclude attribute from example (documentation) and acceptance test
+  exclude_example: bool(required=False) # Exclude attribute from acceptance test only (example/documentation is still generated)
+  description: str(required=False) # Attribute description
+  example: any(str(), int(), bool(), required=False) # Example value for documentation, also used for acceptance test
+  enum_values: list(str(), required=False) # List of enum values, only relevant if type is "String"
+  min_list: int(required=False) # Minimum number of elements in a list, only relevant if type is "List"
+  max_list: int(required=False) # Maximum number of elements in a list, only relevant if type is "List"
+  min_int: int(required=False) # Minimum value of an integer, only relevant if type is "Int64"
+  max_int: int(required=False) # Maximum value of an integer, only relevant if type is "Int64"
+  min_float: num(required=False) # Minimum value of a float, only relevant if type is "Float"
+  max_float: num(required=False) # Maximum value of a float, only relevant if type is "Float"
+  string_patterns: list(str(), required=False) # List of regular expressions that the string must match, only relevant if type is "String"
+  string_min_length: int(required=False) # Minimum length of a string, only relevant if type is "String"
+  string_max_length: int(required=False) # Maximum length of a string, only relevant if type is "String"
+  default_value: any(str(), int(), bool(), required=False) # Default value for the attribute
+  value: any(str(), int(), bool(), required=False) # Hardcoded value for the attribute
+  test_value: str(required=False) # Value used for acceptance test
+  minimum_test_value: str(required=False) # Value used for "minimum" resource acceptance test
+  test_tags: list(str(), required=False) # List of test tags, attribute is only included in acceptance tests if an environment variable with one of these tags is configured
+  attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"

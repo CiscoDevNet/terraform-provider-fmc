@@ -1,0 +1,66 @@
+# Terraform Provider testing workflow.
+name: Tests
+
+# This GitHub action runs your tests for each pull request and push.
+# Optionally, you can turn it on using a schedule for regular testing.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths-ignore:
+      - "README.md"
+  push:
+    paths-ignore:
+      - "README.md"
+
+# Testing only needs permissions to read the repository contents.
+permissions:
+  contents: read
+
+jobs:
+  # Ensure project builds before running testing matrix
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - run: pip install yamale
+      - run: yamale -s gen/schema/schema.yaml gen/definitions/
+      - run: go mod download
+      - run: go generate
+      - run: git diff --exit-code
+      - run: go build -v .
+
+  # Run acceptance tests in a matrix with Terraform CLI versions
+  test:
+    name: Terraform Provider Acceptance Tests
+    needs: [build] # [consecutiveness, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: true
+      max-parallel: 1
+      matrix:
+        # list whatever Terraform versions here you would like to support
+        terraform:
+          - "1.0.*"
+          - "1.5.*"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: true
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ matrix.terraform }}
+          terraform_wrapper: false
+      - run: go mod download
+

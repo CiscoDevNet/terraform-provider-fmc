@@ -1,0 +1,59 @@
+---
+name: Access Control Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies
+data_source_name_query: true
+doc_category: Policy
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: The name of the access control policy.
+    example: POLICY1
+  - model_name: description
+    type: String
+    description: Description
+    example: My access control policy
+  - model_name: action
+    data_path: [defaultAction]
+    tf_name: default_action
+    type: String
+    mandatory: true
+    enum_values: [BLOCK, TRUST, PERMIT, NETWORK_DISCOVERY, INHERIT_FROM_PARENT]
+    description: Specifies the action to take when the conditions defined by the rule are met.
+    example: BLOCK
+  - model_name: id
+    data_path: [defaultAction]
+    tf_name: default_action_id
+    type: String
+    resource_id: true
+    description: Default action ID.
+  - model_name: logBegin
+    data_path: [defaultAction]
+    tf_name: default_action_log_begin
+    type: Bool
+    description: Indicating whether the device will log events at the beginning of the connection.
+    default_value: false
+    example: true
+  - model_name: logEnd
+    data_path: [defaultAction]
+    tf_name: default_action_log_end
+    type: Bool
+    description: Indicating whether the device will log events at the end of the connection.
+    default_value: false
+    example: true
+  - model_name: sendEventsToFMC
+    data_path: [defaultAction]
+    tf_name: default_action_send_events_to_fmc
+    type: Bool
+    description: Indicating whether the device will send events to the Firepower Management Center event viewer.
+    default_value: false
+    example: true
+  - model_name: enableSyslog
+    data_path: [defaultAction]
+    tf_name: default_action_send_syslog
+    type: Bool
+    description: Indicating whether the device will send events to a syslog server.
+    default_value: false
+    example: true
+
+
