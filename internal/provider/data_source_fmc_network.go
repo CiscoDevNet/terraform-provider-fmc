@@ -76,7 +76,7 @@ func (d *NetworkDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				MarkdownDescription: "Description",
 				Computed:            true,
 			},
-			"value": schema.StringAttribute{
+			"prefix": schema.StringAttribute{
 				MarkdownDescription: "Prefix of the network.",
 				Computed:            true,
 			},

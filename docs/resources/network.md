@@ -16,7 +16,7 @@ This resource can manage a Network.
 resource "fmc_network" "example" {
   name        = "NET1"
   description = "My network object"
-  value       = "10.1.2.0/24"
+  prefix      = "10.1.2.0/24"
   overridable = true
 }
 ```
@@ -27,7 +27,7 @@ resource "fmc_network" "example" {
 ### Required
 
 - `name` (String) The name of the network object.
-- `value` (String) Prefix of the network.
+- `prefix` (String) Prefix of the network.
 
 ### Optional
 

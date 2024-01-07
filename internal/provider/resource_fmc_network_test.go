@@ -34,7 +34,7 @@ func TestAccFmcNetwork(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "name", "NET1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "description", "My network object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "value", "10.1.2.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "prefix", "10.1.2.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "overridable", "true"))
 
 	var steps []resource.TestStep
@@ -68,7 +68,7 @@ func TestAccFmcNetwork(t *testing.T) {
 func testAccFmcNetworkConfig_minimum() string {
 	config := `resource "fmc_network" "test" {` + "\n"
 	config += `	name = "NET1"` + "\n"
-	config += `	value = "10.1.2.0/24"` + "\n"
+	config += `	prefix = "10.1.2.0/24"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -80,7 +80,7 @@ func testAccFmcNetworkConfig_all() string {
 	config := `resource "fmc_network" "test" {` + "\n"
 	config += `	name = "NET1"` + "\n"
 	config += `	description = "My network object"` + "\n"
-	config += `	value = "10.1.2.0/24"` + "\n"
+	config += `	prefix = "10.1.2.0/24"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 	return config

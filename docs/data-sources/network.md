@@ -30,4 +30,4 @@ data "fmc_network" "example" {
 
 - `description` (String) Description
 - `overridable` (Boolean) Whether the object values can be overridden.
-- `value` (String) Prefix of the network.
+- `prefix` (String) Prefix of the network.

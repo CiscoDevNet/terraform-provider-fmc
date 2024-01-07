@@ -35,7 +35,7 @@ type Host struct {
 	Id          types.String `tfsdk:"id"`
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
-	Value       types.String `tfsdk:"value"`
+	Ip          types.String `tfsdk:"ip"`
 	Overridable types.Bool   `tfsdk:"overridable"`
 }
 
@@ -60,8 +60,8 @@ func (data Host) toBody(ctx context.Context, state Host) string {
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.Value.IsNull() {
-		body, _ = sjson.Set(body, "value", data.Value.ValueString())
+	if !data.Ip.IsNull() {
+		body, _ = sjson.Set(body, "value", data.Ip.ValueString())
 	}
 	if !data.Overridable.IsNull() {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
@@ -84,9 +84,9 @@ func (data *Host) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("value"); value.Exists() {
-		data.Value = types.StringValue(value.String())
+		data.Ip = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.Ip = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() {
 		data.Overridable = types.BoolValue(value.Bool())
@@ -109,10 +109,10 @@ func (data *Host) updateFromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
-	if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
-		data.Value = types.StringValue(value.String())
+	if value := res.Get("value"); value.Exists() && !data.Ip.IsNull() {
+		data.Ip = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.Ip = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())

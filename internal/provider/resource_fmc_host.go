@@ -77,7 +77,7 @@ func (r *HostResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
 				Optional:            true,
 			},
-			"value": schema.StringAttribute{
+			"ip": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IP of the host.").String,
 				Required:            true,
 			},

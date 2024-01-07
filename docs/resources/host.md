@@ -16,7 +16,7 @@ This resource can manage a Host.
 resource "fmc_host" "example" {
   name        = "HOST1"
   description = "My host object"
-  value       = "10.1.1.1"
+  ip          = "10.1.1.1"
   overridable = true
 }
 ```
@@ -26,8 +26,8 @@ resource "fmc_host" "example" {
 
 ### Required
 
+- `ip` (String) IP of the host.
 - `name` (String) The name of the host object.
-- `value` (String) IP of the host.
 
 ### Optional
 

@@ -76,7 +76,7 @@ func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				MarkdownDescription: "Description",
 				Computed:            true,
 			},
-			"value": schema.StringAttribute{
+			"ip": schema.StringAttribute{
 				MarkdownDescription: "IP of the host.",
 				Computed:            true,
 			},

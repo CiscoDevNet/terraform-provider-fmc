@@ -14,7 +14,7 @@ attributes:
     description: Description
     example: My network object
   - model_name: value
-    tf_string: prefix
+    tf_name: prefix
     type: String
     mandatory: true
     description: Prefix of the network.

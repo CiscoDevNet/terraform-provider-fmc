@@ -29,5 +29,5 @@ data "fmc_host" "example" {
 ### Read-Only
 
 - `description` (String) Description
+- `ip` (String) IP of the host.
 - `overridable` (Boolean) Whether the object values can be overridden.
-- `value` (String) IP of the host.

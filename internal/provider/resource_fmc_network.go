@@ -77,7 +77,7 @@ func (r *NetworkResource) Schema(ctx context.Context, req resource.SchemaRequest
 				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
 				Optional:            true,
 			},
-			"value": schema.StringAttribute{
+			"prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Prefix of the network.").String,
 				Required:            true,
 			},
