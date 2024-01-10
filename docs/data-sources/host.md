@@ -23,6 +23,7 @@ data "fmc_host" "example" {
 
 ### Optional
 
+- `domain` (String) The name of the FMC domain
 - `id` (String) The id of the object
 - `name` (String) The name of the host object.
 

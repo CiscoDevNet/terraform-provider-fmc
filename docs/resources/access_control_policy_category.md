@@ -27,6 +27,10 @@ resource "fmc_access_control_policy_category" "example" {
 - `access_control_policy_id` (String) The ID of the access control policy.
 - `name` (String) The name of the category.
 
+### Optional
+
+- `domain` (String) The name of the FMC domain
+
 ### Read-Only
 
 - `id` (String) The id of the object

@@ -44,6 +44,7 @@ resource "fmc_access_control_policy" "example" {
 - `default_action_send_syslog` (Boolean) Indicating whether the device will send events to a syslog server.
   - Default value: `false`
 - `description` (String) Description
+- `domain` (String) The name of the FMC domain
 
 ### Read-Only
 

@@ -32,6 +32,7 @@ resource "fmc_network" "example" {
 ### Optional
 
 - `description` (String) Description
+- `domain` (String) The name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only

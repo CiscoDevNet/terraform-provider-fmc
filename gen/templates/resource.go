@@ -76,6 +76,10 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The name of the FMC domain",
+				Optional:			true,
+			},
 			{{- range  .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if or (eq .Type "List") (eq .Type "Set")}}{{.Type}}Nested{{else if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}Attribute{
@@ -393,12 +397,18 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
 	body := plan.toBody(ctx, {{camelCase .Name}}{})
 
-	res, err := r.client.Post(plan.getPath(), body)
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
 		return
@@ -406,7 +416,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 	plan.Id = types.StringValue(res.Get("id").String())
 
 	{{- if hasResourceId .Attributes}}
-	res, err = r.client.Get(plan.getPath() + "/" + plan.Id.ValueString())
+	res, err = r.client.Get(plan.getPath() + "/" + plan.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
@@ -432,9 +442,15 @@ func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
-	res, err := r.client.Get(state.getPath() + "/" + state.Id.ValueString())
+	res, err := r.client.Get(state.getPath() + "/" + state.Id.ValueString(), reqMods...)
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 		resp.State.RemoveResource(ctx)
 		return
@@ -469,17 +485,23 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath() + "/" + plan.Id.ValueString(), body)
+	res, err := r.client.Put(plan.getPath() + "/" + plan.Id.ValueString(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 
 	{{- if hasResourceId .Attributes}}
-	res, err = r.client.Get(plan.getPath() + "/" + plan.Id.ValueString())
+	res, err = r.client.Get(plan.getPath() + "/" + plan.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
@@ -505,10 +527,16 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 
 	{{- if not .NoDelete}}
-	res, err := r.client.Delete(state.getPath() + "/" + state.Id.ValueString())
+	res, err := r.client.Delete(state.getPath() + "/" + state.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return

@@ -33,6 +33,7 @@ import (
 //template:begin types
 type Host struct {
 	Id          types.String `tfsdk:"id"`
+	Domain      types.String `tfsdk:"domain"`
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
 	Ip          types.String `tfsdk:"ip"`

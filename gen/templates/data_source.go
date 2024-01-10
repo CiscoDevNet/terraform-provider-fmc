@@ -73,6 +73,10 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 				{{- end}}
 			},
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The name of the FMC domain",
+				Optional:			true,
+			},
 			{{- range  .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if or (eq .Type "List") (eq .Type "Set")}}{{.Type}}Nested{{else if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}Attribute{
@@ -177,6 +181,12 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !config.Domain.IsNull() && config.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(config.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
 	{{- if .DataSourceNameQuery}}
@@ -185,7 +195,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		limit := 1000
 		for page := 1; ; page++ {
 			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
-			res, err := d.client.Get(config.getPath() + queryString)
+			res, err := d.client.Get(config.getPath() + queryString, reqMods...)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
 				return
@@ -213,7 +223,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	}
 	{{- end}}
 
-	res, err := d.client.Get(config.getPath() + "/" + config.Id.ValueString())
+	res, err := d.client.Get(config.getPath() + "/" + config.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return

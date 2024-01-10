@@ -33,6 +33,7 @@ import (
 //template:begin types
 type AccessControlPolicy struct {
 	Id                           types.String `tfsdk:"id"`
+	Domain                       types.String `tfsdk:"domain"`
 	Name                         types.String `tfsdk:"name"`
 	Description                  types.String `tfsdk:"description"`
 	DefaultAction                types.String `tfsdk:"default_action"`

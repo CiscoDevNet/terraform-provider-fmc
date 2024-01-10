@@ -69,6 +69,10 @@ func (r *AccessControlPolicyCategoryResource) Schema(ctx context.Context, req re
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The name of the FMC domain",
+				Optional:            true,
+			},
 			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The ID of the access control policy.").String,
 				Required:            true,
@@ -105,12 +109,18 @@ func (r *AccessControlPolicyCategoryResource) Create(ctx context.Context, req re
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
 	body := plan.toBody(ctx, AccessControlPolicyCategory{})
 
-	res, err := r.client.Post(plan.getPath(), body)
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
 		return
@@ -136,9 +146,15 @@ func (r *AccessControlPolicyCategoryResource) Read(ctx context.Context, req reso
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
-	res, err := r.client.Get(state.getPath() + "/" + state.Id.ValueString())
+	res, err := r.client.Get(state.getPath()+"/"+state.Id.ValueString(), reqMods...)
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 		resp.State.RemoveResource(ctx)
 		return
@@ -174,10 +190,16 @@ func (r *AccessControlPolicyCategoryResource) Update(ctx context.Context, req re
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+plan.Id.ValueString(), body)
+	res, err := r.client.Put(plan.getPath()+"/"+plan.Id.ValueString(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -202,8 +224,14 @@ func (r *AccessControlPolicyCategoryResource) Delete(ctx context.Context, req re
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath() + "/" + state.Id.ValueString())
+	res, err := r.client.Delete(state.getPath()+"/"+state.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return

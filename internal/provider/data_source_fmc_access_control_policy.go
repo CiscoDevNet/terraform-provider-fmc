@@ -67,6 +67,10 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 				Computed:            true,
 			},
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "The name of the FMC domain",
+				Optional:            true,
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "The name of the access control policy.",
 				Optional:            true,
@@ -133,13 +137,19 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !config.Domain.IsNull() && config.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(config.Domain.ValueString()))
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
 			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
-			res, err := d.client.Get(config.getPath() + queryString)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
 				return
@@ -166,7 +176,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		}
 	}
 
-	res, err := d.client.Get(config.getPath() + "/" + config.Id.ValueString())
+	res, err := d.client.Get(config.getPath()+"/"+config.Id.ValueString(), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return

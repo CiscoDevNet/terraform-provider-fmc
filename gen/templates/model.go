@@ -38,6 +38,7 @@ import (
 {{- $name := camelCase .Name}}
 type {{camelCase .Name}} struct {
 	Id types.String `tfsdk:"id"`
+	Domain types.String `tfsdk:"domain"`
 {{- range .Attributes}}
 {{- if not .Value}}
 {{- if or (eq .Type "List") (eq .Type "Set")}}
