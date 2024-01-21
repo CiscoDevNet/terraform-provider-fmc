@@ -83,3 +83,16 @@ func (data *AccessControlPolicyCategory) updateFromBody(ctx context.Context, res
 }
 
 //template:end updateFromBody
+
+//template:begin isNull
+func (data *AccessControlPolicyCategory) isNull(ctx context.Context, res gjson.Result) bool {
+	if !data.AccessControlPolicyId.IsNull() {
+		return false
+	}
+	if !data.Name.IsNull() {
+		return false
+	}
+	return true
+}
+
+//template:end isNull

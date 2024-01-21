@@ -179,3 +179,34 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 }
 
 //template:end updateFromBody
+
+//template:begin isNull
+func (data *AccessControlPolicy) isNull(ctx context.Context, res gjson.Result) bool {
+	if !data.Name.IsNull() {
+		return false
+	}
+	if !data.Description.IsNull() {
+		return false
+	}
+	if !data.DefaultAction.IsNull() {
+		return false
+	}
+	if !data.DefaultActionId.IsNull() {
+		return false
+	}
+	if !data.DefaultActionLogBegin.IsNull() {
+		return false
+	}
+	if !data.DefaultActionLogEnd.IsNull() {
+		return false
+	}
+	if !data.DefaultActionSendEventsToFmc.IsNull() {
+		return false
+	}
+	if !data.DefaultActionSendSyslog.IsNull() {
+		return false
+	}
+	return true
+}
+
+//template:end isNull

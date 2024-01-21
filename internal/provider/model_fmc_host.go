@@ -123,3 +123,22 @@ func (data *Host) updateFromBody(ctx context.Context, res gjson.Result) {
 }
 
 //template:end updateFromBody
+
+//template:begin isNull
+func (data *Host) isNull(ctx context.Context, res gjson.Result) bool {
+	if !data.Name.IsNull() {
+		return false
+	}
+	if !data.Description.IsNull() {
+		return false
+	}
+	if !data.Ip.IsNull() {
+		return false
+	}
+	if !data.Overridable.IsNull() {
+		return false
+	}
+	return true
+}
+
+//template:end isNull
