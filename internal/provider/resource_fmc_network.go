@@ -72,6 +72,9 @@ func (r *NetworkResource) Schema(ctx context.Context, req resource.SchemaRequest
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The name of the FMC domain",
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The name of the network object.").String,

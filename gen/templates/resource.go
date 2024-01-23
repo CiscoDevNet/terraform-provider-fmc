@@ -79,6 +79,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The name of the FMC domain",
 				Optional:			true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			{{- range  .Attributes}}
 			{{- if not .Value}}

@@ -72,6 +72,9 @@ func (r *AccessControlPolicyCategoryResource) Schema(ctx context.Context, req re
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The name of the FMC domain",
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The ID of the access control policy.").String,
