@@ -96,6 +96,8 @@ var templates = []t{
 type YamlConfig struct {
 	Name                string                `yaml:"name"`
 	RestEndpoint        string                `yaml:"rest_endpoint"`
+	PutCreate           bool                  `yaml:"put_create"`
+	NoUpdate            bool                  `yaml:"no_update"`
 	NoDelete            bool                  `yaml:"no_delete"`
 	DataSourceNameQuery bool                  `yaml:"data_source_name_query"`
 	MinimumVersion      string                `yaml:"minimum_version"`
@@ -117,6 +119,7 @@ type YamlConfigAttribute struct {
 	Id               bool                  `yaml:"id"`
 	ResourceId       bool                  `yaml:"resource_id"`
 	Reference        bool                  `yaml:"reference"`
+	RequiresReplace  bool                  `yaml:"requires_replace"`
 	Mandatory        bool                  `yaml:"mandatory"`
 	WriteOnly        bool                  `yaml:"write_only"`
 	WriteChangesOnly bool                  `yaml:"write_changes_only"`

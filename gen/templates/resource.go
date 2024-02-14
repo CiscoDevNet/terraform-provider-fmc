@@ -140,9 +140,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- else if and (len .DefaultValue) (eq .Type "String")}}
 				Default:             stringdefault.StaticString("{{.DefaultValue}}"),
 				{{- end}}
-				{{- if or .Id .Reference}}
-				PlanModifiers: []planmodifier.{{.Type}}{
-					{{snakeCase .Type}}planmodifier.RequiresReplace(),
+				{{- if or .Id .Reference .RequiresReplace}}
+				PlanModifiers: []planmodifier.{{if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}{
+					{{if eq .Type "StringList"}}list{{else}}{{snakeCase .Type}}{{end}}planmodifier.RequiresReplace(),
 				},
 				{{- end}}
 				{{- if or (eq .Type "List") (eq .Type "Set")}}
@@ -205,6 +205,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- else if and (len .DefaultValue) (eq .Type "String")}}
 							Default:             stringdefault.StaticString("{{.DefaultValue}}"),
 							{{- end}}
+							{{- if .RequiresReplace}}
+							PlanModifiers: []planmodifier.{{if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}{
+								{{if eq .Type "StringList"}}list{{else}}{{snakeCase .Type}}{{end}}planmodifier.RequiresReplace(),
+							},
+							{{- end}}
 							{{- if or (eq .Type "List") (eq .Type "Set")}}
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -265,6 +270,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 										{{- else if and (len .DefaultValue) (eq .Type "String")}}
 										Default:             stringdefault.StaticString("{{.DefaultValue}}"),
 										{{- end}}
+										{{- if .RequiresReplace}}
+										PlanModifiers: []planmodifier.{{if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}{
+											{{if eq .Type "StringList"}}list{{else}}{{snakeCase .Type}}{{end}}planmodifier.RequiresReplace(),
+										},
+										{{- end}}
 										{{- if or (eq .Type "List") (eq .Type "Set")}}
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
@@ -324,6 +334,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													Default:             booldefault.StaticBool({{.DefaultValue}}),
 													{{- else if and (len .DefaultValue) (eq .Type "String")}}
 													Default:             stringdefault.StaticString("{{.DefaultValue}}"),
+													{{- end}}
+													{{- if .RequiresReplace}}
+													PlanModifiers: []planmodifier.{{if eq .Type "StringList"}}List{{else}}{{.Type}}{{end}}{
+														{{if eq .Type "StringList"}}list{{else}}{{snakeCase .Type}}{{end}}planmodifier.RequiresReplace(),
+													},
 													{{- end}}
 												},
 												{{- end}}
@@ -411,7 +426,11 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 	// Create object
 	body := plan.toBody(ctx, {{camelCase .Name}}{})
 
+	{{- if .PutCreate}}
+	res, err := r.client.Put(plan.getPath(), body, reqMods...)
+	{{- else}}
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
+	{{- end}}
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
 		return
@@ -500,6 +519,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+	{{- if not .NoUpdate}}
 
 	body := plan.toBody(ctx, state)
 	res, err := r.client.Put(plan.getPath() + "/" + plan.Id.ValueString(), body, reqMods...)
@@ -515,6 +535,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 		return
 	}
 	plan.updateFromBody(ctx, res)
+	{{- end}}
 	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))

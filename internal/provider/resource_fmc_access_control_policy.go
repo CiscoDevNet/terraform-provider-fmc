@@ -157,7 +157,6 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := plan.toBody(ctx, AccessControlPolicy{})
-
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))

@@ -1,6 +1,8 @@
 ---
 name: str() # Name of the resource
 rest_endpoint: str(required=False) # REST endpoint path
+put_create: bool(required=False) # Set to true if the PUT request is used for create
+no_update: bool(required=False) # Set to true if the PUT request is not supported
 no_delete: bool(required=False) # Set to true if the DELETE request is not supported
 data_source_name_query: bool(required=False) # Set to true if the data source supports name queries
 minimum_version: str(required=False) # Define a minimum supported version
@@ -20,6 +22,7 @@ attribute:
   id: bool(required=False) # Set to true if the attribute is part of the ID
   resource_id: bool(required=False) # Set to true if the attribute is a resource ID (and needs to be included in PUT payload)
   reference: bool(required=False) # Set to true if the attribute is a reference being used in the path (URL) of the REST endpoint
+  requires_replace: bool(required=False) # Set to true if the attribute update forces Terraform to destroy/recreate the entire resource
   mandatory: bool(required=False) # Set to true if the attribute is mandatory
   write_only: bool(required=False) # Set to true if the attribute is write-only, meaning we cannot read the value
   write_changes_only: bool(required=False) # Set to true if the attribute should only be written (included in PUT payload) if it has changed
