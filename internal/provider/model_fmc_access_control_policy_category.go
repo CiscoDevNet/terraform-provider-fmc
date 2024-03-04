@@ -23,6 +23,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
@@ -43,7 +44,7 @@ type AccessControlPolicyCategory struct {
 
 //template:begin getPath
 func (data AccessControlPolicyCategory) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/categories", data.AccessControlPolicyId.ValueString())
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/categories", url.QueryEscape(data.AccessControlPolicyId.ValueString()))
 }
 
 //template:end getPath
