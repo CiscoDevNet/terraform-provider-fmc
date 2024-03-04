@@ -115,6 +115,7 @@ type YamlConfigAttribute struct {
 	ModelName        string                `yaml:"model_name"`
 	TfName           string                `yaml:"tf_name"`
 	Type             string                `yaml:"type"`
+	ElementType      string                `yaml:"element_type"`
 	DataPath         []string              `yaml:"data_path"`
 	Id               bool                  `yaml:"id"`
 	ResourceId       bool                  `yaml:"resource_id"`
@@ -233,17 +234,89 @@ func HasResourceId(attributes []YamlConfigAttribute) bool {
 	return false
 }
 
+// Templating helper function to return true if type is a list or set without nested elements
+func IsListSet(attribute YamlConfigAttribute) bool {
+	if (attribute.Type == "List" || attribute.Type == "Set") && attribute.ElementType != "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a list without nested elements
+func IsList(attribute YamlConfigAttribute) bool {
+	if attribute.Type == "List" && attribute.ElementType != "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a set without nested elements
+func IsSet(attribute YamlConfigAttribute) bool {
+	if attribute.Type == "Set" && attribute.ElementType != "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a list or set of strings without nested elements
+func IsStringListSet(attribute YamlConfigAttribute) bool {
+	if (attribute.Type == "List" || attribute.Type == "Set") && attribute.ElementType == "String" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a list or set of integers without nested elements
+func IsInt64ListSet(attribute YamlConfigAttribute) bool {
+	if (attribute.Type == "List" || attribute.Type == "Set") && attribute.ElementType == "Int64" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a list or set with nested elements
+func IsNestedListSet(attribute YamlConfigAttribute) bool {
+	if (attribute.Type == "List" || attribute.Type == "Set") && attribute.ElementType == "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a list with nested elements
+func IsNestedList(attribute YamlConfigAttribute) bool {
+	if attribute.Type == "List" && attribute.ElementType == "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a set with nested elements
+func IsNestedSet(attribute YamlConfigAttribute) bool {
+	if attribute.Type == "Set" && attribute.ElementType == "" {
+		return true
+	}
+	return false
+}
+
 // Map of templating functions
 var functions = template.FuncMap{
-	"toGoName":      ToGoName,
-	"camelCase":     CamelCase,
-	"snakeCase":     SnakeCase,
-	"sprintf":       fmt.Sprintf,
-	"toLower":       strings.ToLower,
-	"path":          BuildPath,
-	"hasId":         HasId,
-	"hasReference":  HasReference,
-	"hasResourceId": HasResourceId,
+	"toGoName":        ToGoName,
+	"camelCase":       CamelCase,
+	"snakeCase":       SnakeCase,
+	"sprintf":         fmt.Sprintf,
+	"toLower":         strings.ToLower,
+	"path":            BuildPath,
+	"hasId":           HasId,
+	"hasReference":    HasReference,
+	"hasResourceId":   HasResourceId,
+	"isListSet":       IsListSet,
+	"isList":          IsList,
+	"isSet":           IsSet,
+	"isStringListSet": IsStringListSet,
+	"isInt64ListSet":  IsInt64ListSet,
+	"isNestedListSet": IsNestedListSet,
+	"isNestedList":    IsNestedList,
+	"isNestedSet":     IsNestedSet,
 }
 
 func augmentAttribute(attr *YamlConfigAttribute) {

@@ -39,3 +39,27 @@ func GetStringList(result []gjson.Result) types.List {
 	}
 	return types.ListValueMust(types.StringType, v)
 }
+
+func GetInt64List(result []gjson.Result) types.List {
+	v := make([]attr.Value, len(result))
+	for r := range result {
+		v[r] = types.Int64Value(result[r].Int())
+	}
+	return types.ListValueMust(types.Int64Type, v)
+}
+
+func GetStringSet(result []gjson.Result) types.Set {
+	v := make([]attr.Value, len(result))
+	for r := range result {
+		v[r] = types.StringValue(result[r].String())
+	}
+	return types.SetValueMust(types.StringType, v)
+}
+
+func GetInt64Set(result []gjson.Result) types.Set {
+	v := make([]attr.Value, len(result))
+	for r := range result {
+		v[r] = types.Int64Value(result[r].Int())
+	}
+	return types.SetValueMust(types.Int64Type, v)
+}

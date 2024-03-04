@@ -41,10 +41,8 @@ type {{camelCase .Name}} struct {
 	Domain types.String `tfsdk:"domain"`
 {{- range .Attributes}}
 {{- if not .Value}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 	{{toGoName .TfName}} []{{$name}}{{toGoName .TfName}} `tfsdk:"{{.TfName}}"`
-{{- else if eq .Type "StringList"}}
-	{{toGoName .TfName}} types.List `tfsdk:"{{.TfName}}"`
 {{- else}}
 	{{toGoName .TfName}} types.{{.Type}} `tfsdk:"{{.TfName}}"`
 {{- end}}
@@ -55,14 +53,12 @@ type {{camelCase .Name}} struct {
 {{ range .Attributes}}
 {{- if not .Value}}
 {{- $childName := toGoName .TfName}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 type {{$name}}{{toGoName .TfName}} struct {
 {{- range .Attributes}}
 {{- if not .Value}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 	{{toGoName .TfName}} []{{$name}}{{$childName}}{{toGoName .TfName}} `tfsdk:"{{.TfName}}"`
-{{- else if eq .Type "StringList"}}
-	{{toGoName .TfName}} types.List `tfsdk:"{{.TfName}}"`
 {{- else}}
 	{{toGoName .TfName}} types.{{.Type}} `tfsdk:"{{.TfName}}"`
 {{- end}}
@@ -76,18 +72,16 @@ type {{$name}}{{toGoName .TfName}} struct {
 {{ range .Attributes}}
 {{- if not .Value}}
 {{- $childName := toGoName .TfName}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 {{ range .Attributes}}
 {{- if not .Value}}
 {{- $childChildName := toGoName .TfName}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 type {{$name}}{{$childName}}{{toGoName .TfName}} struct {
 {{- range .Attributes}}
 {{- if not .Value}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 	{{toGoName .TfName}} []{{$name}}{{$childName}}{{$childChildName}}{{toGoName .TfName}} `tfsdk:"{{.TfName}}"`
-{{- else if eq .Type "StringList"}}
-	{{toGoName .TfName}} types.List `tfsdk:"{{.TfName}}"`
 {{- else}}
 	{{toGoName .TfName}} types.{{.Type}} `tfsdk:"{{.TfName}}"`
 {{- end}}
@@ -104,22 +98,18 @@ type {{$name}}{{$childName}}{{toGoName .TfName}} struct {
 {{ range .Attributes}}
 {{- if not .Value}}
 {{- $childName := toGoName .TfName}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 {{ range .Attributes}}
 {{- if not .Value}}
 {{- $childChildName := toGoName .TfName}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 {{ range .Attributes}}
 {{- if not .Value}}
-{{- if or (eq .Type "List") (eq .Type "Set")}}
+{{- if isNestedListSet .}}
 type {{$name}}{{$childName}}{{$childChildName}}{{toGoName .TfName}} struct {
 {{- range .Attributes}}
 {{- if not .Value}}
-{{- if eq .Type "StringList"}}
-	{{toGoName .TfName}} types.List `tfsdk:"{{.TfName}}"`
-{{- else}}
 	{{toGoName .TfName}} types.{{.Type}} `tfsdk:"{{.TfName}}"`
-{{- end}}
 {{- end}}
 {{- end}}
 }
@@ -162,13 +152,13 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 	if !data.{{toGoName .TfName}}.IsNull() {{if .WriteChangesOnly}}&& data.{{toGoName .TfName}} != state.{{toGoName .TfName}}{{end}} {
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", data.{{toGoName .TfName}}.Value{{.Type}}())
 	}
-	{{- else if eq .Type "StringList"}}
+	{{- else if isListSet .}}
 	if !data.{{toGoName .TfName}}.IsNull() {
-		var values []string
+		var values []{{if isStringListSet .}}string{{else if isInt64ListSet .}}int64{{end}}
 		data.{{toGoName .TfName}}.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 	}
-	{{- else if or (eq .Type "List") (eq .Type "Set")}}
+	{{- else if isNestedListSet .}}
 	if len(data.{{toGoName .TfName}}) > 0 {
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []interface{}{})
 		for _, item := range data.{{toGoName .TfName}} {
@@ -181,13 +171,13 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 			if !item.{{toGoName .TfName}}.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", item.{{toGoName .TfName}}.Value{{.Type}}())
 			}
-			{{- else if eq .Type "StringList"}}
+			{{- else if isListSet .}}
 			if !item.{{toGoName .TfName}}.IsNull() {
-				var values []string
+				var values []{{if isStringListSet .}}string{{else if isInt64ListSet .}}int64{{end}}
 				item.{{toGoName .TfName}}.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 			}
-			{{- else if or (eq .Type "List") (eq .Type "Set")}}
+			{{- else if isNestedListSet .}}
 			if len(item.{{toGoName .TfName}}) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []interface{}{})
 				for _, childItem := range item.{{toGoName .TfName}} {
@@ -200,13 +190,13 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 					if !childItem.{{toGoName .TfName}}.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", childItem.{{toGoName .TfName}}.Value{{.Type}}())
 					}
-					{{- else if eq .Type "StringList"}}
+					{{- else if isListSet .}}
 					if !childItem.{{toGoName .TfName}}.IsNull() {
-						var values []string
+						var values []{{if isStringListSet .}}string{{else if isInt64ListSet .}}int64{{end}}
 						childItem.{{toGoName .TfName}}.ElementsAs(ctx, &values, false)
 						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 					}
-					{{- else if or (eq .Type "List") (eq .Type "Set")}}
+					{{- else if isNestedListSet .}}
 					if len(childItem.{{toGoName .TfName}}) > 0 {
 						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []interface{}{})
 						for _, childChildItem := range childItem.{{toGoName .TfName}} {
@@ -219,9 +209,9 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 							if !childChildItem.{{toGoName .TfName}}.IsNull() {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", childChildItem.{{toGoName .TfName}}.Value{{.Type}}())
 							}
-							{{- else if eq .Type "StringList"}}
+							{{- else if isListSet .}}
 							if !childChildItem.{{toGoName .TfName}}.IsNull() {
-								var values []string
+								var values []{{if isStringListSet .}}string{{else if isInt64ListSet .}}int64{{end}}
 								childChildItem.{{toGoName .TfName}}.ElementsAs(ctx, &values, false)
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 							}
@@ -265,13 +255,13 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		data.{{toGoName .TfName}} = types.{{.Type}}Null()
 		{{- end}}
 	}
-	{{- else if eq .Type "StringList"}}
+	{{- else if isListSet .}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
-		data.{{toGoName .TfName}} = helpers.GetStringList(value.Array())
+		data.{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(value.Array())
 	} else {
-		data.{{toGoName .TfName}} = types.ListNull(types.StringType)
+		data.{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 	}
-	{{- else if or (eq .Type "List") (eq .Type "Set")}}
+	{{- else if isNestedListSet .}}
 	if value := res{{if .ModelName}}.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}; value.Exists() {
 		data.{{toGoName .TfName}} = make([]{{$name}}{{toGoName .TfName}}, 0)
 		value.ForEach(func(k, v gjson.Result) bool {
@@ -289,13 +279,13 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 				item.{{toGoName .TfName}} = types.{{.Type}}Null()
 				{{- end}}
 			}
-			{{- else if eq .Type "StringList"}}
+			{{- else if isListSet .}}
 			if cValue := v.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); cValue.Exists() {
-				item.{{toGoName .TfName}} = helpers.GetStringList(cValue.Array())
+				item.{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(cValue.Array())
 			} else {
-				item.{{toGoName .TfName}} = types.ListNull(types.StringType)
+				item.{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 			}
-			{{- else if or (eq .Type "List") (eq .Type "Set")}}
+			{{- else if isNestedListSet .}}
 			if cValue := v.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); cValue.Exists() {
 				item.{{toGoName .TfName}} = make([]{{$name}}{{$cname}}{{toGoName .TfName}}, 0)
 				cValue.ForEach(func(ck, cv gjson.Result) bool {
@@ -312,13 +302,13 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 						cItem.{{toGoName .TfName}} = types.{{.Type}}Null()
 						{{- end}}
 					}
-					{{- else if eq .Type "StringList"}}
+					{{- else if isListSet .}}
 					if ccValue := cv.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); ccValue.Exists() {
-						cItem.{{toGoName .TfName}} = helpers.GetStringList(ccValue.Array())
+						cItem.{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(ccValue.Array())
 					} else {
-						cItem.{{toGoName .TfName}} = types.ListNull(types.StringType)
+						cItem.{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 					}
-					{{- else if or (eq .Type "List") (eq .Type "Set")}}
+					{{- else if isNestedListSet .}}
 					if ccValue := cv.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); ccValue.Exists() {
 						cItem.{{toGoName .TfName}} = make([]{{$name}}{{$cname}}{{$ccname}}{{toGoName .TfName}}, 0)
 						ccValue.ForEach(func(cck, ccv gjson.Result) bool {
@@ -335,11 +325,11 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 								ccItem.{{toGoName .TfName}} = types.{{.Type}}Null()
 								{{- end}}
 							}
-							{{- else if eq .Type "StringList"}}
+							{{- else if isListSet .}}
 							if cccValue := ccv.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); cccValue.Exists() {
-								ccItem.{{toGoName .TfName}} = helpers.GetStringList(cccValue.Array())
+								ccItem.{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(cccValue.Array())
 							} else {
-								ccItem.{{toGoName .TfName}} = types.ListNull(types.StringType)
+								ccItem.{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 							}
 							{{- end}}
 							{{- end}}
@@ -378,13 +368,13 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 	} else {{if .DefaultValue}}if data.{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 		data.{{toGoName .TfName}} = types.{{.Type}}Null()
 	}
-	{{- else if eq .Type "StringList"}}
+	{{- else if isListSet .}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() && !data.{{toGoName .TfName}}.IsNull() {
-		data.{{toGoName .TfName}} = helpers.GetStringList(value.Array())
+		data.{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(value.Array())
 	} else {
-		data.{{toGoName .TfName}} = types.ListNull(types.StringType)
+		data.{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 	}
-	{{- else if or (eq .Type "List") (eq .Type "Set")}}
+	{{- else if isNestedListSet .}}
 	{{- $list := (toGoName .TfName)}}
 	for i := range data.{{toGoName .TfName}} {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
@@ -418,13 +408,13 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 		} else {{if .DefaultValue}}if data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 			data.{{$list}}[i].{{toGoName .TfName}} = types.{{.Type}}Null()
 		}
-		{{- else if eq .Type "StringList"}}
+		{{- else if isListSet .}}
 		if value := r.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() && !data.{{$list}}[i].{{toGoName .TfName}}.IsNull() {
-			data.{{$list}}[i].{{toGoName .TfName}} = helpers.GetStringList(value.Array())
+			data.{{$list}}[i].{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(value.Array())
 		} else {
-			data.{{$list}}[i].{{toGoName .TfName}} = types.ListNull(types.StringType)
+			data.{{$list}}[i].{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 		}
-		{{- else if or (eq .Type "List") (eq .Type "Set")}}
+		{{- else if isNestedListSet .}}
 		{{- $clist := (toGoName .TfName)}}
 		for ci := range data.{{$list}}[i].{{toGoName .TfName}} {
 			keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
@@ -458,13 +448,13 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 			} else {{if .DefaultValue}}if data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 				data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = types.{{.Type}}Null()
 			}
-			{{- else if eq .Type "StringList"}}
+			{{- else if isListSet .}}
 			if value := cr.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() && !data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}.IsNull() {
-				data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = helpers.GetStringList(value.Array())
+				data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(value.Array())
 			} else {
-				data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = types.ListNull(types.StringType)
+				data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 			}
-			{{- else if or (eq .Type "List") (eq .Type "Set")}}
+			{{- else if isNestedListSet .}}
 			{{- $cclist := (toGoName .TfName)}}
 			for cci := range data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} {
 				keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
@@ -498,11 +488,11 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 				} else {{if .DefaultValue}}if data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
 					data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}} = types.{{.Type}}Null()
 				}
-				{{- else if eq .Type "StringList"}}
+				{{- else if isListSet .}}
 				if value := ccr.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() && !data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}}.IsNull() {
-					data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}} = helpers.GetStringList(value.Array())
+					data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}} = helpers.Get{{.ElementType}}{{.Type}}(value.Array())
 				} else {
-					data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}} = types.ListNull(types.StringType)
+					data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}} = types.{{.Type}}Null(types.{{.ElementType}}Type)
 				}
 				{{- end}}
 				{{- end}}
@@ -527,7 +517,7 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 func (data *{{camelCase .Name}}) isNull(ctx context.Context, res gjson.Result) bool {
 	{{- range .Attributes}}
 	{{- if not .Value}}
-	{{- if or (eq .Type "List") (eq .Type "Set")}}
+	{{- if isNestedListSet .}}
 	if len(data.{{toGoName .TfName}}) > 0 {
 		return false
 	}

@@ -17,7 +17,8 @@ test_prerequisites: str(required=False) # HCL code that is included in the accep
 attribute:
   model_name: str(required=False) # Name of the attribute in the model (payload)
   tf_name: str(required=False) # Name of the attribute in the Terraform resource, by default derived from model_name
-  type: enum('String', 'Int64', 'Float', 'Bool', 'List', 'Set', 'StringList', required=False) # Type of the attribute
+  type: enum('String', 'Int64', 'Float', 'Bool', 'List', 'Set', required=False) # Type of the attribute
+  element_type: enum('String', 'Int64', required=False) # only relevant if type is either 'List' or 'Set'
   data_path: list(str(), required=False) # Path to the attribute in the model structure
   id: bool(required=False) # Set to true if the attribute is part of the ID
   resource_id: bool(required=False) # Set to true if the attribute is a resource ID (and needs to be included in PUT payload)
