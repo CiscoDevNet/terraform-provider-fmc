@@ -4,6 +4,7 @@ layout: ""
 page_title: "Provider: FMC"
 description: |-
   The FMC provider provides resources to interact with a Cisco Secure FMC (Firewall Management Center) instance.
+
 ---
 
 # FMC Provider
@@ -33,6 +34,7 @@ provider "fmc" {
 
 - `insecure` (Boolean) Allow insecure HTTPS client. This can also be set as the FMC_INSECURE environment variable. Defaults to `true`.
 - `password` (String, Sensitive) Password for the FMC instance. This can also be set as the FMC_PASSWORD environment variable.
+- `req_timeout` (String) Timeout for a single HTTPS request made to REST API before it is retried. This can also be set as the FMC_REQTIMEOUT environment variable. A string like `"1s"` means one second. Defaults to `"5s"`.
 - `retries` (Number) Number of retries for REST API calls. This can also be set as the FMC_RETRIES environment variable. Defaults to `3`.
 - `url` (String) URL of the Cisco FMC instance. This can also be set as the FMC_URL environment variable.
 - `username` (String) Username for the FMC instance. This can also be set as the FMC_USERNAME environment variable.
