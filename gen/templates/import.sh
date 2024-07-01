@@ -1,1 +1,1 @@
-terraform import fmc_{{snakeCase .Name}}.example "{{$id := false}}{{range .Attributes}}{{if .Id}}{{$id = true}}{{.Example}}{{end}}{{end}}{{if not $id}}76d24097-41c4-4558-a4d0-a8c07ac08470{{end}}"
+terraform import fmc_{{snakeCase .Name}}.example "{{$id := false}}{{range .Attributes}}{{if .Id}}{{$id = true}}{{.Example}}{{end}}{{end}}{{if not $id}}{{range .Attributes}}{{if .Reference}}76d24097-41c4-4558-a4d0-a8c07ac08470,{{end}}{{end}}76d24097-41c4-4558-a4d0-a8c07ac08470{{end}}"
