@@ -1,0 +1,172 @@
+---
+name: Device Physical Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces
+put_create: true
+no_delete: true
+data_source_name_query: true
+doc_category: Devices
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: UUID of the parent device (fmc_device.example.id).
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: enabled
+    type: Bool
+    description: Indicates whether to enable the interface.
+    default_value: "true"
+    test_value: "true"
+    exclude_example: true
+  - model_name: mode
+    type: String
+    mandatory: true
+    description: >-
+      Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with
+      tap_mode=false or tap_mode unset.
+      Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true.
+      Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
+    enum_values: [INLINE, PASSIVE, TAP, ERSPAN, NONE, SWITCHPORT]
+    example: NONE
+  - model_name: name
+    type: String
+    description: Name of the interface; it must already be present on the device.
+    mandatory: true
+    example: GigabitEthernet0/1
+  - model_name: type
+    type: String
+    value: PhysicalInterface
+    description: Type of the resource.
+  - model_name: ifname
+    tf_name: logical_name
+    type: String
+    description: >-
+      Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
+      characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+    example: myinterface-0-1
+    minimum_test_value: '"iface_minimum"'
+  - model_name: description
+    type: String
+    example: my description
+  - model_name: managementOnly
+    type: Bool
+    description: >-
+      Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is
+      disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
+    minimum_test_value: "true"
+    test_value: "false"
+    exclude_example: true
+  - model_name: MTU
+    tf_name: mtu
+    type: Int64
+    description: Maximum transmission unit. Can only be used when logical_name is set.
+    example: 9000
+  - model_name: priority
+    type: Int64
+    description: Priority 0-65535. Can only be set for routed interfaces.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: [securityZone]
+    tf_name: security_zone_id
+    type: String
+    description: >-
+      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name
+      is set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+  - model_name: type
+    data_path: [securityZone]
+    type: String
+    value: SecurityZone
+  - model_name: address
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_address
+    type: String
+    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    example: "10.1.1.1"
+  - model_name: netmask
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_netmask
+    type: String
+    description: Netmask (width) for ipv4_static_address.
+    example: "24"
+  - model_name: enableDefaultRouteDHCP
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_obtain_route
+    type: Bool
+    description: >-
+      Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
+      from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1.
+      Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be
+      non-null.
+      The ipv4_dhcp_obtain_route must be null when using ipv4_static_netmask.
+    exclude_example: true
+    exclude_test: true
+  - model_name: dhcpRouteMetric
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_route_metric
+    type: Int64
+    description: >-
+      The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be
+      null when using ipv4_static_netmask.
+    min_int: 1
+    max_int: 255
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableIPV6
+    data_path: [ipv6]
+    tf_name: ipv6_enable
+    description: Indicates whether to enable IPv6.
+    type: Bool
+    example: "true"
+  - model_name: enforceEUI64
+    data_path: [ipv6]
+    tf_name: ipv6_enforce_eui
+    description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    type: Bool
+    example: "true"
+  - model_name: enableAutoConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_auto_config
+    description: Indicates whether to enable IPv6 autoconfiguration.
+    type: Bool
+    example: "true"
+  - model_name: enableDHCPAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_dhcp_address
+    description: Indicates whether to enable DHCPv6 for address config.
+    type: Bool
+    example: "true"
+  - model_name: enableDHCPNonAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_dhcp_nonaddress
+    description: Indicates whether to enable DHCPv6 for non-address config.
+    type: Bool
+    example: "true"
+  - model_name: enableRA
+    data_path: [ipv6]
+    tf_name: ipv6_enable_ra
+    description: Indicates whether to enable IPv6 router advertisement (RA).
+    type: Bool
+    example: "false"
+  - model_name: addresses
+    data_path: [ipv6]
+    tf_name: ipv6_addresses
+    type: List
+    attributes:
+      - model_name: address
+        type: String
+        description: IPv6 address without a slash and prefix.
+        id: true
+        example: "2004::"
+      - model_name: prefix
+        type: String
+        description: Prefix width for the IPv6 address.
+        id: true
+        example: "124"
+      - model_name: enforceEUI64
+        tf_name: enforce_eui
+        description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        type: Bool
+        exclude_example: true
+        test_value: '"true"'
