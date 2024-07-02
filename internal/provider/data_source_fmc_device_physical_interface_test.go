@@ -19,6 +19,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -28,8 +29,10 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "device_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mode", "NONE"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
@@ -50,7 +53,7 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcDevicePhysicalInterfaceConfig(),
+				Config: testAccDataSourceFmcDevicePhysicalInterfacePrerequisitesConfig + testAccDataSourceFmcDevicePhysicalInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -60,12 +63,17 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccDataSourceFmcDevicePhysicalInterfacePrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
-	config += `	device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
@@ -91,7 +99,7 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `
 		data "fmc_device_physical_interface" "test" {
 			id = fmc_device_physical_interface.test.id
-			device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+			device_id = var.device_id
 		}
 	`
 	return config

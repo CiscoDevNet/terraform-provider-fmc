@@ -29,8 +29,10 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 func TestAccFmcDevicePhysicalInterface(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "device_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mode", "NONE"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
@@ -50,11 +52,11 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDevicePhysicalInterfaceConfig_minimum(),
+			Config: testAccFmcDevicePhysicalInterfacePrerequisitesConfig + testAccFmcDevicePhysicalInterfaceConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDevicePhysicalInterfaceConfig_all(),
+		Config: testAccFmcDevicePhysicalInterfacePrerequisitesConfig + testAccFmcDevicePhysicalInterfaceConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -68,12 +70,17 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+const testAccFmcDevicePhysicalInterfacePrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
-	config += `	device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
 	config += `	logical_name = "iface_minimum"` + "\n"
@@ -87,7 +94,7 @@ func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
-	config += `	device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"

@@ -23,83 +23,32 @@ import (
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/netascode/terraform-provider-fmc/internal/ftd"
 )
 
 // End of section. //template:end imports
 
 func TestAccDataSourceFmcDevice(t *testing.T) {
-	ftdAddr := os.Getenv("FTD_ADDR")
-	if ftdAddr == "" {
-		t.Skip("skipping test, set environment variable FTD_ADDR")
+	if os.Getenv("TF_VAR_device_id") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
-
-	if os.Getenv("TF_VAR_nat_id") == "" {
-		// Prepare Terraform's var.ftd_addr
-		os.Setenv("TF_VAR_ftd_addr", ftdAddr)
-	}
-	// Prepare Terraform's var.registration_key
-	os.Setenv("TF_VAR_registration_key", ftd.MustRandomizeKey())
 
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device.test", "name", "device1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device.test", "license_capabilities.#", "1"))
-	checks = append(checks, resource.TestCheckTypeSetElemAttr("fmc_device.test", "license_capabilities.*", "BASE"))
+	checks = append(checks, resource.TestCheckTypeSetElemAttr("data.fmc_device.test", "license_capabilities.*", "BASE"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device.test", "type", "Device"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				PreConfig: ftd.MustInitFromEnv,
-				Config:    testAccDataSourceFmcDevicePrerequisitesConfig + testAccDataSourceFmcDeviceConfig(),
-				Check:     resource.ComposeTestCheckFunc(checks...),
+				Config: `
+					variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+					data "fmc_device" "test" {
+						id = var.device_id
+					}
+				`,
+				Check: resource.ComposeTestCheckFunc(checks...),
 			},
 		},
 	})
 }
-
-// Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
-const testAccDataSourceFmcDevicePrerequisitesConfig = `
-resource "fmc_access_control_policy" "minimum" {
-  name = "POLICY1"
-  default_action = "BLOCK"
-}
-
-resource "fmc_access_control_policy" "test" {
-  name = "POLICY2"
-  default_action = "PERMIT"
-}
-
-variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
-variable "nat_id"   { default = null } // tests will set $TF_VAR_nat_id
-variable "registration_key"         {} // tests will set $TF_VAR_registration_key
-
-`
-
-// End of section. //template:end testPrerequisites
-
-// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
-func testAccDataSourceFmcDeviceConfig() string {
-	config := `resource "fmc_device" "test" {` + "\n"
-	config += `	name = "device1"` + "\n"
-	config += `	host_name = var.ftd_addr` + "\n"
-	config += `	nat_id = var.nat_id` + "\n"
-	config += `	license_capabilities = ["BASE"]` + "\n"
-	config += `	registration_key = var.registration_key` + "\n"
-	config += `	type = "Device"` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
-	config += `	nat_policy_id = null` + "\n"
-	config += `	prohibit_packet_transfer = true` + "\n"
-	config += `	performance_tier = "FTDv50"` + "\n"
-	config += `}` + "\n"
-
-	config += `
-		data "fmc_device" "test" {
-			id = fmc_device.test.id
-		}
-	`
-	return config
-}
-
-// End of section. //template:end testAccDataSourceConfig

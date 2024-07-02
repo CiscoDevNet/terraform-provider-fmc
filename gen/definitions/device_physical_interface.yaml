@@ -5,12 +5,14 @@ put_create: true
 no_delete: true
 data_source_name_query: true
 doc_category: Devices
+test_tags: [TF_VAR_device_id]
 attributes:
   - tf_name: device_id
     type: String
     reference: true
     description: UUID of the parent device (fmc_device.example.id).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
   - model_name: enabled
     type: Bool
     description: Indicates whether to enable the interface.
@@ -170,3 +172,6 @@ attributes:
         type: Bool
         exclude_example: true
         test_value: '"true"'
+
+test_prerequisites: |
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
