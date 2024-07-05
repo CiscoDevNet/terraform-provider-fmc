@@ -48,7 +48,7 @@ type PortGroupObjectsResponse struct {
 // /fmc_config/v1/domain/DomainUUID/object/portobjectgroups?bulk=true ( Bulk POST operation on port group objects. )
 
 func (v *Client) CreateFmcPortGroupObject(ctx context.Context, object *PortGroupObject) (*PortGroupObjectResponse, error) {
-	url := fmt.Sprintf("%s/object/portobjectgroups?limit=1000", v.domainBaseURL)
+	url := fmt.Sprintf("%s/object/portobjectgroups", v.domainBaseURL)
 	body, err := json.Marshal(&object)
 	if err != nil {
 		return nil, fmt.Errorf("creating port group objects: %s - %s", url, err.Error())
@@ -86,7 +86,7 @@ func (v *Client) GetFmcPortGroupObject(ctx context.Context, id string) (*PortGro
 }
 
 func (v *Client) GetFmcPortGroupObjectByName(ctx context.Context, name string) (*PortGroupObjectResponse, error) {
-	url := fmt.Sprintf("%s/object/portobjectgroups", v.domainBaseURL)
+	url := fmt.Sprintf("%s/object/portobjectgroups?limit=1000", v.domainBaseURL)
 	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("getting port group object: %s - %s", url, err.Error())
