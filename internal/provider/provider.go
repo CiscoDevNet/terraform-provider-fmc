@@ -289,6 +289,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewDevicePhysicalInterfaceResource,
 		NewDeviceSubinterfaceResource,
 		NewHostResource,
+		NewICMPv4ObjectResource,
 		NewNetworkResource,
 		NewSecurityZoneResource,
 	}
@@ -302,6 +303,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewDevicePhysicalInterfaceDataSource,
 		NewDeviceSubinterfaceDataSource,
 		NewHostDataSource,
+		NewICMPv4ObjectDataSource,
 		NewNetworkDataSource,
 		NewSecurityZoneDataSource,
 	}

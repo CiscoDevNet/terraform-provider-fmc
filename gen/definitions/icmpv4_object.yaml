@@ -1,0 +1,34 @@
+---
+name: ICMPv4 Object
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/icmpv4objects
+data_source_name_query: true
+doc_category: Objects
+attributes:
+  - model_name: icmpType
+    type: Int64
+    description: ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
+    example: "3"
+    min_int: 0
+    max_int: 255
+  - model_name: code
+    type: Int64
+    description: >-
+      ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate
+      to the given `icmp_type`.
+    min_int: 0
+    max_int: 255
+    example: "0"
+  - model_name: name
+    type: String
+    description: User-created name of the resource.
+    mandatory: true
+    example: icmpv4_net_unreachable
+  - model_name: description
+    type: String
+    description: Optional description of the resource.
+    example: "ICMPv4 network unreachable response, type 3, code 0"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"
