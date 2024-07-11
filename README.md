@@ -57,9 +57,19 @@ To compile the provider, run `go install`. This will build the provider and put 
 
 To generate or update documentation, run `go generate`.
 
-In order to run the full suite of Acceptance tests, run `make testacc`. Make sure the respective environment variables are set (e.g., `FMC_USERNAME`, `FMC_PASSWORD`, `FMC_URL`).
+## Acceptance tests
 
-Note: Acceptance tests create real resources.
+Note: Acceptance tests create real resources. You'd need an FMC instance with an administrative user on the default global domain. Make sure the respective environment variables are set: `FMC_USERNAME`, `FMC_PASSWORD`, `FMC_URL`.
+
+A number of test cases use a pre-existing device (e.g. FTDv). If you want your test to be exhaustive, it's recommended to add it manually to your FMC:
+
+  1. SSH onto FTDv and use `configure manager add` followed by `show managers verbose`.
+  2. Use FMC web interface -> Device Management -> Add Device.
+  3. After the Device is registered, snatch its UUID, e.g. from the "edit" link, and set it on the environment variable `TF_VAR_device_id`.
+  4. Optionally, you might want to test registering/unregistering an FTDv device by exporting the `FTD_USERNAME`, `FTD_PASSWORD`, `FTD_ADDR` (the IP address, not a URL this time). This however requires an unregistered FTDv device, so it's not possible to use the device from the above points. You'd need either two separate FTDv devices, or two separate test runs.
+
+Depending on whether the environment is full or partial, the suite of Acceptance tests will
+execute all/partial tests:
 
 ```shell
 make testacc
