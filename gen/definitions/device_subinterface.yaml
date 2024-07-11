@@ -94,8 +94,7 @@ attributes:
       UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: '"11ab4fe6-39ec-11ef-89c2-9095dfb2ea6b"'
-    #exclude_test: true
+    test_value: fmc_security_zone.test.id
   - model_name: type
     data_path: [securityZone]
     type: String
@@ -194,12 +193,17 @@ attributes:
         test_value: '"true"'
 
 test_prerequisites: |
-  resource fmc_device_physical_interface test {
-    device_id = var.device_id
-    name = "GigabitEthernet0/1"
-    mode = "NONE"
+  resource "fmc_device_physical_interface" "test" {
+    device_id    = var.device_id
+    name         = "GigabitEthernet0/1"
+    mode         = "NONE"
     logical_name = "myif-0-1"
-    mtu = 9000
+    mtu          = 9000
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "routed1"
+    interface_mode = "ROUTED"
   }
 
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

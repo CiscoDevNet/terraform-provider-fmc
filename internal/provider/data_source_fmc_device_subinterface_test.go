@@ -63,12 +63,17 @@ func TestAccDataSourceFmcDeviceSubinterface(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 const testAccDataSourceFmcDeviceSubinterfacePrerequisitesConfig = `
-resource fmc_device_physical_interface test {
-  device_id = var.device_id
-  name = "GigabitEthernet0/1"
-  mode = "NONE"
+resource "fmc_device_physical_interface" "test" {
+  device_id    = var.device_id
+  name         = "GigabitEthernet0/1"
+  mode         = "NONE"
   logical_name = "myif-0-1"
-  mtu = 9000
+  mtu          = 9000
+}
+
+resource "fmc_security_zone" "test" {
+  name           = "routed1"
+  interface_mode = "ROUTED"
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
@@ -88,7 +93,7 @@ func testAccDataSourceFmcDeviceSubinterfaceConfig() string {
 	config += `	logical_name = "mysubinterface-0-1.7"` + "\n"
 	config += `	description = "my description"` + "\n"
 	config += `	management_only = false` + "\n"
-	config += `	security_zone_id = "11ab4fe6-39ec-11ef-89c2-9095dfb2ea6b"` + "\n"
+	config += `	security_zone_id = fmc_security_zone.test.id` + "\n"
 	config += `	ipv4_static_address = "10.2.2.2"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ipv6_enable = true` + "\n"
