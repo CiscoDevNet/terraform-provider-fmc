@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
@@ -57,8 +56,7 @@ type FmcProviderModel struct {
 
 // FmcProviderData describes the data maintained by the provider.
 type FmcProviderData struct {
-	Client      *fmc.Client
-	UpdateMutex *sync.Mutex
+	Client *fmc.Client
 }
 
 // Metadata returns the provider type name.
@@ -276,7 +274,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
-	data := FmcProviderData{Client: &c, UpdateMutex: &sync.Mutex{}}
+	data := FmcProviderData{Client: &c}
 	resp.DataSourceData = &data
 	resp.ResourceData = &data
 }
@@ -284,7 +282,6 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAccessControlPolicyResource,
-		NewAccessControlPolicyCategoryResource,
 		NewDeviceResource,
 		NewDeviceIpv6StaticRouteResource,
 		NewDevicePhysicalInterfaceResource,
@@ -299,7 +296,6 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewAccessControlPolicyDataSource,
-		NewAccessControlPolicyCategoryDataSource,
 		NewDeviceDataSource,
 		NewDeviceIpv6StaticRouteDataSource,
 		NewDevicePhysicalInterfaceDataSource,

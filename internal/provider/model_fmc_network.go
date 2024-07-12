@@ -33,6 +33,7 @@ type Network struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
 	Name        types.String `tfsdk:"name"`
+	Type        types.String `tfsdk:"type"`
 	Description types.String `tfsdk:"description"`
 	Prefix      types.String `tfsdk:"prefix"`
 	Overridable types.Bool   `tfsdk:"overridable"`
@@ -56,6 +57,9 @@ func (data Network) toBody(ctx context.Context, state Network) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	if !data.Type.IsNull() {
+		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
@@ -76,6 +80,11 @@ func (data *Network) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringValue("Network")
 	}
 	if value := res.Get("description"); value.Exists() {
 		data.Description = types.StringValue(value.String())
@@ -103,6 +112,11 @@ func (data *Network) updateFromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else if data.Type.ValueString() != "Network" {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
@@ -125,6 +139,9 @@ func (data *Network) updateFromBody(ctx context.Context, res gjson.Result) {
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
 func (data *Network) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.Name.IsNull() {
+		return false
+	}
+	if !data.Type.IsNull() {
 		return false
 	}
 	if !data.Description.IsNull() {

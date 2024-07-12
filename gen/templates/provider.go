@@ -58,7 +58,6 @@ type FmcProviderModel struct {
 // FmcProviderData describes the data maintained by the provider.
 type FmcProviderData struct {
 	Client      *fmc.Client
-	UpdateMutex *sync.Mutex
 }
 
 // Metadata returns the provider type name.
@@ -276,7 +275,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
-	data := FmcProviderData{Client: &c, UpdateMutex: &sync.Mutex{}}
+	data := FmcProviderData{Client: &c}
 	resp.DataSourceData = &data
 	resp.ResourceData = &data
 }

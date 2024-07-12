@@ -75,6 +75,10 @@ func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Optional:            true,
 				Computed:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'Host'.",
+				Computed:            true,
+			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Description",
 				Computed:            true,

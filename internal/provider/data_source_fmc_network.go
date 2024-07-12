@@ -75,6 +75,10 @@ func (d *NetworkDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Optional:            true,
 				Computed:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'Network'.",
+				Computed:            true,
+			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Description",
 				Computed:            true,

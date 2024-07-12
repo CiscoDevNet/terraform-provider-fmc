@@ -169,10 +169,10 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- end}}
 							{{- if or .Reference .Mandatory}}
 							Required:            true,
-							{{- else}}
+							{{- else if not .ResourceId}}
 							Optional:            true,
 							{{- end}}
-							{{- if len .DefaultValue}}
+							{{- if or (len .DefaultValue) .ResourceId}}
 							Computed:            true,
 							{{- end}}
 							{{- if len .EnumValues}}
@@ -234,10 +234,10 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 										{{- end}}
 										{{- if or .Reference .Mandatory}}
 										Required:            true,
-										{{- else}}
+										{{- else if not .ResourceId}}
 										Optional:            true,
 										{{- end}}
-										{{- if len .DefaultValue}}
+										{{- if or (len .DefaultValue) .ResourceId}}
 										Computed:            true,
 										{{- end}}
 										{{- if len .EnumValues}}
@@ -299,10 +299,10 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													{{- end}}
 													{{- if or .Reference .Mandatory}}
 													Required:            true,
-													{{- else}}
+													{{- else if not .ResourceId}}
 													Optional:            true,
 													{{- end}}
-													{{- if len .DefaultValue}}
+													{{- if or (len .DefaultValue) .ResourceId}}
 													Computed:            true,
 													{{- end}}
 													{{- if len .EnumValues}}

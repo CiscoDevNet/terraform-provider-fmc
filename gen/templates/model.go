@@ -375,6 +375,20 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 	}
 	{{- else if isNestedListSet .}}
 	{{- $list := (toGoName .TfName)}}
+	{{- if .OrderedList }}
+	{
+		l := len(res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array())
+		tflog.Debug(ctx, fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}} array resizing from %d to %d", len(data.{{toGoName .TfName}}), l))
+		for i := len(data.{{toGoName .TfName}}); i < l; i++ {
+			data.{{toGoName .TfName}} = append(data.{{toGoName .TfName}}, {{$name}}{{toGoName .TfName}}{})
+		}
+		if len(data.{{toGoName .TfName}}) > l {
+			data.{{toGoName .TfName}} = data.{{toGoName .TfName}}[:l]
+		}
+	}
+	for i := range data.{{toGoName .TfName}} {
+		r := res.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
+	{{- else }}
 	for i := range data.{{toGoName .TfName}} {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
@@ -398,6 +412,7 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 				return true
 			},
 		)
+	{{- end}}
 
 		{{- range .Attributes}}
 		{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}

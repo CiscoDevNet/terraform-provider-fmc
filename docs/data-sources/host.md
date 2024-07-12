@@ -32,3 +32,4 @@ data "fmc_host" "example" {
 - `description` (String) Description
 - `ip` (String) IP of the host.
 - `overridable` (Boolean) Whether the object values can be overridden.
+- `type` (String) Type of the object; this value is always 'Host'.

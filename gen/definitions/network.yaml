@@ -9,6 +9,13 @@ attributes:
     mandatory: true
     description: The name of the network object.
     example: NET1
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Network'.
+    default_value: Network
+    requires_replace: true
+    exclude_example: true
+    exclude_test: true
   - model_name: description
     type: String
     description: Description
@@ -22,4 +29,4 @@ attributes:
   - model_name: overridable
     type: Bool
     description: Whether the object values can be overridden.
-    example: true
+    example: "true"

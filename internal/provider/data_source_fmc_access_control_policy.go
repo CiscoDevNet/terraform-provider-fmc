@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -80,7 +81,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"default_action": schema.StringAttribute{
-				MarkdownDescription: "Specifies the action to take when the conditions defined by the rule are met.",
+				MarkdownDescription: "Specifies the default action to take when none of the rules meet the conditions.",
 				Computed:            true,
 			},
 			"default_action_id": schema.StringAttribute{
@@ -102,6 +103,306 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 			"default_action_send_syslog": schema.BoolAttribute{
 				MarkdownDescription: "Indicating whether the device will send events to a syslog server.",
 				Computed:            true,
+			},
+			"default_action_syslog_config_id": schema.StringAttribute{
+				MarkdownDescription: "UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
+				Computed:            true,
+			},
+			"default_action_syslog_severity": schema.StringAttribute{
+				MarkdownDescription: "Override the Severity of syslog alerts.",
+				Computed:            true,
+			},
+			"default_action_snmp_config_id": schema.StringAttribute{
+				MarkdownDescription: "UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.",
+				Computed:            true,
+			},
+			"default_action_intrusion_policy_id": schema.StringAttribute{
+				MarkdownDescription: "UUID of the existing intrusion policy (e.g. fmc_intrusion_policy.example.id). Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.",
+				Computed:            true,
+			},
+			"categories": schema.ListNestedAttribute{
+				MarkdownDescription: "The ordered list of categories.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Identifier of the category.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "User-specified unique string.",
+							Computed:            true,
+						},
+						"section": schema.StringAttribute{
+							MarkdownDescription: "The section of the policy to which the category belongs. Categories must be ordered so that entire section 'mandatory' comes above the section 'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the default section applies after child policy's own rules.",
+							Computed:            true,
+						},
+					},
+				},
+			},
+			"rules": schema.ListNestedAttribute{
+				MarkdownDescription: "The ordered list of rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. The first matching rule is selected. Except for MONITOR rules, the system does not continue to evaluate traffic against additional rules after that traffic matches a rule.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Unique identifier (UUID) of the access rule.",
+							Computed:            true,
+						},
+						"action": schema.StringAttribute{
+							MarkdownDescription: "What to do when the conditions defined by the rule are met.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "User-specified unique string.",
+							Computed:            true,
+						},
+						"category_name": schema.StringAttribute{
+							MarkdownDescription: "Name of the category that owns this rule (a `name` from `categories` list).",
+							Computed:            true,
+						},
+						"section": schema.StringAttribute{
+							MarkdownDescription: "The section of the policy to which the rule belongs. Can only be used when the `category_name` is null. Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means 'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the default section applies after child policy's own rules.",
+							Computed:            true,
+						},
+						"enabled": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the access rule is in effect (true) or not (false). Default is true.",
+							Computed:            true,
+						},
+						"source_network_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent sources of traffic (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"value": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_network_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent destinations of traffic (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"value": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_network_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_network.this.id, etc.).",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the object (such as fmc_network.this.type, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_network_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_network.this.id, etc.).",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the object (such as fmc_network.this.type, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_dynamic_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent dynamic sources of traffic (fmc_dynamic_object).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_dynamic_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent dynamic destinations of traffic (fmc_dynamic_object).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_port_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_port_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing destination ports associated with the rule (fmc_port or fmc_port_group).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_security_group_tag_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the source Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.this.id, etc.).",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.this.type, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_security_group_tag_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the destination Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.this.id, etc.).",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.this.type, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_zones": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing source security zones associated with the access rule (fmc_security_zone).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_security_zone.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_zones": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing destination security zones associated with the access rule (fmc_security_zone).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_security_zone.this.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"url_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_url.this.id, fmc_url_group.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"url_categories": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the URL Categories associated with the rule (fmc_url_category).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_url_category.this.id, etc.).",
+										Computed:            true,
+									},
+									"reputation": schema.StringAttribute{
+										MarkdownDescription: "Reputation applicable to the category.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"log_begin": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the device will log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.",
+							Computed:            true,
+						},
+						"log_end": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the device will log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.",
+							Computed:            true,
+						},
+						"log_files": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the device will log file events.",
+							Computed:            true,
+						},
+						"send_events_to_fmc": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the device will send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.",
+							Computed:            true,
+						},
+						"send_syslog": schema.BoolAttribute{
+							MarkdownDescription: "Indicates whether the alerts associated with the access rule are sent to syslog.",
+							Computed:            true,
+						},
+						"syslog_config_id": schema.StringAttribute{
+							MarkdownDescription: "UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
+							Computed:            true,
+						},
+						"syslog_severity": schema.StringAttribute{
+							MarkdownDescription: "Override the Severity of syslog alerts.",
+							Computed:            true,
+						},
+						"snmp_config_id": schema.StringAttribute{
+							MarkdownDescription: "UUID of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.",
+							Computed:            true,
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: "User-specified string.",
+							Computed:            true,
+						},
+						"file_policy_id": schema.StringAttribute{
+							MarkdownDescription: "Identifier (UUID) of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.",
+							Computed:            true,
+						},
+						"intrusion_policy_id": schema.StringAttribute{
+							MarkdownDescription: "Identifier (UUID) of the fmc_intrusion_policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.",
+							Computed:            true,
+						},
+					},
+				},
 			},
 		},
 	}
@@ -125,7 +426,6 @@ func (d *AccessControlPolicyDataSource) Configure(_ context.Context, req datasou
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
 func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config AccessControlPolicy
 
@@ -181,12 +481,35 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
+	resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+		return
+	}
+
+	resRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/accessrules?expanded=true&offset=0&limit=1000", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+		return
+	}
+
+	replaceCats := resCats.Get("items").String()
+	if replaceCats == "" {
+		replaceCats = "[]"
+	}
+	replaceRules := resRules.Get("items").String()
+	if replaceRules == "" {
+		replaceRules = "[]"
+	}
+	replace, _ := sjson.SetRaw(res.String(), "dummy_categories", replaceCats)
+	replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
+	res = gjson.Parse(replace)
+
 	config.fromBody(ctx, res)
+	config.adjustFromBody(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read

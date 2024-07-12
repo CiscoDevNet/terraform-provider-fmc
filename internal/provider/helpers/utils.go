@@ -18,8 +18,11 @@
 package helpers
 
 import (
+	"strings"
+
 	"github.com/hashicorp/terraform-plugin-framework/attr"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/tidwall/gjson"
 )
 
@@ -62,4 +65,14 @@ func GetInt64Set(result []gjson.Result) types.Set {
 		v[r] = types.Int64Value(result[r].Int())
 	}
 	return types.SetValueMust(types.Int64Type, v)
+}
+
+// ToLower is the same as strings.ToLower, except it cares to not to convert null/unknown strings
+// into empty strings.
+func ToLower(s basetypes.StringValue) basetypes.StringValue {
+	if s.IsUnknown() || s.IsNull() {
+		return s
+	}
+
+	return types.StringValue(strings.ToLower(s.ValueString()))
 }

@@ -34,6 +34,8 @@ resource "fmc_host" "example" {
 - `description` (String) Description
 - `domain` (String) The name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
+- `type` (String) Type of the object; this value is always 'Host'.
+  - Default value: `Host`
 
 ### Read-Only
 
