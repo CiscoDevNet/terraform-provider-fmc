@@ -31,6 +31,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type DeviceIPv6StaticRoute struct {
 	Id                   types.String                               `tfsdk:"id"`
 	Domain               types.String                               `tfsdk:"domain"`
@@ -51,6 +52,7 @@ type DeviceIPv6StaticRouteDestinationNetworks struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data DeviceIPv6StaticRoute) getPath() string {
 	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv6staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
 }
@@ -58,6 +60,7 @@ func (data DeviceIPv6StaticRoute) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data DeviceIPv6StaticRoute) toBody(ctx context.Context, state DeviceIPv6StaticRoute) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -97,6 +100,7 @@ func (data DeviceIPv6StaticRoute) toBody(ctx context.Context, state DeviceIPv6St
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("interfaceName"); value.Exists() {
 		data.InterfaceLogicalName = types.StringValue(value.String())
@@ -141,6 +145,7 @@ func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *DeviceIPv6StaticRoute) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("interfaceName"); value.Exists() && !data.InterfaceLogicalName.IsNull() {
 		data.InterfaceLogicalName = types.StringValue(value.String())
@@ -156,12 +161,11 @@ func (data *DeviceIPv6StaticRoute) updateFromBody(ctx context.Context, res gjson
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
-					if v.Get(keys[ik]).String() == keyValues[ik] {
-						found = true
-						continue
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
 					}
-					found = false
-					break
+					found = true
 				}
 				if found {
 					r = v
@@ -201,6 +205,7 @@ func (data *DeviceIPv6StaticRoute) updateFromBody(ctx context.Context, res gjson
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *DeviceIPv6StaticRoute) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.DeviceId.IsNull() {
 		return false

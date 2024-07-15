@@ -120,6 +120,7 @@ func (d *DeviceIPv6StaticRouteDataSource) Configure(_ context.Context, req datas
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *DeviceIPv6StaticRouteDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config DeviceIPv6StaticRoute
 

@@ -29,6 +29,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type Host struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
@@ -42,6 +43,7 @@ type Host struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data Host) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts"
 }
@@ -49,6 +51,7 @@ func (data Host) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data Host) toBody(ctx context.Context, state Host) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -75,6 +78,7 @@ func (data Host) toBody(ctx context.Context, state Host) string {
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *Host) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
@@ -106,6 +110,7 @@ func (data *Host) fromBody(ctx context.Context, res gjson.Result) {
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *Host) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
@@ -137,6 +142,7 @@ func (data *Host) updateFromBody(ctx context.Context, res gjson.Result) {
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *Host) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.Name.IsNull() {
 		return false

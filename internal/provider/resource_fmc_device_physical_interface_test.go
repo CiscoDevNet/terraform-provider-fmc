@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
 func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
@@ -70,14 +71,15 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccFmcDevicePhysicalInterfacePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
@@ -92,6 +94,7 @@ func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
@@ -111,9 +114,9 @@ func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config += `	ipv6_enable_dhcp_nonaddress = true` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"
 	config += `	ipv6_addresses = [{` + "\n"
-	config += `	  address = "2004::"` + "\n"
-	config += `	  prefix = "124"` + "\n"
-	config += `	  enforce_eui = "true"` + "\n"
+	config += `		address = "2004::"` + "\n"
+	config += `		prefix = "124"` + "\n"
+	config += `		enforce_eui = "true"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

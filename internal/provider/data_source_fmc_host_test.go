@@ -27,6 +27,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "name", "HOST1"))
@@ -41,6 +42,10 @@ func TestAccDataSourceFmcHost(t *testing.T) {
 				Config: testAccDataSourceFmcHostConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccNamedDataSourceFmcHostConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -51,6 +56,7 @@ func TestAccDataSourceFmcHost(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
 func testAccDataSourceFmcHostConfig() string {
 	config := `resource "fmc_host" "test" {` + "\n"
 	config += `	name = "HOST1"` + "\n"
@@ -62,6 +68,22 @@ func testAccDataSourceFmcHostConfig() string {
 	config += `
 		data "fmc_host" "test" {
 			id = fmc_host.test.id
+		}
+	`
+	return config
+}
+
+func testAccNamedDataSourceFmcHostConfig() string {
+	config := `resource "fmc_host" "test" {` + "\n"
+	config += `	name = "HOST1"` + "\n"
+	config += `	description = "My host object"` + "\n"
+	config += `	ip = "10.1.1.1"` + "\n"
+	config += `	overridable = true` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_host" "test" {
+			name = fmc_host.test.name
 		}
 	`
 	return config

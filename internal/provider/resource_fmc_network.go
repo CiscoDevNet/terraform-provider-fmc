@@ -41,8 +41,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &NetworkResource{}
-var _ resource.ResourceWithImportState = &NetworkResource{}
+var (
+	_ resource.Resource                = &NetworkResource{}
+	_ resource.ResourceWithImportState = &NetworkResource{}
+)
 
 func NewNetworkResource() resource.Resource {
 	return &NetworkResource{}
@@ -116,6 +118,7 @@ func (r *NetworkResource) Configure(_ context.Context, req resource.ConfigureReq
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *NetworkResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan Network
 
@@ -138,7 +141,7 @@ func (r *NetworkResource) Create(ctx context.Context, req resource.CreateRequest
 	body := plan.toBody(ctx, Network{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
@@ -152,6 +155,7 @@ func (r *NetworkResource) Create(ctx context.Context, req resource.CreateRequest
 // End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (r *NetworkResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state Network
 
@@ -195,6 +199,7 @@ func (r *NetworkResource) Read(ctx context.Context, req resource.ReadRequest, re
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *NetworkResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state Network
 
@@ -235,6 +240,7 @@ func (r *NetworkResource) Update(ctx context.Context, req resource.UpdateRequest
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *NetworkResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state Network
 
@@ -266,6 +272,7 @@ func (r *NetworkResource) Delete(ctx context.Context, req resource.DeleteRequest
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *NetworkResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

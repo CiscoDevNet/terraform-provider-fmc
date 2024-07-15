@@ -114,6 +114,7 @@ func (d *ICMPv4ObjectDataSource) Configure(_ context.Context, req datasource.Con
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *ICMPv4ObjectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config ICMPv4Object
 

@@ -173,5 +173,5 @@ attributes:
         exclude_example: true
         test_value: '"true"'
 
-test_prerequisites: |
+test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

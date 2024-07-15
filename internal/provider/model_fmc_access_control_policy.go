@@ -36,6 +36,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type AccessControlPolicy struct {
 	Id                             types.String                    `tfsdk:"id"`
 	Domain                         types.String                    `tfsdk:"domain"`
@@ -174,6 +175,7 @@ func (r AccessControlPolicyRules) GetSection() string {
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data AccessControlPolicy) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies"
 }
@@ -181,6 +183,7 @@ func (data AccessControlPolicy) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlPolicy) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -467,6 +470,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
@@ -846,6 +850,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
@@ -981,12 +986,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1010,12 +1014,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1039,12 +1042,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1073,12 +1075,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1107,12 +1108,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1136,12 +1136,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1165,12 +1164,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1194,12 +1192,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1223,12 +1220,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1257,12 +1253,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1291,12 +1286,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1320,12 +1314,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1349,12 +1342,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1378,12 +1370,11 @@ func (data *AccessControlPolicy) updateFromBody(ctx context.Context, res gjson.R
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
-						if v.Get(keys[ik]).String() == keyValues[ik] {
-							found = true
-							continue
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
 						}
-						found = false
-						break
+						found = true
 					}
 					if found {
 						cr = v
@@ -1483,6 +1474,7 @@ func (data *AccessControlPolicy) adjustFromBody(ctx context.Context, res gjson.R
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *AccessControlPolicy) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.Name.IsNull() {
 		return false

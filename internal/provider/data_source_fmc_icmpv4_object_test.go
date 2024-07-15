@@ -27,6 +27,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcICMPv4Object(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "icmp_type", "3"))
@@ -41,6 +42,10 @@ func TestAccDataSourceFmcICMPv4Object(t *testing.T) {
 				Config: testAccDataSourceFmcICMPv4ObjectConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccNamedDataSourceFmcICMPv4ObjectConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -51,6 +56,7 @@ func TestAccDataSourceFmcICMPv4Object(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
 func testAccDataSourceFmcICMPv4ObjectConfig() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
 	config += `	icmp_type = 3` + "\n"
@@ -63,6 +69,23 @@ func testAccDataSourceFmcICMPv4ObjectConfig() string {
 	config += `
 		data "fmc_icmpv4_object" "test" {
 			id = fmc_icmpv4_object.test.id
+		}
+	`
+	return config
+}
+
+func testAccNamedDataSourceFmcICMPv4ObjectConfig() string {
+	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
+	config += `	icmp_type = 3` + "\n"
+	config += `	code = 0` + "\n"
+	config += `	name = "icmpv4_net_unreachable"` + "\n"
+	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
+	config += `	overridable = true` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_icmpv4_object" "test" {
+			name = fmc_icmpv4_object.test.name
 		}
 	`
 	return config

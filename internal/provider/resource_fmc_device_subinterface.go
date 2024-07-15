@@ -45,8 +45,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &DeviceSubinterfaceResource{}
-var _ resource.ResourceWithImportState = &DeviceSubinterfaceResource{}
+var (
+	_ resource.Resource                = &DeviceSubinterfaceResource{}
+	_ resource.ResourceWithImportState = &DeviceSubinterfaceResource{}
+)
 
 func NewDeviceSubinterfaceResource() resource.Resource {
 	return &DeviceSubinterfaceResource{}
@@ -280,6 +282,7 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DeviceSubinterface
 
@@ -323,6 +326,7 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceSubinterface
 
@@ -369,6 +373,7 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceSubinterface
 
@@ -400,6 +405,7 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *DeviceSubinterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 

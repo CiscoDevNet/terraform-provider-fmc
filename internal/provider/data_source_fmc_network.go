@@ -114,6 +114,7 @@ func (d *NetworkDataSource) Configure(_ context.Context, req datasource.Configur
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *NetworkDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config Network
 

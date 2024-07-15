@@ -533,7 +533,7 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
 
-test_prerequisites: |
+test_prerequisites: |-
   resource "fmc_network" "this" {
     name   = "mynetwork1"
     prefix = "10.0.0.0/24"

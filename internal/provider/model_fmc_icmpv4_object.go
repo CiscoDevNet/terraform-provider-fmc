@@ -29,6 +29,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type ICMPv4Object struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
@@ -42,6 +43,7 @@ type ICMPv4Object struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data ICMPv4Object) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/icmpv4objects"
 }
@@ -49,6 +51,7 @@ func (data ICMPv4Object) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data ICMPv4Object) toBody(ctx context.Context, state ICMPv4Object) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -75,6 +78,7 @@ func (data ICMPv4Object) toBody(ctx context.Context, state ICMPv4Object) string 
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *ICMPv4Object) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("icmpType"); value.Exists() {
 		data.IcmpType = types.Int64Value(value.Int())
@@ -106,6 +110,7 @@ func (data *ICMPv4Object) fromBody(ctx context.Context, res gjson.Result) {
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *ICMPv4Object) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
 		data.IcmpType = types.Int64Value(value.Int())
@@ -137,6 +142,7 @@ func (data *ICMPv4Object) updateFromBody(ctx context.Context, res gjson.Result) 
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *ICMPv4Object) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.IcmpType.IsNull() {
 		return false

@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
 func TestAccFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "name", "HOST1"))
@@ -63,6 +64,7 @@ func TestAccFmcHost(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcHostConfig_minimum() string {
 	config := `resource "fmc_host" "test" {` + "\n"
 	config += `	name = "HOST1"` + "\n"
@@ -74,6 +76,7 @@ func testAccFmcHostConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcHostConfig_all() string {
 	config := `resource "fmc_host" "test" {` + "\n"
 	config += `	name = "HOST1"` + "\n"

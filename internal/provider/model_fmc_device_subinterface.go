@@ -31,6 +31,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type DeviceSubinterface struct {
 	Id                       types.String                      `tfsdk:"id"`
 	Domain                   types.String                      `tfsdk:"domain"`
@@ -68,6 +69,7 @@ type DeviceSubinterfaceIpv6Addresses struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data DeviceSubinterface) getPath() string {
 	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
 }
@@ -75,6 +77,7 @@ func (data DeviceSubinterface) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterface) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -166,6 +169,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("enabled"); value.Exists() {
 		data.Enabled = types.BoolValue(value.Bool())
@@ -295,6 +299,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *DeviceSubinterface) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
 		data.Enabled = types.BoolValue(value.Bool())
@@ -405,12 +410,11 @@ func (data *DeviceSubinterface) updateFromBody(ctx context.Context, res gjson.Re
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
-					if v.Get(keys[ik]).String() == keyValues[ik] {
-						found = true
-						continue
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
 					}
-					found = false
-					break
+					found = true
 				}
 				if found {
 					r = v
@@ -440,6 +444,7 @@ func (data *DeviceSubinterface) updateFromBody(ctx context.Context, res gjson.Re
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *DeviceSubinterface) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.DeviceId.IsNull() {
 		return false

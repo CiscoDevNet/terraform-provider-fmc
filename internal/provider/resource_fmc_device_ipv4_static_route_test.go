@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
 func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
@@ -56,6 +57,7 @@ func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccFmcDeviceIPv4StaticRoutePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
@@ -70,19 +72,19 @@ resource "fmc_device_physical_interface" "test" {
   mode         = "NONE"
   enabled      = true
 }
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcDeviceIPv4StaticRouteConfig_minimum() string {
 	config := `resource "fmc_device_ipv4_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
 	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	destination_networks = [{` + "\n"
-	config += `	  id = data.fmc_network.test.id` + "\n"
+	config += `		id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	metric_value = 254` + "\n"
 	config += `	gateway_literal = "10.0.0.2"` + "\n"
@@ -93,13 +95,14 @@ func testAccFmcDeviceIPv4StaticRouteConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcDeviceIPv4StaticRouteConfig_all() string {
 	config := `resource "fmc_device_ipv4_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
 	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	destination_networks = [{` + "\n"
-	config += `	  id = data.fmc_network.test.id` + "\n"
+	config += `		id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	metric_value = null` + "\n"
 	config += `	gateway_literal = "10.0.0.1"` + "\n"

@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcDeviceIPv6StaticRoute(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
@@ -49,6 +50,7 @@ func TestAccDataSourceFmcDeviceIPv6StaticRoute(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccDataSourceFmcDeviceIPv6StaticRoutePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
@@ -63,19 +65,19 @@ resource "fmc_device_physical_interface" "test" {
   mode         = "NONE"
   enabled      = true
 }
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
 func testAccDataSourceFmcDeviceIPv6StaticRouteConfig() string {
 	config := `resource "fmc_device_ipv6_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
 	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	destination_networks = [{` + "\n"
-	config += `	  id = data.fmc_host.test.id` + "\n"
+	config += `		id = data.fmc_host.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	metric_value = null` + "\n"
 	config += `	gateway_literal = "2024::1"` + "\n"

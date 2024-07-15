@@ -91,7 +91,7 @@ attributes:
     default_value: "false"
     test_value: "true"
 
-test_prerequisites: |
+test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
   data "fmc_host" "test" {

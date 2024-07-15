@@ -29,6 +29,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
 func TestAccFmcAccessControlPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "name", "POLICY1"))
@@ -73,6 +74,7 @@ func TestAccFmcAccessControlPolicy(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccFmcAccessControlPolicyPrerequisitesConfig = `
 resource "fmc_network" "this" {
   name   = "mynetwork1"
@@ -83,12 +85,12 @@ resource "fmc_host" "this" {
   name = "myhost1"
   ip   = "10.1.1.1"
 }
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcAccessControlPolicyConfig_minimum() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
 	config += `	name = "POLICY1"` + "\n"
@@ -100,6 +102,7 @@ func testAccFmcAccessControlPolicyConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcAccessControlPolicyConfig_all() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
 	config += `	name = "POLICY1"` + "\n"
@@ -111,32 +114,32 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 	config += `	default_action_send_syslog = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	categories = [{` + "\n"
-	config += `	  name = "cat1"` + "\n"
+	config += `		name = "cat1"` + "\n"
 	config += `	}]` + "\n"
 	config += `	rules = [{` + "\n"
-	config += `	  action = "ALLOW"` + "\n"
-	config += `	  name = "rule1"` + "\n"
-	config += `	  category_name = "cat1"` + "\n"
-	config += `	  enabled = true` + "\n"
-	config += `	  source_network_literals = [{` + "\n"
-	config += `		value = "10.1.1.0/24"` + "\n"
-	config += `	}]` + "\n"
-	config += `	  destination_network_literals = [{` + "\n"
-	config += `		value = "10.2.2.0/24"` + "\n"
-	config += `	}]` + "\n"
-	config += `	  source_network_objects = [{` + "\n"
-	config += `		id = fmc_network.this.id` + "\n"
-	config += `		type = fmc_network.this.type` + "\n"
-	config += `	}]` + "\n"
-	config += `	  destination_network_objects = [{` + "\n"
-	config += `		id = fmc_host.this.id` + "\n"
-	config += `		type = fmc_host.this.type` + "\n"
-	config += `	}]` + "\n"
-	config += `	  log_begin = true` + "\n"
-	config += `	  log_end = true` + "\n"
-	config += `	  log_files = false` + "\n"
-	config += `	  send_events_to_fmc = true` + "\n"
-	config += `	  description = ""` + "\n"
+	config += `		action = "ALLOW"` + "\n"
+	config += `		name = "rule1"` + "\n"
+	config += `		category_name = "cat1"` + "\n"
+	config += `		enabled = true` + "\n"
+	config += `		source_network_literals = [{` + "\n"
+	config += `			value = "10.1.1.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		destination_network_literals = [{` + "\n"
+	config += `			value = "10.2.2.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		source_network_objects = [{` + "\n"
+	config += `			id = fmc_network.this.id` + "\n"
+	config += `			type = fmc_network.this.type` + "\n"
+	config += `		}]` + "\n"
+	config += `		destination_network_objects = [{` + "\n"
+	config += `			id = fmc_host.this.id` + "\n"
+	config += `			type = fmc_host.this.type` + "\n"
+	config += `		}]` + "\n"
+	config += `		log_begin = true` + "\n"
+	config += `		log_end = true` + "\n"
+	config += `		log_files = false` + "\n"
+	config += `		send_events_to_fmc = true` + "\n"
+	config += `		description = ""` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

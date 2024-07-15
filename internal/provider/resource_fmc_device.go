@@ -50,8 +50,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &DeviceResource{}
-var _ resource.ResourceWithImportState = &DeviceResource{}
+var (
+	_ resource.Resource                = &DeviceResource{}
+	_ resource.ResourceWithImportState = &DeviceResource{}
+)
 
 func NewDeviceResource() resource.Resource {
 	return &DeviceResource{}
@@ -441,6 +443,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state Device
 
@@ -472,6 +475,7 @@ func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest,
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *DeviceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

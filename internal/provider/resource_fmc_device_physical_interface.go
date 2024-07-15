@@ -45,8 +45,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &DevicePhysicalInterfaceResource{}
-var _ resource.ResourceWithImportState = &DevicePhysicalInterfaceResource{}
+var (
+	_ resource.Resource                = &DevicePhysicalInterfaceResource{}
+	_ resource.ResourceWithImportState = &DevicePhysicalInterfaceResource{}
+)
 
 func NewDevicePhysicalInterfaceResource() resource.Resource {
 	return &DevicePhysicalInterfaceResource{}
@@ -206,6 +208,7 @@ func (r *DevicePhysicalInterfaceResource) Configure(_ context.Context, req resou
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DevicePhysicalInterface
 
@@ -261,7 +264,7 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 	body := plan.toBody(ctx, DevicePhysicalInterface{})
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
@@ -275,6 +278,7 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 // End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DevicePhysicalInterface
 
@@ -318,6 +322,7 @@ func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DevicePhysicalInterface
 
@@ -358,6 +363,7 @@ func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resour
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DevicePhysicalInterface
 
@@ -384,6 +390,7 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *DevicePhysicalInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 

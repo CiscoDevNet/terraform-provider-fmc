@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
 func TestAccFmcSecurityZone(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_zone.test", "name", "security_zone_1"))
@@ -61,6 +62,7 @@ func TestAccFmcSecurityZone(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcSecurityZoneConfig_minimum() string {
 	config := `resource "fmc_security_zone" "test" {` + "\n"
 	config += `	name = "security_zone_1"` + "\n"
@@ -72,6 +74,7 @@ func testAccFmcSecurityZoneConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcSecurityZoneConfig_all() string {
 	config := `resource "fmc_security_zone" "test" {` + "\n"
 	config += `	name = "security_zone_1"` + "\n"

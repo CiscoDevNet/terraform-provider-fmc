@@ -28,6 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcDeviceSubinterface(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
@@ -62,6 +63,7 @@ func TestAccDataSourceFmcDeviceSubinterface(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccDataSourceFmcDeviceSubinterfacePrerequisitesConfig = `
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
@@ -77,12 +79,12 @@ resource "fmc_security_zone" "test" {
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
 func testAccDataSourceFmcDeviceSubinterfaceConfig() string {
 	config := `resource "fmc_device_subinterface" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
@@ -103,9 +105,9 @@ func testAccDataSourceFmcDeviceSubinterfaceConfig() string {
 	config += `	ipv6_enable_dhcp_nonaddress = true` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"
 	config += `	ipv6_addresses = [{` + "\n"
-	config += `	  address = "2005::"` + "\n"
-	config += `	  prefix = "124"` + "\n"
-	config += `	  enforce_eui = "true"` + "\n"
+	config += `		address = "2005::"` + "\n"
+	config += `		prefix = "124"` + "\n"
+	config += `		enforce_eui = "true"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

@@ -74,6 +74,7 @@ func TestAccFmcDevice(t *testing.T) {
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
 const testAccFmcDevicePrerequisitesConfig = `
 resource "fmc_access_control_policy" "minimum" {
   name = "POLICY1"
@@ -88,12 +89,12 @@ resource "fmc_access_control_policy" "test" {
 variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
 variable "nat_id"   { default = null } // tests will set $TF_VAR_nat_id
 variable "registration_key"         {} // tests will set $TF_VAR_registration_key
-
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+
 func testAccFmcDeviceConfig_minimum() string {
 	config := `resource "fmc_device" "test" {` + "\n"
 	config += `	name = "device1min"` + "\n"
@@ -109,6 +110,7 @@ func testAccFmcDeviceConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
 func testAccFmcDeviceConfig_all() string {
 	config := `resource "fmc_device" "test" {` + "\n"
 	config += `	name = "device1"` + "\n"

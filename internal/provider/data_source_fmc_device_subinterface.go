@@ -188,6 +188,7 @@ func (d *DeviceSubinterfaceDataSource) Configure(_ context.Context, req datasour
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *DeviceSubinterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config DeviceSubinterface
 

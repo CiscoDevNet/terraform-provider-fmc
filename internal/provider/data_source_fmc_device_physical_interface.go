@@ -194,6 +194,7 @@ func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req dat
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config DevicePhysicalInterface
 

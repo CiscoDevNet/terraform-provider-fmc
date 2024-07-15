@@ -29,6 +29,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type SecurityZone struct {
 	Id            types.String `tfsdk:"id"`
 	Domain        types.String `tfsdk:"domain"`
@@ -39,6 +40,7 @@ type SecurityZone struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data SecurityZone) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securityzones"
 }
@@ -46,6 +48,7 @@ func (data SecurityZone) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data SecurityZone) toBody(ctx context.Context, state SecurityZone) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -63,6 +66,7 @@ func (data SecurityZone) toBody(ctx context.Context, state SecurityZone) string 
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *SecurityZone) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
@@ -79,6 +83,7 @@ func (data *SecurityZone) fromBody(ctx context.Context, res gjson.Result) {
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *SecurityZone) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
@@ -95,6 +100,7 @@ func (data *SecurityZone) updateFromBody(ctx context.Context, res gjson.Result) 
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *SecurityZone) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.Name.IsNull() {
 		return false

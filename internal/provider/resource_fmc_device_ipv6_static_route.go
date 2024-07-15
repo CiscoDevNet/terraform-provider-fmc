@@ -44,8 +44,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &DeviceIPv6StaticRouteResource{}
-var _ resource.ResourceWithImportState = &DeviceIPv6StaticRouteResource{}
+var (
+	_ resource.Resource                = &DeviceIPv6StaticRouteResource{}
+	_ resource.ResourceWithImportState = &DeviceIPv6StaticRouteResource{}
+)
 
 func NewDeviceIPv6StaticRouteResource() resource.Resource {
 	return &DeviceIPv6StaticRouteResource{}
@@ -142,6 +144,7 @@ func (r *DeviceIPv6StaticRouteResource) Configure(_ context.Context, req resourc
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceIPv6StaticRoute
 
@@ -164,7 +167,7 @@ func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource
 	body := plan.toBody(ctx, DeviceIPv6StaticRoute{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
@@ -178,6 +181,7 @@ func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource
 // End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (r *DeviceIPv6StaticRouteResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DeviceIPv6StaticRoute
 
@@ -221,6 +225,7 @@ func (r *DeviceIPv6StaticRouteResource) Read(ctx context.Context, req resource.R
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *DeviceIPv6StaticRouteResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceIPv6StaticRoute
 
@@ -261,6 +266,7 @@ func (r *DeviceIPv6StaticRouteResource) Update(ctx context.Context, req resource
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *DeviceIPv6StaticRouteResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceIPv6StaticRoute
 
@@ -292,6 +298,7 @@ func (r *DeviceIPv6StaticRouteResource) Delete(ctx context.Context, req resource
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *DeviceIPv6StaticRouteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 

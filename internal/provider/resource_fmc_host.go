@@ -41,8 +41,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &HostResource{}
-var _ resource.ResourceWithImportState = &HostResource{}
+var (
+	_ resource.Resource                = &HostResource{}
+	_ resource.ResourceWithImportState = &HostResource{}
+)
 
 func NewHostResource() resource.Resource {
 	return &HostResource{}
@@ -116,6 +118,7 @@ func (r *HostResource) Configure(_ context.Context, req resource.ConfigureReques
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan Host
 
@@ -138,7 +141,7 @@ func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, r
 	body := plan.toBody(ctx, Host{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
@@ -152,6 +155,7 @@ func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, r
 // End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state Host
 
@@ -195,6 +199,7 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *HostResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state Host
 
@@ -235,6 +240,7 @@ func (r *HostResource) Update(ctx context.Context, req resource.UpdateRequest, r
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *HostResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state Host
 
@@ -266,6 +272,7 @@ func (r *HostResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
 func (r *HostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 }

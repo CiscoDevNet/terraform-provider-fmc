@@ -33,6 +33,7 @@ import (
 	"github.com/netascode/go-fmc"
 	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 )
+
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin model
@@ -167,9 +168,11 @@ func (d *{{camelCase .Name}}DataSource) Configure(_ context.Context, req datasou
 
 	d.client = req.ProviderData.(*FmcProviderData).Client
 }
+
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config {{camelCase .Name}}
 
@@ -235,4 +238,5 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
+
 // End of section. //template:end read

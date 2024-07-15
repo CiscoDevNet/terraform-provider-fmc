@@ -27,6 +27,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcSecurityZone(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zone.test", "name", "security_zone_1"))
@@ -39,6 +40,10 @@ func TestAccDataSourceFmcSecurityZone(t *testing.T) {
 				Config: testAccDataSourceFmcSecurityZoneConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccNamedDataSourceFmcSecurityZoneConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -49,6 +54,7 @@ func TestAccDataSourceFmcSecurityZone(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
 func testAccDataSourceFmcSecurityZoneConfig() string {
 	config := `resource "fmc_security_zone" "test" {` + "\n"
 	config += `	name = "security_zone_1"` + "\n"
@@ -58,6 +64,20 @@ func testAccDataSourceFmcSecurityZoneConfig() string {
 	config += `
 		data "fmc_security_zone" "test" {
 			id = fmc_security_zone.test.id
+		}
+	`
+	return config
+}
+
+func testAccNamedDataSourceFmcSecurityZoneConfig() string {
+	config := `resource "fmc_security_zone" "test" {` + "\n"
+	config += `	name = "security_zone_1"` + "\n"
+	config += `	interface_mode = "ROUTED"` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_security_zone" "test" {
+			name = fmc_security_zone.test.name
 		}
 	`
 	return config

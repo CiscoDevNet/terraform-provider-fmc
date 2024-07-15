@@ -31,6 +31,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
+
 type DevicePhysicalInterface struct {
 	Id                       types.String                           `tfsdk:"id"`
 	Domain                   types.String                           `tfsdk:"domain"`
@@ -66,6 +67,7 @@ type DevicePhysicalInterfaceIpv6Addresses struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
+
 func (data DevicePhysicalInterface) getPath() string {
 	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
 }
@@ -73,6 +75,7 @@ func (data DevicePhysicalInterface) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhysicalInterface) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -159,6 +162,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
+
 func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("enabled"); value.Exists() {
 		data.Enabled = types.BoolValue(value.Bool())
@@ -283,6 +287,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+
 func (data *DevicePhysicalInterface) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
 		data.Enabled = types.BoolValue(value.Bool())
@@ -388,12 +393,11 @@ func (data *DevicePhysicalInterface) updateFromBody(ctx context.Context, res gjs
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
-					if v.Get(keys[ik]).String() == keyValues[ik] {
-						found = true
-						continue
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
 					}
-					found = false
-					break
+					found = true
 				}
 				if found {
 					r = v
@@ -423,6 +427,7 @@ func (data *DevicePhysicalInterface) updateFromBody(ctx context.Context, res gjs
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
+
 func (data *DevicePhysicalInterface) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.DeviceId.IsNull() {
 		return false
