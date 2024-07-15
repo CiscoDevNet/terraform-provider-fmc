@@ -31,34 +31,34 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
-type DeviceIPv6StaticRoute struct {
+type DeviceIPv4StaticRoute struct {
 	Id                   types.String                               `tfsdk:"id"`
 	Domain               types.String                               `tfsdk:"domain"`
 	DeviceId             types.String                               `tfsdk:"device_id"`
 	InterfaceLogicalName types.String                               `tfsdk:"interface_logical_name"`
 	InterfaceId          types.String                               `tfsdk:"interface_id"`
-	DestinationNetworks  []DeviceIPv6StaticRouteDestinationNetworks `tfsdk:"destination_networks"`
+	DestinationNetworks  []DeviceIPv4StaticRouteDestinationNetworks `tfsdk:"destination_networks"`
 	MetricValue          types.Int64                                `tfsdk:"metric_value"`
 	GatewayObjectId      types.String                               `tfsdk:"gateway_object_id"`
 	GatewayLiteral       types.String                               `tfsdk:"gateway_literal"`
 	IsTunneled           types.Bool                                 `tfsdk:"is_tunneled"`
 }
 
-type DeviceIPv6StaticRouteDestinationNetworks struct {
+type DeviceIPv4StaticRouteDestinationNetworks struct {
 	Id types.String `tfsdk:"id"`
 }
 
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
-func (data DeviceIPv6StaticRoute) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv6staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
+func (data DeviceIPv4StaticRoute) getPath() string {
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
-func (data DeviceIPv6StaticRoute) toBody(ctx context.Context, state DeviceIPv6StaticRoute) string {
+func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4StaticRoute) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
@@ -97,16 +97,16 @@ func (data DeviceIPv6StaticRoute) toBody(ctx context.Context, state DeviceIPv6St
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
-func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Result) {
+func (data *DeviceIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("interfaceName"); value.Exists() {
 		data.InterfaceLogicalName = types.StringValue(value.String())
 	} else {
 		data.InterfaceLogicalName = types.StringNull()
 	}
 	if value := res.Get("selectedNetworks"); value.Exists() {
-		data.DestinationNetworks = make([]DeviceIPv6StaticRouteDestinationNetworks, 0)
+		data.DestinationNetworks = make([]DeviceIPv4StaticRouteDestinationNetworks, 0)
 		value.ForEach(func(k, v gjson.Result) bool {
-			item := DeviceIPv6StaticRouteDestinationNetworks{}
+			item := DeviceIPv4StaticRouteDestinationNetworks{}
 			if cValue := v.Get("id"); cValue.Exists() {
 				item.Id = types.StringValue(cValue.String())
 			} else {
@@ -141,7 +141,7 @@ func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
-func (data *DeviceIPv6StaticRoute) updateFromBody(ctx context.Context, res gjson.Result) {
+func (data *DeviceIPv4StaticRoute) updateFromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("interfaceName"); value.Exists() && !data.InterfaceLogicalName.IsNull() {
 		data.InterfaceLogicalName = types.StringValue(value.String())
 	} else {
@@ -201,7 +201,7 @@ func (data *DeviceIPv6StaticRoute) updateFromBody(ctx context.Context, res gjson
 // End of section. //template:end updateFromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
-func (data *DeviceIPv6StaticRoute) isNull(ctx context.Context, res gjson.Result) bool {
+func (data *DeviceIPv4StaticRoute) isNull(ctx context.Context, res gjson.Result) bool {
 	if !data.DeviceId.IsNull() {
 		return false
 	}

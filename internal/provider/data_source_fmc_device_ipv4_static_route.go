@@ -35,26 +35,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DeviceIPv6StaticRouteDataSource{}
-	_ datasource.DataSourceWithConfigure = &DeviceIPv6StaticRouteDataSource{}
+	_ datasource.DataSource              = &DeviceIPv4StaticRouteDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceIPv4StaticRouteDataSource{}
 )
 
-func NewDeviceIPv6StaticRouteDataSource() datasource.DataSource {
-	return &DeviceIPv6StaticRouteDataSource{}
+func NewDeviceIPv4StaticRouteDataSource() datasource.DataSource {
+	return &DeviceIPv4StaticRouteDataSource{}
 }
 
-type DeviceIPv6StaticRouteDataSource struct {
+type DeviceIPv4StaticRouteDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DeviceIPv6StaticRouteDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_ipv6_static_route"
+func (d *DeviceIPv4StaticRouteDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ipv4_static_route"
 }
 
-func (d *DeviceIPv6StaticRouteDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceIPv4StaticRouteDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device IPv6 Static Route.",
+		MarkdownDescription: "This data source can read the Device IPv4 Static Route.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -98,18 +98,18 @@ func (d *DeviceIPv6StaticRouteDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"gateway_literal": schema.StringAttribute{
-				MarkdownDescription: "The next hop for this route as a literal IPv6 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
+				MarkdownDescription: "The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
 				Computed:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin host 'any-ipv6'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.",
+				MarkdownDescription: "Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.",
 				Computed:            true,
 			},
 		},
 	}
 }
 
-func (d *DeviceIPv6StaticRouteDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceIPv4StaticRouteDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -120,8 +120,8 @@ func (d *DeviceIPv6StaticRouteDataSource) Configure(_ context.Context, req datas
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
-func (d *DeviceIPv6StaticRouteDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DeviceIPv6StaticRoute
+func (d *DeviceIPv4StaticRouteDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceIPv4StaticRoute
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

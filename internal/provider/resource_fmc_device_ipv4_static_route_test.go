@@ -27,33 +27,40 @@ import (
 
 // End of section. //template:end imports
 
-// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
-func TestAccDataSourceFmcDeviceIPv6StaticRoute(t *testing.T) {
+// Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ipv6_static_route.test", "gateway_literal", "2024::1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ipv4_static_route.test", "gateway_literal", "10.0.0.1"))
+
+	var steps []resource.TestStep
+	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
+		steps = append(steps, resource.TestStep{
+			Config: testAccFmcDeviceIPv4StaticRoutePrerequisitesConfig + testAccFmcDeviceIPv4StaticRouteConfig_minimum(),
+		})
+	}
+	steps = append(steps, resource.TestStep{
+		Config: testAccFmcDeviceIPv4StaticRoutePrerequisitesConfig + testAccFmcDeviceIPv4StaticRouteConfig_all(),
+		Check:  resource.ComposeTestCheckFunc(checks...),
+	})
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
-		Steps: []resource.TestStep{
-			{
-				Config: testAccDataSourceFmcDeviceIPv6StaticRoutePrerequisitesConfig + testAccDataSourceFmcDeviceIPv6StaticRouteConfig(),
-				Check:  resource.ComposeTestCheckFunc(checks...),
-			},
-		},
+		Steps:                    steps,
 	})
 }
 
-// End of section. //template:end testAccDataSource
+// End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
-const testAccDataSourceFmcDeviceIPv6StaticRoutePrerequisitesConfig = `
+const testAccFmcDeviceIPv4StaticRoutePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
-data "fmc_host" "test" {
-  name = "any-ipv6"
+data "fmc_network" "test" {
+  name = "any-ipv4"
 }
 
 resource "fmc_device_physical_interface" "test" {
@@ -68,27 +75,37 @@ resource "fmc_device_physical_interface" "test" {
 
 // End of section. //template:end testPrerequisites
 
-// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
-func testAccDataSourceFmcDeviceIPv6StaticRouteConfig() string {
-	config := `resource "fmc_device_ipv6_static_route" "test" {` + "\n"
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+func testAccFmcDeviceIPv4StaticRouteConfig_minimum() string {
+	config := `resource "fmc_device_ipv4_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
 	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	destination_networks = [{` + "\n"
-	config += `	  id = data.fmc_host.test.id` + "\n"
+	config += `	  id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	metric_value = null` + "\n"
-	config += `	gateway_literal = "2024::1"` + "\n"
-	config += `	is_tunneled = true` + "\n"
+	config += `	metric_value = 254` + "\n"
+	config += `	gateway_literal = "10.0.0.2"` + "\n"
 	config += `}` + "\n"
-
-	config += `
-		data "fmc_device_ipv6_static_route" "test" {
-			id = fmc_device_ipv6_static_route.test.id
-			device_id = fmc_device_physical_interface.test.device_id
-		}
-	`
 	return config
 }
 
-// End of section. //template:end testAccDataSourceConfig
+// End of section. //template:end testAccConfigMinimal
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+func testAccFmcDeviceIPv4StaticRouteConfig_all() string {
+	config := `resource "fmc_device_ipv4_static_route" "test" {` + "\n"
+	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
+	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `	destination_networks = [{` + "\n"
+	config += `	  id = data.fmc_network.test.id` + "\n"
+	config += `	}]` + "\n"
+	config += `	metric_value = null` + "\n"
+	config += `	gateway_literal = "10.0.0.1"` + "\n"
+	config += `	is_tunneled = true` + "\n"
+	config += `}` + "\n"
+	return config
+}
+
+// End of section. //template:end testAccConfigAll

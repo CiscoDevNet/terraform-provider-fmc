@@ -44,25 +44,25 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
-var _ resource.Resource = &DeviceIPv6StaticRouteResource{}
-var _ resource.ResourceWithImportState = &DeviceIPv6StaticRouteResource{}
+var _ resource.Resource = &DeviceIPv4StaticRouteResource{}
+var _ resource.ResourceWithImportState = &DeviceIPv4StaticRouteResource{}
 
-func NewDeviceIPv6StaticRouteResource() resource.Resource {
-	return &DeviceIPv6StaticRouteResource{}
+func NewDeviceIPv4StaticRouteResource() resource.Resource {
+	return &DeviceIPv4StaticRouteResource{}
 }
 
-type DeviceIPv6StaticRouteResource struct {
+type DeviceIPv4StaticRouteResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceIPv6StaticRouteResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_ipv6_static_route"
+func (r *DeviceIPv4StaticRouteResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ipv4_static_route"
 }
 
-func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceIPv4StaticRouteResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device IPv6 Static Route.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device IPv4 Static Route.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -118,11 +118,11 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 				Optional:            true,
 			},
 			"gateway_literal": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The next hop for this route as a literal IPv6 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
 				Optional:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin host 'any-ipv6'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
@@ -131,7 +131,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 	}
 }
 
-func (r *DeviceIPv6StaticRouteResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceIPv4StaticRouteResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -142,8 +142,8 @@ func (r *DeviceIPv6StaticRouteResource) Configure(_ context.Context, req resourc
 // End of section. //template:end model
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
-func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceIPv6StaticRoute
+func (r *DeviceIPv4StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceIPv4StaticRoute
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -161,7 +161,7 @@ func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceIPv6StaticRoute{})
+	body := plan.toBody(ctx, DeviceIPv4StaticRoute{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
@@ -178,8 +178,8 @@ func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource
 // End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
-func (r *DeviceIPv6StaticRouteResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceIPv6StaticRoute
+func (r *DeviceIPv4StaticRouteResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceIPv4StaticRoute
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -221,8 +221,8 @@ func (r *DeviceIPv6StaticRouteResource) Read(ctx context.Context, req resource.R
 // End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
-func (r *DeviceIPv6StaticRouteResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceIPv6StaticRoute
+func (r *DeviceIPv4StaticRouteResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceIPv4StaticRoute
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -261,8 +261,8 @@ func (r *DeviceIPv6StaticRouteResource) Update(ctx context.Context, req resource
 // End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
-func (r *DeviceIPv6StaticRouteResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceIPv6StaticRoute
+func (r *DeviceIPv4StaticRouteResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceIPv4StaticRoute
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -292,7 +292,7 @@ func (r *DeviceIPv6StaticRouteResource) Delete(ctx context.Context, req resource
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *DeviceIPv6StaticRouteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceIPv4StaticRouteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
@@ -308,7 +308,7 @@ func (r *DeviceIPv6StaticRouteResource) ImportState(ctx context.Context, req res
 
 // End of section. //template:end import
 
-func (r DeviceIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+func (r DeviceIPv4StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
 	return []resource.ConfigValidator{
 		resourcevalidator.Conflicting(
 			path.MatchRoot("gateway_object_id"),

@@ -28,7 +28,7 @@ import (
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
-func TestAccFmcDeviceIpv6StaticRoute(t *testing.T) {
+func TestAccFmcDeviceIPv6StaticRoute(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
@@ -38,11 +38,11 @@ func TestAccFmcDeviceIpv6StaticRoute(t *testing.T) {
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDeviceIpv6StaticRoutePrerequisitesConfig + testAccFmcDeviceIpv6StaticRouteConfig_minimum(),
+			Config: testAccFmcDeviceIPv6StaticRoutePrerequisitesConfig + testAccFmcDeviceIPv6StaticRouteConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDeviceIpv6StaticRoutePrerequisitesConfig + testAccFmcDeviceIpv6StaticRouteConfig_all(),
+		Config: testAccFmcDeviceIPv6StaticRoutePrerequisitesConfig + testAccFmcDeviceIPv6StaticRouteConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -56,7 +56,7 @@ func TestAccFmcDeviceIpv6StaticRoute(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
-const testAccFmcDeviceIpv6StaticRoutePrerequisitesConfig = `
+const testAccFmcDeviceIPv6StaticRoutePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
 data "fmc_host" "test" {
@@ -76,7 +76,7 @@ resource "fmc_device_physical_interface" "test" {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
-func testAccFmcDeviceIpv6StaticRouteConfig_minimum() string {
+func testAccFmcDeviceIPv6StaticRouteConfig_minimum() string {
 	config := `resource "fmc_device_ipv6_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
@@ -93,7 +93,7 @@ func testAccFmcDeviceIpv6StaticRouteConfig_minimum() string {
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
-func testAccFmcDeviceIpv6StaticRouteConfig_all() string {
+func testAccFmcDeviceIPv6StaticRouteConfig_all() string {
 	config := `resource "fmc_device_ipv6_static_route" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
 	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
