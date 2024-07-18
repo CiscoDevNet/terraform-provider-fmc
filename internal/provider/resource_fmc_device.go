@@ -280,7 +280,7 @@ func (r *DeviceResource) Read(ctx context.Context, req resource.ReadRequest, res
 		state.fromBody(ctx, res)
 		state.fromPolicyBody(ctx, policies)
 	} else {
-		state.updateFromBody(ctx, res)
+		state.fromBodyPartial(ctx, res)
 		state.updateFromPolicyBody(ctx, policies)
 		tflog.Debug(ctx, fmt.Sprintf("nat policy assignment after update: %s", state.NatPolicyId))
 	}

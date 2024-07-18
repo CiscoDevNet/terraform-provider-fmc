@@ -516,7 +516,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
-	plan.computeFromBody(ctx, read)
+	plan.fromBodyUnknowns(ctx, read)
 
 	err = r.createCatsAt(ctx, plan, bodyCats, 0, &plan, reqMods...)
 	if err != nil {
@@ -610,7 +610,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 	if state.isNull(ctx, res) {
 		state.fromBody(ctx, res)
 	} else {
-		state.updateFromBody(ctx, res)
+		state.fromBodyPartial(ctx, res)
 	}
 	state.adjustFromBody(ctx, res)
 
@@ -658,7 +658,7 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 		return
 	}
 
-	plan.computeFromBody(ctx, res)
+	plan.fromBodyUnknowns(ctx, res)
 
 	keptCats, keptRules := r.countKept(ctx, state, plan)
 

@@ -483,7 +483,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.updateFromBody(ctx, res)
+	plan.fromBodyUnknowns(ctx, res)
 	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
@@ -527,7 +527,7 @@ func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.Rea
 	if state.isNull(ctx, res) {
 		state.fromBody(ctx, res)
 	} else {
-		state.updateFromBody(ctx, res)
+		state.fromBodyPartial(ctx, res)
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
@@ -578,7 +578,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.updateFromBody(ctx, res)
+	plan.fromBodyUnknowns(ctx, res)
 	{{- end}}
 	{{- end}}
 

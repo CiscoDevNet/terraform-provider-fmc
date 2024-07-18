@@ -366,9 +366,13 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 
 // End of section. //template:end fromBody
 
-// Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
 
-func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.Result) {
+// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
+// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
+// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
+// "managed" elements, instead of all elements.
+func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	{{- range .Attributes}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
@@ -533,7 +537,7 @@ func (data *{{camelCase .Name}}) updateFromBody(ctx context.Context, res gjson.R
 	{{- end}}
 }
 
-// End of section. //template:end updateFromBody
+// End of section. //template:end fromBodyPartial
 
 // Section below is generated&owned by "gen/generator.go". //template:begin isNull
 
@@ -555,3 +559,79 @@ func (data *{{camelCase .Name}}) isNull(ctx context.Context, res gjson.Result) b
 }
 
 // End of section. //template:end isNull
+
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
+
+// fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
+// Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
+func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	{{- range .Attributes}}
+	{{- if and .ResourceId (not .Reference)}}
+	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
+	if data.{{toGoName .TfName}}.IsUnknown() {
+		if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
+			data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+		} else {
+			data.{{toGoName .TfName}} = types.{{.Type}}Null()
+		}
+	}
+	{{- else}}
+	{{- errorf "resource_id is not yet implemented for type %v" .Type}}
+	{{- end}}
+	{{- else if isNestedListSet .}}
+	{{- if hasResourceId .Attributes}}
+	{{- $list := (toGoName .TfName)}}
+	{{- if .OrderedList }}
+	for i := range data.{{toGoName .TfName}} {
+		r := res.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
+	{{- else }}
+	for i := range data.{{toGoName .TfName}} {
+		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
+		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
+
+		var r gjson.Result
+		res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					r = v
+					return false
+				}
+				return true
+			},
+		)
+	{{- end}}
+
+		{{- range .Attributes}}
+		{{- if and .ResourceId (not .Reference)}}
+		{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
+		if data.{{$list}}[i].{{toGoName .TfName}}.IsUnknown() {
+			if value := r.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
+				data.{{$list}}[i].{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
+			} else {
+				data.{{$list}}[i].{{toGoName .TfName}} = types.{{.Type}}Null()
+			}
+		}
+		{{- else}}
+		{{- errorf "resource_id is not yet implemented for type %v" .Type}}
+		{{- end}}
+		{{- else if isNestedListSet .}}
+		{{- if hasResourceId .Attributes}}
+		{{- errorf "nesting resource_id so deep is not yet implemented"}}
+		{{- end}}
+		{{- end}}
+		{{- end}}
+	}
+	{{- end}}
+	{{- end}}
+	{{- end}}
+}
+
+// End of section. //template:end fromBodyUnknowns

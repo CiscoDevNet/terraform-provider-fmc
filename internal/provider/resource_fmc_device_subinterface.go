@@ -273,7 +273,7 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.updateFromBody(ctx, res)
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -314,7 +314,7 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 	if state.isNull(ctx, res) {
 		state.fromBody(ctx, res)
 	} else {
-		state.updateFromBody(ctx, res)
+		state.fromBodyPartial(ctx, res)
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
@@ -362,7 +362,7 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.updateFromBody(ctx, res)
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 

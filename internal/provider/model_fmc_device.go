@@ -129,9 +129,13 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 
 // End of section. //template:end fromBody
 
-// Section below is generated&owned by "gen/generator.go". //template:begin updateFromBody
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
 
-func (data *Device) updateFromBody(ctx context.Context, res gjson.Result) {
+// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
+// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
+// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
+// "managed" elements, instead of all elements.
+func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -154,7 +158,7 @@ func (data *Device) updateFromBody(ctx context.Context, res gjson.Result) {
 	}
 }
 
-// End of section. //template:end updateFromBody
+// End of section. //template:end fromBodyPartial
 
 func (data *Device) fromPolicyBody(ctx context.Context, res gjson.Result) {
 	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, data.Id.ValueString())
@@ -249,3 +253,12 @@ func (data *Device) isNull(ctx context.Context, res gjson.Result) bool {
 }
 
 // End of section. //template:end isNull
+
+// Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
+
+// fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
+// Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
+func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+}
+
+// End of section. //template:end fromBodyUnknowns

@@ -186,6 +186,11 @@ func SnakeCase(s string) string {
 	return strings.Join(g, "_")
 }
 
+// Templating helper function to fail a template mid-way
+func Errorf(s string, args ...any) (struct{}, error) {
+	return struct{}{}, fmt.Errorf(s, args...)
+}
+
 // Templating helper function to build a SJSON path
 func BuildPath(s []string) string {
 	return strings.Join(s, ".")
@@ -323,6 +328,7 @@ var functions = template.FuncMap{
 	"camelCase":       CamelCase,
 	"snakeCase":       SnakeCase,
 	"sprintf":         fmt.Sprintf,
+	"errorf":          Errorf,
 	"toLower":         strings.ToLower,
 	"path":            BuildPath,
 	"hasId":           HasId,

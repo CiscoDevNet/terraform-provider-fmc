@@ -187,7 +187,7 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 	if state.isNull(ctx, res) {
 		state.fromBody(ctx, res)
 	} else {
-		state.updateFromBody(ctx, res)
+		state.fromBodyPartial(ctx, res)
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
