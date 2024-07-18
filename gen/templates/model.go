@@ -390,6 +390,9 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 	{{- else if isNestedListSet .}}
 	{{- $list := (toGoName .TfName)}}
 	{{- if .OrderedList }}
+	{{- if (hasId .Attributes)}}
+	{{- errorf "ordered_list %s must not contain elements with `id: true`, as it treats list index ([i]) as the only unique id" .TfName}}
+	{{- end}}
 	{
 		l := len(res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array())
 		tflog.Debug(ctx, fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}} array resizing from %d to %d", len(data.{{toGoName .TfName}}), l))
@@ -403,7 +406,7 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 	for i := range data.{{toGoName .TfName}} {
 		r := res.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
 	{{- else }}
-	for i := range data.{{toGoName .TfName}} {
+	for i := 0; i < len(data.{{toGoName .TfName}}); i++ {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
@@ -425,6 +428,16 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 				return true
 			},
 		)
+		if !r.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing data.{{toGoName .TfName}}[%d] = %+v",
+				i,
+				data.{{toGoName .TfName}}[i],
+			))
+			data.{{toGoName .TfName}} = slices.Delete(data.{{toGoName .TfName}}, i, i+1)
+			i--
+
+			continue
+		}
 	{{- end}}
 
 		{{- range .Attributes}}
@@ -443,7 +456,10 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		{{- else if isNestedListSet .}}
 		{{- $clist := (toGoName .TfName)}}
-		for ci := range data.{{$list}}[i].{{toGoName .TfName}} {
+		{{- if .OrderedList }}
+		{{- errorf "ordered_list cannot be nested that deep"}}
+		{{- end}}
+		for ci := 0; ci < len(data.{{$list}}[i].{{toGoName .TfName}}); ci++ {
 			keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 			keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
@@ -465,6 +481,16 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.{{$list}}[i].{{toGoName .TfName}}[%d] = %+v",
+					ci,
+					data.{{$list}}[i].{{toGoName .TfName}}[ci],
+				))
+				data.{{$list}}[i].{{toGoName .TfName}} = slices.Delete(data.{{$list}}[i].{{toGoName .TfName}}, ci, ci+1)
+				ci--
+
+				continue
+			}
 
 			{{- range .Attributes}}
 			{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
@@ -482,7 +508,10 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			{{- else if isNestedListSet .}}
 			{{- $cclist := (toGoName .TfName)}}
-			for cci := range data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} {
+			{{- if .OrderedList }}
+			{{- errorf "ordered_list cannot be nested that deep"}}
+			{{- end}}
+			for cci := 0; cci < len(data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}); cci++ {
 				keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 				keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{$clist}}[ci].{{$cclist}}[cci].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
@@ -504,6 +533,16 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 						return true
 					},
 				)
+				if !cr.Exists() {
+					tflog.Debug(ctx, fmt.Sprintf("removing data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}[%d] = %+v",
+						cci,
+						data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}[cci],
+					))
+					data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}} = slices.Delete(data.{{$list}}[i].{{$clist}}[ci].{{toGoName .TfName}}, cci, cci+1)
+					cci--
+
+					continue
+				}
 
 				{{- range .Attributes}}
 				{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}

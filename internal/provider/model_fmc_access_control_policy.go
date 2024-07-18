@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"math"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -981,7 +982,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else if data.Rules[i].Enabled.ValueBool() != true {
 			data.Rules[i].Enabled = types.BoolNull()
 		}
-		for ci := range data.Rules[i].SourceNetworkLiterals {
+		for ci := 0; ci < len(data.Rules[i].SourceNetworkLiterals); ci++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Rules[i].SourceNetworkLiterals[ci].Value.ValueString()}
 
@@ -1003,13 +1004,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourceNetworkLiterals[%d] = %+v",
+					ci,
+					data.Rules[i].SourceNetworkLiterals[ci],
+				))
+				data.Rules[i].SourceNetworkLiterals = slices.Delete(data.Rules[i].SourceNetworkLiterals, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("value"); value.Exists() && !data.Rules[i].SourceNetworkLiterals[ci].Value.IsNull() {
 				data.Rules[i].SourceNetworkLiterals[ci].Value = types.StringValue(value.String())
 			} else {
 				data.Rules[i].SourceNetworkLiterals[ci].Value = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationNetworkLiterals {
+		for ci := 0; ci < len(data.Rules[i].DestinationNetworkLiterals); ci++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Rules[i].DestinationNetworkLiterals[ci].Value.ValueString()}
 
@@ -1031,13 +1042,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationNetworkLiterals[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationNetworkLiterals[ci],
+				))
+				data.Rules[i].DestinationNetworkLiterals = slices.Delete(data.Rules[i].DestinationNetworkLiterals, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("value"); value.Exists() && !data.Rules[i].DestinationNetworkLiterals[ci].Value.IsNull() {
 				data.Rules[i].DestinationNetworkLiterals[ci].Value = types.StringValue(value.String())
 			} else {
 				data.Rules[i].DestinationNetworkLiterals[ci].Value = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].SourceNetworkObjects {
+		for ci := 0; ci < len(data.Rules[i].SourceNetworkObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].SourceNetworkObjects[ci].Id.ValueString()}
 
@@ -1059,6 +1080,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourceNetworkObjects[%d] = %+v",
+					ci,
+					data.Rules[i].SourceNetworkObjects[ci],
+				))
+				data.Rules[i].SourceNetworkObjects = slices.Delete(data.Rules[i].SourceNetworkObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].SourceNetworkObjects[ci].Id.IsNull() {
 				data.Rules[i].SourceNetworkObjects[ci].Id = types.StringValue(value.String())
 			} else {
@@ -1070,7 +1101,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Rules[i].SourceNetworkObjects[ci].Type = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationNetworkObjects {
+		for ci := 0; ci < len(data.Rules[i].DestinationNetworkObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].DestinationNetworkObjects[ci].Id.ValueString()}
 
@@ -1092,6 +1123,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationNetworkObjects[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationNetworkObjects[ci],
+				))
+				data.Rules[i].DestinationNetworkObjects = slices.Delete(data.Rules[i].DestinationNetworkObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].DestinationNetworkObjects[ci].Id.IsNull() {
 				data.Rules[i].DestinationNetworkObjects[ci].Id = types.StringValue(value.String())
 			} else {
@@ -1103,7 +1144,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Rules[i].DestinationNetworkObjects[ci].Type = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].SourceDynamicObjects {
+		for ci := 0; ci < len(data.Rules[i].SourceDynamicObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].SourceDynamicObjects[ci].Id.ValueString()}
 
@@ -1125,13 +1166,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourceDynamicObjects[%d] = %+v",
+					ci,
+					data.Rules[i].SourceDynamicObjects[ci],
+				))
+				data.Rules[i].SourceDynamicObjects = slices.Delete(data.Rules[i].SourceDynamicObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].SourceDynamicObjects[ci].Id.IsNull() {
 				data.Rules[i].SourceDynamicObjects[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].SourceDynamicObjects[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationDynamicObjects {
+		for ci := 0; ci < len(data.Rules[i].DestinationDynamicObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].DestinationDynamicObjects[ci].Id.ValueString()}
 
@@ -1153,13 +1204,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationDynamicObjects[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationDynamicObjects[ci],
+				))
+				data.Rules[i].DestinationDynamicObjects = slices.Delete(data.Rules[i].DestinationDynamicObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].DestinationDynamicObjects[ci].Id.IsNull() {
 				data.Rules[i].DestinationDynamicObjects[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].DestinationDynamicObjects[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].SourcePortObjects {
+		for ci := 0; ci < len(data.Rules[i].SourcePortObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].SourcePortObjects[ci].Id.ValueString()}
 
@@ -1181,13 +1242,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourcePortObjects[%d] = %+v",
+					ci,
+					data.Rules[i].SourcePortObjects[ci],
+				))
+				data.Rules[i].SourcePortObjects = slices.Delete(data.Rules[i].SourcePortObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].SourcePortObjects[ci].Id.IsNull() {
 				data.Rules[i].SourcePortObjects[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].SourcePortObjects[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationPortObjects {
+		for ci := 0; ci < len(data.Rules[i].DestinationPortObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].DestinationPortObjects[ci].Id.ValueString()}
 
@@ -1209,13 +1280,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationPortObjects[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationPortObjects[ci],
+				))
+				data.Rules[i].DestinationPortObjects = slices.Delete(data.Rules[i].DestinationPortObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].DestinationPortObjects[ci].Id.IsNull() {
 				data.Rules[i].DestinationPortObjects[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].DestinationPortObjects[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].SourceSecurityGroupTagObjects {
+		for ci := 0; ci < len(data.Rules[i].SourceSecurityGroupTagObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].SourceSecurityGroupTagObjects[ci].Id.ValueString()}
 
@@ -1237,6 +1318,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourceSecurityGroupTagObjects[%d] = %+v",
+					ci,
+					data.Rules[i].SourceSecurityGroupTagObjects[ci],
+				))
+				data.Rules[i].SourceSecurityGroupTagObjects = slices.Delete(data.Rules[i].SourceSecurityGroupTagObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].SourceSecurityGroupTagObjects[ci].Id.IsNull() {
 				data.Rules[i].SourceSecurityGroupTagObjects[ci].Id = types.StringValue(value.String())
 			} else {
@@ -1248,7 +1339,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Rules[i].SourceSecurityGroupTagObjects[ci].Type = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationSecurityGroupTagObjects {
+		for ci := 0; ci < len(data.Rules[i].DestinationSecurityGroupTagObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].DestinationSecurityGroupTagObjects[ci].Id.ValueString()}
 
@@ -1270,6 +1361,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationSecurityGroupTagObjects[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationSecurityGroupTagObjects[ci],
+				))
+				data.Rules[i].DestinationSecurityGroupTagObjects = slices.Delete(data.Rules[i].DestinationSecurityGroupTagObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].DestinationSecurityGroupTagObjects[ci].Id.IsNull() {
 				data.Rules[i].DestinationSecurityGroupTagObjects[ci].Id = types.StringValue(value.String())
 			} else {
@@ -1281,7 +1382,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Rules[i].DestinationSecurityGroupTagObjects[ci].Type = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].SourceZones {
+		for ci := 0; ci < len(data.Rules[i].SourceZones); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].SourceZones[ci].Id.ValueString()}
 
@@ -1303,13 +1404,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].SourceZones[%d] = %+v",
+					ci,
+					data.Rules[i].SourceZones[ci],
+				))
+				data.Rules[i].SourceZones = slices.Delete(data.Rules[i].SourceZones, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].SourceZones[ci].Id.IsNull() {
 				data.Rules[i].SourceZones[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].SourceZones[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].DestinationZones {
+		for ci := 0; ci < len(data.Rules[i].DestinationZones); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].DestinationZones[ci].Id.ValueString()}
 
@@ -1331,13 +1442,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].DestinationZones[%d] = %+v",
+					ci,
+					data.Rules[i].DestinationZones[ci],
+				))
+				data.Rules[i].DestinationZones = slices.Delete(data.Rules[i].DestinationZones, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].DestinationZones[ci].Id.IsNull() {
 				data.Rules[i].DestinationZones[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].DestinationZones[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].UrlObjects {
+		for ci := 0; ci < len(data.Rules[i].UrlObjects); ci++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Rules[i].UrlObjects[ci].Id.ValueString()}
 
@@ -1359,13 +1480,23 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].UrlObjects[%d] = %+v",
+					ci,
+					data.Rules[i].UrlObjects[ci],
+				))
+				data.Rules[i].UrlObjects = slices.Delete(data.Rules[i].UrlObjects, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("id"); value.Exists() && !data.Rules[i].UrlObjects[ci].Id.IsNull() {
 				data.Rules[i].UrlObjects[ci].Id = types.StringValue(value.String())
 			} else {
 				data.Rules[i].UrlObjects[ci].Id = types.StringNull()
 			}
 		}
-		for ci := range data.Rules[i].UrlCategories {
+		for ci := 0; ci < len(data.Rules[i].UrlCategories); ci++ {
 			keys := [...]string{"category.id"}
 			keyValues := [...]string{data.Rules[i].UrlCategories[ci].Id.ValueString()}
 
@@ -1387,6 +1518,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 					return true
 				},
 			)
+			if !cr.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing data.Rules[i].UrlCategories[%d] = %+v",
+					ci,
+					data.Rules[i].UrlCategories[ci],
+				))
+				data.Rules[i].UrlCategories = slices.Delete(data.Rules[i].UrlCategories, ci, ci+1)
+				ci--
+
+				continue
+			}
 			if value := cr.Get("category.id"); value.Exists() && !data.Rules[i].UrlCategories[ci].Id.IsNull() {
 				data.Rules[i].UrlCategories[ci].Id = types.StringValue(value.String())
 			} else {

@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -156,7 +158,7 @@ func (data *DeviceIPv4StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.InterfaceLogicalName = types.StringNull()
 	}
-	for i := range data.DestinationNetworks {
+	for i := 0; i < len(data.DestinationNetworks); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DestinationNetworks[i].Id.ValueString()}
 
@@ -178,6 +180,16 @@ func (data *DeviceIPv4StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 				return true
 			},
 		)
+		if !r.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing data.DestinationNetworks[%d] = %+v",
+				i,
+				data.DestinationNetworks[i],
+			))
+			data.DestinationNetworks = slices.Delete(data.DestinationNetworks, i, i+1)
+			i--
+
+			continue
+		}
 		if value := r.Get("id"); value.Exists() && !data.DestinationNetworks[i].Id.IsNull() {
 			data.DestinationNetworks[i].Id = types.StringValue(value.String())
 		} else {

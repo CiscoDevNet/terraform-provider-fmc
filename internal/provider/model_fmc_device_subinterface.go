@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -405,7 +407,7 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6EnableRa = types.BoolNull()
 	}
-	for i := range data.Ipv6Addresses {
+	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
@@ -427,6 +429,16 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 				return true
 			},
 		)
+		if !r.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing data.Ipv6Addresses[%d] = %+v",
+				i,
+				data.Ipv6Addresses[i],
+			))
+			data.Ipv6Addresses = slices.Delete(data.Ipv6Addresses, i, i+1)
+			i--
+
+			continue
+		}
 		if value := r.Get("address"); value.Exists() && !data.Ipv6Addresses[i].Address.IsNull() {
 			data.Ipv6Addresses[i].Address = types.StringValue(value.String())
 		} else {
