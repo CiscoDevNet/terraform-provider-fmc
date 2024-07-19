@@ -1,0 +1,31 @@
+---
+name: FQDN Object
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns
+data_source_name_query: true
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: User-created name of the resource.
+    mandatory: true
+    example: fqdn_1
+  - model_name: value
+    type: String
+    description: The fully qualified domain name.
+    mandatory: true
+    example: www.example.com
+  - model_name: dnsResolution
+    type: String
+    description: Type of DNS resolution.
+    enum_values: [IPV4_ONLY, IPV6_ONLY, IPV4_AND_IPV6]
+    default_value: IPV4_AND_IPV6
+    example: IPV4_AND_IPV6
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: "My FQDN Object"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"
