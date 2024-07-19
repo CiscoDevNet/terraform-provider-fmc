@@ -1,0 +1,25 @@
+---
+name: Range
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ranges
+data_source_name_query: true
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: User-created name of the resource.
+    mandatory: true
+    example: range1
+  - model_name: value
+    type: String
+    description: Range of addresses, IPv4 or IPv6.
+    mandatory: true
+    example: 10.0.0.1-10.0.0.9
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: "My range"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"
