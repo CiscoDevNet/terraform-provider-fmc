@@ -1,0 +1,35 @@
+---
+name: Network Analysis Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/networkanalysispolicies
+data_source_name_query: true
+doc_category: Policy
+attributes:
+  - model_name: name
+    type: String
+    description: >-
+      Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity'
+      or 'Security Over Connectivity'.
+    mandatory: true
+    example: net_analysis_policy_1
+  - model_name: description
+    type: String
+    description: Optional description of the policy.
+    example: "My network analysis policy"
+  - model_name: id
+    data_path: [basePolicy]
+    tf_name: base_policy_id
+    type: String
+    description: UUID of the base policy (such as data.fmc_network_analysis_policy.example.id).
+    mandatory: true
+    test_value: data.fmc_network_analysis_policy.builtin.id
+  - model_name: inspectionMode
+    type: String
+    description: Inspection mode.
+    enum_values: [PREVENTION, DETECTION]
+    example: PREVENTION
+    requires_replace: true # UI shows mismatch after update. It seems an update never changes associated snort2 policy.
+
+test_prerequisites: |-
+  data "fmc_network_analysis_policy" "builtin" {
+    name = "Security Over Connectivity"
+  }
