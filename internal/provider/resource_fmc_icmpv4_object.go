@@ -126,8 +126,7 @@ func (r *ICMPv4ObjectResource) Create(ctx context.Context, req resource.CreateRe
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -152,6 +151,8 @@ func (r *ICMPv4ObjectResource) Create(ctx context.Context, req resource.CreateRe
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end create
@@ -163,8 +164,7 @@ func (r *ICMPv4ObjectResource) Read(ctx context.Context, req resource.ReadReques
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -185,8 +185,13 @@ func (r *ICMPv4ObjectResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
-	// If every attribute is set to null we are dealing with an import operation and therefore reading all attributes
-	if state.isNull(ctx, res) {
+	imp, diags := helpers.IsFlagImporting(ctx, req)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// After `terraform import` we switch to a full read.
+	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
@@ -196,6 +201,8 @@ func (r *ICMPv4ObjectResource) Read(ctx context.Context, req resource.ReadReques
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end read
@@ -207,14 +214,13 @@ func (r *ICMPv4ObjectResource) Update(ctx context.Context, req resource.UpdateRe
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Read state
 	diags = req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -248,8 +254,7 @@ func (r *ICMPv4ObjectResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -277,6 +282,8 @@ func (r *ICMPv4ObjectResource) Delete(ctx context.Context, req resource.DeleteRe
 
 func (r *ICMPv4ObjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import

@@ -150,8 +150,7 @@ func (r *DeviceIPv4StaticRouteResource) Create(ctx context.Context, req resource
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -176,6 +175,8 @@ func (r *DeviceIPv4StaticRouteResource) Create(ctx context.Context, req resource
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end create
@@ -187,8 +188,7 @@ func (r *DeviceIPv4StaticRouteResource) Read(ctx context.Context, req resource.R
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -209,8 +209,13 @@ func (r *DeviceIPv4StaticRouteResource) Read(ctx context.Context, req resource.R
 		return
 	}
 
-	// If every attribute is set to null we are dealing with an import operation and therefore reading all attributes
-	if state.isNull(ctx, res) {
+	imp, diags := helpers.IsFlagImporting(ctx, req)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// After `terraform import` we switch to a full read.
+	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
@@ -220,6 +225,8 @@ func (r *DeviceIPv4StaticRouteResource) Read(ctx context.Context, req resource.R
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end read
@@ -231,14 +238,13 @@ func (r *DeviceIPv4StaticRouteResource) Update(ctx context.Context, req resource
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Read state
 	diags = req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -272,8 +278,7 @@ func (r *DeviceIPv4StaticRouteResource) Delete(ctx context.Context, req resource
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -311,6 +316,8 @@ func (r *DeviceIPv4StaticRouteResource) ImportState(ctx context.Context, req res
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import

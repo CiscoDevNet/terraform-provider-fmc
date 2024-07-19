@@ -216,44 +216,6 @@ func (data *Device) updateFromPolicyBody(ctx context.Context, res gjson.Result) 
 	}
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin isNull
-
-func (data *Device) isNull(ctx context.Context, res gjson.Result) bool {
-	if !data.Name.IsNull() {
-		return false
-	}
-	if !data.HostName.IsNull() {
-		return false
-	}
-	if !data.NatId.IsNull() {
-		return false
-	}
-	if !data.LicenseCapabilities.IsNull() {
-		return false
-	}
-	if !data.RegistrationKey.IsNull() {
-		return false
-	}
-	if !data.Type.IsNull() {
-		return false
-	}
-	if !data.AccessPolicyId.IsNull() {
-		return false
-	}
-	if !data.NatPolicyId.IsNull() {
-		return false
-	}
-	if !data.ProhibitPacketTransfer.IsNull() {
-		return false
-	}
-	if !data.PerformanceTier.IsNull() {
-		return false
-	}
-	return true
-}
-
-// End of section. //template:end isNull
-
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.

@@ -220,38 +220,6 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 
 // End of section. //template:end fromBodyPartial
 
-// Section below is generated&owned by "gen/generator.go". //template:begin isNull
-
-func (data *DeviceIPv6StaticRoute) isNull(ctx context.Context, res gjson.Result) bool {
-	if !data.DeviceId.IsNull() {
-		return false
-	}
-	if !data.InterfaceLogicalName.IsNull() {
-		return false
-	}
-	if !data.InterfaceId.IsNull() {
-		return false
-	}
-	if len(data.DestinationNetworks) > 0 {
-		return false
-	}
-	if !data.MetricValue.IsNull() {
-		return false
-	}
-	if !data.GatewayObjectId.IsNull() {
-		return false
-	}
-	if !data.GatewayLiteral.IsNull() {
-		return false
-	}
-	if !data.IsTunneled.IsNull() {
-		return false
-	}
-	return true
-}
-
-// End of section. //template:end isNull
-
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.

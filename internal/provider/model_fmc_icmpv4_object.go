@@ -145,29 +145,6 @@ func (data *ICMPv4Object) fromBodyPartial(ctx context.Context, res gjson.Result)
 
 // End of section. //template:end fromBodyPartial
 
-// Section below is generated&owned by "gen/generator.go". //template:begin isNull
-
-func (data *ICMPv4Object) isNull(ctx context.Context, res gjson.Result) bool {
-	if !data.IcmpType.IsNull() {
-		return false
-	}
-	if !data.Code.IsNull() {
-		return false
-	}
-	if !data.Name.IsNull() {
-		return false
-	}
-	if !data.Description.IsNull() {
-		return false
-	}
-	if !data.Overridable.IsNull() {
-		return false
-	}
-	return true
-}
-
-// End of section. //template:end isNull
-
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.

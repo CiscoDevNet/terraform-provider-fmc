@@ -1618,56 +1618,6 @@ func (data *AccessControlPolicy) adjustFromBody(ctx context.Context, res gjson.R
 	}
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin isNull
-
-func (data *AccessControlPolicy) isNull(ctx context.Context, res gjson.Result) bool {
-	if !data.Name.IsNull() {
-		return false
-	}
-	if !data.Description.IsNull() {
-		return false
-	}
-	if !data.DefaultAction.IsNull() {
-		return false
-	}
-	if !data.DefaultActionId.IsNull() {
-		return false
-	}
-	if !data.DefaultActionLogBegin.IsNull() {
-		return false
-	}
-	if !data.DefaultActionLogEnd.IsNull() {
-		return false
-	}
-	if !data.DefaultActionSendEventsToFmc.IsNull() {
-		return false
-	}
-	if !data.DefaultActionSendSyslog.IsNull() {
-		return false
-	}
-	if !data.DefaultActionSyslogConfigId.IsNull() {
-		return false
-	}
-	if !data.DefaultActionSyslogSeverity.IsNull() {
-		return false
-	}
-	if !data.DefaultActionSnmpConfigId.IsNull() {
-		return false
-	}
-	if !data.DefaultActionIntrusionPolicyId.IsNull() {
-		return false
-	}
-	if len(data.Categories) > 0 {
-		return false
-	}
-	if len(data.Rules) > 0 {
-		return false
-	}
-	return true
-}
-
-// End of section. //template:end isNull
-
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.

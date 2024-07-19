@@ -232,8 +232,7 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -279,6 +278,8 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
@@ -288,8 +289,7 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -310,8 +310,13 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 		return
 	}
 
-	// If every attribute is set to null we are dealing with an import operation and therefore reading all attributes
-	if state.isNull(ctx, res) {
+	imp, diags := helpers.IsFlagImporting(ctx, req)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// After `terraform import` we switch to a full read.
+	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
@@ -321,6 +326,8 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end read
@@ -332,14 +339,13 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Read state
 	diags = req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -379,8 +385,7 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -418,6 +423,8 @@ func (r *DeviceSubinterfaceResource) ImportState(ctx context.Context, req resour
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import

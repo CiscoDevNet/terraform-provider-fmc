@@ -214,8 +214,7 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -273,6 +272,8 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end create
@@ -284,8 +285,7 @@ func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -306,8 +306,13 @@ func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource
 		return
 	}
 
-	// If every attribute is set to null we are dealing with an import operation and therefore reading all attributes
-	if state.isNull(ctx, res) {
+	imp, diags := helpers.IsFlagImporting(ctx, req)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// After `terraform import` we switch to a full read.
+	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
@@ -317,6 +322,8 @@ func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end read
@@ -328,14 +335,13 @@ func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resour
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Read state
 	diags = req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -369,8 +375,7 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -403,6 +408,8 @@ func (r *DevicePhysicalInterfaceResource) ImportState(ctx context.Context, req r
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import

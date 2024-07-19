@@ -124,8 +124,7 @@ func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -150,6 +149,8 @@ func (r *HostResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end create
@@ -161,8 +162,7 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -183,8 +183,13 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	// If every attribute is set to null we are dealing with an import operation and therefore reading all attributes
-	if state.isNull(ctx, res) {
+	imp, diags := helpers.IsFlagImporting(ctx, req)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// After `terraform import` we switch to a full read.
+	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
@@ -194,6 +199,8 @@ func (r *HostResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
+
+	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end read
@@ -205,14 +212,13 @@ func (r *HostResource) Update(ctx context.Context, req resource.UpdateRequest, r
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
 	// Read state
 	diags = req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -246,8 +252,7 @@ func (r *HostResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
-	resp.Diagnostics.Append(diags...)
-	if resp.Diagnostics.HasError() {
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -275,6 +280,8 @@ func (r *HostResource) Delete(ctx context.Context, req resource.DeleteRequest, r
 
 func (r *HostResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import

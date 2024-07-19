@@ -578,27 +578,6 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 
 // End of section. //template:end fromBodyPartial
 
-// Section below is generated&owned by "gen/generator.go". //template:begin isNull
-
-func (data *{{camelCase .Name}}) isNull(ctx context.Context, res gjson.Result) bool {
-	{{- range .Attributes}}
-	{{- if not .Value}}
-	{{- if isNestedListSet .}}
-	if len(data.{{toGoName .TfName}}) > 0 {
-		return false
-	}
-	{{- else}}
-	if !data.{{toGoName .TfName}}.IsNull() {
-		return false
-	}
-	{{- end}}
-	{{- end}}
-	{{- end}}
-	return true
-}
-
-// End of section. //template:end isNull
-
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
