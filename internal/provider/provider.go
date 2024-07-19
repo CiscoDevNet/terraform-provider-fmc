@@ -293,6 +293,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewNetworkResource,
 		NewRangeResource,
 		NewSecurityZoneResource,
+		NewURLResource,
 	}
 }
 
@@ -310,6 +311,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewNetworkDataSource,
 		NewRangeDataSource,
 		NewSecurityZoneDataSource,
+		NewURLDataSource,
 	}
 }
 
