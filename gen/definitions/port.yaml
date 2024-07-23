@@ -1,0 +1,34 @@
+---
+name: Port
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/protocolportobjects
+data_source_name_query: true
+doc_category: Objects
+attributes:
+  - model_name: port
+    type: String
+    description: >-
+      Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
+    example: "443"
+  - model_name: name
+    type: String
+    description: User-created name of the resource.
+    mandatory: true
+    example: tcp443
+  - model_name: protocol
+    type: String
+    description: >-
+      IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols.
+      Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP).
+      Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype
+      (e.g. 2048 means IP).
+    mandatory: true
+    example: TCP
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: "Port TCP/443 (HTTPS)"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"

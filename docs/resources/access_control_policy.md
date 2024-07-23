@@ -231,7 +231,7 @@ Read-Only:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_dynamic_object.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_dynamic_object.example.id, etc.).
 
 
 <a id="nestedatt--rules--destination_network_literals"></a>
@@ -247,8 +247,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.this.id, etc.).
-- `type` (String) Type of the object (such as fmc_network.this.type, etc.).
+- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
+- `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
 <a id="nestedatt--rules--destination_port_objects"></a>
@@ -256,7 +256,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
 
 
 <a id="nestedatt--rules--destination_security_group_tag_objects"></a>
@@ -264,8 +264,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_group_tag.this.id, etc.).
-- `type` (String) Type of the object (such as fmc_security_group_tag.this.type, etc.).
+- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
+- `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
 <a id="nestedatt--rules--destination_zones"></a>
@@ -273,7 +273,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_zone.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_security_zone.example.id, etc.).
 
 
 <a id="nestedatt--rules--source_dynamic_objects"></a>
@@ -281,7 +281,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_dynamic_object.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_dynamic_object.example.id, etc.).
 
 
 <a id="nestedatt--rules--source_network_literals"></a>
@@ -297,8 +297,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.this.id, etc.).
-- `type` (String) Type of the object (such as fmc_network.this.type, etc.).
+- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
+- `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
 <a id="nestedatt--rules--source_port_objects"></a>
@@ -306,7 +306,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
 
 
 <a id="nestedatt--rules--source_security_group_tag_objects"></a>
@@ -314,8 +314,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_group_tag.this.id, etc.).
-- `type` (String) Type of the object (such as fmc_security_group_tag.this.type, etc.).
+- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
+- `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
 <a id="nestedatt--rules--source_zones"></a>
@@ -323,7 +323,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_zone.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_security_zone.example.id, etc.).
 
 
 <a id="nestedatt--rules--url_categories"></a>
@@ -331,7 +331,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_url_category.this.id, etc.).
+- `id` (String) UUID of the object (such as fmc_url_category.example.id, etc.).
 - `reputation` (String) Reputation applicable to the category.
   - Choices: `ANY_EXCEPT_UNKNOWN`, `TRUSTED`, `FAVORABLE`, `NEUTRAL`, `QUESTIONABLE`, `UNTRUSTED`, `ANY_AND_UNKNOWN`, `TRUSTED_AND_UNKNOWN`, `FAVORABLE_AND_UNKNOWN`, `NEUTRAL_AND_UNKNOWN`, `QUESTIONABLE_AND_UNKNOWN`, `UNTRUSTED_AND_UNKNOWN`
 
@@ -341,7 +341,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_url.this.id, fmc_url_group.id, etc.).
+- `id` (String) UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).
 
 ## Import
 

@@ -26,6 +26,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -171,6 +172,9 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 						},
 					},
 				},
+				Validators: []validator.List{
+					listvalidator.SizeAtMost(1000),
+				},
 			},
 			"rules": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. The first matching rule is selected. Except for MONITOR rules, the system does not continue to evaluate traffic against additional rules after that traffic matches a rule.").String,
@@ -239,11 +243,11 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.this.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.example.type, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -255,11 +259,11 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.this.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.example.type, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -271,7 +275,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.example.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -283,7 +287,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.example.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -295,7 +299,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).").String,
 										Optional:            true,
 									},
 								},
@@ -307,7 +311,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).").String,
 										Optional:            true,
 									},
 								},
@@ -319,11 +323,11 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_group_tag.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_group_tag.example.id, etc.).").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_security_group_tag.this.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_security_group_tag.example.type, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -335,11 +339,11 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_group_tag.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_group_tag.example.id, etc.).").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_security_group_tag.this.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_security_group_tag.example.type, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -351,7 +355,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.example.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -363,7 +367,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.example.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -375,7 +379,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url.this.id, fmc_url_group.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -387,7 +391,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url_category.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url_category.example.id, etc.).").String,
 										Optional:            true,
 									},
 									"reputation": schema.StringAttribute{
@@ -458,6 +462,9 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							Optional:            true,
 						},
 					},
+				},
+				Validators: []validator.List{
+					listvalidator.SizeAtMost(1000),
 				},
 			},
 		},

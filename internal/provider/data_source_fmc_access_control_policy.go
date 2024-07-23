@@ -199,11 +199,11 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_network.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_network.example.id, etc.).",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_network.this.type, etc.).",
+										MarkdownDescription: "Type of the object (such as fmc_network.example.type, etc.).",
 										Computed:            true,
 									},
 								},
@@ -215,11 +215,11 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_network.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_network.example.id, etc.).",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_network.this.type, etc.).",
+										MarkdownDescription: "Type of the object (such as fmc_network.example.type, etc.).",
 										Computed:            true,
 									},
 								},
@@ -231,7 +231,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.example.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -243,7 +243,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_dynamic_object.example.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -255,7 +255,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).",
 										Computed:            true,
 									},
 								},
@@ -267,7 +267,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_port.this.id, fmc_port_group.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).",
 										Computed:            true,
 									},
 								},
@@ -279,11 +279,11 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.example.id, etc.).",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.this.type, etc.).",
+										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.example.type, etc.).",
 										Computed:            true,
 									},
 								},
@@ -295,11 +295,11 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.example.id, etc.).",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.this.type, etc.).",
+										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.example.type, etc.).",
 										Computed:            true,
 									},
 								},
@@ -311,7 +311,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_zone.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_security_zone.example.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -323,7 +323,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_zone.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_security_zone.example.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -335,7 +335,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_url.this.id, fmc_url_group.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -347,7 +347,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_url_category.this.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_url_category.example.id, etc.).",
 										Computed:            true,
 									},
 									"reputation": schema.StringAttribute{

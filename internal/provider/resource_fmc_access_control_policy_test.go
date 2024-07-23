@@ -76,14 +76,20 @@ func TestAccFmcAccessControlPolicy(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcAccessControlPolicyPrerequisitesConfig = `
-resource "fmc_network" "this" {
-  name   = "mynetwork1"
+resource "fmc_network" "test" {
+  name   = "NET_fmc_access_control_policy"
   prefix = "10.0.0.0/24"
 }
 
-resource "fmc_host" "this" {
-  name = "myhost1"
+resource "fmc_host" "test" {
+  name = "HOST_fmc_access_control_policy"
   ip   = "10.1.1.1"
+}
+
+resource "fmc_port" "test" {
+  name     = "test_fmc_access_control_policy"
+  protocol = "UDP"
+  port     = "53"
 }
 `
 
@@ -128,12 +134,12 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 	config += `			value = "10.2.2.0/24"` + "\n"
 	config += `		}]` + "\n"
 	config += `		source_network_objects = [{` + "\n"
-	config += `			id = fmc_network.this.id` + "\n"
-	config += `			type = fmc_network.this.type` + "\n"
+	config += `			id = fmc_network.test.id` + "\n"
+	config += `			type = fmc_network.test.type` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_network_objects = [{` + "\n"
-	config += `			id = fmc_host.this.id` + "\n"
-	config += `			type = fmc_host.this.type` + "\n"
+	config += `			id = fmc_host.test.id` + "\n"
+	config += `			type = fmc_host.test.type` + "\n"
 	config += `		}]` + "\n"
 	config += `		log_begin = true` + "\n"
 	config += `		log_end = true` + "\n"
