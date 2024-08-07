@@ -34,34 +34,35 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type DevicePhysicalInterface struct {
-	Id                       types.String                           `tfsdk:"id"`
-	Domain                   types.String                           `tfsdk:"domain"`
-	DeviceId                 types.String                           `tfsdk:"device_id"`
-	Enabled                  types.Bool                             `tfsdk:"enabled"`
-	Mode                     types.String                           `tfsdk:"mode"`
-	Name                     types.String                           `tfsdk:"name"`
-	LogicalName              types.String                           `tfsdk:"logical_name"`
-	Description              types.String                           `tfsdk:"description"`
-	ManagementOnly           types.Bool                             `tfsdk:"management_only"`
-	Mtu                      types.Int64                            `tfsdk:"mtu"`
-	Priority                 types.Int64                            `tfsdk:"priority"`
-	SecurityZoneId           types.String                           `tfsdk:"security_zone_id"`
-	Ipv4StaticAddress        types.String                           `tfsdk:"ipv4_static_address"`
-	Ipv4StaticNetmask        types.String                           `tfsdk:"ipv4_static_netmask"`
-	Ipv4DhcpObtainRoute      types.Bool                             `tfsdk:"ipv4_dhcp_obtain_route"`
-	Ipv4DhcpRouteMetric      types.Int64                            `tfsdk:"ipv4_dhcp_route_metric"`
-	Ipv6Enable               types.Bool                             `tfsdk:"ipv6_enable"`
-	Ipv6EnforceEui           types.Bool                             `tfsdk:"ipv6_enforce_eui"`
-	Ipv6EnableAutoConfig     types.Bool                             `tfsdk:"ipv6_enable_auto_config"`
-	Ipv6EnableDhcpAddress    types.Bool                             `tfsdk:"ipv6_enable_dhcp_address"`
-	Ipv6EnableDhcpNonaddress types.Bool                             `tfsdk:"ipv6_enable_dhcp_nonaddress"`
-	Ipv6EnableRa             types.Bool                             `tfsdk:"ipv6_enable_ra"`
-	Ipv6Addresses            []DevicePhysicalInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
-	NveOnly                  types.Bool                             `tfsdk:"nve_only"`
+type DeviceVNIInterface struct {
+	Id                       types.String                      `tfsdk:"id"`
+	Domain                   types.String                      `tfsdk:"domain"`
+	DeviceId                 types.String                      `tfsdk:"device_id"`
+	VniId                    types.Int64                       `tfsdk:"vni_id"`
+	MulticastGroupAddress    types.String                      `tfsdk:"multicast_group_address"`
+	SegmentId                types.Int64                       `tfsdk:"segment_id"`
+	NveNumber                types.Int64                       `tfsdk:"nve_number"`
+	Enabled                  types.Bool                        `tfsdk:"enabled"`
+	LogicalName              types.String                      `tfsdk:"logical_name"`
+	Description              types.String                      `tfsdk:"description"`
+	Mtu                      types.Int64                       `tfsdk:"mtu"`
+	Priority                 types.Int64                       `tfsdk:"priority"`
+	SecurityZoneId           types.String                      `tfsdk:"security_zone_id"`
+	Ipv4StaticAddress        types.String                      `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask        types.String                      `tfsdk:"ipv4_static_netmask"`
+	Ipv4DhcpObtainRoute      types.Bool                        `tfsdk:"ipv4_dhcp_obtain_route"`
+	Ipv4DhcpRouteMetric      types.Int64                       `tfsdk:"ipv4_dhcp_route_metric"`
+	Ipv6Enable               types.Bool                        `tfsdk:"ipv6_enable"`
+	Ipv6EnforceEui           types.Bool                        `tfsdk:"ipv6_enforce_eui"`
+	Ipv6EnableAutoConfig     types.Bool                        `tfsdk:"ipv6_enable_auto_config"`
+	Ipv6EnableDhcpAddress    types.Bool                        `tfsdk:"ipv6_enable_dhcp_address"`
+	Ipv6EnableDhcpNonaddress types.Bool                        `tfsdk:"ipv6_enable_dhcp_nonaddress"`
+	Ipv6EnableRa             types.Bool                        `tfsdk:"ipv6_enable_ra"`
+	Ipv6Addresses            []DeviceVNIInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
+	EnableProxy              types.Bool                        `tfsdk:"enable_proxy"`
 }
 
-type DevicePhysicalInterfaceIpv6Addresses struct {
+type DeviceVNIInterfaceIpv6Addresses struct {
 	Address    types.String `tfsdk:"address"`
 	Prefix     types.String `tfsdk:"prefix"`
 	EnforceEui types.Bool   `tfsdk:"enforce_eui"`
@@ -71,37 +72,39 @@ type DevicePhysicalInterfaceIpv6Addresses struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data DevicePhysicalInterface) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
+func (data DeviceVNIInterface) getPath() string {
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vniinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhysicalInterface) string {
+func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterface) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
+	if !data.VniId.IsNull() {
+		body, _ = sjson.Set(body, "vniId", data.VniId.ValueInt64())
+	}
+	if !data.MulticastGroupAddress.IsNull() {
+		body, _ = sjson.Set(body, "multicastGroupAddress", data.MulticastGroupAddress.ValueString())
+	}
+	if !data.SegmentId.IsNull() {
+		body, _ = sjson.Set(body, "segmentId", data.SegmentId.ValueInt64())
+	}
+	if !data.NveNumber.IsNull() {
+		body, _ = sjson.Set(body, "vtepID", data.NveNumber.ValueInt64())
+	}
 	if !data.Enabled.IsNull() {
 		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
 	}
-	if !data.Mode.IsNull() {
-		body, _ = sjson.Set(body, "mode", data.Mode.ValueString())
-	}
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
-	body, _ = sjson.Set(body, "type", "PhysicalInterface")
 	if !data.LogicalName.IsNull() {
 		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
-	}
-	if !data.ManagementOnly.IsNull() {
-		body, _ = sjson.Set(body, "managementOnly", data.ManagementOnly.ValueBool())
 	}
 	if !data.Mtu.IsNull() {
 		body, _ = sjson.Set(body, "MTU", data.Mtu.ValueInt64())
@@ -159,8 +162,8 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
 		}
 	}
-	if !data.NveOnly.IsNull() {
-		body, _ = sjson.Set(body, "nveOnly", data.NveOnly.ValueBool())
+	if !data.EnableProxy.IsNull() {
+		body, _ = sjson.Set(body, "enableProxy", data.EnableProxy.ValueBool())
 	}
 	return body
 }
@@ -169,21 +172,31 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Result) {
+func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("vniId"); value.Exists() {
+		data.VniId = types.Int64Value(value.Int())
+	} else {
+		data.VniId = types.Int64Null()
+	}
+	if value := res.Get("multicastGroupAddress"); value.Exists() {
+		data.MulticastGroupAddress = types.StringValue(value.String())
+	} else {
+		data.MulticastGroupAddress = types.StringNull()
+	}
+	if value := res.Get("segmentId"); value.Exists() {
+		data.SegmentId = types.Int64Value(value.Int())
+	} else {
+		data.SegmentId = types.Int64Null()
+	}
+	if value := res.Get("vtepID"); value.Exists() {
+		data.NveNumber = types.Int64Value(value.Int())
+	} else {
+		data.NveNumber = types.Int64Null()
+	}
 	if value := res.Get("enabled"); value.Exists() {
 		data.Enabled = types.BoolValue(value.Bool())
 	} else {
 		data.Enabled = types.BoolValue(true)
-	}
-	if value := res.Get("mode"); value.Exists() {
-		data.Mode = types.StringValue(value.String())
-	} else {
-		data.Mode = types.StringNull()
-	}
-	if value := res.Get("name"); value.Exists() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
@@ -194,11 +207,6 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
-	}
-	if value := res.Get("managementOnly"); value.Exists() {
-		data.ManagementOnly = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementOnly = types.BoolNull()
 	}
 	if value := res.Get("MTU"); value.Exists() {
 		data.Mtu = types.Int64Value(value.Int())
@@ -266,9 +274,9 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6EnableRa = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceVNIInterfaceIpv6Addresses, 0)
 		value.ForEach(func(k, v gjson.Result) bool {
-			item := DevicePhysicalInterfaceIpv6Addresses{}
+			item := DeviceVNIInterfaceIpv6Addresses{}
 			if cValue := v.Get("address"); cValue.Exists() {
 				item.Address = types.StringValue(cValue.String())
 			} else {
@@ -288,10 +296,10 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 			return true
 		})
 	}
-	if value := res.Get("nveOnly"); value.Exists() {
-		data.NveOnly = types.BoolValue(value.Bool())
+	if value := res.Get("enableProxy"); value.Exists() {
+		data.EnableProxy = types.BoolValue(value.Bool())
 	} else {
-		data.NveOnly = types.BoolValue(false)
+		data.EnableProxy = types.BoolValue(false)
 	}
 }
 
@@ -303,21 +311,31 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	if value := res.Get("vniId"); value.Exists() && !data.VniId.IsNull() {
+		data.VniId = types.Int64Value(value.Int())
+	} else {
+		data.VniId = types.Int64Null()
+	}
+	if value := res.Get("multicastGroupAddress"); value.Exists() && !data.MulticastGroupAddress.IsNull() {
+		data.MulticastGroupAddress = types.StringValue(value.String())
+	} else {
+		data.MulticastGroupAddress = types.StringNull()
+	}
+	if value := res.Get("segmentId"); value.Exists() && !data.SegmentId.IsNull() {
+		data.SegmentId = types.Int64Value(value.Int())
+	} else {
+		data.SegmentId = types.Int64Null()
+	}
+	if value := res.Get("vtepID"); value.Exists() && !data.NveNumber.IsNull() {
+		data.NveNumber = types.Int64Value(value.Int())
+	} else {
+		data.NveNumber = types.Int64Null()
+	}
 	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
 		data.Enabled = types.BoolValue(value.Bool())
 	} else if data.Enabled.ValueBool() != true {
 		data.Enabled = types.BoolNull()
-	}
-	if value := res.Get("mode"); value.Exists() && !data.Mode.IsNull() {
-		data.Mode = types.StringValue(value.String())
-	} else {
-		data.Mode = types.StringNull()
-	}
-	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())
@@ -328,11 +346,6 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
-	}
-	if value := res.Get("managementOnly"); value.Exists() && !data.ManagementOnly.IsNull() {
-		data.ManagementOnly = types.BoolValue(value.Bool())
-	} else {
-		data.ManagementOnly = types.BoolNull()
 	}
 	if value := res.Get("MTU"); value.Exists() && !data.Mtu.IsNull() {
 		data.Mtu = types.Int64Value(value.Int())
@@ -447,10 +460,10 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 			data.Ipv6Addresses[i].EnforceEui = types.BoolNull()
 		}
 	}
-	if value := res.Get("nveOnly"); value.Exists() && !data.NveOnly.IsNull() {
-		data.NveOnly = types.BoolValue(value.Bool())
-	} else if data.NveOnly.ValueBool() != false {
-		data.NveOnly = types.BoolNull()
+	if value := res.Get("enableProxy"); value.Exists() && !data.EnableProxy.IsNull() {
+		data.EnableProxy = types.BoolValue(value.Bool())
+	} else if data.EnableProxy.ValueBool() != false {
+		data.EnableProxy = types.BoolNull()
 	}
 }
 
@@ -460,7 +473,7 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *DevicePhysicalInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *DeviceVNIInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 }
 
 // End of section. //template:end fromBodyUnknowns

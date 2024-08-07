@@ -1,6 +1,6 @@
 ---
-name: Device Subinterface
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces
+name: Device VNI Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vniinterfaces
 doc_category: Devices
 test_tags: [TF_VAR_device_id]
 attributes:
@@ -11,71 +11,54 @@ attributes:
     description: UUID of the parent device (fmc_device.example.id).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
-  - model_name: parent # dummy
-    data_path: [links]
-    tf_name: interface_id
-    type: String
-    write_only: true
+  - model_name: vniId
+    type: Int64
+    description: User-created VNI number for the interface, not exposed over the wire.
+    example: "42"
     mandatory: true
     requires_replace: true
-    description: >-
-      UUID of the parent interface (fmc_device_physical_interface.example.id).
-    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_device_physical_interface.test.id
-    minimum_test_value: fmc_device_physical_interface.test.id
+    min_int: 1
+    max_int: 10000
+  - model_name: multicastGroupAddress
+    type: String
+    description:
+      Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to
+      DEFAULT_MULTICAST_GROUP.
+      If unset, the default group from the VTEP source interface is used.
+    example: 224.0.0.24
+  - model_name: segmentId
+    type: Int64
+    description: VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+    min_int: 1
+    max_int: 16777215
+    example: 501
+    minimum_test_value: "401"
+  - model_name: vtepID
+    tf_name: nve_number
+    type: Int64
+    description: VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.
+    min_int: 1
+    max_int: 10000
+    example: 1
+    minimum_test_value: "null"
+    test_value: fmc_device_vtep_policy.test.vteps[0].nve_number
   - model_name: enabled
     type: Bool
-    description: Indicates whether to enable the subinterface.
+    description: Indicates whether to enable the interface.
     default_value: "true"
     test_value: "true"
     exclude_example: true
-  - model_name: name
-    tf_name: interface_name
-    type: String
-    description: >-
-      Name of the parent interface. As the fmc_device_physical_interface.example.name does not propagate
-      dependency adequately on Terraform, the `interface_id` attribute must be always set when creating this managed
-      resource.
-    resource_id: true
-    requires_replace: true
-    exclude_example: true
-    exclude_test: true
-  - model_name: subIntfId
-    tf_name: index
-    type: Int64
-    description: The numerical id of this subinterface, unique on the parent interface.
-    mandatory: true
-    requires_replace: true
-    example: 7
-    min_int: 0
-    max_int: 4294967295 # per API and per UI, despite the spec says int32
-  - model_name: vlanId
-    type: Int64
-    description: >-
-      VLAN identifier, unique per the parent interface. Must be non-empty in order to set
-      `logical_name`, `security_zone_id`, `mtu`.
-    example: 4094
-    min_int: 1
-    max_int: 4094
   - model_name: ifname
     tf_name: logical_name
     type: String
     description: >-
-      Customizable logical name of the subinterface, unique on the device. Should not contain whitespace or slash
-      characters. Can only be set when vlan_id is set. Must be non-empty in order to set `security_zone_id` or `mtu`.
-    example: mysubinterface-0-1.7
+      Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
+      characters. Can only be used when `segment_id` is set.
+    example: vni42
   - model_name: description
     type: String
     description: Optional user-created description.
     example: my description
-  - model_name: managementOnly
-    type: Bool
-    description: >-
-      Indicates whether this subinterface limits traffic to management traffic; when true, through-the-box traffic is
-      disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-    minimum_test_value: "true"
-    test_value: "false"
-    exclude_example: true
   - model_name: MTU
     tf_name: mtu
     type: Int64
@@ -84,7 +67,7 @@ attributes:
     exclude_test: true
   - model_name: priority
     type: Int64
-    description: Priority 0-65535. Can only be set for routed subinterfaces.
+    description: Priority 0-65535.
     exclude_example: true
     exclude_test: true
   - model_name: id
@@ -92,10 +75,11 @@ attributes:
     tf_name: security_zone_id
     type: String
     description: >-
-      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name
+      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when `logical_name`
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_security_zone.test.id
+    minimum_test_value: "null"
   - model_name: type
     data_path: [securityZone]
     type: String
@@ -104,7 +88,7 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
     type: String
-    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    description: Static IPv4 address.
     example: "10.2.2.2"
   - model_name: netmask
     data_path: [ipv4, static]
@@ -146,7 +130,8 @@ attributes:
     tf_name: ipv6_enforce_eui
     description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
     type: Bool
-    example: "true"
+    exclude_example: true
+    test_value: "true"
   - model_name: enableAutoConfig
     data_path: [ipv6]
     tf_name: ipv6_enable_auto_config
@@ -158,40 +143,52 @@ attributes:
     tf_name: ipv6_enable_dhcp_address
     description: Indicates whether to enable DHCPv6 for address config.
     type: Bool
-    example: "true"
+    exclude_example: true
+    exclude_test: true
   - model_name: enableDHCPNonAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_enable_dhcp_nonaddress
     description: Indicates whether to enable DHCPv6 for non-address config.
     type: Bool
-    example: "true"
+    exclude_example: true
+    exclude_test: true
   - model_name: enableRA
     data_path: [ipv6]
     tf_name: ipv6_enable_ra
     description: Indicates whether to enable IPv6 router advertisement (RA).
     type: Bool
-    example: "false"
+    exclude_example: true
+    exclude_test: true
   - model_name: addresses
     data_path: [ipv6]
     tf_name: ipv6_addresses
     type: List
+    exclude_example: true
     attributes:
       - model_name: address
         type: String
         description: IPv6 address without a slash and prefix.
         id: true
-        example: "2005::"
+        exclude_example: true
+        test_value: '"2005::"'
       - model_name: prefix
         type: String
         description: Prefix width for the IPv6 address.
         id: true
-        example: "124"
+        exclude_example: true
+        test_value: "56"
       - model_name: enforceEUI64
         tf_name: enforce_eui
         description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
         exclude_example: true
-        test_value: "true"
+        test_value: "false"
+  - model_name: enableProxy
+    type: Bool
+    description: Indicates whether to enable proxy.
+    default_value: "false"
+    exclude_example: true
+    exclude_test: true
 
 test_prerequisites: |-
   resource "fmc_device_physical_interface" "test" {
@@ -202,52 +199,19 @@ test_prerequisites: |-
     mtu          = 9000
   }
 
+  resource "fmc_device_vtep_policy" "test" {
+    device_id = var.device_id
+    vteps = [{
+      nve_number               = 1
+      source_interface_id      = fmc_device_physical_interface.test.id
+      neighbor_discovery       = "DEFAULT_MULTICAST_GROUP"
+      neighbor_address_literal = "224.0.0.1"
+    }]
+  }
+
   resource "fmc_security_zone" "test" {
     name           = "routed1"
     interface_mode = "ROUTED"
   }
 
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
-
-# These are only present in the fmc_physical_interface, but not on subinterface:
-#          "nveOnly": {
-#            "type": "boolean"
-#          },
-#          "hardware": {
-#            "type": "object",
-#            "$ref": "#/components/schemas/IHardwareContainer"
-#          },
-#          "lacpMode": {
-#            "type": "string",
-#            "enum": [
-#              "ACTIVE",
-#              "PASSIVE",
-#              "ON"
-#            ]
-#          },
-#          "channelGroupId": {
-#            "type": "integer",
-#            "format": "int32"
-#          },
-#          "switchPortConfig": {
-#            "type": "object",
-#            "$ref": "#/components/schemas/ISwitchPortConfig"
-#          },
-#          "isRedundantMember": {
-#            "type": "boolean"
-#          },
-#          "powerOverEthernet": {
-#            "type": "object",
-#            "$ref": "#/components/schemas/IPoeConfig"
-#          },
-#          "LLDP": {
-#            "type": "object",
-#            "$ref": "#/components/schemas/LLDPContainer"
-#          },
-#          "erspanFlowId": {
-#            "type": "integer",
-#            "format": "int32"
-#          },
-#          "erspanSourceIP": {
-#            "type": "string"
-#          },

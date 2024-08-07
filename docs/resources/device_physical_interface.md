@@ -50,12 +50,12 @@ resource "fmc_device_physical_interface" "example" {
 
 ### Optional
 
-- `description` (String)
+- `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
 - `enabled` (Boolean) Indicates whether to enable the interface.
   - Default value: `true`
-- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_netmask.
-- `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_netmask.
+- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+- `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.
   - Range: `1`-`255`
 - `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
 - `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
@@ -69,6 +69,8 @@ resource "fmc_device_physical_interface" "example" {
 - `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
+- `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
+  - Default value: `false`
 - `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
 - `security_zone_id` (String) UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.
 

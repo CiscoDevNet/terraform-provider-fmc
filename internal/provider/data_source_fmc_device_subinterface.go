@@ -94,7 +94,7 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Optional user-created description.",
 				Computed:            true,
 			},
 			"management_only": schema.BoolAttribute{
@@ -122,11 +122,11 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_netmask.",
+				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_route_metric": schema.Int64Attribute{
-				MarkdownDescription: "The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_netmask.",
+				MarkdownDescription: "The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.",
 				Computed:            true,
 			},
 			"ipv6_enable": schema.BoolAttribute{

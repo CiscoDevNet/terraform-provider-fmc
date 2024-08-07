@@ -77,12 +77,12 @@ func TestAccFmcDevice(t *testing.T) {
 
 const testAccFmcDevicePrerequisitesConfig = `
 resource "fmc_access_control_policy" "minimum" {
-  name = "POLICY1"
+  name = "test_fmc_device_1"
   default_action = "BLOCK"
 }
 
 resource "fmc_access_control_policy" "test" {
-  name = "POLICY2"
+  name = "test_fmc_device_2"
   default_action = "PERMIT"
 }
 

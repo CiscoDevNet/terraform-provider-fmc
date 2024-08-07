@@ -50,12 +50,12 @@ resource "fmc_device_subinterface" "example" {
 
 ### Optional
 
-- `description` (String)
+- `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
 - `enabled` (Boolean) Indicates whether to enable the subinterface.
   - Default value: `true`
-- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_netmask.
-- `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_netmask.
+- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+- `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.
   - Range: `1`-`255`
 - `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
 - `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.

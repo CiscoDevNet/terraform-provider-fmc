@@ -23,14 +23,10 @@ import (
 	"fmt"
 	"net/url"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/path"
-	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -39,32 +35,31 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DevicePhysicalInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &DevicePhysicalInterfaceDataSource{}
+	_ datasource.DataSource              = &DeviceVNIInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceVNIInterfaceDataSource{}
 )
 
-func NewDevicePhysicalInterfaceDataSource() datasource.DataSource {
-	return &DevicePhysicalInterfaceDataSource{}
+func NewDeviceVNIInterfaceDataSource() datasource.DataSource {
+	return &DeviceVNIInterfaceDataSource{}
 }
 
-type DevicePhysicalInterfaceDataSource struct {
+type DeviceVNIInterfaceDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_physical_interface"
+func (d *DeviceVNIInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_vni_interface"
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device Physical Interface.",
+		MarkdownDescription: "This data source can read the Device VNI Interface.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "The id of the object",
-				Optional:            true,
-				Computed:            true,
+				Required:            true,
 			},
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The name of the FMC domain",
@@ -74,45 +69,48 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
 				Required:            true,
 			},
+			"vni_id": schema.Int64Attribute{
+				MarkdownDescription: "User-created VNI number for the interface, not exposed over the wire.",
+				Computed:            true,
+			},
+			"multicast_group_address": schema.StringAttribute{
+				MarkdownDescription: "Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to DEFAULT_MULTICAST_GROUP. If unset, the default group from the VTEP source interface is used.",
+				Computed:            true,
+			},
+			"segment_id": schema.Int64Attribute{
+				MarkdownDescription: "VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.",
+				Computed:            true,
+			},
+			"nve_number": schema.Int64Attribute{
+				MarkdownDescription: "VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.",
+				Computed:            true,
+			},
 			"enabled": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable the interface.",
 				Computed:            true,
 			},
-			"mode": schema.StringAttribute{
-				MarkdownDescription: "Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.",
-				Computed:            true,
-			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the interface; it must already be present on the device.",
-				Optional:            true,
-				Computed:            true,
-			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.",
+				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Optional user-created description.",
 				Computed:            true,
 			},
-			"management_only": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.",
-				Computed:            true,
-			},
 			"mtu": schema.Int64Attribute{
-				MarkdownDescription: "Maximum transmission unit. Can only be used when logical_name is set.",
+				MarkdownDescription: "Maximum transmission unit. Can only be used when logical_name is set on the parent interface.",
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: "Priority 0-65535. Can only be set for routed interfaces.",
+				MarkdownDescription: "Priority 0-65535.",
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.",
+				MarkdownDescription: "UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when `logical_name` is set.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
-				MarkdownDescription: "Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.",
+				MarkdownDescription: "Static IPv4 address.",
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
@@ -171,23 +169,15 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 					},
 				},
 			},
-			"nve_only": schema.BoolAttribute{
-				MarkdownDescription: "Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.",
+			"enable_proxy": schema.BoolAttribute{
+				MarkdownDescription: "Indicates whether to enable proxy.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *DevicePhysicalInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
-	return []datasource.ConfigValidator{
-		datasourcevalidator.ExactlyOneOf(
-			path.MatchRoot("id"),
-			path.MatchRoot("name"),
-		),
-	}
-}
 
-func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceVNIInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -199,8 +189,8 @@ func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req dat
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DevicePhysicalInterface
+func (d *DeviceVNIInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceVNIInterface
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -216,37 +206,6 @@ func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req dataso
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
-	if config.Id.IsNull() && !config.Name.IsNull() {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
-			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("name").String() {
-						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
-						return false
-					}
-					return true
-				})
-			}
-			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
-			return
-		}
-	}
 
 	res, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString()), reqMods...)
 	if err != nil {

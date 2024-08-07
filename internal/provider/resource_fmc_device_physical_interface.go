@@ -111,7 +111,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
 				Optional:            true,
 			},
 			"management_only": schema.BoolAttribute{
@@ -139,11 +139,11 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_netmask.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
 				Optional:            true,
 			},
 			"ipv4_dhcp_route_metric": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_netmask.").AddIntegerRangeDescription(1, 255).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.").AddIntegerRangeDescription(1, 255).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 255),
@@ -192,6 +192,12 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 						},
 					},
 				},
+			},
+			"nve_only": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.").AddDefaultValueDescription("false").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
 			},
 		},
 	}

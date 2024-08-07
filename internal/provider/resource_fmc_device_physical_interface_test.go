@@ -116,8 +116,9 @@ func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config += `	ipv6_addresses = [{` + "\n"
 	config += `		address = "2004::"` + "\n"
 	config += `		prefix = "124"` + "\n"
-	config += `		enforce_eui = "true"` + "\n"
+	config += `		enforce_eui = true` + "\n"
 	config += `	}]` + "\n"
+	config += `	nve_only = false` + "\n"
 	config += `}` + "\n"
 	return config
 }

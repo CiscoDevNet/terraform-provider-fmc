@@ -29,34 +29,29 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcDeviceSubinterface(t *testing.T) {
+func TestAccFmcDeviceVNIInterface(t *testing.T) {
 	if os.Getenv("TF_VAR_device_id") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "index", "7"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "vlan_id", "4094"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "logical_name", "mysubinterface-0-1.7"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "description", "my description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv4_static_address", "10.2.2.2"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv4_static_netmask", "24"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enforce_eui", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enable_auto_config", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enable_dhcp_address", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enable_dhcp_nonaddress", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_enable_ra", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_addresses.0.address", "2005::"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "ipv6_addresses.0.prefix", "124"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "vni_id", "42"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "multicast_group_address", "224.0.0.24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "segment_id", "501"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "logical_name", "vni42"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "description", "my description"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "ipv4_static_address", "10.2.2.2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "ipv4_static_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "ipv6_enable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "ipv6_enable_auto_config", "true"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDeviceSubinterfacePrerequisitesConfig + testAccFmcDeviceSubinterfaceConfig_minimum(),
+			Config: testAccFmcDeviceVNIInterfacePrerequisitesConfig + testAccFmcDeviceVNIInterfaceConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDeviceSubinterfacePrerequisitesConfig + testAccFmcDeviceSubinterfaceConfig_all(),
+		Config: testAccFmcDeviceVNIInterfacePrerequisitesConfig + testAccFmcDeviceVNIInterfaceConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -71,13 +66,23 @@ func TestAccFmcDeviceSubinterface(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
-const testAccFmcDeviceSubinterfacePrerequisitesConfig = `
+const testAccFmcDeviceVNIInterfacePrerequisitesConfig = `
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
   name         = "GigabitEthernet0/1"
   mode         = "NONE"
   logical_name = "myinterface-0-1"
   mtu          = 9000
+}
+
+resource "fmc_device_vtep_policy" "test" {
+  device_id = var.device_id
+  vteps = [{
+    nve_number               = 1
+    source_interface_id      = fmc_device_physical_interface.test.id
+    neighbor_discovery       = "DEFAULT_MULTICAST_GROUP"
+    neighbor_address_literal = "224.0.0.1"
+  }]
 }
 
 resource "fmc_security_zone" "test" {
@@ -92,12 +97,13 @@ variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcDeviceSubinterfaceConfig_minimum() string {
-	config := `resource "fmc_device_subinterface" "test" {` + "\n"
+func testAccFmcDeviceVNIInterfaceConfig_minimum() string {
+	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
-	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
-	config += `	index = 7` + "\n"
-	config += `	management_only = true` + "\n"
+	config += `	vni_id = 42` + "\n"
+	config += `	segment_id = 401` + "\n"
+	config += `	nve_number = null` + "\n"
+	config += `	security_zone_id = null` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -106,29 +112,26 @@ func testAccFmcDeviceSubinterfaceConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcDeviceSubinterfaceConfig_all() string {
-	config := `resource "fmc_device_subinterface" "test" {` + "\n"
+func testAccFmcDeviceVNIInterfaceConfig_all() string {
+	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
 	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
-	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `	vni_id = 42` + "\n"
+	config += `	multicast_group_address = "224.0.0.24"` + "\n"
+	config += `	segment_id = 501` + "\n"
+	config += `	nve_number = fmc_device_vtep_policy.test.vteps[0].nve_number` + "\n"
 	config += `	enabled = true` + "\n"
-	config += `	index = 7` + "\n"
-	config += `	vlan_id = 4094` + "\n"
-	config += `	logical_name = "mysubinterface-0-1.7"` + "\n"
+	config += `	logical_name = "vni42"` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	management_only = false` + "\n"
 	config += `	security_zone_id = fmc_security_zone.test.id` + "\n"
 	config += `	ipv4_static_address = "10.2.2.2"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ipv6_enable = true` + "\n"
 	config += `	ipv6_enforce_eui = true` + "\n"
 	config += `	ipv6_enable_auto_config = true` + "\n"
-	config += `	ipv6_enable_dhcp_address = true` + "\n"
-	config += `	ipv6_enable_dhcp_nonaddress = true` + "\n"
-	config += `	ipv6_enable_ra = false` + "\n"
 	config += `	ipv6_addresses = [{` + "\n"
 	config += `		address = "2005::"` + "\n"
-	config += `		prefix = "124"` + "\n"
-	config += `		enforce_eui = true` + "\n"
+	config += `		prefix = 56` + "\n"
+	config += `		enforce_eui = false` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
