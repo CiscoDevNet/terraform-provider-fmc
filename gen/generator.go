@@ -95,6 +95,7 @@ var templates = []t{
 
 type YamlConfig struct {
 	Name                string                `yaml:"name"`
+	TfName              string                `yaml:"tf_name"`
 	RestEndpoint        string                `yaml:"rest_endpoint"`
 	PutCreate           bool                  `yaml:"put_create"`
 	NoUpdate            bool                  `yaml:"no_update"`
@@ -135,6 +136,7 @@ type YamlConfigAttribute struct {
 	MaxInt           int64                 `yaml:"max_int"`
 	MinFloat         float64               `yaml:"min_float"`
 	MaxFloat         float64               `yaml:"max_float"`
+	MapKeyExample    string                `yaml:"map_key_example"`
 	OrderedList      bool                  `yaml:"ordered_list"`
 	StringPatterns   []string              `yaml:"string_patterns"`
 	StringMinLength  int64                 `yaml:"string_min_length"`
@@ -145,6 +147,7 @@ type YamlConfigAttribute struct {
 	MinimumTestValue string                `yaml:"minimum_test_value"`
 	TestTags         []string              `yaml:"test_tags"`
 	Attributes       []YamlConfigAttribute `yaml:"attributes"`
+	GoTypeName       string
 }
 
 // Templating helper function to convert TF name to GO name
@@ -280,6 +283,14 @@ func IsInt64ListSet(attribute YamlConfigAttribute) bool {
 	return false
 }
 
+// Templating helper function to return true if type is a list or a map or a set, anyway with nested elements
+func IsNestedListMapSet(attribute YamlConfigAttribute) bool {
+	if (attribute.Type == "List" || attribute.Type == "Map" || attribute.Type == "Set") && attribute.ElementType == "" {
+		return true
+	}
+	return false
+}
+
 // Templating helper function to return true if type is a list or set with nested elements
 func IsNestedListSet(attribute YamlConfigAttribute) bool {
 	if (attribute.Type == "List" || attribute.Type == "Set") && attribute.ElementType == "" {
@@ -291,6 +302,14 @@ func IsNestedListSet(attribute YamlConfigAttribute) bool {
 // Templating helper function to return true if type is a list with nested elements
 func IsNestedList(attribute YamlConfigAttribute) bool {
 	if attribute.Type == "List" && attribute.ElementType == "" {
+		return true
+	}
+	return false
+}
+
+// Templating helper function to return true if type is a map with nested elements
+func IsNestedMap(attribute YamlConfigAttribute) bool {
+	if attribute.Type == "Map" && attribute.ElementType == "" {
 		return true
 	}
 	return false
@@ -324,29 +343,32 @@ func Subtract(a, b int) int {
 
 // Map of templating functions
 var functions = template.FuncMap{
-	"toGoName":        ToGoName,
-	"camelCase":       CamelCase,
-	"snakeCase":       SnakeCase,
-	"sprintf":         fmt.Sprintf,
-	"errorf":          Errorf,
-	"toLower":         strings.ToLower,
-	"path":            BuildPath,
-	"hasId":           HasId,
-	"hasReference":    HasReference,
-	"hasResourceId":   HasResourceId,
-	"isListSet":       IsListSet,
-	"isList":          IsList,
-	"isSet":           IsSet,
-	"isStringListSet": IsStringListSet,
-	"isInt64ListSet":  IsInt64ListSet,
-	"isNestedListSet": IsNestedListSet,
-	"isNestedList":    IsNestedList,
-	"isNestedSet":     IsNestedSet,
-	"importParts":     ImportParts,
-	"subtract":        Subtract,
+	"toGoName":           ToGoName,
+	"camelCase":          CamelCase,
+	"snakeCase":          SnakeCase,
+	"sprintf":            fmt.Sprintf,
+	"errorf":             Errorf,
+	"toLower":            strings.ToLower,
+	"path":               BuildPath,
+	"hasId":              HasId,
+	"hasReference":       HasReference,
+	"hasResourceId":      HasResourceId,
+	"isListSet":          IsListSet,
+	"isList":             IsList,
+	"isSet":              IsSet,
+	"isStringListSet":    IsStringListSet,
+	"isInt64ListSet":     IsInt64ListSet,
+	"isNestedListMapSet": IsNestedListMapSet,
+	"isNestedListSet":    IsNestedListSet,
+	"isNestedList":       IsNestedList,
+	"isNestedMap":        IsNestedMap,
+	"isNestedSet":        IsNestedSet,
+	"importParts":        ImportParts,
+	"subtract":           Subtract,
 }
 
-func augmentAttribute(attr *YamlConfigAttribute) {
+func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
+	// Augument
 	if attr.TfName == "" {
 		var words []string
 		l := 0
@@ -359,16 +381,60 @@ func augmentAttribute(attr *YamlConfigAttribute) {
 		}
 		attr.TfName = strings.Join(words, "_")
 	}
-	if attr.Type == "List" || attr.Type == "Set" {
-		for a := range attr.Attributes {
-			augmentAttribute(&attr.Attributes[a])
+
+	attr.GoTypeName = parentGoTypeName + ToGoName(attr.TfName)
+
+	// Validate
+	if len(attr.Attributes) > 0 && attr.Type != "List" && attr.Type != "Map" && attr.Type != "Set" {
+		return fmt.Errorf("%q has type %q which cannot have `attributes`: instead use type List, Map, Set",
+			attr.TfName, attr.Type)
+	}
+
+	if len(attr.Attributes) > 0 && attr.ElementType != "" {
+		return fmt.Errorf("%q: either `attributes` or `element_type` can be specified, but not both", attr.TfName)
+	}
+
+	if attr.Type == "Map" && attr.ElementType != "" {
+		return fmt.Errorf("%q: the `element_type` is not yet implemented for type Map", attr.TfName)
+	}
+
+	if attr.OrderedList {
+		if attr.Type != "List" {
+			return fmt.Errorf("%q has type %q which cannot use `ordered_list`: instead use type List",
+				attr.TfName, attr.Type)
+		}
+		if HasId(attr.Attributes) {
+			return fmt.Errorf("%q: the `ordered_list: true` conflicts with sub-attributes having `id: true`, as it treats list index ([i]) as the only unique id",
+				attr.TfName)
 		}
 	}
+
+	if attr.Type == "Map" && HasId(attr.Attributes) {
+		return fmt.Errorf("Map %q cannot contain sub-attributes with `id: true`, as it treats map key ([k]) as the only unique id",
+			attr.TfName)
+	}
+
+	// Recurse
+	for i := range attr.Attributes {
+		if err := attr.Attributes[i].init(attr.GoTypeName); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
-func augmentConfig(config *YamlConfig) {
-	for ia := range config.Attributes {
-		augmentAttribute(&config.Attributes[ia])
+func NewYamlConfig(bytes []byte) (YamlConfig, error) {
+	var config YamlConfig
+
+	if err := yaml.Unmarshal(bytes, &config); err != nil {
+		return config, err
+	}
+
+	for i := range config.Attributes {
+		if err := config.Attributes[i].init(CamelCase(config.Name)); err != nil {
+			return YamlConfig{}, err
+		}
 	}
 	if config.DsDescription == "" {
 		config.DsDescription = fmt.Sprintf("This data source can read the %s.", config.Name)
@@ -381,6 +447,11 @@ func augmentConfig(config *YamlConfig) {
 			config.ResDescription = fmt.Sprintf("This resource can manage a %s.", config.Name)
 		}
 	}
+	if config.TfName == "" {
+		config.TfName = strings.Replace(config.Name, " ", "_", -1)
+	}
+
+	return config, nil
 }
 
 func getTemplateSection(content, name string) string {
@@ -433,7 +504,7 @@ func renderTemplate(templatePath, outputPath string, config interface{}) {
 	output := new(bytes.Buffer)
 	err = template.Execute(output, config)
 	if err != nil {
-		log.Fatalf("Error executing template: %v", err)
+		log.Fatalf("Error executing template for %s: %v", outputPath, err)
 	}
 
 	outputFile := filepath.Join(outputPath)
@@ -475,30 +546,26 @@ func renderTemplate(templatePath, outputPath string, config interface{}) {
 }
 
 func main() {
-	providerConfig := make([]string, 0)
-
-	files, _ := os.ReadDir(definitionsPath)
-	configs := make([]YamlConfig, len(files))
-
 	// Load configs
-	for i, filename := range files {
-		yamlFile, err := os.ReadFile(filepath.Join(definitionsPath, filename.Name()))
+	var configs []YamlConfig
+	files, _ := os.ReadDir(definitionsPath)
+
+	for _, filename := range files {
+		path := filepath.Join(definitionsPath, filename.Name())
+		bytes, err := os.ReadFile(path)
 		if err != nil {
-			log.Fatalf("Error reading file: %v", err)
+			log.Fatalf("Error reading file %q: %v", path, err)
 		}
 
-		config := YamlConfig{}
-		err = yaml.Unmarshal(yamlFile, &config)
+		config, err := NewYamlConfig(bytes)
 		if err != nil {
-			log.Fatalf("Error parsing yaml: %v", err)
+			log.Fatalf("Error parsing %q: %v", path, err)
 		}
-		configs[i] = config
+		configs = append(configs, config)
 	}
 
+	var providerConfig []string
 	for i := range configs {
-		// Augment config
-		augmentConfig(&configs[i])
-
 		// Iterate over templates and render files
 		for _, t := range templates {
 			renderTemplate(t.path, t.prefix+SnakeCase(configs[i].Name)+t.suffix, configs[i])
@@ -511,7 +578,7 @@ func main() {
 
 	changelog, err := os.ReadFile(changelogOriginal)
 	if err != nil {
-		log.Fatalf("Error reading changelog: %v", err)
+		log.Fatalf("Error reading %q: %v", changelogOriginal, err)
 	}
 	renderTemplate(changelogTemplate, changelogLocation, string(changelog))
 }

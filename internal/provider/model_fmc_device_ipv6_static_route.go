@@ -111,14 +111,15 @@ func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 	}
 	if value := res.Get("selectedNetworks"); value.Exists() {
 		data.DestinationNetworks = make([]DeviceIPv6StaticRouteDestinationNetworks, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := DeviceIPv6StaticRouteDestinationNetworks{}
-			if cValue := v.Get("id"); cValue.Exists() {
-				item.Id = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceIPv6StaticRouteDestinationNetworks{}
+			if value := res.Get("id"); value.Exists() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				item.Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
-			data.DestinationNetworks = append(data.DestinationNetworks, item)
+			(*parent).DestinationNetworks = append((*parent).DestinationNetworks, data)
 			return true
 		})
 	}
@@ -162,8 +163,12 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DestinationNetworks[i].Id.ValueString()}
 
-		var r gjson.Result
-		res.Get("selectedNetworks").ForEach(
+		parent := &data
+		data := (*parent).DestinationNetworks[i]
+		parentRes := &res
+		var res gjson.Result
+
+		parentRes.Get("selectedNetworks").ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -174,27 +179,28 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 					found = true
 				}
 				if found {
-					r = v
+					res = v
 					return false
 				}
 				return true
 			},
 		)
-		if !r.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing data.DestinationNetworks[%d] = %+v",
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworks[%d] = %+v",
 				i,
-				data.DestinationNetworks[i],
+				(*parent).DestinationNetworks[i],
 			))
-			data.DestinationNetworks = slices.Delete(data.DestinationNetworks, i, i+1)
+			(*parent).DestinationNetworks = slices.Delete((*parent).DestinationNetworks, i, i+1)
 			i--
 
 			continue
 		}
-		if value := r.Get("id"); value.Exists() && !data.DestinationNetworks[i].Id.IsNull() {
-			data.DestinationNetworks[i].Id = types.StringValue(value.String())
+		if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+			data.Id = types.StringValue(value.String())
 		} else {
-			data.DestinationNetworks[i].Id = types.StringNull()
+			data.Id = types.StringNull()
 		}
+		(*parent).DestinationNetworks[i] = data
 	}
 	if value := res.Get("metricValue"); value.Exists() && !data.MetricValue.IsNull() {
 		data.MetricValue = types.Int64Value(value.Int())

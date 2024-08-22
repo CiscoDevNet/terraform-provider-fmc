@@ -267,24 +267,25 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := DevicePhysicalInterfaceIpv6Addresses{}
-			if cValue := v.Get("address"); cValue.Exists() {
-				item.Address = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DevicePhysicalInterfaceIpv6Addresses{}
+			if value := res.Get("address"); value.Exists() {
+				data.Address = types.StringValue(value.String())
 			} else {
-				item.Address = types.StringNull()
+				data.Address = types.StringNull()
 			}
-			if cValue := v.Get("prefix"); cValue.Exists() {
-				item.Prefix = types.StringValue(cValue.String())
+			if value := res.Get("prefix"); value.Exists() {
+				data.Prefix = types.StringValue(value.String())
 			} else {
-				item.Prefix = types.StringNull()
+				data.Prefix = types.StringNull()
 			}
-			if cValue := v.Get("enforceEUI64"); cValue.Exists() {
-				item.EnforceEui = types.BoolValue(cValue.Bool())
+			if value := res.Get("enforceEUI64"); value.Exists() {
+				data.EnforceEui = types.BoolValue(value.Bool())
 			} else {
-				item.EnforceEui = types.BoolNull()
+				data.EnforceEui = types.BoolNull()
 			}
-			data.Ipv6Addresses = append(data.Ipv6Addresses, item)
+			(*parent).Ipv6Addresses = append((*parent).Ipv6Addresses, data)
 			return true
 		})
 	}
@@ -403,8 +404,12 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
-		var r gjson.Result
-		res.Get("ipv6.addresses").ForEach(
+		parent := &data
+		data := (*parent).Ipv6Addresses[i]
+		parentRes := &res
+		var res gjson.Result
+
+		parentRes.Get("ipv6.addresses").ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -415,37 +420,38 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 					found = true
 				}
 				if found {
-					r = v
+					res = v
 					return false
 				}
 				return true
 			},
 		)
-		if !r.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing data.Ipv6Addresses[%d] = %+v",
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing Ipv6Addresses[%d] = %+v",
 				i,
-				data.Ipv6Addresses[i],
+				(*parent).Ipv6Addresses[i],
 			))
-			data.Ipv6Addresses = slices.Delete(data.Ipv6Addresses, i, i+1)
+			(*parent).Ipv6Addresses = slices.Delete((*parent).Ipv6Addresses, i, i+1)
 			i--
 
 			continue
 		}
-		if value := r.Get("address"); value.Exists() && !data.Ipv6Addresses[i].Address.IsNull() {
-			data.Ipv6Addresses[i].Address = types.StringValue(value.String())
+		if value := res.Get("address"); value.Exists() && !data.Address.IsNull() {
+			data.Address = types.StringValue(value.String())
 		} else {
-			data.Ipv6Addresses[i].Address = types.StringNull()
+			data.Address = types.StringNull()
 		}
-		if value := r.Get("prefix"); value.Exists() && !data.Ipv6Addresses[i].Prefix.IsNull() {
-			data.Ipv6Addresses[i].Prefix = types.StringValue(value.String())
+		if value := res.Get("prefix"); value.Exists() && !data.Prefix.IsNull() {
+			data.Prefix = types.StringValue(value.String())
 		} else {
-			data.Ipv6Addresses[i].Prefix = types.StringNull()
+			data.Prefix = types.StringNull()
 		}
-		if value := r.Get("enforceEUI64"); value.Exists() && !data.Ipv6Addresses[i].EnforceEui.IsNull() {
-			data.Ipv6Addresses[i].EnforceEui = types.BoolValue(value.Bool())
+		if value := res.Get("enforceEUI64"); value.Exists() && !data.EnforceEui.IsNull() {
+			data.EnforceEui = types.BoolValue(value.Bool())
 		} else {
-			data.Ipv6Addresses[i].EnforceEui = types.BoolNull()
+			data.EnforceEui = types.BoolNull()
 		}
+		(*parent).Ipv6Addresses[i] = data
 	}
 	if value := res.Get("nveOnly"); value.Exists() && !data.NveOnly.IsNull() {
 		data.NveOnly = types.BoolValue(value.Bool())

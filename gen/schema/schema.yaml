@@ -17,7 +17,7 @@ test_prerequisites: str(required=False) # HCL code that is included in the accep
 attribute:
   model_name: str(required=False) # Name of the attribute in the model (payload)
   tf_name: str(required=False) # Name of the attribute in the Terraform resource, by default derived from model_name
-  type: enum('String', 'Int64', 'Float', 'Bool', 'List', 'Set', required=False) # Type of the attribute
+  type: enum('String', 'Int64', 'Float', 'Bool', 'List', 'Map', 'Set', required=False) # Type of the attribute
   element_type: enum('String', 'Int64', required=False) # only relevant if type is either 'List' or 'Set'
   data_path: list(str(), required=False) # Path to the attribute in the model structure
   id: bool(required=False) # Set to true if the attribute is part of the ID
@@ -38,6 +38,7 @@ attribute:
   max_int: int(required=False) # Maximum value of an integer, only relevant if type is "Int64"
   min_float: num(required=False) # Minimum value of a float, only relevant if type is "Float"
   max_float: num(required=False) # Maximum value of a float, only relevant if type is "Float"
+  map_key_example: str(required=False) # Example value of the map key, only relevant if type is "Map"
   ordered_list: bool(required=False) # Treat `type: List` as strictly ordered. If API ever returns different order, destroy and re-create elements.
   string_patterns: list(str(), required=False) # List of regular expressions that the string must match, only relevant if type is "String"
   string_min_length: int(required=False) # Minimum length of a string, only relevant if type is "String"
