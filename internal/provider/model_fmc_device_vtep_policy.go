@@ -115,44 +115,45 @@ func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("vtepEntries"); value.Exists() {
 		data.Vteps = make([]DeviceVTEPPolicyVteps, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := DeviceVTEPPolicyVteps{}
-			if cValue := v.Get("sourceInterface.id"); cValue.Exists() {
-				item.SourceInterfaceId = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceVTEPPolicyVteps{}
+			if value := res.Get("sourceInterface.id"); value.Exists() {
+				data.SourceInterfaceId = types.StringValue(value.String())
 			} else {
-				item.SourceInterfaceId = types.StringNull()
+				data.SourceInterfaceId = types.StringNull()
 			}
-			if cValue := v.Get("nveVtepId"); cValue.Exists() {
-				item.NveNumber = types.Int64Value(cValue.Int())
+			if value := res.Get("nveVtepId"); value.Exists() {
+				data.NveNumber = types.Int64Value(value.Int())
 			} else {
-				item.NveNumber = types.Int64Null()
+				data.NveNumber = types.Int64Null()
 			}
-			if cValue := v.Get("nveDestinationPort"); cValue.Exists() {
-				item.EncapsulationPort = types.Int64Value(cValue.Int())
+			if value := res.Get("nveDestinationPort"); value.Exists() {
+				data.EncapsulationPort = types.Int64Value(value.Int())
 			} else {
-				item.EncapsulationPort = types.Int64Value(4789)
+				data.EncapsulationPort = types.Int64Value(4789)
 			}
-			if cValue := v.Get("nveEncapsulationType"); cValue.Exists() {
-				item.EncapsulationType = types.StringValue(cValue.String())
+			if value := res.Get("nveEncapsulationType"); value.Exists() {
+				data.EncapsulationType = types.StringValue(value.String())
 			} else {
-				item.EncapsulationType = types.StringValue("VXLAN")
+				data.EncapsulationType = types.StringValue("VXLAN")
 			}
-			if cValue := v.Get("nveNeighborDiscoveryType"); cValue.Exists() {
-				item.NeighborDiscovery = types.StringValue(cValue.String())
+			if value := res.Get("nveNeighborDiscoveryType"); value.Exists() {
+				data.NeighborDiscovery = types.StringValue(value.String())
 			} else {
-				item.NeighborDiscovery = types.StringNull()
+				data.NeighborDiscovery = types.StringNull()
 			}
-			if cValue := v.Get("nveNeighborAddress.literal.value"); cValue.Exists() {
-				item.NeighborAddressLiteral = types.StringValue(cValue.String())
+			if value := res.Get("nveNeighborAddress.literal.value"); value.Exists() {
+				data.NeighborAddressLiteral = types.StringValue(value.String())
 			} else {
-				item.NeighborAddressLiteral = types.StringNull()
+				data.NeighborAddressLiteral = types.StringNull()
 			}
-			if cValue := v.Get("nveNeighborAddress.object.id"); cValue.Exists() {
-				item.NeighborAddressId = types.StringValue(cValue.String())
+			if value := res.Get("nveNeighborAddress.object.id"); value.Exists() {
+				data.NeighborAddressId = types.StringValue(value.String())
 			} else {
-				item.NeighborAddressId = types.StringNull()
+				data.NeighborAddressId = types.StringNull()
 			}
-			data.Vteps = append(data.Vteps, item)
+			(*parent).Vteps = append((*parent).Vteps, data)
 			return true
 		})
 	}
@@ -176,8 +177,12 @@ func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Res
 		keys := [...]string{"sourceInterface.id"}
 		keyValues := [...]string{data.Vteps[i].SourceInterfaceId.ValueString()}
 
-		var r gjson.Result
-		res.Get("vtepEntries").ForEach(
+		parent := &data
+		data := (*parent).Vteps[i]
+		parentRes := &res
+		var res gjson.Result
+
+		parentRes.Get("vtepEntries").ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -188,57 +193,58 @@ func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Res
 					found = true
 				}
 				if found {
-					r = v
+					res = v
 					return false
 				}
 				return true
 			},
 		)
-		if !r.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing data.Vteps[%d] = %+v",
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing Vteps[%d] = %+v",
 				i,
-				data.Vteps[i],
+				(*parent).Vteps[i],
 			))
-			data.Vteps = slices.Delete(data.Vteps, i, i+1)
+			(*parent).Vteps = slices.Delete((*parent).Vteps, i, i+1)
 			i--
 
 			continue
 		}
-		if value := r.Get("sourceInterface.id"); value.Exists() && !data.Vteps[i].SourceInterfaceId.IsNull() {
-			data.Vteps[i].SourceInterfaceId = types.StringValue(value.String())
+		if value := res.Get("sourceInterface.id"); value.Exists() && !data.SourceInterfaceId.IsNull() {
+			data.SourceInterfaceId = types.StringValue(value.String())
 		} else {
-			data.Vteps[i].SourceInterfaceId = types.StringNull()
+			data.SourceInterfaceId = types.StringNull()
 		}
-		if value := r.Get("nveVtepId"); value.Exists() && !data.Vteps[i].NveNumber.IsNull() {
-			data.Vteps[i].NveNumber = types.Int64Value(value.Int())
+		if value := res.Get("nveVtepId"); value.Exists() && !data.NveNumber.IsNull() {
+			data.NveNumber = types.Int64Value(value.Int())
 		} else {
-			data.Vteps[i].NveNumber = types.Int64Null()
+			data.NveNumber = types.Int64Null()
 		}
-		if value := r.Get("nveDestinationPort"); value.Exists() && !data.Vteps[i].EncapsulationPort.IsNull() {
-			data.Vteps[i].EncapsulationPort = types.Int64Value(value.Int())
-		} else if data.Vteps[i].EncapsulationPort.ValueInt64() != 4789 {
-			data.Vteps[i].EncapsulationPort = types.Int64Null()
+		if value := res.Get("nveDestinationPort"); value.Exists() && !data.EncapsulationPort.IsNull() {
+			data.EncapsulationPort = types.Int64Value(value.Int())
+		} else if data.EncapsulationPort.ValueInt64() != 4789 {
+			data.EncapsulationPort = types.Int64Null()
 		}
-		if value := r.Get("nveEncapsulationType"); value.Exists() && !data.Vteps[i].EncapsulationType.IsNull() {
-			data.Vteps[i].EncapsulationType = types.StringValue(value.String())
-		} else if data.Vteps[i].EncapsulationType.ValueString() != "VXLAN" {
-			data.Vteps[i].EncapsulationType = types.StringNull()
+		if value := res.Get("nveEncapsulationType"); value.Exists() && !data.EncapsulationType.IsNull() {
+			data.EncapsulationType = types.StringValue(value.String())
+		} else if data.EncapsulationType.ValueString() != "VXLAN" {
+			data.EncapsulationType = types.StringNull()
 		}
-		if value := r.Get("nveNeighborDiscoveryType"); value.Exists() && !data.Vteps[i].NeighborDiscovery.IsNull() {
-			data.Vteps[i].NeighborDiscovery = types.StringValue(value.String())
+		if value := res.Get("nveNeighborDiscoveryType"); value.Exists() && !data.NeighborDiscovery.IsNull() {
+			data.NeighborDiscovery = types.StringValue(value.String())
 		} else {
-			data.Vteps[i].NeighborDiscovery = types.StringNull()
+			data.NeighborDiscovery = types.StringNull()
 		}
-		if value := r.Get("nveNeighborAddress.literal.value"); value.Exists() && !data.Vteps[i].NeighborAddressLiteral.IsNull() {
-			data.Vteps[i].NeighborAddressLiteral = types.StringValue(value.String())
+		if value := res.Get("nveNeighborAddress.literal.value"); value.Exists() && !data.NeighborAddressLiteral.IsNull() {
+			data.NeighborAddressLiteral = types.StringValue(value.String())
 		} else {
-			data.Vteps[i].NeighborAddressLiteral = types.StringNull()
+			data.NeighborAddressLiteral = types.StringNull()
 		}
-		if value := r.Get("nveNeighborAddress.object.id"); value.Exists() && !data.Vteps[i].NeighborAddressId.IsNull() {
-			data.Vteps[i].NeighborAddressId = types.StringValue(value.String())
+		if value := res.Get("nveNeighborAddress.object.id"); value.Exists() && !data.NeighborAddressId.IsNull() {
+			data.NeighborAddressId = types.StringValue(value.String())
 		} else {
-			data.Vteps[i].NeighborAddressId = types.StringNull()
+			data.NeighborAddressId = types.StringNull()
 		}
+		(*parent).Vteps[i] = data
 	}
 }
 

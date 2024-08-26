@@ -203,117 +203,124 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("entries"); value.Exists() {
 		data.Entries = make([]ExtendedACLEntries, 0)
-		value.ForEach(func(k, v gjson.Result) bool {
-			item := ExtendedACLEntries{}
-			if cValue := v.Get("action"); cValue.Exists() {
-				item.Action = types.StringValue(cValue.String())
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := ExtendedACLEntries{}
+			if value := res.Get("action"); value.Exists() {
+				data.Action = types.StringValue(value.String())
 			} else {
-				item.Action = types.StringNull()
+				data.Action = types.StringNull()
 			}
-			if cValue := v.Get("logLevel"); cValue.Exists() {
-				item.LogLevel = types.StringValue(cValue.String())
+			if value := res.Get("logLevel"); value.Exists() {
+				data.LogLevel = types.StringValue(value.String())
 			} else {
-				item.LogLevel = types.StringValue("INFORMATIONAL")
+				data.LogLevel = types.StringValue("INFORMATIONAL")
 			}
-			if cValue := v.Get("logging"); cValue.Exists() {
-				item.Logging = types.StringValue(cValue.String())
+			if value := res.Get("logging"); value.Exists() {
+				data.Logging = types.StringValue(value.String())
 			} else {
-				item.Logging = types.StringNull()
+				data.Logging = types.StringNull()
 			}
-			if cValue := v.Get("logInterval"); cValue.Exists() {
-				item.LogIntervalSeconds = types.Int64Value(cValue.Int())
+			if value := res.Get("logInterval"); value.Exists() {
+				data.LogIntervalSeconds = types.Int64Value(value.Int())
 			} else {
-				item.LogIntervalSeconds = types.Int64Value(300)
+				data.LogIntervalSeconds = types.Int64Value(300)
 			}
-			if cValue := v.Get("sourceNetworks.literals"); cValue.Exists() {
-				item.SourceNetworkLiterals = make([]ExtendedACLEntriesSourceNetworkLiterals, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesSourceNetworkLiterals{}
-					if ccValue := cv.Get("value"); ccValue.Exists() {
-						cItem.Value = types.StringValue(ccValue.String())
+			if value := res.Get("sourceNetworks.literals"); value.Exists() {
+				data.SourceNetworkLiterals = make([]ExtendedACLEntriesSourceNetworkLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourceNetworkLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
 					} else {
-						cItem.Value = types.StringNull()
+						data.Value = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.SourceNetworkLiterals = append(item.SourceNetworkLiterals, cItem)
+					(*parent).SourceNetworkLiterals = append((*parent).SourceNetworkLiterals, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationNetworks.literals"); cValue.Exists() {
-				item.DestinationNetworkLiterals = make([]ExtendedACLEntriesDestinationNetworkLiterals, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesDestinationNetworkLiterals{}
-					if ccValue := cv.Get("value"); ccValue.Exists() {
-						cItem.Value = types.StringValue(ccValue.String())
+			if value := res.Get("destinationNetworks.literals"); value.Exists() {
+				data.DestinationNetworkLiterals = make([]ExtendedACLEntriesDestinationNetworkLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesDestinationNetworkLiterals{}
+					if value := res.Get("value"); value.Exists() {
+						data.Value = types.StringValue(value.String())
 					} else {
-						cItem.Value = types.StringNull()
+						data.Value = types.StringNull()
 					}
-					if ccValue := cv.Get("type"); ccValue.Exists() {
-						cItem.Type = types.StringValue(ccValue.String())
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
 					} else {
-						cItem.Type = types.StringNull()
+						data.Type = types.StringNull()
 					}
-					item.DestinationNetworkLiterals = append(item.DestinationNetworkLiterals, cItem)
+					(*parent).DestinationNetworkLiterals = append((*parent).DestinationNetworkLiterals, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourceNetworks.objects"); cValue.Exists() {
-				item.SourceNetworkObjects = make([]ExtendedACLEntriesSourceNetworkObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesSourceNetworkObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourceNetworks.objects"); value.Exists() {
+				data.SourceNetworkObjects = make([]ExtendedACLEntriesSourceNetworkObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourceNetworkObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.SourceNetworkObjects = append(item.SourceNetworkObjects, cItem)
+					(*parent).SourceNetworkObjects = append((*parent).SourceNetworkObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationNetworks.objects"); cValue.Exists() {
-				item.DestinationNetworkObjects = make([]ExtendedACLEntriesDestinationNetworkObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesDestinationNetworkObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationNetworks.objects"); value.Exists() {
+				data.DestinationNetworkObjects = make([]ExtendedACLEntriesDestinationNetworkObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesDestinationNetworkObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.DestinationNetworkObjects = append(item.DestinationNetworkObjects, cItem)
+					(*parent).DestinationNetworkObjects = append((*parent).DestinationNetworkObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("sourcePorts.objects"); cValue.Exists() {
-				item.SourcePortObjects = make([]ExtendedACLEntriesSourcePortObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesSourcePortObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("sourcePorts.objects"); value.Exists() {
+				data.SourcePortObjects = make([]ExtendedACLEntriesSourcePortObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourcePortObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.SourcePortObjects = append(item.SourcePortObjects, cItem)
+					(*parent).SourcePortObjects = append((*parent).SourcePortObjects, data)
 					return true
 				})
 			}
-			if cValue := v.Get("destinationPorts.objects"); cValue.Exists() {
-				item.DestinationPortObjects = make([]ExtendedACLEntriesDestinationPortObjects, 0)
-				cValue.ForEach(func(ck, cv gjson.Result) bool {
-					cItem := ExtendedACLEntriesDestinationPortObjects{}
-					if ccValue := cv.Get("id"); ccValue.Exists() {
-						cItem.Id = types.StringValue(ccValue.String())
+			if value := res.Get("destinationPorts.objects"); value.Exists() {
+				data.DestinationPortObjects = make([]ExtendedACLEntriesDestinationPortObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesDestinationPortObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
 					} else {
-						cItem.Id = types.StringNull()
+						data.Id = types.StringNull()
 					}
-					item.DestinationPortObjects = append(item.DestinationPortObjects, cItem)
+					(*parent).DestinationPortObjects = append((*parent).DestinationPortObjects, data)
 					return true
 				})
 			}
-			data.Entries = append(data.Entries, item)
+			(*parent).Entries = append((*parent).Entries, data)
 			return true
 		})
 	}
@@ -349,33 +356,40 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		}
 	}
 	for i := range data.Entries {
-		r := res.Get(fmt.Sprintf("entries.%d", i))
-		if value := r.Get("action"); value.Exists() && !data.Entries[i].Action.IsNull() {
-			data.Entries[i].Action = types.StringValue(value.String())
+		parent := &data
+		data := (*parent).Entries[i]
+		parentRes := &res
+		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
+			data.Action = types.StringValue(value.String())
 		} else {
-			data.Entries[i].Action = types.StringNull()
+			data.Action = types.StringNull()
 		}
-		if value := r.Get("logLevel"); value.Exists() && !data.Entries[i].LogLevel.IsNull() {
-			data.Entries[i].LogLevel = types.StringValue(value.String())
-		} else if data.Entries[i].LogLevel.ValueString() != "INFORMATIONAL" {
-			data.Entries[i].LogLevel = types.StringNull()
+		if value := res.Get("logLevel"); value.Exists() && !data.LogLevel.IsNull() {
+			data.LogLevel = types.StringValue(value.String())
+		} else if data.LogLevel.ValueString() != "INFORMATIONAL" {
+			data.LogLevel = types.StringNull()
 		}
-		if value := r.Get("logging"); value.Exists() && !data.Entries[i].Logging.IsNull() {
-			data.Entries[i].Logging = types.StringValue(value.String())
+		if value := res.Get("logging"); value.Exists() && !data.Logging.IsNull() {
+			data.Logging = types.StringValue(value.String())
 		} else {
-			data.Entries[i].Logging = types.StringNull()
+			data.Logging = types.StringNull()
 		}
-		if value := r.Get("logInterval"); value.Exists() && !data.Entries[i].LogIntervalSeconds.IsNull() {
-			data.Entries[i].LogIntervalSeconds = types.Int64Value(value.Int())
-		} else if data.Entries[i].LogIntervalSeconds.ValueInt64() != 300 {
-			data.Entries[i].LogIntervalSeconds = types.Int64Null()
+		if value := res.Get("logInterval"); value.Exists() && !data.LogIntervalSeconds.IsNull() {
+			data.LogIntervalSeconds = types.Int64Value(value.Int())
+		} else if data.LogIntervalSeconds.ValueInt64() != 300 {
+			data.LogIntervalSeconds = types.Int64Null()
 		}
-		for ci := 0; ci < len(data.Entries[i].SourceNetworkLiterals); ci++ {
+		for i := 0; i < len(data.SourceNetworkLiterals); i++ {
 			keys := [...]string{"value"}
-			keyValues := [...]string{data.Entries[i].SourceNetworkLiterals[ci].Value.ValueString()}
+			keyValues := [...]string{data.SourceNetworkLiterals[i].Value.ValueString()}
 
-			var cr gjson.Result
-			r.Get("sourceNetworks.literals").ForEach(
+			parent := &data
+			data := (*parent).SourceNetworkLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("sourceNetworks.literals").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -386,39 +400,44 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].SourceNetworkLiterals[%d] = %+v",
-					ci,
-					data.Entries[i].SourceNetworkLiterals[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourceNetworkLiterals[%d] = %+v",
+					i,
+					(*parent).SourceNetworkLiterals[i],
 				))
-				data.Entries[i].SourceNetworkLiterals = slices.Delete(data.Entries[i].SourceNetworkLiterals, ci, ci+1)
-				ci--
+				(*parent).SourceNetworkLiterals = slices.Delete((*parent).SourceNetworkLiterals, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("value"); value.Exists() && !data.Entries[i].SourceNetworkLiterals[ci].Value.IsNull() {
-				data.Entries[i].SourceNetworkLiterals[ci].Value = types.StringValue(value.String())
+			if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
+				data.Value = types.StringValue(value.String())
 			} else {
-				data.Entries[i].SourceNetworkLiterals[ci].Value = types.StringNull()
+				data.Value = types.StringNull()
 			}
-			if value := cr.Get("type"); value.Exists() && !data.Entries[i].SourceNetworkLiterals[ci].Type.IsNull() {
-				data.Entries[i].SourceNetworkLiterals[ci].Type = types.StringValue(value.String())
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
 			} else {
-				data.Entries[i].SourceNetworkLiterals[ci].Type = types.StringNull()
+				data.Type = types.StringNull()
 			}
+			(*parent).SourceNetworkLiterals[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].DestinationNetworkLiterals); ci++ {
+		for i := 0; i < len(data.DestinationNetworkLiterals); i++ {
 			keys := [...]string{"value"}
-			keyValues := [...]string{data.Entries[i].DestinationNetworkLiterals[ci].Value.ValueString()}
+			keyValues := [...]string{data.DestinationNetworkLiterals[i].Value.ValueString()}
 
-			var cr gjson.Result
-			r.Get("destinationNetworks.literals").ForEach(
+			parent := &data
+			data := (*parent).DestinationNetworkLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationNetworks.literals").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -429,39 +448,44 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].DestinationNetworkLiterals[%d] = %+v",
-					ci,
-					data.Entries[i].DestinationNetworkLiterals[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworkLiterals[%d] = %+v",
+					i,
+					(*parent).DestinationNetworkLiterals[i],
 				))
-				data.Entries[i].DestinationNetworkLiterals = slices.Delete(data.Entries[i].DestinationNetworkLiterals, ci, ci+1)
-				ci--
+				(*parent).DestinationNetworkLiterals = slices.Delete((*parent).DestinationNetworkLiterals, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("value"); value.Exists() && !data.Entries[i].DestinationNetworkLiterals[ci].Value.IsNull() {
-				data.Entries[i].DestinationNetworkLiterals[ci].Value = types.StringValue(value.String())
+			if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
+				data.Value = types.StringValue(value.String())
 			} else {
-				data.Entries[i].DestinationNetworkLiterals[ci].Value = types.StringNull()
+				data.Value = types.StringNull()
 			}
-			if value := cr.Get("type"); value.Exists() && !data.Entries[i].DestinationNetworkLiterals[ci].Type.IsNull() {
-				data.Entries[i].DestinationNetworkLiterals[ci].Type = types.StringValue(value.String())
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
 			} else {
-				data.Entries[i].DestinationNetworkLiterals[ci].Type = types.StringNull()
+				data.Type = types.StringNull()
 			}
+			(*parent).DestinationNetworkLiterals[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].SourceNetworkObjects); ci++ {
+		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Entries[i].SourceNetworkObjects[ci].Id.ValueString()}
+			keyValues := [...]string{data.SourceNetworkObjects[i].Id.ValueString()}
 
-			var cr gjson.Result
-			r.Get("sourceNetworks.objects").ForEach(
+			parent := &data
+			data := (*parent).SourceNetworkObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("sourceNetworks.objects").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -472,34 +496,39 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].SourceNetworkObjects[%d] = %+v",
-					ci,
-					data.Entries[i].SourceNetworkObjects[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourceNetworkObjects[%d] = %+v",
+					i,
+					(*parent).SourceNetworkObjects[i],
 				))
-				data.Entries[i].SourceNetworkObjects = slices.Delete(data.Entries[i].SourceNetworkObjects, ci, ci+1)
-				ci--
+				(*parent).SourceNetworkObjects = slices.Delete((*parent).SourceNetworkObjects, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("id"); value.Exists() && !data.Entries[i].SourceNetworkObjects[ci].Id.IsNull() {
-				data.Entries[i].SourceNetworkObjects[ci].Id = types.StringValue(value.String())
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.Entries[i].SourceNetworkObjects[ci].Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
+			(*parent).SourceNetworkObjects[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].DestinationNetworkObjects); ci++ {
+		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Entries[i].DestinationNetworkObjects[ci].Id.ValueString()}
+			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
 
-			var cr gjson.Result
-			r.Get("destinationNetworks.objects").ForEach(
+			parent := &data
+			data := (*parent).DestinationNetworkObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationNetworks.objects").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -510,34 +539,39 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].DestinationNetworkObjects[%d] = %+v",
-					ci,
-					data.Entries[i].DestinationNetworkObjects[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationNetworkObjects[%d] = %+v",
+					i,
+					(*parent).DestinationNetworkObjects[i],
 				))
-				data.Entries[i].DestinationNetworkObjects = slices.Delete(data.Entries[i].DestinationNetworkObjects, ci, ci+1)
-				ci--
+				(*parent).DestinationNetworkObjects = slices.Delete((*parent).DestinationNetworkObjects, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("id"); value.Exists() && !data.Entries[i].DestinationNetworkObjects[ci].Id.IsNull() {
-				data.Entries[i].DestinationNetworkObjects[ci].Id = types.StringValue(value.String())
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.Entries[i].DestinationNetworkObjects[ci].Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
+			(*parent).DestinationNetworkObjects[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].SourcePortObjects); ci++ {
+		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Entries[i].SourcePortObjects[ci].Id.ValueString()}
+			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
 
-			var cr gjson.Result
-			r.Get("sourcePorts.objects").ForEach(
+			parent := &data
+			data := (*parent).SourcePortObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("sourcePorts.objects").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -548,34 +582,39 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].SourcePortObjects[%d] = %+v",
-					ci,
-					data.Entries[i].SourcePortObjects[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourcePortObjects[%d] = %+v",
+					i,
+					(*parent).SourcePortObjects[i],
 				))
-				data.Entries[i].SourcePortObjects = slices.Delete(data.Entries[i].SourcePortObjects, ci, ci+1)
-				ci--
+				(*parent).SourcePortObjects = slices.Delete((*parent).SourcePortObjects, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("id"); value.Exists() && !data.Entries[i].SourcePortObjects[ci].Id.IsNull() {
-				data.Entries[i].SourcePortObjects[ci].Id = types.StringValue(value.String())
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.Entries[i].SourcePortObjects[ci].Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
+			(*parent).SourcePortObjects[i] = data
 		}
-		for ci := 0; ci < len(data.Entries[i].DestinationPortObjects); ci++ {
+		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Entries[i].DestinationPortObjects[ci].Id.ValueString()}
+			keyValues := [...]string{data.DestinationPortObjects[i].Id.ValueString()}
 
-			var cr gjson.Result
-			r.Get("destinationPorts.objects").ForEach(
+			parent := &data
+			data := (*parent).DestinationPortObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationPorts.objects").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -586,28 +625,30 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 						found = true
 					}
 					if found {
-						cr = v
+						res = v
 						return false
 					}
 					return true
 				},
 			)
-			if !cr.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing data.Entries[i].DestinationPortObjects[%d] = %+v",
-					ci,
-					data.Entries[i].DestinationPortObjects[ci],
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationPortObjects[%d] = %+v",
+					i,
+					(*parent).DestinationPortObjects[i],
 				))
-				data.Entries[i].DestinationPortObjects = slices.Delete(data.Entries[i].DestinationPortObjects, ci, ci+1)
-				ci--
+				(*parent).DestinationPortObjects = slices.Delete((*parent).DestinationPortObjects, i, i+1)
+				i--
 
 				continue
 			}
-			if value := cr.Get("id"); value.Exists() && !data.Entries[i].DestinationPortObjects[ci].Id.IsNull() {
-				data.Entries[i].DestinationPortObjects[ci].Id = types.StringValue(value.String())
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.Entries[i].DestinationPortObjects[ci].Id = types.StringNull()
+				data.Id = types.StringNull()
 			}
+			(*parent).DestinationPortObjects[i] = data
 		}
+		(*parent).Entries[i] = data
 	}
 }
 
