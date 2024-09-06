@@ -2,8 +2,10 @@ package fmc
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
@@ -26,6 +28,7 @@ func resourceVNI() *schema.Resource {
 			"	 multicast_groupaddress = \"224.0.0.34\"\n" +
 			"	 segment_id = 4011\n" +
 			"	 enable_proxy= false\n" +
+			"	 proxy_type = \"DUAL_ARM\"\n" +
 			"	 ipv4 {\n" +
 			"	 	static {\n" +
 			"		 address = \"3.3.3.3\"\n" +
@@ -103,6 +106,26 @@ func resourceVNI() *schema.Resource {
 				Type:        schema.TypeBool,
 				Optional:    true,
 				Description: "EnableProxy of the VNI",
+			},
+			"proxy_type": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "SINGLE_ARM",
+				Description: "Select one from [ SINGLE_ARM, DUAL_ARM, PAIRED ]",
+				StateFunc: func(val interface{}) string {
+					return strings.ToUpper(val.(string))
+				},
+				ValidateFunc: func(val interface{}, key string) (warns []string, errs []error) {
+					v := strings.ToUpper(val.(string))
+					allowedValues := []string{"SINGLE_ARM", "DUAL_ARM", "PAIRED"}
+					for _, allowed := range allowedValues {
+						if v == allowed {
+							return
+						}
+					}
+					errs = append(errs, fmt.Errorf("%q must be in %v, got: %q", key, allowedValues, v))
+					return
+				},
 			},
 			"ipv4": {
 				Type:     schema.TypeList,
@@ -198,6 +221,7 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 	log.Printf("VNI: Creating virtual interface")
 
 	device_id := d.Get("device_id").(string)
+	proxyType := d.Get("proxy_type").(string)
 	ifname := d.Get("if_name").(string)
 	description := d.Get("description").(string)
 	security_zone_id := d.Get("security_zone_id").(string)
@@ -270,6 +294,7 @@ func resourceVNICreate(ctx context.Context, d *schema.ResourceData, m interface{
 		SecurityZone:          securityZone,
 		IPv4:                  ipv4,
 		VtepID:                vtepid,
+		ProxyType:             proxyType,
 		Type:                  "VNIInterface",
 		Enabled:               d.Get("enabled").(bool),
 	})
@@ -301,7 +326,7 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 
 	if len(id) > 0 {
 		device_id := d.Get("device_id").(string)
-
+		proxyType := d.Get("proxy_type").(string)
 		ifname := d.Get("if_name").(string)
 		description := d.Get("description").(string)
 		security_zone_id := d.Get("security_zone_id").(string)
@@ -386,6 +411,7 @@ func resourceVNIUpdate(ctx context.Context, d *schema.ResourceData, m interface{
 			SecurityZone:          securityZone,
 			IPv4:                  ipv4,
 			VtepID:                vtepid,
+			ProxyType:             proxyType,
 			Type:                  "VNIInterface",
 			Enabled:               d.Get("enabled").(bool),
 		})

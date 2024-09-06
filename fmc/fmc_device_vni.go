@@ -36,6 +36,7 @@ type VNIRequest struct {
 	SecurityZone          VNISecurityZone `json:"securityZone"`
 	IPv4                  IPv4            `json:"ipv4,omitempty"`
 	Type                  string          `json:"type"`
+	ProxyType             string          `json:"proxyType"`
 }
 
 type VNIResponse struct {
@@ -52,6 +53,7 @@ type VNIResponse struct {
 	Priority              int             `json:"priority"`
 	Ifname                string          `json:"ifname"`
 	SecurityZone          VNISecurityZone `json:"securityZone"`
+	ProxyType             string          `json:"proxyType"`
 }
 
 /*
