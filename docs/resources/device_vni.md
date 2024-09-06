@@ -17,6 +17,7 @@ description: |-
        multicast_groupaddress = "224.0.0.34"
        segment_id = 4011
        enable_proxy= false
+       proxy_type = "DUAL_ARM"
        ipv4 {
           static {
            address = "3.3.3.3"
@@ -47,6 +48,7 @@ resource "fmc_device_vni" "my_fmc_device_vni" {
 	 multicast_groupaddress = "224.0.0.34"
 	 segment_id = 4011
 	 enable_proxy= false
+	 proxy_type = "DUAL_ARM"
 	 ipv4 {
 	 	static {
 		 address = "3.3.3.3"
@@ -79,6 +81,7 @@ resource "fmc_device_vni" "my_fmc_device_vni" {
 - `ipv4` (Block List) IPV4 information (see [below for nested schema](#nestedblock--ipv4))
 - `multicast_groupaddress` (String) MulticastGroupAddress of the VNI
 - `priority` (Number) Priority of the VNI
+- `proxy_type` (String) Select one from [ SINGLE_ARM, DUAL_ARM, PAIRED ]
 - `security_zone_id` (String) securityZone of the VNI
 - `segment_id` (Number) SegmentId of the VNI
 - `vtep_id` (Number) The Device Id of VNI
