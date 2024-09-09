@@ -157,8 +157,12 @@ func (v *Client) CreateFmcAccessRule(ctx context.Context, acpId, section, insert
 		initialSet = true
 	}
 	if category != "" {
-		url = fmt.Sprintf("%s?category=%s", url, category)
-		initialSet = true
+		if initialSet {
+			url = fmt.Sprintf("%s&category=%s", url, category)
+		} else {
+			url = fmt.Sprintf("%s?category=%s", url, category)
+			initialSet = true
+		}
 	}
 	if insertBefore != "" {
 		if initialSet {
