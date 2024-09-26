@@ -27,8 +27,8 @@ attribute:
   mandatory: bool(required=False) # Set to true if the attribute is mandatory
   write_only: bool(required=False) # Set to true if the attribute is write-only, meaning we cannot read the value
   write_changes_only: bool(required=False) # Set to true if the attribute should only be written (included in PUT payload) if it has changed
-  exclude_test: bool(required=False) # Exclude attribute from example (documentation) and acceptance test
-  exclude_example: bool(required=False) # Exclude attribute from acceptance test only (example/documentation is still generated)
+  exclude_test: bool(required=False) # Exclude attribute from acceptance test only (example/documentation is still generated)
+  exclude_example: bool(required=False) # Exclude attribute from example (documentation)
   description: str(required=False) # Attribute description
   example: any(str(), int(), bool(), required=False) # Example value for documentation, also used for acceptance test
   enum_values: list(str(), required=False) # List of enum values, only relevant if type is "String". Null value is instead governed by `mandatory`, never include null here
