@@ -28,6 +28,7 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -36,6 +37,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -498,12 +500,13 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
+	planBody := plan.toBody(ctx, AccessControlPolicy{})
+
 	// Create object
-	body := plan.toBody(ctx, AccessControlPolicy{})
-	bodyCats := gjson.Parse(body).Get("dummy_categories").Array()
+	body := planBody
 	body, _ = sjson.Delete(body, "dummy_categories")
-	bodyRules := gjson.Parse(body).Get("dummy_rules").Array()
 	body, _ = sjson.Delete(body, "dummy_rules")
+
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -524,36 +527,18 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	plan.fromBodyUnknowns(ctx, read)
 
-	err = r.createCatsAt(ctx, plan, bodyCats, 0, &plan, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
+	state := plan
+	state.Rules = nil
+	state.Categories = nil
 
-		res, err := r.client.Delete(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddWarning("Client Error", fmt.Sprintf("Also, cannot DELETE a hanging policy object, got error: %s, %s", err, res.String()))
-		}
+	state, diags = r.updateSubresources(ctx, req.Plan, plan, planBody, tfsdk.State{}, state)
+	resp.Diagnostics.Append(diags...)
 
-		return
-	}
+	// On error we do Set anyway. Terraform taints our resource, and the next run is responsible to call Delete() for us.
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
 
-	err = r.createRulesAt(ctx, plan, bodyRules, 0, &plan, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
-
-		res, err := r.client.Delete(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddWarning("Client Error", fmt.Sprintf("Also, cannot DELETE a hanging policy object, got error: %s, %s", err, res.String()))
-		}
-
-		return
-	}
-
-	diags = resp.State.Set(ctx, &plan)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
-		return
-	}
-
-	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished", state.Id.ValueString()))
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
@@ -655,12 +640,9 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	body := plan.toBody(ctx, state)
-
-	bodyCats := gjson.Parse(body).Get("dummy_categories").Array()
+	planBody := plan.toBody(ctx, state)
+	body := planBody
 	body, _ = sjson.Delete(body, "dummy_categories")
-
-	bodyRules := gjson.Parse(body).Get("dummy_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
@@ -671,28 +653,48 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	plan.fromBodyUnknowns(ctx, res)
 
+	// Most of attribs are set as planned, except Rules and Categories which we'll do below.
+	orig := state
+	state = plan
+	state.Rules, state.Categories = orig.Rules, orig.Categories
+
+	state, diags = r.updateSubresources(ctx, req.Plan, plan, planBody, req.State, state)
+	resp.Diagnostics.Append(diags...)
+
+	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished", plan.Id.ValueString()))
+
+	diags = resp.State.Set(ctx, &state)
+	resp.Diagnostics.Append(diags...)
+}
+
+// updateSubresources returns a coherent state whether it fails or succeeds. Caller should always set that state
+// into the Response (UpdateResponse, CreateResponse, ...), otherwise the API's UUIDs may go out-of-sync with
+// terraform.tfstate, which is always a big user-facing problem.
+func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tfsdkPlan tfsdk.Plan, plan AccessControlPolicy, planBody string, tfsdkState tfsdk.State, state AccessControlPolicy) (AccessControlPolicy, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	p := gjson.Parse(planBody)
+	bodyCats := p.Get("dummy_categories").Array()
+	bodyRules := p.Get("dummy_rules")
+
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
+
 	keptCats, keptRules := r.countKept(ctx, state, plan)
 
-	// Most of attribs are set as planned, except Rules and Categories which we'll do below.
-	existingRules, existingCategories := state.Rules, state.Categories
-	state = plan
-	state.Rules, state.Categories = existingRules, existingCategories
-
-	// Whether we return error or success, the `state` var will be actually persisted by terraform:
-	defer func() {
-		diags = resp.State.Set(ctx, &state)
-		resp.Diagnostics.Append(diags...)
-	}()
-
-	err = r.truncateRulesAt(ctx, &state, keptRules, reqMods...)
+	err := r.truncateRulesAt(ctx, &state, keptRules, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
-		return
+		diags.AddError("Client Error", err.Error())
+		return state, diags
 	}
+
 	err = r.truncateCatsAt(ctx, &state, keptCats, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
-		return
+		diags.AddError("Client Error", err.Error())
+		return state, diags
 	}
 
 	if len(plan.Categories) == 0 {
@@ -705,17 +707,17 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	err = r.createCatsAt(ctx, plan, bodyCats, keptCats, &state, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
-		return
+		diags.AddError("Client Error", err.Error())
+		return state, diags
 	}
 
 	err = r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", err.Error())
-		return
+		diags.AddError("Client Error", err.Error())
+		return state, diags
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
+	return state, diags
 }
 
 // countKept compares the state with the plan starting from index 0, and returns:
