@@ -124,7 +124,7 @@ func TestAccFmc{{camelCase .Name}}(t *testing.T) {
 		Config: {{if .TestPrerequisites}}testAccFmc{{camelCase .Name}}PrerequisitesConfig+{{end}}testAccFmc{{camelCase .Name}}Config_all(),
 		Check: resource.ComposeTestCheckFunc(checks...),
 	})
-	{{- if not (hasReference .Attributes)}}
+	{{- if not (or .NoImport (hasReference .Attributes))}}
 	steps = append(steps, resource.TestStep{
 		ResourceName:  "fmc_{{snakeCase $name}}.test",
 		ImportState:   true,

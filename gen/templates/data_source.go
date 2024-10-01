@@ -90,9 +90,13 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				{{- if and (eq .ModelName "name") ($nameQuery)}}
 				Optional:            true,
 				{{- end}}
+				{{- if isNestedMap .}}
+				Optional:            true,
+				{{- end}}
 				Computed:            true,
 				{{- end}}
 				{{- if isNestedListMapSet .}}
+				{{- $parentNestedMap := isNestedMap .}}
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						{{- range  .Attributes}}
@@ -102,7 +106,11 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 							{{- if isListSet .}}
 							ElementType:         types.{{.ElementType}}Type,
 							{{- end}}
+							{{- if and .ResourceId $parentNestedMap}}
+							Required:            true,
+							{{- else}}
 							Computed:            true,
+							{{- end}}
 							{{- if isNestedListMapSet .}}
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

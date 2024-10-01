@@ -1,5 +1,7 @@
 ---
 name: str() # Name of the resource
+no_data_source: bool(required=False) # Set to true if no data-source should be created
+no_import: bool(required=False) # Set to true if the resource does not support `terraform import` command
 rest_endpoint: str(required=False) # REST endpoint path
 put_create: bool(required=False) # Set to true if the PUT request is used for create
 no_update: bool(required=False) # Set to true if the PUT request is not supported

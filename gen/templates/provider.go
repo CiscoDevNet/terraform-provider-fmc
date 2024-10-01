@@ -283,7 +283,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		{{- range .}}
-		New{{camelCase .}}Resource,
+		New{{camelCase .Name}}Resource,
 		{{- end}}
 	}
 }
@@ -291,7 +291,9 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		{{- range .}}
-		New{{camelCase .}}DataSource,
+		{{- if not .NoDataSource}}
+		New{{camelCase .Name}}DataSource,
+		{{- end}}
 		{{- end}}
 	}
 }

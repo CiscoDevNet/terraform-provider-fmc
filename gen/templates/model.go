@@ -303,6 +303,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		if !res.Exists() {
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: uuid=%s, key=%v", data.Id, k))
 			delete((*parent).{{toGoName .TfName}}, k)
+			continue
 		}
 		{{- template "fromBodyTemplate" .}}
 		(*parent).{{toGoName .TfName}}[k] = data

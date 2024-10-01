@@ -1,0 +1,78 @@
+---
+name: Network Groups
+no_data_source: true
+no_import: true
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
+res_description: >-
+  This plural resource manages a bulk of Network Groups.
+  The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
+  Updating and deleting `fmc_network_groups` can thus take much more time than creating it (even >500 times more time,
+  i.e. >50000%, depending on the change size).
+  The `terraform import` of the resource is not implemented, you need to instead use the singular resource
+  `fmc_network_group`.
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of network groups. The key of the map is the name of the individual Network Group. Renaming Network Groups
+      is not yet implemented.
+    map_key_example: net_group_1
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Network Group.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "My Network Group 1"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        exclude_example: true
+        test_value: "true"
+      - model_name: network_groups
+        type: Set
+        element_type: String
+        example: "child_group_1"
+        description: >-
+          Set of names (not UUIDs) of child Network Groups. The names must be defined in the same instance
+          of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is
+          to instead add it inside `objects` by its UUID.
+          Renaming a group contained in `network_groups` is not yet implemented, while it works in `objects`.
+        exclude_test: true
+      - model_name: objects
+        description: Set of objects (fmc_network, fmc_host, ...).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: >-
+              UUID of the object (such as fmc_network.example.id, fmc_host.example.id,
+              fmc_network_groups.another.items[\"example\"].id, etc.).
+            id: true
+            exclude_example: true
+            test_value: fmc_range.test.id
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+      - model_name: literals
+        description: Set of literal values.
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            id: true
+            example: 10.1.1.0/24
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+
+test_prerequisites: |-
+  resource "fmc_range" "test" {
+    name   = "test_fmc_network_groups"
+    value  = "2005::10-2005::12"
+  }

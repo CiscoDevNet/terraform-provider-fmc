@@ -95,6 +95,8 @@ var templates = []t{
 
 type YamlConfig struct {
 	Name                string                `yaml:"name"`
+	NoDataSource        bool                  `yaml:"no_data_source"`
+	NoImport            bool                  `yaml:"no_import"`
 	TfName              string                `yaml:"tf_name"`
 	RestEndpoint        string                `yaml:"rest_endpoint"`
 	PutCreate           bool                  `yaml:"put_create"`
@@ -564,17 +566,21 @@ func main() {
 		configs = append(configs, config)
 	}
 
-	var providerConfig []string
 	for i := range configs {
 		// Iterate over templates and render files
 		for _, t := range templates {
+			if configs[i].NoImport && t.path == "./gen/templates/import.sh" ||
+				configs[i].NoDataSource && t.path == "./gen/templates/data_source.go" ||
+				configs[i].NoDataSource && t.path == "./gen/templates/data_source_test.go" ||
+				configs[i].NoDataSource && t.path == "./gen/templates/data-source.tf" {
+				continue
+			}
 			renderTemplate(t.path, t.prefix+SnakeCase(configs[i].Name)+t.suffix, configs[i])
 		}
-		providerConfig = append(providerConfig, configs[i].Name)
 	}
 
 	// render provider.go
-	renderTemplate(providerTemplate, providerLocation, providerConfig)
+	renderTemplate(providerTemplate, providerLocation, configs)
 
 	changelog, err := os.ReadFile(changelogOriginal)
 	if err != nil {

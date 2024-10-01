@@ -18,12 +18,17 @@
 package helpers
 
 import (
+	"context"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/attr"
+	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 func Contains(s []string, str string) bool {
@@ -75,4 +80,31 @@ func ToLower(s basetypes.StringValue) basetypes.StringValue {
 	}
 
 	return types.StringValue(strings.ToLower(s.ValueString()))
+}
+
+// IsConfigUpdatingAt checks whether the attribute given by the Path is not Equal() between plan and state.
+func IsConfigUpdatingAt(ctx context.Context, tfsdkPlan tfsdk.Plan, tfsdkState tfsdk.State, where path.Path) (bool, diag.Diagnostics) {
+	var pv, sv attr.Value
+
+	diags := tfsdkPlan.GetAttribute(ctx, where, &pv)
+	if diags.HasError() {
+		return false, diags
+	}
+
+	diags = tfsdkState.GetAttribute(ctx, where, &sv)
+	if diags.HasError() {
+		return false, nil
+	}
+
+	return !sv.Equal(pv), diags
+}
+
+// SetGjson conveniently wraps sjson.SetRaw, so that it acts on gjson.Result directly.
+func SetGjson(orig gjson.Result, path string, content gjson.Result) gjson.Result {
+	s, err := sjson.SetRaw(orig.String(), path, content.String())
+	if err != nil {
+		panic(err)
+	}
+
+	return gjson.Parse(s)
 }
