@@ -15,6 +15,8 @@ skip_minimum_test: bool(required=False) # Do not perform a "minimum" (only manda
 attributes: list(include('attribute'), required=False) # List of attributes
 test_tags: list(str(), required=False) # List of test tags, tests are only executed if an environment variable with one of these tags is configured
 test_prerequisites: str(required=False) # HCL code that is included in the acceptance tests to define prerequisites
+is_bulk: bool(required=False) # Treat this as a bulk resource
+import_name_query: bool(required=False) # Set to true if import should be done using object name
 ---
 attribute:
   model_name: str(required=False) # Name of the attribute in the model (payload)

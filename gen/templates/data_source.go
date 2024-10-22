@@ -69,7 +69,9 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				{{- if not .DataSourceNameQuery}}
 				Required:            true,
 				{{- else}}
+				{{- if not .IsBulk}}
 				Optional:            true,
+				{{- end}}
 				Computed:            true,
 				{{- end}}
 			},
@@ -106,7 +108,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 							{{- if isListSet .}}
 							ElementType:         types.{{.ElementType}}Type,
 							{{- end}}
-							{{- if and .ResourceId $parentNestedMap}}
+							{{- if and .ResourceId $parentNestedMap (not $.IsBulk)}}
 							Required:            true,
 							{{- else}}
 							Computed:            true,
@@ -158,7 +160,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 	}
 }
 
-{{- if .DataSourceNameQuery}}
+{{- if and .DataSourceNameQuery (not .IsBulk)}}
 func (d *{{camelCase .Name}}DataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
     return []datasource.ConfigValidator{
         datasourcevalidator.ExactlyOneOf(

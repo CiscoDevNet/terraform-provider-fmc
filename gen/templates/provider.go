@@ -60,6 +60,13 @@ type FmcProviderData struct {
 	Client      *fmc.Client
 }
 
+// Define provider constants
+const (
+	// Define maximum elements in single bulk request for delete & create
+	bulkSizeDelete int = 200
+	bulkSizeCreate int = 1000
+)
+
 // Metadata returns the provider type name.
 func (p *FmcProvider) Metadata(_ context.Context, _ provider.MetadataRequest, resp *provider.MetadataResponse) {
 	resp.TypeName = "fmc"

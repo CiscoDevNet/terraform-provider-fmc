@@ -246,7 +246,11 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 	{{- end}}
 	{{- end}}
 	{{- end}}
+	{{- if .IsBulk}}
+	return gjson.Get(body, "items").String()
+	{{- else}}
 	return body
+	{{- end}}
 }
 
 // End of section. //template:end toBody
@@ -293,7 +297,11 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 
 		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
 			func(_, v gjson.Result) bool {
+				{{- if $.ImportNameQuery -}}
+				if v.Get("name").String() == k {
+				{{- else -}}
 				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
+				{{- end}}
 					res = v
 					return false // break ForEach
 				}
@@ -301,7 +309,11 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 			},
 		)
 		if !res.Exists() {
+			{{- if $.ImportNameQuery -}}
+			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
+			{{- else -}}
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: uuid=%s, key=%v", data.Id, k))
+			{{- end}}
 			delete((*parent).{{toGoName .TfName}}, k)
 			continue
 		}
