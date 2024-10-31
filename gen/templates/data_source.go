@@ -201,7 +201,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
-	{{- if .DataSourceNameQuery}}
+	{{- if and .DataSourceNameQuery (not .IsBulk)}}
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000
@@ -235,7 +235,14 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	}
 	{{- end}}
 
-	res, err := d.client.Get(config.getPath() + "/" + url.QueryEscape(config.Id.ValueString()), reqMods...)
+	{{- if .IsBulk}}
+	
+	// Get all objects from FMC
+	urlPath := config.getPath() + "?expanded=true"
+	{{- else}}
+	urlPath := config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())
+	{{- end}}
+	res, err := d.client.Get(urlPath, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return

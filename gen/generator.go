@@ -94,26 +94,27 @@ var templates = []t{
 }
 
 type YamlConfig struct {
-	Name                string                `yaml:"name"`
-	NoDataSource        bool                  `yaml:"no_data_source"`
-	NoImport            bool                  `yaml:"no_import"`
-	TfName              string                `yaml:"tf_name"`
-	RestEndpoint        string                `yaml:"rest_endpoint"`
-	PutCreate           bool                  `yaml:"put_create"`
-	NoUpdate            bool                  `yaml:"no_update"`
-	NoDelete            bool                  `yaml:"no_delete"`
-	DataSourceNameQuery bool                  `yaml:"data_source_name_query"`
-	MinimumVersion      string                `yaml:"minimum_version"`
-	DsDescription       string                `yaml:"ds_description"`
-	ResDescription      string                `yaml:"res_description"`
-	DocCategory         string                `yaml:"doc_category"`
-	ExcludeTest         bool                  `yaml:"exclude_test"`
-	SkipMinimumTest     bool                  `yaml:"skip_minimum_test"`
-	Attributes          []YamlConfigAttribute `yaml:"attributes"`
-	TestTags            []string              `yaml:"test_tags"`
-	TestPrerequisites   string                `yaml:"test_prerequisites"`
-	IsBulk              bool                  `yaml:"is_bulk"`
-	ImportNameQuery     bool                  `yaml:"import_name_query"`
+	Name                     string                `yaml:"name"`
+	NoDataSource             bool                  `yaml:"no_data_source"`
+	NoImport                 bool                  `yaml:"no_import"`
+	TfName                   string                `yaml:"tf_name"`
+	RestEndpoint             string                `yaml:"rest_endpoint"`
+	PutCreate                bool                  `yaml:"put_create"`
+	NoUpdate                 bool                  `yaml:"no_update"`
+	NoDelete                 bool                  `yaml:"no_delete"`
+	DataSourceNameQuery      bool                  `yaml:"data_source_name_query"`
+	MinimumVersion           string                `yaml:"minimum_version"`
+	MinimumVersionBulkDelete string                `yaml:"minimum_version_bulk_delete"`
+	DsDescription            string                `yaml:"ds_description"`
+	ResDescription           string                `yaml:"res_description"`
+	DocCategory              string                `yaml:"doc_category"`
+	ExcludeTest              bool                  `yaml:"exclude_test"`
+	SkipMinimumTest          bool                  `yaml:"skip_minimum_test"`
+	Attributes               []YamlConfigAttribute `yaml:"attributes"`
+	TestTags                 []string              `yaml:"test_tags"`
+	TestPrerequisites        string                `yaml:"test_prerequisites"`
+	IsBulk                   bool                  `yaml:"is_bulk"`
+	ImportNameQuery          bool                  `yaml:"import_name_query"`
 }
 
 type YamlConfigAttribute struct {

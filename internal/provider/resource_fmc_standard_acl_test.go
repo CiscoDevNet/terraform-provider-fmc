@@ -71,7 +71,7 @@ func testAccFmcStandardACLConfig_minimum() string {
 	config += `	entries = [{` + "\n"
 	config += `		action = "PERMIT"` + "\n"
 	config += `		literals = [{` + "\n"
-	config += `		value = "10.1.1.0/24"` + "\n"
+	config += `			value = "10.1.1.0/24"` + "\n"
 	config += `		}]` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"

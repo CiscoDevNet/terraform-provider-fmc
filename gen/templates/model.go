@@ -579,3 +579,36 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 		{{- end}}
 	{{- end}}
 {{- end}}
+
+// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+
+{{if .IsBulk}}
+func (data *{{camelCase .Name}}) Clone() {{camelCase .Name}} {
+	ret := *data
+	ret.Items = maps.Clone(data.Items)
+
+	return ret
+}
+{{- end}}
+
+// End of section. //template:end Clone
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+
+{{if .IsBulk}}
+// Updates done one-by-one require different API body
+func (data {{camelCase .Name}}) toBodyNonBulk(ctx context.Context, state {{camelCase .Name}}) string {
+	// This is one-by-one update, so only one element to update is expected
+	if len(data.Items) > 1 {
+		tflog.Error(ctx, "Found more than one element to chage. Only one will be changed.")
+	}
+
+	// Utilize existing toBody function
+	body := data.toBody(ctx, state)
+
+	// Get first element only
+	return gjson.Get(body, "0").String()
+}
+{{- end}}
+
+// End of section. //template:end toBodyNonBulk

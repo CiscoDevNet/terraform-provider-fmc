@@ -42,10 +42,6 @@ import (
 
 // End of section. //template:end imports
 
-var (
-	hostsBulkDeleteMinFMCVersion, _ = version.NewVersion("7.4")
-)
-
 // Section below is generated&owned by "gen/generator.go". //template:begin model
 
 // Ensure provider defined types fully satisfy framework interfaces
@@ -53,6 +49,7 @@ var (
 	_ resource.Resource                = &HostsResource{}
 	_ resource.ResourceWithImportState = &HostsResource{}
 )
+var minFMCVersionBulkDeleteHosts = version.Must(version.NewVersion("7.4"))
 
 func NewHostsResource() resource.Resource {
 	return &HostsResource{}
@@ -133,6 +130,8 @@ func (r *HostsResource) Configure(_ context.Context, req resource.ConfigureReque
 
 // End of section. //template:end model
 
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan Hosts
 
@@ -150,9 +149,8 @@ func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, 
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Prepare state for the output
-	// Since I am splitting request into multipe, it may happen that some resources will be created
-	// while other don't. Hence I'd like to track current status outside of plan structure
+	// Prepare state to track creation process
+	// Create request is split to multiple requests, where just subset of them may be successful
 	state := Hosts{}
 	state.Items = make(map[string]HostsItems, len(plan.Items))
 	state.Id = types.StringValue(uuid.New().String())
@@ -160,16 +158,20 @@ func (r *HostsResource) Create(ctx context.Context, req resource.CreateRequest, 
 
 	// Create object
 	// Creation process is put in a separate function, as that same proces will be needed with `Update`
-	state, diags = r.createSubresources(ctx, state, plan, reqMods...)
+	plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
 	resp.Diagnostics.Append(diags...)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
-	diags = resp.State.Set(ctx, &state)
+	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
+
+// End of section. //template:end create
+
+// Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state Hosts
@@ -192,7 +194,7 @@ func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp
 	urlPath := state.getPath() + "?expanded=true"
 	res, err := r.client.Get(urlPath, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET) from %s, got error: %s, %s", urlPath, err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -215,6 +217,10 @@ func (r *HostsResource) Read(ctx context.Context, req resource.ReadRequest, resp
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
+
+// End of section. //template:end read
+
+// Section below is generated&owned by "gen/generator.go". //template:begin update
 
 func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state Hosts
@@ -240,7 +246,7 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	// DELETE
-	// Delete objects (objects that are present in state, but missing in plan)
+	// Delete objects (that are present in state, but missing in plan)
 	var toDelete Hosts
 	toDelete.Items = make(map[string]HostsItems)
 	planOwnedIDs := make(map[string]string, len(plan.Items))
@@ -257,7 +263,7 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 		}
 	}
 
-	// If there are hosts marked to be deleted
+	// If there are objects marked to be deleted
 	if len(toDelete.Items) > 0 {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Number of items to delete: %d", state.Id.ValueString(), len(toDelete.Items)))
 		state, diags = r.deleteSubresources(ctx, state, toDelete, reqMods...)
@@ -271,19 +277,19 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
-	var newObjects Hosts
-	newObjects.Items = make(map[string]HostsItems)
+	var toCreate Hosts
+	toCreate.Items = make(map[string]HostsItems)
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
-			newObjects.Items[k] = v
+			toCreate.Items[k] = v
 		}
 	}
 
-	// If there are hosts marked for create
-	if len(newObjects.Items) > 0 {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Number of items to create: %d", state.Id.ValueString(), len(newObjects.Items)))
-		state, diags = r.createSubresources(ctx, state, newObjects, reqMods...)
+	// If there are objects marked for create
+	if len(toCreate.Items) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Number of items to create: %d", state.Id.ValueString(), len(toCreate.Items)))
+		state, diags = r.createSubresources(ctx, state, toCreate, reqMods...)
 		if diags != nil {
 			resp.Diagnostics.Append(diags...)
 			diags = resp.State.Set(ctx, &state)
@@ -294,8 +300,6 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 
 	// UPDATE
 	// Update objects (objects that have different definition in plan and state)
-	// FMC API does not support bulk updates for hosts, but still I would like to keep it as if it had
-	// TODO: Add support for renaming objects
 	var notEqual bool
 	var toUpdate Hosts
 	toUpdate.Items = make(map[string]HostsItems)
@@ -314,14 +318,14 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 				return
 			}
 
-			// If definitions differ, add host to update list
+			// If definitions differ, add object to update list
 			if notEqual {
 				toUpdate.Items[keyState] = plan.Items[keyState]
 			}
 		}
 	}
 
-	// If there are hosts marked for update
+	// If there are objects marked for update
 	if len(toUpdate.Items) > 0 {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Number of items to update: %d", state.Id.ValueString(), len(toUpdate.Items)))
 		state, diags = r.updateSubresources(ctx, state, toUpdate, reqMods...)
@@ -332,12 +336,17 @@ func (r *HostsResource) Update(ctx context.Context, req resource.UpdateRequest, 
 			return
 		}
 	}
+	plan = state
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
-	diags = resp.State.Set(ctx, &state)
+	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
+
+// End of section. //template:end update
+
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
 
 func (r *HostsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state Hosts
@@ -354,27 +363,32 @@ func (r *HostsResource) Delete(ctx context.Context, req resource.DeleteRequest, 
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
 
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
+
 	// Execute delete
 	state, diags = r.deleteSubresources(ctx, state, state, reqMods...)
 	resp.Diagnostics.Append(diags...)
 
 	// Check if every element was removed
-	if len(state.Items) == 0 {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
-		resp.State.RemoveResource(ctx)
-	} else {
+	if len(state.Items) > 0 {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Not all elements have been removed", state.Id.ValueString()))
 		diags = resp.State.Set(ctx, &state)
 		resp.Diagnostics.Append(diags...)
+		return
 	}
 
+	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
+
+	resp.State.RemoveResource(ctx)
 }
 
-func (r *HostsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: Domain,[HostName1,HostName2,...]
-	// Domain part is optional
-	// HostName1,HostName2,... is coma-separated list of object names
+// End of section. //template:end delete
 
+// Section below is generated&owned by "gen/generator.go". //template:begin import
+func (r *HostsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Import looks for string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]
+	// <domain_name> is optional
+	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config Hosts
 
 	// Compile pattern for import command parsing
@@ -385,11 +399,11 @@ func (r *HostsResource) ImportState(ctx context.Context, req resource.ImportStat
 
 	// Check if regex matched
 	if match == nil {
-		resp.Diagnostics.AddError("Import error", "Failed to parse import parameters")
+		resp.Diagnostics.AddError("Import error", "Failed to parse import parameters. Please provide import string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]")
 		return
 	}
 
-	// extract values
+	// Extract values
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
 		config.Domain = types.StringValue(tmpDomain)
 	}
@@ -415,14 +429,17 @@ func (r *HostsResource) ImportState(ctx context.Context, req resource.ImportStat
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
-// createSubresources takes list of hosts, splits them into bulks and creates them
+// End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+// createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *HostsResource) createSubresources(ctx context.Context, state, plan Hosts, reqMods ...func(*fmc.Req)) (Hosts, diag.Diagnostics) {
 	var idx = 0
 	var bulk Hosts
 	bulk.Items = make(map[string]HostsItems, bulkSizeCreate)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of hosts id", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of objects", state.Id.ValueString()))
 
 	// iterate over all items
 	for k, v := range plan.Items {
@@ -461,23 +478,25 @@ func (r *HostsResource) createSubresources(ctx context.Context, state, plan Host
 	return state, nil
 }
 
-// deleteSubresources takes list of hosts and deletes them either in bulk, or one-by-one, depending on FMC version
+// End of section. //template:end createSubresources
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+// deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
 func (r *HostsResource) deleteSubresources(ctx context.Context, state, plan Hosts, reqMods ...func(*fmc.Req)) (Hosts, diag.Diagnostics) {
-	hostsToRemove := plan.Clone()
+	objectsToRemove := plan.Clone()
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of hosts id", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of objects", state.Id.ValueString()))
 	// Get FMC version from the clinet
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.GreaterThanOrEqual(hostsBulkDeleteMinFMCVersion) {
+	if fmcVersion.GreaterThanOrEqual(minFMCVersionBulkDeleteHosts) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode", state.Id.ValueString()))
 
 		var idx = 0
 		var idsToRemove strings.Builder
 		var alreadyDeleted []string
 
-		for k, v := range hostsToRemove.Items {
+		for k, v := range objectsToRemove.Items {
 			// Counter
 			idx++
 
@@ -491,7 +510,7 @@ func (r *HostsResource) deleteSubresources(ctx context.Context, state, plan Host
 			idsToRemove.WriteString(url.QueryEscape(v.Id.ValueString()) + ",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(hostsToRemove.Items) {
+			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + idsToRemove.String() + "\""
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -517,8 +536,8 @@ func (r *HostsResource) deleteSubresources(ctx context.Context, state, plan Host
 
 	} else {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode", state.Id.ValueString()))
-		for k, v := range hostsToRemove.Items {
-			// If ID is missing (i.a. object already deleted)
+		for k, v := range objectsToRemove.Items {
+			// Check if the object was not already deleted
 			if v.Id.IsNull() {
 				delete(state.Items, k)
 				continue
@@ -540,18 +559,22 @@ func (r *HostsResource) deleteSubresources(ctx context.Context, state, plan Host
 	return state, nil
 }
 
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
 func (r *HostsResource) updateSubresources(ctx context.Context, state, plan Hosts, reqMods ...func(*fmc.Req)) (Hosts, diag.Diagnostics) {
-	var tmpHost Hosts
-	tmpHost.Items = make(map[string]HostsItems, 1)
+	var tmpObject Hosts
+	tmpObject.Items = make(map[string]HostsItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of hosts id", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
-		tmpHost.Items[k] = v
+		tmpObject.Items[k] = v
 
-		body := tmpHost.toBodyNonBulk(ctx, state)
-		urlPath := tmpHost.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		body := tmpObject.toBodyNonBulk(ctx, state)
+		urlPath := tmpObject.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{
@@ -562,9 +585,11 @@ func (r *HostsResource) updateSubresources(ctx context.Context, state, plan Host
 		// Update state
 		state.Items[k] = v
 
-		// Clear tmpHost Items
-		delete(tmpHost.Items, k)
+		// Clear tmpObject.Items
+		delete(tmpObject.Items, k)
 	}
 
 	return state, nil
 }
+
+// End of section. //template:end updateSubresources

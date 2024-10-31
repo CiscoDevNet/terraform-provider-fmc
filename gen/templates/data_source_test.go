@@ -39,6 +39,18 @@ func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
 	{{- $name := .Name }}
 	{{- range  .Attributes}}
 	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .ResourceId)}}
+	{{- if isNestedMap .}}
+	{{- $list := .TfName }}
+	{{- $map := .MapKeyExample }}
+	{{- range  .Attributes}}
+	{{- if eq .TfName "id" }}
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{.TfName}}"))
+	{{- end}}
+	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not (isSet .))}}
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{.TfName}}", "{{.Example}}"))
+	{{- end}}
+	{{- end}}
+	{{- end}}
 	{{- if isNestedListSet .}}
 	{{- $list := .TfName }}
 	{{- if len .TestTags}}
@@ -119,7 +131,7 @@ func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
 				Config: {{if .TestPrerequisites}}testAccDataSourceFmc{{camelCase .Name}}PrerequisitesConfig+{{end}}testAccDataSourceFmc{{camelCase .Name}}Config(),
 				Check: resource.ComposeTestCheckFunc(checks...),
 			},
-			{{- if .DataSourceNameQuery}}
+			{{- if and .DataSourceNameQuery (not .IsBulk)}}
 			{
 				Config: {{if .TestPrerequisites}}testAccDataSourceFmc{{camelCase .Name}}PrerequisitesConfig+{{end}}testAccNamedDataSourceFmc{{camelCase .Name}}Config(),
 				Check: resource.ComposeTestCheckFunc(checks...),
@@ -234,7 +246,7 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 
 	config += `
 		data "fmc_{{snakeCase .Name}}" "test" {
-			id = fmc_{{snakeCase $name}}.test.id
+			{{if not .IsBulk}}id = fmc_{{snakeCase $name}}.test.id{{else}}depends_on = [fmc_{{snakeCase $name}}.test]{{end}}
 			{{- range  .Attributes}}
 			{{- if .Reference}}
 			{{.TfName}} = {{if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}
@@ -244,7 +256,7 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 			{{.TfName}} = {
 				"{{.MapKeyExample}}" = {
 					{{- range  .Attributes}}
-					{{- if .ResourceId}}
+					{{- if and .ResourceId (not $.IsBulk)}}
 					{{.TfName}} = fmc_{{snakeCase $name}}.test.{{$map}}["{{$mapkey}}"].{{.TfName}}
 					{{- end}}
 					{{- end}}
@@ -257,7 +269,7 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 	return config
 }
 
-{{if .DataSourceNameQuery -}}
+{{if and .DataSourceNameQuery (not .IsBulk) -}}
 func testAccNamedDataSourceFmc{{camelCase .Name}}Config() string {
 	config := `resource "fmc_{{snakeCase $name}}" "test" {` + "\n"
 	{{- range  .Attributes}}

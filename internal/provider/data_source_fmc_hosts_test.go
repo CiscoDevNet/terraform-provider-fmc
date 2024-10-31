@@ -26,12 +26,14 @@ import (
 
 // End of section. //template:end imports
 
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
 func TestAccDataSourceFmcHosts(t *testing.T) {
 	var checks []resource.TestCheckFunc
-
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test", "items.hosts_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.description", "My Host 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.ip", "10.1.1.1"))
-
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -44,8 +46,12 @@ func TestAccDataSourceFmcHosts(t *testing.T) {
 	})
 }
 
+// End of section. //template:end testAccDataSource
+
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 // End of section. //template:end testPrerequisites
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
 func testAccDataSourceFmcHostsConfig() string {
 	config := `resource "fmc_hosts" "test" {` + "\n"
@@ -58,12 +64,14 @@ func testAccDataSourceFmcHostsConfig() string {
 
 	config += `
 		data "fmc_hosts" "test" {
+			depends_on = [fmc_hosts.test]
 			items = {
 				"hosts_1" = {
 				}
 			}
-			depends_on = [fmc_hosts.test]
 		}
 	`
 	return config
 }
+
+// End of section. //template:end testAccDataSourceConfig

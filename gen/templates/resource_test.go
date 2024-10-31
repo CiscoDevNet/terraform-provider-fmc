@@ -39,6 +39,25 @@ func TestAccFmc{{camelCase .Name}}(t *testing.T) {
 	{{- $name := .Name }}
 	{{- range  .Attributes}}
 	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .ResourceId)}}
+	{{- if isNestedMap .}}
+	{{- $list := .TfName }}
+	{{- $map := .MapKeyExample }}
+	{{- range  .Attributes}}
+	{{- if eq .TfName "id" }}
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{.TfName}}"))
+	{{- end}}
+	{{- if isNestedListSet .}}
+	{{- $clist := .TfName }}
+	{{- range  .Attributes}}
+	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not (isSet .))}}
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{$clist}}.0.{{.TfName}}", "{{.Example}}"))
+	{{- end}}
+	{{- end}}
+	{{- else if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not (isSet .))}}
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{.TfName}}", "{{.Example}}"))
+	{{- end}}
+	{{- end}}
+	{{- end}}
 	{{- if isNestedListSet .}}
 	{{- $list := .TfName }}
 	{{- if len .TestTags}}
@@ -124,7 +143,7 @@ func TestAccFmc{{camelCase .Name}}(t *testing.T) {
 		Config: {{if .TestPrerequisites}}testAccFmc{{camelCase .Name}}PrerequisitesConfig+{{end}}testAccFmc{{camelCase .Name}}Config_all(),
 		Check: resource.ComposeTestCheckFunc(checks...),
 	})
-	{{- if not (or .NoImport (hasReference .Attributes))}}
+	{{- if and (not (or .NoImport (hasReference .Attributes))) (not .IsBulk)}}
 	steps = append(steps, resource.TestStep{
 		ResourceName:  "fmc_{{snakeCase $name}}.test",
 		ImportState:   true,
@@ -151,16 +170,21 @@ const testAccFmc{{camelCase .Name}}PrerequisitesConfig = `
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+{{- if not .SkipMinimumTest}}
 
 func testAccFmc{{camelCase .Name}}Config_minimum() string {
 	config := `resource "fmc_{{snakeCase $name}}" "test" {` + "\n"
 	{{- range  .Attributes}}
 	{{- if or .Id .Reference .Mandatory .MinimumTestValue}}
-	{{- if isNestedListSet .}}
+	{{- if isNestedListMapSet .}}
 	{{- if len .TestTags}}
 	if {{range $i, $e := .TestTags}}{{if $i}} || {{end}}os.Getenv("{{$e}}") != ""{{end}} {
 	{{- end}}
+	{{- if isNestedListSet .}}
 	config += `	{{.TfName}} = [{` + "\n"
+	{{- else if isNestedMap .}}
+	config += `	{{.TfName}} = { "{{.MapKeyExample}}" = {` + "\n"
+	{{- end}}
 		{{- range  .Attributes}}
 		{{- if or .Id .Reference .Mandatory .MinimumTestValue}}
 		{{- if isNestedListSet .}}
@@ -193,10 +217,10 @@ func testAccFmc{{camelCase .Name}}Config_minimum() string {
 			{{- else}}
 			{{- if len .TestTags}}
 	if {{range $i, $e := .TestTags}}{{if $i}} || {{end}}os.Getenv("{{$e}}") != ""{{end}} {
-		config += `		{{.TfName}} = {{if .MinimumTestValue}}{{.MinimumTestValue}}{{else if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}` + "\n"
+		config += `			{{.TfName}} = {{if .MinimumTestValue}}{{.MinimumTestValue}}{{else if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}` + "\n"
 	}
 			{{- else}}
-	config += `		{{.TfName}} = {{if .MinimumTestValue}}{{.MinimumTestValue}}{{else if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}` + "\n"
+	config += `			{{.TfName}} = {{if .MinimumTestValue}}{{.MinimumTestValue}}{{else if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}` + "\n"
 			{{- end}}
 			{{- end}}
 			{{- end}}
@@ -216,7 +240,11 @@ func testAccFmc{{camelCase .Name}}Config_minimum() string {
 		{{- end}}
 		{{- end}}
 		{{- end}}
+	{{- if isNestedListSet .}}
 	config += `	}]` + "\n"
+	{{- else if isNestedMap .}}
+	config += `	}}` + "\n"
+	{{- end}}
 		{{- if len .TestTags}}
 	}
 		{{- end}}
@@ -234,7 +262,7 @@ func testAccFmc{{camelCase .Name}}Config_minimum() string {
 	config += `}` + "\n"
 	return config
 }
-
+{{- end}}
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll

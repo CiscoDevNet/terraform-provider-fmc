@@ -9,6 +9,7 @@ doc_category: Objects
 is_bulk: true
 data_source_name_query: yes
 import_name_query: yes
+minimum_version_bulk_delete: "7.4"
 attributes:
   - model_name: items
     type: Map
@@ -32,7 +33,7 @@ attributes:
         type: Bool
         description: Indicates whether object values can be overridden.
         exclude_example: true
-        test_value: "true"
+        example: "true"
       - model_name: value
         tf_name: ip
         type: String

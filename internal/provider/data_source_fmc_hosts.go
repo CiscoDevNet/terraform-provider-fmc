@@ -107,6 +107,8 @@ func (d *HostsDataSource) Configure(_ context.Context, req datasource.ConfigureR
 
 // End of section. //template:end model
 
+// Section below is generated&owned by "gen/generator.go". //template:begin read
+
 func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config Hosts
 
@@ -129,7 +131,7 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	urlPath := config.getPath() + "?expanded=true"
 	res, err := d.client.Get(urlPath, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET) from %s, got error: %s, %s", urlPath, err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
 
@@ -140,3 +142,5 @@ func (d *HostsDataSource) Read(ctx context.Context, req datasource.ReadRequest, 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
+
+// End of section. //template:end read
