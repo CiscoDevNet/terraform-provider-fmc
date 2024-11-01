@@ -1,0 +1,56 @@
+---
+name: Ports
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/protocolportobjects
+res_description: >-
+  This plural resource manages a bulk of Ports.
+  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
+  Updating/deleting `fmc_ports` can thus take much more time than creating it
+doc_category: Objects
+is_bulk: true
+data_source_name_query: yes
+import_name_query: yes
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of ports. The key of the map is the name of the individual Port. Renaming Ports in bulk
+      is not yet implemented.
+    map_key_example: ports_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Port.
+        exclude_example: true
+        exclude_test: true
+      - model_name: port
+        type: String
+        description: >-
+          Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
+        example: "443"
+      - model_name: protocol
+        type: String
+        description: >-
+          IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols.
+          Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP).
+          Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype
+          (e.g. 2048 means IP).
+        mandatory: true
+        example: TCP
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "Port TCP/443 (HTTPS)"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        exclude_example: true
+        test_value: "true"
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'ProtocolPortObject'.
+        default_value: ProtocolPortObject
+        exclude_example: true
+        exclude_test: true
