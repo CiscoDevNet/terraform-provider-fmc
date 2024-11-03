@@ -12,36 +12,20 @@ This provider can be used to manage the FMC configuration.
 
 ## Features
 
-You can manage the following resources with this provider:
-
-- Network, Host, Range, FQDN objects
-- Network object groups
-- ICMPv4 objects
-- URL objects
-- URL object groups
-- Port objects
-- Port object groups
-
-- Access Policies
-- Access Rules
-- NAT Policies
-- Auto NAT and Manual NAT Rules
-
-- Policy Device Mappings
-- Deployment to FTD
-
-Further, the provider provides the below data sources:
-
-- FTD devices
-- File and IPS policies
-- Security zones
-- Syslog alert configurations
+To check the documentation of the features supported by this Terraform provider, click on *Resources* and *Data Source* drop down menu from the left pane.
 
 ## Example
 
 An example provider initialization is shown below:
 
 ```hcl
+terraform {
+  required_providers {
+    fmc = {
+      source = "CiscoDevNet/fmc"
+    }
+  }
+}
 provider "fmc" {
     fmc_username = "terraform_user"
     fmc_password = "SecurePasswordFromTfvars"
