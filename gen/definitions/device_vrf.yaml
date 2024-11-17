@@ -1,0 +1,35 @@
+---
+name: Device VRF
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters
+data_source_name_query: true
+doc_category: Devices
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: UUID of the parent device (fmc_device.example.id).
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: name
+    type: String
+    mandatory: true
+    requires_replace: true
+    description: The name of the vrf object.
+    example: VRF_A
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'VirtualRouter'.
+    default_value: VirtualRouter
+    requires_replace: true
+    exclude_example: true
+    exclude_test: true
+  - model_name: description
+    type: String
+    description: Description
+    example: My VRF object
+
+test_prerequisites: |-
+
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
