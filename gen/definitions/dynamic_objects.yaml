@@ -1,0 +1,48 @@
+---
+name: Dynamic Objects
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/dynamicobjects
+res_description: >-
+  This plural resource manages a bulk of Dynamic Objects.
+  The FMC API supports quick bulk creation and deletion of this resource. Modification is always done one-by-one. Refresh is done in bulk for all objects and one-by-one for evey object that has mapping defined.
+  Updating/deleting `fmc_dynamic_objects` can thus take much more time than creating it
+doc_category: Objects
+is_bulk: true
+data_source_name_query: yes
+import_name_query: yes
+minimum_version_bulk_delete: "7.0"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of dynamic objects. The key of the map is the name of the individual Dynamic Objects.
+    map_key_example: dynamic_object_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Dynamic Object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'DynamicObject'.
+        default_value: DynamicObject
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "My Dynamic Object 1"
+      - model_name: objectType
+        mandatory: true
+        type: String
+        description: Type of dynamic object mappings. Currently we support only 'IP'.
+        example: IP
+        enum_values: ["IP"]
+      - model_name: mappings
+        type: Set
+        element_type: String
+        description: List of mappings for the Dynamic Object.
+        example: "10.0.0.1"
+

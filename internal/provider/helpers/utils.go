@@ -108,3 +108,30 @@ func SetGjson(orig gjson.Result, path string, content gjson.Result) gjson.Result
 
 	return gjson.Parse(s)
 }
+
+// DifferenceStringSet returns the elements that are present in `b`, but not in `a`.
+func DifferenceStringSet(ctx context.Context, a basetypes.SetValue, b basetypes.SetValue) basetypes.SetValue {
+	// extract elements from both sets
+	var aElements []string
+	var bElements []string
+	a.ElementsAs(ctx, &aElements, false)
+	b.ElementsAs(ctx, &bElements, false)
+
+	diff := []attr.Value{}
+	m := map[string]bool{}
+
+	// Mark in `m` all elements from `a`
+	for _, v := range aElements {
+		m[v] = true
+	}
+
+	// Iterate over `b` to find elements not marked in `m`
+	for _, v := range bElements {
+		// If element is not in `m`, add it to the diff
+		if _, ok := m[v]; !ok {
+			diff = append(diff, types.StringValue(v))
+		}
+	}
+
+	return types.SetValueMust(types.StringType, diff)
+}
