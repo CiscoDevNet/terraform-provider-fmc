@@ -11,6 +11,19 @@
             "mode": "auto",
             "program": "gen/generator.go",
             "cwd": "./"
+        },
+        {
+            "name": "Debug Terraform Provider",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            // this assumes your workspace is the root of the repo
+            "program": "${workspaceFolder}",
+            "env": {},
+            "args": [
+                "-debug",
+            ],
+            "envFile": "${workspaceFolder}/.vscode/private.env"
         }
     ]
 }

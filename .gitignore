@@ -17,6 +17,7 @@ website/node_modules
 ./*.tfstate
 .terraform/
 .vscode/settings.json
+.vscode/private.env
 *.log
 *.bak
 *~
