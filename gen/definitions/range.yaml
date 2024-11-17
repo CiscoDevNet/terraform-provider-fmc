@@ -10,6 +10,7 @@ attributes:
     mandatory: true
     example: range1
   - model_name: value
+    tf_name: ip_range
     type: String
     description: Range of addresses, IPv4 or IPv6.
     mandatory: true

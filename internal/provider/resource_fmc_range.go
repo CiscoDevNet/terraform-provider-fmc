@@ -81,7 +81,7 @@ func (r *RangeResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the resource.").String,
 				Required:            true,
 			},
-			"value": schema.StringAttribute{
+			"ip_range": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Range of addresses, IPv4 or IPv6.").String,
 				Required:            true,
 			},

@@ -75,7 +75,7 @@ func (d *RangeDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Optional:            true,
 				Computed:            true,
 			},
-			"value": schema.StringAttribute{
+			"ip_range": schema.StringAttribute{
 				MarkdownDescription: "Range of addresses, IPv4 or IPv6.",
 				Computed:            true,
 			},

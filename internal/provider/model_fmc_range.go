@@ -34,7 +34,7 @@ type Range struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
 	Name        types.String `tfsdk:"name"`
-	Value       types.String `tfsdk:"value"`
+	IpRange     types.String `tfsdk:"ip_range"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
 }
@@ -59,8 +59,8 @@ func (data Range) toBody(ctx context.Context, state Range) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
-	if !data.Value.IsNull() {
-		body, _ = sjson.Set(body, "value", data.Value.ValueString())
+	if !data.IpRange.IsNull() {
+		body, _ = sjson.Set(body, "value", data.IpRange.ValueString())
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
@@ -82,9 +82,9 @@ func (data *Range) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("value"); value.Exists() {
-		data.Value = types.StringValue(value.String())
+		data.IpRange = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.IpRange = types.StringNull()
 	}
 	if value := res.Get("description"); value.Exists() {
 		data.Description = types.StringValue(value.String())
@@ -112,10 +112,10 @@ func (data *Range) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
-		data.Value = types.StringValue(value.String())
+	if value := res.Get("value"); value.Exists() && !data.IpRange.IsNull() {
+		data.IpRange = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.IpRange = types.StringNull()
 	}
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())

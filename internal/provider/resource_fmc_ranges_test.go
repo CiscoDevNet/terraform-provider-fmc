@@ -29,25 +29,22 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcRange(t *testing.T) {
+func TestAccFmcRanges(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "name", "range1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "ip_range", "10.0.0.1-10.0.0.9"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "description", "My range"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.ranges_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.description", "My Range 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.ip_range", "10.0.0.1-10.0.0.9"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcRangeConfig_minimum(),
+			Config: testAccFmcRangesConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcRangeConfig_all(),
+		Config: testAccFmcRangesConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
-	})
-	steps = append(steps, resource.TestStep{
-		ResourceName: "fmc_range.test",
-		ImportState:  true,
 	})
 
 	resource.Test(t, resource.TestCase{
@@ -64,10 +61,11 @@ func TestAccFmcRange(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcRangeConfig_minimum() string {
-	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
-	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
+func testAccFmcRangesConfig_minimum() string {
+	config := `resource "fmc_ranges" "test" {` + "\n"
+	config += `	items = { "ranges_1" = {` + "\n"
+	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -76,12 +74,13 @@ func testAccFmcRangeConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcRangeConfig_all() string {
-	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
-	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
-	config += `	description = "My range"` + "\n"
-	config += `	overridable = true` + "\n"
+func testAccFmcRangesConfig_all() string {
+	config := `resource "fmc_ranges" "test" {` + "\n"
+	config += `	items = { "ranges_1" = {` + "\n"
+	config += `		description = "My Range 1"` + "\n"
+	config += `		overridable = true` + "\n"
+	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }

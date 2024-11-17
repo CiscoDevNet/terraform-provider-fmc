@@ -30,5 +30,5 @@ data "fmc_range" "example" {
 ### Read-Only
 
 - `description` (String) Optional user-created description.
+- `ip_range` (String) Range of addresses, IPv4 or IPv6.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `value` (String) Range of addresses, IPv4 or IPv6.

@@ -15,7 +15,7 @@ This resource can manage a Range.
 ```terraform
 resource "fmc_range" "example" {
   name        = "range1"
-  value       = "10.0.0.1-10.0.0.9"
+  ip_range    = "10.0.0.1-10.0.0.9"
   description = "My range"
 }
 ```
@@ -25,8 +25,8 @@ resource "fmc_range" "example" {
 
 ### Required
 
+- `ip_range` (String) Range of addresses, IPv4 or IPv6.
 - `name` (String) User-created name of the resource.
-- `value` (String) Range of addresses, IPv4 or IPv6.
 
 ### Optional
 

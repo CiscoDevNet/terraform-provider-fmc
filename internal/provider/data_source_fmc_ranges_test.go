@@ -28,21 +28,18 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
-func TestAccDataSourceFmcRange(t *testing.T) {
+func TestAccDataSourceFmcRanges(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "name", "range1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "ip_range", "10.0.0.1-10.0.0.9"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "description", "My range"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ranges.test", "items.ranges_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.description", "My Range 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.ip_range", "10.0.0.1-10.0.0.9"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcRangeConfig(),
-				Check:  resource.ComposeTestCheckFunc(checks...),
-			},
-			{
-				Config: testAccNamedDataSourceFmcRangeConfig(),
+				Config: testAccDataSourceFmcRangesConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -56,33 +53,22 @@ func TestAccDataSourceFmcRange(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
-func testAccDataSourceFmcRangeConfig() string {
-	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
-	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
-	config += `	description = "My range"` + "\n"
-	config += `	overridable = true` + "\n"
+func testAccDataSourceFmcRangesConfig() string {
+	config := `resource "fmc_ranges" "test" {` + "\n"
+	config += `	items = { "ranges_1" = {` + "\n"
+	config += `		description = "My Range 1"` + "\n"
+	config += `		overridable = true` + "\n"
+	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 
 	config += `
-		data "fmc_range" "test" {
-			id = fmc_range.test.id
-		}
-	`
-	return config
-}
-
-func testAccNamedDataSourceFmcRangeConfig() string {
-	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
-	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
-	config += `	description = "My range"` + "\n"
-	config += `	overridable = true` + "\n"
-	config += `}` + "\n"
-
-	config += `
-		data "fmc_range" "test" {
-			name = fmc_range.test.name
+		data "fmc_ranges" "test" {
+			depends_on = [fmc_ranges.test]
+			items = {
+				"ranges_1" = {
+				}
+			}
 		}
 	`
 	return config
