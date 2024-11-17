@@ -1,0 +1,35 @@
+---
+name: Security Zones
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securityzones
+is_bulk: true
+data_source_name_query: true
+import_name_query: yes
+res_description: >-
+  This plural resource manages a bulk of Security Zones.
+  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
+  Updating/deleting `fmc_security_zones` can thus take much more time than creating it
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of security zones. The key of the map is the name of the individual Security Zone. Renaming Security Zone in bulk
+      is not yet implemented.
+    map_key_example: security_zone_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Security Zone.
+        exclude_example: true
+        exclude_test: true
+      - model_name: interfaceMode
+        type: String
+        mandatory: true
+        description: >-
+          The mode of the associated interfaces, with the exception of mode ROUTED that corresponds
+          to mode NONE of associated interfaces.
+        enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, ASA]
+        example: ROUTED
+        requires_replace: true
