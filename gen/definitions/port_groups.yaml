@@ -1,0 +1,63 @@
+---
+name: Port Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/portobjectgroups
+res_description: >-
+  This plural resource manages a bulk of Port Groups.
+  The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
+  Updating and deleting `fmc_port_groups` can thus take much more time than creating it (even >500 times more time,
+  i.e. >50000%, depending on the change size).
+data_source_name_query: true
+import_name_query: yes
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of port groups. The key of the map is the name of the individual Port Group. 
+    mandatory: true
+    map_key_example: port_group_1
+    attributes:
+    - model_name: id
+      type: String
+      resource_id: true
+      description: UUID of the managed Port Groups.
+      exclude_example: true
+      exclude_test: true
+    - model_name: type
+      type: String
+      mandatory: true
+      example: "PortObjectGroup"
+    - model_name: description
+      type: String
+      description: Optional user-created description.
+      example: "My port group description"
+    - model_name: overridable
+      type: Bool
+      description: Indicates whether object values can be overridden.
+      exclude_example: true
+      test_value: "true"        
+    - model_name: objects
+      tf_name: ports
+      type: Set
+      mandatory: true
+      attributes:
+        - model_name: id
+          type: String
+          description: UUID of the port (such as fmc_port.test.id, etc.).
+          id: true
+          example: 0050568A-232D-0ed3-0000-004294971602
+          test_value: fmc_port.test.id
+        - model_name: type
+          type: String
+          mandatory: true
+          enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
+          example: ProtocolPortObject
+
+test_prerequisites: |-
+  resource "fmc_port" "test" {
+    name        = "port_1"
+    description = "My PORT id"
+    protocol    = "TCP"
+    port        = "443"
+  }

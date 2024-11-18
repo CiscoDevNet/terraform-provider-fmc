@@ -266,7 +266,7 @@ func IsList(attribute YamlConfigAttribute) bool {
 
 // Templating helper function to return true if type is a set without nested elements
 func IsSet(attribute YamlConfigAttribute) bool {
-	if attribute.Type == "Set" && attribute.ElementType != "" {
+	if attribute.Type == "Set" && (attribute.ElementType != "" || len(attribute.Attributes) > 0) {
 		return true
 	}
 	return false
