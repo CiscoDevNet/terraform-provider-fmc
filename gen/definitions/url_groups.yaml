@@ -1,0 +1,60 @@
+---
+name: URL Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/urlgroups
+res_description: >-
+  This plural resource manages a bulk of Port Groups.
+  The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
+  Updating and deleting `fmc_port_groups` can thus take much more time than creating it (even >500 times more time,
+  i.e. >50000%, depending on the change size).
+data_source_name_query: true
+import_name_query: yes
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of port groups. The key of the map is the name of the individual URL Group. 
+    mandatory: true
+    map_key_example: url_group_1
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed URL Groups.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "My URL group"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        exclude_example: true
+        test_value: "true"
+      - model_name: objects
+        tf_name: urls
+        type: Set
+        mandatory: true
+        attributes:
+          - model_name: id
+            type: String
+            description: UUID of the object (such as fmc_url.example.id, etc.).
+            id: true
+            example: 0050568A-FAC7-0ed3-0000-004294987896
+            test_value: fmc_url.test.id
+      - model_name: literals
+        type: Set
+        attributes:
+          - model_name: url
+            type: String
+            description: URL literal value.
+            example: "https://www.example.com/app"
+test_prerequisites: |-
+  resource "fmc_url" "test" {
+    name        = "url_1"
+    url         = "https://www.example.com/app"
+  }
+
+      
