@@ -30,12 +30,12 @@ data "fmc_port_group" "example" {
 ### Read-Only
 
 - `description` (String) Optional user-created description.
+- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `ports` (Attributes Set) (see [below for nested schema](#nestedatt--ports))
-- `type` (String)
+- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
-<a id="nestedatt--ports"></a>
-### Nested Schema for `ports`
+<a id="nestedatt--objects"></a>
+### Nested Schema for `objects`
 
 Read-Only:
 

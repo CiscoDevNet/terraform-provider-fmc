@@ -30,3 +30,4 @@ data "fmc_security_zone" "example" {
 ### Read-Only
 
 - `interface_mode` (String) The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.
+- `type` (String) Type of the object; this value is always 'SecurityZone'.

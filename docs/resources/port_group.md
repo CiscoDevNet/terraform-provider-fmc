@@ -15,9 +15,8 @@ This resource can manage a Port Group.
 ```terraform
 resource "fmc_port_group" "example" {
   name        = "portgroup_obj1"
-  type        = "PortObjectGroup"
   description = "My port group description"
-  ports = [
+  objects = [
     {
       id   = "0050568A-232D-0ed3-0000-004294971602"
       type = "ProtocolPortObject"
@@ -32,21 +31,22 @@ resource "fmc_port_group" "example" {
 ### Required
 
 - `name` (String) User-created name of the object.
-- `ports` (Attributes Set) (see [below for nested schema](#nestedatt--ports))
-- `type` (String)
+- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--objects))
 
 ### Optional
 
 - `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
+- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
+  - Default value: `PortObjectGroup`
 
 ### Read-Only
 
 - `id` (String) The id of the object
 
-<a id="nestedatt--ports"></a>
-### Nested Schema for `ports`
+<a id="nestedatt--objects"></a>
+### Nested Schema for `objects`
 
 Required:
 

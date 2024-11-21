@@ -38,6 +38,7 @@ type ICMPv4Object struct {
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
+	Type        types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -72,6 +73,9 @@ func (data ICMPv4Object) toBody(ctx context.Context, state ICMPv4Object) string 
 	if !data.Overridable.IsNull() {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
+	if !data.Type.IsNull() {
+		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	}
 	return body
 }
 
@@ -104,6 +108,11 @@ func (data *ICMPv4Object) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
+	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringValue("ICMPV4Object")
 	}
 }
 
@@ -140,6 +149,11 @@ func (data *ICMPv4Object) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else if data.Type.ValueString() != "ICMPV4Object" {
+		data.Type = types.StringNull()
 	}
 }
 

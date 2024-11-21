@@ -40,3 +40,4 @@ Read-Only:
 
 - `id` (String) UUID of the managed Security Zone.
 - `interface_mode` (String) The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.
+- `type` (String) Type of the object; this value is always 'SecurityZone'.

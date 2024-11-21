@@ -75,7 +75,7 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Type of the object; this value is always 'PortObjectGroup'.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{

@@ -26,8 +26,11 @@ attributes:
       exclude_test: true
     - model_name: type
       type: String
-      mandatory: true
-      example: "PortObjectGroup"
+      description: Type of the object; this value is always 'PortObjectGroup'.
+      default_value: PortObjectGroup
+      requires_replace: true
+      exclude_example: true
+      exclude_test: true 
     - model_name: description
       type: String
       description: Optional user-created description.

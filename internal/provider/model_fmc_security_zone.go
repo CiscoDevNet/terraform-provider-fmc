@@ -35,6 +35,7 @@ type SecurityZone struct {
 	Domain        types.String `tfsdk:"domain"`
 	Name          types.String `tfsdk:"name"`
 	InterfaceMode types.String `tfsdk:"interface_mode"`
+	Type          types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -60,6 +61,9 @@ func (data SecurityZone) toBody(ctx context.Context, state SecurityZone) string 
 	if !data.InterfaceMode.IsNull() {
 		body, _ = sjson.Set(body, "interfaceMode", data.InterfaceMode.ValueString())
 	}
+	if !data.Type.IsNull() {
+		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	}
 	return body
 }
 
@@ -77,6 +81,11 @@ func (data *SecurityZone) fromBody(ctx context.Context, res gjson.Result) {
 		data.InterfaceMode = types.StringValue(value.String())
 	} else {
 		data.InterfaceMode = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringValue("SecurityZone")
 	}
 }
 
@@ -98,6 +107,11 @@ func (data *SecurityZone) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.InterfaceMode = types.StringValue(value.String())
 	} else {
 		data.InterfaceMode = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else if data.Type.ValueString() != "SecurityZone" {
+		data.Type = types.StringNull()
 	}
 }
 

@@ -90,6 +90,10 @@ func (d *ICMPv4ObjectsDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.",
 							Computed:            true,
 						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the object; this value is always 'ICMPV4Object'.",
+							Computed:            true,
+						},
 					},
 				},
 			},

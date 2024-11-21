@@ -138,7 +138,7 @@ func (data *PortGroups) fromBody(ctx context.Context, res gjson.Result) {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())
 		} else {
-			data.Type = types.StringNull()
+			data.Type = types.StringValue("PortObjectGroup")
 		}
 		if value := res.Get("description"); value.Exists() {
 			data.Description = types.StringValue(value.String())
@@ -204,7 +204,7 @@ func (data *PortGroups) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 			data.Type = types.StringValue(value.String())
-		} else {
+		} else if data.Type.ValueString() != "PortObjectGroup" {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {

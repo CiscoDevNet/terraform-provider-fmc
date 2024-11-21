@@ -11,8 +11,11 @@ attributes:
     example: portgroup_obj1
   - model_name: type
     type: String
-    mandatory: true
-    example: "PortObjectGroup"
+    description: Type of the object; this value is always 'PortObjectGroup'.
+    default_value: PortObjectGroup
+    requires_replace: true
+    exclude_example: true
+    exclude_test: true 
   - model_name: description
     type: String
     description: Optional user-created description.
@@ -21,9 +24,8 @@ attributes:
     type: Bool
     description: Indicates whether object values can be overridden.
     exclude_example: true
-    test_value: "true"        
+    test_value: "true"
   - model_name: objects
-    tf_name: ports
     type: Set
     mandatory: true
     attributes:
@@ -37,7 +39,7 @@ attributes:
         type: String
         mandatory: true
         enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
-        example: ProtocolPortObject
+        example: ProtocolPortObject        
 
 test_prerequisites: |-
   resource "fmc_port" "test" {

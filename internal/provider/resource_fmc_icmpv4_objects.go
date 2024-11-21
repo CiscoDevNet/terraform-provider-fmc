@@ -33,6 +33,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -117,6 +118,12 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							Validators: []validator.Int64{
 								int64validator.Between(0, 255),
 							},
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPV4Object'.").AddDefaultValueDescription("ICMPV4Object").String,
+							Optional:            true,
+							Computed:            true,
+							Default:             stringdefault.StaticString("ICMPV4Object"),
 						},
 					},
 				},

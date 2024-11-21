@@ -29,6 +29,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -84,8 +85,13 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
-				Required:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'PortObjectGroup'.").AddDefaultValueDescription("PortObjectGroup").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             stringdefault.StaticString("PortObjectGroup"),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
@@ -95,7 +101,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 				Optional:            true,
 			},
-			"ports": schema.SetNestedAttribute{
+			"objects": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{

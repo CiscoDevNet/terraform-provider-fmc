@@ -76,7 +76,7 @@ func (d *PortGroupDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Type of the object; this value is always 'PortObjectGroup'.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -87,7 +87,7 @@ func (d *PortGroupDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				MarkdownDescription: "Indicates whether object values can be overridden.",
 				Computed:            true,
 			},
-			"ports": schema.SetNestedAttribute{
+			"objects": schema.SetNestedAttribute{
 				MarkdownDescription: "",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

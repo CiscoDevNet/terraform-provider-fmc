@@ -31,6 +31,8 @@ resource "fmc_security_zone" "example" {
 ### Optional
 
 - `domain` (String) The name of the FMC domain
+- `type` (String) Type of the object; this value is always 'SecurityZone'.
+  - Default value: `SecurityZone`
 
 ### Read-Only
 

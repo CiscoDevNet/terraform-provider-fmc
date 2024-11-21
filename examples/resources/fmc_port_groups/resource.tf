@@ -1,7 +1,6 @@
 resource "fmc_port_groups" "example" {
   items = {
     port_group_1 = {
-      type        = "PortObjectGroup"
       description = "My port group description"
       ports = [
         {
