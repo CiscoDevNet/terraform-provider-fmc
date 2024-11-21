@@ -41,14 +41,14 @@ type PortGroups struct {
 }
 
 type PortGroupsItems struct {
-	Id          types.String           `tfsdk:"id"`
-	Type        types.String           `tfsdk:"type"`
-	Description types.String           `tfsdk:"description"`
-	Overridable types.Bool             `tfsdk:"overridable"`
-	Ports       []PortGroupsItemsPorts `tfsdk:"ports"`
+	Id          types.String             `tfsdk:"id"`
+	Type        types.String             `tfsdk:"type"`
+	Description types.String             `tfsdk:"description"`
+	Overridable types.Bool               `tfsdk:"overridable"`
+	Objects     []PortGroupsItemsObjects `tfsdk:"objects"`
 }
 
-type PortGroupsItemsPorts struct {
+type PortGroupsItemsObjects struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
@@ -86,9 +86,9 @@ func (data PortGroups) toBody(ctx context.Context, state PortGroups) string {
 			if !item.Overridable.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
-			if len(item.Ports) > 0 {
+			if len(item.Objects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "objects", []interface{}{})
-				for _, childItem := range item.Ports {
+				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
@@ -151,10 +151,10 @@ func (data *PortGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.Ports = make([]PortGroupsItemsPorts, 0)
+			data.Objects = make([]PortGroupsItemsObjects, 0)
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
-				data := PortGroupsItemsPorts{}
+				data := PortGroupsItemsObjects{}
 				if value := res.Get("id"); value.Exists() {
 					data.Id = types.StringValue(value.String())
 				} else {
@@ -165,7 +165,7 @@ func (data *PortGroups) fromBody(ctx context.Context, res gjson.Result) {
 				} else {
 					data.Type = types.StringNull()
 				}
-				(*parent).Ports = append((*parent).Ports, data)
+				(*parent).Objects = append((*parent).Objects, data)
 				return true
 			})
 		}
@@ -217,12 +217,12 @@ func (data *PortGroups) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Overridable = types.BoolNull()
 		}
-		for i := 0; i < len(data.Ports); i++ {
+		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.Ports[i].Id.ValueString()}
+			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 			parent := &data
-			data := (*parent).Ports[i]
+			data := (*parent).Objects[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -244,11 +244,11 @@ func (data *PortGroups) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing Ports[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing Objects[%d] = %+v",
 					i,
-					(*parent).Ports[i],
+					(*parent).Objects[i],
 				))
-				(*parent).Ports = slices.Delete((*parent).Ports, i, i+1)
+				(*parent).Objects = slices.Delete((*parent).Objects, i, i+1)
 				i--
 
 				continue
@@ -263,7 +263,7 @@ func (data *PortGroups) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else {
 				data.Type = types.StringNull()
 			}
-			(*parent).Ports[i] = data
+			(*parent).Objects[i] = data
 		}
 		(*parent).Items[i] = data
 	}

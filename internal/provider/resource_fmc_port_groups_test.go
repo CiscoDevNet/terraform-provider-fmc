@@ -33,7 +33,7 @@ func TestAccFmcPortGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_groups.test", "items.port_group_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.description", "My port group description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.ports.0.type", "ProtocolPortObject"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.objects.0.type", "ProtocolPortObject"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -73,7 +73,7 @@ resource "fmc_port" "test" {
 func testAccFmcPortGroupsConfig_minimum() string {
 	config := `resource "fmc_port_groups" "test" {` + "\n"
 	config += `	items = { "port_group_1" = {` + "\n"
-	config += `		ports = [{` + "\n"
+	config += `		objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `			type = "ProtocolPortObject"` + "\n"
 	config += `		}]` + "\n"
@@ -91,7 +91,7 @@ func testAccFmcPortGroupsConfig_all() string {
 	config += `	items = { "port_group_1" = {` + "\n"
 	config += `		description = "My port group description"` + "\n"
 	config += `		overridable = true` + "\n"
-	config += `		ports = [{` + "\n"
+	config += `		objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `			type = "ProtocolPortObject"` + "\n"
 	config += `		}]` + "\n"

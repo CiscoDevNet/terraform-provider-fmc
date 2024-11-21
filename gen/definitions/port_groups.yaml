@@ -41,7 +41,6 @@ attributes:
       exclude_example: true
       test_value: "true"        
     - model_name: objects
-      tf_name: ports
       type: Set
       mandatory: true
       attributes:

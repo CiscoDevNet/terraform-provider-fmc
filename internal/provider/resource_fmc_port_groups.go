@@ -112,7 +112,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 							Optional:            true,
 						},
-						"ports": schema.SetNestedAttribute{
+						"objects": schema.SetNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{

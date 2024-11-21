@@ -40,12 +40,12 @@ Read-Only:
 
 - `description` (String) Optional user-created description.
 - `id` (String) UUID of the managed Port Groups.
+- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--items--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `ports` (Attributes Set) (see [below for nested schema](#nestedatt--items--ports))
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
-<a id="nestedatt--items--ports"></a>
-### Nested Schema for `items.ports`
+<a id="nestedatt--items--objects"></a>
+### Nested Schema for `items.objects`
 
 Read-Only:
 

@@ -86,7 +86,7 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 							MarkdownDescription: "Indicates whether object values can be overridden.",
 							Computed:            true,
 						},
-						"ports": schema.SetNestedAttribute{
+						"objects": schema.SetNestedAttribute{
 							MarkdownDescription: "",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
