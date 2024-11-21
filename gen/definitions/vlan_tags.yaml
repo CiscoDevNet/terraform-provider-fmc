@@ -1,0 +1,50 @@
+---
+name: VLAN Tags
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/vlantags
+is_bulk: true
+data_source_name_query: true
+import_name_query: yes
+res_description: >-
+  This plural resource manages a bulk of VLAN tags.
+  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
+  Updating/deleting `fmc_vlan_tags` can thus take much more time than creating it
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of security zones. The key of the map is the name of the individual VLAN tag object. Renaming URL object in bulk
+      is not yet implemented.
+    map_key_example: vlan_tag_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Vlan tag object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "My TAG id"
+        mandatory: false
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        example: true
+      - model_name: type
+        type: String
+        value: "VlanTag"
+      - model_name: startTag
+        type: String
+        example: "12"
+        test_value: "12"
+        data_path: ["data"]
+        mandatory: true
+      - model_name: endTag
+        type: String
+        example: "15"
+        test_value: "15"
+        data_path: ["data"]
+        mandatory: true
