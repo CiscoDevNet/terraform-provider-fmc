@@ -34,26 +34,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &URLGroupsDataSource{}
-	_ datasource.DataSourceWithConfigure = &URLGroupsDataSource{}
+	_ datasource.DataSource              = &VLANTagGroupsDataSource{}
+	_ datasource.DataSourceWithConfigure = &VLANTagGroupsDataSource{}
 )
 
-func NewURLGroupsDataSource() datasource.DataSource {
-	return &URLGroupsDataSource{}
+func NewVLANTagGroupsDataSource() datasource.DataSource {
+	return &VLANTagGroupsDataSource{}
 }
 
-type URLGroupsDataSource struct {
+type VLANTagGroupsDataSource struct {
 	client *fmc.Client
 }
 
-func (d *URLGroupsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_url_groups"
+func (d *VLANTagGroupsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_vlan_tag_groups"
 }
 
-func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *VLANTagGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the URL Groups.",
+		MarkdownDescription: "This data source can read the VLAN Tag Groups.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -65,7 +65,7 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of url groups. The key of the map is the name of the individual URL Group. ",
+				MarkdownDescription: "Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. ",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -82,25 +82,13 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							MarkdownDescription: "Indicates whether object values can be overridden.",
 							Computed:            true,
 						},
-						"urls": schema.SetNestedAttribute{
+						"vlan_tags": schema.SetNestedAttribute{
 							MarkdownDescription: "",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_url.example.id, etc.).",
-										Computed:            true,
-									},
-								},
-							},
-						},
-						"literals": schema.SetNestedAttribute{
-							MarkdownDescription: "",
-							Computed:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"url": schema.StringAttribute{
-										MarkdownDescription: "URL literal value.",
+										MarkdownDescription: "UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).",
 										Computed:            true,
 									},
 								},
@@ -113,7 +101,7 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 	}
 }
 
-func (d *URLGroupsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *VLANTagGroupsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -125,8 +113,8 @@ func (d *URLGroupsDataSource) Configure(_ context.Context, req datasource.Config
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *URLGroupsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config URLGroups
+func (d *VLANTagGroupsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config VLANTagGroups
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

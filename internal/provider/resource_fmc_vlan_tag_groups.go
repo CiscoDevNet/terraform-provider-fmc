@@ -44,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &URLGroupsResource{}
-	_ resource.ResourceWithImportState = &URLGroupsResource{}
+	_ resource.Resource                = &VLANTagGroupsResource{}
+	_ resource.ResourceWithImportState = &VLANTagGroupsResource{}
 )
 
-func NewURLGroupsResource() resource.Resource {
-	return &URLGroupsResource{}
+func NewVLANTagGroupsResource() resource.Resource {
+	return &VLANTagGroupsResource{}
 }
 
-type URLGroupsResource struct {
+type VLANTagGroupsResource struct {
 	client *fmc.Client
 }
 
-func (r *URLGroupsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_url_groups"
+func (r *VLANTagGroupsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_vlan_tag_groups"
 }
 
-func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *VLANTagGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_url_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This plural resource manages a bulk of VLAN Tag Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_vlan_tag_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -81,7 +81,7 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of url groups. The key of the map is the name of the individual URL Group. ").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. ").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -100,25 +100,13 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 							Optional:            true,
 						},
-						"urls": schema.SetNestedAttribute{
+						"vlan_tags": schema.SetNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url.example.id, etc.).").String,
-										Optional:            true,
-									},
-								},
-							},
-						},
-						"literals": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
-							Optional:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"url": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("URL literal value.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).").String,
 										Optional:            true,
 									},
 								},
@@ -131,7 +119,7 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 	}
 }
 
-func (r *URLGroupsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *VLANTagGroupsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -143,8 +131,8 @@ func (r *URLGroupsResource) Configure(_ context.Context, req resource.ConfigureR
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *URLGroupsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan URLGroups
+func (r *VLANTagGroupsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan VLANTagGroups
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -162,8 +150,8 @@ func (r *URLGroupsResource) Create(ctx context.Context, req resource.CreateReque
 
 	// Prepare state to track creation process
 	// Create request is split to multiple requests, where just subset of them may be successful
-	state := URLGroups{}
-	state.Items = make(map[string]URLGroupsItems, len(plan.Items))
+	state := VLANTagGroups{}
+	state.Items = make(map[string]VLANTagGroupsItems, len(plan.Items))
 	state.Id = types.StringValue(uuid.New().String())
 	state.Domain = plan.Domain
 
@@ -184,8 +172,8 @@ func (r *URLGroupsResource) Create(ctx context.Context, req resource.CreateReque
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *URLGroupsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state URLGroups
+func (r *VLANTagGroupsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state VLANTagGroups
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -233,8 +221,8 @@ func (r *URLGroupsResource) Read(ctx context.Context, req resource.ReadRequest, 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *URLGroupsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state URLGroups
+func (r *VLANTagGroupsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state VLANTagGroups
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -258,8 +246,8 @@ func (r *URLGroupsResource) Update(ctx context.Context, req resource.UpdateReque
 
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
-	var toDelete URLGroups
-	toDelete.Items = make(map[string]URLGroupsItems)
+	var toDelete VLANTagGroups
+	toDelete.Items = make(map[string]VLANTagGroupsItems)
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -288,8 +276,8 @@ func (r *URLGroupsResource) Update(ctx context.Context, req resource.UpdateReque
 
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
-	var toCreate URLGroups
-	toCreate.Items = make(map[string]URLGroupsItems)
+	var toCreate VLANTagGroups
+	toCreate.Items = make(map[string]VLANTagGroupsItems)
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -312,8 +300,8 @@ func (r *URLGroupsResource) Update(ctx context.Context, req resource.UpdateReque
 	// UPDATE
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
-	var toUpdate URLGroups
-	toUpdate.Items = make(map[string]URLGroupsItems)
+	var toUpdate VLANTagGroups
+	toUpdate.Items = make(map[string]VLANTagGroupsItems)
 
 	for _, valueState := range state.Items {
 
@@ -359,8 +347,8 @@ func (r *URLGroupsResource) Update(ctx context.Context, req resource.UpdateReque
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *URLGroupsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state URLGroups
+func (r *VLANTagGroupsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state VLANTagGroups
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -396,11 +384,11 @@ func (r *URLGroupsResource) Delete(ctx context.Context, req resource.DeleteReque
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *URLGroupsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *VLANTagGroupsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Import looks for string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]
 	// <domain_name> is optional
 	// <object1_name>,<object2_name>,... is coma-separated list of object names
-	var config URLGroups
+	var config VLANTagGroups
 
 	// Compile pattern for import command parsing
 	var inputPattern = regexp.MustCompile(`^(?P<domain>[^\s,]*),*\[(?P<names>.*?),*\]`)
@@ -421,9 +409,9 @@ func (r *URLGroupsResource) ImportState(ctx context.Context, req resource.Import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 
 	// Fill state with names of objects to import
-	config.Items = make(map[string]URLGroupsItems, len(names))
+	config.Items = make(map[string]VLANTagGroupsItems, len(names))
 	for _, v := range names {
-		config.Items[v] = URLGroupsItems{}
+		config.Items[v] = VLANTagGroupsItems{}
 	}
 
 	// Generate new ID
@@ -445,10 +433,10 @@ func (r *URLGroupsResource) ImportState(ctx context.Context, req resource.Import
 // Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
-func (r *URLGroupsResource) createSubresources(ctx context.Context, state, plan URLGroups, reqMods ...func(*fmc.Req)) (URLGroups, diag.Diagnostics) {
+func (r *VLANTagGroupsResource) createSubresources(ctx context.Context, state, plan VLANTagGroups, reqMods ...func(*fmc.Req)) (VLANTagGroups, diag.Diagnostics) {
 	var idx = 0
-	var bulk URLGroups
-	bulk.Items = make(map[string]URLGroupsItems, bulkSizeCreate)
+	var bulk VLANTagGroups
+	bulk.Items = make(map[string]VLANTagGroupsItems, bulkSizeCreate)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of objects", state.Id.ValueString()))
 
@@ -464,7 +452,7 @@ func (r *URLGroupsResource) createSubresources(ctx context.Context, state, plan 
 		if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
 
 			// Parse body of the request to string
-			body := bulk.toBody(ctx, URLGroups{})
+			body := bulk.toBody(ctx, VLANTagGroups{})
 
 			// Execute request
 			urlPath := bulk.getPath() + "?bulk=true"
@@ -482,7 +470,7 @@ func (r *URLGroupsResource) createSubresources(ctx context.Context, state, plan 
 			}
 
 			// Clear bulk item for next run
-			bulk.Items = make(map[string]URLGroupsItems, bulkSizeCreate)
+			bulk.Items = make(map[string]VLANTagGroupsItems, bulkSizeCreate)
 		}
 	}
 
@@ -493,7 +481,7 @@ func (r *URLGroupsResource) createSubresources(ctx context.Context, state, plan 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
-func (r *URLGroupsResource) deleteSubresources(ctx context.Context, state, plan URLGroups, reqMods ...func(*fmc.Req)) (URLGroups, diag.Diagnostics) {
+func (r *VLANTagGroupsResource) deleteSubresources(ctx context.Context, state, plan VLANTagGroups, reqMods ...func(*fmc.Req)) (VLANTagGroups, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of objects", state.Id.ValueString()))
@@ -525,9 +513,9 @@ func (r *URLGroupsResource) deleteSubresources(ctx context.Context, state, plan 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
-func (r *URLGroupsResource) updateSubresources(ctx context.Context, state, plan URLGroups, reqMods ...func(*fmc.Req)) (URLGroups, diag.Diagnostics) {
-	var tmpObject URLGroups
-	tmpObject.Items = make(map[string]URLGroupsItems, 1)
+func (r *VLANTagGroupsResource) updateSubresources(ctx context.Context, state, plan VLANTagGroups, reqMods ...func(*fmc.Req)) (VLANTagGroups, diag.Diagnostics) {
+	var tmpObject VLANTagGroups
+	tmpObject.Items = make(map[string]VLANTagGroupsItems, 1)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
 

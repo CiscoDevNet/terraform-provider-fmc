@@ -1,0 +1,54 @@
+---
+name: VLAN Tag Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/vlangrouptags
+res_description: >-
+  This plural resource manages a bulk of VLAN Tag Groups.
+  The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
+  Updating and deleting `fmc_vlan_tag_groups` can thus take much more time than creating it (even >500 times more time,
+  i.e. >50000%, depending on the change size).
+data_source_name_query: true
+import_name_query: yes
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. 
+    mandatory: true
+    map_key_example: vlan_tag_group_1
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed URL Groups.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Optional user-created description.
+        example: "My vlan tag group name"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        example: true
+      - model_name: objects
+        tf_name: vlan_tags
+        type: Set
+        mandatory: true
+        attributes:
+          - model_name: id
+            type: String
+            description: UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).
+            id: true
+            example: 0050568A-4E02-1ed3-0000-004294969198
+            test_value: fmc_vlan_tag.test.id
+
+test_prerequisites: |-
+  resource "fmc_vlan_tag" "test" {
+    name        = "vlan_tag_1111"
+    description = "My TAG id"
+    overridable = false
+    start_tag   = 11
+    end_tag     = 12
+  }

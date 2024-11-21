@@ -27,7 +27,7 @@ data "fmc_url_groups" "example" {
 ### Optional
 
 - `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of port groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of url groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 

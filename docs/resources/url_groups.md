@@ -3,12 +3,12 @@
 page_title: "fmc_url_groups Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of Port Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting fmc_port_groups can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+  This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting fmc_url_groups can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
 ---
 
 # fmc_url_groups (Resource)
 
-This plural resource manages a bulk of Port Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_port_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_url_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
 
 ## Example Usage
 
@@ -37,7 +37,7 @@ resource "fmc_url_groups" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of port groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of url groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
