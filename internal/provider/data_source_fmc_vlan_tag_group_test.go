@@ -75,6 +75,10 @@ func testAccDataSourceFmcVLANTagGroupConfig() string {
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"
 	config += `	}]` + "\n"
+	config += `	literals = [{` + "\n"
+	config += `		start_tag = 11` + "\n"
+	config += `		end_tag = 22` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -92,6 +96,10 @@ func testAccNamedDataSourceFmcVLANTagGroupConfig() string {
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"
+	config += `	}]` + "\n"
+	config += `	literals = [{` + "\n"
+	config += `		start_tag = 11` + "\n"
+	config += `		end_tag = 22` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

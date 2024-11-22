@@ -95,6 +95,22 @@ func (d *VLANTagGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 					},
 				},
 			},
+			"literals": schema.SetNestedAttribute{
+				MarkdownDescription: "",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"start_tag": schema.StringAttribute{
+							MarkdownDescription: "VLAN Tag literal starting value.",
+							Computed:            true,
+						},
+						"end_tag": schema.StringAttribute{
+							MarkdownDescription: "VLAN Tag literal end value.",
+							Computed:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

@@ -101,6 +101,22 @@ func (r *VLANTagGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 					},
 				},
 			},
+			"literals": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"start_tag": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("VLAN Tag literal starting value.").String,
+							Required:            true,
+						},
+						"end_tag": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("VLAN Tag literal end value.").String,
+							Optional:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

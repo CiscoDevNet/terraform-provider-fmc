@@ -22,6 +22,12 @@ resource "fmc_vlan_tag_group" "example" {
       id = "0050568A-4E02-1ed3-0000-004294969198"
     }
   ]
+  literals = [
+    {
+      start_tag = "11"
+      end_tag   = "22"
+    }
+  ]
 }
 ```
 
@@ -37,6 +43,7 @@ resource "fmc_vlan_tag_group" "example" {
 
 - `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
+- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
@@ -49,6 +56,18 @@ resource "fmc_vlan_tag_group" "example" {
 Optional:
 
 - `id` (String) UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).
+
+
+<a id="nestedatt--literals"></a>
+### Nested Schema for `literals`
+
+Required:
+
+- `start_tag` (String) VLAN Tag literal starting value.
+
+Optional:
+
+- `end_tag` (String) VLAN Tag literal end value.
 
 ## Import
 

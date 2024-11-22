@@ -30,8 +30,18 @@ data "fmc_vlan_tag_group" "example" {
 ### Read-Only
 
 - `description` (String) Optional user-created description.
+- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `vlan_tags` (Attributes Set) (see [below for nested schema](#nestedatt--vlan_tags))
+
+<a id="nestedatt--literals"></a>
+### Nested Schema for `literals`
+
+Read-Only:
+
+- `end_tag` (String) VLAN Tag literal end value.
+- `start_tag` (String) VLAN Tag literal starting value.
+
 
 <a id="nestedatt--vlan_tags"></a>
 ### Nested Schema for `vlan_tags`

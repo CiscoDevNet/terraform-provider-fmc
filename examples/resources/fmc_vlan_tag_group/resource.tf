@@ -7,4 +7,10 @@ resource "fmc_vlan_tag_group" "example" {
       id = "0050568A-4E02-1ed3-0000-004294969198"
     }
   ]
+  literals = [
+    {
+      start_tag = "11"
+      end_tag   = "22"
+    }
+  ]
 }

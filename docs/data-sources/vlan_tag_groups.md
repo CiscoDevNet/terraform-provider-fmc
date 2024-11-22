@@ -40,8 +40,18 @@ Read-Only:
 
 - `description` (String) Optional user-created description.
 - `id` (String) UUID of the managed URL Groups.
+- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--items--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `vlan_tags` (Attributes Set) (see [below for nested schema](#nestedatt--items--vlan_tags))
+
+<a id="nestedatt--items--literals"></a>
+### Nested Schema for `items.literals`
+
+Read-Only:
+
+- `end_tag` (String) VLAN Tag literal end value.
+- `start_tag` (String) VLAN Tag literal starting value.
+
 
 <a id="nestedatt--items--vlan_tags"></a>
 ### Nested Schema for `items.vlan_tags`

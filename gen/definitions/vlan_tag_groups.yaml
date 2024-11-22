@@ -43,7 +43,20 @@ attributes:
             id: true
             example: 0050568A-4E02-1ed3-0000-004294969198
             test_value: fmc_vlan_tag.test.id
-
+      - model_name: literals
+        type: Set
+        attributes:
+          - model_name: startTag
+            type: String
+            description: VLAN Tag literal starting value.
+            example: "11"
+            test_value: "11"
+            mandatory: true
+          - model_name: endTag
+            type: String
+            description: VLAN Tag literal end value.
+            example: "22"
+            test_value: "22"
 test_prerequisites: |-
   resource "fmc_vlan_tag" "test" {
     name        = "vlan_tag_1111"

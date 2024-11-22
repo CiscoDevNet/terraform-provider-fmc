@@ -45,10 +45,15 @@ type VLANTagGroupsItems struct {
 	Description types.String                 `tfsdk:"description"`
 	Overridable types.Bool                   `tfsdk:"overridable"`
 	VlanTags    []VLANTagGroupsItemsVlanTags `tfsdk:"vlan_tags"`
+	Literals    []VLANTagGroupsItemsLiterals `tfsdk:"literals"`
 }
 
 type VLANTagGroupsItemsVlanTags struct {
 	Id types.String `tfsdk:"id"`
+}
+type VLANTagGroupsItemsLiterals struct {
+	StartTag types.String `tfsdk:"start_tag"`
+	EndTag   types.String `tfsdk:"end_tag"`
 }
 
 // End of section. //template:end types
@@ -89,6 +94,19 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+				}
+			}
+			if len(item.Literals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "literals", []interface{}{})
+				for _, childItem := range item.Literals {
+					itemChildBody := ""
+					if !childItem.StartTag.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "startTag", childItem.StartTag.ValueString())
+					}
+					if !childItem.EndTag.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "endTag", childItem.EndTag.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
 				}
 			}
 			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
@@ -148,6 +166,25 @@ func (data *VLANTagGroups) fromBody(ctx context.Context, res gjson.Result) {
 					data.Id = types.StringNull()
 				}
 				(*parent).VlanTags = append((*parent).VlanTags, data)
+				return true
+			})
+		}
+		if value := res.Get("literals"); value.Exists() {
+			data.Literals = make([]VLANTagGroupsItemsLiterals, 0)
+			value.ForEach(func(k, res gjson.Result) bool {
+				parent := &data
+				data := VLANTagGroupsItemsLiterals{}
+				if value := res.Get("startTag"); value.Exists() {
+					data.StartTag = types.StringValue(value.String())
+				} else {
+					data.StartTag = types.StringNull()
+				}
+				if value := res.Get("endTag"); value.Exists() {
+					data.EndTag = types.StringValue(value.String())
+				} else {
+					data.EndTag = types.StringNull()
+				}
+				(*parent).Literals = append((*parent).Literals, data)
 				return true
 			})
 		}
@@ -236,6 +273,54 @@ func (data *VLANTagGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 				data.Id = types.StringNull()
 			}
 			(*parent).VlanTags[i] = data
+		}
+		for i := 0; i < len(data.Literals); i++ {
+			keys := [...]string{"startTag", "endTag"}
+			keyValues := [...]string{data.Literals[i].StartTag.ValueString(), data.Literals[i].EndTag.ValueString()}
+
+			parent := &data
+			data := (*parent).Literals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Literals[%d] = %+v",
+					i,
+					(*parent).Literals[i],
+				))
+				(*parent).Literals = slices.Delete((*parent).Literals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("startTag"); value.Exists() && !data.StartTag.IsNull() {
+				data.StartTag = types.StringValue(value.String())
+			} else {
+				data.StartTag = types.StringNull()
+			}
+			if value := res.Get("endTag"); value.Exists() && !data.EndTag.IsNull() {
+				data.EndTag = types.StringValue(value.String())
+			} else {
+				data.EndTag = types.StringNull()
+			}
+			(*parent).Literals[i] = data
 		}
 		(*parent).Items[i] = data
 	}
