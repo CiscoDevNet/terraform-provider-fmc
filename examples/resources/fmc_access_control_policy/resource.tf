@@ -28,6 +28,17 @@ resource "fmc_access_control_policy" "example" {
           value = "10.2.2.0/24"
         }
       ]
+      vlan_tags_literals = [
+        {
+          start_tag = "11"
+          end_tag   = "22"
+        }
+      ]
+      vlan_tags_objects = [
+        {
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
       source_network_objects = [
         {
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"

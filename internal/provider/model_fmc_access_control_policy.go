@@ -72,6 +72,8 @@ type AccessControlPolicyRules struct {
 	Enabled                            types.Bool                                                   `tfsdk:"enabled"`
 	SourceNetworkLiterals              []AccessControlPolicyRulesSourceNetworkLiterals              `tfsdk:"source_network_literals"`
 	DestinationNetworkLiterals         []AccessControlPolicyRulesDestinationNetworkLiterals         `tfsdk:"destination_network_literals"`
+	VlanTagsLiterals                   []AccessControlPolicyRulesVlanTagsLiterals                   `tfsdk:"vlan_tags_literals"`
+	VlanTagsObjects                    []AccessControlPolicyRulesVlanTagsObjects                    `tfsdk:"vlan_tags_objects"`
 	SourceNetworkObjects               []AccessControlPolicyRulesSourceNetworkObjects               `tfsdk:"source_network_objects"`
 	DestinationNetworkObjects          []AccessControlPolicyRulesDestinationNetworkObjects          `tfsdk:"destination_network_objects"`
 	SourceDynamicObjects               []AccessControlPolicyRulesSourceDynamicObjects               `tfsdk:"source_dynamic_objects"`
@@ -102,6 +104,13 @@ type AccessControlPolicyRulesSourceNetworkLiterals struct {
 }
 type AccessControlPolicyRulesDestinationNetworkLiterals struct {
 	Value types.String `tfsdk:"value"`
+}
+type AccessControlPolicyRulesVlanTagsLiterals struct {
+	StartTag types.String `tfsdk:"start_tag"`
+	EndTag   types.String `tfsdk:"end_tag"`
+}
+type AccessControlPolicyRulesVlanTagsObjects struct {
+	Id types.String `tfsdk:"id"`
 }
 type AccessControlPolicyRulesSourceNetworkObjects struct {
 	Id   types.String `tfsdk:"id"`
@@ -284,6 +293,30 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.literals.-1", itemChildBody)
+				}
+			}
+			if len(item.VlanTagsLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []interface{}{})
+				for _, childItem := range item.VlanTagsLiterals {
+					itemChildBody := ""
+					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
+					if !childItem.StartTag.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "startTag", childItem.StartTag.ValueString())
+					}
+					if !childItem.EndTag.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "endTag", childItem.EndTag.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.literals.-1", itemChildBody)
+				}
+			}
+			if len(item.VlanTagsObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []interface{}{})
+				for _, childItem := range item.VlanTagsObjects {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.objects.-1", itemChildBody)
 				}
 			}
 			if len(item.SourceNetworkObjects) > 0 {
@@ -612,6 +645,39 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						data.Value = types.StringNull()
 					}
 					(*parent).DestinationNetworkLiterals = append((*parent).DestinationNetworkLiterals, data)
+					return true
+				})
+			}
+			if value := res.Get("vlanTags.literals"); value.Exists() {
+				data.VlanTagsLiterals = make([]AccessControlPolicyRulesVlanTagsLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesVlanTagsLiterals{}
+					if value := res.Get("startTag"); value.Exists() {
+						data.StartTag = types.StringValue(value.String())
+					} else {
+						data.StartTag = types.StringNull()
+					}
+					if value := res.Get("endTag"); value.Exists() {
+						data.EndTag = types.StringValue(value.String())
+					} else {
+						data.EndTag = types.StringNull()
+					}
+					(*parent).VlanTagsLiterals = append((*parent).VlanTagsLiterals, data)
+					return true
+				})
+			}
+			if value := res.Get("vlanTags.objects"); value.Exists() {
+				data.VlanTagsObjects = make([]AccessControlPolicyRulesVlanTagsObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesVlanTagsObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).VlanTagsObjects = append((*parent).VlanTagsObjects, data)
 					return true
 				})
 			}
@@ -1090,6 +1156,97 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Value = types.StringNull()
 			}
 			(*parent).DestinationNetworkLiterals[i] = data
+		}
+		for i := 0; i < len(data.VlanTagsLiterals); i++ {
+			keys := [...]string{"startTag", "endTag"}
+			keyValues := [...]string{data.VlanTagsLiterals[i].StartTag.ValueString(), data.VlanTagsLiterals[i].EndTag.ValueString()}
+
+			parent := &data
+			data := (*parent).VlanTagsLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("vlanTags.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagsLiterals[%d] = %+v",
+					i,
+					(*parent).VlanTagsLiterals[i],
+				))
+				(*parent).VlanTagsLiterals = slices.Delete((*parent).VlanTagsLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("startTag"); value.Exists() && !data.StartTag.IsNull() {
+				data.StartTag = types.StringValue(value.String())
+			} else {
+				data.StartTag = types.StringNull()
+			}
+			if value := res.Get("endTag"); value.Exists() && !data.EndTag.IsNull() {
+				data.EndTag = types.StringValue(value.String())
+			} else {
+				data.EndTag = types.StringNull()
+			}
+			(*parent).VlanTagsLiterals[i] = data
+		}
+		for i := 0; i < len(data.VlanTagsObjects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.VlanTagsObjects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).VlanTagsObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("vlanTags.objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagsObjects[%d] = %+v",
+					i,
+					(*parent).VlanTagsObjects[i],
+				))
+				(*parent).VlanTagsObjects = slices.Delete((*parent).VlanTagsObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).VlanTagsObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}

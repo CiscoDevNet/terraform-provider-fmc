@@ -43,6 +43,8 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.name", "rule1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.source_network_literals.0.value", "10.1.1.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.destination_network_literals.0.value", "10.2.2.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.vlan_tags_literals.0.start_tag", "11"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.vlan_tags_literals.0.end_tag", "22"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.log_begin", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.log_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.send_events_to_fmc", "true"))
@@ -82,6 +84,12 @@ resource "fmc_port" "test" {
   protocol = "UDP"
   port     = "53"
 }
+
+resource "fmc_vlan_tag" "test" {
+  name      = "VLAN_TAG_fmc_access_control_policy"
+  start_tag = "10"
+  end_tag   = "11" 
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -111,6 +119,13 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `		}]` + "\n"
 	config += `		destination_network_literals = [{` + "\n"
 	config += `			value = "10.2.2.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tags_literals = [{` + "\n"
+	config += `			start_tag = "11"` + "\n"
+	config += `			end_tag = "22"` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tags_objects = [{` + "\n"
+	config += `			id = fmc_vlan_tag.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		source_network_objects = [{` + "\n"
 	config += `			id = fmc_network.test.id` + "\n"
@@ -159,6 +174,13 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 	config += `		}]` + "\n"
 	config += `		destination_network_literals = [{` + "\n"
 	config += `			value = "10.2.2.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tags_literals = [{` + "\n"
+	config += `			start_tag = "11"` + "\n"
+	config += `			end_tag = "22"` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tags_objects = [{` + "\n"
+	config += `			id = fmc_vlan_tag.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		source_network_objects = [{` + "\n"
 	config += `			id = fmc_network.test.id` + "\n"

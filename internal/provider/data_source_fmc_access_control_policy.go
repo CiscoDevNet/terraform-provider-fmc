@@ -193,6 +193,34 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
+						"vlan_tags_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent vlan tags (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"start_tag": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"end_tag": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"vlan_tags_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_vlan_tag.example.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
 						"source_network_objects": schema.SetNestedAttribute{
 							MarkdownDescription: "Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).",
 							Computed:            true,

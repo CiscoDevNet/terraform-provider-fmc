@@ -216,6 +216,33 @@ attributes:
             type: String
             id: true
             example: 10.2.2.0/24
+      - model_name: literals
+        data_path: [vlanTags]
+        tf_name: vlan_tags_literals
+        description: Set of objects that represent vlan tags (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+          - model_name: startTag
+            type: String
+            example: "11"
+          - model_name: endTag
+            type: String
+            example: "22"  
+      - model_name: objects
+        data_path: [vlanTags]
+        tf_name: vlan_tags_objects
+        description: Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: UUID of the object (such as fmc_vlan_tag.example.id, etc.).
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_vlan_tag.test.id          
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
@@ -550,4 +577,10 @@ test_prerequisites: |-
     name     = "test_fmc_access_control_policy"
     protocol = "UDP"
     port     = "53"
+  }
+
+  resource "fmc_vlan_tag" "test" {
+    name      = "VLAN_TAG_fmc_access_control_policy"
+    start_tag = "10"
+    end_tag   = "11" 
   }

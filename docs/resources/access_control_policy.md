@@ -43,6 +43,17 @@ resource "fmc_access_control_policy" "example" {
           value = "10.2.2.0/24"
         }
       ]
+      vlan_tags_literals = [
+        {
+          start_tag = "11"
+          end_tag   = "22"
+        }
+      ]
+      vlan_tags_objects = [
+        {
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
       source_network_objects = [
         {
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -221,6 +232,8 @@ Optional:
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule (fmc_url_category). (see [below for nested schema](#nestedatt--rules--url_categories))
 - `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group). (see [below for nested schema](#nestedatt--rules--url_objects))
+- `vlan_tags_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tags_literals))
+- `vlan_tags_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tags_objects))
 
 Read-Only:
 
@@ -342,6 +355,23 @@ Optional:
 Optional:
 
 - `id` (String) UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).
+
+
+<a id="nestedatt--rules--vlan_tags_literals"></a>
+### Nested Schema for `rules.vlan_tags_literals`
+
+Optional:
+
+- `end_tag` (String)
+- `start_tag` (String)
+
+
+<a id="nestedatt--rules--vlan_tags_objects"></a>
+### Nested Schema for `rules.vlan_tags_objects`
+
+Optional:
+
+- `id` (String) UUID of the object (such as fmc_vlan_tag.example.id, etc.).
 
 ## Import
 
