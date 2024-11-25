@@ -1,0 +1,25 @@
+---
+name: Variable Set
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/variablesets
+data_source_name_query: true
+no_resource: true
+no_import: true
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: >-
+      Name of the Variable Set. Names for built-in set is 'Default-Set'.
+    mandatory: true
+    example: test_variable_set_1
+  - model_name: description
+    type: String
+    description: Optional description of the policy.
+    example: "My customized variable set"
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'VariableSet'.
+    default_value: VariableSet
+    requires_replace: true
+    exclude_example: true
+    exclude_test: true

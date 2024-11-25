@@ -36,6 +36,7 @@ type YamlConfig struct {
 	Name         string `yaml:"name"`
 	DocCategory  string `yaml:"doc_category"`
 	NoDataSource bool   `yaml:"no_data_source"`
+	NoResource   bool   `yaml:"no_resource"`
 }
 
 var docPaths = []string{"./docs/data-sources/", "./docs/resources/"}
@@ -78,7 +79,8 @@ func main() {
 			filename := path + SnakeCase(configs[i].Name) + ".md"
 			content, err := os.ReadFile(filename)
 			if err != nil {
-				if configs[i].NoDataSource && path == "./docs/data-sources/" {
+				if configs[i].NoDataSource && path == "./docs/data-sources/" ||
+					configs[i].NoResource && path == "./docs/resources/" {
 					continue
 				}
 				log.Fatalf("Error opening documentation: %v", err)
