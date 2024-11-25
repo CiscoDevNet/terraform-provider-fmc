@@ -64,8 +64,8 @@ Read-Only:
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
+- `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--destination_port_objects))
-- `destination_security_group_tag_objects` (Attributes Set) Set of objects representing the destination Security Group Tags (fmc_security_group_tag - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--destination_security_group_tag_objects))
 - `destination_zones` (Attributes Set) Set of objects representing destination security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false). Default is true.
 - `file_policy_id` (String) Identifier (UUID) of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
@@ -82,15 +82,18 @@ Read-Only:
 - `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--source_network_objects))
+- `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `source_security_group_tag_objects` (Attributes Set) Set of objects representing the source Security Group Tags (fmc_security_group_tag - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--source_security_group_tag_objects))
+- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
 - `source_zones` (Attributes Set) Set of objects representing source security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--source_zones))
 - `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule (fmc_url_category). (see [below for nested schema](#nestedatt--rules--url_categories))
+- `url_literals` (Attributes Set) Set of objects representing the URLs associated with the rule (literally specified). (see [below for nested schema](#nestedatt--rules--url_literals))
 - `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group). (see [below for nested schema](#nestedatt--rules--url_objects))
-- `vlan_tags_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tags_literals))
-- `vlan_tags_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tags_objects))
+- `variable_set_id` (String) Identifier (UUID) of the Variable Set for the rule action.
+- `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
+- `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
 <a id="nestedatt--rules--destination_dynamic_objects"></a>
 ### Nested Schema for `rules.destination_dynamic_objects`
@@ -117,21 +120,24 @@ Read-Only:
 - `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
+<a id="nestedatt--rules--destination_port_literals"></a>
+### Nested Schema for `rules.destination_port_literals`
+
+Read-Only:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
+- `protocol` (String)
+- `type` (String)
+
+
 <a id="nestedatt--rules--destination_port_objects"></a>
 ### Nested Schema for `rules.destination_port_objects`
 
 Read-Only:
 
 - `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
-
-
-<a id="nestedatt--rules--destination_security_group_tag_objects"></a>
-### Nested Schema for `rules.destination_security_group_tag_objects`
-
-Read-Only:
-
-- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
-- `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
 <a id="nestedatt--rules--destination_zones"></a>
@@ -167,6 +173,18 @@ Read-Only:
 - `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
+<a id="nestedatt--rules--source_port_literals"></a>
+### Nested Schema for `rules.source_port_literals`
+
+Read-Only:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
+- `protocol` (String)
+- `type` (String)
+
+
 <a id="nestedatt--rules--source_port_objects"></a>
 ### Nested Schema for `rules.source_port_objects`
 
@@ -175,12 +193,12 @@ Read-Only:
 - `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
 
 
-<a id="nestedatt--rules--source_security_group_tag_objects"></a>
-### Nested Schema for `rules.source_security_group_tag_objects`
+<a id="nestedatt--rules--source_sgt_objects"></a>
+### Nested Schema for `rules.source_sgt_objects`
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
+- `id` (String) UUID of the object (such as fmc_sgt.example.id, etc.).
 - `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
@@ -201,6 +219,14 @@ Read-Only:
 - `reputation` (String) Reputation applicable to the category.
 
 
+<a id="nestedatt--rules--url_literals"></a>
+### Nested Schema for `rules.url_literals`
+
+Read-Only:
+
+- `url` (String) URL such as https://www.example.com/app
+
+
 <a id="nestedatt--rules--url_objects"></a>
 ### Nested Schema for `rules.url_objects`
 
@@ -209,8 +235,8 @@ Read-Only:
 - `id` (String) UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).
 
 
-<a id="nestedatt--rules--vlan_tags_literals"></a>
-### Nested Schema for `rules.vlan_tags_literals`
+<a id="nestedatt--rules--vlan_tag_literals"></a>
+### Nested Schema for `rules.vlan_tag_literals`
 
 Read-Only:
 
@@ -218,8 +244,8 @@ Read-Only:
 - `start_tag` (String)
 
 
-<a id="nestedatt--rules--vlan_tags_objects"></a>
-### Nested Schema for `rules.vlan_tags_objects`
+<a id="nestedatt--rules--vlan_tag_objects"></a>
+### Nested Schema for `rules.vlan_tag_objects`
 
 Read-Only:
 

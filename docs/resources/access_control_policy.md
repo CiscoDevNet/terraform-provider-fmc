@@ -43,13 +43,13 @@ resource "fmc_access_control_policy" "example" {
           value = "10.2.2.0/24"
         }
       ]
-      vlan_tags_literals = [
+      vlan_tag_literals = [
         {
           start_tag = "11"
           end_tag   = "22"
         }
       ]
-      vlan_tags_objects = [
+      vlan_tag_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
@@ -76,9 +76,27 @@ resource "fmc_access_control_policy" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
+      source_port_literals = [
+        {
+          type      = "PortLiteral"
+          port      = "80"
+          protocol  = "6"
+          icmp_type = "0"
+          icmp_code = "0"
+        }
+      ]
       source_port_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
+      destination_port_literals = [
+        {
+          type      = "PortLiteral"
+          port      = "80"
+          protocol  = "6"
+          icmp_type = "0"
+          icmp_code = "0"
         }
       ]
       destination_port_objects = [
@@ -86,13 +104,7 @@ resource "fmc_access_control_policy" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      source_security_group_tag_objects = [
-        {
-          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-          type = "SecurityGroupTag"
-        }
-      ]
-      destination_security_group_tag_objects = [
+      source_sgt_objects = [
         {
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
           type = "SecurityGroupTag"
@@ -106,6 +118,11 @@ resource "fmc_access_control_policy" "example" {
       destination_zones = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
+      url_literals = [
+        {
+          url = "https://www.example.com/app"
         }
       ]
       url_objects = [
@@ -128,6 +145,7 @@ resource "fmc_access_control_policy" "example" {
       snmp_config_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       file_policy_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      variable_set_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
 }
@@ -201,8 +219,8 @@ Optional:
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
+- `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--destination_port_objects))
-- `destination_security_group_tag_objects` (Attributes Set) Set of objects representing the destination Security Group Tags (fmc_security_group_tag - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--destination_security_group_tag_objects))
 - `destination_zones` (Attributes Set) Set of objects representing destination security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false). Default is true.
   - Default value: `true`
@@ -224,16 +242,19 @@ Optional:
 - `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--source_network_objects))
+- `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `source_security_group_tag_objects` (Attributes Set) Set of objects representing the source Security Group Tags (fmc_security_group_tag - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--source_security_group_tag_objects))
+- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
 - `source_zones` (Attributes Set) Set of objects representing source security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--source_zones))
 - `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule (fmc_url_category). (see [below for nested schema](#nestedatt--rules--url_categories))
+- `url_literals` (Attributes Set) Set of objects representing the URLs associated with the rule (literally specified). (see [below for nested schema](#nestedatt--rules--url_literals))
 - `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group). (see [below for nested schema](#nestedatt--rules--url_objects))
-- `vlan_tags_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tags_literals))
-- `vlan_tags_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tags_objects))
+- `variable_set_id` (String) Identifier (UUID) of the Variable Set for the rule action.
+- `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
+- `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
 Read-Only:
 
@@ -264,21 +285,27 @@ Optional:
 - `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
+<a id="nestedatt--rules--destination_port_literals"></a>
+### Nested Schema for `rules.destination_port_literals`
+
+Required:
+
+- `protocol` (String)
+- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+
+Optional:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
+
+
 <a id="nestedatt--rules--destination_port_objects"></a>
 ### Nested Schema for `rules.destination_port_objects`
 
 Optional:
 
 - `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
-
-
-<a id="nestedatt--rules--destination_security_group_tag_objects"></a>
-### Nested Schema for `rules.destination_security_group_tag_objects`
-
-Optional:
-
-- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
-- `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
 <a id="nestedatt--rules--destination_zones"></a>
@@ -314,6 +341,21 @@ Optional:
 - `type` (String) Type of the object (such as fmc_network.example.type, etc.).
 
 
+<a id="nestedatt--rules--source_port_literals"></a>
+### Nested Schema for `rules.source_port_literals`
+
+Required:
+
+- `protocol` (String)
+- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+
+Optional:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
+
+
 <a id="nestedatt--rules--source_port_objects"></a>
 ### Nested Schema for `rules.source_port_objects`
 
@@ -322,12 +364,12 @@ Optional:
 - `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
 
 
-<a id="nestedatt--rules--source_security_group_tag_objects"></a>
-### Nested Schema for `rules.source_security_group_tag_objects`
+<a id="nestedatt--rules--source_sgt_objects"></a>
+### Nested Schema for `rules.source_sgt_objects`
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_group_tag.example.id, etc.).
+- `id` (String) UUID of the object (such as fmc_sgt.example.id, etc.).
 - `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
 
 
@@ -349,6 +391,14 @@ Optional:
   - Choices: `ANY_EXCEPT_UNKNOWN`, `TRUSTED`, `FAVORABLE`, `NEUTRAL`, `QUESTIONABLE`, `UNTRUSTED`, `ANY_AND_UNKNOWN`, `TRUSTED_AND_UNKNOWN`, `FAVORABLE_AND_UNKNOWN`, `NEUTRAL_AND_UNKNOWN`, `QUESTIONABLE_AND_UNKNOWN`, `UNTRUSTED_AND_UNKNOWN`
 
 
+<a id="nestedatt--rules--url_literals"></a>
+### Nested Schema for `rules.url_literals`
+
+Required:
+
+- `url` (String) URL such as https://www.example.com/app
+
+
 <a id="nestedatt--rules--url_objects"></a>
 ### Nested Schema for `rules.url_objects`
 
@@ -357,8 +407,8 @@ Optional:
 - `id` (String) UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).
 
 
-<a id="nestedatt--rules--vlan_tags_literals"></a>
-### Nested Schema for `rules.vlan_tags_literals`
+<a id="nestedatt--rules--vlan_tag_literals"></a>
+### Nested Schema for `rules.vlan_tag_literals`
 
 Optional:
 
@@ -366,8 +416,8 @@ Optional:
 - `start_tag` (String)
 
 
-<a id="nestedatt--rules--vlan_tags_objects"></a>
-### Nested Schema for `rules.vlan_tags_objects`
+<a id="nestedatt--rules--vlan_tag_objects"></a>
+### Nested Schema for `rules.vlan_tag_objects`
 
 Optional:
 

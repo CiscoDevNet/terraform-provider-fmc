@@ -218,7 +218,7 @@ attributes:
             example: 10.2.2.0/24
       - model_name: literals
         data_path: [vlanTags]
-        tf_name: vlan_tags_literals
+        tf_name: vlan_tag_literals
         description: Set of objects that represent vlan tags (literally specified).
         type: Set
         attributes:
@@ -233,7 +233,7 @@ attributes:
             example: "22"  
       - model_name: objects
         data_path: [vlanTags]
-        tf_name: vlan_tags_objects
+        tf_name: vlan_tag_objects
         description: Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...).
         type: Set
         attributes:
@@ -311,6 +311,33 @@ attributes:
             type: String
             description: Type of the object (such as fmc_dynamic_object.example.type, etc.).
             value: DynamicObject
+      - model_name: literals
+        data_path: [sourcePorts]
+        tf_name: source_port_literals
+        description: Set of objects that represent protocol/port (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            mandatory: true
+            example: PortLiteral
+          - model_name: port
+            type: String
+            example: "80"              
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true    
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+          - model_name: code 
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true  
       - model_name: objects
         data_path: [sourcePorts]
         tf_name: source_port_objects
@@ -328,6 +355,33 @@ attributes:
           - model_name: type
             type: String
             value: AnyNonEmptyString
+      - model_name: literals
+        data_path: [destinationPorts]
+        tf_name: destination_port_literals
+        description: Set of objects that represent protocol/port (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            mandatory: true
+            example: PortLiteral
+          - model_name: port
+            type: String
+            example: "80"              
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true    
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+          - model_name: code 
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true  
       - model_name: objects
         data_path: [destinationPorts]
         tf_name: destination_port_objects
@@ -347,37 +401,18 @@ attributes:
             value: AnyNonEmptyString
       - model_name: objects
         data_path: [sourceSecurityGroupTags]
-        tf_name: source_security_group_tag_objects
+        tf_name: source_sgt_objects
         description: >-
-          Set of objects representing the source Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).
+          Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes).
         type: Set
         exclude_test: true
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_security_group_tag.example.id, etc.).
+            description: UUID of the object (such as fmc_sgt.example.id, etc.).
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            # test_value: fmc_security_group_tag.test.id
-          - model_name: type
-            type: String
-            description: Type of the object (such as fmc_security_group_tag.example.type, etc.).
-            example: SecurityGroupTag
-            # test_value: fmc_security_group_tag.test.type
-      - model_name: objects
-        data_path: [destinationSecurityGroupTags]
-        tf_name: destination_security_group_tag_objects
-        description: >-
-          Set of objects representing the destination Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).
-        type: Set
-        exclude_test: true
-        attributes:
-          - model_name: id
-            type: String
-            description: UUID of the object (such as fmc_security_group_tag.example.id, etc.).
-            id: true
-            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            # test_value: fmc_security_group_tag.test.id
+            # test_value: fmc_sgt.test.id
           - model_name: type
             type: String
             description: Type of the object (such as fmc_security_group_tag.example.type, etc.).
@@ -417,6 +452,18 @@ attributes:
             type: String
             description: Type of the object (such as fmc_security_zone.example.type, etc.).
             value: SecurityZone
+      - model_name: literals
+        data_path: [urls]
+        tf_name: url_literals
+        description: Set of objects representing the URLs associated with the rule (literally specified).
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: url
+            type: String
+            description: URL such as https://www.example.com/app
+            mandatory: true
+            example: "https://www.example.com/app"
       - model_name: objects
         data_path: [urls]
         tf_name: url_objects
@@ -561,6 +608,14 @@ attributes:
           is BLOCK, BLOCK_RESET, TRUST, MONITOR.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
+      - model_name: id
+        data_path: [variableSet]
+        tf_name: variable_set_id
+        type: String
+        description: >-
+          Identifier (UUID) of the Variable Set for the rule action. 
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        exclude_test: true        
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
@@ -584,3 +639,4 @@ test_prerequisites: |-
     start_tag = "10"
     end_tag   = "11" 
   }
+

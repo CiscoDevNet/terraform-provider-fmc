@@ -64,39 +64,42 @@ type AccessControlPolicyCategories struct {
 }
 
 type AccessControlPolicyRules struct {
-	Id                                 types.String                                                 `tfsdk:"id"`
-	Action                             types.String                                                 `tfsdk:"action"`
-	Name                               types.String                                                 `tfsdk:"name"`
-	CategoryName                       types.String                                                 `tfsdk:"category_name"`
-	Section                            types.String                                                 `tfsdk:"section"`
-	Enabled                            types.Bool                                                   `tfsdk:"enabled"`
-	SourceNetworkLiterals              []AccessControlPolicyRulesSourceNetworkLiterals              `tfsdk:"source_network_literals"`
-	DestinationNetworkLiterals         []AccessControlPolicyRulesDestinationNetworkLiterals         `tfsdk:"destination_network_literals"`
-	VlanTagsLiterals                   []AccessControlPolicyRulesVlanTagsLiterals                   `tfsdk:"vlan_tags_literals"`
-	VlanTagsObjects                    []AccessControlPolicyRulesVlanTagsObjects                    `tfsdk:"vlan_tags_objects"`
-	SourceNetworkObjects               []AccessControlPolicyRulesSourceNetworkObjects               `tfsdk:"source_network_objects"`
-	DestinationNetworkObjects          []AccessControlPolicyRulesDestinationNetworkObjects          `tfsdk:"destination_network_objects"`
-	SourceDynamicObjects               []AccessControlPolicyRulesSourceDynamicObjects               `tfsdk:"source_dynamic_objects"`
-	DestinationDynamicObjects          []AccessControlPolicyRulesDestinationDynamicObjects          `tfsdk:"destination_dynamic_objects"`
-	SourcePortObjects                  []AccessControlPolicyRulesSourcePortObjects                  `tfsdk:"source_port_objects"`
-	DestinationPortObjects             []AccessControlPolicyRulesDestinationPortObjects             `tfsdk:"destination_port_objects"`
-	SourceSecurityGroupTagObjects      []AccessControlPolicyRulesSourceSecurityGroupTagObjects      `tfsdk:"source_security_group_tag_objects"`
-	DestinationSecurityGroupTagObjects []AccessControlPolicyRulesDestinationSecurityGroupTagObjects `tfsdk:"destination_security_group_tag_objects"`
-	SourceZones                        []AccessControlPolicyRulesSourceZones                        `tfsdk:"source_zones"`
-	DestinationZones                   []AccessControlPolicyRulesDestinationZones                   `tfsdk:"destination_zones"`
-	UrlObjects                         []AccessControlPolicyRulesUrlObjects                         `tfsdk:"url_objects"`
-	UrlCategories                      []AccessControlPolicyRulesUrlCategories                      `tfsdk:"url_categories"`
-	LogBegin                           types.Bool                                                   `tfsdk:"log_begin"`
-	LogEnd                             types.Bool                                                   `tfsdk:"log_end"`
-	LogFiles                           types.Bool                                                   `tfsdk:"log_files"`
-	SendEventsToFmc                    types.Bool                                                   `tfsdk:"send_events_to_fmc"`
-	SendSyslog                         types.Bool                                                   `tfsdk:"send_syslog"`
-	SyslogConfigId                     types.String                                                 `tfsdk:"syslog_config_id"`
-	SyslogSeverity                     types.String                                                 `tfsdk:"syslog_severity"`
-	SnmpConfigId                       types.String                                                 `tfsdk:"snmp_config_id"`
-	Description                        types.String                                                 `tfsdk:"description"`
-	FilePolicyId                       types.String                                                 `tfsdk:"file_policy_id"`
-	IntrusionPolicyId                  types.String                                                 `tfsdk:"intrusion_policy_id"`
+	Id                         types.String                                         `tfsdk:"id"`
+	Action                     types.String                                         `tfsdk:"action"`
+	Name                       types.String                                         `tfsdk:"name"`
+	CategoryName               types.String                                         `tfsdk:"category_name"`
+	Section                    types.String                                         `tfsdk:"section"`
+	Enabled                    types.Bool                                           `tfsdk:"enabled"`
+	SourceNetworkLiterals      []AccessControlPolicyRulesSourceNetworkLiterals      `tfsdk:"source_network_literals"`
+	DestinationNetworkLiterals []AccessControlPolicyRulesDestinationNetworkLiterals `tfsdk:"destination_network_literals"`
+	VlanTagLiterals            []AccessControlPolicyRulesVlanTagLiterals            `tfsdk:"vlan_tag_literals"`
+	VlanTagObjects             []AccessControlPolicyRulesVlanTagObjects             `tfsdk:"vlan_tag_objects"`
+	SourceNetworkObjects       []AccessControlPolicyRulesSourceNetworkObjects       `tfsdk:"source_network_objects"`
+	DestinationNetworkObjects  []AccessControlPolicyRulesDestinationNetworkObjects  `tfsdk:"destination_network_objects"`
+	SourceDynamicObjects       []AccessControlPolicyRulesSourceDynamicObjects       `tfsdk:"source_dynamic_objects"`
+	DestinationDynamicObjects  []AccessControlPolicyRulesDestinationDynamicObjects  `tfsdk:"destination_dynamic_objects"`
+	SourcePortLiterals         []AccessControlPolicyRulesSourcePortLiterals         `tfsdk:"source_port_literals"`
+	SourcePortObjects          []AccessControlPolicyRulesSourcePortObjects          `tfsdk:"source_port_objects"`
+	DestinationPortLiterals    []AccessControlPolicyRulesDestinationPortLiterals    `tfsdk:"destination_port_literals"`
+	DestinationPortObjects     []AccessControlPolicyRulesDestinationPortObjects     `tfsdk:"destination_port_objects"`
+	SourceSgtObjects           []AccessControlPolicyRulesSourceSgtObjects           `tfsdk:"source_sgt_objects"`
+	SourceZones                []AccessControlPolicyRulesSourceZones                `tfsdk:"source_zones"`
+	DestinationZones           []AccessControlPolicyRulesDestinationZones           `tfsdk:"destination_zones"`
+	UrlLiterals                []AccessControlPolicyRulesUrlLiterals                `tfsdk:"url_literals"`
+	UrlObjects                 []AccessControlPolicyRulesUrlObjects                 `tfsdk:"url_objects"`
+	UrlCategories              []AccessControlPolicyRulesUrlCategories              `tfsdk:"url_categories"`
+	LogBegin                   types.Bool                                           `tfsdk:"log_begin"`
+	LogEnd                     types.Bool                                           `tfsdk:"log_end"`
+	LogFiles                   types.Bool                                           `tfsdk:"log_files"`
+	SendEventsToFmc            types.Bool                                           `tfsdk:"send_events_to_fmc"`
+	SendSyslog                 types.Bool                                           `tfsdk:"send_syslog"`
+	SyslogConfigId             types.String                                         `tfsdk:"syslog_config_id"`
+	SyslogSeverity             types.String                                         `tfsdk:"syslog_severity"`
+	SnmpConfigId               types.String                                         `tfsdk:"snmp_config_id"`
+	Description                types.String                                         `tfsdk:"description"`
+	FilePolicyId               types.String                                         `tfsdk:"file_policy_id"`
+	IntrusionPolicyId          types.String                                         `tfsdk:"intrusion_policy_id"`
+	VariableSetId              types.String                                         `tfsdk:"variable_set_id"`
 }
 
 type AccessControlPolicyRulesSourceNetworkLiterals struct {
@@ -105,11 +108,11 @@ type AccessControlPolicyRulesSourceNetworkLiterals struct {
 type AccessControlPolicyRulesDestinationNetworkLiterals struct {
 	Value types.String `tfsdk:"value"`
 }
-type AccessControlPolicyRulesVlanTagsLiterals struct {
+type AccessControlPolicyRulesVlanTagLiterals struct {
 	StartTag types.String `tfsdk:"start_tag"`
 	EndTag   types.String `tfsdk:"end_tag"`
 }
-type AccessControlPolicyRulesVlanTagsObjects struct {
+type AccessControlPolicyRulesVlanTagObjects struct {
 	Id types.String `tfsdk:"id"`
 }
 type AccessControlPolicyRulesSourceNetworkObjects struct {
@@ -126,17 +129,27 @@ type AccessControlPolicyRulesSourceDynamicObjects struct {
 type AccessControlPolicyRulesDestinationDynamicObjects struct {
 	Id types.String `tfsdk:"id"`
 }
+type AccessControlPolicyRulesSourcePortLiterals struct {
+	Type     types.String `tfsdk:"type"`
+	Port     types.String `tfsdk:"port"`
+	Protocol types.String `tfsdk:"protocol"`
+	IcmpType types.String `tfsdk:"icmp_type"`
+	IcmpCode types.String `tfsdk:"icmp_code"`
+}
 type AccessControlPolicyRulesSourcePortObjects struct {
 	Id types.String `tfsdk:"id"`
+}
+type AccessControlPolicyRulesDestinationPortLiterals struct {
+	Type     types.String `tfsdk:"type"`
+	Port     types.String `tfsdk:"port"`
+	Protocol types.String `tfsdk:"protocol"`
+	IcmpType types.String `tfsdk:"icmp_type"`
+	IcmpCode types.String `tfsdk:"icmp_code"`
 }
 type AccessControlPolicyRulesDestinationPortObjects struct {
 	Id types.String `tfsdk:"id"`
 }
-type AccessControlPolicyRulesSourceSecurityGroupTagObjects struct {
-	Id   types.String `tfsdk:"id"`
-	Type types.String `tfsdk:"type"`
-}
-type AccessControlPolicyRulesDestinationSecurityGroupTagObjects struct {
+type AccessControlPolicyRulesSourceSgtObjects struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
@@ -145,6 +158,9 @@ type AccessControlPolicyRulesSourceZones struct {
 }
 type AccessControlPolicyRulesDestinationZones struct {
 	Id types.String `tfsdk:"id"`
+}
+type AccessControlPolicyRulesUrlLiterals struct {
+	Url types.String `tfsdk:"url"`
 }
 type AccessControlPolicyRulesUrlObjects struct {
 	Id types.String `tfsdk:"id"`
@@ -295,9 +311,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.literals.-1", itemChildBody)
 				}
 			}
-			if len(item.VlanTagsLiterals) > 0 {
+			if len(item.VlanTagLiterals) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []interface{}{})
-				for _, childItem := range item.VlanTagsLiterals {
+				for _, childItem := range item.VlanTagLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
 					if !childItem.StartTag.IsNull() {
@@ -309,9 +325,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.literals.-1", itemChildBody)
 				}
 			}
-			if len(item.VlanTagsObjects) > 0 {
+			if len(item.VlanTagObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []interface{}{})
-				for _, childItem := range item.VlanTagsObjects {
+				for _, childItem := range item.VlanTagObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
@@ -367,6 +383,28 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationDynamicObjects.objects.-1", itemChildBody)
 				}
 			}
+			if len(item.SourcePortLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []interface{}{})
+				for _, childItem := range item.SourcePortLiterals {
+					itemChildBody := ""
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					if !childItem.Port.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "port", childItem.Port.ValueString())
+					}
+					if !childItem.Protocol.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "protocol", childItem.Protocol.ValueString())
+					}
+					if !childItem.IcmpType.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "icmpType", childItem.IcmpType.ValueString())
+					}
+					if !childItem.IcmpCode.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "code", childItem.IcmpCode.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.literals.-1", itemChildBody)
+				}
+			}
 			if len(item.SourcePortObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []interface{}{})
 				for _, childItem := range item.SourcePortObjects {
@@ -376,6 +414,28 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
 					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.objects.-1", itemChildBody)
+				}
+			}
+			if len(item.DestinationPortLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []interface{}{})
+				for _, childItem := range item.DestinationPortLiterals {
+					itemChildBody := ""
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					if !childItem.Port.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "port", childItem.Port.ValueString())
+					}
+					if !childItem.Protocol.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "protocol", childItem.Protocol.ValueString())
+					}
+					if !childItem.IcmpType.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "icmpType", childItem.IcmpType.ValueString())
+					}
+					if !childItem.IcmpCode.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "code", childItem.IcmpCode.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.literals.-1", itemChildBody)
 				}
 			}
 			if len(item.DestinationPortObjects) > 0 {
@@ -389,9 +449,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.objects.-1", itemChildBody)
 				}
 			}
-			if len(item.SourceSecurityGroupTagObjects) > 0 {
+			if len(item.SourceSgtObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "sourceSecurityGroupTags.objects", []interface{}{})
-				for _, childItem := range item.SourceSecurityGroupTagObjects {
+				for _, childItem := range item.SourceSgtObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
@@ -400,19 +460,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "sourceSecurityGroupTags.objects.-1", itemChildBody)
-				}
-			}
-			if len(item.DestinationSecurityGroupTagObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationSecurityGroupTags.objects", []interface{}{})
-				for _, childItem := range item.DestinationSecurityGroupTagObjects {
-					itemChildBody := ""
-					if !childItem.Id.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
-					}
-					if !childItem.Type.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
-					}
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationSecurityGroupTags.objects.-1", itemChildBody)
 				}
 			}
 			if len(item.SourceZones) > 0 {
@@ -435,6 +482,16 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "SecurityZone")
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationZones.objects.-1", itemChildBody)
+				}
+			}
+			if len(item.UrlLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "urls.literals", []interface{}{})
+				for _, childItem := range item.UrlLiterals {
+					itemChildBody := ""
+					if !childItem.Url.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "url", childItem.Url.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "urls.literals.-1", itemChildBody)
 				}
 			}
 			if len(item.UrlObjects) > 0 {
@@ -494,6 +551,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			}
 			if !item.IntrusionPolicyId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipsPolicy.id", item.IntrusionPolicyId.ValueString())
+			}
+			if !item.VariableSetId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "variableSet.id", item.VariableSetId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
 		}
@@ -649,10 +709,10 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("vlanTags.literals"); value.Exists() {
-				data.VlanTagsLiterals = make([]AccessControlPolicyRulesVlanTagsLiterals, 0)
+				data.VlanTagLiterals = make([]AccessControlPolicyRulesVlanTagLiterals, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := AccessControlPolicyRulesVlanTagsLiterals{}
+					data := AccessControlPolicyRulesVlanTagLiterals{}
 					if value := res.Get("startTag"); value.Exists() {
 						data.StartTag = types.StringValue(value.String())
 					} else {
@@ -663,21 +723,21 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.EndTag = types.StringNull()
 					}
-					(*parent).VlanTagsLiterals = append((*parent).VlanTagsLiterals, data)
+					(*parent).VlanTagLiterals = append((*parent).VlanTagLiterals, data)
 					return true
 				})
 			}
 			if value := res.Get("vlanTags.objects"); value.Exists() {
-				data.VlanTagsObjects = make([]AccessControlPolicyRulesVlanTagsObjects, 0)
+				data.VlanTagObjects = make([]AccessControlPolicyRulesVlanTagObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := AccessControlPolicyRulesVlanTagsObjects{}
+					data := AccessControlPolicyRulesVlanTagObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					(*parent).VlanTagsObjects = append((*parent).VlanTagsObjects, data)
+					(*parent).VlanTagObjects = append((*parent).VlanTagObjects, data)
 					return true
 				})
 			}
@@ -747,6 +807,40 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					return true
 				})
 			}
+			if value := res.Get("sourcePorts.literals"); value.Exists() {
+				data.SourcePortLiterals = make([]AccessControlPolicyRulesSourcePortLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesSourcePortLiterals{}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					if value := res.Get("port"); value.Exists() {
+						data.Port = types.StringValue(value.String())
+					} else {
+						data.Port = types.StringNull()
+					}
+					if value := res.Get("protocol"); value.Exists() {
+						data.Protocol = types.StringValue(value.String())
+					} else {
+						data.Protocol = types.StringNull()
+					}
+					if value := res.Get("icmpType"); value.Exists() {
+						data.IcmpType = types.StringValue(value.String())
+					} else {
+						data.IcmpType = types.StringNull()
+					}
+					if value := res.Get("code"); value.Exists() {
+						data.IcmpCode = types.StringValue(value.String())
+					} else {
+						data.IcmpCode = types.StringNull()
+					}
+					(*parent).SourcePortLiterals = append((*parent).SourcePortLiterals, data)
+					return true
+				})
+			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
 				data.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -758,6 +852,40 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						data.Id = types.StringNull()
 					}
 					(*parent).SourcePortObjects = append((*parent).SourcePortObjects, data)
+					return true
+				})
+			}
+			if value := res.Get("destinationPorts.literals"); value.Exists() {
+				data.DestinationPortLiterals = make([]AccessControlPolicyRulesDestinationPortLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesDestinationPortLiterals{}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					if value := res.Get("port"); value.Exists() {
+						data.Port = types.StringValue(value.String())
+					} else {
+						data.Port = types.StringNull()
+					}
+					if value := res.Get("protocol"); value.Exists() {
+						data.Protocol = types.StringValue(value.String())
+					} else {
+						data.Protocol = types.StringNull()
+					}
+					if value := res.Get("icmpType"); value.Exists() {
+						data.IcmpType = types.StringValue(value.String())
+					} else {
+						data.IcmpType = types.StringNull()
+					}
+					if value := res.Get("code"); value.Exists() {
+						data.IcmpCode = types.StringValue(value.String())
+					} else {
+						data.IcmpCode = types.StringNull()
+					}
+					(*parent).DestinationPortLiterals = append((*parent).DestinationPortLiterals, data)
 					return true
 				})
 			}
@@ -776,10 +904,10 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourceSecurityGroupTags.objects"); value.Exists() {
-				data.SourceSecurityGroupTagObjects = make([]AccessControlPolicyRulesSourceSecurityGroupTagObjects, 0)
+				data.SourceSgtObjects = make([]AccessControlPolicyRulesSourceSgtObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := AccessControlPolicyRulesSourceSecurityGroupTagObjects{}
+					data := AccessControlPolicyRulesSourceSgtObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
@@ -790,26 +918,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					(*parent).SourceSecurityGroupTagObjects = append((*parent).SourceSecurityGroupTagObjects, data)
-					return true
-				})
-			}
-			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
-				data.DestinationSecurityGroupTagObjects = make([]AccessControlPolicyRulesDestinationSecurityGroupTagObjects, 0)
-				value.ForEach(func(k, res gjson.Result) bool {
-					parent := &data
-					data := AccessControlPolicyRulesDestinationSecurityGroupTagObjects{}
-					if value := res.Get("id"); value.Exists() {
-						data.Id = types.StringValue(value.String())
-					} else {
-						data.Id = types.StringNull()
-					}
-					if value := res.Get("type"); value.Exists() {
-						data.Type = types.StringValue(value.String())
-					} else {
-						data.Type = types.StringNull()
-					}
-					(*parent).DestinationSecurityGroupTagObjects = append((*parent).DestinationSecurityGroupTagObjects, data)
+					(*parent).SourceSgtObjects = append((*parent).SourceSgtObjects, data)
 					return true
 				})
 			}
@@ -838,6 +947,20 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						data.Id = types.StringNull()
 					}
 					(*parent).DestinationZones = append((*parent).DestinationZones, data)
+					return true
+				})
+			}
+			if value := res.Get("urls.literals"); value.Exists() {
+				data.UrlLiterals = make([]AccessControlPolicyRulesUrlLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesUrlLiterals{}
+					if value := res.Get("url"); value.Exists() {
+						data.Url = types.StringValue(value.String())
+					} else {
+						data.Url = types.StringNull()
+					}
+					(*parent).UrlLiterals = append((*parent).UrlLiterals, data)
 					return true
 				})
 			}
@@ -923,6 +1046,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.IntrusionPolicyId = types.StringValue(value.String())
 			} else {
 				data.IntrusionPolicyId = types.StringNull()
+			}
+			if value := res.Get("variableSet.id"); value.Exists() {
+				data.VariableSetId = types.StringValue(value.String())
+			} else {
+				data.VariableSetId = types.StringNull()
 			}
 			(*parent).Rules = append((*parent).Rules, data)
 			return true
@@ -1157,12 +1285,12 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationNetworkLiterals[i] = data
 		}
-		for i := 0; i < len(data.VlanTagsLiterals); i++ {
+		for i := 0; i < len(data.VlanTagLiterals); i++ {
 			keys := [...]string{"startTag", "endTag"}
-			keyValues := [...]string{data.VlanTagsLiterals[i].StartTag.ValueString(), data.VlanTagsLiterals[i].EndTag.ValueString()}
+			keyValues := [...]string{data.VlanTagLiterals[i].StartTag.ValueString(), data.VlanTagLiterals[i].EndTag.ValueString()}
 
 			parent := &data
-			data := (*parent).VlanTagsLiterals[i]
+			data := (*parent).VlanTagLiterals[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1184,11 +1312,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagsLiterals[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagLiterals[%d] = %+v",
 					i,
-					(*parent).VlanTagsLiterals[i],
+					(*parent).VlanTagLiterals[i],
 				))
-				(*parent).VlanTagsLiterals = slices.Delete((*parent).VlanTagsLiterals, i, i+1)
+				(*parent).VlanTagLiterals = slices.Delete((*parent).VlanTagLiterals, i, i+1)
 				i--
 
 				continue
@@ -1203,14 +1331,14 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.EndTag = types.StringNull()
 			}
-			(*parent).VlanTagsLiterals[i] = data
+			(*parent).VlanTagLiterals[i] = data
 		}
-		for i := 0; i < len(data.VlanTagsObjects); i++ {
+		for i := 0; i < len(data.VlanTagObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.VlanTagsObjects[i].Id.ValueString()}
+			keyValues := [...]string{data.VlanTagObjects[i].Id.ValueString()}
 
 			parent := &data
-			data := (*parent).VlanTagsObjects[i]
+			data := (*parent).VlanTagObjects[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1232,11 +1360,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagsObjects[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing VlanTagObjects[%d] = %+v",
 					i,
-					(*parent).VlanTagsObjects[i],
+					(*parent).VlanTagObjects[i],
 				))
-				(*parent).VlanTagsObjects = slices.Delete((*parent).VlanTagsObjects, i, i+1)
+				(*parent).VlanTagObjects = slices.Delete((*parent).VlanTagObjects, i, i+1)
 				i--
 
 				continue
@@ -1246,7 +1374,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Id = types.StringNull()
 			}
-			(*parent).VlanTagsObjects[i] = data
+			(*parent).VlanTagObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
@@ -1430,6 +1558,69 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationDynamicObjects[i] = data
 		}
+		for i := 0; i < len(data.SourcePortLiterals); i++ {
+			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
+			keyValues := [...]string{data.SourcePortLiterals[i].Type.ValueString(), data.SourcePortLiterals[i].Port.ValueString(), data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].IcmpType.ValueString(), data.SourcePortLiterals[i].IcmpCode.ValueString()}
+
+			parent := &data
+			data := (*parent).SourcePortLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("sourcePorts.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourcePortLiterals[%d] = %+v",
+					i,
+					(*parent).SourcePortLiterals[i],
+				))
+				(*parent).SourcePortLiterals = slices.Delete((*parent).SourcePortLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+				data.Port = types.StringValue(value.String())
+			} else {
+				data.Port = types.StringNull()
+			}
+			if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
+				data.Protocol = types.StringValue(value.String())
+			} else {
+				data.Protocol = types.StringNull()
+			}
+			if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
+				data.IcmpType = types.StringValue(value.String())
+			} else {
+				data.IcmpType = types.StringNull()
+			}
+			if value := res.Get("code"); value.Exists() && !data.IcmpCode.IsNull() {
+				data.IcmpCode = types.StringValue(value.String())
+			} else {
+				data.IcmpCode = types.StringNull()
+			}
+			(*parent).SourcePortLiterals[i] = data
+		}
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
@@ -1472,6 +1663,69 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Id = types.StringNull()
 			}
 			(*parent).SourcePortObjects[i] = data
+		}
+		for i := 0; i < len(data.DestinationPortLiterals); i++ {
+			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
+			keyValues := [...]string{data.DestinationPortLiterals[i].Type.ValueString(), data.DestinationPortLiterals[i].Port.ValueString(), data.DestinationPortLiterals[i].Protocol.ValueString(), data.DestinationPortLiterals[i].IcmpType.ValueString(), data.DestinationPortLiterals[i].IcmpCode.ValueString()}
+
+			parent := &data
+			data := (*parent).DestinationPortLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationPorts.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationPortLiterals[%d] = %+v",
+					i,
+					(*parent).DestinationPortLiterals[i],
+				))
+				(*parent).DestinationPortLiterals = slices.Delete((*parent).DestinationPortLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+				data.Port = types.StringValue(value.String())
+			} else {
+				data.Port = types.StringNull()
+			}
+			if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
+				data.Protocol = types.StringValue(value.String())
+			} else {
+				data.Protocol = types.StringNull()
+			}
+			if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
+				data.IcmpType = types.StringValue(value.String())
+			} else {
+				data.IcmpType = types.StringNull()
+			}
+			if value := res.Get("code"); value.Exists() && !data.IcmpCode.IsNull() {
+				data.IcmpCode = types.StringValue(value.String())
+			} else {
+				data.IcmpCode = types.StringNull()
+			}
+			(*parent).DestinationPortLiterals[i] = data
 		}
 		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
@@ -1516,12 +1770,12 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationPortObjects[i] = data
 		}
-		for i := 0; i < len(data.SourceSecurityGroupTagObjects); i++ {
+		for i := 0; i < len(data.SourceSgtObjects); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.SourceSecurityGroupTagObjects[i].Id.ValueString()}
+			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
 
 			parent := &data
-			data := (*parent).SourceSecurityGroupTagObjects[i]
+			data := (*parent).SourceSgtObjects[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1543,11 +1797,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing SourceSecurityGroupTagObjects[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing SourceSgtObjects[%d] = %+v",
 					i,
-					(*parent).SourceSecurityGroupTagObjects[i],
+					(*parent).SourceSgtObjects[i],
 				))
-				(*parent).SourceSecurityGroupTagObjects = slices.Delete((*parent).SourceSecurityGroupTagObjects, i, i+1)
+				(*parent).SourceSgtObjects = slices.Delete((*parent).SourceSgtObjects, i, i+1)
 				i--
 
 				continue
@@ -1562,55 +1816,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			(*parent).SourceSecurityGroupTagObjects[i] = data
-		}
-		for i := 0; i < len(data.DestinationSecurityGroupTagObjects); i++ {
-			keys := [...]string{"id"}
-			keyValues := [...]string{data.DestinationSecurityGroupTagObjects[i].Id.ValueString()}
-
-			parent := &data
-			data := (*parent).DestinationSecurityGroupTagObjects[i]
-			parentRes := &res
-			var res gjson.Result
-
-			parentRes.Get("destinationSecurityGroupTags.objects").ForEach(
-				func(_, v gjson.Result) bool {
-					found := false
-					for ik := range keys {
-						if v.Get(keys[ik]).String() != keyValues[ik] {
-							found = false
-							break
-						}
-						found = true
-					}
-					if found {
-						res = v
-						return false
-					}
-					return true
-				},
-			)
-			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing DestinationSecurityGroupTagObjects[%d] = %+v",
-					i,
-					(*parent).DestinationSecurityGroupTagObjects[i],
-				))
-				(*parent).DestinationSecurityGroupTagObjects = slices.Delete((*parent).DestinationSecurityGroupTagObjects, i, i+1)
-				i--
-
-				continue
-			}
-			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			(*parent).DestinationSecurityGroupTagObjects[i] = data
+			(*parent).SourceSgtObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceZones); i++ {
 			keys := [...]string{"id"}
@@ -1697,6 +1903,49 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Id = types.StringNull()
 			}
 			(*parent).DestinationZones[i] = data
+		}
+		for i := 0; i < len(data.UrlLiterals); i++ {
+			keys := [...]string{"url"}
+			keyValues := [...]string{data.UrlLiterals[i].Url.ValueString()}
+
+			parent := &data
+			data := (*parent).UrlLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("urls.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing UrlLiterals[%d] = %+v",
+					i,
+					(*parent).UrlLiterals[i],
+				))
+				(*parent).UrlLiterals = slices.Delete((*parent).UrlLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("url"); value.Exists() && !data.Url.IsNull() {
+				data.Url = types.StringValue(value.String())
+			} else {
+				data.Url = types.StringNull()
+			}
+			(*parent).UrlLiterals[i] = data
 		}
 		for i := 0; i < len(data.UrlObjects); i++ {
 			keys := [...]string{"id"}
@@ -1838,6 +2087,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.IntrusionPolicyId = types.StringValue(value.String())
 		} else {
 			data.IntrusionPolicyId = types.StringNull()
+		}
+		if value := res.Get("variableSet.id"); value.Exists() && !data.VariableSetId.IsNull() {
+			data.VariableSetId = types.StringValue(value.String())
+		} else {
+			data.VariableSetId = types.StringNull()
 		}
 		(*parent).Rules[i] = data
 	}

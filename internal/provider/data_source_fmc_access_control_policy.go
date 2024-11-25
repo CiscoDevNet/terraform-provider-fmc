@@ -193,7 +193,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"vlan_tags_literals": schema.SetNestedAttribute{
+						"vlan_tag_literals": schema.SetNestedAttribute{
 							MarkdownDescription: "Set of objects that represent vlan tags (literally specified).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -209,7 +209,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"vlan_tags_objects": schema.SetNestedAttribute{
+						"vlan_tag_objects": schema.SetNestedAttribute{
 							MarkdownDescription: "Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -277,6 +277,34 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
+						"source_port_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent protocol/port (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"port": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+								},
+							},
+						},
 						"source_port_objects": schema.SetNestedAttribute{
 							MarkdownDescription: "Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group).",
 							Computed:            true,
@@ -284,6 +312,34 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: "UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_port_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent protocol/port (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"port": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: "",
 										Computed:            true,
 									},
 								},
@@ -301,29 +357,13 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"source_security_group_tag_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing the source Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).",
+						"source_sgt_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.example.id, etc.).",
-										Computed:            true,
-									},
-									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_security_group_tag.example.type, etc.).",
-										Computed:            true,
-									},
-								},
-							},
-						},
-						"destination_security_group_tag_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing the destination Security Group Tags (fmc_security_group_tag - part of the dynamic attributes).",
-							Computed:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_security_group_tag.example.id, etc.).",
+										MarkdownDescription: "UUID of the object (such as fmc_sgt.example.id, etc.).",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
@@ -352,6 +392,18 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: "UUID of the object (such as fmc_security_zone.example.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"url_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the URLs associated with the rule (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"url": schema.StringAttribute{
+										MarkdownDescription: "URL such as https://www.example.com/app",
 										Computed:            true,
 									},
 								},
@@ -427,6 +479,10 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 						},
 						"intrusion_policy_id": schema.StringAttribute{
 							MarkdownDescription: "Identifier (UUID) of the fmc_intrusion_policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.",
+							Computed:            true,
+						},
+						"variable_set_id": schema.StringAttribute{
+							MarkdownDescription: "Identifier (UUID) of the Variable Set for the rule action. ",
 							Computed:            true,
 						},
 					},
