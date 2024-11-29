@@ -1,0 +1,30 @@
+---
+name: Syslog Alerts
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/syslogalerts
+data_source_name_query: true
+import_name_query: true
+no_resource: true
+no_import: true
+is_bulk: true
+doc_category: Policy
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Syslog Alerts. The key of the map is the name of the individual Syslog Alert. 
+    map_key_example: test_syslog_alert_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Syslog Alert.
+        exclude_example: true
+        exclude_test: true    
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'SyslogAlert'.
+        default_value: SyslogAlert
+        requires_replace: true
+        exclude_example: true
+        exclude_test: true
