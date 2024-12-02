@@ -146,6 +146,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	{{- range .Attributes}}
+	{{- if .Computed}}{{- continue}}{{- end}}
 	{{- if .Value}}
 	body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 	{{- else if .ResourceId}}
@@ -174,6 +175,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 			itemBody := ""
 		{{- end}}
 			{{- range .Attributes}}
+			{{- if .Computed}}{{- continue}}{{- end}}
 			{{- if .Value}}
 			itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 			{{- else if not .Reference}}
@@ -193,6 +195,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 				for _, childItem := range item.{{toGoName .TfName}} {
 					itemChildBody := ""
 					{{- range .Attributes}}
+					{{- if .Computed}}{{- continue}}{{- end}}
 					{{- if .Value}}
 					itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 					{{- else if not .Reference}}
@@ -212,6 +215,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 						for _, childChildItem := range childItem.{{toGoName .TfName}} {
 							itemChildChildBody := ""
 							{{- range .Attributes}}
+							{{- if .Computed}}{{- continue}}{{- end}}
 							{{- if .Value}}
 							itemChildChildBody, _ = sjson.Set(itemChildChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 							{{- else if not .Reference}}
@@ -442,7 +446,7 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	{{- range .Attributes}}
-	{{- if and .ResourceId (not .Reference)}}
+	{{- if or (and .ResourceId (not .Reference)) .Computed}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if data.{{toGoName .TfName}}.IsUnknown() {
 		if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
@@ -506,7 +510,7 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- end}}
 
 		{{- range .Attributes}}
-		{{- if and .ResourceId (not .Reference)}}
+		{{- if or (and .ResourceId (not .Reference)) .Computed}}
 		{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 		if v := data.{{$list}}[i]; v.{{toGoName .TfName}}.IsUnknown() {
 			if value := r.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {

@@ -31,6 +31,7 @@ import (
 func TestAccDataSourceFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "name", "HOST1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_host.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "description", "My host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "ip", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "overridable", "true"))

@@ -35,6 +35,7 @@ func TestAccFmcHosts(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.description", "My Host 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.ip", "10.1.1.1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -107,9 +108,12 @@ func TestAccFmcHosts_Sequential(t *testing.T) {
 
 	var checks_step01 []resource.TestCheckFunc
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.ip", "1.2.3.1"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_1.type"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.description", "host1"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_2.ip", "1.2.3.2"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_2.type"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_3.ip", "1.2.3.3"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_3.type"))
 
 	step_02 := `resource "fmc_hosts" "test" {` + "\n" +
 		`	items = {` + "\n" +
@@ -129,9 +133,12 @@ func TestAccFmcHosts_Sequential(t *testing.T) {
 	var checks_step02 []resource.TestCheckFunc
 	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.ip", "1.2.3.1"))
 	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.description", "host1 new description"))
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_1.type"))
 	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_2.ip", "1.2.3.2"))
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_2.type"))
 	checks_step02 = append(checks_step02, resource.TestCheckNoResourceAttr("fmc_hosts.test", "items.hosts_3"))
 	checks_step02 = append(checks_step02, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_4.ip", "1.2.3.4"))
+	checks_step02 = append(checks_step02, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_4.type"))
 
 	steps := []resource.TestStep{{
 		Config: step_01,

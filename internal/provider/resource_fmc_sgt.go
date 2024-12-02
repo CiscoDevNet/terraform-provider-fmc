@@ -28,7 +28,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,12 +82,10 @@ func (r *SGTResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecurityGroupTag'.").AddDefaultValueDescription("SecurityGroupTag").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecurityGroupTag'.").String,
 				Computed:            true,
-				Default:             stringdefault.StaticString("SecurityGroupTag"),
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
@@ -140,6 +137,7 @@ func (r *SGTResource) Create(ctx context.Context, req resource.CreateRequest, re
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
