@@ -29,28 +29,29 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcDevicePhysicalInterface(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+func TestAccFmcDeviceEtherChannelInterface(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_id") == "" || os.Getenv("FMC_DEVICE_ETHERCHANNEL_INTERFACE") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_id and FMC_DEVICE_ETHERCHANNEL_INTERFACE")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_physical_interface.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "description", "my description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mode", "NONE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mtu", "9000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "logical_name", "myinterface-0-1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "description", "my description"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "NONE"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "name"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mtu", "9000"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "ether_channel_id", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "ipv4_static_address", "10.1.1.1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "ipv4_static_netmask", "24"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDevicePhysicalInterfacePrerequisitesConfig + testAccFmcDevicePhysicalInterfaceConfig_minimum(),
+			Config: testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccFmcDeviceEtherChannelInterfaceConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDevicePhysicalInterfacePrerequisitesConfig + testAccFmcDevicePhysicalInterfaceConfig_all(),
+		Config: testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccFmcDeviceEtherChannelInterfaceConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -65,21 +66,26 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
-const testAccFmcDevicePhysicalInterfacePrerequisitesConfig = `
+const testAccFmcDeviceEtherChannelInterfacePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_id" { default = null } // tests will set $TF_VAR_interface_id
+
+data "fmc_device_physical_interface" "test" {
+  device_id = var.device_id
+  id = var.interface_id
+}
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
-	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
+func testAccFmcDeviceEtherChannelInterfaceConfig_minimum() string {
+	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	logical_name = "iface_minimum"` + "\n"
-	config += `	management_only = true` + "\n"
 	config += `	mode = "NONE"` + "\n"
-	config += `	name = "GigabitEthernet0/1"` + "\n"
+	config += `	ether_channel_id = "1"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -88,19 +94,21 @@ func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcDevicePhysicalInterfaceConfig_all() string {
-	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
+func testAccFmcDeviceEtherChannelInterfaceConfig_all() string {
+	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	logical_name = "myinterface-0-1"` + "\n"
 	config += `	enabled = true` + "\n"
-	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
-	config += `	name = "GigabitEthernet0/1"` + "\n"
 	config += `	mtu = 9000` + "\n"
+	config += `	ether_channel_id = "1"` + "\n"
+	config += `	selected_interfaces = [{` + "\n"
+	config += `		id = data.fmc_device_physical_interface.test.id` + "\n"
+	config += `		name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	}]` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable_ra = false` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -30,12 +30,13 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDeviceVRF(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vrf.test", "name", "VRF_A"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vrf.test", "description", "My VRF object"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vrf.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vrf.test", "description", "My VRF instance"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -62,6 +63,14 @@ func TestAccFmcDeviceVRF(t *testing.T) {
 const testAccFmcDeviceVRFPrerequisitesConfig = `
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+
+resource "fmc_device_physical_interface" "test" {
+  device_id    = var.device_id
+  name         = var.interface_name
+  logical_name = "my_test_name"
+  mode         = "NONE"
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -84,7 +93,12 @@ func testAccFmcDeviceVRFConfig_all() string {
 	config := `resource "fmc_device_vrf" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	name = "VRF_A"` + "\n"
-	config += `	description = "My VRF object"` + "\n"
+	config += `	description = "My VRF instance"` + "\n"
+	config += `	interfaces = [{` + "\n"
+	config += `		interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `		interface_name = fmc_device_physical_interface.test.name` + "\n"
+	config += `		interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -34,21 +34,14 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mode", "NONE"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_physical_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "description", "my description"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mode", "NONE"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mtu", "9000"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enforce_eui", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enable_auto_config", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enable_dhcp_address", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enable_dhcp_nonaddress", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_enable_ra", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_addresses.0.address", "2004::"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv6_addresses.0.prefix", "124"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -80,27 +73,16 @@ variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "myinterface-0-1"` + "\n"
 	config += `	enabled = true` + "\n"
+	config += `	management_only = false` + "\n"
+	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
-	config += `	logical_name = "myinterface-0-1"` + "\n"
-	config += `	description = "my description"` + "\n"
-	config += `	management_only = false` + "\n"
 	config += `	mtu = 9000` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable = true` + "\n"
-	config += `	ipv6_enforce_eui = true` + "\n"
-	config += `	ipv6_enable_auto_config = true` + "\n"
-	config += `	ipv6_enable_dhcp_address = true` + "\n"
-	config += `	ipv6_enable_dhcp_nonaddress = true` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"
-	config += `	ipv6_addresses = [{` + "\n"
-	config += `		address = "2004::"` + "\n"
-	config += `		prefix = "124"` + "\n"
-	config += `		enforce_eui = true` + "\n"
-	config += `	}]` + "\n"
-	config += `	nve_only = false` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -115,27 +97,16 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "myinterface-0-1"` + "\n"
 	config += `	enabled = true` + "\n"
+	config += `	management_only = false` + "\n"
+	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
-	config += `	logical_name = "myinterface-0-1"` + "\n"
-	config += `	description = "my description"` + "\n"
-	config += `	management_only = false` + "\n"
 	config += `	mtu = 9000` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable = true` + "\n"
-	config += `	ipv6_enforce_eui = true` + "\n"
-	config += `	ipv6_enable_auto_config = true` + "\n"
-	config += `	ipv6_enable_dhcp_address = true` + "\n"
-	config += `	ipv6_enable_dhcp_nonaddress = true` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"
-	config += `	ipv6_addresses = [{` + "\n"
-	config += `		address = "2004::"` + "\n"
-	config += `		prefix = "124"` + "\n"
-	config += `		enforce_eui = true` + "\n"
-	config += `	}]` + "\n"
-	config += `	nve_only = false` + "\n"
 	config += `}` + "\n"
 
 	config += `

@@ -37,7 +37,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
 	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
 
@@ -47,26 +46,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DevicePhysicalInterfaceResource{}
-	_ resource.ResourceWithImportState = &DevicePhysicalInterfaceResource{}
+	_ resource.Resource                = &DeviceEtherChannelInterfaceResource{}
+	_ resource.ResourceWithImportState = &DeviceEtherChannelInterfaceResource{}
 )
 
-func NewDevicePhysicalInterfaceResource() resource.Resource {
-	return &DevicePhysicalInterfaceResource{}
+func NewDeviceEtherChannelInterfaceResource() resource.Resource {
+	return &DeviceEtherChannelInterfaceResource{}
 }
 
-type DevicePhysicalInterfaceResource struct {
+type DeviceEtherChannelInterfaceResource struct {
 	client *fmc.Client
 }
 
-func (r *DevicePhysicalInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_physical_interface"
+func (r *DeviceEtherChannelInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_etherchannel_interface"
 }
 
-func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device Physical Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device EtherChannel Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -128,7 +127,10 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the interface; it must already be present on the device.").String,
-				Required:            true,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"mtu": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when logical_name is set.").AddIntegerRangeDescription(64, 9000).String,
@@ -145,8 +147,34 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"enable_sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to propagate SGT.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to propagate SGT.").AddDefaultValueDescription("false").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
+			},
+			"ether_channel_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Value of Ether Channel ID, allowed range 1 to 48.").String,
+				Required:            true,
+			},
+			"selected_interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_device_physical_interface.example.id, ...).").String,
+							Optional:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the selected interface").String,
+							Optional:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface").String,
+							Optional:            true,
+						},
+					},
+				},
 			},
 			"nve_only": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.").String,
@@ -329,7 +357,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Prefix Name for Prefix Delegation (PD)").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Prefix Name for Prefix Delegation").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
@@ -472,7 +500,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 	}
 }
 
-func (r *DevicePhysicalInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceEtherChannelInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -484,8 +512,8 @@ func (r *DevicePhysicalInterfaceResource) Configure(_ context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DevicePhysicalInterface
+func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceEtherChannelInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -498,45 +526,12 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object name %s", plan.Id, plan.Name))
-
-	if plan.Id.ValueString() == "" && plan.Name.ValueString() != "" {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
-			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.Name.ValueString() == v.Get("name").String() {
-						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%s', id: %s", plan.Id, plan.Name.ValueString(), plan.Id))
-						return false
-					}
-					return true
-				})
-			}
-			if plan.Id.ValueString() != "" || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", plan.Name.ValueString()))
-			return
-		}
-	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DevicePhysicalInterface{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBody(ctx, DeviceEtherChannelInterface{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -556,8 +551,8 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DevicePhysicalInterface
+func (r *DeviceEtherChannelInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceEtherChannelInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -606,10 +601,8 @@ func (r *DevicePhysicalInterfaceResource) Read(ctx context.Context, req resource
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
-func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DevicePhysicalInterface
+func (r *DeviceEtherChannelInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceEtherChannelInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -632,6 +625,10 @@ func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resour
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	// Name is computed field, but it's needed in the request anyways
+	if !plan.Name.IsNull() {
+		body, _ = sjson.Set(body, "name", plan.Name.ValueString())
+	}
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
@@ -644,10 +641,10 @@ func (r *DevicePhysicalInterfaceResource) Update(ctx context.Context, req resour
 	resp.Diagnostics.Append(diags...)
 }
 
-// End of section. //template:end update
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DevicePhysicalInterface
+func (r *DeviceEtherChannelInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceEtherChannelInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -662,22 +659,9 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-
-	// This is physical interface, so delete is done by PUT with minimal body
-	// This needs to be done in two steps due to some dependencies in the FMC
-	// Step 1: Remove all attributes except 'ifname'
-	body := state.toBodyPutDelete(ctx, DevicePhysicalInterface{})
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	// Step 2: Remove 'ifname' from body and re-run request
-	body, _ = sjson.Delete(body, "ifname")
-	res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -686,9 +670,11 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	resp.State.RemoveResource(ctx)
 }
 
+// End of section. //template:end delete
+
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *DevicePhysicalInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceEtherChannelInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
@@ -705,3 +691,15 @@ func (r *DevicePhysicalInterfaceResource) ImportState(ctx context.Context, req r
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

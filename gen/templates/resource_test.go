@@ -31,8 +31,8 @@ import (
 
 func TestAccFmc{{camelCase .Name}}(t *testing.T) {
 	{{- if len .TestTags}}
-	if {{range $i, $e := .TestTags}}{{if $i}} && {{end}}os.Getenv("{{$e}}") == ""{{end}} {
-        t.Skip("skipping test, set environment variable {{range $i, $e := .TestTags}}{{if $i}} or {{end}}{{$e}}{{end}}")
+	if {{range $i, $e := .TestTags}}{{if $i}} || {{end}}os.Getenv("{{$e}}") == ""{{end}} {
+        t.Skip("skipping test, set environment variable {{range $i, $e := .TestTags}}{{if $i}} and {{end}}{{$e}}{{end}}")
 	}
 	{{- end}}
 	var checks []resource.TestCheckFunc

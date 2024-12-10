@@ -1,10 +1,9 @@
 ---
-name: Device Physical Interface
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces
-put_create: true
+name: Device EtherChannel Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/etherchannelinterfaces
 data_source_name_query: true
 doc_category: Devices
-test_tags: [TF_VAR_device_id]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_id, FMC_DEVICE_ETHERCHANNEL_INTERFACE]
 attributes:
   - tf_name: device_id
     type: String
@@ -36,8 +35,7 @@ attributes:
     description: >-
       Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is
       disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-    minimum_test_value: "true"
-    test_value: "false"
+    exclude_test: true
     exclude_example: true
   - model_name: description
     type: String
@@ -67,12 +65,10 @@ attributes:
     data_path: [securityZone]
     type: String
     value: SecurityZone
-    #test_value: SecurityZone
   - model_name: name
     type: String
     description: Name of the interface; it must already be present on the device.
-    mandatory: true
-    example: GigabitEthernet0/1
+    computed: true
   - model_name: MTU
     tf_name: mtu
     type: Int64
@@ -91,14 +87,42 @@ attributes:
     tf_name: enable_sgt_propagate
     type: Bool
     description: Indicates whether to propagate SGT.
+    default_value: "false"
     example: "false"
     exclude_test: true
+  - model_name: etherChannelId
+    type: String
+    mandatory: true
+    example: "1"
+    description: Value of Ether Channel ID, allowed range 1 to 48.
+  - model_name: selectedInterfaces
+    description: >-
+      Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).
+    type: Set
+    attributes:
+      - model_name: id
+        type: String
+        description: UUID of the object (such as fmc_device_physical_interface.example.id, ...).
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: data.fmc_device_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the selected interface
+        exclude_example: true
+        exclude_test: true
+      - model_name: name
+        type: String
+        description: Name of the selected interface
+        example: "GigabitEthernet0/1"
+        test_value: data.fmc_device_physical_interface.test.name
   - model_name: nveOnly
     type: Bool
     description: >-
       Used for VTEP's source interface to restrict it to NVE only.
       For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic.
       For transparent firewall modes, the `nve_only` is automatically enabled.
+    test_value: "false"
     exclude_test: true
     exclude_example: true
 #IPv4 - Static
@@ -165,7 +189,7 @@ attributes:
     tf_name: ipv4_pppoe_authentication
     type: String
     description: PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.
-    enum_values: [PAP, CHAP, MSCHAP]
+    enum_values: [ PAP, CHAP, MSCHAP ]
     exclude_example: true
     exclude_test: true
   - model_name: pppoeRouteMetric
@@ -241,7 +265,6 @@ attributes:
         tf_name: enforce_eui
         description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
-        example: true
         exclude_example: true
         exclude_test: true
 #IPv6 Prefixes
@@ -266,7 +289,6 @@ attributes:
         tf_name: enforce_eui
         description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
-        example: true
         exclude_example: true
         exclude_test: true
 #IPv6 Settings:
@@ -309,7 +331,7 @@ attributes:
     tf_name: ipv6_enable_ra
     description: Indicates whether to enable IPv6 router advertisement (RA).
     type: Bool
-    test_value: "false"
+    exclude_test: true
     exclude_example: true
   - model_name: raLifeTime
     data_path: [ipv6]
@@ -318,7 +340,6 @@ attributes:
     description: Router Advertisement (RA) lifetime.
     min_int: 0
     max_int: 9000
-    example: 0
     exclude_example: true
     exclude_test: true
   - model_name: raInterval
@@ -348,8 +369,8 @@ attributes:
   - model_name: id
     data_path: [ipv6,ipv6DHCPPool]
     tf_name: ipv6_dhcp_pool_id
-    description: UUID of the assigned DHCPv6 pool
     type: String
+    description: UUID of the assigned DHCPv6 pool
     exclude_example: true
     exclude_test: true
   - model_name: type
@@ -377,7 +398,7 @@ attributes:
     data_path: [ipv6, DHCP, clientPd]
     tf_name: ipv6_dhcp_client_pd_prefix_name
     type: String
-    description: Prefix Name for Prefix Delegation (PD)
+    description: Prefix Name for Prefix Delegation
     exclude_example: true
     exclude_test: true
   - model_name: hintPrefixes
@@ -400,8 +421,7 @@ attributes:
     tf_name: ip_based_monitoring_type
     type: String
     description: PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
-    enum_values: [AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6]
-    example: AUTO
+    enum_values: [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
     exclude_example: true
     exclude_test: true
   - model_name: monitoredIp
@@ -416,13 +436,13 @@ attributes:
     tf_name: auto_negotiation
     type: Bool
     description: Enables auto negotiation of duplex and speed.
-    exclude_example: true
     exclude_test: true
+    exclude_example: true
   - model_name: duplex
     data_path: [hardware]
     type: String
     description: Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
-    enum_values: [AUTO, FULL, HALF]
+    enum_values: [ AUTO, FULL, HALF ]
     exclude_example: true
     exclude_test: true
   - model_name: speed
@@ -547,8 +567,8 @@ attributes:
   - model_name: size
     data_path: [overrideDefaultFragmentSetting]
     tf_name: override_default_fragment_setting_size
-    description: Override Default Fragment Setting - Fragment Size value
     type: Int64
+    description: Override Default Fragment Setting - Fragment Size value
     min_int: 1
     max_int: 30000
     exclude_example: true
@@ -556,8 +576,8 @@ attributes:
   - model_name: timeout
     data_path: [overrideDefaultFragmentSetting]
     tf_name: override_default_fragment_setting_timeout
-    description: Override Default Fragment Setting - Time Out value
     type: Int64
+    description: Override Default Fragment Setting - Time Out value
     min_int: 1
     max_int: 30
     exclude_example: true
@@ -565,3 +585,10 @@ attributes:
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_id" { default = null } // tests will set $TF_VAR_interface_id
+
+  data "fmc_device_physical_interface" "test" {
+    device_id = var.device_id
+    id = var.interface_id
+  }
+

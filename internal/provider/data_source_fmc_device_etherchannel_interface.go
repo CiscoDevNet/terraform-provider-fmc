@@ -39,26 +39,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DevicePhysicalInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &DevicePhysicalInterfaceDataSource{}
+	_ datasource.DataSource              = &DeviceEtherChannelInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceEtherChannelInterfaceDataSource{}
 )
 
-func NewDevicePhysicalInterfaceDataSource() datasource.DataSource {
-	return &DevicePhysicalInterfaceDataSource{}
+func NewDeviceEtherChannelInterfaceDataSource() datasource.DataSource {
+	return &DeviceEtherChannelInterfaceDataSource{}
 }
 
-type DevicePhysicalInterfaceDataSource struct {
+type DeviceEtherChannelInterfaceDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_physical_interface"
+func (d *DeviceEtherChannelInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_etherchannel_interface"
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device Physical Interface.",
+		MarkdownDescription: "This data source can read the Device EtherChannel Interface.",
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -118,6 +118,30 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 			"enable_sgt_propagate": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to propagate SGT.",
 				Computed:            true,
+			},
+			"ether_channel_id": schema.StringAttribute{
+				MarkdownDescription: "Value of Ether Channel ID, allowed range 1 to 48.",
+				Computed:            true,
+			},
+			"selected_interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: "Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "UUID of the object (such as fmc_device_physical_interface.example.id, ...).",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the selected interface",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the selected interface",
+							Computed:            true,
+						},
+					},
+				},
 			},
 			"nve_only": schema.BoolAttribute{
 				MarkdownDescription: "Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.",
@@ -276,7 +300,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
-				MarkdownDescription: "Prefix Name for Prefix Delegation (PD)",
+				MarkdownDescription: "Prefix Name for Prefix Delegation",
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
@@ -394,7 +418,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 		},
 	}
 }
-func (d *DevicePhysicalInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceEtherChannelInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -403,7 +427,7 @@ func (d *DevicePhysicalInterfaceDataSource) ConfigValidators(ctx context.Context
 	}
 }
 
-func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceEtherChannelInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -415,8 +439,8 @@ func (d *DevicePhysicalInterfaceDataSource) Configure(_ context.Context, req dat
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DevicePhysicalInterface
+func (d *DeviceEtherChannelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceEtherChannelInterface
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

@@ -28,7 +28,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -79,31 +78,49 @@ func (r *DeviceVRFResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the vrf object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The name of the VRF").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'VirtualRouter'.").AddDefaultValueDescription("VirtualRouter").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'VirtualRouter'.").String,
 				Computed:            true,
-				Default:             stringdefault.StaticString("VirtualRouter"),
 				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
+					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("VRF description").String,
 				Optional:            true,
+			},
+			"interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...).").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"interface_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("UUID of the member interface.").String,
+							Required:            true,
+						},
+						"interface_name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the interface.").String,
+							Required:            true,
+						},
+						"interface_logical_name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface").String,
+							Required:            true,
+						},
+					},
+				},
 			},
 		},
 	}
