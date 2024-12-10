@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -37,7 +38,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
 	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -89,27 +89,68 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent interface (fmc_device_physical_interface.example.id).").String,
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"logical_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.").String,
+				Optional:            true,
+			},
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the interface.").AddDefaultValueDescription("true").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
+			},
+			"management_only": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.").String,
+				Optional:            true,
+			},
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				Optional:            true,
+			},
+			"security_zone_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.").String,
+				Optional:            true,
+			},
+			"mtu": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when logical_name is set.").AddIntegerRangeDescription(64, 9000).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(64, 9000),
+				},
+			},
+			"priority": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Priority 0-65535. Can only be set for routed interfaces.").AddIntegerRangeDescription(0, 65535).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 65535),
+				},
+			},
+			"enable_sgt_propagate": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to propagate SGT.").String,
+				Optional:            true,
+			},
+			"interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface (fmc_device_physical_interface.example.name).").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the subinterface.").AddDefaultValueDescription("true").String,
-				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(true),
-			},
-			"interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface. As the fmc_device_physical_interface.example.name does not propagate dependency adequately on Terraform, the `interface_id` attribute must be always set when creating this managed resource.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"index": schema.Int64Attribute{
+			"sub_interface_id": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The numerical id of this subinterface, unique on the parent interface.").AddIntegerRangeDescription(0, 4294967295).String,
 				Required:            true,
 				Validators: []validator.Int64{
@@ -120,35 +161,11 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique per the parent interface. Must be non-empty in order to set `logical_name`, `security_zone_id`, `mtu`.").AddIntegerRangeDescription(1, 4094).String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique per the parent interface.").AddIntegerRangeDescription(1, 4094).String,
+				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4094),
 				},
-			},
-			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Customizable logical name of the subinterface, unique on the device. Should not contain whitespace or slash characters. Can only be set when vlan_id is set. Must be non-empty in order to set `security_zone_id` or `mtu`.").String,
-				Optional:            true,
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
-				Optional:            true,
-			},
-			"management_only": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this subinterface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.").String,
-				Optional:            true,
-			},
-			"mtu": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when logical_name is set on the parent interface.").String,
-				Optional:            true,
-			},
-			"priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority 0-65535. Can only be set for routed subinterfaces.").String,
-				Optional:            true,
-			},
-			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.").String,
-				Optional:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.").String,
@@ -169,6 +186,40 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 					int64validator.Between(1, 255),
 				},
 			},
+			"ipv4_pppoe_vpdn_group_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE Group Name.").String,
+				Optional:            true,
+			},
+			"ipv4_pppoe_user": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE User.").String,
+				Optional:            true,
+			},
+			"ipv4_pppoe_password": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE Password.").String,
+				Optional:            true,
+			},
+			"ipv4_pppoe_authentication": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.").AddStringEnumDescription("PAP", "CHAP", "MSCHAP").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("PAP", "CHAP", "MSCHAP"),
+				},
+			},
+			"ipv4_pppoe_route_metric": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE route metric, can be value between 1 - 255.").AddIntegerRangeDescription(1, 255).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 255),
+				},
+			},
+			"ipv4_pppoe_route_settings": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE Enable Route Settings.").String,
+				Optional:            true,
+			},
+			"ipv4_pppoe_store_credentials_in_flash": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE store username and password in Flash.").String,
+				Optional:            true,
+			},
 			"ipv6_enable": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6.").String,
 				Optional:            true,
@@ -177,20 +228,12 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 				Optional:            true,
 			},
+			"ipv6_link_local_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IPv6 Configuration - Link-Local Address.").String,
+				Optional:            true,
+			},
 			"ipv6_enable_auto_config": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 autoconfiguration.").String,
-				Optional:            true,
-			},
-			"ipv6_enable_dhcp_address": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for address config.").String,
-				Optional:            true,
-			},
-			"ipv6_enable_dhcp_nonaddress": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for non-address config.").String,
-				Optional:            true,
-			},
-			"ipv6_enable_ra": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 router advertisement (RA).").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -211,6 +254,173 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 							Optional:            true,
 						},
 					},
+				},
+			},
+			"ipv6_prefixes": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"address": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
+							Optional:            true,
+						},
+						"default": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
+							Optional:            true,
+						},
+						"enforce_eui": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+							Optional:            true,
+						},
+					},
+				},
+			},
+			"ipv6_enable_dad": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 DAD Loopback Detect (DAD).").String,
+				Optional:            true,
+			},
+			"ipv6_dad_attempts": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Number of Duplicate Address Detection (DAD) attempts.").AddIntegerRangeDescription(0, 600).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 600),
+				},
+			},
+			"ipv6_ns_interval": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Neighbor Solicitation (NS) interval.").AddIntegerRangeDescription(1000, 3600000).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1000, 3600000),
+				},
+			},
+			"ipv6_reachable_time": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred").AddIntegerRangeDescription(0, 3600000).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 3600000),
+				},
+			},
+			"ipv6_enable_ra": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 router advertisement (RA).").String,
+				Optional:            true,
+			},
+			"ipv6_ra_life_time": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Router Advertisement (RA) lifetime.").AddIntegerRangeDescription(0, 9000).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 9000),
+				},
+			},
+			"ipv6_ra_interval": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Interval between Router Advertisements (RA) transmissions").AddIntegerRangeDescription(3, 1800).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(3, 1800),
+				},
+			},
+			"ipv6_dhcp": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable DHCPv6 client.").String,
+				Optional:            true,
+			},
+			"ipv6_default_route_by_dhcp": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to obtain default route from DHCPv6.").String,
+				Optional:            true,
+			},
+			"ipv6_dhcp_pool_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned DHCPv6 pool").String,
+				Optional:            true,
+			},
+			"ipv6_dhcp_pool_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPv6AddressPool'.").String,
+				Optional:            true,
+			},
+			"ipv6_enable_dhcp_address_config": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for address config.").String,
+				Optional:            true,
+			},
+			"ipv6_enable_dhcp_nonaddress_config": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for non-address config.").String,
+				Optional:            true,
+			},
+			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Prefix Name for Prefix Delegation (PD)").String,
+				Optional:            true,
+			},
+			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Hint Prefixes for Prefix Delegation (PD)").String,
+				Optional:            true,
+			},
+			"ip_based_monitoring": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IP based Monitoring.").String,
+				Optional:            true,
+			},
+			"ip_based_monitoring_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]").AddStringEnumDescription("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6"),
+				},
+			},
+			"ip_based_monitoring_next_hop": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IP address to monitor.").String,
+				Optional:            true,
+			},
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address for active interface in format 0123.4567.89ab.").String,
+				Optional:            true,
+			},
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address for standby interface in format 0123.4567.89ab.").String,
+				Optional:            true,
+			},
+			"arp_table_entries": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"mac_address": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("MAC address for custom ARP entry in format 0123.4567.89ab.").String,
+							Optional:            true,
+						},
+						"ip_address": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("IP address for custom ARP entry").String,
+							Optional:            true,
+						},
+						"enable_alias": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry").String,
+							Optional:            true,
+						},
+					},
+				},
+			},
+			"enable_anti_spoofing": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Anti Spoofing").String,
+				Optional:            true,
+			},
+			"allow_full_fragment_reassembly": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Allow Full Fragment Reassembly").String,
+				Optional:            true,
+			},
+			"override_default_fragment_setting_chain": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Chain value").AddIntegerRangeDescription(1, 8200).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 8200),
+				},
+			},
+			"override_default_fragment_setting_size": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Fragment Size value").AddIntegerRangeDescription(1, 30000).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 30000),
+				},
+			},
+			"override_default_fragment_setting_timeout": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Time Out value").AddIntegerRangeDescription(1, 30).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 30),
 				},
 			},
 		},
@@ -244,35 +454,18 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	body := plan.toBody(ctx, DeviceSubinterface{})
-
-	// Retrieve parent's name using parent's uuid.
-	parentPath := fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces/%v",
-		url.QueryEscape(plan.DeviceId.ValueString()),
-		url.QueryEscape(plan.InterfaceId.ValueString()),
-	)
-	parent, err := r.client.Get(parentPath, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, parent.String()))
-		return
-	}
-
-	body, _ = sjson.Set(body, "name", parent.Get("name").String())
-
 	// Create object
+	body := plan.toBody(ctx, DeviceSubinterface{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
-
-	res, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
 	plan.fromBodyUnknowns(ctx, res)
+
+	// Fix 'name`
+	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", plan.Name.ValueString(), plan.SubInterfaceId.ValueInt64()))
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -281,8 +474,6 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DeviceSubinterface
@@ -324,6 +515,9 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 		state.fromBodyPartial(ctx, res)
 	}
 
+	// Fix 'name`
+	state.Name = types.StringValue(fmt.Sprintf("%s.%d", state.Name.ValueString(), state.SubInterfaceId.ValueInt64()))
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -331,10 +525,6 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
-
-// Section below is generated&owned by "gen/generator.go". //template:begin update
 
 func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceSubinterface
@@ -365,20 +555,15 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-	res, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
-	plan.fromBodyUnknowns(ctx, res)
+
+	// Fix 'name`
+	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", strings.Split(plan.Name.ValueString(), ".")[0], plan.SubInterfaceId.ValueInt64()))
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
