@@ -26,7 +26,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -173,9 +172,6 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							Default: stringdefault.StaticString("default"),
 						},
 					},
-				},
-				Validators: []validator.List{
-					listvalidator.SizeAtMost(1000),
 				},
 			},
 			"rules": schema.ListNestedAttribute{
@@ -555,9 +551,6 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 						},
 					},
 				},
-				Validators: []validator.List{
-					listvalidator.SizeAtMost(1000),
-				},
 			},
 		},
 	}
@@ -659,13 +652,13 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
-	resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
+	resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true", reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
 		return
 	}
 
-	resRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/accessrules?expanded=true&offset=0&limit=1000", reqMods...)
+	resRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/accessrules?expanded=true", reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
 		return
@@ -835,7 +828,7 @@ func (r *AccessControlPolicyResource) truncateRulesAt(ctx context.Context, state
 		}
 		b.WriteString(state.Rules[i].Id.ValueString())
 		count++
-		if b.Len() >= 3700-2 {
+		if b.Len() >= maxUrlParamLength {
 			bulks = append(bulks, b.String())
 			b.Reset()
 			counts = append(counts, count)
@@ -915,6 +908,8 @@ func (r *AccessControlPolicyResource) createRulesAt(ctx context.Context, plan Ac
 	for i := startIndex; i < len(body); i++ {
 		bulk := `{"dummy_rules":[]}`
 		j := i
+		bulkCount := 0
+		bodyLength := 0
 		head := plan.Rules[i]
 		for ; i < len(body); i++ {
 			if !head.CategoryName.Equal(plan.Rules[i].CategoryName) || head.GetSection() != plan.Rules[i].GetSection() {
@@ -926,7 +921,20 @@ func (r *AccessControlPolicyResource) createRulesAt(ctx context.Context, plan Ac
 			rule, _ = sjson.Delete(rule, "metadata.category")
 			rule, _ = sjson.Delete(rule, "metadata.section")
 
+			// Check if the body is too big for a single POST
+			bodyLength += len(rule)
+			if bodyLength >= maxPayloadSize {
+				i--
+				break
+			}
+
 			bulk, _ = sjson.SetRaw(bulk, "dummy_rules.-1", rule)
+
+			// Count the number of rules in the bulk
+			bulkCount++
+			if bulkCount >= bulkSizeCreate {
+				break
+			}
 		}
 
 		param := "?bulk=true"

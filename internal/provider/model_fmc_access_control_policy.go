@@ -2171,19 +2171,6 @@ func NewValidAccessControlPolicy(ctx context.Context, tfplan tfsdk.Plan) (Access
 		return plan, diags
 	}
 
-	// Validate lenghts. TODO(#66): make lenghts unlimited
-	if len(plan.Categories) > 1000 {
-		diags.AddAttributeError(path.Root("categories"), "Too many categories",
-			fmt.Sprintf("%d categories specified, expected at most %d.", len(plan.Categories), 1000))
-		return plan, diags
-	}
-
-	if len(plan.Rules) > 1000 {
-		diags.AddAttributeError(path.Root("rules"), "Too many rules",
-			fmt.Sprintf("%d rules specified, expected at most %d.", len(plan.Rules), 1000))
-		return plan, diags
-	}
-
 	// Validate categories.*.section
 	def := types.StringNull()
 	insertion := len(plan.Categories)
