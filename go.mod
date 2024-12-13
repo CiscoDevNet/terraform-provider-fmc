@@ -16,7 +16,7 @@ require (
 	github.com/netascode/go-fmc v0.0.0-20241121100336-de2a2fe14e68
 	github.com/tidwall/gjson v1.18.0
 	github.com/tidwall/sjson v1.2.5
-	golang.org/x/crypto v0.30.0
+	golang.org/x/crypto v0.31.0
 	golang.org/x/tools v0.28.0
 	gopkg.in/yaml.v3 v3.0.1
 )
