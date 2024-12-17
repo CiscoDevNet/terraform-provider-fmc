@@ -1,0 +1,164 @@
+---
+name: File Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
+data_source_name_query: true
+doc_category: Policy
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: The name of file policy.
+    example: file_policy_1
+  - model_name: type
+    type: String
+    description: Type of the object
+    computed: true
+  - model_name: description
+    type: String
+    description: File policy description.
+    example: My file policy
+  - model_name: firstTimeFileAnalysis
+    type: Bool
+    description: Analyze first-seen files while AMP cloud disposition is pending
+    example: true
+  - model_name: customDetectionList
+    type: Bool
+    description: Enable custom detection list
+    example: true
+  - model_name: cleanList
+    type: Bool
+    description: Enable clean list
+    example: true
+  - model_name: threatScore
+    type: String
+    enum_values: [DISABLED, MEDIUM, High, VERY_HIGH]
+    description: If AMP Cloud disposition is Unknown, override disposition based upon threat score.
+    example: DISABLED
+  - model_name: inspectArchives
+    type: Bool
+    description: Inspect Archives
+    example: false
+  - model_name: blockEncryptedArchives
+    type: Bool
+    description: Block encrypted archives
+    example: false
+  - model_name: archiveDepthAction
+    tf_name: block_uninspectable_archives
+    type: Bool
+    description: Block uninspectable Archives
+    example: false
+  - model_name: archiveDepth
+    tf_name: max_archive_depth
+    type: Int64
+    description: Max archive depth
+    example: 2
+    min_int: 1
+    max_int: 3
+  - model_name: dummy_file_rules
+    tf_name: file_rules
+    type: List
+    description: The ordered list of file rules.
+    ordered_list: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Unique identifier representing the File Rule.
+        resource_id: true
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: The name of file rule type.
+        computed: true
+      # Exist in schema but not in GUI
+      #- model_name: name
+      #  type: String
+      #  description: Name of the FileRule object.
+      #  example: file_rule_1
+      #  exclude_example: true
+      #  exclude_test: true
+      #- model_name: description
+      #  type: String
+      #  description: Description of the file rule.
+      #  example: My file policy rule.
+      #  exclude_example: true
+      #  exclude_test: true
+      - model_name: protocol
+        tf_name: application_protocol
+        type: String
+        enum_values: [ANY, HTTP, SMTP, IMAP, POP3, FTP, SMB]
+        mandatory: true
+        description: Defines a protocol for file inspection.
+        example: ANY
+      - model_name: action
+        type: String
+        enum_values: [DETECT, BLOCK_WITH_RESET, DETECT_MALWARE, BLOCK_MALWARE_WITH_RESET]
+        mandatory: true
+        description: Action to be performed on a file.
+        example: DETECT
+      - model_name: storeFiles
+        type: Set
+        element_type: String
+        description: List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
+        exclude_example: true
+        exclude_test: true
+      - model_name: direction
+        tf_name: direction_of_transfer
+        type: String
+        enum_values: [ANY, UPLOAD, DOWNLOAD]
+        mandatory: true
+        description: Direction of file transfer.
+        example: ANY
+      - model_name: fileCategories
+        tf_name: file_type_categories
+        type: Set
+        description: Defines a list of file categories for inspection.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            description: The id of file category.
+            example: "5"
+          - model_name: name
+            type: String
+            mandatory: true
+            description: The name of file category.
+            example: PDF files
+          - model_name: type
+            type: String
+            description: The type of file category.
+            default_value: FileCategory
+            exclude_example: true
+            exclude_test: true
+      - model_name: fileTypes
+        tf_name: file_types
+        type: Set
+        description: Defines a list of file types for inspection.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            description: The id of file type.
+            example: "19"
+          - model_name: name
+            type: String
+            mandatory: true
+            description: The name of file type.
+            example: 7Z
+          - model_name: type
+            type: String
+            description: The name of file type.
+            default_value: FileType
+            exclude_example: true
+            exclude_test: true
+
+
+
+
+
+
+
+
+
+
+
