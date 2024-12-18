@@ -105,6 +105,8 @@ type YamlConfig struct {
 	NoDelete                 bool                  `yaml:"no_delete"`
 	DataSourceNameQuery      bool                  `yaml:"data_source_name_query"`
 	MinimumVersion           string                `yaml:"minimum_version"`
+	MinimumVersionCreate     string                `yaml:"minimum_version_create"`
+	MinimumVersionBulkCreate string                `yaml:"minimum_version_bulk_create"`
 	MinimumVersionBulkDelete string                `yaml:"minimum_version_bulk_delete"`
 	DsDescription            string                `yaml:"ds_description"`
 	ResDescription           string                `yaml:"res_description"`

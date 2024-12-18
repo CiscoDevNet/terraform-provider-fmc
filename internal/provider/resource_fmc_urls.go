@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -47,6 +48,7 @@ var (
 	_ resource.Resource                = &URLsResource{}
 	_ resource.ResourceWithImportState = &URLsResource{}
 )
+var minFMCVersionBulkDeleteURLs = version.Must(version.NewVersion("7.4"))
 
 func NewURLsResource() resource.Resource {
 	return &URLsResource{}
@@ -430,7 +432,7 @@ func (r *URLsResource) createSubresources(ctx context.Context, state, plan URLs,
 	var bulk URLs
 	bulk.Items = make(map[string]URLsItems, bulkSizeCreate)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (URLs)", state.Id.ValueString()))
 
 	// iterate over all items
 	for k, v := range plan.Items {
@@ -476,25 +478,74 @@ func (r *URLsResource) createSubresources(ctx context.Context, state, plan URLs,
 func (r *URLsResource) deleteSubresources(ctx context.Context, state, plan URLs, reqMods ...func(*fmc.Req)) (URLs, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of objects", state.Id.ValueString()))
-	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode", state.Id.ValueString()))
-	for k, v := range objectsToRemove.Items {
-		// Check if the object was not already deleted
-		if v.Id.IsNull() {
-			delete(state.Items, k)
-			continue
-		}
+	// Get FMC version from the clinet
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
-		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
-		res, err := r.client.Delete(urlPath, reqMods...)
-		if err != nil {
-			return state, diag.Diagnostics{
-				diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+	// Check if FMC version supports bulk deletes
+	if fmcVersion.LessThan(minFMCVersionBulkDeleteURLs) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (URLs)", state.Id.ValueString()))
+		for k, v := range objectsToRemove.Items {
+			// Check if the object was not already deleted
+			if v.Id.IsNull() {
+				delete(state.Items, k)
+				continue
+			}
+
+			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+			res, err := r.client.Delete(urlPath, reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+				}
+			}
+
+			// Remove deleted item from state
+			delete(state.Items, k)
+		}
+	} else {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (URLs)", state.Id.ValueString()))
+
+		var idx = 0
+		var idsToRemove strings.Builder
+		var alreadyDeleted []string
+
+		for k, v := range objectsToRemove.Items {
+			// Counter
+			idx++
+
+			// Check if the object was not already deleted
+			if v.Id.IsNull() {
+				alreadyDeleted = append(alreadyDeleted, k)
+				continue
+			}
+
+			// Create list of IDs of items to delete
+			idsToRemove.WriteString(url.QueryEscape(v.Id.ValueString()) + ",")
+
+			// If bulk size was reached or all entries have been processed
+			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+				urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + idsToRemove.String() + "\""
+				res, err := r.client.Delete(urlPath, reqMods...)
+				if err != nil {
+					return state, diag.Diagnostics{
+						diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete subobject(s) (DELETE), got error: %s, %s", state.Id.ValueString(), err, res.String())),
+					}
+				}
+
+				// Read result and remove deleted items from state
+				deletedItems := res.Get("items.#.name").Array()
+				for _, name := range deletedItems {
+					delete(state.Items, name.String())
+				}
+
+				// Reset ID string
+				idsToRemove.Reset()
 			}
 		}
 
-		// Remove deleted item from state
-		delete(state.Items, k)
+		for _, v := range alreadyDeleted {
+			delete(state.Items, v)
+		}
 	}
 
 	return state, nil
@@ -509,7 +560,7 @@ func (r *URLsResource) updateSubresources(ctx context.Context, state, plan URLs,
 	var tmpObject URLs
 	tmpObject.Items = make(map[string]URLsItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (URLs)", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
 		tmpObject.Items[k] = v

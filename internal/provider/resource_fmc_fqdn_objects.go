@@ -450,7 +450,7 @@ func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, pla
 	var bulk FQDNObjects
 	bulk.Items = make(map[string]FQDNObjectsItems, bulkSizeCreate)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (FQDN Objects)", state.Id.ValueString()))
 
 	// iterate over all items
 	for k, v := range plan.Items {
@@ -496,13 +496,32 @@ func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, pla
 func (r *FQDNObjectsResource) deleteSubresources(ctx context.Context, state, plan FQDNObjects, reqMods ...func(*fmc.Req)) (FQDNObjects, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of objects", state.Id.ValueString()))
 	// Get FMC version from the clinet
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.GreaterThanOrEqual(minFMCVersionBulkDeleteFQDNObjects) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode", state.Id.ValueString()))
+	if fmcVersion.LessThan(minFMCVersionBulkDeleteFQDNObjects) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (FQDN Objects)", state.Id.ValueString()))
+		for k, v := range objectsToRemove.Items {
+			// Check if the object was not already deleted
+			if v.Id.IsNull() {
+				delete(state.Items, k)
+				continue
+			}
+
+			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+			res, err := r.client.Delete(urlPath, reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+				}
+			}
+
+			// Remove deleted item from state
+			delete(state.Items, k)
+		}
+	} else {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (FQDN Objects)", state.Id.ValueString()))
 
 		var idx = 0
 		var idsToRemove strings.Builder
@@ -545,27 +564,6 @@ func (r *FQDNObjectsResource) deleteSubresources(ctx context.Context, state, pla
 		for _, v := range alreadyDeleted {
 			delete(state.Items, v)
 		}
-
-	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode", state.Id.ValueString()))
-		for k, v := range objectsToRemove.Items {
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				delete(state.Items, k)
-				continue
-			}
-
-			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
-			res, err := r.client.Delete(urlPath, reqMods...)
-			if err != nil {
-				return state, diag.Diagnostics{
-					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
-				}
-			}
-
-			// Remove deleted item from state
-			delete(state.Items, k)
-		}
 	}
 
 	return state, nil
@@ -580,7 +578,7 @@ func (r *FQDNObjectsResource) updateSubresources(ctx context.Context, state, pla
 	var tmpObject FQDNObjects
 	tmpObject.Items = make(map[string]FQDNObjectsItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (FQDN Objects)", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
 		tmpObject.Items[k] = v

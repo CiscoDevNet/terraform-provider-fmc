@@ -9,6 +9,7 @@ res_description: >-
   The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
   Updating/deleting `fmc_security_zones` can thus take much more time than creating it
 doc_category: Objects
+minimum_version_bulk_delete: "999"
 attributes:
   - model_name: items
     type: Map

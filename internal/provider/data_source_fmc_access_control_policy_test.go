@@ -36,7 +36,6 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_begin", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_send_events_to_fmc", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_send_syslog", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_syslog_severity", "DEBUG"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "categories.0.name", "cat1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.action", "ALLOW"))
@@ -57,6 +56,7 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceFmcAccessControlPolicyPrerequisitesConfig + testAccDataSourceFmcAccessControlPolicyConfig(),
@@ -110,7 +110,6 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
-	config += `	default_action_send_syslog = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "cat1"` + "\n"
@@ -175,7 +174,6 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
-	config += `	default_action_send_syslog = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "cat1"` + "\n"

@@ -171,7 +171,6 @@ resource "fmc_access_control_policy" "example" {
 - `default_action_send_events_to_fmc` (Boolean) Indicating whether the device will send events to the Firepower Management Center event viewer.
   - Default value: `false`
 - `default_action_send_syslog` (Boolean) Indicating whether the device will send events to a syslog server.
-  - Default value: `false`
 - `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
 - `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `default_action_syslog_severity` (String) Override the Severity of syslog alerts.

@@ -73,6 +73,6 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_range" "test" {
-    name   = "test_fmc_network_groups"
-    value  = "2005::10-2005::12"
+    name      = "test_fmc_network_groups"
+    ip_range  = "2005::10-2005::12"
   }

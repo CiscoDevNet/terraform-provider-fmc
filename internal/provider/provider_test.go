@@ -19,6 +19,7 @@ package provider
 
 import (
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
@@ -46,4 +47,12 @@ func testAccPreCheck(t *testing.T) {
 	if v := os.Getenv("FMC_URL"); v == "" {
 		t.Fatal("FMC_URL env variable must be set for acceptance tests")
 	}
+}
+
+func testAccErrorCheck(t *testing.T, err error) error {
+	if strings.Contains(err.Error(), "UnsupportedVersion") {
+		t.Skip("UnsupportedVersion: Skipping check - resource not supported in the detected FMC version.")
+		return nil
+	}
+	return err
 }

@@ -3,6 +3,7 @@ name: Extended ACL
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/extendedaccesslists
 data_source_name_query: true
 doc_category: Objects
+minimum_version_create: "7.2"
 attributes:
   - model_name: name
     type: String

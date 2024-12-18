@@ -451,7 +451,7 @@ func (r *ICMPv4ObjectsResource) createSubresources(ctx context.Context, state, p
 	var bulk ICMPv4Objects
 	bulk.Items = make(map[string]ICMPv4ObjectsItems, bulkSizeCreate)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Creating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (ICMPv4 Objects)", state.Id.ValueString()))
 
 	// iterate over all items
 	for k, v := range plan.Items {
@@ -497,13 +497,32 @@ func (r *ICMPv4ObjectsResource) createSubresources(ctx context.Context, state, p
 func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, plan ICMPv4Objects, reqMods ...func(*fmc.Req)) (ICMPv4Objects, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Deleting bulk of objects", state.Id.ValueString()))
 	// Get FMC version from the clinet
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.GreaterThanOrEqual(minFMCVersionBulkDeleteICMPv4Objects) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode", state.Id.ValueString()))
+	if fmcVersion.LessThan(minFMCVersionBulkDeleteICMPv4Objects) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (ICMPv4 Objects)", state.Id.ValueString()))
+		for k, v := range objectsToRemove.Items {
+			// Check if the object was not already deleted
+			if v.Id.IsNull() {
+				delete(state.Items, k)
+				continue
+			}
+
+			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+			res, err := r.client.Delete(urlPath, reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+				}
+			}
+
+			// Remove deleted item from state
+			delete(state.Items, k)
+		}
+	} else {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (ICMPv4 Objects)", state.Id.ValueString()))
 
 		var idx = 0
 		var idsToRemove strings.Builder
@@ -546,27 +565,6 @@ func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, p
 		for _, v := range alreadyDeleted {
 			delete(state.Items, v)
 		}
-
-	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode", state.Id.ValueString()))
-		for k, v := range objectsToRemove.Items {
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				delete(state.Items, k)
-				continue
-			}
-
-			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
-			res, err := r.client.Delete(urlPath, reqMods...)
-			if err != nil {
-				return state, diag.Diagnostics{
-					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
-				}
-			}
-
-			// Remove deleted item from state
-			delete(state.Items, k)
-		}
 	}
 
 	return state, nil
@@ -581,7 +579,7 @@ func (r *ICMPv4ObjectsResource) updateSubresources(ctx context.Context, state, p
 	var tmpObject ICMPv4Objects
 	tmpObject.Items = make(map[string]ICMPv4ObjectsItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (ICMPv4 Objects)", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
 		tmpObject.Items[k] = v

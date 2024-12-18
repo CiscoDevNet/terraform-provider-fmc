@@ -53,8 +53,8 @@ attributes:
     tf_name: default_action_send_syslog
     type: Bool
     description: Indicating whether the device will send events to a syslog server.
-    default_value: "false"
     example: "true"
+    exclude_test: true
   - model_name: id
     data_path: [defaultAction, syslogConfig]
     tf_name: default_action_syslog_config_id

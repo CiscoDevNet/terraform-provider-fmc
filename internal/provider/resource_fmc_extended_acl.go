@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -49,6 +50,7 @@ var (
 	_ resource.Resource                = &ExtendedACLResource{}
 	_ resource.ResourceWithImportState = &ExtendedACLResource{}
 )
+var minFMCVersionCreateExtendedACL = version.Must(version.NewVersion("7.2"))
 
 func NewExtendedACLResource() resource.Resource {
 	return &ExtendedACLResource{}
@@ -228,6 +230,14 @@ func (r *ExtendedACLResource) Configure(_ context.Context, req resource.Configur
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *ExtendedACLResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateExtendedACL) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Extended ACL creation, minumum required version is 7.2", r.client.FMCVersion))
+		return
+	}
 	var plan ExtendedACL
 
 	// Read plan

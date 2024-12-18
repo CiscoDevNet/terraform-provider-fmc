@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -47,6 +48,7 @@ var (
 	_ resource.Resource                = &StandardACLResource{}
 	_ resource.ResourceWithImportState = &StandardACLResource{}
 )
+var minFMCVersionCreateStandardACL = version.Must(version.NewVersion("7.2"))
 
 func NewStandardACLResource() resource.Resource {
 	return &StandardACLResource{}
@@ -152,6 +154,14 @@ func (r *StandardACLResource) Configure(_ context.Context, req resource.Configur
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *StandardACLResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateStandardACL) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Standard ACL creation, minumum required version is 7.2", r.client.FMCVersion))
+		return
+	}
 	var plan StandardACL
 
 	// Read plan

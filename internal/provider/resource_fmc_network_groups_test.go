@@ -50,6 +50,7 @@ func TestAccFmcNetworkGroups(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps:                    steps,
 	})
 }
@@ -60,8 +61,8 @@ func TestAccFmcNetworkGroups(t *testing.T) {
 
 const testAccFmcNetworkGroupsPrerequisitesConfig = `
 resource "fmc_range" "test" {
-  name   = "test_fmc_network_groups"
-  value  = "2005::10-2005::12"
+  name      = "test_fmc_network_groups"
+  ip_range  = "2005::10-2005::12"
 }
 `
 

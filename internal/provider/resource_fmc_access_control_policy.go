@@ -125,10 +125,8 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				Default:             booldefault.StaticBool(false),
 			},
 			"default_action_send_syslog": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will send events to a syslog server.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will send events to a syslog server.").String,
 				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(false),
 			},
 			"default_action_syslog_config_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,

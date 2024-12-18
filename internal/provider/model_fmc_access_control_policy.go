@@ -604,7 +604,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 	if value := res.Get("defaultAction.enableSyslog"); value.Exists() {
 		data.DefaultActionSendSyslog = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionSendSyslog = types.BoolValue(false)
+		data.DefaultActionSendSyslog = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() {
 		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
@@ -1104,7 +1104,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	}
 	if value := res.Get("defaultAction.enableSyslog"); value.Exists() && !data.DefaultActionSendSyslog.IsNull() {
 		data.DefaultActionSendSyslog = types.BoolValue(value.Bool())
-	} else if data.DefaultActionSendSyslog.ValueBool() != false {
+	} else {
 		data.DefaultActionSendSyslog = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() && !data.DefaultActionSyslogConfigId.IsNull() {

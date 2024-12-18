@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -44,6 +45,7 @@ var (
 	_ resource.Resource                = &SGTResource{}
 	_ resource.ResourceWithImportState = &SGTResource{}
 )
+var minFMCVersionCreateSGT = version.Must(version.NewVersion("7.4"))
 
 func NewSGTResource() resource.Resource {
 	return &SGTResource{}
@@ -113,6 +115,14 @@ func (r *SGTResource) Configure(_ context.Context, req resource.ConfigureRequest
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *SGTResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateSGT) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support SGT creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan SGT
 
 	// Read plan
