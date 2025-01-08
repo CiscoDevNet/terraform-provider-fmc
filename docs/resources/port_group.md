@@ -38,12 +38,11 @@ resource "fmc_port_group" "example" {
 - `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
-  - Default value: `PortObjectGroup`
 
 ### Read-Only
 
 - `id` (String) The id of the object
+- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
 <a id="nestedatt--objects"></a>
 ### Nested Schema for `objects`

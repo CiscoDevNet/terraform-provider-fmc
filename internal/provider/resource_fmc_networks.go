@@ -32,7 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -108,10 +107,11 @@ func (r *NetworksResource) Schema(ctx context.Context, req resource.SchemaReques
 							Required:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Network'.").AddDefaultValueDescription("Network").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Network'.").String,
 							Computed:            true,
-							Default:             stringdefault.StaticString("Network"),
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+							},
 						},
 					},
 				},

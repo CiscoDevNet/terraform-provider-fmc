@@ -12,7 +12,6 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    requires_replace: true
     description: >-
       UUID of the parent device (fmc_device.example.id).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
@@ -61,7 +60,6 @@ attributes:
         description: Encapsulation type.
         enum_values: [VXLAN, GENEVE]
         default_value: VXLAN
-        requires_replace: true
         exclude_example: true
         exclude_test: true
       - model_name: nveNeighborDiscoveryType

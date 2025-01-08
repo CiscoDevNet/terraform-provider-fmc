@@ -74,7 +74,7 @@ func (d *SecurityZonesDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "UUID of the managed Security Zone.",
 							Computed:            true,
 						},
-						"interface_mode": schema.StringAttribute{
+						"interface_type": schema.StringAttribute{
 							MarkdownDescription: "The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.",
 							Computed:            true,
 						},

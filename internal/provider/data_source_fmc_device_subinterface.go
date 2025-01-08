@@ -118,7 +118,6 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"interface_name": schema.StringAttribute{
 				MarkdownDescription: "Name of the parent interface (fmc_device_physical_interface.example.name).",
-				Optional:            true,
 				Computed:            true,
 			},
 			"sub_interface_id": schema.Int64Attribute{

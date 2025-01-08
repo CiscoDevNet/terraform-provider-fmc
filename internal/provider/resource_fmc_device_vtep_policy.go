@@ -129,9 +129,6 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 								stringvalidator.OneOf("VXLAN", "GENEVE"),
 							},
 							Default: stringdefault.StaticString("VXLAN"),
-							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.RequiresReplace(),
-							},
 						},
 						"neighbor_discovery": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).").AddStringEnumDescription("NONE", "STATIC_PEER_IP", "STATIC_PEER_GROUP", "DEFAULT_MULTICAST_GROUP").String,

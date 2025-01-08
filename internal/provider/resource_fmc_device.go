@@ -113,9 +113,6 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 				Computed:            true,
 				Default:             stringdefault.StaticString("Device"),
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
 			},
 			"access_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.").String,

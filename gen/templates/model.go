@@ -301,7 +301,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 
 		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
 			func(_, v gjson.Result) bool {
-				{{- if $.ImportNameQuery -}}
+				{{- if or $.ImportNameQuery $.IsBulk -}}
 				if v.Get("name").String() == k {
 				{{- else -}}
 				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
@@ -313,7 +313,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 			},
 		)
 		if !res.Exists() {
-			{{- if $.ImportNameQuery -}}
+			{{- if or $.ImportNameQuery $.IsBulk -}}
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
 			{{- else -}}
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: uuid=%s, key=%v", data.Id, k))

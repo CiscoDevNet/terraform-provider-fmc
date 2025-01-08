@@ -136,7 +136,7 @@ func (d *InterfaceGroupDataSource) Read(ctx context.Context, req datasource.Read
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
 			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))

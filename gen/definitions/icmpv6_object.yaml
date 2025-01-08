@@ -1,7 +1,6 @@
 ---
 name: ICMPv6 Object
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/icmpv6objects
-data_source_name_query: true
 doc_category: Objects
 attributes:
   - model_name: icmpType
@@ -23,6 +22,7 @@ attributes:
     description: User-created name of the resource.
     mandatory: true
     example: icmpv6_addr_unreachable
+    data_source_query: true
   - model_name: description
     type: String
     description: Optional user-created description.

@@ -1,7 +1,6 @@
 ---
 name: Host
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts
-data_source_name_query: true
 doc_category: Objects
 attributes:
   - model_name: name
@@ -9,6 +8,7 @@ attributes:
     mandatory: true
     description: The name of the host object.
     example: HOST1
+    data_source_query: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'Host'.

@@ -498,13 +498,13 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object name %s", plan.Id, plan.Name))
 
+	tflog.Debug(ctx, fmt.Sprintf("%s: considering object name %s", plan.Id, plan.Name))
 	if plan.Id.ValueString() == "" && plan.Name.ValueString() != "" {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
 			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))

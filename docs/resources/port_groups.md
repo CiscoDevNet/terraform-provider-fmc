@@ -54,12 +54,11 @@ Optional:
 
 - `description` (String) Optional user-created description.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
-  - Default value: `PortObjectGroup`
 
 Read-Only:
 
 - `id` (String) UUID of the managed Port Groups.
+- `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
 <a id="nestedatt--items--objects"></a>
 ### Nested Schema for `items.objects`

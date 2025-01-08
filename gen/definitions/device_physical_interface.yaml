@@ -2,7 +2,6 @@
 name: Device Physical Interface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces
 put_create: true
-data_source_name_query: true
 doc_category: Devices
 test_tags: [TF_VAR_device_id]
 attributes:
@@ -73,6 +72,7 @@ attributes:
     description: Name of the interface; it must already be present on the device.
     mandatory: true
     example: GigabitEthernet0/1
+    data_source_query: true
   - model_name: MTU
     tf_name: mtu
     type: Int64

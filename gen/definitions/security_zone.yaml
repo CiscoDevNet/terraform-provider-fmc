@@ -2,14 +2,15 @@
 name: Security Zone
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securityzones
 doc_category: Objects
-data_source_name_query: true
 attributes:
   - model_name: name
     type: String
     mandatory: true
     description: User-provided resource name.
     example: security_zone_1
+    data_source_query: true
   - model_name: interfaceMode
+    tf_name: interface_type
     type: String
     mandatory: true
     description: >-
@@ -17,10 +18,9 @@ attributes:
       to mode NONE of associated interfaces.
     enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, ASA]
     example: ROUTED
-    requires_replace: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'SecurityZone'.
-    default_value: SecurityZone
+    computed: true
     exclude_example: true
     exclude_test: true

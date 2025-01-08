@@ -30,7 +30,6 @@ data "fmc_device_subinterface" "example" {
 
 - `domain` (String) The name of the FMC domain
 - `id` (String) The id of the object
-- `interface_name` (String) Name of the parent interface (fmc_device_physical_interface.example.name).
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
 
 ### Read-Only
@@ -42,6 +41,7 @@ data "fmc_device_subinterface" "example" {
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
 - `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
 - `enabled` (Boolean) Indicates whether to enable the interface.
+- `interface_name` (String) Name of the parent interface (fmc_device_physical_interface.example.name).
 - `ip_based_monitoring` (Boolean) Indicates whether to enable IP based Monitoring.
 - `ip_based_monitoring_next_hop` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]

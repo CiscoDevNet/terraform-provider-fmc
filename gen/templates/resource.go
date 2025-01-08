@@ -471,13 +471,21 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 	}
 
 	{{- if and .PutCreate (not .IsBulk)}}
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object name %s", plan.Id, plan.Name))
 
-	if plan.Id.ValueString() == "" && plan.Name.ValueString() != "" {
+	{{- $attrTfName := "name" }}
+	{{- $attrModelName := "name" }}
+	{{- if hasDataSourceQuery .Attributes}}
+	{{- $attr := getDataSourceQueryAttribute . }}
+	{{- $attrTfName = $attr.TfName }}
+	{{- $attrModelName = $attr.ModelName }}
+	{{- end}}
+	
+	tflog.Debug(ctx, fmt.Sprintf("%s: considering object {{$attrTfName}} %s", plan.Id, plan.{{toGoName $attrTfName}}))
+	if plan.Id.ValueString() == "" && plan.{{toGoName $attrTfName}}.ValueString() != "" {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d", limit, offset)
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
 			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
 			if err != nil {
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
@@ -485,9 +493,9 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.Name.ValueString() == v.Get("name").String() {
+					if plan.{{toGoName $attrTfName}}.ValueString() == v.Get("{{$attrModelName}}").String() {
 						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%s', id: %s", plan.Id, plan.Name.ValueString(), plan.Id))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$attrTfName}} '%s', id: %s", plan.Id, plan.{{toGoName $attrTfName}}.ValueString(), plan.Id))
 						return false
 					}
 					return true
@@ -500,7 +508,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		}
 
 		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", plan.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$attrTfName}}: %s", plan.{{toGoName $attrTfName}}.ValueString()))
 			return
 		}
 	}

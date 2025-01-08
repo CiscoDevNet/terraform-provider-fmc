@@ -1,0 +1,67 @@
+---
+name: Device BFD
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bfdpolicies
+doc_category: Device
+test_tags: [TF_VAR_device_id]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: UUID of the parent device (fmc_device.example.id).
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object; this value is always 'BFDPolicy'
+# General
+  - model_name: hopType
+    description: BFD Hop type.
+    mandatory: true
+    enum_values: [ SINGLE_HOP, MULTI_HOP ]
+    type: String
+    example: SINGLE_HOP
+  - model_name: id
+    tf_name: bfd_template_id
+    data_path: [template]
+    mandatory: true
+    type: String
+    description: ID of the BFD Template
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470     
+  - model_name: ifname
+    data_path: [interface]
+    tf_name: interface_logical_name
+    description: Logical Name of the interface of BFD assignment if SINGLE_HOP selected.
+    type: String
+    example: "outside"
+    data_source_query: true
+  - model_name: id
+    data_path: [destinationAddress]
+    tf_name: destination_host_object_id
+    description: The ID of the destination host object if MULTI_HOP selected.
+    type: String
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: id
+    data_path: [sourceAddress]
+    tf_name: source_host_object_id
+    description: The ID of the source host object if MULTI_HOP selected.
+    type: String
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: id
+    data_path: [interface]
+    tf_name: interface_id
+    description: ID of the interface of BFD assignment if SINGLE_HOP selected.
+    type: String
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470 
+  - model_name: slowTimer
+    type: Int64
+    description: "BFD Slow Timer value in range: 1000-30000, default: 1000"
+    min_int: 1000
+    max_int: 30000
+    default_value: 1000
+    exclude_example: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  

@@ -1,7 +1,6 @@
 ---
 name: Network
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networks
-data_source_name_query: true
 doc_category: Objects
 attributes:
   - model_name: name
@@ -9,11 +8,11 @@ attributes:
     mandatory: true
     description: The name of the network object.
     example: NET1
+    data_source_query: true
   - model_name: type
     type: String
-    description: Type of the object; this value is always 'Network'.
-    default_value: Network
-    requires_replace: true
+    description: "Type of the object; this value is always 'Network'."
+    computed: true
     exclude_example: true
     exclude_test: true
   - model_name: description

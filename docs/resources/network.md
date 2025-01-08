@@ -34,12 +34,11 @@ resource "fmc_network" "example" {
 - `description` (String) Description
 - `domain` (String) The name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
-- `type` (String) Type of the object; this value is always 'Network'.
-  - Default value: `Network`
 
 ### Read-Only
 
 - `id` (String) The id of the object
+- `type` (String) Type of the object; this value is always 'Network'.
 
 ## Import
 

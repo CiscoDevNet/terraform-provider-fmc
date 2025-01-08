@@ -7,7 +7,6 @@ rest_endpoint: str(required=False) # REST endpoint path
 put_create: bool(required=False) # Set to true if the PUT request is used for create
 no_update: bool(required=False) # Set to true if the PUT request is not supported
 no_delete: bool(required=False) # Set to true if the DELETE request is not supported
-data_source_name_query: bool(required=False) # Set to true if the data source supports name queries
 minimum_version: str(required=False) # Define a minimum supported version
 minimum_version_create: str(required=False) # Define a minimum version that supports create (in case it's higher than `minimum_version`)
 minimum_version_bulk_create: str(required=False) # Define a minimum version that supports bulk create (in case it's higher than `minimum_version`). Please use version "999" if not supported (fallback to one-by-one create)
@@ -57,5 +56,6 @@ attribute:
   test_value: str(required=False) # Value used for acceptance test
   minimum_test_value: str(required=False) # Value used for "minimum" resource acceptance test
   test_tags: list(str(), required=False) # List of test tags, attribute is only included in acceptance tests if an environment variable with one of these tags is configured
+  data_source_query: bool(required=False) # Set to true if the attribute can be used in the data source query. This is supported only for top-level attributes.
   attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"
   

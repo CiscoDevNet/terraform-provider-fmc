@@ -6,8 +6,6 @@ res_description: >-
   The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
   Updating and deleting `fmc_port_groups` can thus take much more time than creating it (even >500 times more time,
   i.e. >50000%, depending on the change size).
-data_source_name_query: true
-import_name_query: yes
 is_bulk: true
 doc_category: Objects
 minimum_version_bulk_delete: "7.4"
@@ -28,8 +26,7 @@ attributes:
     - model_name: type
       type: String
       description: Type of the object; this value is always 'PortObjectGroup'.
-      default_value: PortObjectGroup
-      requires_replace: true
+      computed: true
       exclude_example: true
       exclude_test: true 
     - model_name: description

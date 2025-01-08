@@ -126,8 +126,8 @@ func testAccNamedDataSourceFmcDeviceSubinterfaceConfig() string {
 
 	config += `
 		data "fmc_device_subinterface" "test" {
-			name = fmc_device_subinterface.test.name
 			device_id = var.device_id
+			name = fmc_device_subinterface.test.name
 		}
 	`
 	return config

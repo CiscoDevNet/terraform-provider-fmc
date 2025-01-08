@@ -103,7 +103,6 @@ type YamlConfig struct {
 	PutCreate                bool                  `yaml:"put_create"`
 	NoUpdate                 bool                  `yaml:"no_update"`
 	NoDelete                 bool                  `yaml:"no_delete"`
-	DataSourceNameQuery      bool                  `yaml:"data_source_name_query"`
 	MinimumVersion           string                `yaml:"minimum_version"`
 	MinimumVersionCreate     string                `yaml:"minimum_version_create"`
 	MinimumVersionBulkCreate string                `yaml:"minimum_version_bulk_create"`
@@ -155,6 +154,7 @@ type YamlConfigAttribute struct {
 	TestValue        string                `yaml:"test_value"`
 	MinimumTestValue string                `yaml:"minimum_test_value"`
 	TestTags         []string              `yaml:"test_tags"`
+	DataSourceQuery  bool                  `yaml:"data_source_query"`
 	Attributes       []YamlConfigAttribute `yaml:"attributes"`
 	GoTypeName       string
 }
@@ -215,6 +215,26 @@ func contains(s []string, str string) bool {
 		}
 	}
 	return false
+}
+
+// Templating helper function to check if any of the attributes is a data source query
+func HasDataSourceQuery(attributes []YamlConfigAttribute) bool {
+	for _, attr := range attributes {
+		if attr.DataSourceQuery {
+			return true
+		}
+	}
+	return false
+}
+
+// Templating helper function to return Data Source Query Attribute
+func GetDataSourceQueryAttribute(config YamlConfig) YamlConfigAttribute {
+	for _, attr := range config.Attributes {
+		if attr.DataSourceQuery {
+			return attr
+		}
+	}
+	return YamlConfigAttribute{}
 }
 
 // Templating helper function to return true if id included in attributes
@@ -352,28 +372,30 @@ func Subtract(a, b int) int {
 
 // Map of templating functions
 var functions = template.FuncMap{
-	"toGoName":           ToGoName,
-	"camelCase":          CamelCase,
-	"snakeCase":          SnakeCase,
-	"sprintf":            fmt.Sprintf,
-	"errorf":             Errorf,
-	"toLower":            strings.ToLower,
-	"path":               BuildPath,
-	"hasId":              HasId,
-	"hasReference":       HasReference,
-	"hasResourceId":      HasResourceId,
-	"isListSet":          IsListSet,
-	"isList":             IsList,
-	"isSet":              IsSet,
-	"isStringListSet":    IsStringListSet,
-	"isInt64ListSet":     IsInt64ListSet,
-	"isNestedListMapSet": IsNestedListMapSet,
-	"isNestedListSet":    IsNestedListSet,
-	"isNestedList":       IsNestedList,
-	"isNestedMap":        IsNestedMap,
-	"isNestedSet":        IsNestedSet,
-	"importParts":        ImportParts,
-	"subtract":           Subtract,
+	"toGoName":                    ToGoName,
+	"camelCase":                   CamelCase,
+	"snakeCase":                   SnakeCase,
+	"sprintf":                     fmt.Sprintf,
+	"errorf":                      Errorf,
+	"toLower":                     strings.ToLower,
+	"path":                        BuildPath,
+	"hasDataSourceQuery":          HasDataSourceQuery,
+	"getDataSourceQueryAttribute": GetDataSourceQueryAttribute,
+	"hasId":                       HasId,
+	"hasReference":                HasReference,
+	"hasResourceId":               HasResourceId,
+	"isListSet":                   IsListSet,
+	"isList":                      IsList,
+	"isSet":                       IsSet,
+	"isStringListSet":             IsStringListSet,
+	"isInt64ListSet":              IsInt64ListSet,
+	"isNestedListMapSet":          IsNestedListMapSet,
+	"isNestedListSet":             IsNestedListSet,
+	"isNestedList":                IsNestedList,
+	"isNestedMap":                 IsNestedMap,
+	"isNestedSet":                 IsNestedSet,
+	"importParts":                 ImportParts,
+	"subtract":                    Subtract,
 }
 
 func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
@@ -435,6 +457,7 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 
 func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 	var config YamlConfig
+	var hasDataSourceQuery bool = false
 
 	if err := yaml.Unmarshal(bytes, &config); err != nil {
 		return config, err
@@ -443,6 +466,12 @@ func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 	for i := range config.Attributes {
 		if err := config.Attributes[i].init(CamelCase(config.Name)); err != nil {
 			return YamlConfig{}, err
+		}
+		if config.Attributes[i].DataSourceQuery {
+			if hasDataSourceQuery {
+				return YamlConfig{}, fmt.Errorf("Multiple `data_source_query` attributes found. Only one is allowed.")
+			}
+			hasDataSourceQuery = true
 		}
 	}
 	if config.DsDescription == "" {

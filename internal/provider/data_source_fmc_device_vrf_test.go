@@ -110,8 +110,8 @@ func testAccNamedDataSourceFmcDeviceVRFConfig() string {
 
 	config += `
 		data "fmc_device_vrf" "test" {
-			name = fmc_device_vrf.test.name
 			device_id = var.device_id
+			name = fmc_device_vrf.test.name
 		}
 	`
 	return config

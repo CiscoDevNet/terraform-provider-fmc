@@ -1,10 +1,8 @@
 ---
 name: SGTs
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securitygrouptags
-data_source_name_query: true
 is_bulk: true
 doc_category: Objects
-import_name_query: yes
 minimum_version_create: "7.4"
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"

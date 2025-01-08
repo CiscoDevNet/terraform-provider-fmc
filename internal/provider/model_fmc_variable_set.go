@@ -61,9 +61,6 @@ func (data VariableSet) toBody(ctx context.Context, state VariableSet) string {
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.Type.IsNull() {
-		body, _ = sjson.Set(body, "type", data.Type.ValueString())
-	}
 	return body
 }
 
@@ -85,7 +82,7 @@ func (data *VariableSet) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
-		data.Type = types.StringValue("VariableSet")
+		data.Type = types.StringNull()
 	}
 }
 
@@ -110,7 +107,7 @@ func (data *VariableSet) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
-	} else if data.Type.ValueString() != "VariableSet" {
+	} else {
 		data.Type = types.StringNull()
 	}
 }
@@ -122,6 +119,13 @@ func (data *VariableSet) fromBodyPartial(ctx context.Context, res gjson.Result) 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *VariableSet) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns

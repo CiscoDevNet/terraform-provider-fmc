@@ -7,8 +7,6 @@ res_description: >-
   Updating/deleting `fmc_hosts` can thus take much more time than creating it
 doc_category: Objects
 is_bulk: true
-data_source_name_query: yes
-import_name_query: yes
 minimum_version_bulk_delete: "7.4"
 attributes:
   - model_name: items

@@ -2,8 +2,6 @@
 name: URLs
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/urls
 is_bulk: true
-data_source_name_query: true
-import_name_query: yes
 res_description: >-
   This plural resource manages a bulk of URL objects.
   The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.

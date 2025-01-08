@@ -49,12 +49,11 @@ Optional:
 
 - `description` (String) Optional user-created description.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `type` (String) Type of the object; this value is always 'Network'.
-  - Default value: `Network`
 
 Read-Only:
 
 - `id` (String) UUID of the managed Network.
+- `type` (String) Type of the object; this value is always 'Network'.
 
 ## Import
 

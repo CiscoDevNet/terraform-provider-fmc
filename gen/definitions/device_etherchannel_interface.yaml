@@ -1,7 +1,6 @@
 ---
 name: Device EtherChannel Interface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/etherchannelinterfaces
-data_source_name_query: true
 doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_interface_id, FMC_DEVICE_ETHERCHANNEL_INTERFACE]
 attributes:
@@ -69,6 +68,7 @@ attributes:
     type: String
     description: Name of the interface; it must already be present on the device.
     computed: true
+    data_source_query: true
   - model_name: MTU
     tf_name: mtu
     type: Int64

@@ -1,7 +1,6 @@
 ---
 name: VLAN Tag
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/vlantags
-data_source_name_query: true
 doc_category: Objects
 attributes:
   - model_name: name
@@ -9,6 +8,7 @@ attributes:
     description: User-created name of the resource.
     mandatory: true
     example: vlan_tag_1
+    data_source_query: true
   - model_name: description
     type: String
     description: Optional user-created description.

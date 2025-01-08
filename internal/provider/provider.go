@@ -293,8 +293,13 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAccessControlPolicyResource,
+		NewBFDTemplateResource,
 		NewDeviceResource,
+		NewDeviceBFDResource,
+		NewDeviceBGPResource,
+		NewDeviceBGPGeneralSettingsResource,
 		NewDeviceEtherChannelInterfaceResource,
+		NewDeviceHAPairMonitoringResource,
 		NewDeviceIPv4StaticRouteResource,
 		NewDeviceIPv6StaticRouteResource,
 		NewDevicePhysicalInterfaceResource,
@@ -346,8 +351,13 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewAccessControlPolicyDataSource,
+		NewBFDTemplateDataSource,
 		NewDeviceDataSource,
+		NewDeviceBFDDataSource,
+		NewDeviceBGPDataSource,
+		NewDeviceBGPGeneralSettingsDataSource,
 		NewDeviceEtherChannelInterfaceDataSource,
+		NewDeviceHAPairMonitoringDataSource,
 		NewDeviceIPv4StaticRouteDataSource,
 		NewDeviceIPv6StaticRouteDataSource,
 		NewDevicePhysicalInterfaceDataSource,

@@ -32,7 +32,7 @@ import (
 func TestAccFmcSecurityZones(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_zones.test", "items.security_zone_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_zones.test", "items.security_zone_1.interface_mode", "ROUTED"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_zones.test", "items.security_zone_1.interface_type", "ROUTED"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -63,7 +63,7 @@ func TestAccFmcSecurityZones(t *testing.T) {
 func testAccFmcSecurityZonesConfig_minimum() string {
 	config := `resource "fmc_security_zones" "test" {` + "\n"
 	config += `	items = { "security_zone_1" = {` + "\n"
-	config += `		interface_mode = "ROUTED"` + "\n"
+	config += `		interface_type = "ROUTED"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
@@ -76,7 +76,7 @@ func testAccFmcSecurityZonesConfig_minimum() string {
 func testAccFmcSecurityZonesConfig_all() string {
 	config := `resource "fmc_security_zones" "test" {` + "\n"
 	config += `	items = { "security_zone_1" = {` + "\n"
-	config += `		interface_mode = "ROUTED"` + "\n"
+	config += `		interface_type = "ROUTED"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config

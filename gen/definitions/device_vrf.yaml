@@ -1,7 +1,6 @@
 ---
 name: Device VRF
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters
-data_source_name_query: true
 doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
@@ -18,6 +17,7 @@ attributes:
     requires_replace: true
     description: The name of the VRF
     example: VRF_A
+    data_source_query: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'VirtualRouter'.

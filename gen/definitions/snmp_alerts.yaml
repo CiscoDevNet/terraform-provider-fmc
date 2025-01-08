@@ -1,8 +1,6 @@
 ---
 name: SNMP Alerts
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/snmpalerts
-data_source_name_query: true
-import_name_query: true
 no_resource: true
 no_import: true
 is_bulk: true
@@ -24,7 +22,6 @@ attributes:
       - model_name: type
         type: String
         description: Type of the object; this value is always 'SNMPAlert'.
-        default_value: SNMPAlert
-        requires_replace: true
+        computed: true
         exclude_example: true
         exclude_test: true

@@ -1,7 +1,6 @@
 ---
 name: Range
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ranges
-data_source_name_query: true
 doc_category: Objects
 attributes:
   - model_name: name
@@ -9,6 +8,7 @@ attributes:
     description: User-created name of the resource.
     mandatory: true
     example: range1
+    data_source_query: true
   - model_name: value
     tf_name: ip_range
     type: String

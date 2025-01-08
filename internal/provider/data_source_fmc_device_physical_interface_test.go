@@ -112,8 +112,8 @@ func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 
 	config += `
 		data "fmc_device_physical_interface" "test" {
-			name = fmc_device_physical_interface.test.name
 			device_id = var.device_id
+			name = fmc_device_physical_interface.test.name
 		}
 	`
 	return config

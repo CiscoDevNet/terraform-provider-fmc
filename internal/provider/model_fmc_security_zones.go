@@ -41,7 +41,7 @@ type SecurityZones struct {
 
 type SecurityZonesItems struct {
 	Id            types.String `tfsdk:"id"`
-	InterfaceMode types.String `tfsdk:"interface_mode"`
+	InterfaceType types.String `tfsdk:"interface_type"`
 	Type          types.String `tfsdk:"type"`
 }
 
@@ -69,11 +69,8 @@ func (data SecurityZones) toBody(ctx context.Context, state SecurityZones) strin
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			if !item.InterfaceMode.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "interfaceMode", item.InterfaceMode.ValueString())
-			}
-			if !item.Type.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
+			if !item.InterfaceType.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "interfaceMode", item.InterfaceType.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
 		}
@@ -112,14 +109,14 @@ func (data *SecurityZones) fromBody(ctx context.Context, res gjson.Result) {
 			data.Id = types.StringNull()
 		}
 		if value := res.Get("interfaceMode"); value.Exists() {
-			data.InterfaceMode = types.StringValue(value.String())
+			data.InterfaceType = types.StringValue(value.String())
 		} else {
-			data.InterfaceMode = types.StringNull()
+			data.InterfaceType = types.StringNull()
 		}
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())
 		} else {
-			data.Type = types.StringValue("SecurityZone")
+			data.Type = types.StringNull()
 		}
 		(*parent).Items[k] = data
 	}
@@ -154,14 +151,14 @@ func (data *SecurityZones) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.Id = types.StringNull()
 		}
-		if value := res.Get("interfaceMode"); value.Exists() && !data.InterfaceMode.IsNull() {
-			data.InterfaceMode = types.StringValue(value.String())
+		if value := res.Get("interfaceMode"); value.Exists() && !data.InterfaceType.IsNull() {
+			data.InterfaceType = types.StringValue(value.String())
 		} else {
-			data.InterfaceMode = types.StringNull()
+			data.InterfaceType = types.StringNull()
 		}
 		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 			data.Type = types.StringValue(value.String())
-		} else if data.Type.ValueString() != "SecurityZone" {
+		} else {
 			data.Type = types.StringNull()
 		}
 		(*parent).Items[i] = data
@@ -199,6 +196,14 @@ func (data *SecurityZones) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 				v.Id = types.StringValue(value.String())
 			} else {
 				v.Id = types.StringNull()
+			}
+			data.Items[i] = v
+		}
+		if v := data.Items[i]; v.Type.IsUnknown() {
+			if value := r.Get("type"); value.Exists() {
+				v.Type = types.StringValue(value.String())
+			} else {
+				v.Type = types.StringNull()
 			}
 			data.Items[i] = v
 		}

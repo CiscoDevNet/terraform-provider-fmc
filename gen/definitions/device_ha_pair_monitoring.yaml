@@ -1,0 +1,70 @@
+---
+name: Device HA Pair Monitoring
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/monitoredinterfaces
+put_create: true
+doc_category: Device
+test_tags: [TF_VAR_device_ha_id]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: UUID of the parent HA device (fmc_device.example.id).
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_ha_id
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the resource.
+# General
+  - model_name: name
+    tf_name: logical_name
+    description: Logical Name of the monitored interface.
+    mandatory: true
+    type: String
+    example: "outside"
+    data_source_query: true
+  - model_name: monitorForFailures
+    tf_name: monitor_interface
+    description: Monitor this interface for failures.
+    mandatory: true
+    type: Bool
+    example: true
+  - model_name: activeIPv4Address
+    tf_name: ipv4_active_address
+    data_path: [ipv4Configuration]
+    type: String
+    description: >-
+      Active IPv4 address from the interface.
+    computed: true
+  - model_name: standbyIPv4Address
+    tf_name: ipv4_standby_address
+    data_path: [ipv4Configuration]
+    type: String
+    description: >-
+      Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.
+    example: 10.1.1.2
+  - model_name: activeIPv4Mask
+    tf_name: ipv4_netmask
+    data_path: [ipv4Configuration]
+    type: String
+    description: >-
+      IPv4 Network Mask assigned on the interface.
+    computed: true
+  - model_name: ipv6ActiveStandbyPair
+    data_path: [ipv6Configuration]
+    tf_name: ipv6_addresses
+    type: List
+    attributes:
+      - model_name: activeIPv6
+        tf_name: active_address   
+        type: String
+        description: Active IPv6 address with prefix. Address has to be configured on the interface.
+        example: "2006::1/30"
+      - model_name: standbyIPv6
+        tf_name: standby_address     
+        type: String
+        description: Standby IPv6 address. Address has to be from the same subnet as active IPv6 address.
+        example: "2006::2"
+         
+test_prerequisites: |-
+  variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_id
