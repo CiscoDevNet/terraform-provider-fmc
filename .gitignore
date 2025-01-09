@@ -29,7 +29,8 @@ website/node_modules
 .vscode/settings.json
 
 website/vendor
-
+vendor
+running.sh
 # Test exclusions
 !command/test-fixtures/**/*.tfstate
 !command/test-fixtures/**/.terraform/
