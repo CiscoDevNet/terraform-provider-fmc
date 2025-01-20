@@ -1,0 +1,44 @@
+---
+name: Device Deploy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deployment/deploymentrequests
+no_data_source: true
+no_import: true
+no_delete: true
+no_update: true
+doc_category: Deployment
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DeploymentRequest'
+    value: DeploymentRequest
+  - model_name: version
+    type: String
+    description: Version to which the deployment should be done in milliseconds unix timestamp. If not provided, the latest version will be used.
+    exclude_example: true
+    exclude_test: true
+  # Force deploy requires different way of obraining version, as no devices may be in deployable state
+  #- model_name: forceDeploy
+  #  type: Bool
+  #  description: Force deployment (deploy even if there are no configuration changes).
+  #  example: "false"
+  - model_name: ignoreWarning
+    type: Bool
+    description: Ignore warnings during deployment.
+    example: "false"
+    exclude_test: true
+  - model_name: deviceList
+    type: List
+    description: List of device ids to be deployed.
+    mandatory: true
+    element_type: String
+    example: 2fe9063e-8bd5-11ef-9475-e4aeac78cf37
+    test_value: "[var.device_id]"
+  - model_name: deploymentNote
+    type: String
+    description: User note.
+    example: Terraform initiated deployment
+    exclude_test: true
+test_prerequisites: |-
+
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

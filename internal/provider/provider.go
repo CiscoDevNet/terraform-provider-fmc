@@ -299,6 +299,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewDeviceBGPResource,
 		NewDeviceBGPGeneralSettingsResource,
 		NewDeviceClusterResource,
+		NewDeviceDeployResource,
 		NewDeviceEtherChannelInterfaceResource,
 		NewDeviceHAPairResource,
 		NewDeviceHAPairMonitoringResource,

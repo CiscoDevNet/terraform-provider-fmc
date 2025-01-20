@@ -48,6 +48,14 @@ func GetStringList(result []gjson.Result) types.List {
 	return types.ListValueMust(types.StringType, v)
 }
 
+func GetStringListFromStringSlice(result []string) types.List {
+	v := make([]attr.Value, len(result))
+	for i, e := range result {
+		v[i] = types.StringValue(e)
+	}
+	return types.ListValueMust(types.StringType, v)
+}
+
 func GetInt64List(result []gjson.Result) types.List {
 	v := make([]attr.Value, len(result))
 	for r := range result {
