@@ -2,37 +2,44 @@
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
 doc_category: Devices
-test_tags: [FTD_ADDR]
+test_tags: [TF_VAR_device_ip, TF_VAR_device_registration_key]
 attributes:
+# General
   - model_name: name
     type: String
     mandatory: true
-    description: "User-specified name, must be unique. Example: 'Device 01 - 192.168.0.152'"
-    example: device1
-    minimum_test_value: '"device1min"'
+    description: User-specified name, must be unique.
     data_source_query: true
+    example: MyDeviceName1
+  # type is set twice on purpose - to make sure this is part of POST request and to make it computed field
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'Device'.
+    value: Device
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'Device'.
+    computed: true
   - model_name: hostName
     type: String
     description: Hostname or IP address of the device. Either the host_name or nat_id must be present.
+    mandatory: true
     example: 10.0.0.1
-    minimum_test_value: var.ftd_addr
-    test_value: var.ftd_addr
+    test_value: var.device_ip
   - model_name: natID
     tf_name: nat_id
     type: String
     description: (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
     write_only: true
     exclude_example: true
-    minimum_test_value: var.nat_id
-    test_value: var.nat_id
   - model_name: license_caps
     tf_name: license_capabilities
     type: Set
     element_type: String
     mandatory: true
-    description: "Array of strings representing the license capabilities on the managed device. For registering FTD, the allowed values are: BASE (mandatory), THREAT, URLFilter, MALWARE, APEX, PLUS, VPNOnly. For Firepower ASA or NGIPSv devices, allowed values are: BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL."
-    example: BASE
-    minimum_test_value: '["THREAT", "URLFilter", "BASE", "MALWARE"]'
+    enum_values: [ ESSENTIALS, IPS, URL, MALWARE_DEFENSE, CARRIER, SECURE_CLIENT_PREMIER, SECURE_CLIENT_PREMIER_ADVANTAGE, SECURE_CLIENT_VPNOnly, BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL ] # cannot be autoenerated
+    description: "Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory"
+    example: ESSENTIALS
   - model_name: regKey
     tf_name: registration_key
     type: String
@@ -40,56 +47,130 @@ attributes:
     description: Registration Key identical to the one previously configured on the device (`configure manager`).
     example: key1
     write_only: true
-    test_value: var.registration_key
-  - model_name: type
+    test_value: var.device_registration_key
+  - model_name: id
+    tf_name: device_group_id
+    data_path: [ deviceGroup ]
     type: String
-    description: Type of the device; this value is always 'Device'.
+    description: ID of the device group.
     exclude_example: true
-    default_value: Device
-    example: Device
-  - tf_name: access_policy_id
-    type: String
-    mandatory: true
-    model_name: id
-    data_path:
-      - accessPolicy
-    write_only: true # actually is read-write, but (for reading) generated code hurts custom code
-    description: The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
-    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    minimum_test_value: fmc_access_control_policy.minimum.id
-    test_value: fmc_access_control_policy.test.id
-  - model_name: dummy_nat_policy_id
-    tf_name: nat_policy_id
-    type: String
-    write_only: true # actually is read-write, but (for reading) generated code hurts custom code
-    description: The UUID of the assigned NAT policy.
-    exclude_example: true
-    test_value: "null"
-    # test_value: fmc_ftd_nat_policy.test.id
   - model_name: prohibitPacketTransfer
     type: Bool
     description: Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
-    write_only: true # buggy in GET
     exclude_example: true
     test_value: "true"
   - model_name: performanceTier
     type: String
     description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
-    write_only: true
     enum_values: [FTDv5, FTDv10, FTDv20, FTDv30, FTDv50, Legacy]
-    example: FTDv50
+    example: FTDv5
+  - model_name: snortEngine
+    type: String
+    description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+    enum_values: [ SNORT2, SNORT3]
+    example: SNORT3
+  - model_name: enableOGS
+    data_path: [ advanced ]
+    tf_name: object_group_search
+    type: Bool
+    description: Enables Object Group Search
+    example: "true"
+    default_value: "true"
+# Policy assignments
+  - model_name: id
+    tf_name: access_policy_id
+    type: String
+    mandatory: true
+    data_path: [ accessPolicy ]
+    description: The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_access_control_policy.device_test.id
+  - model_name: dummy_nat_policy_id
+    tf_name: nat_policy_id
+    type: String
+    description: The UUID of the assigned NAT policy.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: [ healthPolicy ]
+    tf_name: health_policy_id
+    type: String
+    description: The UUID of the assigned Health policy.
+    exclude_example: true
+    exclude_test: true
+# Computed - informational only
+  - model_name: sw_version
+    tf_name: info_version
+    type: String
+    description: Version of the registered device - Informational only.
+    computed: true
+  - model_name: healthStatus
+    tf_name: info_health_status
+    type: String
+    description: Health Status of the device - Informational only.
+    computed: true
+  - model_name: healthMessage
+    tf_name: info_health_message
+    type: String
+    description: Health Message of the device - Informational only.
+    computed: true
+  - model_name: isConnected
+    tf_name: info_is_connected
+    type: Bool
+    description: Shows if the device is connected - Informational only.
+    computed: true
+  - model_name: deploymentStatus
+    tf_name: info_deployment_status
+    type: String
+    description: Shows deployment status - Informational only.
+    computed: true
+  - model_name: ftdMode
+    tf_name: info_ftd_mode
+    type: String
+    description: FTD Mode - Informational only.
+    computed: true
+  - model_name: deviceSerialNumber
+    data_path: [ metadata ]
+    tf_name: info_device_serial_number
+    type: String
+    description: Device Serial Number - Informational only.
+    computed: true
+  - model_name: snortVersion
+    data_path: [ metadata ]
+    tf_name: info_snort_version
+    type: String
+    description: Snort Version - Informational only.
+    computed: true
+  - model_name: vdbVersion
+    data_path: [ metadata ]
+    tf_name: info_vdb_version
+    type: String
+    description: VDB Version - Informational only.
+    computed: true
+  - model_name: lspVersion
+    data_path: [ metadata ]
+    tf_name: info_lsp_version
+    type: String
+    description: LSP Version - Informational only.
+    computed: true
+  - model_name: name
+    tf_name: info_deployed_access_policy_name
+    data_path: [ accessPolicy ]
+    type: String
+    description: Deployed Access Control Policy Name - Informational only.
+    computed: true
+  - model_name: name
+    tf_name: info_deployed_health_policy_name
+    data_path: [ healthPolicy ]
+    type: String
+    description: Deployed Health Policy Name - Informational only.
+    computed: true
 
 test_prerequisites: |-
-  resource "fmc_access_control_policy" "minimum" {
+  resource "fmc_access_control_policy" "device_test" {
     name = "test_fmc_device_1"
     default_action = "BLOCK"
   }
 
-  resource "fmc_access_control_policy" "test" {
-    name = "test_fmc_device_2"
-    default_action = "PERMIT"
-  }
-
-  variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
-  variable "nat_id"   { default = null } // tests will set $TF_VAR_nat_id
-  variable "registration_key"         {} // tests will set $TF_VAR_registration_key
+  variable "device_ip" { default = null } // tests will set $TF_VAR_device_ip
+  variable "device_registration_key"         {} // tests will set $TF_VAR_device_registration_key

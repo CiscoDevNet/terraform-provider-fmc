@@ -34,18 +34,34 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type Device struct {
-	Id                     types.String `tfsdk:"id"`
-	Domain                 types.String `tfsdk:"domain"`
-	Name                   types.String `tfsdk:"name"`
-	HostName               types.String `tfsdk:"host_name"`
-	NatId                  types.String `tfsdk:"nat_id"`
-	LicenseCapabilities    types.Set    `tfsdk:"license_capabilities"`
-	RegistrationKey        types.String `tfsdk:"registration_key"`
-	Type                   types.String `tfsdk:"type"`
-	AccessPolicyId         types.String `tfsdk:"access_policy_id"`
-	NatPolicyId            types.String `tfsdk:"nat_policy_id"`
-	ProhibitPacketTransfer types.Bool   `tfsdk:"prohibit_packet_transfer"`
-	PerformanceTier        types.String `tfsdk:"performance_tier"`
+	Id                           types.String `tfsdk:"id"`
+	Domain                       types.String `tfsdk:"domain"`
+	Name                         types.String `tfsdk:"name"`
+	Type                         types.String `tfsdk:"type"`
+	HostName                     types.String `tfsdk:"host_name"`
+	NatId                        types.String `tfsdk:"nat_id"`
+	LicenseCapabilities          types.Set    `tfsdk:"license_capabilities"`
+	RegistrationKey              types.String `tfsdk:"registration_key"`
+	DeviceGroupId                types.String `tfsdk:"device_group_id"`
+	ProhibitPacketTransfer       types.Bool   `tfsdk:"prohibit_packet_transfer"`
+	PerformanceTier              types.String `tfsdk:"performance_tier"`
+	SnortEngine                  types.String `tfsdk:"snort_engine"`
+	ObjectGroupSearch            types.Bool   `tfsdk:"object_group_search"`
+	AccessPolicyId               types.String `tfsdk:"access_policy_id"`
+	NatPolicyId                  types.String `tfsdk:"nat_policy_id"`
+	HealthPolicyId               types.String `tfsdk:"health_policy_id"`
+	InfoVersion                  types.String `tfsdk:"info_version"`
+	InfoHealthStatus             types.String `tfsdk:"info_health_status"`
+	InfoHealthMessage            types.String `tfsdk:"info_health_message"`
+	InfoIsConnected              types.Bool   `tfsdk:"info_is_connected"`
+	InfoDeploymentStatus         types.String `tfsdk:"info_deployment_status"`
+	InfoFtdMode                  types.String `tfsdk:"info_ftd_mode"`
+	InfoDeviceSerialNumber       types.String `tfsdk:"info_device_serial_number"`
+	InfoSnortVersion             types.String `tfsdk:"info_snort_version"`
+	InfoVdbVersion               types.String `tfsdk:"info_vdb_version"`
+	InfoLspVersion               types.String `tfsdk:"info_lsp_version"`
+	InfoDeployedAccessPolicyName types.String `tfsdk:"info_deployed_access_policy_name"`
+	InfoDeployedHealthPolicyName types.String `tfsdk:"info_deployed_health_policy_name"`
 }
 
 // End of section. //template:end types
@@ -68,6 +84,7 @@ func (data Device) toBody(ctx context.Context, state Device) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	body, _ = sjson.Set(body, "type", "Device")
 	if !data.HostName.IsNull() {
 		body, _ = sjson.Set(body, "hostName", data.HostName.ValueString())
 	}
@@ -82,8 +99,20 @@ func (data Device) toBody(ctx context.Context, state Device) string {
 	if !data.RegistrationKey.IsNull() {
 		body, _ = sjson.Set(body, "regKey", data.RegistrationKey.ValueString())
 	}
-	if !data.Type.IsNull() {
-		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	if !data.DeviceGroupId.IsNull() {
+		body, _ = sjson.Set(body, "deviceGroup.id", data.DeviceGroupId.ValueString())
+	}
+	if !data.ProhibitPacketTransfer.IsNull() {
+		body, _ = sjson.Set(body, "prohibitPacketTransfer", data.ProhibitPacketTransfer.ValueBool())
+	}
+	if !data.PerformanceTier.IsNull() {
+		body, _ = sjson.Set(body, "performanceTier", data.PerformanceTier.ValueString())
+	}
+	if !data.SnortEngine.IsNull() {
+		body, _ = sjson.Set(body, "snortEngine", data.SnortEngine.ValueString())
+	}
+	if !data.ObjectGroupSearch.IsNull() {
+		body, _ = sjson.Set(body, "advanced.enableOGS", data.ObjectGroupSearch.ValueBool())
 	}
 	if !data.AccessPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "accessPolicy.id", data.AccessPolicyId.ValueString())
@@ -91,11 +120,8 @@ func (data Device) toBody(ctx context.Context, state Device) string {
 	if !data.NatPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "dummy_nat_policy_id", data.NatPolicyId.ValueString())
 	}
-	if !data.ProhibitPacketTransfer.IsNull() {
-		body, _ = sjson.Set(body, "prohibitPacketTransfer", data.ProhibitPacketTransfer.ValueBool())
-	}
-	if !data.PerformanceTier.IsNull() {
-		body, _ = sjson.Set(body, "performanceTier", data.PerformanceTier.ValueString())
+	if !data.HealthPolicyId.IsNull() {
+		body, _ = sjson.Set(body, "healthPolicy.id", data.HealthPolicyId.ValueString())
 	}
 	return body
 }
@@ -110,6 +136,11 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("hostName"); value.Exists() {
 		data.HostName = types.StringValue(value.String())
 	} else {
@@ -120,10 +151,105 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.LicenseCapabilities = types.SetNull(types.StringType)
 	}
-	if value := res.Get("type"); value.Exists() {
-		data.Type = types.StringValue(value.String())
+	if value := res.Get("deviceGroup.id"); value.Exists() {
+		data.DeviceGroupId = types.StringValue(value.String())
 	} else {
-		data.Type = types.StringValue("Device")
+		data.DeviceGroupId = types.StringNull()
+	}
+	if value := res.Get("prohibitPacketTransfer"); value.Exists() {
+		data.ProhibitPacketTransfer = types.BoolValue(value.Bool())
+	} else {
+		data.ProhibitPacketTransfer = types.BoolNull()
+	}
+	if value := res.Get("performanceTier"); value.Exists() {
+		data.PerformanceTier = types.StringValue(value.String())
+	} else {
+		data.PerformanceTier = types.StringNull()
+	}
+	if value := res.Get("snortEngine"); value.Exists() {
+		data.SnortEngine = types.StringValue(value.String())
+	} else {
+		data.SnortEngine = types.StringNull()
+	}
+	if value := res.Get("advanced.enableOGS"); value.Exists() {
+		data.ObjectGroupSearch = types.BoolValue(value.Bool())
+	} else {
+		data.ObjectGroupSearch = types.BoolValue(true)
+	}
+	if value := res.Get("accessPolicy.id"); value.Exists() {
+		data.AccessPolicyId = types.StringValue(value.String())
+	} else {
+		data.AccessPolicyId = types.StringNull()
+	}
+	if value := res.Get("dummy_nat_policy_id"); value.Exists() {
+		data.NatPolicyId = types.StringValue(value.String())
+	} else {
+		data.NatPolicyId = types.StringNull()
+	}
+	if value := res.Get("healthPolicy.id"); value.Exists() {
+		data.HealthPolicyId = types.StringValue(value.String())
+	} else {
+		data.HealthPolicyId = types.StringNull()
+	}
+	if value := res.Get("sw_version"); value.Exists() {
+		data.InfoVersion = types.StringValue(value.String())
+	} else {
+		data.InfoVersion = types.StringNull()
+	}
+	if value := res.Get("healthStatus"); value.Exists() {
+		data.InfoHealthStatus = types.StringValue(value.String())
+	} else {
+		data.InfoHealthStatus = types.StringNull()
+	}
+	if value := res.Get("healthMessage"); value.Exists() {
+		data.InfoHealthMessage = types.StringValue(value.String())
+	} else {
+		data.InfoHealthMessage = types.StringNull()
+	}
+	if value := res.Get("isConnected"); value.Exists() {
+		data.InfoIsConnected = types.BoolValue(value.Bool())
+	} else {
+		data.InfoIsConnected = types.BoolNull()
+	}
+	if value := res.Get("deploymentStatus"); value.Exists() {
+		data.InfoDeploymentStatus = types.StringValue(value.String())
+	} else {
+		data.InfoDeploymentStatus = types.StringNull()
+	}
+	if value := res.Get("ftdMode"); value.Exists() {
+		data.InfoFtdMode = types.StringValue(value.String())
+	} else {
+		data.InfoFtdMode = types.StringNull()
+	}
+	if value := res.Get("metadata.deviceSerialNumber"); value.Exists() {
+		data.InfoDeviceSerialNumber = types.StringValue(value.String())
+	} else {
+		data.InfoDeviceSerialNumber = types.StringNull()
+	}
+	if value := res.Get("metadata.snortVersion"); value.Exists() {
+		data.InfoSnortVersion = types.StringValue(value.String())
+	} else {
+		data.InfoSnortVersion = types.StringNull()
+	}
+	if value := res.Get("metadata.vdbVersion"); value.Exists() {
+		data.InfoVdbVersion = types.StringValue(value.String())
+	} else {
+		data.InfoVdbVersion = types.StringNull()
+	}
+	if value := res.Get("metadata.lspVersion"); value.Exists() {
+		data.InfoLspVersion = types.StringValue(value.String())
+	} else {
+		data.InfoLspVersion = types.StringNull()
+	}
+	if value := res.Get("accessPolicy.name"); value.Exists() {
+		data.InfoDeployedAccessPolicyName = types.StringValue(value.String())
+	} else {
+		data.InfoDeployedAccessPolicyName = types.StringNull()
+	}
+	if value := res.Get("healthPolicy.name"); value.Exists() {
+		data.InfoDeployedHealthPolicyName = types.StringValue(value.String())
+	} else {
+		data.InfoDeployedHealthPolicyName = types.StringNull()
 	}
 }
 
@@ -141,6 +267,11 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("hostName"); value.Exists() && !data.HostName.IsNull() {
 		data.HostName = types.StringValue(value.String())
 	} else {
@@ -151,76 +282,241 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.LicenseCapabilities = types.SetNull(types.StringType)
 	}
-	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-		data.Type = types.StringValue(value.String())
-	} else if data.Type.ValueString() != "Device" {
-		data.Type = types.StringNull()
+	if value := res.Get("deviceGroup.id"); value.Exists() && !data.DeviceGroupId.IsNull() {
+		data.DeviceGroupId = types.StringValue(value.String())
+	} else {
+		data.DeviceGroupId = types.StringNull()
+	}
+	if value := res.Get("prohibitPacketTransfer"); value.Exists() && !data.ProhibitPacketTransfer.IsNull() {
+		data.ProhibitPacketTransfer = types.BoolValue(value.Bool())
+	} else {
+		data.ProhibitPacketTransfer = types.BoolNull()
+	}
+	if value := res.Get("performanceTier"); value.Exists() && !data.PerformanceTier.IsNull() {
+		data.PerformanceTier = types.StringValue(value.String())
+	} else {
+		data.PerformanceTier = types.StringNull()
+	}
+	if value := res.Get("snortEngine"); value.Exists() && !data.SnortEngine.IsNull() {
+		data.SnortEngine = types.StringValue(value.String())
+	} else {
+		data.SnortEngine = types.StringNull()
+	}
+	if value := res.Get("advanced.enableOGS"); value.Exists() && !data.ObjectGroupSearch.IsNull() {
+		data.ObjectGroupSearch = types.BoolValue(value.Bool())
+	} else if data.ObjectGroupSearch.ValueBool() != true {
+		data.ObjectGroupSearch = types.BoolNull()
+	}
+	if value := res.Get("accessPolicy.id"); value.Exists() && !data.AccessPolicyId.IsNull() {
+		data.AccessPolicyId = types.StringValue(value.String())
+	} else {
+		data.AccessPolicyId = types.StringNull()
+	}
+	if value := res.Get("dummy_nat_policy_id"); value.Exists() && !data.NatPolicyId.IsNull() {
+		data.NatPolicyId = types.StringValue(value.String())
+	} else {
+		data.NatPolicyId = types.StringNull()
+	}
+	if value := res.Get("healthPolicy.id"); value.Exists() && !data.HealthPolicyId.IsNull() {
+		data.HealthPolicyId = types.StringValue(value.String())
+	} else {
+		data.HealthPolicyId = types.StringNull()
+	}
+	if value := res.Get("sw_version"); value.Exists() && !data.InfoVersion.IsNull() {
+		data.InfoVersion = types.StringValue(value.String())
+	} else {
+		data.InfoVersion = types.StringNull()
+	}
+	if value := res.Get("healthStatus"); value.Exists() && !data.InfoHealthStatus.IsNull() {
+		data.InfoHealthStatus = types.StringValue(value.String())
+	} else {
+		data.InfoHealthStatus = types.StringNull()
+	}
+	if value := res.Get("healthMessage"); value.Exists() && !data.InfoHealthMessage.IsNull() {
+		data.InfoHealthMessage = types.StringValue(value.String())
+	} else {
+		data.InfoHealthMessage = types.StringNull()
+	}
+	if value := res.Get("isConnected"); value.Exists() && !data.InfoIsConnected.IsNull() {
+		data.InfoIsConnected = types.BoolValue(value.Bool())
+	} else {
+		data.InfoIsConnected = types.BoolNull()
+	}
+	if value := res.Get("deploymentStatus"); value.Exists() && !data.InfoDeploymentStatus.IsNull() {
+		data.InfoDeploymentStatus = types.StringValue(value.String())
+	} else {
+		data.InfoDeploymentStatus = types.StringNull()
+	}
+	if value := res.Get("ftdMode"); value.Exists() && !data.InfoFtdMode.IsNull() {
+		data.InfoFtdMode = types.StringValue(value.String())
+	} else {
+		data.InfoFtdMode = types.StringNull()
+	}
+	if value := res.Get("metadata.deviceSerialNumber"); value.Exists() && !data.InfoDeviceSerialNumber.IsNull() {
+		data.InfoDeviceSerialNumber = types.StringValue(value.String())
+	} else {
+		data.InfoDeviceSerialNumber = types.StringNull()
+	}
+	if value := res.Get("metadata.snortVersion"); value.Exists() && !data.InfoSnortVersion.IsNull() {
+		data.InfoSnortVersion = types.StringValue(value.String())
+	} else {
+		data.InfoSnortVersion = types.StringNull()
+	}
+	if value := res.Get("metadata.vdbVersion"); value.Exists() && !data.InfoVdbVersion.IsNull() {
+		data.InfoVdbVersion = types.StringValue(value.String())
+	} else {
+		data.InfoVdbVersion = types.StringNull()
+	}
+	if value := res.Get("metadata.lspVersion"); value.Exists() && !data.InfoLspVersion.IsNull() {
+		data.InfoLspVersion = types.StringValue(value.String())
+	} else {
+		data.InfoLspVersion = types.StringNull()
+	}
+	if value := res.Get("accessPolicy.name"); value.Exists() && !data.InfoDeployedAccessPolicyName.IsNull() {
+		data.InfoDeployedAccessPolicyName = types.StringValue(value.String())
+	} else {
+		data.InfoDeployedAccessPolicyName = types.StringNull()
+	}
+	if value := res.Get("healthPolicy.name"); value.Exists() && !data.InfoDeployedHealthPolicyName.IsNull() {
+		data.InfoDeployedHealthPolicyName = types.StringValue(value.String())
+	} else {
+		data.InfoDeployedHealthPolicyName = types.StringNull()
 	}
 }
 
 // End of section. //template:end fromBodyPartial
-
-func (data *Device) fromPolicyBody(ctx context.Context, res gjson.Result) {
-	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, data.Id.ValueString())
-	list := res.Get(query)
-	tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies: %s", query, len(list.Array()), list))
-
-	if !list.Exists() {
-		data.AccessPolicyId = types.StringNull()
-		data.NatPolicyId = types.StringNull()
-		return
-	}
-
-	value := list.Get(`#(type=="AccessPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search AccessPolicy resulted in: %s", value))
-	if value.Exists() {
-		data.AccessPolicyId = types.StringValue(value.String())
-	} else {
-		data.AccessPolicyId = types.StringNull()
-	}
-
-	value = list.Get(`#(type=="FTDNatPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search FTDNatPolicy resulted in: %s", value))
-	if value.Exists() {
-		data.NatPolicyId = types.StringValue(value.String())
-	} else {
-		data.NatPolicyId = types.StringNull()
-	}
-}
-
-func (data *Device) updateFromPolicyBody(ctx context.Context, res gjson.Result) {
-	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, data.Id.ValueString())
-	list := res.Get(query)
-	tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies for update: %s", query, len(list.Array()), list))
-
-	if !list.Exists() {
-		data.AccessPolicyId = types.StringNull()
-		data.NatPolicyId = types.StringNull()
-		return
-	}
-
-	value := list.Get(`#(type=="AccessPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search AccessPolicy resulted in: %s", value))
-	if value.Exists() && !data.AccessPolicyId.IsNull() {
-		data.AccessPolicyId = types.StringValue(value.String())
-	} else {
-		data.AccessPolicyId = types.StringNull()
-	}
-
-	value = list.Get(`#(type=="FTDNatPolicy").id`)
-	tflog.Debug(ctx, fmt.Sprintf("gjson search FTDNatPolicy resulted in: %s", value))
-	if value.Exists() && !data.NatPolicyId.IsNull() {
-		data.NatPolicyId = types.StringValue(value.String())
-	} else {
-		data.NatPolicyId = types.StringNull()
-	}
-}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
+	if data.InfoVersion.IsUnknown() {
+		if value := res.Get("sw_version"); value.Exists() {
+			data.InfoVersion = types.StringValue(value.String())
+		} else {
+			data.InfoVersion = types.StringNull()
+		}
+	}
+	if data.InfoHealthStatus.IsUnknown() {
+		if value := res.Get("healthStatus"); value.Exists() {
+			data.InfoHealthStatus = types.StringValue(value.String())
+		} else {
+			data.InfoHealthStatus = types.StringNull()
+		}
+	}
+	if data.InfoHealthMessage.IsUnknown() {
+		if value := res.Get("healthMessage"); value.Exists() {
+			data.InfoHealthMessage = types.StringValue(value.String())
+		} else {
+			data.InfoHealthMessage = types.StringNull()
+		}
+	}
+	if data.InfoIsConnected.IsUnknown() {
+		if value := res.Get("isConnected"); value.Exists() {
+			data.InfoIsConnected = types.BoolValue(value.Bool())
+		} else {
+			data.InfoIsConnected = types.BoolNull()
+		}
+	}
+	if data.InfoDeploymentStatus.IsUnknown() {
+		if value := res.Get("deploymentStatus"); value.Exists() {
+			data.InfoDeploymentStatus = types.StringValue(value.String())
+		} else {
+			data.InfoDeploymentStatus = types.StringNull()
+		}
+	}
+	if data.InfoFtdMode.IsUnknown() {
+		if value := res.Get("ftdMode"); value.Exists() {
+			data.InfoFtdMode = types.StringValue(value.String())
+		} else {
+			data.InfoFtdMode = types.StringNull()
+		}
+	}
+	if data.InfoDeviceSerialNumber.IsUnknown() {
+		if value := res.Get("metadata.deviceSerialNumber"); value.Exists() {
+			data.InfoDeviceSerialNumber = types.StringValue(value.String())
+		} else {
+			data.InfoDeviceSerialNumber = types.StringNull()
+		}
+	}
+	if data.InfoSnortVersion.IsUnknown() {
+		if value := res.Get("metadata.snortVersion"); value.Exists() {
+			data.InfoSnortVersion = types.StringValue(value.String())
+		} else {
+			data.InfoSnortVersion = types.StringNull()
+		}
+	}
+	if data.InfoVdbVersion.IsUnknown() {
+		if value := res.Get("metadata.vdbVersion"); value.Exists() {
+			data.InfoVdbVersion = types.StringValue(value.String())
+		} else {
+			data.InfoVdbVersion = types.StringNull()
+		}
+	}
+	if data.InfoLspVersion.IsUnknown() {
+		if value := res.Get("metadata.lspVersion"); value.Exists() {
+			data.InfoLspVersion = types.StringValue(value.String())
+		} else {
+			data.InfoLspVersion = types.StringNull()
+		}
+	}
+	if data.InfoDeployedAccessPolicyName.IsUnknown() {
+		if value := res.Get("accessPolicy.name"); value.Exists() {
+			data.InfoDeployedAccessPolicyName = types.StringValue(value.String())
+		} else {
+			data.InfoDeployedAccessPolicyName = types.StringNull()
+		}
+	}
+	if data.InfoDeployedHealthPolicyName.IsUnknown() {
+		if value := res.Get("healthPolicy.name"); value.Exists() {
+			data.InfoDeployedHealthPolicyName = types.StringValue(value.String())
+		} else {
+			data.InfoDeployedHealthPolicyName = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
+
+// Fill response with policies IDs obtained from different API endpoint
+func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result) gjson.Result {
+	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, data.Id.ValueString())
+	list := policies.Get(query)
+	tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies for update: %s", query, len(list.Array()), list))
+
+	if !list.Exists() {
+		tflog.Error(ctx, fmt.Sprintf("No mandatory policies found for device %s", data.Id.ValueString()))
+		return res
+	}
+
+	var ret = res.String()
+
+	// Altough AccessPolicy ID exists in device object, it may have different upper/lower cases in ID, which causes problems when compared with tfstate
+	value := list.Get(`#(type=="AccessPolicy").id`)
+	tflog.Debug(ctx, fmt.Sprintf("gjson search AccessPolicy resulted in: %s", value))
+	if value.Exists() {
+		ret, _ = sjson.Set(ret, "accessPolicy.id", value.String())
+	}
+
+	value = list.Get(`#(type=="FTDNatPolicy").id`)
+	tflog.Debug(ctx, fmt.Sprintf("gjson search FTDNatPolicy resulted in: %s", value))
+	if value.Exists() {
+		ret, _ = sjson.Set(ret, "dummy_nat_policy_id", value.String())
+	}
+
+	value = list.Get(`#(type=="HealthPolicy").id`)
+	tflog.Debug(ctx, fmt.Sprintf("gjson search HealthPolicy resulted in: %s", value))
+	if value.Exists() {
+		ret, _ = sjson.Set(ret, "healthPolicy.id", value.String())
+	}
+
+	return gjson.Parse(ret)
+}

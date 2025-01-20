@@ -25,16 +25,32 @@ data "fmc_device" "example" {
 
 - `domain` (String) The name of the FMC domain
 - `id` (String) The id of the object
-- `name` (String) User-specified name, must be unique. Example: 'Device 01 - 192.168.0.152'
+- `name` (String) User-specified name, must be unique.
 
 ### Read-Only
 
 - `access_policy_id` (String) The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
+- `device_group_id` (String) ID of the device group.
+- `health_policy_id` (String) The UUID of the assigned Health policy.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. For registering FTD, the allowed values are: BASE (mandatory), THREAT, URLFilter, MALWARE, APEX, PLUS, VPNOnly. For Firepower ASA or NGIPSv devices, allowed values are: BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL.
+- `info_deployed_access_policy_name` (String) Deployed Access Control Policy Name - Informational only.
+- `info_deployed_health_policy_name` (String) Deployed Health Policy Name - Informational only.
+- `info_deployment_status` (String) Shows deployment status - Informational only.
+- `info_device_serial_number` (String) Device Serial Number - Informational only.
+- `info_ftd_mode` (String) FTD Mode - Informational only.
+- `info_health_message` (String) Health Message of the device - Informational only.
+- `info_health_status` (String) Health Status of the device - Informational only.
+- `info_is_connected` (Boolean) Shows if the device is connected - Informational only.
+- `info_lsp_version` (String) LSP Version - Informational only.
+- `info_snort_version` (String) Snort Version - Informational only.
+- `info_vdb_version` (String) VDB Version - Informational only.
+- `info_version` (String) Version of the registered device - Informational only.
+- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) The UUID of the assigned NAT policy.
+- `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
 - `registration_key` (String) Registration Key identical to the one previously configured on the device (`configure manager`).
+- `snort_engine` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
 - `type` (String) Type of the device; this value is always 'Device'.

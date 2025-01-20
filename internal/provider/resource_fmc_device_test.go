@@ -76,19 +76,13 @@ func TestAccFmcDevice(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDevicePrerequisitesConfig = `
-resource "fmc_access_control_policy" "minimum" {
+resource "fmc_access_control_policy" "device_test" {
   name = "test_fmc_device_1"
   default_action = "BLOCK"
 }
 
-resource "fmc_access_control_policy" "test" {
-  name = "test_fmc_device_2"
-  default_action = "PERMIT"
-}
-
-variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
-variable "nat_id"   { default = null } // tests will set $TF_VAR_nat_id
-variable "registration_key"         {} // tests will set $TF_VAR_registration_key
+variable "device_ip" { default = null } // tests will set $TF_VAR_device_ip
+variable "device_registration_key"         {} // tests will set $TF_VAR_device_registration_key
 `
 
 // End of section. //template:end testPrerequisites
@@ -97,12 +91,11 @@ variable "registration_key"         {} // tests will set $TF_VAR_registration_ke
 
 func testAccFmcDeviceConfig_minimum() string {
 	config := `resource "fmc_device" "test" {` + "\n"
-	config += `	name = "device1min"` + "\n"
-	config += `	host_name = var.ftd_addr` + "\n"
-	config += `	nat_id = var.nat_id` + "\n"
-	config += `	license_capabilities = ["THREAT", "URLFilter", "BASE", "MALWARE"]` + "\n"
-	config += `	registration_key = var.registration_key` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.minimum.id` + "\n"
+	config += `	name = "MyDeviceName1"` + "\n"
+	config += `	host_name = var.device_ip` + "\n"
+	config += `	license_capabilities = ["ESSENTIALS"]` + "\n"
+	config += `	registration_key = var.device_registration_key` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.device_test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -113,16 +106,17 @@ func testAccFmcDeviceConfig_minimum() string {
 
 func testAccFmcDeviceConfig_all() string {
 	config := `resource "fmc_device" "test" {` + "\n"
-	config += `	name = "device1"` + "\n"
-	config += `	host_name = var.ftd_addr` + "\n"
-	config += `	nat_id = var.nat_id` + "\n"
-	config += `	license_capabilities = ["BASE"]` + "\n"
-	config += `	registration_key = var.registration_key` + "\n"
-	config += `	type = "Device"` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
-	config += `	nat_policy_id = null` + "\n"
+	config += `	name = "MyDeviceName1"` + "\n"
+	config += `	host_name = var.device_ip` + "\n"
+	config += `	nat_id = ""` + "\n"
+	config += `	license_capabilities = ["ESSENTIALS"]` + "\n"
+	config += `	registration_key = var.device_registration_key` + "\n"
+	config += `	device_group_id = ""` + "\n"
 	config += `	prohibit_packet_transfer = true` + "\n"
-	config += `	performance_tier = "FTDv50"` + "\n"
+	config += `	performance_tier = "FTDv5"` + "\n"
+	config += `	snort_engine = "SNORT3"` + "\n"
+	config += `	object_group_search = true` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.device_test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
