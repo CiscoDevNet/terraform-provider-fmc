@@ -2,6 +2,7 @@
 name: Security Zones
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securityzones
 is_bulk: true
+bulk_size_create: 20
 res_description: >-
   This plural resource manages a bulk of Security Zones.
   The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.

@@ -68,6 +68,9 @@ var minFMCVersionBulkCreate{{camelCase .Name}} = version.Must(version.NewVersion
 {{- if .MinimumVersionBulkDelete}}
 var minFMCVersionBulkDelete{{camelCase .Name}} = version.Must(version.NewVersion("{{.MinimumVersionBulkDelete}}"))
 {{- end}}
+{{- if .BulkSizeCreate}}
+const bulkSizeCreate{{camelCase .Name}} int = {{.BulkSizeCreate}}
+{{- end}}
 
 func New{{camelCase .Name}}Resource() resource.Resource {
 	return &{{camelCase .Name}}Resource{}
@@ -970,7 +973,7 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 	} else { {{- end}}
 		var idx = 0
 		var bulk {{camelCase .Name}}
-		bulk.Items = make(map[string]{{camelCase .Name}}Items, bulkSizeCreate)
+		bulk.Items = make(map[string]{{camelCase .Name}}Items, bulkSizeCreate{{if .BulkSizeCreate}}{{camelCase .Name}}{{end}})
 
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode ({{.Name}})", state.Id.ValueString()))
 
@@ -983,7 +986,7 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 			bulk.Items[k] = v
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
+			if idx%bulkSizeCreate{{if .BulkSizeCreate}}{{camelCase .Name}}{{end}} == 0 || idx == len(plan.Items) {
 
 				// Parse body of the request to string
 				body := bulk.toBody(ctx, {{camelCase .Name}}{})
@@ -1004,7 +1007,7 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 				}
 
 				// Clear bulk item for next run
-				bulk.Items = make(map[string]{{camelCase .Name}}Items, bulkSizeCreate)
+				bulk.Items = make(map[string]{{camelCase .Name}}Items, bulkSizeCreate{{if .BulkSizeCreate}}{{camelCase .Name}}{{end}})
 			}
 		}
 	{{- if .MinimumVersionBulkCreate}}

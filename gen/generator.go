@@ -116,6 +116,7 @@ type YamlConfig struct {
 	TestTags                 []string              `yaml:"test_tags"`
 	TestPrerequisites        string                `yaml:"test_prerequisites"`
 	IsBulk                   bool                  `yaml:"is_bulk"`
+	BulkSizeCreate           int                   `yaml:"bulk_size_create"`
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
 }
 

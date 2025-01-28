@@ -52,6 +52,8 @@ var (
 )
 var minFMCVersionBulkDeleteSecurityZones = version.Must(version.NewVersion("999"))
 
+const bulkSizeCreateSecurityZones int = 20
+
 func NewSecurityZonesResource() resource.Resource {
 	return &SecurityZonesResource{}
 }
@@ -434,7 +436,7 @@ func (r *SecurityZonesResource) ImportState(ctx context.Context, req resource.Im
 func (r *SecurityZonesResource) createSubresources(ctx context.Context, state, plan SecurityZones, reqMods ...func(*fmc.Req)) (SecurityZones, diag.Diagnostics) {
 	var idx = 0
 	var bulk SecurityZones
-	bulk.Items = make(map[string]SecurityZonesItems, bulkSizeCreate)
+	bulk.Items = make(map[string]SecurityZonesItems, bulkSizeCreateSecurityZones)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (Security Zones)", state.Id.ValueString()))
 
@@ -447,7 +449,7 @@ func (r *SecurityZonesResource) createSubresources(ctx context.Context, state, p
 		bulk.Items[k] = v
 
 		// If bulk size was reached or all entries have been processed
-		if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
+		if idx%bulkSizeCreateSecurityZones == 0 || idx == len(plan.Items) {
 
 			// Parse body of the request to string
 			body := bulk.toBody(ctx, SecurityZones{})
@@ -468,7 +470,7 @@ func (r *SecurityZonesResource) createSubresources(ctx context.Context, state, p
 			}
 
 			// Clear bulk item for next run
-			bulk.Items = make(map[string]SecurityZonesItems, bulkSizeCreate)
+			bulk.Items = make(map[string]SecurityZonesItems, bulkSizeCreateSecurityZones)
 		}
 	}
 
