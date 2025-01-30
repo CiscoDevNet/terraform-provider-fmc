@@ -111,6 +111,7 @@ type YamlConfig struct {
 	ResDescription           string                `yaml:"res_description"`
 	DocCategory              string                `yaml:"doc_category"`
 	ExcludeTest              bool                  `yaml:"exclude_test"`
+	SkipTest                 bool                  `yaml:"skip_test"`
 	SkipMinimumTest          bool                  `yaml:"skip_minimum_test"`
 	Attributes               []YamlConfigAttribute `yaml:"attributes"`
 	TestTags                 []string              `yaml:"test_tags"`
@@ -121,43 +122,44 @@ type YamlConfig struct {
 }
 
 type YamlConfigAttribute struct {
-	ModelName        string                `yaml:"model_name"`
-	TfName           string                `yaml:"tf_name"`
-	Type             string                `yaml:"type"`
-	ElementType      string                `yaml:"element_type"`
-	DataPath         []string              `yaml:"data_path"`
-	Id               bool                  `yaml:"id"`
-	ResourceId       bool                  `yaml:"resource_id"`
-	Reference        bool                  `yaml:"reference"`
-	RequiresReplace  bool                  `yaml:"requires_replace"`
-	Mandatory        bool                  `yaml:"mandatory"`
-	WriteOnly        bool                  `yaml:"write_only"`
-	WriteChangesOnly bool                  `yaml:"write_changes_only"`
-	ExcludeTest      bool                  `yaml:"exclude_test"`
-	ExcludeExample   bool                  `yaml:"exclude_example"`
-	Description      string                `yaml:"description"`
-	Example          string                `yaml:"example"`
-	EnumValues       []string              `yaml:"enum_values"`
-	MinList          int64                 `yaml:"min_list"`
-	MaxList          int64                 `yaml:"max_list"`
-	MinInt           int64                 `yaml:"min_int"`
-	MaxInt           int64                 `yaml:"max_int"`
-	MinFloat         float64               `yaml:"min_float"`
-	MaxFloat         float64               `yaml:"max_float"`
-	MapKeyExample    string                `yaml:"map_key_example"`
-	OrderedList      bool                  `yaml:"ordered_list"`
-	StringPatterns   []string              `yaml:"string_patterns"`
-	StringMinLength  int64                 `yaml:"string_min_length"`
-	StringMaxLength  int64                 `yaml:"string_max_length"`
-	Computed         string                `yaml:"computed"`
-	DefaultValue     string                `yaml:"default_value"`
-	Value            string                `yaml:"value"`
-	TestValue        string                `yaml:"test_value"`
-	MinimumTestValue string                `yaml:"minimum_test_value"`
-	TestTags         []string              `yaml:"test_tags"`
-	DataSourceQuery  bool                  `yaml:"data_source_query"`
-	Attributes       []YamlConfigAttribute `yaml:"attributes"`
-	GoTypeName       string
+	ModelName            string                `yaml:"model_name"`
+	TfName               string                `yaml:"tf_name"`
+	Type                 string                `yaml:"type"`
+	ElementType          string                `yaml:"element_type"`
+	DataPath             []string              `yaml:"data_path"`
+	Id                   bool                  `yaml:"id"`
+	ResourceId           bool                  `yaml:"resource_id"`
+	Reference            bool                  `yaml:"reference"`
+	RequiresReplace      bool                  `yaml:"requires_replace"`
+	Mandatory            bool                  `yaml:"mandatory"`
+	WriteOnly            bool                  `yaml:"write_only"`
+	WriteChangesOnly     bool                  `yaml:"write_changes_only"`
+	ExcludeTest          bool                  `yaml:"exclude_test"`
+	ExcludeExample       bool                  `yaml:"exclude_example"`
+	Description          string                `yaml:"description"`
+	Example              string                `yaml:"example"`
+	EnumValues           []string              `yaml:"enum_values"`
+	MinList              int64                 `yaml:"min_list"`
+	MaxList              int64                 `yaml:"max_list"`
+	MinInt               int64                 `yaml:"min_int"`
+	MaxInt               int64                 `yaml:"max_int"`
+	MinFloat             float64               `yaml:"min_float"`
+	MaxFloat             float64               `yaml:"max_float"`
+	MapKeyExample        string                `yaml:"map_key_example"`
+	OrderedList          bool                  `yaml:"ordered_list"`
+	StringPatterns       []string              `yaml:"string_patterns"`
+	StringMinLength      int64                 `yaml:"string_min_length"`
+	StringMaxLength      int64                 `yaml:"string_max_length"`
+	Computed             string                `yaml:"computed"`
+	ComputedRefreshValue string                `yaml:"computed_refresh_value"`
+	DefaultValue         string                `yaml:"default_value"`
+	Value                string                `yaml:"value"`
+	TestValue            string                `yaml:"test_value"`
+	MinimumTestValue     string                `yaml:"minimum_test_value"`
+	TestTags             []string              `yaml:"test_tags"`
+	DataSourceQuery      bool                  `yaml:"data_source_query"`
+	Attributes           []YamlConfigAttribute `yaml:"attributes"`
+	GoTypeName           string
 }
 
 // Templating helper function to convert TF name to GO name
@@ -353,6 +355,11 @@ func IsNestedSet(attribute YamlConfigAttribute) bool {
 	return false
 }
 
+// Templating helper function to return true if object is domain dependent (exists within a domain)
+func IsDomainDependent(config YamlConfig) bool {
+	return strings.Contains(config.RestEndpoint, "{DOMAIN_UUID}")
+}
+
 // Templating helper function to return number of import parts
 func ImportParts(attributes []YamlConfigAttribute) int {
 	parts := 1
@@ -395,6 +402,7 @@ var functions = template.FuncMap{
 	"isNestedList":                IsNestedList,
 	"isNestedMap":                 IsNestedMap,
 	"isNestedSet":                 IsNestedSet,
+	"isDomainDependent":           IsDomainDependent,
 	"importParts":                 ImportParts,
 	"subtract":                    Subtract,
 }
@@ -609,8 +617,10 @@ func main() {
 			if configs[i].NoImport && t.path == "./gen/templates/import.sh" ||
 				configs[i].NoDataSource && t.path == "./gen/templates/data_source.go" ||
 				configs[i].NoDataSource && t.path == "./gen/templates/data_source_test.go" ||
+				configs[i].SkipTest && t.path == "./gen/templates/data_source_test.go" ||
 				configs[i].NoDataSource && t.path == "./gen/templates/data-source.tf" ||
 				configs[i].NoResource && t.path == "./gen/templates/resource.go" ||
+				configs[i].SkipTest && t.path == "./gen/templates/resource_test.go" ||
 				configs[i].NoResource && t.path == "./gen/templates/resource_test.go" ||
 				configs[i].NoResource && t.path == "./gen/templates/resource.tf" ||
 				// Data source test cannot be generated if there is no corresponding resource

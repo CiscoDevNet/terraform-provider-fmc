@@ -38,7 +38,9 @@ import (
 
 type {{camelCase .Name}} struct {
 	Id types.String `tfsdk:"id"`
+{{- if isDomainDependent .}}
 	Domain types.String `tfsdk:"domain"`
+{{- end}}
 {{- range .Attributes}}
 {{- if not .Value}}
 {{- if isNestedListSet .}}

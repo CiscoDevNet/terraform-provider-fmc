@@ -14,6 +14,7 @@ minimum_version_bulk_delete: str(required=False) # Define a minimum version that
 ds_description: str(required=False) # Define a data source description
 res_description: str(required=False) # Define a resource description
 doc_category: str(required=False) # Define a documentation category
+skip_test: bool(required=False) # Do not perform any tests for resource or data source
 skip_minimum_test: bool(required=False) # Do not perform a "minimum" (only mandatory attributes) test
 attributes: list(include('attribute'), required=False) # List of attributes
 test_tags: list(str(), required=False) # List of test tags, tests are only executed if environment variables with all of these tags are configured
@@ -52,6 +53,7 @@ attribute:
   string_min_length: int(required=False) # Minimum length of a string, only relevant if type is "String"
   string_max_length: int(required=False) # Maximum length of a string, only relevant if type is "String"
   computed: bool(required=False) # Defines field as read-only (computed) with value derived from the API
+  computed_refresh_value: bool(required=False) # Set to true if the computed value should be refreshed on every update (no UseStateForUnknown)
   default_value: any(str(), int(), bool(), required=False) # Default value for the attribute
   value: any(str(), int(), bool(), required=False) # Hardcoded value for the attribute
   test_value: str(required=False) # Value used for acceptance test

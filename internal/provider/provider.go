@@ -340,6 +340,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewSecurityZonesResource,
 		NewSGTResource,
 		NewSGTsResource,
+		NewSmartLicenseResource,
 		NewStandardACLResource,
 		NewURLResource,
 		NewURLGroupResource,

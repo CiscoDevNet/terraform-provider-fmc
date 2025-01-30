@@ -97,6 +97,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			{{- if isDomainDependent .}}
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "The name of the FMC domain",
 				Optional:			true,
@@ -104,6 +105,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			{{- end}}
 			{{- range  .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
@@ -171,12 +173,12 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- else if and (len .DefaultValue) (eq .Type "String")}}
 				Default:             stringdefault.StaticString("{{.DefaultValue}}"),
 				{{- end}}
-				{{- if or .Id .Reference .RequiresReplace .Computed}}
+				{{- if or .Id .Reference .RequiresReplace (and .Computed (not .ComputedRefreshValue))}}
 				PlanModifiers: []planmodifier.{{.Type}}{
 					{{- if or .Id .Reference .RequiresReplace}}
 					{{snakeCase .Type}}planmodifier.RequiresReplace(),
 					{{end}}
-					{{- if .Computed}}
+					{{- if and .Computed (not .ComputedRefreshValue)}}
 					{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
 					{{end}}
 				},
@@ -242,7 +244,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- else if and (len .DefaultValue) (eq .Type "String")}}
 							Default:             stringdefault.StaticString("{{.DefaultValue}}"),
 							{{- end}}
-							{{- if or (and .ResourceId $useStateForUnknown) .Computed}}
+							{{- if or (and .ResourceId $useStateForUnknown) (and .Computed (not .ComputedRefreshValue))}}
 							PlanModifiers: []planmodifier.{{.Type}}{
 								{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
 							},
@@ -316,7 +318,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 											{{- if .RequiresReplace}}
 											{{snakeCase .Type}}planmodifier.RequiresReplace(),
 											{{end}}
-											{{- if .Computed}}
+											{{- if and .Computed (not .ComputedRefreshValue)}}
 											{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
 											{{end}}
 										},
@@ -386,7 +388,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 														{{- if .RequiresReplace}}
 														{{snakeCase .Type}}planmodifier.RequiresReplace(),
 														{{end}}
-														{{- if .Computed}}
+														{{- if and .Computed (not .ComputedRefreshValue)}}
 														{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
 														{{end}}
 													},
@@ -479,9 +481,11 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
+	{{- if isDomainDependent .}}
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
+	{{- end}}
 
 	{{- if and .PutCreate (not .IsBulk)}}
 
@@ -536,7 +540,9 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 	state := {{camelCase .Name}}{}
 	state.Items = make(map[string]{{camelCase .Name}}Items, len(plan.Items))
 	state.Id = types.StringValue(uuid.New().String())
+	{{- if isDomainDependent .}}
 	state.Domain = plan.Domain
+	{{- end}}
 
 	// Create object
 	// Creation process is put in a separate function, as that same proces will be needed with `Update`
@@ -604,9 +610,11 @@ func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.Rea
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
+	{{- if isDomainDependent .}}
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
+	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
@@ -666,10 +674,14 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	}
 
 	// Set request domain if provided
+	{{- if not .NoUpdate}}
 	reqMods := [](func(*fmc.Req)){}
+	{{- if isDomainDependent .}}
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
+	{{- end}}
+	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 	{{- if not .NoUpdate}}
@@ -811,9 +823,11 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
+	{{- if isDomainDependent .}}
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
+	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 
