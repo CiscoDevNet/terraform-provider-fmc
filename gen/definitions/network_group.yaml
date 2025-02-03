@@ -1,0 +1,51 @@
+---
+name: Network Group
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the managed Network Group.
+    example: net_group_1
+    mandatory: true
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: "My Network Group 1"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"
+    minimum_test_value: "true"
+  - model_name: objects
+    description: Set of network objects (Host, Network, Range, FQDN or Network Group).
+    type: Set
+    attributes:
+      - model_name: id
+        type: String
+        description: ID of the network object
+        id: true
+        example: 12345678-1234-1234-1234-123456789012
+        test_value: fmc_range.test.id
+      - model_name: type
+        type: String
+        value: AnyNonEmptyString
+  - model_name: literals
+    description: Set of literal values (Host or Network).
+    type: Set
+    attributes:
+      - model_name: value
+        type: String
+        id: true
+        example: 10.1.1.0/24
+      - model_name: type
+        type: String
+        value: AnyNonEmptyString
+
+test_prerequisites: |-
+  resource "fmc_range" "test" {
+    name      = "test_fmc_network_groups"
+    ip_range  = "2005::10-2005::12"
+  }
