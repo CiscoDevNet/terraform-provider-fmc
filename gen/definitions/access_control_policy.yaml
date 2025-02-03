@@ -228,7 +228,7 @@ attributes:
             example: "11"
           - model_name: endTag
             type: String
-            example: "22"  
+            example: "22"
       - model_name: objects
         data_path: [vlanTags]
         tf_name: vlan_tag_objects
@@ -240,7 +240,7 @@ attributes:
             description: UUID of the object (such as fmc_vlan_tag.example.id, etc.).
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_vlan_tag.test.id          
+            test_value: fmc_vlan_tag.test.id
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
@@ -317,25 +317,25 @@ attributes:
         attributes:
           - model_name: type
             type: String
-            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
             mandatory: true
             example: PortLiteral
           - model_name: port
             type: String
-            example: "80"              
+            example: "80"
           - model_name: protocol
             type: String
             example: "6"
-            mandatory: true    
+            mandatory: true
           - model_name: icmpType
             type: String
             example: "0"
             exclude_test: true
-          - model_name: code 
+          - model_name: code
             tf_name: icmp_code
             type: String
             example: "0"
-            exclude_test: true  
+            exclude_test: true
       - model_name: objects
         data_path: [sourcePorts]
         tf_name: source_port_objects
@@ -361,25 +361,25 @@ attributes:
         attributes:
           - model_name: type
             type: String
-            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
             mandatory: true
             example: PortLiteral
           - model_name: port
             type: String
-            example: "80"              
+            example: "80"
           - model_name: protocol
             type: String
             example: "6"
-            mandatory: true    
+            mandatory: true
           - model_name: icmpType
             type: String
             example: "0"
             exclude_test: true
-          - model_name: code 
+          - model_name: code
             tf_name: icmp_code
             type: String
             example: "0"
-            exclude_test: true  
+            exclude_test: true
       - model_name: objects
         data_path: [destinationPorts]
         tf_name: destination_port_objects
@@ -611,9 +611,9 @@ attributes:
         tf_name: variable_set_id
         type: String
         description: >-
-          Identifier (UUID) of the Variable Set for the rule action. 
+          Identifier (UUID) of the Variable Set for the rule action.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        exclude_test: true        
+        exclude_test: true
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
@@ -637,4 +637,3 @@ test_prerequisites: |-
     start_tag = "10"
     end_tag   = "11" 
   }
-

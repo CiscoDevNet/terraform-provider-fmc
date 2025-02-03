@@ -482,7 +482,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							Computed:            true,
 						},
 						"variable_set_id": schema.StringAttribute{
-							MarkdownDescription: "Identifier (UUID) of the Variable Set for the rule action. ",
+							MarkdownDescription: "Identifier (UUID) of the Variable Set for the rule action.",
 							Computed:            true,
 						},
 					},

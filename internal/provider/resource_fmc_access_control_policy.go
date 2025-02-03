@@ -544,7 +544,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							Optional:            true,
 						},
 						"variable_set_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the Variable Set for the rule action. ").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the Variable Set for the rule action.").String,
 							Optional:            true,
 						},
 					},
