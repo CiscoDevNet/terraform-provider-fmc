@@ -10,7 +10,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of SGTs. The key of the map is the name of the individual SGT. 
+      Map of SGTs. The key of the map is the name of the individual SGT.
     map_key_example: sgt_1
     mandatory: true
     attributes:

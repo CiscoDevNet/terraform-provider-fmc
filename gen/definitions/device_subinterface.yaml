@@ -413,7 +413,7 @@ attributes:
     type: String
     description: IP address to monitor.
     exclude_example: true
-    exclude_test: true  
+    exclude_test: true
 # Advanced - Information
   - model_name: activeMACAddress
     tf_name: active_mac_address
@@ -498,7 +498,7 @@ test_prerequisites: |-
 
   resource "fmc_security_zone" "test" {
     name           = "routed1"
-    interface_mode = "ROUTED"
+    interface_type = "ROUTED"
   }
 
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

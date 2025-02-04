@@ -52,17 +52,17 @@ type FilePolicy struct {
 }
 
 type FilePolicyFileRules struct {
-	Id                  types.String                            `tfsdk:"id"`
-	Type                types.String                            `tfsdk:"type"`
-	ApplicationProtocol types.String                            `tfsdk:"application_protocol"`
-	Action              types.String                            `tfsdk:"action"`
-	StoreFiles          types.Set                               `tfsdk:"store_files"`
-	DirectionOfTransfer types.String                            `tfsdk:"direction_of_transfer"`
-	FileTypeCategories  []FilePolicyFileRulesFileTypeCategories `tfsdk:"file_type_categories"`
-	FileTypes           []FilePolicyFileRulesFileTypes          `tfsdk:"file_types"`
+	Id                  types.String                        `tfsdk:"id"`
+	Type                types.String                        `tfsdk:"type"`
+	ApplicationProtocol types.String                        `tfsdk:"application_protocol"`
+	Action              types.String                        `tfsdk:"action"`
+	StoreFiles          types.Set                           `tfsdk:"store_files"`
+	DirectionOfTransfer types.String                        `tfsdk:"direction_of_transfer"`
+	FileCategories      []FilePolicyFileRulesFileCategories `tfsdk:"file_categories"`
+	FileTypes           []FilePolicyFileRulesFileTypes      `tfsdk:"file_types"`
 }
 
-type FilePolicyFileRulesFileTypeCategories struct {
+type FilePolicyFileRulesFileCategories struct {
 	Id   types.String `tfsdk:"id"`
 	Name types.String `tfsdk:"name"`
 	Type types.String `tfsdk:"type"`
@@ -141,9 +141,9 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 			if !item.DirectionOfTransfer.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "direction", item.DirectionOfTransfer.ValueString())
 			}
-			if len(item.FileTypeCategories) > 0 {
+			if len(item.FileCategories) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "fileCategories", []interface{}{})
-				for _, childItem := range item.FileTypeCategories {
+				for _, childItem := range item.FileCategories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
@@ -275,10 +275,10 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.DirectionOfTransfer = types.StringNull()
 			}
 			if value := res.Get("fileCategories"); value.Exists() {
-				data.FileTypeCategories = make([]FilePolicyFileRulesFileTypeCategories, 0)
+				data.FileCategories = make([]FilePolicyFileRulesFileCategories, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := FilePolicyFileRulesFileTypeCategories{}
+					data := FilePolicyFileRulesFileCategories{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
@@ -294,7 +294,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.Type = types.StringValue("FileCategory")
 					}
-					(*parent).FileTypeCategories = append((*parent).FileTypeCategories, data)
+					(*parent).FileCategories = append((*parent).FileCategories, data)
 					return true
 				})
 			}
@@ -437,12 +437,12 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.DirectionOfTransfer = types.StringNull()
 		}
-		for i := 0; i < len(data.FileTypeCategories); i++ {
+		for i := 0; i < len(data.FileCategories); i++ {
 			keys := [...]string{"id", "name", "type"}
-			keyValues := [...]string{data.FileTypeCategories[i].Id.ValueString(), data.FileTypeCategories[i].Name.ValueString(), data.FileTypeCategories[i].Type.ValueString()}
+			keyValues := [...]string{data.FileCategories[i].Id.ValueString(), data.FileCategories[i].Name.ValueString(), data.FileCategories[i].Type.ValueString()}
 
 			parent := &data
-			data := (*parent).FileTypeCategories[i]
+			data := (*parent).FileCategories[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -464,11 +464,11 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing FileTypeCategories[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing FileCategories[%d] = %+v",
 					i,
-					(*parent).FileTypeCategories[i],
+					(*parent).FileCategories[i],
 				))
-				(*parent).FileTypeCategories = slices.Delete((*parent).FileTypeCategories, i, i+1)
+				(*parent).FileCategories = slices.Delete((*parent).FileCategories, i, i+1)
 				i--
 
 				continue
@@ -488,7 +488,7 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else if data.Type.ValueString() != "FileCategory" {
 				data.Type = types.StringNull()
 			}
-			(*parent).FileTypeCategories[i] = data
+			(*parent).FileCategories[i] = data
 		}
 		for i := 0; i < len(data.FileTypes); i++ {
 			keys := [...]string{"id", "name", "type"}

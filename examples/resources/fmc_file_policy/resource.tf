@@ -14,7 +14,7 @@ resource "fmc_file_policy" "example" {
       application_protocol  = "ANY"
       action                = "DETECT"
       direction_of_transfer = "ANY"
-      file_type_categories = [
+      file_categories = [
         {
           id   = "5"
           name = "PDF files"

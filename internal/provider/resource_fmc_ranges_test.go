@@ -35,6 +35,7 @@ func TestAccFmcRanges(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.description", "My Range 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.ip_range", "10.0.0.1-10.0.0.9"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.ranges_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

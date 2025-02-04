@@ -132,6 +132,10 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				MarkdownDescription: helpers.NewAttributeDescription("UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
 				Optional:            true,
 			},
+			"prefilter_policy_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("UUID of the prefilter policy. ").String,
+				Optional:            true,
+			},
 			"default_action_syslog_severity": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Override the Severity of syslog alerts.").AddStringEnumDescription("ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE", "WARNING").String,
 				Optional:            true,
@@ -541,6 +545,10 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 						},
 						"intrusion_policy_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the fmc_intrusion_policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.").String,
+							Optional:            true,
+						},
+						"time_range_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("UUID of Time Range object applied to the rule.").String,
 							Optional:            true,
 						},
 						"variable_set_id": schema.StringAttribute{
@@ -989,7 +997,7 @@ func (r *AccessControlPolicyResource) Delete(ctx context.Context, req resource.D
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

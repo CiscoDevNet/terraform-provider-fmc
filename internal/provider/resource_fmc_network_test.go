@@ -32,6 +32,7 @@ import (
 func TestAccFmcNetwork(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "name", "NET1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_network.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "description", "My network object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "prefix", "10.1.2.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network.test", "overridable", "true"))

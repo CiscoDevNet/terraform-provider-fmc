@@ -79,6 +79,10 @@ func (d *VLANTagGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Optional user-created description.",
 				Computed:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'VlanGroupTag'",
+				Computed:            true,
+			},
 			"overridable": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether object values can be overridden.",
 				Computed:            true,

@@ -71,7 +71,7 @@ attributes:
             example: 10.1.1.0/24
           - model_name: type
             type: String
-            example: Network
+            example: Network           
       - model_name: literals
         data_path: [destinationNetworks]
         tf_name: destination_network_literals
@@ -97,6 +97,36 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_network.test.id
+      - model_name: objects
+        data_path: [securityGroupTags]
+        tf_name: source_sgt_objects
+        description: Set of SGT that represent tag of source traffic (fmc_sgts).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: UUID of the object (such as fmc_sgts.example.id, etc.).
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_sgt.test.id   
+          - model_name: type
+            type: String
+            value: SecurityGroupTag
+            exclude_example: true
+      # Possible to configure SGT litterals via API but not via GUI
+      #- model_name: literals
+      #  data_path: [securityGroupTags]
+      #  tf_name: source_sgt_literals
+      #  description: Set of SGT that represent tag of source traffic (literally specified).
+      #  type: Set
+      #  attributes:
+      #    - model_name: tag
+      #      type: String
+      #      id: true
+      #      example: 11
+      #    - model_name: type
+      #      type: String
+      #      example: SecurityGroupTag          
       - model_name: objects
         data_path: [destinationNetworks]
         tf_name: destination_network_objects
@@ -133,6 +163,60 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_port.test.id
+      - model_name: literals
+        data_path: [destinationPorts]
+        tf_name: destination_port_literals
+        description: Set of objects that represent destination port of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            mandatory: true
+            example: PortLiteral
+          - model_name: port
+            type: String
+            example: "80"
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+          - model_name: code
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true
+      - model_name: literals
+        data_path: [sourcePorts]
+        tf_name: source_port_literals
+        description: Set of objects that represent destination port of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            mandatory: true
+            example: PortLiteral
+          - model_name: port
+            type: String
+            example: "80"
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+          - model_name: code
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
@@ -147,6 +231,11 @@ test_prerequisites: |-
 
   resource "fmc_port" "test" {
     name = "myport2"
-    protocol = "UDP"
+    protocol = "TCP"
     port = "65000"
+  }
+
+  resource "fmc_sgt" "test" {
+    name = "mysgt2"
+    tag = "11"
   }

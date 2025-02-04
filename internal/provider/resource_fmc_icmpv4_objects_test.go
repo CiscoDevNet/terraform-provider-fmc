@@ -36,6 +36,7 @@ func TestAccFmcICMPv4Objects(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.icmp_type", "3"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.code", "0"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_objects.test", "items.icmpv4_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

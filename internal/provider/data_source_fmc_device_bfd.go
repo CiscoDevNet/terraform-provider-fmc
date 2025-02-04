@@ -22,7 +22,9 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -132,6 +134,14 @@ func (d *DeviceBFDDataSource) Configure(_ context.Context, req datasource.Config
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *DeviceBFDDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionDeviceBFD) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device BFD, minimum required version is 7.4", d.client.FMCVersion))
+		return
+	}
 	var config DeviceBFD
 
 	// Read config
@@ -160,7 +170,7 @@ func (d *DeviceBFDDataSource) Read(ctx context.Context, req datasource.ReadReque
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.InterfaceLogicalName.ValueString() == v.Get("ifname").String() {
+					if config.InterfaceLogicalName.ValueString() == v.Get("interface.ifname").String() {
 						config.Id = types.StringValue(v.Get("id").String())
 						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_logical_name '%v', id: %v", config.Id.String(), config.InterfaceLogicalName.ValueString(), config.Id.String()))
 						return false

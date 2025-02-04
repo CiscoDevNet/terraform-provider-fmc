@@ -33,6 +33,7 @@ func TestAccDataSourceFmcNetworks(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.networks_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.networks_1.description", "My Network 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.networks_1.prefix", "10.1.1.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.networks_1.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

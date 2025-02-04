@@ -34,6 +34,7 @@ func TestAccFmcNetworks(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_networks.test", "items.networks_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_networks.test", "items.networks_1.description", "My Network 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_networks.test", "items.networks_1.prefix", "10.1.1.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_networks.test", "items.networks_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

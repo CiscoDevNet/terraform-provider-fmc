@@ -268,7 +268,8 @@ attributes:
         type: Bool
         description: Give only warning message when prefix limit exceeded or terminate peering when prefix limit is exceeded.
         example: true
-        exclude_example: true      
+        exclude_example: true
+        exclude_test: true
       - model_name: thresholdValue
         data_path: [neighborFiltering, neighborMaximumPrefix]
         tf_name: neighbor_filter_threshold_value
@@ -455,7 +456,7 @@ attributes:
         type: Bool
         description: Do not prepend local AS number to routes received from neighbor
         exclude_test: true
-        exclude_example: true 
+        exclude_example: true
       - model_name: replaceAs
         tf_name: neighbor_customized_replace_as
         data_path: [neighborLocalAs]

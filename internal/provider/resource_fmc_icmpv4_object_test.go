@@ -35,6 +35,7 @@ func TestAccFmcICMPv4Object(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_object.test", "code", "0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_object.test", "name", "icmpv4_net_unreachable"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_object.test", "description", "ICMPv4 network unreachable response, type 3, code 0"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_object.test", "type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

@@ -33,3 +33,4 @@ data "fmc_vlan_tag" "example" {
 - `end_tag` (String)
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `start_tag` (String)
+- `type` (String) Type of the object; this value is always 'VlanTag'

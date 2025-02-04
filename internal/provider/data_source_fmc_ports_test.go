@@ -34,6 +34,7 @@ func TestAccDataSourceFmcPorts(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.ports_1.port", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.ports_1.protocol", "TCP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.ports_1.description", "Port TCP/443 (HTTPS)"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ports.test", "items.ports_1.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

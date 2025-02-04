@@ -45,7 +45,7 @@ resource "fmc_device_physical_interface" "example" {
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
 - `domain` (String) The name of the FMC domain
-- `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
+- `duplex` (String) Duplex configuraion.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
 - `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.

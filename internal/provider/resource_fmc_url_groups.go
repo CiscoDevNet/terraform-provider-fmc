@@ -83,7 +83,7 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of url groups. The key of the map is the name of the individual URL Group. ").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of url groups. The key of the map is the name of the individual URL Group.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

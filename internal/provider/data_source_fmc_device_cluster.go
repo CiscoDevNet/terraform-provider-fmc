@@ -87,11 +87,11 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Cluster control node device ID.",
 				Computed:            true,
 			},
-			"control_node_vni_network": schema.StringAttribute{
+			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: "Cluster Control VXLAN Network Identifier (VNI) Network",
 				Computed:            true,
 			},
-			"control_node_ccl_network": schema.StringAttribute{
+			"control_node_ccl_prefix": schema.StringAttribute{
 				MarkdownDescription: "Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network",
 				Computed:            true,
 			},

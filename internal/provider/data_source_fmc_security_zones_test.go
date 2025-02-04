@@ -32,6 +32,7 @@ func TestAccDataSourceFmcSecurityZones(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.security_zone_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zones.test", "items.security_zone_1.interface_type", "ROUTED"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.security_zone_1.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

@@ -14,13 +14,11 @@ This resource can manage a Device BFD.
 
 ```terraform
 resource "fmc_device_bfd" "example" {
-  device_id                  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  hop_type                   = "SINGLE_HOP"
-  bfd_template_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  interface_logical_name     = "outside"
-  destination_host_object_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  source_host_object_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  interface_id               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  device_id              = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  hop_type               = "SINGLE_HOP"
+  bfd_template_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  interface_logical_name = "outside"
+  interface_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -42,7 +40,6 @@ resource "fmc_device_bfd" "example" {
 - `interface_logical_name` (String) Logical Name of the interface of BFD assignment if SINGLE_HOP selected.
 - `slow_timer` (Number) BFD Slow Timer value in range: 1000-30000, default: 1000
   - Range: `1000`-`30000`
-  - Default value: `1000`
 - `source_host_object_id` (String) The ID of the source host object if MULTI_HOP selected.
 
 ### Read-Only

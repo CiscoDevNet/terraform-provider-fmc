@@ -1,0 +1,33 @@
+---
+name: Tunnel Zones
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/tunneltags
+is_bulk: true
+doc_category: Objects
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Tunnel Zones. The key of the map is the name of the individual Tunnel Zone.
+    map_key_example: TunnelZone1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: UUID of the managed Tunnel Zone.
+        exclude_example: true
+        exclude_test: true
+      # Type is defined twice on purpose, to be read-only attribute and to be in POST body
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'TunnelTag'.
+        value: TunnelTag
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'TunnelTag'.
+        computed: true
+      - model_name: description
+        type: String
+        description: Description
+        example: My Tunnel Zone object

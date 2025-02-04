@@ -24,12 +24,12 @@ import (
 	"net/url"
 	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -48,6 +48,7 @@ var (
 	_ resource.Resource                = &DeviceBFDResource{}
 	_ resource.ResourceWithImportState = &DeviceBFDResource{}
 )
+var minFMCVersionDeviceBFD = version.Must(version.NewVersion("7.4"))
 
 func NewDeviceBFDResource() resource.Resource {
 	return &DeviceBFDResource{}
@@ -123,13 +124,11 @@ func (r *DeviceBFDResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 			},
 			"slow_timer": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("BFD Slow Timer value in range: 1000-30000, default: 1000").AddIntegerRangeDescription(1000, 30000).AddDefaultValueDescription("1000").String,
+				MarkdownDescription: helpers.NewAttributeDescription("BFD Slow Timer value in range: 1000-30000, default: 1000").AddIntegerRangeDescription(1000, 30000).String,
 				Optional:            true,
-				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1000, 30000),
 				},
-				Default: int64default.StaticInt64(1000),
 			},
 		},
 	}
@@ -148,6 +147,14 @@ func (r *DeviceBFDResource) Configure(_ context.Context, req resource.ConfigureR
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DeviceBFDResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionDeviceBFD) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device BFD creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan DeviceBFD
 
 	// Read plan
@@ -187,6 +194,14 @@ func (r *DeviceBFDResource) Create(ctx context.Context, req resource.CreateReque
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *DeviceBFDResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionDeviceBFD) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device BFD, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var state DeviceBFD
 
 	// Read state
@@ -295,7 +310,7 @@ func (r *DeviceBFDResource) Delete(ctx context.Context, req resource.DeleteReque
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

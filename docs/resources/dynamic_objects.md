@@ -51,12 +51,11 @@ Optional:
 
 - `description` (String) Optional user-created description.
 - `mappings` (Set of String) List of mappings for the Dynamic Object.
-- `type` (String) Type of the object; this value is always 'DynamicObject'.
-  - Default value: `DynamicObject`
 
 Read-Only:
 
 - `id` (String) UUID of the managed Dynamic Object.
+- `type` (String) Type of the object; this value is always 'DynamicObject'.
 
 ## Import
 

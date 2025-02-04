@@ -49,9 +49,12 @@ type ExtendedACLEntries struct {
 	SourceNetworkLiterals      []ExtendedACLEntriesSourceNetworkLiterals      `tfsdk:"source_network_literals"`
 	DestinationNetworkLiterals []ExtendedACLEntriesDestinationNetworkLiterals `tfsdk:"destination_network_literals"`
 	SourceNetworkObjects       []ExtendedACLEntriesSourceNetworkObjects       `tfsdk:"source_network_objects"`
+	SourceSgtObjects           []ExtendedACLEntriesSourceSgtObjects           `tfsdk:"source_sgt_objects"`
 	DestinationNetworkObjects  []ExtendedACLEntriesDestinationNetworkObjects  `tfsdk:"destination_network_objects"`
 	SourcePortObjects          []ExtendedACLEntriesSourcePortObjects          `tfsdk:"source_port_objects"`
 	DestinationPortObjects     []ExtendedACLEntriesDestinationPortObjects     `tfsdk:"destination_port_objects"`
+	DestinationPortLiterals    []ExtendedACLEntriesDestinationPortLiterals    `tfsdk:"destination_port_literals"`
+	SourcePortLiterals         []ExtendedACLEntriesSourcePortLiterals         `tfsdk:"source_port_literals"`
 }
 
 type ExtendedACLEntriesSourceNetworkLiterals struct {
@@ -65,6 +68,9 @@ type ExtendedACLEntriesDestinationNetworkLiterals struct {
 type ExtendedACLEntriesSourceNetworkObjects struct {
 	Id types.String `tfsdk:"id"`
 }
+type ExtendedACLEntriesSourceSgtObjects struct {
+	Id types.String `tfsdk:"id"`
+}
 type ExtendedACLEntriesDestinationNetworkObjects struct {
 	Id types.String `tfsdk:"id"`
 }
@@ -73,6 +79,20 @@ type ExtendedACLEntriesSourcePortObjects struct {
 }
 type ExtendedACLEntriesDestinationPortObjects struct {
 	Id types.String `tfsdk:"id"`
+}
+type ExtendedACLEntriesDestinationPortLiterals struct {
+	Type     types.String `tfsdk:"type"`
+	Port     types.String `tfsdk:"port"`
+	Protocol types.String `tfsdk:"protocol"`
+	IcmpType types.String `tfsdk:"icmp_type"`
+	IcmpCode types.String `tfsdk:"icmp_code"`
+}
+type ExtendedACLEntriesSourcePortLiterals struct {
+	Type     types.String `tfsdk:"type"`
+	Port     types.String `tfsdk:"port"`
+	Protocol types.String `tfsdk:"protocol"`
+	IcmpType types.String `tfsdk:"icmp_type"`
+	IcmpCode types.String `tfsdk:"icmp_code"`
 }
 
 // End of section. //template:end types
@@ -150,6 +170,17 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.objects.-1", itemChildBody)
 				}
 			}
+			if len(item.SourceSgtObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "securityGroupTags.objects", []interface{}{})
+				for _, childItem := range item.SourceSgtObjects {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemChildBody, _ = sjson.Set(itemChildBody, "type", "SecurityGroupTag")
+					itemBody, _ = sjson.SetRaw(itemBody, "securityGroupTags.objects.-1", itemChildBody)
+				}
+			}
 			if len(item.DestinationNetworkObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []interface{}{})
 				for _, childItem := range item.DestinationNetworkObjects {
@@ -178,6 +209,50 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.objects.-1", itemChildBody)
+				}
+			}
+			if len(item.DestinationPortLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []interface{}{})
+				for _, childItem := range item.DestinationPortLiterals {
+					itemChildBody := ""
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					if !childItem.Port.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "port", childItem.Port.ValueString())
+					}
+					if !childItem.Protocol.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "protocol", childItem.Protocol.ValueString())
+					}
+					if !childItem.IcmpType.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "icmpType", childItem.IcmpType.ValueString())
+					}
+					if !childItem.IcmpCode.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "code", childItem.IcmpCode.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.literals.-1", itemChildBody)
+				}
+			}
+			if len(item.SourcePortLiterals) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []interface{}{})
+				for _, childItem := range item.SourcePortLiterals {
+					itemChildBody := ""
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					if !childItem.Port.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "port", childItem.Port.ValueString())
+					}
+					if !childItem.Protocol.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "protocol", childItem.Protocol.ValueString())
+					}
+					if !childItem.IcmpType.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "icmpType", childItem.IcmpType.ValueString())
+					}
+					if !childItem.IcmpCode.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "code", childItem.IcmpCode.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.literals.-1", itemChildBody)
 				}
 			}
 			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
@@ -278,6 +353,20 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 					return true
 				})
 			}
+			if value := res.Get("securityGroupTags.objects"); value.Exists() {
+				data.SourceSgtObjects = make([]ExtendedACLEntriesSourceSgtObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourceSgtObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).SourceSgtObjects = append((*parent).SourceSgtObjects, data)
+					return true
+				})
+			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
 				data.DestinationNetworkObjects = make([]ExtendedACLEntriesDestinationNetworkObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -317,6 +406,74 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 						data.Id = types.StringNull()
 					}
 					(*parent).DestinationPortObjects = append((*parent).DestinationPortObjects, data)
+					return true
+				})
+			}
+			if value := res.Get("destinationPorts.literals"); value.Exists() {
+				data.DestinationPortLiterals = make([]ExtendedACLEntriesDestinationPortLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesDestinationPortLiterals{}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					if value := res.Get("port"); value.Exists() {
+						data.Port = types.StringValue(value.String())
+					} else {
+						data.Port = types.StringNull()
+					}
+					if value := res.Get("protocol"); value.Exists() {
+						data.Protocol = types.StringValue(value.String())
+					} else {
+						data.Protocol = types.StringNull()
+					}
+					if value := res.Get("icmpType"); value.Exists() {
+						data.IcmpType = types.StringValue(value.String())
+					} else {
+						data.IcmpType = types.StringNull()
+					}
+					if value := res.Get("code"); value.Exists() {
+						data.IcmpCode = types.StringValue(value.String())
+					} else {
+						data.IcmpCode = types.StringNull()
+					}
+					(*parent).DestinationPortLiterals = append((*parent).DestinationPortLiterals, data)
+					return true
+				})
+			}
+			if value := res.Get("sourcePorts.literals"); value.Exists() {
+				data.SourcePortLiterals = make([]ExtendedACLEntriesSourcePortLiterals, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourcePortLiterals{}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					if value := res.Get("port"); value.Exists() {
+						data.Port = types.StringValue(value.String())
+					} else {
+						data.Port = types.StringNull()
+					}
+					if value := res.Get("protocol"); value.Exists() {
+						data.Protocol = types.StringValue(value.String())
+					} else {
+						data.Protocol = types.StringNull()
+					}
+					if value := res.Get("icmpType"); value.Exists() {
+						data.IcmpType = types.StringValue(value.String())
+					} else {
+						data.IcmpType = types.StringNull()
+					}
+					if value := res.Get("code"); value.Exists() {
+						data.IcmpCode = types.StringValue(value.String())
+					} else {
+						data.IcmpCode = types.StringNull()
+					}
+					(*parent).SourcePortLiterals = append((*parent).SourcePortLiterals, data)
 					return true
 				})
 			}
@@ -519,6 +676,49 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			}
 			(*parent).SourceNetworkObjects[i] = data
 		}
+		for i := 0; i < len(data.SourceSgtObjects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).SourceSgtObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("securityGroupTags.objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourceSgtObjects[%d] = %+v",
+					i,
+					(*parent).SourceSgtObjects[i],
+				))
+				(*parent).SourceSgtObjects = slices.Delete((*parent).SourceSgtObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).SourceSgtObjects[i] = data
+		}
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
@@ -647,6 +847,132 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 				data.Id = types.StringNull()
 			}
 			(*parent).DestinationPortObjects[i] = data
+		}
+		for i := 0; i < len(data.DestinationPortLiterals); i++ {
+			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
+			keyValues := [...]string{data.DestinationPortLiterals[i].Type.ValueString(), data.DestinationPortLiterals[i].Port.ValueString(), data.DestinationPortLiterals[i].Protocol.ValueString(), data.DestinationPortLiterals[i].IcmpType.ValueString(), data.DestinationPortLiterals[i].IcmpCode.ValueString()}
+
+			parent := &data
+			data := (*parent).DestinationPortLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationPorts.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationPortLiterals[%d] = %+v",
+					i,
+					(*parent).DestinationPortLiterals[i],
+				))
+				(*parent).DestinationPortLiterals = slices.Delete((*parent).DestinationPortLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+				data.Port = types.StringValue(value.String())
+			} else {
+				data.Port = types.StringNull()
+			}
+			if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
+				data.Protocol = types.StringValue(value.String())
+			} else {
+				data.Protocol = types.StringNull()
+			}
+			if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
+				data.IcmpType = types.StringValue(value.String())
+			} else {
+				data.IcmpType = types.StringNull()
+			}
+			if value := res.Get("code"); value.Exists() && !data.IcmpCode.IsNull() {
+				data.IcmpCode = types.StringValue(value.String())
+			} else {
+				data.IcmpCode = types.StringNull()
+			}
+			(*parent).DestinationPortLiterals[i] = data
+		}
+		for i := 0; i < len(data.SourcePortLiterals); i++ {
+			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
+			keyValues := [...]string{data.SourcePortLiterals[i].Type.ValueString(), data.SourcePortLiterals[i].Port.ValueString(), data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].IcmpType.ValueString(), data.SourcePortLiterals[i].IcmpCode.ValueString()}
+
+			parent := &data
+			data := (*parent).SourcePortLiterals[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("sourcePorts.literals").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourcePortLiterals[%d] = %+v",
+					i,
+					(*parent).SourcePortLiterals[i],
+				))
+				(*parent).SourcePortLiterals = slices.Delete((*parent).SourcePortLiterals, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+				data.Port = types.StringValue(value.String())
+			} else {
+				data.Port = types.StringNull()
+			}
+			if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
+				data.Protocol = types.StringValue(value.String())
+			} else {
+				data.Protocol = types.StringNull()
+			}
+			if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
+				data.IcmpType = types.StringValue(value.String())
+			} else {
+				data.IcmpType = types.StringNull()
+			}
+			if value := res.Get("code"); value.Exists() && !data.IcmpCode.IsNull() {
+				data.IcmpCode = types.StringValue(value.String())
+			} else {
+				data.IcmpCode = types.StringNull()
+			}
+			(*parent).SourcePortLiterals[i] = data
 		}
 		(*parent).Entries[i] = data
 	}

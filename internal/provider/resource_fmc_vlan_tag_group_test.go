@@ -33,6 +33,7 @@ func TestAccFmcVLANTagGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "name", "vlan_tag_group_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "description", "My vlan tag group name"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "overridable", "true"))
 
 	var steps []resource.TestStep

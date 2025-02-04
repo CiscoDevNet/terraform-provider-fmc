@@ -14,16 +14,17 @@ This resource can manage a BFD Template.
 
 ```terraform
 resource "fmc_bfd_template" "example" {
-  name                    = "BFD_Template1"
-  hop_type                = "SINGLE_HOP"
-  echo                    = "ENABLED"
-  interval_time           = "MILLISECONDS"
-  min_transmit            = 300
-  tx_rx_multiplier        = 3
-  min_receive             = 300
-  authentication_password = "Cisco123!"
-  authentication_key_id   = 1
-  authentication_type     = "MD5"
+  name                               = "BFD_Template1"
+  hop_type                           = "SINGLE_HOP"
+  echo                               = "ENABLED"
+  interval_time                      = "MILLISECONDS"
+  min_transmit                       = 300
+  tx_rx_multiplier                   = 3
+  min_receive                        = 300
+  authentication_password            = "ThisIsMySecretPassword"
+  authentication_key_id              = 1
+  authentication_type                = "MD5"
+  authentication_password_encryption = "UN_ENCRYPTED"
 }
 ```
 
@@ -32,8 +33,6 @@ resource "fmc_bfd_template" "example" {
 
 ### Required
 
-- `echo` (String) Enables/disables BFD echo.
-  - Choices: `ENABLED`, `DISABLED`
 - `hop_type` (String) The hop type.
   - Choices: `SINGLE_HOP`, `MULTI_HOP`
 - `name` (String) The name of the bfd template object.
@@ -43,9 +42,13 @@ resource "fmc_bfd_template" "example" {
 - `authentication_key_id` (Number) Authentication Key ID
   - Range: `0`-`255`
 - `authentication_password` (String) Password for BFD Authentication (1-24 characters)
+- `authentication_password_encryption` (String) Determines if authentication_password is encrypted
+  - Choices: `UN_ENCRYPTED`, `ENCRYPTED`, `NONE`
 - `authentication_type` (String) Authentication types
   - Choices: `MD5`, `METICULOUSMD5`, `METICULOUSSHA1`, `SHA1`, `NONE`
 - `domain` (String) The name of the FMC domain
+- `echo` (String) Enables/disables BFD echo.
+  - Choices: `ENABLED`, `DISABLED`
 - `interval_time` (String) Interval unit of measurement of time.
   - Choices: `MILLISECONDS`, `MICROSECONDS`, `NONE`
 - `min_receive` (Number) BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds

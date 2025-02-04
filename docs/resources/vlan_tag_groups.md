@@ -65,6 +65,7 @@ Optional:
 Read-Only:
 
 - `id` (String) UUID of the managed URL Groups.
+- `type` (String) Type of the object; this value is always 'VlanGroupTag'
 
 <a id="nestedatt--items--vlan_tags"></a>
 ### Nested Schema for `items.vlan_tags`

@@ -35,6 +35,7 @@ func TestAccDataSourceFmcICMPv4Objects(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.icmp_type", "3"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.code", "0"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_objects.test", "items.icmpv4_1.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

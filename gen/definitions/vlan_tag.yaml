@@ -18,9 +18,15 @@ attributes:
     type: Bool
     description: Indicates whether object values can be overridden.
     example: true
+    # Type is defined twice on purpose, as this needs to be an attribute, but also is required for POST/PUT requests
   - model_name: type
     type: String
-    value: "VlanTag"
+    description: Type of the object; this value is always 'VlanTag'
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'VlanTag'
+    value: VlanTag
   - model_name: startTag
     type: String
     example: "12"

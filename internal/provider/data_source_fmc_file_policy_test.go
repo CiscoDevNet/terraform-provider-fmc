@@ -44,8 +44,8 @@ func TestAccDataSourceFmcFilePolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.application_protocol", "ANY"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.action", "DETECT"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.direction_of_transfer", "ANY"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_type_categories.0.id", "5"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_type_categories.0.name", "PDF files"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_categories.0.id", "5"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_categories.0.name", "PDF files"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_types.0.id", "19"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "file_rules.0.file_types.0.name", "7Z"))
 	resource.Test(t, resource.TestCase{
@@ -88,7 +88,7 @@ func testAccDataSourceFmcFilePolicyConfig() string {
 	config += `		application_protocol = "ANY"` + "\n"
 	config += `		action = "DETECT"` + "\n"
 	config += `		direction_of_transfer = "ANY"` + "\n"
-	config += `		file_type_categories = [{` + "\n"
+	config += `		file_categories = [{` + "\n"
 	config += `			id = "5"` + "\n"
 	config += `			name = "PDF files"` + "\n"
 	config += `		}]` + "\n"
@@ -123,7 +123,7 @@ func testAccNamedDataSourceFmcFilePolicyConfig() string {
 	config += `		application_protocol = "ANY"` + "\n"
 	config += `		action = "DETECT"` + "\n"
 	config += `		direction_of_transfer = "ANY"` + "\n"
-	config += `		file_type_categories = [{` + "\n"
+	config += `		file_categories = [{` + "\n"
 	config += `			id = "5"` + "\n"
 	config += `			name = "PDF files"` + "\n"
 	config += `		}]` + "\n"

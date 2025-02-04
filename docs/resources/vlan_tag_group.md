@@ -49,6 +49,7 @@ resource "fmc_vlan_tag_group" "example" {
 ### Read-Only
 
 - `id` (String) The id of the object
+- `type` (String) Type of the object; this value is always 'VlanGroupTag'
 
 <a id="nestedatt--vlan_tags"></a>
 ### Nested Schema for `vlan_tags`

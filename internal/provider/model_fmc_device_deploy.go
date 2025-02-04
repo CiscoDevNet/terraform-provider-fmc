@@ -36,7 +36,7 @@ type DeviceDeploy struct {
 	Domain         types.String `tfsdk:"domain"`
 	Version        types.String `tfsdk:"version"`
 	IgnoreWarning  types.Bool   `tfsdk:"ignore_warning"`
-	DeviceList     types.List   `tfsdk:"device_list"`
+	DeviceIdList   types.List   `tfsdk:"device_id_list"`
 	DeploymentNote types.String `tfsdk:"deployment_note"`
 }
 
@@ -64,9 +64,9 @@ func (data DeviceDeploy) toBody(ctx context.Context, state DeviceDeploy) string 
 	if !data.IgnoreWarning.IsNull() {
 		body, _ = sjson.Set(body, "ignoreWarning", data.IgnoreWarning.ValueBool())
 	}
-	if !data.DeviceList.IsNull() {
+	if !data.DeviceIdList.IsNull() {
 		var values []string
-		data.DeviceList.ElementsAs(ctx, &values, false)
+		data.DeviceIdList.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "deviceList", values)
 	}
 	if !data.DeploymentNote.IsNull() {
@@ -91,9 +91,9 @@ func (data *DeviceDeploy) fromBody(ctx context.Context, res gjson.Result) {
 		data.IgnoreWarning = types.BoolNull()
 	}
 	if value := res.Get("deviceList"); value.Exists() {
-		data.DeviceList = helpers.GetStringList(value.Array())
+		data.DeviceIdList = helpers.GetStringList(value.Array())
 	} else {
-		data.DeviceList = types.ListNull(types.StringType)
+		data.DeviceIdList = types.ListNull(types.StringType)
 	}
 	if value := res.Get("deploymentNote"); value.Exists() {
 		data.DeploymentNote = types.StringValue(value.String())
@@ -121,10 +121,10 @@ func (data *DeviceDeploy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else {
 		data.IgnoreWarning = types.BoolNull()
 	}
-	if value := res.Get("deviceList"); value.Exists() && !data.DeviceList.IsNull() {
-		data.DeviceList = helpers.GetStringList(value.Array())
+	if value := res.Get("deviceList"); value.Exists() && !data.DeviceIdList.IsNull() {
+		data.DeviceIdList = helpers.GetStringList(value.Array())
 	} else {
-		data.DeviceList = types.ListNull(types.StringType)
+		data.DeviceIdList = types.ListNull(types.StringType)
 	}
 	if value := res.Get("deploymentNote"); value.Exists() && !data.DeploymentNote.IsNull() {
 		data.DeploymentNote = types.StringValue(value.String())

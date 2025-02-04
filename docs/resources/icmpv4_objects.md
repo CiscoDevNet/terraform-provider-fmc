@@ -50,12 +50,11 @@ Optional:
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `type` (String) Type of the object; this value is always 'ICMPV4Object'.
-  - Default value: `ICMPV4Object`
 
 Read-Only:
 
 - `id` (String) UUID of the managed ICMPv4 object.
+- `type` (String)
 
 ## Import
 

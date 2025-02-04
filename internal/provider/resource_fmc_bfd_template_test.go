@@ -39,9 +39,9 @@ func TestAccFmcBFDTemplate(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "min_transmit", "300"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "tx_rx_multiplier", "3"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "min_receive", "300"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_password", "Cisco123!"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_key_id", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_type", "MD5"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_password_encryption", "UN_ENCRYPTED"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -77,7 +77,6 @@ func testAccFmcBFDTemplateConfig_minimum() string {
 	config := `resource "fmc_bfd_template" "test" {` + "\n"
 	config += `	name = "BFD_Template1"` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"
-	config += `	echo = "ENABLED"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -95,9 +94,10 @@ func testAccFmcBFDTemplateConfig_all() string {
 	config += `	min_transmit = 300` + "\n"
 	config += `	tx_rx_multiplier = 3` + "\n"
 	config += `	min_receive = 300` + "\n"
-	config += `	authentication_password = "Cisco123!"` + "\n"
+	config += `	authentication_password = "ThisIsMySecretPassword"` + "\n"
 	config += `	authentication_key_id = 1` + "\n"
 	config += `	authentication_type = "MD5"` + "\n"
+	config += `	authentication_password_encryption = "UN_ENCRYPTED"` + "\n"
 	config += `}` + "\n"
 	return config
 }

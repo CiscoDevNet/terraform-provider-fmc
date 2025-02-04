@@ -73,9 +73,6 @@ func (data ICMPv4Object) toBody(ctx context.Context, state ICMPv4Object) string 
 	if !data.Overridable.IsNull() {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
-	if !data.Type.IsNull() {
-		body, _ = sjson.Set(body, "type", data.Type.ValueString())
-	}
 	return body
 }
 
@@ -112,7 +109,7 @@ func (data *ICMPv4Object) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
-		data.Type = types.StringValue("ICMPV4Object")
+		data.Type = types.StringNull()
 	}
 }
 
@@ -152,7 +149,7 @@ func (data *ICMPv4Object) fromBodyPartial(ctx context.Context, res gjson.Result)
 	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
-	} else if data.Type.ValueString() != "ICMPV4Object" {
+	} else {
 		data.Type = types.StringNull()
 	}
 }
@@ -164,6 +161,13 @@ func (data *ICMPv4Object) fromBodyPartial(ctx context.Context, res gjson.Result)
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *ICMPv4Object) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns

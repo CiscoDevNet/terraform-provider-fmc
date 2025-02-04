@@ -25,6 +25,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -53,6 +54,7 @@ var (
 	_ resource.Resource                = &FilePolicyResource{}
 	_ resource.ResourceWithImportState = &FilePolicyResource{}
 )
+var minFMCVersionCreateFilePolicy = version.Must(version.NewVersion("7.4"))
 
 func NewFilePolicyResource() resource.Resource {
 	return &FilePolicyResource{}
@@ -181,7 +183,7 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 								stringvalidator.OneOf("ANY", "UPLOAD", "DOWNLOAD"),
 							},
 						},
-						"file_type_categories": schema.SetNestedAttribute{
+						"file_categories": schema.SetNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Defines a list of file categories for inspection.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -243,6 +245,14 @@ func (r *FilePolicyResource) Configure(_ context.Context, req resource.Configure
 // End of section. //template:end model
 
 func (r *FilePolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateFilePolicy) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support File Policy creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan FilePolicy
 
 	// Read plan
@@ -424,7 +434,7 @@ func (r *FilePolicyResource) Delete(ctx context.Context, req resource.DeleteRequ
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

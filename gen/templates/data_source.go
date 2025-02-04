@@ -77,7 +77,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				MarkdownDescription: "The name of the FMC domain",
 				Optional:			true,
 			},
-			{{- range  .Attributes}}
+			{{- range .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
 				MarkdownDescription: "{{.Description}}",
@@ -99,7 +99,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				{{- $parentNestedMap := isNestedMap .}}
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						{{- range  .Attributes}}
+						{{- range .Attributes}}
 						{{- if not .Value}}
 						"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
 							MarkdownDescription: "{{.Description}}",
@@ -114,7 +114,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 							{{- if isNestedListMapSet .}}
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									{{- range  .Attributes}}
+									{{- range .Attributes}}
 									{{- if not .Value}}
 									"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
 										MarkdownDescription: "{{.Description}}",
@@ -125,7 +125,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 										{{- if isNestedListMapSet .}}
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
-												{{- range  .Attributes}}
+												{{- range .Attributes}}
 												{{- if not .Value}}
 												"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
 													MarkdownDescription: "{{.Description}}",
@@ -184,11 +184,11 @@ func (d *{{camelCase .Name}}DataSource) Configure(_ context.Context, req datasou
 func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	{{- if .MinimumVersion}}
 	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
 	if fmcVersion.LessThan(minFMCVersion{{camelCase .Name}}) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support {{.Name}}, minimum required version is {{.MinimumVersion}}", r.client.FMCVersion))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support {{.Name}}, minimum required version is {{.MinimumVersion}}", d.client.FMCVersion))
 		return
 	}
 	{{- end}}
@@ -222,7 +222,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.{{toGoName $dataSourceAttribute.TfName}}.ValueString() == v.Get("{{$dataSourceAttribute.ModelName}}").String() {
+					if config.{{toGoName $dataSourceAttribute.TfName}}.ValueString() == v.Get("{{range $dataSourceAttribute.DataPath}}{{.}}.{{end}}{{$dataSourceAttribute.ModelName}}").String() {
 						config.Id = types.StringValue(v.Get("id").String())
 						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$dataSourceAttribute.TfName}} '%v', id: %v", config.Id.String(), config.{{toGoName $dataSourceAttribute.TfName}}.ValueString(), config.Id.String()))
 						return false

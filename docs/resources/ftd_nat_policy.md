@@ -65,7 +65,7 @@ Required:
 
 Optional:
 
-- `destination_interface_id` (String) ID of destination interface
+- `destination_interface_id` (String) ID of destination security zone or interface group
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
 - `net_to_net` (Boolean) Net to Net Mapping
@@ -75,7 +75,7 @@ Optional:
 - `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface
 - `protocol` (String) Service protocol
   - Choices: `TCP`, `UDP`
-- `source_interface_id` (String) ID of source interface
+- `source_interface_id` (String) ID of source security zone or interface group
 - `translate_dns` (Boolean) Translate DNS replies that match this rule
 - `translated_network_id` (String) ID of translated network object (host, network or range)
 - `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address
@@ -99,7 +99,7 @@ Required:
 Optional:
 
 - `description` (String) Manual nat rule description
-- `destination_interface_id` (String) ID of destination interface
+- `destination_interface_id` (String) ID of destination security zone or interface group
 - `enabled` (Boolean) Indicates if the rule is enabled.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
 - `interface_in_original_destination` (Boolean) Use interface address as original destination
@@ -112,7 +112,7 @@ Optional:
 - `original_source_id` (String) ID of original source network object (host, network or range)
 - `original_source_port_id` (String) ID of original source port object
 - `route_lookup` (Boolean) Perform Route Lookup for Destination Interface
-- `source_interface_id` (String) ID of source interface
+- `source_interface_id` (String) ID of source security zone or interface group
 - `translate_dns` (Boolean) Translate DNS replies that match this rule
 - `translated_destination_id` (String) ID of translated destination network object (host, network or range)
 - `translated_destination_port_id` (String) ID of translated destination port object

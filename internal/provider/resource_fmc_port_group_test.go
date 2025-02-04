@@ -32,6 +32,7 @@ import (
 func TestAccFmcPortGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "name", "portgroup_obj1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "description", "My port group description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "objects.0.type", "ProtocolPortObject"))
 

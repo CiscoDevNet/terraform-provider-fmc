@@ -13,7 +13,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of port groups. The key of the map is the name of the individual Port Group. 
+      Map of port groups. The key of the map is the name of the individual Port Group.
     mandatory: true
     map_key_example: port_group_1
     attributes:
@@ -27,8 +27,6 @@ attributes:
       type: String
       description: Type of the object; this value is always 'PortObjectGroup'.
       computed: true
-      exclude_example: true
-      exclude_test: true 
     - model_name: description
       type: String
       description: Optional user-created description.
@@ -37,7 +35,7 @@ attributes:
       type: Bool
       description: Indicates whether object values can be overridden.
       exclude_example: true
-      test_value: "true"        
+      test_value: "true"
     - model_name: objects
       type: Set
       mandatory: true

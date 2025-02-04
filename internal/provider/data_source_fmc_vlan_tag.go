@@ -83,6 +83,10 @@ func (d *VLANTagDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				MarkdownDescription: "Indicates whether object values can be overridden.",
 				Computed:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'VlanTag'",
+				Computed:            true,
+			},
 			"start_tag": schema.StringAttribute{
 				MarkdownDescription: "",
 				Computed:            true,

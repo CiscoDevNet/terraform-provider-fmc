@@ -174,7 +174,7 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("advanced.enableOGS"); value.Exists() {
 		data.ObjectGroupSearch = types.BoolValue(value.Bool())
 	} else {
-		data.ObjectGroupSearch = types.BoolValue(true)
+		data.ObjectGroupSearch = types.BoolNull()
 	}
 	if value := res.Get("accessPolicy.id"); value.Exists() {
 		data.AccessPolicyId = types.StringValue(value.String())
@@ -304,7 +304,7 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("advanced.enableOGS"); value.Exists() && !data.ObjectGroupSearch.IsNull() {
 		data.ObjectGroupSearch = types.BoolValue(value.Bool())
-	} else if data.ObjectGroupSearch.ValueBool() != true {
+	} else {
 		data.ObjectGroupSearch = types.BoolNull()
 	}
 	if value := res.Get("accessPolicy.id"); value.Exists() && !data.AccessPolicyId.IsNull() {

@@ -39,6 +39,11 @@ resource "fmc_extended_acl" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
+      source_sgt_objects = [
+        {
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
       destination_network_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -52,6 +57,24 @@ resource "fmc_extended_acl" "example" {
       destination_port_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+        }
+      ]
+      destination_port_literals = [
+        {
+          type      = "PortLiteral"
+          port      = "80"
+          protocol  = "6"
+          icmp_type = "0"
+          icmp_code = "0"
+        }
+      ]
+      source_port_literals = [
+        {
+          type      = "PortLiteral"
+          port      = "80"
+          protocol  = "6"
+          icmp_type = "0"
+          icmp_code = "0"
         }
       ]
     }
@@ -90,6 +113,7 @@ Optional:
 
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--destination_network_objects))
+- `destination_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports. (see [below for nested schema](#nestedatt--entries--destination_port_objects))
 - `log_interval_seconds` (Number) The logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
   - Default value: `300`
@@ -98,7 +122,9 @@ Optional:
   - Default value: `INFORMATIONAL`
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--source_network_objects))
+- `source_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports. (see [below for nested schema](#nestedatt--entries--source_port_objects))
+- `source_sgt_objects` (Attributes Set) Set of SGT that represent tag of source traffic (fmc_sgts). (see [below for nested schema](#nestedatt--entries--source_sgt_objects))
 
 <a id="nestedatt--entries--destination_network_literals"></a>
 ### Nested Schema for `entries.destination_network_literals`
@@ -115,6 +141,21 @@ Optional:
 Optional:
 
 - `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
+
+
+<a id="nestedatt--entries--destination_port_literals"></a>
+### Nested Schema for `entries.destination_port_literals`
+
+Required:
+
+- `protocol` (String)
+- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+
+Optional:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
 
 
 <a id="nestedatt--entries--destination_port_objects"></a>
@@ -142,12 +183,35 @@ Optional:
 - `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
 
 
+<a id="nestedatt--entries--source_port_literals"></a>
+### Nested Schema for `entries.source_port_literals`
+
+Required:
+
+- `protocol` (String)
+- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+
+Optional:
+
+- `icmp_code` (String)
+- `icmp_type` (String)
+- `port` (String)
+
+
 <a id="nestedatt--entries--source_port_objects"></a>
 ### Nested Schema for `entries.source_port_objects`
 
 Optional:
 
 - `id` (String) UUID of the object (such as fmc_port.example.id).
+
+
+<a id="nestedatt--entries--source_sgt_objects"></a>
+### Nested Schema for `entries.source_sgt_objects`
+
+Optional:
+
+- `id` (String) UUID of the object (such as fmc_sgts.example.id, etc.).
 
 ## Import
 

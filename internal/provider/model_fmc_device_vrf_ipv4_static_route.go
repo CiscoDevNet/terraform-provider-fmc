@@ -43,8 +43,8 @@ type DeviceVRFIPv4StaticRoute struct {
 	InterfaceId          types.String                                  `tfsdk:"interface_id"`
 	DestinationNetworks  []DeviceVRFIPv4StaticRouteDestinationNetworks `tfsdk:"destination_networks"`
 	MetricValue          types.Int64                                   `tfsdk:"metric_value"`
-	GatewayObjectId      types.String                                  `tfsdk:"gateway_object_id"`
-	GatewayLiteral       types.String                                  `tfsdk:"gateway_literal"`
+	GatewayHostObjectId  types.String                                  `tfsdk:"gateway_host_object_id"`
+	GatewayHostLiteral   types.String                                  `tfsdk:"gateway_host_literal"`
 	IsTunneled           types.Bool                                    `tfsdk:"is_tunneled"`
 }
 
@@ -88,11 +88,11 @@ func (data DeviceVRFIPv4StaticRoute) toBody(ctx context.Context, state DeviceVRF
 	if !data.MetricValue.IsNull() {
 		body, _ = sjson.Set(body, "metricValue", data.MetricValue.ValueInt64())
 	}
-	if !data.GatewayObjectId.IsNull() {
-		body, _ = sjson.Set(body, "gateway.object.id", data.GatewayObjectId.ValueString())
+	if !data.GatewayHostObjectId.IsNull() {
+		body, _ = sjson.Set(body, "gateway.object.id", data.GatewayHostObjectId.ValueString())
 	}
-	if !data.GatewayLiteral.IsNull() {
-		body, _ = sjson.Set(body, "gateway.literal.value", data.GatewayLiteral.ValueString())
+	if !data.GatewayHostLiteral.IsNull() {
+		body, _ = sjson.Set(body, "gateway.literal.value", data.GatewayHostLiteral.ValueString())
 	}
 	if !data.IsTunneled.IsNull() {
 		body, _ = sjson.Set(body, "isTunneled", data.IsTunneled.ValueBool())
@@ -130,14 +130,14 @@ func (data *DeviceVRFIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Re
 		data.MetricValue = types.Int64Null()
 	}
 	if value := res.Get("gateway.object.id"); value.Exists() {
-		data.GatewayObjectId = types.StringValue(value.String())
+		data.GatewayHostObjectId = types.StringValue(value.String())
 	} else {
-		data.GatewayObjectId = types.StringNull()
+		data.GatewayHostObjectId = types.StringNull()
 	}
 	if value := res.Get("gateway.literal.value"); value.Exists() {
-		data.GatewayLiteral = types.StringValue(value.String())
+		data.GatewayHostLiteral = types.StringValue(value.String())
 	} else {
-		data.GatewayLiteral = types.StringNull()
+		data.GatewayHostLiteral = types.StringNull()
 	}
 	if value := res.Get("isTunneled"); value.Exists() {
 		data.IsTunneled = types.BoolValue(value.Bool())
@@ -208,15 +208,15 @@ func (data *DeviceVRFIPv4StaticRoute) fromBodyPartial(ctx context.Context, res g
 	} else {
 		data.MetricValue = types.Int64Null()
 	}
-	if value := res.Get("gateway.object.id"); value.Exists() && !data.GatewayObjectId.IsNull() {
-		data.GatewayObjectId = types.StringValue(value.String())
+	if value := res.Get("gateway.object.id"); value.Exists() && !data.GatewayHostObjectId.IsNull() {
+		data.GatewayHostObjectId = types.StringValue(value.String())
 	} else {
-		data.GatewayObjectId = types.StringNull()
+		data.GatewayHostObjectId = types.StringNull()
 	}
-	if value := res.Get("gateway.literal.value"); value.Exists() && !data.GatewayLiteral.IsNull() {
-		data.GatewayLiteral = types.StringValue(value.String())
+	if value := res.Get("gateway.literal.value"); value.Exists() && !data.GatewayHostLiteral.IsNull() {
+		data.GatewayHostLiteral = types.StringValue(value.String())
 	} else {
-		data.GatewayLiteral = types.StringNull()
+		data.GatewayHostLiteral = types.StringNull()
 	}
 	if value := res.Get("isTunneled"); value.Exists() && !data.IsTunneled.IsNull() {
 		data.IsTunneled = types.BoolValue(value.Bool())

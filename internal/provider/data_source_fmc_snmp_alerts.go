@@ -65,7 +65,7 @@ func (d *SNMPAlertsDataSource) Schema(ctx context.Context, req datasource.Schema
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of SNMP Alerts. The key of the map is the name of the individual SNMP Alert. ",
+				MarkdownDescription: "Map of SNMP Alerts. The key of the map is the name of the individual SNMP Alert.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

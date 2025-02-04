@@ -146,7 +146,7 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 							MarkdownDescription: "Direction of file transfer.",
 							Computed:            true,
 						},
-						"file_type_categories": schema.SetNestedAttribute{
+						"file_categories": schema.SetNestedAttribute{
 							MarkdownDescription: "Defines a list of file categories for inspection.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{

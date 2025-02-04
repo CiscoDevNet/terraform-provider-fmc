@@ -29,7 +29,7 @@ resource "fmc_file_policy" "example" {
       application_protocol  = "ANY"
       action                = "DETECT"
       direction_of_transfer = "ANY"
-      file_type_categories = [
+      file_categories = [
         {
           id   = "5"
           name = "PDF files"
@@ -88,7 +88,7 @@ Required:
 
 Optional:
 
-- `file_type_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_type_categories))
+- `file_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_categories))
 - `file_types` (Attributes Set) Defines a list of file types for inspection. (see [below for nested schema](#nestedatt--file_rules--file_types))
 - `store_files` (Set of String) List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
 
@@ -97,8 +97,8 @@ Read-Only:
 - `id` (String) Unique identifier representing the File Rule.
 - `type` (String) The name of file rule type.
 
-<a id="nestedatt--file_rules--file_type_categories"></a>
-### Nested Schema for `file_rules.file_type_categories`
+<a id="nestedatt--file_rules--file_categories"></a>
+### Nested Schema for `file_rules.file_categories`
 
 Required:
 

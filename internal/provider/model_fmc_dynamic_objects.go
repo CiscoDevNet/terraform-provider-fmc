@@ -86,9 +86,6 @@ func (data DynamicObjects) toBody(ctx context.Context, state DynamicObjects) str
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			if !item.Type.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
-			}
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
@@ -139,7 +136,7 @@ func (data *DynamicObjects) fromBody(ctx context.Context, res gjson.Result) {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())
 		} else {
-			data.Type = types.StringValue("DynamicObject")
+			data.Type = types.StringNull()
 		}
 		if value := res.Get("description"); value.Exists() {
 			data.Description = types.StringValue(value.String())
@@ -191,7 +188,7 @@ func (data *DynamicObjects) fromBodyPartial(ctx context.Context, res gjson.Resul
 		}
 		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 			data.Type = types.StringValue(value.String())
-		} else if data.Type.ValueString() != "DynamicObject" {
+		} else {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
@@ -244,6 +241,14 @@ func (data *DynamicObjects) fromBodyUnknowns(ctx context.Context, res gjson.Resu
 				v.Id = types.StringValue(value.String())
 			} else {
 				v.Id = types.StringNull()
+			}
+			data.Items[i] = v
+		}
+		if v := data.Items[i]; v.Type.IsUnknown() {
+			if value := r.Get("type"); value.Exists() {
+				v.Type = types.StringValue(value.String())
+			} else {
+				v.Type = types.StringNull()
 			}
 			data.Items[i] = v
 		}

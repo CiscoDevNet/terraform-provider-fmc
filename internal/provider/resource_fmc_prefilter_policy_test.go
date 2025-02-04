@@ -107,7 +107,7 @@ resource "fmc_vlan_tag" "test" {
 
 resource "fmc_security_zone" "test" {
   name           = "security_zone_1"
-  interface_mode = "ROUTED"
+  interface_type = "ROUTED"
 }
 `
 

@@ -22,8 +22,8 @@ resource "fmc_device_ipv4_static_route" "example" {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
-  metric_value    = 254
-  gateway_literal = "10.0.0.1"
+  metric_value         = 254
+  gateway_host_literal = "10.0.0.1"
 }
 ```
 
@@ -40,8 +40,8 @@ resource "fmc_device_ipv4_static_route" "example" {
 ### Optional
 
 - `domain` (String) The name of the FMC domain
-- `gateway_literal` (String) The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.
-- `gateway_object_id` (String) UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.
+- `gateway_host_literal` (String) The next hop for this route as a literal IPv4 address. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.
+- `gateway_host_object_id` (String) UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.
 - `is_tunneled` (Boolean) Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.
   - Default value: `false`
 - `metric_value` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.

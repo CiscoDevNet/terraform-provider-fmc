@@ -33,6 +33,7 @@ func TestAccDataSourceFmcVLANTags(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tags.test", "items.vlan_tag_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tags.test", "items.vlan_tag_1.description", "My TAG id"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tags.test", "items.vlan_tag_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tags.test", "items.vlan_tag_1.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

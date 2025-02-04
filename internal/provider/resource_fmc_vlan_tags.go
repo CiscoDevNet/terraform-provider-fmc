@@ -102,6 +102,13 @@ func (r *VLANTagsResource) Schema(ctx context.Context, req resource.SchemaReques
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 							Optional:            true,
 						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'VlanTag'").String,
+							Computed:            true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+							},
+						},
 						"start_tag": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("").String,
 							Required:            true,

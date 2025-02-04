@@ -49,14 +49,14 @@ Read-Only:
 - `action` (String) Action to be performed on a file.
 - `application_protocol` (String) Defines a protocol for file inspection.
 - `direction_of_transfer` (String) Direction of file transfer.
-- `file_type_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_type_categories))
+- `file_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_categories))
 - `file_types` (Attributes Set) Defines a list of file types for inspection. (see [below for nested schema](#nestedatt--file_rules--file_types))
 - `id` (String) Unique identifier representing the File Rule.
 - `store_files` (Set of String) List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
 - `type` (String) The name of file rule type.
 
-<a id="nestedatt--file_rules--file_type_categories"></a>
-### Nested Schema for `file_rules.file_type_categories`
+<a id="nestedatt--file_rules--file_categories"></a>
+### Nested Schema for `file_rules.file_categories`
 
 Read-Only:
 

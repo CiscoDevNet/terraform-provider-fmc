@@ -2,7 +2,7 @@
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
 doc_category: Devices
-test_tags: [TF_VAR_device_ip, TF_VAR_device_registration_key]
+test_tags: [TF_VAR_device_registration_key,TF_VAR_license_capabilities]
 attributes:
 # General
   - model_name: name
@@ -25,21 +25,23 @@ attributes:
     description: Hostname or IP address of the device. Either the host_name or nat_id must be present.
     mandatory: true
     example: 10.0.0.1
-    test_value: var.device_ip
+    test_value: var.ftd_addr
   - model_name: natID
     tf_name: nat_id
     type: String
     description: (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
     write_only: true
     exclude_example: true
+    exclude_test: true
   - model_name: license_caps
     tf_name: license_capabilities
     type: Set
     element_type: String
     mandatory: true
-    enum_values: [ ESSENTIALS, IPS, URL, MALWARE_DEFENSE, CARRIER, SECURE_CLIENT_PREMIER, SECURE_CLIENT_PREMIER_ADVANTAGE, SECURE_CLIENT_VPNOnly, BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL ] # cannot be autoenerated
+    enum_values: [ ESSENTIALS, IPS, URL, MALWARE_DEFENSE, CARRIER, SECURE_CLIENT_PREMIER, SECURE_CLIENT_PREMIER_ADVANTAGE, SECURE_CLIENT_VPNOnly, BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL ]
     description: "Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory"
     example: ESSENTIALS
+    test_value: "[var.license_capabilities]"
   - model_name: regKey
     tf_name: registration_key
     type: String
@@ -54,11 +56,12 @@ attributes:
     type: String
     description: ID of the device group.
     exclude_example: true
+    exclude_test: true
   - model_name: prohibitPacketTransfer
     type: Bool
     description: Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
     exclude_example: true
-    test_value: "true"
+    exclude_test: true
   - model_name: performanceTier
     type: String
     description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
@@ -75,7 +78,7 @@ attributes:
     type: Bool
     description: Enables Object Group Search
     example: "true"
-    default_value: "true"
+    exclude_test: true
 # Policy assignments
   - model_name: id
     tf_name: access_policy_id
@@ -104,67 +107,79 @@ attributes:
     type: String
     description: Version of the registered device - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: healthStatus
     tf_name: info_health_status
     type: String
     description: Health Status of the device - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: healthMessage
     tf_name: info_health_message
     type: String
     description: Health Message of the device - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: isConnected
     tf_name: info_is_connected
     type: Bool
     description: Shows if the device is connected - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: deploymentStatus
     tf_name: info_deployment_status
     type: String
     description: Shows deployment status - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: ftdMode
     tf_name: info_ftd_mode
     type: String
     description: FTD Mode - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: deviceSerialNumber
     data_path: [ metadata ]
     tf_name: info_device_serial_number
     type: String
     description: Device Serial Number - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: snortVersion
     data_path: [ metadata ]
     tf_name: info_snort_version
     type: String
     description: Snort Version - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: vdbVersion
     data_path: [ metadata ]
     tf_name: info_vdb_version
     type: String
     description: VDB Version - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: lspVersion
     data_path: [ metadata ]
     tf_name: info_lsp_version
     type: String
     description: LSP Version - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: name
     tf_name: info_deployed_access_policy_name
     data_path: [ accessPolicy ]
     type: String
     description: Deployed Access Control Policy Name - Informational only.
     computed: true
+    computed_refresh_value: true
   - model_name: name
     tf_name: info_deployed_health_policy_name
     data_path: [ healthPolicy ]
     type: String
     description: Deployed Health Policy Name - Informational only.
     computed: true
+    computed_refresh_value: true
 
 test_prerequisites: |-
   resource "fmc_access_control_policy" "device_test" {
@@ -172,5 +187,6 @@ test_prerequisites: |-
     default_action = "BLOCK"
   }
 
-  variable "device_ip" { default = null } // tests will set $TF_VAR_device_ip
-  variable "device_registration_key"         {} // tests will set $TF_VAR_device_registration_key
+  variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
+  variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
+  variable "license_capabilities" {} // tests will set $TF_VAR_license_capabilities

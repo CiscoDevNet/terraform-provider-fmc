@@ -160,7 +160,7 @@ func (d *PolicyAssignmentDataSource) Read(ctx context.Context, req datasource.Re
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.PolicyName.ValueString() == v.Get("name").String() {
+					if config.PolicyName.ValueString() == v.Get("policy.name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
 						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with policy_name '%v', id: %v", config.Id.String(), config.PolicyName.ValueString(), config.Id.String()))
 						return false

@@ -34,6 +34,7 @@ func TestAccFmcVLANTags(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.vlan_tag_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.vlan_tag_1.description", "My TAG id"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.vlan_tag_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.vlan_tag_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

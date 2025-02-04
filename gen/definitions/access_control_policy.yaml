@@ -65,6 +65,14 @@ attributes:
       in Access Control Logging applies.
     example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
     exclude_test: true
+  - model_name: id
+    data_path: [prefilterPolicySetting]
+    tf_name: prefilter_policy_id
+    type: String
+    description: >-
+      UUID of the prefilter policy. 
+    example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
+    exclude_test: true    
   - model_name: syslogSeverity
     data_path: [defaultAction]
     tf_name: default_action_syslog_severity
@@ -607,6 +615,13 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
       - model_name: id
+        data_path: [timeRangeObjects.0]
+        tf_name: time_range_id
+        type: String
+        description: UUID of Time Range object applied to the rule.
+        example: 0050568A-7F57-0ed3-0000-004294975576
+        exclude_test: true        
+      - model_name: id
         data_path: [variableSet]
         tf_name: variable_set_id
         type: String
@@ -635,5 +650,5 @@ test_prerequisites: |-
   resource "fmc_vlan_tag" "test" {
     name      = "VLAN_TAG_fmc_access_control_policy"
     start_tag = "10"
-    end_tag   = "11" 
+    end_tag   = "11"
   }

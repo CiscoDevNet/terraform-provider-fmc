@@ -43,3 +43,4 @@ Read-Only:
 - `id` (String) UUID of the managed Vlan tag object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `start_tag` (String)
+- `type` (String) Type of the object; this value is always 'VlanTag'

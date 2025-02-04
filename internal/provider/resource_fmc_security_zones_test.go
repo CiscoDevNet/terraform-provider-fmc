@@ -33,6 +33,7 @@ func TestAccFmcSecurityZones(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_zones.test", "items.security_zone_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_zones.test", "items.security_zone_1.interface_type", "ROUTED"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_zones.test", "items.security_zone_1.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

@@ -17,9 +17,9 @@ import (
 
 // MustInitFromEnv initializes an FTD so that it would be ready for
 // a registration attempt made by the given Firewall Management Center (FMC) if
-// it uses identical TF_VAR_registration_key. It panics on any error.
+// it uses identical TF_VAR_device_registration_key. It panics on any error.
 //
-// Reads from env FTD_ADDR, FTD_USERNAME, FTD_PASSWORD, FMC_URL, TF_VAR_registration_key.
+// Reads from env FTD_ADDR, FTD_USERNAME, FTD_PASSWORD, FMC_URL, TF_VAR_device_registration_key.
 // Assumes FTD_ADDR and FMC_URL are non-empty, checks others.
 //
 // It writes results of SSH session to the stdout.
@@ -42,8 +42,8 @@ func MustInitFromEnv() {
 	if os.Getenv("FTD_PASSWORD") == "" {
 		panic("FTD_PASSWORD env variable must be set")
 	}
-	if os.Getenv("TF_VAR_registration_key") == "" {
-		panic("TF_VAR_registration_key env variable must be set")
+	if os.Getenv("TF_VAR_device_registration_key") == "" {
+		panic("TF_VAR_device_registration_key env variable must be set")
 	}
 
 	err = initialize(
@@ -51,7 +51,7 @@ func MustInitFromEnv() {
 		os.Getenv("FTD_USERNAME"),
 		os.Getenv("FTD_PASSWORD"),
 		fmcAddr,
-		os.Getenv("TF_VAR_registration_key"),
+		os.Getenv("TF_VAR_device_registration_key"),
 		os.Getenv("TF_VAR_nat_id" /* can be unset */),
 	)
 	if err != nil {

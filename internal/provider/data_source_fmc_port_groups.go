@@ -65,7 +65,7 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of port groups. The key of the map is the name of the individual Port Group. ",
+				MarkdownDescription: "Map of port groups. The key of the map is the name of the individual Port Group.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

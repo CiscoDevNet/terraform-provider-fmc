@@ -240,6 +240,16 @@ func GetDataSourceQueryAttribute(config YamlConfig) YamlConfigAttribute {
 	return YamlConfigAttribute{}
 }
 
+// Templating helper function to return Attribute by TfName
+func GetAttributeByTfName(attributes []YamlConfigAttribute, tfName string) YamlConfigAttribute {
+	for _, attr := range attributes {
+		if attr.TfName == tfName {
+			return attr
+		}
+	}
+	return YamlConfigAttribute{}
+}
+
 // Templating helper function to return true if id included in attributes
 func HasId(attributes []YamlConfigAttribute) bool {
 	for _, attr := range attributes {
@@ -389,6 +399,7 @@ var functions = template.FuncMap{
 	"path":                        BuildPath,
 	"hasDataSourceQuery":          HasDataSourceQuery,
 	"getDataSourceQueryAttribute": GetDataSourceQueryAttribute,
+	"getAttributeByTfName":        GetAttributeByTfName,
 	"hasId":                       HasId,
 	"hasReference":                HasReference,
 	"hasResourceId":               HasResourceId,

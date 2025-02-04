@@ -17,8 +17,8 @@ resource "fmc_device_cluster" "example" {
   name                          = "MyDeviceClusterName1"
   cluster_key                   = "cisco123"
   control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  control_node_vni_network      = "10.10.3.0/27"
-  control_node_ccl_network      = "10.10.4.0/27"
+  control_node_vni_prefix       = "10.10.3.0/27"
+  control_node_ccl_prefix       = "10.10.4.0/27"
   control_node_interface_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_interface_name   = "GigabitEthernet0/0"
   control_node_interface_type   = "PhysicalInterface"
@@ -41,7 +41,7 @@ resource "fmc_device_cluster" "example" {
 
 - `cluster_key` (String) Secret key for the cluster, between 1 nd 63 characters.
 - `control_node_ccl_ipv4_address` (String) Cluster control link IPv4 address / VTEP IPv4 address.
-- `control_node_ccl_network` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
+- `control_node_ccl_prefix` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
 - `control_node_device_id` (String) Cluster control node device ID.
 - `control_node_interface_id` (String) Cluster control link interface ID.
 - `control_node_interface_name` (String) Cluster control link interface Name.
@@ -52,7 +52,7 @@ resource "fmc_device_cluster" "example" {
 
 ### Optional
 
-- `control_node_vni_network` (String) Cluster Control VXLAN Network Identifier (VNI) Network
+- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `data_devices` (Attributes List) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
 - `domain` (String) The name of the FMC domain
 

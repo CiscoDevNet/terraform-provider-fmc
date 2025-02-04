@@ -65,7 +65,7 @@ func (d *SyslogAlertsDataSource) Schema(ctx context.Context, req datasource.Sche
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of Syslog Alerts. The key of the map is the name of the individual Syslog Alert. ",
+				MarkdownDescription: "Map of Syslog Alerts. The key of the map is the name of the individual Syslog Alert.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

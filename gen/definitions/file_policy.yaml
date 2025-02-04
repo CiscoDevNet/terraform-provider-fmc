@@ -2,6 +2,7 @@
 name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
 doc_category: Policy
+minimum_version_create: "7.4"
 attributes:
   - model_name: name
     type: String
@@ -110,7 +111,7 @@ attributes:
         description: Direction of file transfer.
         example: ANY
       - model_name: fileCategories
-        tf_name: file_type_categories
+        tf_name: file_categories
         type: Set
         description: Defines a list of file categories for inspection.
         attributes:

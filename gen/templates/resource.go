@@ -519,16 +519,13 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	{{- if and .PutCreate (not .IsBulk)}}
 
-	{{- $attrTfName := "name" }}
-	{{- $attrModelName := "name" }}
+	{{- $dataSourceAttribute := getAttributeByTfName .Attributes "name"}}
 	{{- if hasDataSourceQuery .Attributes}}
-	{{- $attr := getDataSourceQueryAttribute . }}
-	{{- $attrTfName = $attr.TfName }}
-	{{- $attrModelName = $attr.ModelName }}
+	{{- $dataSourceAttribute = getDataSourceQueryAttribute . }}
 	{{- end}}
 	
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object {{$attrTfName}} %s", plan.Id, plan.{{toGoName $attrTfName}}))
-	if plan.Id.ValueString() == "" && plan.{{toGoName $attrTfName}}.ValueString() != "" {
+	tflog.Debug(ctx, fmt.Sprintf("%s: considering object {{$dataSourceAttribute.TfName}} %s", plan.Id, plan.{{toGoName $dataSourceAttribute.TfName}}))
+	if plan.Id.ValueString() == "" && plan.{{toGoName $dataSourceAttribute.TfName}}.ValueString() != "" {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
@@ -540,9 +537,9 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.{{toGoName $attrTfName}}.ValueString() == v.Get("{{$attrModelName}}").String() {
+					if plan.{{toGoName $dataSourceAttribute.TfName}}.ValueString() == v.Get("{{range $dataSourceAttribute.DataPath}}{{.}}.{{end}}{{$dataSourceAttribute.ModelName}}").String() {
 						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$attrTfName}} '%s', id: %s", plan.Id, plan.{{toGoName $attrTfName}}.ValueString(), plan.Id))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$dataSourceAttribute.TfName}} '%s', id: %s", plan.Id, plan.{{toGoName $dataSourceAttribute.TfName}}.ValueString(), plan.Id))
 						return false
 					}
 					return true
@@ -555,7 +552,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		}
 
 		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$attrTfName}}: %s", plan.{{toGoName $attrTfName}}.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$dataSourceAttribute.TfName}}: %s", plan.{{toGoName $dataSourceAttribute.TfName}}.ValueString()))
 			return
 		}
 	}
@@ -864,7 +861,7 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 	{{- if not .NoDelete}}
 	{{- if not .IsBulk}}
 	res, err := r.client.Delete(state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

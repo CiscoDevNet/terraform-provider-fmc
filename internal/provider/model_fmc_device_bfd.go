@@ -130,7 +130,7 @@ func (data *DeviceBFD) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("slowTimer"); value.Exists() {
 		data.SlowTimer = types.Int64Value(value.Int())
 	} else {
-		data.SlowTimer = types.Int64Value(1000)
+		data.SlowTimer = types.Int64Null()
 	}
 }
 
@@ -180,7 +180,7 @@ func (data *DeviceBFD) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("slowTimer"); value.Exists() && !data.SlowTimer.IsNull() {
 		data.SlowTimer = types.Int64Value(value.Int())
-	} else if data.SlowTimer.ValueInt64() != 1000 {
+	} else {
 		data.SlowTimer = types.Int64Null()
 	}
 }

@@ -40,6 +40,7 @@ resource "fmc_vlan_tag" "example" {
 ### Read-Only
 
 - `id` (String) The id of the object
+- `type` (String) Type of the object; this value is always 'VlanTag'
 
 ## Import
 

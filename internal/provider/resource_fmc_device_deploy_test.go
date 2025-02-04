@@ -67,7 +67,8 @@ variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
 func testAccFmcDeviceDeployConfig_minimum() string {
 	config := `resource "fmc_device_deploy" "test" {` + "\n"
-	config += `	device_list = [var.device_id]` + "\n"
+	config += `	ignore_warning = true` + "\n"
+	config += `	device_id_list = [var.device_id]` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -78,7 +79,8 @@ func testAccFmcDeviceDeployConfig_minimum() string {
 
 func testAccFmcDeviceDeployConfig_all() string {
 	config := `resource "fmc_device_deploy" "test" {` + "\n"
-	config += `	device_list = [var.device_id]` + "\n"
+	config += `	ignore_warning = true` + "\n"
+	config += `	device_id_list = [var.device_id]` + "\n"
 	config += `}` + "\n"
 	return config
 }

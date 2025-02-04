@@ -38,7 +38,7 @@ data "fmc_ftd_nat_policy" "example" {
 
 Read-Only:
 
-- `destination_interface_id` (String) ID of destination interface
+- `destination_interface_id` (String) ID of destination security zone or interface group
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
 - `id` (String) Identifier of the auto nat rule.
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
@@ -49,7 +49,7 @@ Read-Only:
 - `original_port` (Number) Original port number
 - `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface
 - `protocol` (String) Service protocol
-- `source_interface_id` (String) ID of source interface
+- `source_interface_id` (String) ID of source security zone or interface group
 - `translate_dns` (Boolean) Translate DNS replies that match this rule
 - `translated_network_id` (String) ID of translated network object (host, network or range)
 - `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address
@@ -62,7 +62,7 @@ Read-Only:
 Read-Only:
 
 - `description` (String) Manual nat rule description
-- `destination_interface_id` (String) ID of destination interface
+- `destination_interface_id` (String) ID of destination security zone or interface group
 - `enabled` (Boolean) Indicates if the rule is enabled.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
 - `id` (String) Identifier of the manual nat rule.
@@ -78,7 +78,7 @@ Read-Only:
 - `original_source_port_id` (String) ID of original source port object
 - `route_lookup` (Boolean) Perform Route Lookup for Destination Interface
 - `section` (String) Name of section to which the rule belongs.
-- `source_interface_id` (String) ID of source interface
+- `source_interface_id` (String) ID of source security zone or interface group
 - `translate_dns` (Boolean) Translate DNS replies that match this rule
 - `translated_destination_id` (String) ID of translated destination network object (host, network or range)
 - `translated_destination_port_id` (String) ID of translated destination port object

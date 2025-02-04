@@ -50,6 +50,7 @@ type AccessControlPolicy struct {
 	DefaultActionSendEventsToFmc   types.Bool                      `tfsdk:"default_action_send_events_to_fmc"`
 	DefaultActionSendSyslog        types.Bool                      `tfsdk:"default_action_send_syslog"`
 	DefaultActionSyslogConfigId    types.String                    `tfsdk:"default_action_syslog_config_id"`
+	PrefilterPolicyId              types.String                    `tfsdk:"prefilter_policy_id"`
 	DefaultActionSyslogSeverity    types.String                    `tfsdk:"default_action_syslog_severity"`
 	DefaultActionSnmpConfigId      types.String                    `tfsdk:"default_action_snmp_config_id"`
 	DefaultActionIntrusionPolicyId types.String                    `tfsdk:"default_action_intrusion_policy_id"`
@@ -99,6 +100,7 @@ type AccessControlPolicyRules struct {
 	Description                types.String                                         `tfsdk:"description"`
 	FilePolicyId               types.String                                         `tfsdk:"file_policy_id"`
 	IntrusionPolicyId          types.String                                         `tfsdk:"intrusion_policy_id"`
+	TimeRangeId                types.String                                         `tfsdk:"time_range_id"`
 	VariableSetId              types.String                                         `tfsdk:"variable_set_id"`
 }
 
@@ -241,6 +243,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	}
 	if !data.DefaultActionSyslogConfigId.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.syslogConfig.id", data.DefaultActionSyslogConfigId.ValueString())
+	}
+	if !data.PrefilterPolicyId.IsNull() {
+		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
 	}
 	if !data.DefaultActionSyslogSeverity.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.syslogSeverity", data.DefaultActionSyslogSeverity.ValueString())
@@ -552,6 +557,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			if !item.IntrusionPolicyId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipsPolicy.id", item.IntrusionPolicyId.ValueString())
 			}
+			if !item.TimeRangeId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "timeRangeObjects.0.id", item.TimeRangeId.ValueString())
+			}
 			if !item.VariableSetId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "variableSet.id", item.VariableSetId.ValueString())
 			}
@@ -610,6 +618,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionSyslogConfigId = types.StringNull()
+	}
+	if value := res.Get("prefilterPolicySetting.id"); value.Exists() {
+		data.PrefilterPolicyId = types.StringValue(value.String())
+	} else {
+		data.PrefilterPolicyId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.syslogSeverity"); value.Exists() {
 		data.DefaultActionSyslogSeverity = types.StringValue(value.String())
@@ -1047,6 +1060,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			} else {
 				data.IntrusionPolicyId = types.StringNull()
 			}
+			if value := res.Get("timeRangeObjects.0.id"); value.Exists() {
+				data.TimeRangeId = types.StringValue(value.String())
+			} else {
+				data.TimeRangeId = types.StringNull()
+			}
 			if value := res.Get("variableSet.id"); value.Exists() {
 				data.VariableSetId = types.StringValue(value.String())
 			} else {
@@ -1111,6 +1129,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionSyslogConfigId = types.StringNull()
+	}
+	if value := res.Get("prefilterPolicySetting.id"); value.Exists() && !data.PrefilterPolicyId.IsNull() {
+		data.PrefilterPolicyId = types.StringValue(value.String())
+	} else {
+		data.PrefilterPolicyId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.syslogSeverity"); value.Exists() && !data.DefaultActionSyslogSeverity.IsNull() {
 		data.DefaultActionSyslogSeverity = types.StringValue(value.String())
@@ -2087,6 +2110,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.IntrusionPolicyId = types.StringValue(value.String())
 		} else {
 			data.IntrusionPolicyId = types.StringNull()
+		}
+		if value := res.Get("timeRangeObjects.0.id"); value.Exists() && !data.TimeRangeId.IsNull() {
+			data.TimeRangeId = types.StringValue(value.String())
+		} else {
+			data.TimeRangeId = types.StringNull()
 		}
 		if value := res.Get("variableSet.id"); value.Exists() && !data.VariableSetId.IsNull() {
 			data.VariableSetId = types.StringValue(value.String())

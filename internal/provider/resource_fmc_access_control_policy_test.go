@@ -103,7 +103,7 @@ resource "fmc_port" "test" {
 resource "fmc_vlan_tag" "test" {
   name      = "VLAN_TAG_fmc_access_control_policy"
   start_tag = "10"
-  end_tag   = "11" 
+  end_tag   = "11"
 }
 `
 

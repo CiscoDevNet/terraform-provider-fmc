@@ -32,6 +32,7 @@ import (
 func TestAccFmcDynamicObjects(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_dynamic_objects.test", "items.dynamic_object_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_dynamic_objects.test", "items.dynamic_object_1.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_dynamic_objects.test", "items.dynamic_object_1.description", "My Dynamic Object 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_dynamic_objects.test", "items.dynamic_object_1.object_type", "IP"))
 

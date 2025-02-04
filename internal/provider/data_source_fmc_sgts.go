@@ -65,7 +65,7 @@ func (d *SGTsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of SGTs. The key of the map is the name of the individual SGT. ",
+				MarkdownDescription: "Map of SGTs. The key of the map is the name of the individual SGT.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

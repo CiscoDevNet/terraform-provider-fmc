@@ -42,6 +42,7 @@ Read-Only:
 - `id` (String) UUID of the managed URL Groups.
 - `literals` (Attributes Set) (see [below for nested schema](#nestedatt--items--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
+- `type` (String) Type of the object; this value is always 'VlanGroupTag'
 - `vlan_tags` (Attributes Set) (see [below for nested schema](#nestedatt--items--vlan_tags))
 
 <a id="nestedatt--items--literals"></a>

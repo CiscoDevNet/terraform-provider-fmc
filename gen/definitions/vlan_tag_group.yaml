@@ -13,6 +13,10 @@ attributes:
     type: String
     description: Optional user-created description.
     example: "My vlan tag group name"
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'VlanGroupTag'
+    computed: true
   - model_name: overridable
     type: Bool
     description: Indicates whether object values can be overridden.

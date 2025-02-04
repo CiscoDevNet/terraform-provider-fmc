@@ -56,15 +56,15 @@ attributes:
     type: List
     attributes:
       - model_name: activeIPv6
-        tf_name: active_address   
+        tf_name: active_address
         type: String
         description: Active IPv6 address with prefix. Address has to be configured on the interface.
         example: "2006::1/30"
       - model_name: standbyIPv6
-        tf_name: standby_address     
+        tf_name: standby_address
         type: String
         description: Standby IPv6 address. Address has to be from the same subnet as active IPv6 address.
         example: "2006::2"
-         
+
 test_prerequisites: |-
   variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_id

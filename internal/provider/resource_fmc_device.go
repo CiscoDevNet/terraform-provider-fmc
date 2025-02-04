@@ -32,8 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -148,10 +146,8 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				},
 			},
 			"object_group_search": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables Object Group Search").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enables Object Group Search").String,
 				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(true),
 			},
 			"access_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.").String,
@@ -168,86 +164,50 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			"info_version": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Version of the registered device - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_health_status": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Health Status of the device - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_health_message": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Health Message of the device - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_is_connected": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shows if the device is connected - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.Bool{
-					boolplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_deployment_status": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Shows deployment status - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_ftd_mode": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("FTD Mode - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_device_serial_number": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Device Serial Number - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_snort_version": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Snort Version - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_vdb_version": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("VDB Version - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_lsp_version": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("LSP Version - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_deployed_access_policy_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Deployed Access Control Policy Name - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 			"info_deployed_health_policy_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Deployed Health Policy Name - Informational only.").String,
 				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 		},
 	}
@@ -493,6 +453,8 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 			return
 		}
 	}
+
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 

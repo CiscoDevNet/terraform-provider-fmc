@@ -97,11 +97,11 @@ func (d *DeviceVRFIPv4StaticRouteDataSource) Schema(ctx context.Context, req dat
 				MarkdownDescription: "The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.",
 				Computed:            true,
 			},
-			"gateway_object_id": schema.StringAttribute{
+			"gateway_host_object_id": schema.StringAttribute{
 				MarkdownDescription: "UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
 				Computed:            true,
 			},
-			"gateway_literal": schema.StringAttribute{
+			"gateway_host_literal": schema.StringAttribute{
 				MarkdownDescription: "The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
 				Computed:            true,
 			},

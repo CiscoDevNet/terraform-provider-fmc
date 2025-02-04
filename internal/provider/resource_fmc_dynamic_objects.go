@@ -26,14 +26,12 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -51,7 +49,6 @@ var (
 	_ resource.Resource                = &DynamicObjectsResource{}
 	_ resource.ResourceWithImportState = &DynamicObjectsResource{}
 )
-var minFMCVersionBulkDeleteDynamicObjects = version.Must(version.NewVersion("7.0"))
 
 func NewDynamicObjectsResource() resource.Resource {
 	return &DynamicObjectsResource{}
@@ -98,10 +95,11 @@ func (r *DynamicObjectsResource) Schema(ctx context.Context, req resource.Schema
 							},
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'DynamicObject'.").AddDefaultValueDescription("DynamicObject").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'DynamicObject'.").String,
 							Computed:            true,
-							Default:             stringdefault.StaticString("DynamicObject"),
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+							},
 						},
 						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
@@ -569,75 +567,48 @@ func (r *DynamicObjectsResource) createSubresources(ctx context.Context, state, 
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
 func (r *DynamicObjectsResource) deleteSubresources(ctx context.Context, state, plan DynamicObjects, reqMods ...func(*fmc.Req)) (DynamicObjects, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
+	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Dynamic Objects)", state.Id.ValueString()))
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+	var idx = 0
+	var idsToRemove strings.Builder
+	var alreadyDeleted []string
 
-	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteDynamicObjects) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Dynamic Objects)", state.Id.ValueString()))
-		for k, v := range objectsToRemove.Items {
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				delete(state.Items, k)
-				continue
-			}
+	for k, v := range objectsToRemove.Items {
+		// Counter
+		idx++
 
-			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		// Check if the object was not already deleted
+		if v.Id.IsNull() {
+			alreadyDeleted = append(alreadyDeleted, k)
+			continue
+		}
+
+		// Create list of IDs of items to delete
+		idsToRemove.WriteString(url.QueryEscape(v.Id.ValueString()) + ",")
+
+		// If bulk size was reached or all entries have been processed
+		if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + idsToRemove.String() + "\""
 			res, err := r.client.Delete(urlPath, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
-					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete subobject(s) (DELETE), got error: %s, %s", state.Id.ValueString(), err, res.String())),
 				}
 			}
 
-			// Remove deleted item from state
-			delete(state.Items, k)
-		}
-	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Dynamic Objects)", state.Id.ValueString()))
-
-		var idx = 0
-		var idsToRemove strings.Builder
-		var alreadyDeleted []string
-
-		for k, v := range objectsToRemove.Items {
-			// Counter
-			idx++
-
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
-				continue
+			// Read result and remove deleted items from state
+			deletedItems := res.Get("items.#.name").Array()
+			for _, name := range deletedItems {
+				delete(state.Items, name.String())
 			}
 
-			// Create list of IDs of items to delete
-			idsToRemove.WriteString(url.QueryEscape(v.Id.ValueString()) + ",")
-
-			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
-				urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + idsToRemove.String() + "\""
-				res, err := r.client.Delete(urlPath, reqMods...)
-				if err != nil {
-					return state, diag.Diagnostics{
-						diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete subobject(s) (DELETE), got error: %s, %s", state.Id.ValueString(), err, res.String())),
-					}
-				}
-
-				// Read result and remove deleted items from state
-				deletedItems := res.Get("items.#.name").Array()
-				for _, name := range deletedItems {
-					delete(state.Items, name.String())
-				}
-
-				// Reset ID string
-				idsToRemove.Reset()
-			}
+			// Reset ID string
+			idsToRemove.Reset()
 		}
+	}
 
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
-		}
+	for _, v := range alreadyDeleted {
+		delete(state.Items, v)
 	}
 
 	return state, nil

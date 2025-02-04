@@ -34,7 +34,7 @@ func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ipv4_static_route.test", "gateway_literal", "10.0.0.1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ipv4_static_route.test", "gateway_host_literal", "10.0.0.1"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -88,7 +88,7 @@ func testAccFmcDeviceIPv4StaticRouteConfig_minimum() string {
 	config += `		id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	metric_value = 254` + "\n"
-	config += `	gateway_literal = "10.0.0.2"` + "\n"
+	config += `	gateway_host_literal = "10.0.0.2"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -106,7 +106,7 @@ func testAccFmcDeviceIPv4StaticRouteConfig_all() string {
 	config += `		id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	metric_value = null` + "\n"
-	config += `	gateway_literal = "10.0.0.1"` + "\n"
+	config += `	gateway_host_literal = "10.0.0.1"` + "\n"
 	config += `	is_tunneled = true` + "\n"
 	config += `}` + "\n"
 	return config

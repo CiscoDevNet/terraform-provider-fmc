@@ -115,12 +115,12 @@ func (r *DeviceIPv4StaticRouteResource) Schema(ctx context.Context, req resource
 					int64validator.Between(1, 254),
 				},
 			},
-			"gateway_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
+			"gateway_host_object_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.").String,
 				Optional:            true,
 			},
-			"gateway_literal": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
+			"gateway_host_literal": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The next hop for this route as a literal IPv4 address. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.").String,
 				Optional:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{
@@ -293,7 +293,7 @@ func (r *DeviceIPv4StaticRouteResource) Delete(ctx context.Context, req resource
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
@@ -328,8 +328,8 @@ func (r *DeviceIPv4StaticRouteResource) ImportState(ctx context.Context, req res
 func (r DeviceIPv4StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
 	return []resource.ConfigValidator{
 		resourcevalidator.Conflicting(
-			path.MatchRoot("gateway_object_id"),
-			path.MatchRoot("gateway_literal"),
+			path.MatchRoot("gateway_host_object_id"),
+			path.MatchRoot("gateway_host_literal"),
 		),
 	}
 }

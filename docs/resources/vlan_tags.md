@@ -56,6 +56,7 @@ Optional:
 Read-Only:
 
 - `id` (String) UUID of the managed Vlan tag object.
+- `type` (String) Type of the object; this value is always 'VlanTag'
 
 ## Import
 

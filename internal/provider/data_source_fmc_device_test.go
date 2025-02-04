@@ -33,8 +33,7 @@ func TestAccDataSourceFmcDevice(t *testing.T) {
 	}
 
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckTypeSetElemAttr("data.fmc_device.test", "license_capabilities.*", "BASE"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device.test", "type", "Device"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device.test", "type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

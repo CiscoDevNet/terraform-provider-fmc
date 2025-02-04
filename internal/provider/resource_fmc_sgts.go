@@ -87,7 +87,7 @@ func (r *SGTsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of SGTs. The key of the map is the name of the individual SGT. ").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of SGTs. The key of the map is the name of the individual SGT.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

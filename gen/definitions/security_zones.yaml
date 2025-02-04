@@ -37,5 +37,3 @@ attributes:
         type: String
         description: Type of the object; this value is always 'SecurityZone'.
         computed: true
-        exclude_example: true
-        exclude_test: true

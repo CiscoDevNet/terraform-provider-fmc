@@ -91,7 +91,7 @@ func (d *ICMPv4ObjectsDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'ICMPV4Object'.",
+							MarkdownDescription: "",
 							Computed:            true,
 						},
 					},

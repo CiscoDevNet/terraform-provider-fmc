@@ -144,6 +144,18 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 								},
 							},
 						},
+						"source_sgt_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of SGT that represent tag of source traffic (fmc_sgts).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "UUID of the object (such as fmc_sgts.example.id, etc.).",
+										Computed:            true,
+									},
+								},
+							},
+						},
 						"destination_network_objects": schema.SetNestedAttribute{
 							MarkdownDescription: "Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...).",
 							Computed:            true,
@@ -175,6 +187,62 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: "UUID of the object (such as fmc_port.example.id).",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_port_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent destination port of traffic (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"port": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"source_port_literals": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent destination port of traffic (literally specified).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"port": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: "",
+										Computed:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: "",
 										Computed:            true,
 									},
 								},

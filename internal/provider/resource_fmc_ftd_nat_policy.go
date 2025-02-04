@@ -153,7 +153,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of source interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group").String,
 							Optional:            true,
 						},
 						"original_source_id": schema.StringAttribute{
@@ -177,7 +177,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"destination_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of destination interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
 							Optional:            true,
 						},
 						"translated_source_id": schema.StringAttribute{
@@ -220,7 +220,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"destination_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of destination interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
 							Optional:            true,
 						},
 						"fall_through": schema.BoolAttribute{
@@ -259,7 +259,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of source interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group").String,
 							Optional:            true,
 						},
 						"translate_dns": schema.BoolAttribute{
@@ -732,7 +732,7 @@ func (r *FTDNATPolicyResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

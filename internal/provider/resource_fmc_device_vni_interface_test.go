@@ -88,7 +88,7 @@ resource "fmc_device_vtep_policy" "test" {
 
 resource "fmc_security_zone" "test" {
   name           = "routed1"
-  interface_mode = "ROUTED"
+  interface_type = "ROUTED"
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id

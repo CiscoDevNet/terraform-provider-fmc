@@ -30,25 +30,15 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDeviceBFD(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_bfd.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "hop_type", "SINGLE_HOP"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "bfd_template_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "interface_logical_name", "outside"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "destination_host_object_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "source_host_object_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "interface_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "slow_timer", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bfd.test", "slow_timer", "1000"))
 
 	var steps []resource.TestStep
-	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
-		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDeviceBFDPrerequisitesConfig + testAccFmcDeviceBFDConfig_minimum(),
-		})
-	}
 	steps = append(steps, resource.TestStep{
 		Config: testAccFmcDeviceBFDPrerequisitesConfig + testAccFmcDeviceBFDConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
@@ -68,21 +58,25 @@ func TestAccFmcDeviceBFD(t *testing.T) {
 
 const testAccFmcDeviceBFDPrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+
+resource "fmc_bfd_template" "test" {
+  name = "BFD_Template1"
+  hop_type = "SINGLE_HOP"
+  echo = "DISABLED"
+}
+
+resource "fmc_device_physical_interface" "test" {
+  device_id = var.device_id
+  name = var.interface_name
+  logical_name = "outside"
+  mode = "NONE"
+}
 `
 
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
-
-func testAccFmcDeviceBFDConfig_minimum() string {
-	config := `resource "fmc_device_bfd" "test" {` + "\n"
-	config += `	device_id = var.device_id` + "\n"
-	config += `	hop_type = "SINGLE_HOP"` + "\n"
-	config += `	bfd_template_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `}` + "\n"
-	return config
-}
-
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
@@ -91,12 +85,10 @@ func testAccFmcDeviceBFDConfig_all() string {
 	config := `resource "fmc_device_bfd" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"
-	config += `	bfd_template_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	interface_logical_name = "outside"` + "\n"
-	config += `	destination_host_object_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	source_host_object_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	slow_timer = ` + "\n"
+	config += `	bfd_template_id = fmc_bfd_template.test.id` + "\n"
+	config += `	interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
+	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `	slow_timer = 1000` + "\n"
 	config += `}` + "\n"
 	return config
 }

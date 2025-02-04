@@ -31,6 +31,7 @@ data "fmc_bfd_template" "example" {
 
 - `authentication_key_id` (Number) Authentication Key ID
 - `authentication_password` (String) Password for BFD Authentication (1-24 characters)
+- `authentication_password_encryption` (String) Determines if authentication_password is encrypted
 - `authentication_type` (String) Authentication types
 - `echo` (String) Enables/disables BFD echo.
 - `hop_type` (String) The hop type.

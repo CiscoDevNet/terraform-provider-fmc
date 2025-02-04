@@ -421,7 +421,7 @@ attributes:
   - model_name: duplex
     data_path: [hardware]
     type: String
-    description: Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
+    description: Duplex configuraion.
     enum_values: [AUTO, FULL, HALF]
     exclude_example: true
     exclude_test: true

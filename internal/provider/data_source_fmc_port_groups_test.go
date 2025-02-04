@@ -31,6 +31,7 @@ import (
 func TestAccDataSourceFmcPortGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port_groups.test", "items.port_group_1.description", "My port group description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.objects.0.type", "ProtocolPortObject"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.objects.0.id"))

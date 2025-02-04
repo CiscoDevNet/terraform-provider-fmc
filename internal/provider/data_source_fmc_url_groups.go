@@ -65,7 +65,7 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of url groups. The key of the map is the name of the individual URL Group. ",
+				MarkdownDescription: "Map of url groups. The key of the map is the name of the individual URL Group.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

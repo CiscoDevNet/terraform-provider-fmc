@@ -31,19 +31,20 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type BFDTemplate struct {
-	Id                     types.String `tfsdk:"id"`
-	Domain                 types.String `tfsdk:"domain"`
-	Name                   types.String `tfsdk:"name"`
-	Type                   types.String `tfsdk:"type"`
-	HopType                types.String `tfsdk:"hop_type"`
-	Echo                   types.String `tfsdk:"echo"`
-	IntervalTime           types.String `tfsdk:"interval_time"`
-	MinTransmit            types.Int64  `tfsdk:"min_transmit"`
-	TxRxMultiplier         types.Int64  `tfsdk:"tx_rx_multiplier"`
-	MinReceive             types.Int64  `tfsdk:"min_receive"`
-	AuthenticationPassword types.String `tfsdk:"authentication_password"`
-	AuthenticationKeyId    types.Int64  `tfsdk:"authentication_key_id"`
-	AuthenticationType     types.String `tfsdk:"authentication_type"`
+	Id                               types.String `tfsdk:"id"`
+	Domain                           types.String `tfsdk:"domain"`
+	Name                             types.String `tfsdk:"name"`
+	Type                             types.String `tfsdk:"type"`
+	HopType                          types.String `tfsdk:"hop_type"`
+	Echo                             types.String `tfsdk:"echo"`
+	IntervalTime                     types.String `tfsdk:"interval_time"`
+	MinTransmit                      types.Int64  `tfsdk:"min_transmit"`
+	TxRxMultiplier                   types.Int64  `tfsdk:"tx_rx_multiplier"`
+	MinReceive                       types.Int64  `tfsdk:"min_receive"`
+	AuthenticationPassword           types.String `tfsdk:"authentication_password"`
+	AuthenticationKeyId              types.Int64  `tfsdk:"authentication_key_id"`
+	AuthenticationType               types.String `tfsdk:"authentication_type"`
+	AuthenticationPasswordEncryption types.String `tfsdk:"authentication_password_encryption"`
 }
 
 // End of section. //template:end types
@@ -66,6 +67,7 @@ func (data BFDTemplate) toBody(ctx context.Context, state BFDTemplate) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	body, _ = sjson.Set(body, "type", "BFDTemplate")
 	if !data.HopType.IsNull() {
 		body, _ = sjson.Set(body, "hopType", data.HopType.ValueString())
 	}
@@ -92,6 +94,9 @@ func (data BFDTemplate) toBody(ctx context.Context, state BFDTemplate) string {
 	}
 	if !data.AuthenticationType.IsNull() {
 		body, _ = sjson.Set(body, "authentication.authType", data.AuthenticationType.ValueString())
+	}
+	if !data.AuthenticationPasswordEncryption.IsNull() {
+		body, _ = sjson.Set(body, "authentication.pwdEncryption", data.AuthenticationPasswordEncryption.ValueString())
 	}
 	return body
 }
@@ -141,11 +146,6 @@ func (data *BFDTemplate) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.MinReceive = types.Int64Null()
 	}
-	if value := res.Get("authentication.authKey"); value.Exists() {
-		data.AuthenticationPassword = types.StringValue(value.String())
-	} else {
-		data.AuthenticationPassword = types.StringNull()
-	}
 	if value := res.Get("authentication.authKeyId"); value.Exists() {
 		data.AuthenticationKeyId = types.Int64Value(value.Int())
 	} else {
@@ -155,6 +155,11 @@ func (data *BFDTemplate) fromBody(ctx context.Context, res gjson.Result) {
 		data.AuthenticationType = types.StringValue(value.String())
 	} else {
 		data.AuthenticationType = types.StringNull()
+	}
+	if value := res.Get("authentication.pwdEncryption"); value.Exists() {
+		data.AuthenticationPasswordEncryption = types.StringValue(value.String())
+	} else {
+		data.AuthenticationPasswordEncryption = types.StringNull()
 	}
 }
 
@@ -207,11 +212,6 @@ func (data *BFDTemplate) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.MinReceive = types.Int64Null()
 	}
-	if value := res.Get("authentication.authKey"); value.Exists() && !data.AuthenticationPassword.IsNull() {
-		data.AuthenticationPassword = types.StringValue(value.String())
-	} else {
-		data.AuthenticationPassword = types.StringNull()
-	}
 	if value := res.Get("authentication.authKeyId"); value.Exists() && !data.AuthenticationKeyId.IsNull() {
 		data.AuthenticationKeyId = types.Int64Value(value.Int())
 	} else {
@@ -221,6 +221,11 @@ func (data *BFDTemplate) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		data.AuthenticationType = types.StringValue(value.String())
 	} else {
 		data.AuthenticationType = types.StringNull()
+	}
+	if value := res.Get("authentication.pwdEncryption"); value.Exists() && !data.AuthenticationPasswordEncryption.IsNull() {
+		data.AuthenticationPasswordEncryption = types.StringValue(value.String())
+	} else {
+		data.AuthenticationPasswordEncryption = types.StringNull()
 	}
 }
 

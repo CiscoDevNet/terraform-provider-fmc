@@ -121,11 +121,11 @@ func (r *DeviceVRFIPv4StaticRouteResource) Schema(ctx context.Context, req resou
 					int64validator.Between(1, 254),
 				},
 			},
-			"gateway_object_id": schema.StringAttribute{
+			"gateway_host_object_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
 				Optional:            true,
 			},
-			"gateway_literal": schema.StringAttribute{
+			"gateway_host_literal": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
 				Optional:            true,
 			},
@@ -299,7 +299,7 @@ func (r *DeviceVRFIPv4StaticRouteResource) Delete(ctx context.Context, req resou
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

@@ -41,8 +41,8 @@ type DeviceCluster struct {
 	Type                      types.String               `tfsdk:"type"`
 	ClusterKey                types.String               `tfsdk:"cluster_key"`
 	ControlNodeDeviceId       types.String               `tfsdk:"control_node_device_id"`
-	ControlNodeVniNetwork     types.String               `tfsdk:"control_node_vni_network"`
-	ControlNodeCclNetwork     types.String               `tfsdk:"control_node_ccl_network"`
+	ControlNodeVniPrefix      types.String               `tfsdk:"control_node_vni_prefix"`
+	ControlNodeCclPrefix      types.String               `tfsdk:"control_node_ccl_prefix"`
 	ControlNodeInterfaceId    types.String               `tfsdk:"control_node_interface_id"`
 	ControlNodeInterfaceName  types.String               `tfsdk:"control_node_interface_name"`
 	ControlNodeInterfaceType  types.String               `tfsdk:"control_node_interface_type"`
@@ -83,11 +83,11 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 	if !data.ControlNodeDeviceId.IsNull() {
 		body, _ = sjson.Set(body, "controlDevice.deviceDetails.id", data.ControlNodeDeviceId.ValueString())
 	}
-	if !data.ControlNodeVniNetwork.IsNull() {
-		body, _ = sjson.Set(body, "commonBootstrap.vniNetwork", data.ControlNodeVniNetwork.ValueString())
+	if !data.ControlNodeVniPrefix.IsNull() {
+		body, _ = sjson.Set(body, "commonBootstrap.vniNetwork", data.ControlNodeVniPrefix.ValueString())
 	}
-	if !data.ControlNodeCclNetwork.IsNull() {
-		body, _ = sjson.Set(body, "commonBootstrap.cclNetwork", data.ControlNodeCclNetwork.ValueString())
+	if !data.ControlNodeCclPrefix.IsNull() {
+		body, _ = sjson.Set(body, "commonBootstrap.cclNetwork", data.ControlNodeCclPrefix.ValueString())
 	}
 	if !data.ControlNodeInterfaceId.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.cclInterface.id", data.ControlNodeInterfaceId.ValueString())
@@ -144,14 +144,14 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodeDeviceId = types.StringNull()
 	}
 	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() {
-		data.ControlNodeVniNetwork = types.StringValue(value.String())
+		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
-		data.ControlNodeVniNetwork = types.StringNull()
+		data.ControlNodeVniPrefix = types.StringNull()
 	}
 	if value := res.Get("commonBootstrap.cclNetwork"); value.Exists() {
-		data.ControlNodeCclNetwork = types.StringValue(value.String())
+		data.ControlNodeCclPrefix = types.StringValue(value.String())
 	} else {
-		data.ControlNodeCclNetwork = types.StringNull()
+		data.ControlNodeCclPrefix = types.StringNull()
 	}
 	if value := res.Get("commonBootstrap.cclInterface.id"); value.Exists() {
 		data.ControlNodeInterfaceId = types.StringValue(value.String())
@@ -228,15 +228,15 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.ControlNodeDeviceId = types.StringNull()
 	}
-	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() && !data.ControlNodeVniNetwork.IsNull() {
-		data.ControlNodeVniNetwork = types.StringValue(value.String())
+	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() && !data.ControlNodeVniPrefix.IsNull() {
+		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
-		data.ControlNodeVniNetwork = types.StringNull()
+		data.ControlNodeVniPrefix = types.StringNull()
 	}
-	if value := res.Get("commonBootstrap.cclNetwork"); value.Exists() && !data.ControlNodeCclNetwork.IsNull() {
-		data.ControlNodeCclNetwork = types.StringValue(value.String())
+	if value := res.Get("commonBootstrap.cclNetwork"); value.Exists() && !data.ControlNodeCclPrefix.IsNull() {
+		data.ControlNodeCclPrefix = types.StringValue(value.String())
 	} else {
-		data.ControlNodeCclNetwork = types.StringNull()
+		data.ControlNodeCclPrefix = types.StringNull()
 	}
 	if value := res.Get("commonBootstrap.cclInterface.id"); value.Exists() && !data.ControlNodeInterfaceId.IsNull() {
 		data.ControlNodeInterfaceId = types.StringValue(value.String())

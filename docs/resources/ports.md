@@ -51,12 +51,11 @@ Optional:
 - `description` (String) Optional user-created description.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `port` (String) Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
-- `type` (String) Type of the object; this value is always 'ProtocolPortObject'.
-  - Default value: `ProtocolPortObject`
 
 Read-Only:
 
 - `id` (String) UUID of the managed Port.
+- `type` (String) Type of the object; this value is always 'ProtocolPortObject'.
 
 ## Import
 

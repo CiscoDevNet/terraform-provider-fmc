@@ -13,7 +13,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of url groups. The key of the map is the name of the individual URL Group. 
+      Map of url groups. The key of the map is the name of the individual URL Group.
     mandatory: true
     map_key_example: url_group_1
     attributes:
@@ -55,5 +55,3 @@ test_prerequisites: |-
     name        = "url_1"
     url         = "https://www.example.com/app"
   }
-
-      

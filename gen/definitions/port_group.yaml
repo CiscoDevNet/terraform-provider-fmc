@@ -13,8 +13,6 @@ attributes:
     type: String
     description: Type of the object; this value is always 'PortObjectGroup'.
     computed: true
-    exclude_example: true
-    exclude_test: true 
   - model_name: description
     type: String
     description: Optional user-created description.
@@ -38,7 +36,7 @@ attributes:
         type: String
         mandatory: true
         enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
-        example: ProtocolPortObject        
+        example: ProtocolPortObject
 
 test_prerequisites: |-
   resource "fmc_port" "test" {

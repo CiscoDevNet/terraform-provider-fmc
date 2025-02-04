@@ -1,0 +1,25 @@
+---
+name: Tunnel Zone
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/tunneltags
+doc_category: Objects
+#minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: The name of the Tunnel Zone object.
+    example: TunnelZone1
+    data_source_query: true
+    # Type is defined twice on purpose, to be read-only attribute and to be in POST body
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'TunnelTag'.
+    value: TunnelTag
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'TunnelTag'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description
+    example: My Tunnel Zone object

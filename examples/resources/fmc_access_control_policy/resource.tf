@@ -7,6 +7,7 @@ resource "fmc_access_control_policy" "example" {
   default_action_send_events_to_fmc = true
   default_action_send_syslog        = true
   default_action_syslog_config_id   = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+  prefilter_policy_id               = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
   default_action_syslog_severity    = "DEBUG"
   default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   categories = [
@@ -130,6 +131,7 @@ resource "fmc_access_control_policy" "example" {
       snmp_config_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       file_policy_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      time_range_id       = "0050568A-7F57-0ed3-0000-004294975576"
       variable_set_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]

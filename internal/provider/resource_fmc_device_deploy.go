@@ -84,7 +84,7 @@ func (r *DeviceDeployResource) Schema(ctx context.Context, req resource.SchemaRe
 				MarkdownDescription: helpers.NewAttributeDescription("Ignore warnings during deployment.").String,
 				Optional:            true,
 			},
-			"device_list": schema.ListAttribute{
+			"device_id_list": schema.ListAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of device ids to be deployed.").String,
 				ElementType:         types.StringType,
 				Required:            true,
@@ -144,7 +144,7 @@ func (r *DeviceDeployResource) Read(ctx context.Context, req resource.ReadReques
 	}
 
 	// Clear device list, this will trigger update
-	state.DeviceList = types.ListNull(types.StringType)
+	state.DeviceIdList = types.ListNull(types.StringType)
 
 	// Save state
 	diags = resp.State.Set(ctx, &state)
@@ -207,10 +207,10 @@ func (r *DeviceDeployResource) triggerDeployment(ctx context.Context, plan Devic
 	tflog.Debug(ctx, fmt.Sprintf("%s: Triggering deployment", plan.Id.ValueString()))
 
 	// Save original device list
-	origPlanDeviceList := plan.DeviceList
+	origPlanDeviceIdList := plan.DeviceIdList
 	// Restore original list of devices
 	defer func() {
-		plan.DeviceList = origPlanDeviceList
+		plan.DeviceIdList = origPlanDeviceIdList
 	}()
 
 	// Get list of deployable devices
@@ -240,10 +240,10 @@ func (r *DeviceDeployResource) triggerDeployment(ctx context.Context, plan Devic
 	// List of devices that actually need deployment
 	var devicesToBeDeployed []string
 	var planDevices []string
-	plan.DeviceList.ElementsAs(ctx, &planDevices, false)
+	plan.DeviceIdList.ElementsAs(ctx, &planDevices, false)
 
 	// Clear the list of devices to deploy
-	plan.DeviceList = types.ListNull(types.StringType)
+	plan.DeviceIdList = types.ListNull(types.StringType)
 
 	// Check which devices from original list are deployable
 	for _, device := range planDevices {
@@ -252,11 +252,11 @@ func (r *DeviceDeployResource) triggerDeployment(ctx context.Context, plan Devic
 		}
 	}
 
-	plan.DeviceList = helpers.GetStringListFromStringSlice(devicesToBeDeployed)
+	plan.DeviceIdList = helpers.GetStringListFromStringSlice(devicesToBeDeployed)
 	//}
 
 	var deviceIdsSlice []string
-	plan.DeviceList.ElementsAs(ctx, &deviceIdsSlice, false)
+	plan.DeviceIdList.ElementsAs(ctx, &deviceIdsSlice, false)
 
 	if len(deviceIdsSlice) > 0 {
 		// Trigger deployment if any devices are in deployable state

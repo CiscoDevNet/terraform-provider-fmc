@@ -55,7 +55,6 @@ func TestAccDataSourceFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_shutdown", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_description", "My BGP Peer"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_max_prefix", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_warning_only", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_threshold_value", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_restart_interval", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_routes_advertisement_interval", "1"))
@@ -126,7 +125,6 @@ func testAccDataSourceFmcDeviceBGPConfig() string {
 	config += `		neighbor_shutdown = false` + "\n"
 	config += `		neighbor_description = "My BGP Peer"` + "\n"
 	config += `		neighbor_filter_max_prefix = 1` + "\n"
-	config += `		neighbor_filter_warning_only = true` + "\n"
 	config += `		neighbor_filter_threshold_value = 1` + "\n"
 	config += `		neighbor_filter_restart_interval = 1` + "\n"
 	config += `		neighbor_routes_advertisement_interval = 1` + "\n"
@@ -175,7 +173,6 @@ func testAccNamedDataSourceFmcDeviceBGPConfig() string {
 	config += `		neighbor_shutdown = false` + "\n"
 	config += `		neighbor_description = "My BGP Peer"` + "\n"
 	config += `		neighbor_filter_max_prefix = 1` + "\n"
-	config += `		neighbor_filter_warning_only = true` + "\n"
 	config += `		neighbor_filter_threshold_value = 1` + "\n"
 	config += `		neighbor_filter_restart_interval = 1` + "\n"
 	config += `		neighbor_routes_advertisement_interval = 1` + "\n"

@@ -15,7 +15,7 @@ This resource can manage a Device Deploy.
 ```terraform
 resource "fmc_device_deploy" "example" {
   ignore_warning  = false
-  device_list     = ["2fe9063e-8bd5-11ef-9475-e4aeac78cf37"]
+  device_id_list  = ["2fe9063e-8bd5-11ef-9475-e4aeac78cf37"]
   deployment_note = "Terraform initiated deployment"
 }
 ```
@@ -25,7 +25,7 @@ resource "fmc_device_deploy" "example" {
 
 ### Required
 
-- `device_list` (List of String) List of device ids to be deployed.
+- `device_id_list` (List of String) List of device ids to be deployed.
 
 ### Optional
 

@@ -46,9 +46,7 @@ attributes:
         tf_name: nat_type
         type: String
         description: Type of the rule
-        enum_values:
-          - STATIC
-          - DYNAMIC
+        enum_values: [STATIC, DYNAMIC]
         example: STATIC
         mandatory: true
       - model_name: fallThrough
@@ -101,7 +99,7 @@ attributes:
         tf_name: source_interface_id
         type: String
         data_path: [sourceInterface]
-        description: ID of source interface
+        description: ID of source security zone or interface group
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
         exclude_example: true
@@ -147,7 +145,7 @@ attributes:
         tf_name: destination_interface_id
         type: String
         data_path: [destinationInterface]
-        description: ID of destination interface
+        description: ID of destination security zone or interface group
         example: 76d24097-41c4-4558-a4d0-a8c07ac08475
         exclude_test: true
         exclude_example: true
@@ -205,16 +203,14 @@ attributes:
         tf_name: nat_type
         type: String
         description: Type of the rule
-        enum_values:
-          - STATIC
-          - DYNAMIC
+        enum_values: [STATIC, DYNAMIC]
         example: STATIC
         mandatory: true
       - model_name: id
         tf_name: destination_interface_id
         type: String
         data_path: [destinationInterface]
-        description: ID of destination interface
+        description: ID of destination security zone or interface group
         example: 76d24097-41c4-4558-a4d0-a8c07ac08480
         exclude_example: true
         exclude_test: true
@@ -281,7 +277,7 @@ attributes:
         tf_name: source_interface_id
         type: String
         data_path: [sourceInterface]
-        description: ID of source interface
+        description: ID of source security zone or interface group
         example: 76d24097-41c4-4558-a4d0-a8c07ac08482
         exclude_example: true
         exclude_test: true

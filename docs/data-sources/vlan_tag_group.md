@@ -32,6 +32,7 @@ data "fmc_vlan_tag_group" "example" {
 - `description` (String) Optional user-created description.
 - `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
+- `type` (String) Type of the object; this value is always 'VlanGroupTag'
 - `vlan_tags` (Attributes Set) (see [below for nested schema](#nestedatt--vlan_tags))
 
 <a id="nestedatt--literals"></a>

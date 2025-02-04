@@ -99,11 +99,11 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster control node device ID.").String,
 				Required:            true,
 			},
-			"control_node_vni_network": schema.StringAttribute{
+			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
 				Optional:            true,
 			},
-			"control_node_ccl_network": schema.StringAttribute{
+			"control_node_ccl_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network").String,
 				Required:            true,
 			},
@@ -353,7 +353,7 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}

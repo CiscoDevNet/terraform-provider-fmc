@@ -31,6 +31,7 @@ import (
 func TestAccDataSourceFmcVLANTagGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.description", "My vlan tag group name"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.vlan_tags.0.id"))

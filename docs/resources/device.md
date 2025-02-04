@@ -45,7 +45,6 @@ resource "fmc_device" "example" {
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) The UUID of the assigned NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
-  - Default value: `true`
 - `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
   - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `Legacy`
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.

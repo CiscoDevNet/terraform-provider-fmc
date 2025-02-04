@@ -49,6 +49,4 @@ attributes:
       - model_name: type
         type: String
         description: Type of the object; this value is always 'ProtocolPortObject'.
-        default_value: ProtocolPortObject
-        exclude_example: true
-        exclude_test: true
+        computed: true

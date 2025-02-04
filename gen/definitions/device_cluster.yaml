@@ -30,13 +30,13 @@ attributes:
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: vniNetwork
-    tf_name: control_node_vni_network
+    tf_name: control_node_vni_prefix
     data_path: [commonBootstrap]
     type: String
     description: Cluster Control VXLAN Network Identifier (VNI) Network
     example: 10.10.3.0/27
   - model_name: cclNetwork
-    tf_name: control_node_ccl_network
+    tf_name: control_node_ccl_prefix
     data_path: [commonBootstrap]
     type: String
     mandatory: true

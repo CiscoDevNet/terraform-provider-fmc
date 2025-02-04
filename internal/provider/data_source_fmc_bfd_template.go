@@ -22,7 +22,9 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
@@ -115,6 +117,10 @@ func (d *BFDTemplateDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Authentication types",
 				Computed:            true,
 			},
+			"authentication_password_encryption": schema.StringAttribute{
+				MarkdownDescription: "Determines if authentication_password is encrypted",
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -140,6 +146,14 @@ func (d *BFDTemplateDataSource) Configure(_ context.Context, req datasource.Conf
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *BFDTemplateDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionBFDTemplate) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support BFD Template, minimum required version is 7.4", d.client.FMCVersion))
+		return
+	}
 	var config BFDTemplate
 
 	// Read config
