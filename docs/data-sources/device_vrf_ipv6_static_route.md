@@ -3,12 +3,12 @@
 page_title: "fmc_device_vrf_ipv6_static_route Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device VRF IPv6 Static Route.
+  This data source reads the Device VRF IPv6 Static Route.
 ---
 
 # fmc_device_vrf_ipv6_static_route (Data Source)
 
-This data source can read the Device VRF IPv6 Static Route.
+This data source reads the Device VRF IPv6 Static Route.
 
 ## Example Usage
 
@@ -25,13 +25,13 @@ data "fmc_device_vrf_ipv6_static_route" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
-- `id` (String) The id of the object
-- `vrf_id` (String) UUID of the parent VRF.
+- `device_id` (String) Id of the parent device .
+- `id` (String) Id of the object
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 

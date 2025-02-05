@@ -64,7 +64,7 @@ func TestAccFmcNetworkGroup(t *testing.T) {
 
 const testAccFmcNetworkGroupPrerequisitesConfig = `
 resource "fmc_range" "test" {
-  name      = "test_fmc_network_groups"
+  name      = "fmc_network_group_range"
   ip_range  = "2005::10-2005::12"
 }
 `

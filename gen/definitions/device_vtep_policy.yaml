@@ -3,7 +3,7 @@ name: Device VTEP Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vteppolicies
 res_description: >-
   This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource
-  `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single UUID for
+  `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single Id for
   every request to create a new VTEP Policy on the same Device.
   Thus multiple resources per Device would unexpectedly overwrite the same set of settings.
 doc_category: Devices
@@ -13,7 +13,7 @@ attributes:
     type: String
     reference: true
     description: >-
-      UUID of the parent device (fmc_device.example.id).
+      Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
   - model_name: nveEnable
@@ -34,8 +34,7 @@ attributes:
         tf_name: source_interface_id
         id: true
         type: String
-        description: >-
-          UUID of the source interface (e.g. fmc_physical_interface.example.id). It cannot refer to a subinterface.
+        description: Id of the source interface. It cannot refer to a subinterface.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_device_physical_interface.test.id
       - model_name: nveVtepId

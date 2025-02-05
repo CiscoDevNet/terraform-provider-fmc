@@ -3,12 +3,12 @@
 page_title: "fmc_device Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device.
+  This resource manages a Device.
 ---
 
 # fmc_device (Resource)
 
-This resource can manage a Device.
+This resource manages a Device.
 
 ## Example Usage
 
@@ -40,7 +40,7 @@ resource "fmc_device" "example" {
 ### Optional
 
 - `device_group_id` (String) ID of the device group.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `health_policy_id` (String) The UUID of the assigned Health policy.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) The UUID of the assigned NAT policy.
@@ -53,7 +53,7 @@ resource "fmc_device" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `info_deployed_access_policy_name` (String) Deployed Access Control Policy Name - Informational only.
 - `info_deployed_health_policy_name` (String) Deployed Health Policy Name - Informational only.
 - `info_deployment_status` (String) Shows deployment status - Informational only.

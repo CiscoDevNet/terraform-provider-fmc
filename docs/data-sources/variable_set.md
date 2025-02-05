@@ -3,12 +3,12 @@
 page_title: "fmc_variable_set Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Variable Set.
+  This data source reads the Variable Set.
 ---
 
 # fmc_variable_set (Data Source)
 
-This data source can read the Variable Set.
+This data source reads the Variable Set.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_variable_set" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the Variable Set. Names for built-in set is 'Default-Set'.
 
 ### Read-Only

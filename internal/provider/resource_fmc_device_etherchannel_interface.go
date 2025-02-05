@@ -65,43 +65,43 @@ func (r *DeviceEtherChannelInterfaceResource) Metadata(ctx context.Context, req 
 func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device EtherChannel Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device EtherChannel Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.").String,
 				Optional:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the interface.").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable the interface.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
@@ -122,7 +122,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone.").String,
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
@@ -147,7 +147,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"enable_sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to propagate SGT.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable SGT propagation.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
@@ -157,12 +157,12 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Required:            true,
 			},
 			"selected_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing physical interfaces.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_device_physical_interface.example.id, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{

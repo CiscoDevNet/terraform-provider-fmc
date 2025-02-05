@@ -26,6 +26,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 )
 
 // End of section. //template:end imports
@@ -53,29 +54,29 @@ func (d *ICMPv4ObjectsDataSource) Metadata(_ context.Context, req datasource.Met
 func (d *ICMPv4ObjectsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the ICMPv4 Objects.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the ICMPv4 Objects.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object. Renaming ICMPv4 objects in bulk is not yet implemented.",
+				MarkdownDescription: "Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed ICMPv4 object.",
+							MarkdownDescription: "Id of the managed ICMPv4 object.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Optional description of the resource.",
+							MarkdownDescription: "Description of the resource.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

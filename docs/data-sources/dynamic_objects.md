@@ -3,12 +3,12 @@
 page_title: "fmc_dynamic_objects Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Dynamic Objects.
+  This data source reads the Dynamic Objects.
 ---
 
 # fmc_dynamic_objects (Data Source)
 
-This data source can read the Dynamic Objects.
+This data source reads the Dynamic Objects.
 
 ## Example Usage
 
@@ -26,20 +26,20 @@ data "fmc_dynamic_objects" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of dynamic objects. The key of the map is the name of the individual Dynamic Objects. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of Dynamic Objects. The key of the map is the name of the individual Dynamic Object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
-- `id` (String) UUID of the managed Dynamic Object.
-- `mappings` (Set of String) List of mappings for the Dynamic Object.
-- `object_type` (String) Type of dynamic object mappings. Currently we support only 'IP'.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed Dynamic Object.
+- `mappings` (Set of String) List of mappings.
+- `object_type` (String) Type of dynamic object mappings.
 - `type` (String) Type of the object; this value is always 'DynamicObject'.

@@ -69,23 +69,23 @@ func TestAccDataSourceFmcExtendedACL(t *testing.T) {
 
 const testAccDataSourceFmcExtendedACLPrerequisitesConfig = `
 resource "fmc_network" "test" {
-  name   = "mynetwork2"
+  name   = "fmc_extended_acl_network"
   prefix = "10.0.0.0/24"
 }
 
 resource "fmc_host" "test" {
-  name = "myhost2"
+  name = "fmc_extended_acl_host"
   ip   = "10.1.1.1"
 }
 
 resource "fmc_port" "test" {
-  name = "myport2"
+  name = "fmc_extended_acl_port"
   protocol = "TCP"
   port = "65000"
 }
 
 resource "fmc_sgt" "test" {
-  name = "mysgt2"
+  name = "fmc_extended_acl_sgt"
   tag = "11"
 }
 `

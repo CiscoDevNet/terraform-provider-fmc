@@ -3,18 +3,18 @@
 page_title: "fmc_device_cluster Resource - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This resource can manage a Device Cluster.
+  This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
 ---
 
 # fmc_device_cluster (Resource)
 
-This resource can manage a Device Cluster.
+This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_device_cluster" "example" {
-  name                          = "MyDeviceClusterName1"
+  name                          = "fmc_device_cluster"
   cluster_key                   = "cisco123"
   control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_vni_prefix       = "10.10.3.0/27"
@@ -42,23 +42,23 @@ resource "fmc_device_cluster" "example" {
 - `cluster_key` (String) Secret key for the cluster, between 1 nd 63 characters.
 - `control_node_ccl_ipv4_address` (String) Cluster control link IPv4 address / VTEP IPv4 address.
 - `control_node_ccl_prefix` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
-- `control_node_device_id` (String) Cluster control node device ID.
+- `control_node_device_id` (String) Cluster Control Node device ID.
 - `control_node_interface_id` (String) Cluster control link interface ID.
 - `control_node_interface_name` (String) Cluster control link interface Name.
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
   - Range: `1`-`255`
-- `name` (String) The name of the FTD Cluster.
+- `name` (String) Name of the FTD Cluster.
 
 ### Optional
 
 - `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `data_devices` (Attributes List) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the resource; This is always `DeviceCluster`.
 
 <a id="nestedatt--data_devices"></a>
@@ -66,8 +66,8 @@ resource "fmc_device_cluster" "example" {
 
 Required:
 
-- `data_node_ccl_ipv4_address` (String) Cluster data node link IPv4 address / VTEP IPv4 address.
-- `data_node_device_id` (String) Cluster data node device ID.
+- `data_node_ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
+- `data_node_device_id` (String) Cluster Data Node device ID.
 - `data_node_priority` (Number) Priority of cluster data node.
   - Range: `1`-`255`
 

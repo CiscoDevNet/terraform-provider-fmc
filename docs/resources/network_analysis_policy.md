@@ -3,12 +3,12 @@
 page_title: "fmc_network_analysis_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage a Network Analysis Policy.
+  This resource manages a Network Analysis Policy.
 ---
 
 # fmc_network_analysis_policy (Resource)
 
-This resource can manage a Network Analysis Policy.
+This resource manages a Network Analysis Policy.
 
 ## Example Usage
 
@@ -32,13 +32,13 @@ resource "fmc_network_analysis_policy" "example" {
 ### Optional
 
 - `description` (String) Optional description of the policy.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `inspection_mode` (String) Inspection mode.
   - Choices: `PREVENTION`, `DETECTION`
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

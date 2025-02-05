@@ -3,12 +3,12 @@
 page_title: "fmc_device_etherchannel_interface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device EtherChannel Interface.
+  This resource manages a Device EtherChannel Interface.
 ---
 
 # fmc_device_etherchannel_interface (Resource)
 
-This resource can manage a Device EtherChannel Interface.
+This resource manages a Device EtherChannel Interface.
 
 ## Example Usage
 
@@ -38,7 +38,7 @@ resource "fmc_device_etherchannel_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 - `ether_channel_id` (String) Value of Ether Channel ID, allowed range 1 to 48.
 - `mode` (String) Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
   - Choices: `INLINE`, `PASSIVE`, `TAP`, `ERSPAN`, `NONE`, `SWITCHPORT`
@@ -50,13 +50,13 @@ resource "fmc_device_etherchannel_interface" "example" {
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
+- `enable_sgt_propagate` (Boolean) Enable SGT propagation.
   - Default value: `false`
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enabled` (Boolean) Enable the interface.
   - Default value: `true`
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
   - Choices: `AUTO`, `CL108RS`, `CL74FC`, `CL91RS`, `DISABLE`
@@ -108,7 +108,7 @@ resource "fmc_device_etherchannel_interface" "example" {
   - Range: `0`-`3600000`
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_access` (Boolean) Indicates whether to enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
@@ -123,17 +123,17 @@ resource "fmc_device_etherchannel_interface" "example" {
   - Range: `1`-`30`
 - `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
   - Range: `0`-`65535`
-- `security_zone_id` (String) UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.
-- `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface). (see [below for nested schema](#nestedatt--selected_interfaces))
+- `security_zone_id` (String) Id of the assigned security zone.
+- `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `name` (String) Name of the interface; it must already be present on the device.
-- `type` (String) Type of the resource.
+- `type` (String) Type of the object.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`
@@ -179,7 +179,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_device_physical_interface.example.id, ...).
+- `id` (String) Id of the object.
 - `name` (String) Name of the selected interface
 - `type` (String) Type of the selected interface
 

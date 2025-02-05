@@ -3,12 +3,12 @@
 page_title: "fmc_file_category Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the File Category.
+  This data source reads the File Category.
 ---
 
 # fmc_file_category (Data Source)
 
-This data source can read the File Category.
+This data source reads the File Category.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_file_category" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the File Category. There can be only build-in File Categories.
 
 ### Read-Only

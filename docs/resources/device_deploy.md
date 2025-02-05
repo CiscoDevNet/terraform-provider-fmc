@@ -3,12 +3,12 @@
 page_title: "fmc_device_deploy Resource - terraform-provider-fmc"
 subcategory: "Deployment"
 description: |-
-  This resource can manage a Device Deploy.
+  This resource is used to trigger deployment to all deployable devices on each terraform apply.
 ---
 
 # fmc_device_deploy (Resource)
 
-This resource can manage a Device Deploy.
+This resource is used to trigger deployment to all deployable devices on each `terraform apply`.
 
 ## Example Usage
 
@@ -25,15 +25,15 @@ resource "fmc_device_deploy" "example" {
 
 ### Required
 
-- `device_id_list` (List of String) List of device ids to be deployed.
+- `device_id_list` (List of String) List of device Ids to be deployed.
 
 ### Optional
 
-- `deployment_note` (String) User note.
-- `domain` (String) The name of the FMC domain
+- `deployment_note` (String) Deployment note.
+- `domain` (String) Name of the FMC domain
 - `ignore_warning` (Boolean) Ignore warnings during deployment.
 - `version` (String) Version to which the deployment should be done in milliseconds unix timestamp. If not provided, the latest version will be used.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object

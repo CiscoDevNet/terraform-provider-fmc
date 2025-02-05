@@ -3,12 +3,12 @@
 page_title: "fmc_ftd_nat_policy Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the FTD NAT Policy.
+  This data source reads the FTD NAT Policy.
 ---
 
 # fmc_ftd_nat_policy (Data Source)
 
-This data source can read the FTD NAT Policy.
+This data source reads the FTD NAT Policy.
 
 ## Example Usage
 
@@ -23,9 +23,9 @@ data "fmc_ftd_nat_policy" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of the FTD Network Address Translation (NAT) policy.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the FTD Network Address Translation (NAT) policy.
 
 ### Read-Only
 

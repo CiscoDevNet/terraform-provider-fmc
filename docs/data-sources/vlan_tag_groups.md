@@ -3,19 +3,19 @@
 page_title: "fmc_vlan_tag_groups Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the VLAN Tag Groups.
+  This data source reads the VLAN Tag Groups.
 ---
 
 # fmc_vlan_tag_groups (Data Source)
 
-This data source can read the VLAN Tag Groups.
+This data source reads the VLAN Tag Groups.
 
 ## Example Usage
 
 ```terraform
 data "fmc_vlan_tag_groups" "example" {
   items = {
-    "vlan_tag_group_1" = {
+    "fmc_vlan_tag_groups" = {
     }
   }
 }
@@ -26,12 +26,12 @@ data "fmc_vlan_tag_groups" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `items` (Attributes Map) Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

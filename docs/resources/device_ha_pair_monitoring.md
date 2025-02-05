@@ -3,12 +3,12 @@
 page_title: "fmc_device_ha_pair_monitoring Resource - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This resource can manage a Device HA Pair Monitoring.
+  This resource manages a Device HA Pair Monitoring.
 ---
 
 # fmc_device_ha_pair_monitoring (Resource)
 
-This resource can manage a Device HA Pair Monitoring.
+This resource manages a Device HA Pair Monitoring.
 
 ## Example Usage
 
@@ -32,19 +32,19 @@ resource "fmc_device_ha_pair_monitoring" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent HA device (fmc_device.example.id).
+- `device_id` (String) Id of the parent HA device (fmc_device.example.id).
 - `logical_name` (String) Logical Name of the monitored interface.
 - `monitor_interface` (Boolean) Monitor this interface for failures.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `ipv4_standby_address` (String) Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `ipv4_active_address` (String) Active IPv4 address from the interface.
 - `ipv4_netmask` (String) IPv4 Network Mask assigned on the interface.
 - `type` (String) Type of the resource.

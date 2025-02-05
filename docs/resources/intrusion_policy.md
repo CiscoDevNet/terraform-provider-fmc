@@ -3,18 +3,18 @@
 page_title: "fmc_intrusion_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage an Intrusion Policy.
+  This resource manages an Intrusion Policy.
 ---
 
 # fmc_intrusion_policy (Resource)
 
-This resource can manage an Intrusion Policy.
+This resource manages an Intrusion Policy.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_intrusion_policy" "example" {
-  name            = "ips_policy_1"
+  name            = "fmc_intrusion_policy"
   description     = "My IPS Policy"
   base_policy_id  = ""
   inspection_mode = "PREVENTION"
@@ -32,13 +32,13 @@ resource "fmc_intrusion_policy" "example" {
 ### Optional
 
 - `description` (String) Optional description of the policy.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `inspection_mode` (String) Inspection mode.
   - Choices: `PREVENTION`, `DETECTION`
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

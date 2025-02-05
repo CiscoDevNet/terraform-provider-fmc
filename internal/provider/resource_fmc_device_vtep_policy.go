@@ -66,25 +66,25 @@ func (r *DeviceVTEPPolicyResource) Metadata(ctx context.Context, req resource.Me
 func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single UUID for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single Id for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -102,7 +102,7 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the source interface (e.g. fmc_physical_interface.example.id). It cannot refer to a subinterface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the source interface. It cannot refer to a subinterface.").String,
 							Optional:            true,
 						},
 						"nve_number": schema.Int64Attribute{

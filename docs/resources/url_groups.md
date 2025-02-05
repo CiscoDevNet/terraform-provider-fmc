@@ -3,12 +3,19 @@
 page_title: "fmc_url_groups Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting fmc_url_groups can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+  This resource manages URL Groups through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_url_groups (Resource)
 
-This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_url_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+This resource manages URL Groups through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -41,11 +48,11 @@ resource "fmc_url_groups" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

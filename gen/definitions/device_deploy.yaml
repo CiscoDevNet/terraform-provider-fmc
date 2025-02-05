@@ -1,6 +1,7 @@
 ---
 name: Device Deploy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deployment/deploymentrequests
+res_description: This resource is used to trigger deployment to all deployable devices on each `terraform apply`.
 no_data_source: true
 no_import: true
 no_delete: true
@@ -31,14 +32,14 @@ attributes:
   - model_name: deviceList
     tf_name: device_id_list
     type: List
-    description: List of device ids to be deployed.
+    description: List of device Ids to be deployed.
     mandatory: true
     element_type: String
     example: 2fe9063e-8bd5-11ef-9475-e4aeac78cf37
     test_value: "[var.device_id]"
   - model_name: deploymentNote
     type: String
-    description: User note.
+    description: Deployment note.
     example: Terraform initiated deployment
     exclude_test: true
 test_prerequisites: |-

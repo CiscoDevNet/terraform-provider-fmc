@@ -65,25 +65,25 @@ func (r *StandardACLResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Standard ACL.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Standard ACL.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.2").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{

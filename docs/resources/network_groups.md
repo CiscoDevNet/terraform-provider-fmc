@@ -3,12 +3,12 @@
 page_title: "fmc_network_groups Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of Network Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting fmc_network_groups can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size). The terraform import of the resource is not implemented, you need to instead use the singular resource fmc_network_group.
+  This resource manages a Network Groups.
 ---
 
 # fmc_network_groups (Resource)
 
-This plural resource manages a bulk of Network Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_network_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size). The `terraform import` of the resource is not implemented, you need to instead use the singular resource `fmc_network_group`.
+This resource manages a Network Groups.
 
 ## Example Usage
 
@@ -37,12 +37,12 @@ resource "fmc_network_groups" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of network groups. The key of the map is the name of the individual Network Group. Renaming Network Groups is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of network groups. The key of the map is the name of the individual Network Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

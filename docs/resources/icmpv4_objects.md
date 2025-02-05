@@ -3,12 +3,19 @@
 page_title: "fmc_icmpv4_objects Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of ICMPv4. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting fmc_icmpv4_objects can thus take much more time than creating it
+  This resource manages ICMPv4 Objects through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_icmpv4_objects (Resource)
 
-This plural resource manages a bulk of ICMPv4. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting `fmc_icmpv4_objects` can thus take much more time than creating it
+This resource manages ICMPv4 Objects through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -29,15 +36,15 @@ resource "fmc_icmpv4_objects" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object. Renaming ICMPv4 objects in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
@@ -46,14 +53,14 @@ Optional:
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
-- `description` (String) Optional description of the resource.
+- `description` (String) Description of the resource.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed ICMPv4 object.
+- `id` (String) Id of the managed ICMPv4 object.
 - `type` (String)
 
 ## Import

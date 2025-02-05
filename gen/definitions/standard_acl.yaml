@@ -6,7 +6,7 @@ minimum_version_create: "7.2"
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the object.
     mandatory: true
     example: stdacl1
     data_source_query: true

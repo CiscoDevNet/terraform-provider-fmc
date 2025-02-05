@@ -3,12 +3,12 @@
 page_title: "fmc_range Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Range.
+  This data source reads the Range.
 ---
 
 # fmc_range (Data Source)
 
-This data source can read the Range.
+This data source reads the Range.
 
 ## Example Usage
 
@@ -23,9 +23,9 @@ data "fmc_range" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) User-created name of the resource.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the object.
 
 ### Read-Only
 

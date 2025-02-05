@@ -7,12 +7,12 @@ attributes:
     type: String
     description: User-created name of the object.
     mandatory: true
-    example: vlan_tag_group_1
+    example: fmc_vlan_tag_group
     data_source_query: true
   - model_name: description
     type: String
     description: Optional user-created description.
-    example: "My vlan tag group name"
+    example: "My VLAN Tag Group"
   - model_name: type
     type: String
     description: Type of the object; this value is always 'VlanGroupTag'
@@ -48,7 +48,7 @@ attributes:
         test_value: "22"
 test_prerequisites: |-
   resource "fmc_vlan_tag" "test" {
-    name        = "vlan_tag_1111"
+    name        = "fmc_vlan_tag_group_vlan_tag"
     description = "My TAG id"
     overridable = false
     start_tag   = 11

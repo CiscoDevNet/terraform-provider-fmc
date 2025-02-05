@@ -3,12 +3,12 @@
 page_title: "fmc_range Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Range.
+  This resource manages a Range.
 ---
 
 # fmc_range (Resource)
 
-This resource can manage a Range.
+This resource manages a Range.
 
 ## Example Usage
 
@@ -26,17 +26,17 @@ resource "fmc_range" "example" {
 ### Required
 
 - `ip_range` (String) Range of addresses, IPv4 or IPv6.
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the object.
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

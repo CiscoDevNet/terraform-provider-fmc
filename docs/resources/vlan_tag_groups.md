@@ -3,19 +3,26 @@
 page_title: "fmc_vlan_tag_groups Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of VLAN Tag Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting fmc_vlan_tag_groups can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+  This resource manages VLAN Tag Groups through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_vlan_tag_groups (Resource)
 
-This plural resource manages a bulk of VLAN Tag Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_vlan_tag_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).
+This resource manages VLAN Tag Groups through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_vlan_tag_groups" "example" {
   items = {
-    vlan_tag_group_1 = {
+    fmc_vlan_tag_groups = {
       description = "My vlan tag group name"
       overridable = true
       vlan_tags = [
@@ -43,11 +50,11 @@ resource "fmc_vlan_tag_groups" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

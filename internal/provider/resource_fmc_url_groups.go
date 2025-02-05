@@ -65,18 +65,18 @@ func (r *URLGroupsResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This plural resource manages a bulk of URL Groups. The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one. Updating and deleting `fmc_url_groups` can thus take much more time than creating it (even >500 times more time, i.e. >50000%, depending on the change size).").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages URL Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

@@ -3,17 +3,17 @@ name: Device HA Pair
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs
 doc_category: Device
 test_tags: [TF_VAR_device_id, TF_VAR_device_2_id]
-res_description: Resource to manage HA Pair. failed_interfaces_limit or failed_interfaces_percent needs to be set.
+res_description: This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
 attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of the High Availability (HA) Pair.
+    description: Name of the High Availability (HA) Pair.
     data_source_query: true
     example: FTD_HA
   - model_name: type
     type: String
-    description: Type of the resource; This is always `DeviceHAPair`.
+    description: Type of the object; This is always `DeviceHAPair`.
     computed: true
   - model_name: id
     type: String

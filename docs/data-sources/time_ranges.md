@@ -3,12 +3,12 @@
 page_title: "fmc_time_ranges Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Time Ranges.
+  This data source reads the Time Ranges.
 ---
 
 # fmc_time_ranges (Data Source)
 
-This data source can read the Time Ranges.
+This data source reads the Time Ranges.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_time_ranges" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `items` (Attributes Map) Map of Time Ranges. The key of the map is the name of the individual Time Range. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

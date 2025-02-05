@@ -3,12 +3,12 @@
 page_title: "fmc_security_zones Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Security Zones.
+  This data source reads the Security Zones.
 ---
 
 # fmc_security_zones (Data Source)
 
-This data source can read the Security Zones.
+This data source reads the Security Zones.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_security_zones" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. Renaming Security Zone in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

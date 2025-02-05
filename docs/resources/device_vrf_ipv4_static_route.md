@@ -3,12 +3,12 @@
 page_title: "fmc_device_vrf_ipv4_static_route Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device VRF IPv4 Static Route.
+  This resource manages a Device VRF IPv4 Static Route.
 ---
 
 # fmc_device_vrf_ipv4_static_route (Resource)
 
-This resource can manage a Device VRF IPv4 Static Route.
+This resource manages a Device VRF IPv4 Static Route.
 
 ## Example Usage
 
@@ -34,14 +34,14 @@ resource "fmc_device_vrf_ipv4_static_route" "example" {
 ### Required
 
 - `destination_networks` (Attributes Set) Set of the destination networks matching this route (fmc_network, fmc_host, but not fmc_range). (see [below for nested schema](#nestedatt--destination_networks))
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 - `interface_id` (String) UUID of the same interface which has been given by `interface_logical_name` (e.g. fmc_device_physical_interface.example.id or fmc_device_subinterface.example.id). The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).
 - `interface_logical_name` (String) Logical name of the parent interface (fmc_device_physical_interface.example.logical_name or fmc_device_subinterface.example.logical_name). For transparent mode, any bridge group member interface. For routed mode with bridge groups, any bridge group member interface for the BVI name.
-- `vrf_id` (String) UUID of the parent VRF.
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `gateway_host_literal` (String) The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.
 - `gateway_host_object_id` (String) UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.
 - `is_tunneled` (Boolean) Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.
@@ -51,7 +51,7 @@ resource "fmc_device_vrf_ipv4_static_route" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--destination_networks"></a>
 ### Nested Schema for `destination_networks`

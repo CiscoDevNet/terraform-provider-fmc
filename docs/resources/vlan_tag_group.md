@@ -3,19 +3,19 @@
 page_title: "fmc_vlan_tag_group Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a VLAN Tag Group.
+  This resource manages a VLAN Tag Group.
 ---
 
 # fmc_vlan_tag_group (Resource)
 
-This resource can manage a VLAN Tag Group.
+This resource manages a VLAN Tag Group.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_vlan_tag_group" "example" {
-  name        = "vlan_tag_group_1"
-  description = "My vlan tag group name"
+  name        = "fmc_vlan_tag_group"
+  description = "My VLAN Tag Group"
   overridable = true
   vlan_tags = [
     {
@@ -42,13 +42,13 @@ resource "fmc_vlan_tag_group" "example" {
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'VlanGroupTag'
 
 <a id="nestedatt--vlan_tags"></a>

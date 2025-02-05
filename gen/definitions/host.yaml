@@ -15,7 +15,7 @@ attributes:
     computed: true
   - model_name: description
     type: String
-    description: Description
+    description: Description of the resource.
     example: My host object
   - model_name: value
     tf_name: ip

@@ -3,12 +3,12 @@
 page_title: "fmc_urls Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the URLs.
+  This data source reads the URLs.
 ---
 
 # fmc_urls (Data Source)
 
-This data source can read the URLs.
+This data source reads the URLs.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_urls" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual URL object. Renaming URL object in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

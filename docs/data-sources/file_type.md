@@ -3,12 +3,12 @@
 page_title: "fmc_file_type Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the File Type.
+  This data source reads the File Type.
 ---
 
 # fmc_file_type (Data Source)
 
-This data source can read the File Type.
+This data source reads the File Type.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_file_type" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the File Type. There can be only build-in File Types.
 
 ### Read-Only

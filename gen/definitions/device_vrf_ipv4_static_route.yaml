@@ -7,15 +7,13 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    description: >-
-      UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
   - tf_name: vrf_id
     type: String
     reference: true
-    description: >-
-      UUID of the parent VRF.
+    description: Id of the parent VRF.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_vrf.test.id
   - model_name: interfaceName

@@ -1,5 +1,5 @@
 resource "fmc_file_policy" "example" {
-  name                         = "file_policy_1"
+  name                         = "fmc_file_policy"
   description                  = "My file policy"
   first_time_file_analysis     = true
   custom_detection_list        = true

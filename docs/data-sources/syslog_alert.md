@@ -3,12 +3,12 @@
 page_title: "fmc_syslog_alert Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the Syslog Alert.
+  This data source reads the Syslog Alert.
 ---
 
 # fmc_syslog_alert (Data Source)
 
-This data source can read the Syslog Alert.
+This data source reads the Syslog Alert.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_syslog_alert" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the Syslog Alert. There is no built-in Syslog alert.
 
 ### Read-Only

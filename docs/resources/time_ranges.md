@@ -3,12 +3,18 @@
 page_title: "fmc_time_ranges Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Time Ranges.
+  This resource manages Time Ranges through bulk operations.
+  The following restrictions apply:
+  Bulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_time_ranges (Resource)
 
-This resource can manage a Time Ranges.
+This resource manages Time Ranges through bulk operations.
+
+The following restrictions apply:
+  - Bulk object deletion is not supported by FMC, it will be handled one-by-one
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -42,11 +48,11 @@ resource "fmc_time_ranges" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

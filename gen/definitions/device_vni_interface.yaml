@@ -8,7 +8,7 @@ attributes:
     type: String
     reference: true
     requires_replace: true
-    description: UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
   - model_name: vniId

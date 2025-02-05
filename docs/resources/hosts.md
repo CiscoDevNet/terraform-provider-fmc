@@ -3,12 +3,19 @@
 page_title: "fmc_hosts Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of Hosts. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting fmc_hosts can thus take much more time than creating it
+  This resource manages Hosts through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_hosts (Resource)
 
-This plural resource manages a bulk of Hosts. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting `fmc_hosts` can thus take much more time than creating it
+This resource manages Hosts through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -28,15 +35,15 @@ resource "fmc_hosts" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of hosts. The key of the map is the name of the individual Host. Renaming Hosts in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of hosts. The key of the map is the name of the individual Host. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
@@ -47,12 +54,12 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the resource.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Host.
+- `id` (String) Id of the managed Host.
 - `type` (String) Type of the object; this value is always 'Host'.
 
 ## Import

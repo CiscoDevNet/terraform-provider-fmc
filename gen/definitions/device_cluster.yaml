@@ -2,13 +2,14 @@
 name: Device Cluster
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster
 doc_category: Device
+res_description: This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
 test_tags: [TF_VAR_device_id, TF_VAR_device_interface_name]
 attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of the FTD Cluster.
-    example: MyDeviceClusterName1
+    description: Name of the FTD Cluster.
+    example: fmc_device_cluster
     data_source_query: true
   - model_name: type
     type: String
@@ -26,7 +27,7 @@ attributes:
     data_path: [controlDevice, deviceDetails]
     type: String
     mandatory: true
-    description: Cluster control node device ID.
+    description: Cluster Control Node device ID.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: vniNetwork
@@ -91,14 +92,14 @@ attributes:
       data_path: [deviceDetails]
       type: String
       mandatory: true
-      description: Cluster data node device ID.
+      description: Cluster Data Node device ID.
       example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     - model_name: cclIp
       tf_name: data_node_ccl_ipv4_address
       data_path: [clusterNodeBootstrap]
       type: String
       mandatory: true
-      description: Cluster data node link IPv4 address / VTEP IPv4 address.
+      description: Cluster Data Node link IPv4 address / VTEP IPv4 address.
       example: 10.10.4.2
     - model_name: priority
       tf_name: data_node_priority

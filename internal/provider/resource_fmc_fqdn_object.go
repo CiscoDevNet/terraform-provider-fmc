@@ -63,29 +63,29 @@ func (r *FQDNObjectResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a FQDN Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN Object.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FQDN object.").String,
 				Required:            true,
 			},
-			"value": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The fully qualified domain name.").String,
+			"fqdn": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Fully qualified domain name.").String,
 				Required:            true,
 			},
 			"dns_resolution": schema.StringAttribute{

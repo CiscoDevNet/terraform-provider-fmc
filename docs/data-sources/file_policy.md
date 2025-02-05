@@ -3,12 +3,12 @@
 page_title: "fmc_file_policy Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the File Policy.
+  This data source reads the File Policy.
 ---
 
 # fmc_file_policy (Data Source)
 
-This data source can read the File Policy.
+This data source reads the File Policy.
 
 ## Example Usage
 
@@ -23,9 +23,9 @@ data "fmc_file_policy" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of file policy.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of file policy.
 
 ### Read-Only
 
@@ -51,9 +51,9 @@ Read-Only:
 - `direction_of_transfer` (String) Direction of file transfer.
 - `file_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_categories))
 - `file_types` (Attributes Set) Defines a list of file types for inspection. (see [below for nested schema](#nestedatt--file_rules--file_types))
-- `id` (String) Unique identifier representing the File Rule.
+- `id` (String) Id of File Rule
 - `store_files` (Set of String) List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
-- `type` (String) The name of file rule type.
+- `type` (String) Type of File Rule.
 
 <a id="nestedatt--file_rules--file_categories"></a>
 ### Nested Schema for `file_rules.file_categories`

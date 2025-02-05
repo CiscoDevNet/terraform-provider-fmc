@@ -3,12 +3,12 @@
 page_title: "fmc_icmpv6_object Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the ICMPv6 Object.
+  This data source reads the ICMPv6 Object.
 ---
 
 # fmc_icmpv6_object (Data Source)
 
-This data source can read the ICMPv6 Object.
+This data source reads the ICMPv6 Object.
 
 ## Example Usage
 
@@ -23,13 +23,13 @@ data "fmc_icmpv6_object" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) User-created name of the resource.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the resource.
 
 ### Read-Only
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the resource.
 - `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
 - `overridable` (Boolean) Indicates whether object values can be overridden.

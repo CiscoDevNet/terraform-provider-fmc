@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcFilePolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "name", "file_policy_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "name", "fmc_file_policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_file_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "description", "My file policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_file_policy.test", "first_time_file_analysis", "true"))
@@ -74,7 +74,7 @@ func TestAccDataSourceFmcFilePolicy(t *testing.T) {
 
 func testAccDataSourceFmcFilePolicyConfig() string {
 	config := `resource "fmc_file_policy" "test" {` + "\n"
-	config += `	name = "file_policy_1"` + "\n"
+	config += `	name = "fmc_file_policy"` + "\n"
 	config += `	description = "My file policy"` + "\n"
 	config += `	first_time_file_analysis = true` + "\n"
 	config += `	custom_detection_list = true` + "\n"
@@ -109,7 +109,7 @@ func testAccDataSourceFmcFilePolicyConfig() string {
 
 func testAccNamedDataSourceFmcFilePolicyConfig() string {
 	config := `resource "fmc_file_policy" "test" {` + "\n"
-	config += `	name = "file_policy_1"` + "\n"
+	config += `	name = "fmc_file_policy"` + "\n"
 	config += `	description = "My file policy"` + "\n"
 	config += `	first_time_file_analysis = true` + "\n"
 	config += `	custom_detection_list = true` + "\n"

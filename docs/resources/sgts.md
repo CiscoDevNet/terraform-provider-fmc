@@ -3,12 +3,21 @@
 page_title: "fmc_sgts Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a SGTs.
+  This resource manages SGTs through bulk operations.
+  The following restrictions apply:
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_sgts (Resource)
 
-This resource can manage a SGTs.
+This resource manages SGTs through bulk operations.
+
+The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
+  - Bulk object creation is not supported by FMC, it will be handled one-by-one
+  - Bulk object deletion is not supported by FMC, it will be handled one-by-one
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -32,11 +41,11 @@ resource "fmc_sgts" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

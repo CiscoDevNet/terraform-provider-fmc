@@ -3,12 +3,12 @@
 page_title: "fmc_device_etherchannel_interface Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device EtherChannel Interface.
+  This data source reads the Device EtherChannel Interface.
 ---
 
 # fmc_device_etherchannel_interface (Data Source)
 
-This data source can read the Device EtherChannel Interface.
+This data source reads the Device EtherChannel Interface.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_etherchannel_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the interface; it must already be present on the device.
 
 ### Read-Only
@@ -41,8 +41,8 @@ data "fmc_device_etherchannel_interface" "example" {
 - `description` (String) Optional user-created description.
 - `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enable_sgt_propagate` (Boolean) Enable SGT propagation.
+- `enabled` (Boolean) Enable the interface.
 - `ether_channel_id` (String) Value of Ether Channel ID, allowed range 1 to 48.
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
 - `flow_control_send` (String) Flow Control Send configuraion, can be one of ON, OFF.
@@ -83,7 +83,7 @@ data "fmc_device_etherchannel_interface" "example" {
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_access` (Boolean) Indicates whether to enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
@@ -94,11 +94,11 @@ data "fmc_device_etherchannel_interface" "example" {
 - `override_default_fragment_setting_size` (Number) Override Default Fragment Setting - Fragment Size value
 - `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value
 - `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
-- `security_zone_id` (String) UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.
-- `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface). (see [below for nested schema](#nestedatt--selected_interfaces))
+- `security_zone_id` (String) Id of the assigned security zone.
+- `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
-- `type` (String) Type of the resource.
+- `type` (String) Type of the object.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`
@@ -144,6 +144,6 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_device_physical_interface.example.id, ...).
+- `id` (String) Id of the object.
 - `name` (String) Name of the selected interface
 - `type` (String) Type of the selected interface

@@ -3,12 +3,12 @@
 page_title: "fmc_device_bgp_general_settings Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device BGP General Settings.
+  This resource manages a Device BGP General Settings.
 ---
 
 # fmc_device_bgp_general_settings (Resource)
 
-This resource can manage a Device BGP General Settings.
+This resource manages a Device BGP General Settings.
 
 ## Example Usage
 
@@ -31,8 +31,8 @@ resource "fmc_device_bgp_general_settings" "example" {
 
 ### Required
 
-- `as_number` (String) Autonomous System (AS) number in asplain or asdot format
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `as_number` (String) Autonomous System (AS) number in 'asplain' or 'asdot' format
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
@@ -44,7 +44,7 @@ resource "fmc_device_bgp_general_settings" "example" {
 - `compare_router_id_in_path` (Boolean) Compare Router ID for identical EBGP paths
 - `default_local_preference` (Number) Default local preference
   - Range: `0`-`4294967295`
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `enforce_first_peer_as` (Boolean) Discard updates received from an external BGP (eBGP) peers that do not list their autonomous system (AS) number.
 - `graceful_restart` (Boolean) Enable graceful restart
 - `graceful_restart_restart_time` (Number) Graceful Restart Time in seconds
@@ -55,7 +55,7 @@ resource "fmc_device_bgp_general_settings" "example" {
   - Range: `0`-`65535`
 - `keepalive_interval` (Number) Keepalive interval in seconds
   - Range: `0`-`65535`
-- `log_neighbor_changes` (Boolean) Enable logging of BGP neighbor status changes.
+- `log_neighbor_changes` (Boolean) Logging of BGP neighbor status changes.
 - `min_hold_time` (Number) Minimum hold time (0 or 3-65535 seconds)
   - Range: `0`-`65535`
 - `missing_med_as_best` (Boolean) Treat missing MED as the best preferred path
@@ -72,7 +72,7 @@ resource "fmc_device_bgp_general_settings" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `name` (String) Object name; Always set to 'AsaBGPGeneralTable'
 
 ## Import

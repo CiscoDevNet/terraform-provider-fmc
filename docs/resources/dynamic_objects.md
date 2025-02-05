@@ -3,12 +3,17 @@
 page_title: "fmc_dynamic_objects Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of Dynamic Objects. The FMC API supports quick bulk creation and deletion of this resource. Modification is always done one-by-one. Refresh is done in bulk for all objects and one-by-one for evey object that has mapping defined. Updating/deleting fmc_dynamic_objects can thus take much more time than creating it
+  This resource manages Dynamic Objects through bulk operations.
+  The following restrictions apply:
+  Updates are always done one-by-one.
 ---
 
 # fmc_dynamic_objects (Resource)
 
-This plural resource manages a bulk of Dynamic Objects. The FMC API supports quick bulk creation and deletion of this resource. Modification is always done one-by-one. Refresh is done in bulk for all objects and one-by-one for evey object that has mapping defined. Updating/deleting `fmc_dynamic_objects` can thus take much more time than creating it
+This resource manages Dynamic Objects through bulk operations.
+
+The following restrictions apply:
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -29,32 +34,32 @@ resource "fmc_dynamic_objects" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of dynamic objects. The key of the map is the name of the individual Dynamic Objects. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Dynamic Objects. The key of the map is the name of the individual Dynamic Object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
 Required:
 
-- `object_type` (String) Type of dynamic object mappings. Currently we support only 'IP'.
+- `object_type` (String) Type of dynamic object mappings.
   - Choices: `IP`
 
 Optional:
 
-- `description` (String) Optional user-created description.
-- `mappings` (Set of String) List of mappings for the Dynamic Object.
+- `description` (String) Description of the object.
+- `mappings` (Set of String) List of mappings.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Dynamic Object.
+- `id` (String) Id of the managed Dynamic Object.
 - `type` (String) Type of the object; this value is always 'DynamicObject'.
 
 ## Import

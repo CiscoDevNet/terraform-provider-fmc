@@ -3,12 +3,12 @@
 page_title: "fmc_snmp_alert Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the SNMP Alert.
+  This data source reads the SNMP Alert.
 ---
 
 # fmc_snmp_alert (Data Source)
 
-This data source can read the SNMP Alert.
+This data source reads the SNMP Alert.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_snmp_alert" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the SNMP Alert. There is no built-in SNMP alert.
 
 ### Read-Only

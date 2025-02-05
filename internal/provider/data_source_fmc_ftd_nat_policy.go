@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
@@ -59,20 +60,20 @@ func (d *FTDNATPolicyDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the FTD NAT Policy.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD NAT Policy.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "The name of the FTD Network Address Translation (NAT) policy.",
+				MarkdownDescription: "Name of the FTD Network Address Translation (NAT) policy.",
 				Optional:            true,
 				Computed:            true,
 			},

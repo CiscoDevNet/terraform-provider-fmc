@@ -8,7 +8,7 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    description: UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: type
@@ -20,8 +20,8 @@ attributes:
     tf_name: logical_name
     type: String
     description: >-
-      Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
-      characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+      Logical name of the interface, unique on the device. Should not contain whitespace or slash
+      characters.
     example: myinterface-0-1
     minimum_test_value: '"iface_minimum"'
   - model_name: enabled

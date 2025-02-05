@@ -7,8 +7,8 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of file policy.
-    example: file_policy_1
+    description: Name of file policy.
+    example: fmc_file_policy
     data_source_query: true
   - model_name: type
     type: String
@@ -63,13 +63,13 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: Unique identifier representing the File Rule.
+        description: Id of File Rule
         resource_id: true
         exclude_example: true
         exclude_test: true
       - model_name: type
         type: String
-        description: The name of file rule type.
+        description: Type of File Rule.
         computed: true
       # Exist in schema but not in GUI
       #- model_name: name

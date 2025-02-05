@@ -3,12 +3,12 @@
 page_title: "fmc_security_zone Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Security Zone.
+  This resource manages a Security Zone.
 ---
 
 # fmc_security_zone (Resource)
 
-This resource can manage a Security Zone.
+This resource manages a Security Zone.
 
 ## Example Usage
 
@@ -30,11 +30,11 @@ resource "fmc_security_zone" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'SecurityZone'.
 
 ## Import

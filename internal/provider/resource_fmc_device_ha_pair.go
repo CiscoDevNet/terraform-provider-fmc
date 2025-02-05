@@ -68,29 +68,29 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("Resource to manage HA Pair. failed_interfaces_limit or failed_interfaces_percent needs to be set.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the High Availability (HA) Pair.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the High Availability (HA) Pair.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource; This is always `DeviceHAPair`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; This is always `DeviceHAPair`.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),

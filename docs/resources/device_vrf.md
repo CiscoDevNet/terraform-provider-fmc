@@ -3,12 +3,12 @@
 page_title: "fmc_device_vrf Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device VRF.
+  This resource manages a Device VRF.
 ---
 
 # fmc_device_vrf (Resource)
 
-This resource can manage a Device VRF.
+This resource manages a Device VRF.
 
 ## Example Usage
 
@@ -32,18 +32,18 @@ resource "fmc_device_vrf" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device.
-- `name` (String) The name of the VRF
+- `device_id` (String) Id of the parent device.
+- `name` (String) Name of the VRF
 
 ### Optional
 
 - `description` (String) VRF description
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `interfaces` (Attributes Set) Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...). (see [below for nested schema](#nestedatt--interfaces))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'VirtualRouter'.
 
 <a id="nestedatt--interfaces"></a>
@@ -51,9 +51,9 @@ resource "fmc_device_vrf" "example" {
 
 Required:
 
-- `interface_id` (String) UUID of the member interface.
-- `interface_logical_name` (String) Logical name of the interface
-- `interface_name` (String) Name of the interface.
+- `interface_id` (String) Id of the member interface.
+- `interface_logical_name` (String) Logical name of the member interface
+- `interface_name` (String) Name of the member interface.
 
 ## Import
 

@@ -3,12 +3,12 @@
 page_title: "fmc_device_vrf Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device VRF.
+  This data source reads the Device VRF.
 ---
 
 # fmc_device_vrf (Data Source)
 
-This data source can read the Device VRF.
+This data source reads the Device VRF.
 
 ## Example Usage
 
@@ -24,13 +24,13 @@ data "fmc_device_vrf" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device.
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of the VRF
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the VRF
 
 ### Read-Only
 
@@ -43,6 +43,6 @@ data "fmc_device_vrf" "example" {
 
 Read-Only:
 
-- `interface_id` (String) UUID of the member interface.
-- `interface_logical_name` (String) Logical name of the interface
-- `interface_name` (String) Name of the interface.
+- `interface_id` (String) Id of the member interface.
+- `interface_logical_name` (String) Logical name of the member interface
+- `interface_name` (String) Name of the member interface.

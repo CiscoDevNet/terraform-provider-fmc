@@ -3,19 +3,19 @@
 page_title: "fmc_access_control_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage an Access Control Policy.
+  This resource manages Access Control Policy (ACP) with corresponding Access Rules and Categories.
 ---
 
 # fmc_access_control_policy (Resource)
 
-This resource can manage an Access Control Policy.
+This resource manages Access Control Policy (ACP) with corresponding Access Rules and Categories.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_access_control_policy" "example" {
-  name                              = "POLICY1"
-  description                       = "My access control policy"
+  name                              = "fmc_access_control_policy"
+  description                       = "My Access Control Policy"
   default_action                    = "BLOCK"
   default_action_log_begin          = true
   default_action_log_end            = false
@@ -27,13 +27,13 @@ resource "fmc_access_control_policy" "example" {
   default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   categories = [
     {
-      name = "cat1"
+      name = "category_1"
     }
   ]
   rules = [
     {
       action = "ALLOW"
-      name   = "rule1"
+      name   = "rule_1"
       source_network_literals = [
         {
           value = "10.1.1.0/24"
@@ -158,41 +158,41 @@ resource "fmc_access_control_policy" "example" {
 
 ### Required
 
-- `default_action` (String) Specifies the default action to take when none of the rules meet the conditions.
+- `default_action` (String) Action to be taken, when traffic does not match any Access Rule.
   - Choices: `BLOCK`, `TRUST`, `PERMIT`, `NETWORK_DISCOVERY`, `INHERIT_FROM_PARENT`
-- `name` (String) The name of the access control policy.
+- `name` (String) Name of the Access Control Policy.
 
 ### Optional
 
-- `categories` (Attributes List) The ordered list of categories. (see [below for nested schema](#nestedatt--categories))
-- `default_action_intrusion_policy_id` (String) UUID of the existing intrusion policy (e.g. fmc_intrusion_policy.example.id). Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
-- `default_action_log_begin` (Boolean) Indicating whether the device will log events at the beginning of the connection.
+- `categories` (Attributes List) Ordered list of categories. (see [below for nested schema](#nestedatt--categories))
+- `default_action_intrusion_policy_id` (String) Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
+- `default_action_log_begin` (Boolean) Log events at the beginning of the connection.
   - Default value: `false`
-- `default_action_log_end` (Boolean) Indicating whether the device will log events at the end of the connection.
+- `default_action_log_end` (Boolean) Log events at the end of the connection.
   - Default value: `false`
-- `default_action_send_events_to_fmc` (Boolean) Indicating whether the device will send events to the Firepower Management Center event viewer.
+- `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
   - Default value: `false`
-- `default_action_send_syslog` (Boolean) Indicating whether the device will send events to a syslog server.
-- `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
+- `default_action_send_syslog` (Boolean) Send events to a syslog server.
+- `default_action_snmp_config_id` (String) Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
+- `default_action_syslog_config_id` (String) Id of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `default_action_syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
-- `description` (String) Description
-- `domain` (String) The name of the FMC domain
-- `prefilter_policy_id` (String) UUID of the prefilter policy.
-- `rules` (Attributes List) The ordered list of rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. The first matching rule is selected. Except for MONITOR rules, the system does not continue to evaluate traffic against additional rules after that traffic matches a rule. (see [below for nested schema](#nestedatt--rules))
+- `description` (String) Description of the Access Control Policy.
+- `domain` (String) Name of the FMC domain
+- `prefilter_policy_id` (String) Id of the Prefilter Policy.
+- `rules` (Attributes List) Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. (see [below for nested schema](#nestedatt--rules))
 
 ### Read-Only
 
-- `default_action_id` (String) Default action ID.
-- `id` (String) The id of the object
+- `default_action_id` (String) Id of the default action.
+- `id` (String) Id of the object
 
 <a id="nestedatt--categories"></a>
 ### Nested Schema for `categories`
 
 Required:
 
-- `name` (String) User-specified unique string.
+- `name` (String) Name of the Category.
 
 Optional:
 
@@ -202,7 +202,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Identifier of the category.
+- `id` (String) Id of the Category.
 
 
 <a id="nestedatt--rules"></a>
@@ -210,65 +210,65 @@ Read-Only:
 
 Required:
 
-- `action` (String) What to do when the conditions defined by the rule are met.
+- `action` (String) Rule action.
   - Choices: `ALLOW`, `TRUST`, `BLOCK`, `MONITOR`, `BLOCK_RESET`, `BLOCK_INTERACTIVE`, `BLOCK_RESET_INTERACTIVE`
-- `name` (String) User-specified unique string.
+- `name` (String) Name of the Access Rule. This name needs to be uqique within the policy.
 
 Optional:
 
-- `category_name` (String) Name of the category that owns this rule (a `name` from `categories` list).
-- `description` (String) User-specified string.
-- `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
+- `category_name` (String) Name of the category that owns this rule (`name` from `categories` list).
+- `description` (String) Rule description.
+- `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic. (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--destination_network_literals))
-- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
+- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--destination_port_literals))
-- `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--destination_port_objects))
-- `destination_zones` (Attributes Set) Set of objects representing destination security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--destination_zones))
-- `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false). Default is true.
+- `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule. (see [below for nested schema](#nestedatt--rules--destination_port_objects))
+- `destination_zones` (Attributes Set) Set of objects representing destination Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--destination_zones))
+- `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false).
   - Default value: `true`
-- `file_policy_id` (String) Identifier (UUID) of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
-- `intrusion_policy_id` (String) Identifier (UUID) of the fmc_intrusion_policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
-- `log_begin` (Boolean) Indicates whether the device will log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
+- `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
+- `intrusion_policy_id` (String) Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
+- `log_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
   - Default value: `false`
-- `log_end` (Boolean) Indicates whether the device will log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.
+- `log_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.
   - Default value: `false`
-- `log_files` (Boolean) Indicates whether the device will log file events.
+- `log_files` (Boolean) Log file events.
   - Default value: `false`
 - `section` (String) The section of the policy to which the rule belongs. Can only be used when the `category_name` is null. Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means 'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the default section applies after child policy's own rules.
   - Choices: `default`, `mandatory`
-- `send_events_to_fmc` (Boolean) Indicates whether the device will send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.
+- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.
   - Default value: `false`
-- `send_syslog` (Boolean) Indicates whether the alerts associated with the access rule are sent to syslog.
+- `send_syslog` (Boolean) Send alerts to syslog.
   - Default value: `false`
-- `snmp_config_id` (String) UUID of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.
-- `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic (fmc_dynamic_object). (see [below for nested schema](#nestedatt--rules--source_dynamic_objects))
+- `snmp_config_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.
+- `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic. (see [below for nested schema](#nestedatt--rules--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
-- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--rules--source_network_objects))
+- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--source_port_literals))
-- `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group). (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes). (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
-- `source_zones` (Attributes Set) Set of objects representing source security zones associated with the access rule (fmc_security_zone). (see [below for nested schema](#nestedatt--rules--source_zones))
-- `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
+- `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule. (see [below for nested schema](#nestedatt--rules--source_port_objects))
+- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT). (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
+- `source_zones` (Attributes Set) Set of objects representing source Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--source_zones))
+- `syslog_config_id` (String) Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
-- `time_range_id` (String) UUID of Time Range object applied to the rule.
-- `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule (fmc_url_category). (see [below for nested schema](#nestedatt--rules--url_categories))
+- `time_range_id` (String) Id of Time Range object applied to the rule.
+- `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule. (see [below for nested schema](#nestedatt--rules--url_categories))
 - `url_literals` (Attributes Set) Set of objects representing the URLs associated with the rule (literally specified). (see [below for nested schema](#nestedatt--rules--url_literals))
-- `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group). (see [below for nested schema](#nestedatt--rules--url_objects))
-- `variable_set_id` (String) Identifier (UUID) of the Variable Set for the rule action.
+- `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule. (see [below for nested schema](#nestedatt--rules--url_objects))
+- `variable_set_id` (String) Id of the Variable Set for the rule action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
-- `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...). (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
+- `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags or vlan tags group. (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
 Read-Only:
 
-- `id` (String) Unique identifier (UUID) of the access rule.
+- `id` (String) Id of the Access Rule.
 
 <a id="nestedatt--rules--destination_dynamic_objects"></a>
 ### Nested Schema for `rules.destination_dynamic_objects`
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_dynamic_object.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--destination_network_literals"></a>
@@ -276,7 +276,7 @@ Optional:
 
 Optional:
 
-- `value` (String)
+- `value` (String) IP address or network in CIDR format.
 
 
 <a id="nestedatt--rules--destination_network_objects"></a>
@@ -284,8 +284,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
-- `type` (String) Type of the object (such as fmc_network.example.type, etc.).
+- `id` (String) Id of the object.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--destination_port_literals"></a>
@@ -293,14 +293,15 @@ Optional:
 
 Required:
 
-- `protocol` (String)
-- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+- `protocol` (String) IANA protocol number.
+- `type` (String) Type of the object.
+  - Choices: `PortLiteral`, `ICMPv4PortLiteral`
 
 Optional:
 
-- `icmp_code` (String)
-- `icmp_type` (String)
-- `port` (String)
+- `icmp_code` (String) ICMP code.
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
 
 
 <a id="nestedatt--rules--destination_port_objects"></a>
@@ -308,7 +309,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--destination_zones"></a>
@@ -316,7 +317,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_zone.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--source_dynamic_objects"></a>
@@ -324,7 +325,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_dynamic_object.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--source_network_literals"></a>
@@ -332,7 +333,7 @@ Optional:
 
 Optional:
 
-- `value` (String)
+- `value` (String) IP address or network in CIDR format.
 
 
 <a id="nestedatt--rules--source_network_objects"></a>
@@ -340,8 +341,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
-- `type` (String) Type of the object (such as fmc_network.example.type, etc.).
+- `id` (String) Id of the object.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--source_port_literals"></a>
@@ -349,14 +350,15 @@ Optional:
 
 Required:
 
-- `protocol` (String)
-- `type` (String) - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+- `protocol` (String) IANA protocol number.
+- `type` (String) Type of the object.
+  - Choices: `PortLiteral`, `ICMPv4PortLiteral`
 
 Optional:
 
-- `icmp_code` (String)
-- `icmp_type` (String)
-- `port` (String)
+- `icmp_code` (String) ICMP code.
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
 
 
 <a id="nestedatt--rules--source_port_objects"></a>
@@ -364,7 +366,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--source_sgt_objects"></a>
@@ -372,8 +374,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_sgt.example.id, etc.).
-- `type` (String) Type of the object (such as fmc_security_group_tag.example.type, etc.).
+- `id` (String) Id of the object.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--source_zones"></a>
@@ -381,7 +383,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_security_zone.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--url_categories"></a>
@@ -389,8 +391,8 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_url_category.example.id, etc.).
-- `reputation` (String) Reputation applicable to the category.
+- `id` (String) Id of the object.
+- `reputation` (String) Reputation applicable to the URL Category.
   - Choices: `ANY_EXCEPT_UNKNOWN`, `TRUSTED`, `FAVORABLE`, `NEUTRAL`, `QUESTIONABLE`, `UNTRUSTED`, `ANY_AND_UNKNOWN`, `TRUSTED_AND_UNKNOWN`, `FAVORABLE_AND_UNKNOWN`, `NEUTRAL_AND_UNKNOWN`, `QUESTIONABLE_AND_UNKNOWN`, `UNTRUSTED_AND_UNKNOWN`
 
 
@@ -407,7 +409,7 @@ Required:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--vlan_tag_literals"></a>
@@ -415,8 +417,8 @@ Optional:
 
 Optional:
 
-- `end_tag` (String)
-- `start_tag` (String)
+- `end_tag` (String) End of the VLAN tag range.
+- `start_tag` (String) Start of the VLAN tag range.
 
 
 <a id="nestedatt--rules--vlan_tag_objects"></a>
@@ -424,7 +426,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_vlan_tag.example.id, etc.).
+- `id` (String) Id of the object.
 
 ## Import
 

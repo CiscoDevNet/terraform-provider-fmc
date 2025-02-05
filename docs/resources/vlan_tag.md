@@ -3,19 +3,19 @@
 page_title: "fmc_vlan_tag Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a VLAN Tag.
+  This resource manages a VLAN Tag.
 ---
 
 # fmc_vlan_tag (Resource)
 
-This resource can manage a VLAN Tag.
+This resource manages a VLAN Tag.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_vlan_tag" "example" {
-  name        = "vlan_tag_1"
-  description = "My TAG id"
+  name        = "fmc_vlan_tag"
+  description = "My VLAN Tag"
   overridable = true
   start_tag   = "12"
   end_tag     = "15"
@@ -28,18 +28,18 @@ resource "fmc_vlan_tag" "example" {
 ### Required
 
 - `end_tag` (String)
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the object.
 - `start_tag` (String)
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'VlanTag'
 
 ## Import

@@ -3,12 +3,12 @@
 page_title: "fmc_url Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage an URL.
+  This resource manages an URL.
 ---
 
 # fmc_url (Resource)
 
-This resource can manage an URL.
+This resource manages an URL.
 
 ## Example Usage
 
@@ -25,18 +25,18 @@ resource "fmc_url" "example" {
 
 ### Required
 
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the object.
 - `url` (String) URL value.
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

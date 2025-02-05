@@ -3,12 +3,12 @@
 page_title: "fmc_device_ha_pair_monitoring Data Source - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This data source can read the Device HA Pair Monitoring.
+  This data source reads the Device HA Pair Monitoring.
 ---
 
 # fmc_device_ha_pair_monitoring (Data Source)
 
-This data source can read the Device HA Pair Monitoring.
+This data source reads the Device HA Pair Monitoring.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_ha_pair_monitoring" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent HA device (fmc_device.example.id).
+- `device_id` (String) Id of the parent HA device (fmc_device.example.id).
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `logical_name` (String) Logical Name of the monitored interface.
 
 ### Read-Only

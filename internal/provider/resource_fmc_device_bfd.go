@@ -65,25 +65,25 @@ func (r *DeviceBFDResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *DeviceBFDResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device BFD.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device BFD.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -104,23 +104,23 @@ func (r *DeviceBFDResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"bfd_template_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the BFD Template").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the BFD Template").String,
 				Required:            true,
 			},
 			"interface_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the interface of BFD assignment if SINGLE_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the interface for BFD assignment if SINGLE_HOP selected.").String,
 				Optional:            true,
 			},
 			"destination_host_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ID of the destination host object if MULTI_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the destination host object if MULTI_HOP selected.").String,
 				Optional:            true,
 			},
 			"source_host_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ID of the source host object if MULTI_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the source host object if MULTI_HOP selected.").String,
 				Optional:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the interface of BFD assignment if SINGLE_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface for BFD assignment if SINGLE_HOP selected.").String,
 				Optional:            true,
 			},
 			"slow_timer": schema.Int64Attribute{

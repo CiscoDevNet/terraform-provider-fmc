@@ -3,18 +3,18 @@
 page_title: "fmc_network Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Network.
+  This resource manages a Network.
 ---
 
 # fmc_network (Resource)
 
-This resource can manage a Network.
+This resource manages a Network.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_network" "example" {
-  name        = "NET1"
+  name        = "fmc_network_1"
   description = "My network object"
   prefix      = "10.1.2.0/24"
   overridable = true
@@ -26,18 +26,18 @@ resource "fmc_network" "example" {
 
 ### Required
 
-- `name` (String) The name of the network object.
+- `name` (String) Name of the object.
 - `prefix` (String) Prefix of the network.
 
 ### Optional
 
 - `description` (String) Description
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'Network'.
 
 ## Import

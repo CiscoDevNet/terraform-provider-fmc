@@ -65,25 +65,25 @@ func (r *NetworksResource) Metadata(ctx context.Context, req resource.MetadataRe
 func (r *NetworksResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This plural resource manages a bulk of Networks. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting `fmc_networks` can thus take much more time than creating it").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Networks through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of networks. The key of the map is the name of the individual Network. Renaming Networks in bulk is not yet implemented.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of networks. The key of the map is the name of the individual Network.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

@@ -3,12 +3,12 @@
 page_title: "fmc_device_subinterface Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device Subinterface.
+  This data source reads the Device Subinterface.
 ---
 
 # fmc_device_subinterface (Data Source)
 
-This data source can read the Device Subinterface.
+This data source reads the Device Subinterface.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_subinterface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
 
 ### Read-Only
@@ -77,7 +77,7 @@ data "fmc_device_subinterface" "example" {
 - `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value
@@ -87,7 +87,7 @@ data "fmc_device_subinterface" "example" {
 - `security_zone_id` (String) UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
-- `type` (String) Type of the resource.
+- `type` (String) Type of the object.
 - `vlan_id` (Number) VLAN identifier, unique per the parent interface.
 
 <a id="nestedatt--arp_table_entries"></a>

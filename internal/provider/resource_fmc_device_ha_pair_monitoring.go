@@ -61,25 +61,25 @@ func (r *DeviceHAPairMonitoringResource) Metadata(ctx context.Context, req resou
 func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device HA Pair Monitoring.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Monitoring.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent HA device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA device (fmc_device.example.id).").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

@@ -3,12 +3,12 @@
 page_title: "fmc_tunnel_zone Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Tunnel Zone.
+  This resource manages a Tunnel Zone.
 ---
 
 # fmc_tunnel_zone (Resource)
 
-This resource can manage a Tunnel Zone.
+This resource manages a Tunnel Zone.
 
 ## Example Usage
 
@@ -29,11 +29,11 @@ resource "fmc_tunnel_zone" "example" {
 ### Optional
 
 - `description` (String) Description
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'TunnelTag'.
 
 ## Import

@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcIntrusionPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy.test", "name", "ips_policy_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy.test", "name", "fmc_intrusion_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy.test", "description", "My IPS Policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy.test", "inspection_mode", "PREVENTION"))
 
@@ -74,7 +74,7 @@ data "fmc_intrusion_policy" "builtin" {
 
 func testAccFmcIntrusionPolicyConfig_minimum() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
-	config += `	name = "ips_policy_1"` + "\n"
+	config += `	name = "fmc_intrusion_policy"` + "\n"
 	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
 	config += `}` + "\n"
 	return config
@@ -86,7 +86,7 @@ func testAccFmcIntrusionPolicyConfig_minimum() string {
 
 func testAccFmcIntrusionPolicyConfig_all() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
-	config += `	name = "ips_policy_1"` + "\n"
+	config += `	name = "fmc_intrusion_policy"` + "\n"
 	config += `	description = "My IPS Policy"` + "\n"
 	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"

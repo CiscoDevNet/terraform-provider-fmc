@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -58,20 +59,20 @@ func (d *DeviceBGPDataSource) Metadata(_ context.Context, req datasource.Metadat
 func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device BGP.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device BGP.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"name": schema.StringAttribute{
@@ -83,12 +84,12 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"as_number": schema.StringAttribute{
-				MarkdownDescription: "Autonomus System (AS) Number",
+				MarkdownDescription: "Autonomus System (AS) number",
 				Optional:            true,
 				Computed:            true,
 			},
 			"ipv4_address_family_type": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "IPv4 Address Family Type",
 				Computed:            true,
 			},
 			"ipv4_learned_route_map_id": schema.StringAttribute{
@@ -112,7 +113,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"ipv4_bgp_redistribute_internal": schema.BoolAttribute{
-				MarkdownDescription: "Redistribute IBGP into IGP. (Use filtering to limit the number of prefixes that are redistributed)",
+				MarkdownDescription: "Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.",
 				Computed:            true,
 			},
 			"ipv4_external_distance": schema.Int64Attribute{

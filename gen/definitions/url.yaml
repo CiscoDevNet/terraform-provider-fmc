@@ -5,7 +5,7 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the object.
     mandatory: true
     example: url_1
     data_source_query: true

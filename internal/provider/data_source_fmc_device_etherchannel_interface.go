@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -58,32 +59,32 @@ func (d *DeviceEtherChannelInterfaceDataSource) Metadata(_ context.Context, req 
 func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device EtherChannel Interface.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device EtherChannel Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the resource.",
+				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.",
+				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"management_only": schema.BoolAttribute{
@@ -99,7 +100,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.",
+				MarkdownDescription: "Id of the assigned security zone.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -116,7 +117,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"enable_sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to propagate SGT.",
+				MarkdownDescription: "Enable SGT propagation.",
 				Computed:            true,
 			},
 			"ether_channel_id": schema.StringAttribute{
@@ -124,12 +125,12 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"selected_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).",
+				MarkdownDescription: "Set of objects representing physical interfaces.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the object (such as fmc_device_physical_interface.example.id, ...).",
+							MarkdownDescription: "Id of the object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

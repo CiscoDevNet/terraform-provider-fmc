@@ -87,11 +87,36 @@ func (r *{{camelCase .Name}}Resource) Metadata(ctx context.Context, req resource
 func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("{{.ResDescription}}").String,
+		MarkdownDescription: helpers.NewAttributeDescription("{{.ResDescription}}")
+		{{- if or .MinimumVersion .MinimumVersionCreate .MinimumVersionBulkCreate .MinimumVersionBulkDelete .IsBulk -}}
+		.AddMinimumVersionHeaderDescription()
+		{{- end -}}
+		{{- if .MinimumVersion -}}
+		.AddMinimumVersionDescription("{{.MinimumVersion}}")
+		{{- end -}}
+		{{- if and .MinimumVersionCreate (not .MinimumVersion) -}}
+		.AddMinimumVersionAnyDescription()
+		{{- end -}}
+		{{- if .MinimumVersionCreate -}}
+		.AddMinimumVersionCreateDescription("{{.MinimumVersionCreate}}")
+		{{- end -}}
+		{{- if .MinimumVersionBulkCreate -}}
+		.AddMinimumVersionBulkCreateDescription("{{.MinimumVersionBulkCreate}}")
+		{{- end -}}
+		{{- if .MinimumVersionBulkDelete -}}
+		.AddMinimumVersionBulkDeleteDescription("{{.MinimumVersionBulkDelete}}")
+		{{- end -}}
+		{{- if and (or .MinimumVersionBulkCreate .MinimumVersionBulkDelete) (ne .MinimumVersionBulkCreate "999") (ne .MinimumVersionBulkDelete "999")  -}}
+		.AddMinimumVersionBulkDisclaimerDescription()
+		{{- end -}}
+		{{- if .IsBulk -}}
+		.AddMinimumVersionBulkUpdateDescription()
+		{{- end -}}
+		.String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -99,7 +124,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 			},
 			{{- if isDomainDependent .}}
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:			true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

@@ -30,8 +30,8 @@ import (
 
 func TestAccDataSourceFmcVLANTag(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag.test", "name", "vlan_tag_1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag.test", "description", "My TAG id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag.test", "name", "fmc_vlan_tag"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag.test", "description", "My VLAN Tag"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag.test", "overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag.test", "type"))
 	resource.Test(t, resource.TestCase{
@@ -60,8 +60,8 @@ func TestAccDataSourceFmcVLANTag(t *testing.T) {
 
 func testAccDataSourceFmcVLANTagConfig() string {
 	config := `resource "fmc_vlan_tag" "test" {` + "\n"
-	config += `	name = "vlan_tag_1"` + "\n"
-	config += `	description = "My TAG id"` + "\n"
+	config += `	name = "fmc_vlan_tag"` + "\n"
+	config += `	description = "My VLAN Tag"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	start_tag = 12` + "\n"
 	config += `	end_tag = 15` + "\n"
@@ -77,8 +77,8 @@ func testAccDataSourceFmcVLANTagConfig() string {
 
 func testAccNamedDataSourceFmcVLANTagConfig() string {
 	config := `resource "fmc_vlan_tag" "test" {` + "\n"
-	config += `	name = "vlan_tag_1"` + "\n"
-	config += `	description = "My TAG id"` + "\n"
+	config += `	name = "fmc_vlan_tag"` + "\n"
+	config += `	description = "My VLAN Tag"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	start_tag = 12` + "\n"
 	config += `	end_tag = 15` + "\n"

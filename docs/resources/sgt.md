@@ -3,12 +3,18 @@
 page_title: "fmc_sgt Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a SGT.
+  This resource manages a SGT.
+  The following restrictions apply:
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4
 ---
 
 # fmc_sgt (Resource)
 
-This resource can manage a SGT.
+This resource manages a SGT.
+
+The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
 
 ## Example Usage
 
@@ -31,11 +37,11 @@ resource "fmc_sgt" "example" {
 ### Optional
 
 - `description` (String) Description
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.
 
 ## Import

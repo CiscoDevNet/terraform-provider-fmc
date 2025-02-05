@@ -3,12 +3,12 @@
 page_title: "fmc_extended_acl Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Extended ACL.
+  This data source reads the Extended ACL.
 ---
 
 # fmc_extended_acl (Data Source)
 
-This data source can read the Extended ACL.
+This data source reads the Extended ACL.
 
 ## Example Usage
 
@@ -23,13 +23,13 @@ data "fmc_extended_acl" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) User-created name of the resource.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the Extended ACL.
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the Extended ACL.
 - `entries` (Attributes List) Ordered list of ACL's entries. (see [below for nested schema](#nestedatt--entries))
 
 <a id="nestedatt--entries"></a>
@@ -37,14 +37,14 @@ data "fmc_extended_acl" "example" {
 
 Read-Only:
 
-- `action` (String) Indicates the redistribution access: PERMIT or DENY.
+- `action` (String) Rule action.
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_network_literals))
-- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--destination_network_objects))
+- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic. (see [below for nested schema](#nestedatt--entries--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports. (see [below for nested schema](#nestedatt--entries--destination_port_objects))
-- `log_interval_seconds` (Number) The logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
-- `log_level` (String) The logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
-- `logging` (String) The logging mode.
+- `log_interval_seconds` (Number) Logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
+- `log_level` (String) Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
+- `logging` (String) Logging mode.
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
@@ -56,8 +56,8 @@ Read-Only:
 
 Read-Only:
 
-- `type` (String)
-- `value` (String)
+- `type` (String) Type of the object.
+- `value` (String) IPv4 or IPv6 host or network.
 
 
 <a id="nestedatt--entries--destination_network_objects"></a>
@@ -65,7 +65,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--entries--destination_port_literals"></a>
@@ -73,11 +73,11 @@ Read-Only:
 
 Read-Only:
 
-- `icmp_code` (String)
-- `icmp_type` (String)
-- `port` (String)
-- `protocol` (String)
-- `type` (String)
+- `icmp_code` (String) ICMP code.
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
+- `protocol` (String) IANA port number.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--entries--destination_port_objects"></a>
@@ -85,7 +85,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_port.example.id).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--entries--source_network_literals"></a>
@@ -93,8 +93,8 @@ Read-Only:
 
 Read-Only:
 
-- `type` (String)
-- `value` (String)
+- `type` (String) Type of the object.
+- `value` (String) IPv4 or IPv6 host or network.
 
 
 <a id="nestedatt--entries--source_network_objects"></a>
@@ -110,11 +110,11 @@ Read-Only:
 
 Read-Only:
 
-- `icmp_code` (String)
-- `icmp_type` (String)
-- `port` (String)
-- `protocol` (String)
-- `type` (String)
+- `icmp_code` (String) ICMP code
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
+- `protocol` (String) IANA port number.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--entries--source_port_objects"></a>
@@ -122,7 +122,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_port.example.id).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--entries--source_sgt_objects"></a>

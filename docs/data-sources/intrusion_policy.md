@@ -3,12 +3,12 @@
 page_title: "fmc_intrusion_policy Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the Intrusion Policy.
+  This data source reads the Intrusion Policy.
 ---
 
 # fmc_intrusion_policy (Data Source)
 
-This data source can read the Intrusion Policy.
+This data source reads the Intrusion Policy.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_intrusion_policy" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity' or 'Security Over Connectivity'.
 
 ### Read-Only

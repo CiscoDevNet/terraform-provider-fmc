@@ -1,10 +1,6 @@
 ---
 name: Ports
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/protocolportobjects
-res_description: >-
-  This plural resource manages a bulk of Ports.
-  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
-  Updating/deleting `fmc_ports` can thus take much more time than creating it
 doc_category: Objects
 is_bulk: true
 minimum_version_bulk_delete: "7.4"
@@ -12,8 +8,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of ports. The key of the map is the name of the individual Port. Renaming Ports in bulk
-      is not yet implemented.
+      Map of ports. The key of the map is the name of the individual Port.
     map_key_example: ports_1
     mandatory: true
     attributes:

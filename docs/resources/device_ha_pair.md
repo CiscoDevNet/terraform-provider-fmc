@@ -3,12 +3,12 @@
 page_title: "fmc_device_ha_pair Resource - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  Resource to manage HA Pair. failed_interfaces_limit or failed_interfaces_percent needs to be set.
+  This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
 ---
 
 # fmc_device_ha_pair (Resource)
 
-Resource to manage HA Pair. failed_interfaces_limit or failed_interfaces_percent needs to be set.
+This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
 
 ## Example Usage
 
@@ -59,7 +59,7 @@ resource "fmc_device_ha_pair" "example" {
 - `ha_link_netmask` (String) Subnet mask for HA link.
 - `ha_link_primary_ip` (String) The IP of primary node interface.
 - `ha_link_secondary_ip` (String) The IP of secondary node interface.
-- `name` (String) The name of the High Availability (HA) Pair.
+- `name` (String) Name of the High Availability (HA) Pair.
 - `primary_device_id` (String) ID of primary FTD in the HA Pair.
 - `secondary_device_id` (String) ID of secondary FTD in the HA Pair.
 - `state_link_use_same_as_ha` (Boolean) Use the same link for state and HA.
@@ -68,7 +68,7 @@ resource "fmc_device_ha_pair" "example" {
 
 - `action` (String) FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
   - Choices: `SWITCH`, `HABREAK`
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `encryption_enabled` (Boolean) Use encryption for communication.
 - `encryption_key` (String) Pass shared key for encryption if CUSTOM key geneeration scheme is selected.
 - `encryption_key_generation_scheme` (String) Select the encyption key generation scheme.
@@ -111,8 +111,8 @@ resource "fmc_device_ha_pair" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
-- `type` (String) Type of the resource; This is always `DeviceHAPair`.
+- `id` (String) Id of the object
+- `type` (String) Type of the object; This is always `DeviceHAPair`.
 
 ## Import
 

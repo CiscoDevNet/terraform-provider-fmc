@@ -34,7 +34,7 @@ type FQDNObject struct {
 	Id            types.String `tfsdk:"id"`
 	Domain        types.String `tfsdk:"domain"`
 	Name          types.String `tfsdk:"name"`
-	Value         types.String `tfsdk:"value"`
+	Fqdn          types.String `tfsdk:"fqdn"`
 	DnsResolution types.String `tfsdk:"dns_resolution"`
 	Description   types.String `tfsdk:"description"`
 	Overridable   types.Bool   `tfsdk:"overridable"`
@@ -60,8 +60,8 @@ func (data FQDNObject) toBody(ctx context.Context, state FQDNObject) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
-	if !data.Value.IsNull() {
-		body, _ = sjson.Set(body, "value", data.Value.ValueString())
+	if !data.Fqdn.IsNull() {
+		body, _ = sjson.Set(body, "value", data.Fqdn.ValueString())
 	}
 	if !data.DnsResolution.IsNull() {
 		body, _ = sjson.Set(body, "dnsResolution", data.DnsResolution.ValueString())
@@ -86,9 +86,9 @@ func (data *FQDNObject) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("value"); value.Exists() {
-		data.Value = types.StringValue(value.String())
+		data.Fqdn = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.Fqdn = types.StringNull()
 	}
 	if value := res.Get("dnsResolution"); value.Exists() {
 		data.DnsResolution = types.StringValue(value.String())
@@ -121,10 +121,10 @@ func (data *FQDNObject) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("value"); value.Exists() && !data.Value.IsNull() {
-		data.Value = types.StringValue(value.String())
+	if value := res.Get("value"); value.Exists() && !data.Fqdn.IsNull() {
+		data.Fqdn = types.StringValue(value.String())
 	} else {
-		data.Value = types.StringNull()
+		data.Fqdn = types.StringNull()
 	}
 	if value := res.Get("dnsResolution"); value.Exists() && !data.DnsResolution.IsNull() {
 		data.DnsResolution = types.StringValue(value.String())

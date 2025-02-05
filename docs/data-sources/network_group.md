@@ -3,12 +3,12 @@
 page_title: "fmc_network_group Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Network Group.
+  This data source reads the Network Group.
 ---
 
 # fmc_network_group (Data Source)
 
-This data source can read the Network Group.
+This data source reads the Network Group.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_network_group" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the managed Network Group.
 
 ### Read-Only

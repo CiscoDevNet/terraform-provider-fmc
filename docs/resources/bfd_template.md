@@ -3,18 +3,23 @@
 page_title: "fmc_bfd_template Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a BFD Template.
+  This resource manages a BFD Template.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_bfd_template (Resource)
 
-This resource can manage a BFD Template.
+This resource manages a BFD Template.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 
 ```terraform
 resource "fmc_bfd_template" "example" {
-  name                               = "BFD_Template1"
+  name                               = "fmc_bfd_template"
   hop_type                           = "SINGLE_HOP"
   echo                               = "ENABLED"
   interval_time                      = "MILLISECONDS"
@@ -33,21 +38,21 @@ resource "fmc_bfd_template" "example" {
 
 ### Required
 
-- `hop_type` (String) The hop type.
+- `hop_type` (String) Hop type.
   - Choices: `SINGLE_HOP`, `MULTI_HOP`
-- `name` (String) The name of the bfd template object.
+- `name` (String) Name of the BFD Template object.
 
 ### Optional
 
 - `authentication_key_id` (Number) Authentication Key ID
   - Range: `0`-`255`
 - `authentication_password` (String) Password for BFD Authentication (1-24 characters)
-- `authentication_password_encryption` (String) Determines if authentication_password is encrypted
+- `authentication_password_encryption` (String) Determines if `authentication_password` is encrypted
   - Choices: `UN_ENCRYPTED`, `ENCRYPTED`, `NONE`
-- `authentication_type` (String) Authentication types
+- `authentication_type` (String) Authentication type.
   - Choices: `MD5`, `METICULOUSMD5`, `METICULOUSSHA1`, `SHA1`, `NONE`
-- `domain` (String) The name of the FMC domain
-- `echo` (String) Enables/disables BFD echo.
+- `domain` (String) Name of the FMC domain
+- `echo` (String) BFD echo status.
   - Choices: `ENABLED`, `DISABLED`
 - `interval_time` (String) Interval unit of measurement of time.
   - Choices: `MILLISECONDS`, `MICROSECONDS`, `NONE`
@@ -60,7 +65,7 @@ resource "fmc_bfd_template" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'BFDTemplate'.
 
 ## Import

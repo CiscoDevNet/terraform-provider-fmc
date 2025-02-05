@@ -30,8 +30,51 @@ func NewAttributeDescription(s string) *AttributeDescription {
 	return &AttributeDescription{s}
 }
 
+func (d *AttributeDescription) AddMinimumVersionHeaderDescription() *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n\nThe following restrictions apply:", d.String)
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionAnyDescription() *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n  - Read operations are supported by any tested FMC version", d.String)
+	return d
+}
+
 func (d *AttributeDescription) AddMinimumVersionDescription(minimumVersion string) *AttributeDescription {
 	d.String = fmt.Sprintf("%s\n  - Minimum FMC version: `%s`", d.String, minimumVersion)
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionCreateDescription(minimumVersion string) *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n  - Minimum FMC version for object management (Create/Update/Delete): `%s`", d.String, minimumVersion)
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionBulkCreateDescription(minimumVersion string) *AttributeDescription {
+	if minimumVersion == "999" {
+		d.String = fmt.Sprintf("%s\n  - Bulk object creation is not supported by FMC, it will be handled one-by-one", d.String)
+	} else {
+		d.String = fmt.Sprintf("%s\n  - Minimum FMC version for bulk object creation: `%s`", d.String, minimumVersion)
+	}
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionBulkDeleteDescription(minimumVersion string) *AttributeDescription {
+	if minimumVersion == "999" {
+		d.String = fmt.Sprintf("%s\n  - Bulk object deletion is not supported by FMC, it will be handled one-by-one", d.String)
+	} else {
+		d.String = fmt.Sprintf("%s\n  - Minimum FMC version for bulk object deletion: `%s`", d.String, minimumVersion)
+	}
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionBulkUpdateDescription() *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n  - Updates are always done one-by-one.", d.String)
+	return d
+}
+
+func (d *AttributeDescription) AddMinimumVersionBulkDisclaimerDescription() *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.", d.String)
 	return d
 }
 

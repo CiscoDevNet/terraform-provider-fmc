@@ -3,12 +3,12 @@
 page_title: "fmc_network Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Network.
+  This data source reads the Network.
 ---
 
 # fmc_network (Data Source)
 
-This data source can read the Network.
+This data source reads the Network.
 
 ## Example Usage
 
@@ -23,9 +23,9 @@ data "fmc_network" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of the network object.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the object.
 
 ### Read-Only
 

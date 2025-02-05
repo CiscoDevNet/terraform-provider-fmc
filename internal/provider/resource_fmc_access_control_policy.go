@@ -70,70 +70,70 @@ func (r *AccessControlPolicyResource) Metadata(ctx context.Context, req resource
 func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage an Access Control Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Access Control Policy (ACP) with corresponding Access Rules and Categories.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the access control policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Access Control Policy.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Access Control Policy.").String,
 				Optional:            true,
 			},
 			"default_action": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Specifies the default action to take when none of the rules meet the conditions.").AddStringEnumDescription("BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY", "INHERIT_FROM_PARENT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Action to be taken, when traffic does not match any Access Rule.").AddStringEnumDescription("BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY", "INHERIT_FROM_PARENT").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("BLOCK", "TRUST", "PERMIT", "NETWORK_DISCOVERY", "INHERIT_FROM_PARENT"),
 				},
 			},
 			"default_action_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default action ID.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the default action.").String,
 				Computed:            true,
 			},
 			"default_action_log_begin": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will log events at the beginning of the connection.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"default_action_log_end": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will log events at the end of the connection.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"default_action_send_events_to_fmc": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will send events to the Firepower Management Center event viewer.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Send events to the Firepower Management Center event viewer.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"default_action_send_syslog": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicating whether the device will send events to a syslog server.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Send events to a syslog server.").String,
 				Optional:            true,
 			},
 			"default_action_syslog_config_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
 				Optional:            true,
 			},
 			"prefilter_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the prefilter policy. ").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Prefilter Policy. ").String,
 				Optional:            true,
 			},
 			"default_action_syslog_severity": schema.StringAttribute{
@@ -144,24 +144,24 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"default_action_snmp_config_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.").String,
 				Optional:            true,
 			},
 			"default_action_intrusion_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the existing intrusion policy (e.g. fmc_intrusion_policy.example.id). Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.").String,
 				Optional:            true,
 			},
 			"categories": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of categories.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of categories.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier of the category.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Category.").String,
 							Computed:            true,
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("User-specified unique string.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the Category.").String,
 							Required:            true,
 						},
 						"section": schema.StringAttribute{
@@ -177,27 +177,27 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. The first matching rule is selected. Except for MONITOR rules, the system does not continue to evaluate traffic against additional rules after that traffic matches a rule.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Unique identifier (UUID) of the access rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Rule.").String,
 							Computed:            true,
 						},
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("What to do when the conditions defined by the rule are met.").AddStringEnumDescription("ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE", "BLOCK_RESET_INTERACTIVE").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Rule action.").AddStringEnumDescription("ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE", "BLOCK_RESET_INTERACTIVE").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("ALLOW", "TRUST", "BLOCK", "MONITOR", "BLOCK_RESET", "BLOCK_INTERACTIVE", "BLOCK_RESET_INTERACTIVE"),
 							},
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("User-specified unique string.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the Access Rule. This name needs to be uqique within the policy.").String,
 							Required:            true,
 						},
 						"category_name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the category that owns this rule (a `name` from `categories` list).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the category that owns this rule (`name` from `categories` list).").String,
 							Optional:            true,
 						},
 						"section": schema.StringAttribute{
@@ -208,7 +208,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the access rule is in effect (true) or not (false). Default is true.").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the access rule is in effect (true) or not (false).").AddDefaultValueDescription("true").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(true),
@@ -219,7 +219,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
 										Optional:            true,
 									},
 								},
@@ -231,7 +231,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
 										Optional:            true,
 									},
 								},
@@ -243,79 +243,79 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"start_tag": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Start of the VLAN tag range.").String,
 										Optional:            true,
 									},
 									"end_tag": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("End of the VLAN tag range.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"vlan_tag_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent vlan tags (fmc_vlan_tag, fmc_vlan_tag_group, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent vlan tags or vlan tags group.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_vlan_tag.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.example.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"destination_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.example.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_dynamic_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent dynamic sources of traffic (fmc_dynamic_object).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent dynamic sources of traffic.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"destination_dynamic_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent dynamic destinations of traffic (fmc_dynamic_object).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent dynamic destinations of traffic.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_dynamic_object.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -327,38 +327,38 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
 										},
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
 										Optional:            true,
 									},
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").String,
 										Required:            true,
 									},
 									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
 										Optional:            true,
 									},
 									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP code.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_port_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing source ports associated with the rule (fmc_port or fmc_port_group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing source ports associated with the rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -370,78 +370,78 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
 										},
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
 										Optional:            true,
 									},
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").String,
 										Required:            true,
 									},
 									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
 										Optional:            true,
 									},
 									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP code.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"destination_port_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing destination ports associated with the rule (fmc_port or fmc_port_group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing destination ports associated with the rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id, fmc_port_group.example.id, ...).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_sgt_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the source Security Group Tags (fmc_sgt - part of the dynamic attributes).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the source Security Group Tags (SGT).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_sgt.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_security_group_tag.example.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_zones": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing source security zones associated with the access rule (fmc_security_zone).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing source Security Zones associated with the access rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"destination_zones": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing destination security zones associated with the access rule (fmc_security_zone).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing destination Security Zones associated with the access rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_security_zone.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -460,28 +460,28 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"url_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the URLs associated with the rule (fmc_url or fmc_url_group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the URLs associated with the rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url.example.id, fmc_url_group.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"url_categories": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the URL Categories associated with the rule (fmc_url_category).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the URL Categories associated with the rule.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url_category.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"reputation": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Reputation applicable to the category.").AddStringEnumDescription("ANY_EXCEPT_UNKNOWN", "TRUSTED", "FAVORABLE", "NEUTRAL", "QUESTIONABLE", "UNTRUSTED", "ANY_AND_UNKNOWN", "TRUSTED_AND_UNKNOWN", "FAVORABLE_AND_UNKNOWN", "NEUTRAL_AND_UNKNOWN", "QUESTIONABLE_AND_UNKNOWN", "UNTRUSTED_AND_UNKNOWN").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Reputation applicable to the URL Category.").AddStringEnumDescription("ANY_EXCEPT_UNKNOWN", "TRUSTED", "FAVORABLE", "NEUTRAL", "QUESTIONABLE", "UNTRUSTED", "ANY_AND_UNKNOWN", "TRUSTED_AND_UNKNOWN", "FAVORABLE_AND_UNKNOWN", "NEUTRAL_AND_UNKNOWN", "QUESTIONABLE_AND_UNKNOWN", "UNTRUSTED_AND_UNKNOWN").String,
 										Optional:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("ANY_EXCEPT_UNKNOWN", "TRUSTED", "FAVORABLE", "NEUTRAL", "QUESTIONABLE", "UNTRUSTED", "ANY_AND_UNKNOWN", "TRUSTED_AND_UNKNOWN", "FAVORABLE_AND_UNKNOWN", "NEUTRAL_AND_UNKNOWN", "QUESTIONABLE_AND_UNKNOWN", "UNTRUSTED_AND_UNKNOWN"),
@@ -491,37 +491,37 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"log_begin": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the device will log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
 						"log_end": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the device will log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
 						"log_files": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the device will log file events.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log file events.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
 						"send_events_to_fmc": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the device will send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
 						"send_syslog": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the alerts associated with the access rule are sent to syslog.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Send alerts to syslog.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
 						"syslog_config_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
 							Optional:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -532,27 +532,27 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"snmp_config_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.").String,
 							Optional:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("User-specified string.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Rule description.").String,
 							Optional:            true,
 						},
 						"file_policy_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.").String,
 							Optional:            true,
 						},
 						"intrusion_policy_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the fmc_intrusion_policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.").String,
 							Optional:            true,
 						},
 						"time_range_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of Time Range object applied to the rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Time Range object applied to the rule.").String,
 							Optional:            true,
 						},
 						"variable_set_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier (UUID) of the Variable Set for the rule action.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Variable Set for the rule action.").String,
 							Optional:            true,
 						},
 					},

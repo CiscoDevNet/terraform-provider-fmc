@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -60,20 +61,20 @@ func (d *DeviceBFDDataSource) Metadata(_ context.Context, req datasource.Metadat
 func (d *DeviceBFDDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device BFD.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device BFD.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,24 +86,24 @@ func (d *DeviceBFDDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"bfd_template_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the BFD Template",
+				MarkdownDescription: "Id of the BFD Template",
 				Computed:            true,
 			},
 			"interface_logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical Name of the interface of BFD assignment if SINGLE_HOP selected.",
+				MarkdownDescription: "Logical Name of the interface for BFD assignment if SINGLE_HOP selected.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"destination_host_object_id": schema.StringAttribute{
-				MarkdownDescription: "The ID of the destination host object if MULTI_HOP selected.",
+				MarkdownDescription: "Id of the destination host object if MULTI_HOP selected.",
 				Computed:            true,
 			},
 			"source_host_object_id": schema.StringAttribute{
-				MarkdownDescription: "The ID of the source host object if MULTI_HOP selected.",
+				MarkdownDescription: "Id of the source host object if MULTI_HOP selected.",
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the interface of BFD assignment if SINGLE_HOP selected.",
+				MarkdownDescription: "Id of the interface for BFD assignment if SINGLE_HOP selected.",
 				Computed:            true,
 			},
 			"slow_timer": schema.Int64Attribute{

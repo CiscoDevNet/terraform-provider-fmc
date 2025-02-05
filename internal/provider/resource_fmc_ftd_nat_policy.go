@@ -68,25 +68,25 @@ func (r *FTDNATPolicyResource) Metadata(ctx context.Context, req resource.Metada
 func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a FTD NAT Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Network Address Translation (NAT) policy with corresponding Manual and Auto NAT rules.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the FTD Network Address Translation (NAT) policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FTD Network Address Translation (NAT) policy.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{

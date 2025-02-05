@@ -3,12 +3,12 @@
 page_title: "fmc_networks Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Networks.
+  This data source reads the Networks.
 ---
 
 # fmc_networks (Data Source)
 
-This data source can read the Networks.
+This data source reads the Networks.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_networks" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of networks. The key of the map is the name of the individual Network. Renaming Networks in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of networks. The key of the map is the name of the individual Network. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

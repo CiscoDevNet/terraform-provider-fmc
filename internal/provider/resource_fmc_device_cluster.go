@@ -63,25 +63,25 @@ func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.Metad
 func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device Cluster.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the FTD Cluster.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FTD Cluster.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -96,7 +96,7 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 				Required:            true,
 			},
 			"control_node_device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster control node device ID.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Node device ID.").String,
 				Required:            true,
 			},
 			"control_node_vni_prefix": schema.StringAttribute{
@@ -136,11 +136,11 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"data_node_device_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Cluster data node device ID.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node device ID.").String,
 							Required:            true,
 						},
 						"data_node_ccl_ipv4_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Cluster data node link IPv4 address / VTEP IPv4 address.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node link IPv4 address / VTEP IPv4 address.").String,
 							Required:            true,
 						},
 						"data_node_priority": schema.Int64Attribute{

@@ -3,12 +3,18 @@
 page_title: "fmc_standard_acl Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Standard ACL.
+  This resource manages a Standard ACL.
+  The following restrictions apply:
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.2
 ---
 
 # fmc_standard_acl (Resource)
 
-This resource can manage a Standard ACL.
+This resource manages a Standard ACL.
+
+The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.2`
 
 ## Example Usage
 
@@ -39,16 +45,16 @@ resource "fmc_standard_acl" "example" {
 ### Required
 
 - `entries` (Attributes List) Ordered list of ACL's entries. (see [below for nested schema](#nestedatt--entries))
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the object.
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--entries"></a>
 ### Nested Schema for `entries`

@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 )
 
 // End of section. //template:end imports
@@ -54,19 +55,19 @@ func (d *DeviceVTEPPolicyDataSource) Metadata(_ context.Context, req datasource.
 func (d *DeviceVTEPPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device VTEP Policy.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device VTEP Policy.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Required:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"nve_enabled": schema.BoolAttribute{
@@ -79,7 +80,7 @@ func (d *DeviceVTEPPolicyDataSource) Schema(ctx context.Context, req datasource.
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the source interface (e.g. fmc_physical_interface.example.id). It cannot refer to a subinterface.",
+							MarkdownDescription: "Id of the source interface. It cannot refer to a subinterface.",
 							Computed:            true,
 						},
 						"nve_number": schema.Int64Attribute{

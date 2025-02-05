@@ -3,18 +3,13 @@ name: Security Zones
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securityzones
 is_bulk: true
 bulk_size_create: 20
-res_description: >-
-  This plural resource manages a bulk of Security Zones.
-  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
-  Updating/deleting `fmc_security_zones` can thus take much more time than creating it
 doc_category: Objects
 minimum_version_bulk_delete: "999"
 attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of security zones. The key of the map is the name of the individual Security Zone. Renaming Security Zone in bulk
-      is not yet implemented.
+      Map of security zones. The key of the map is the name of the individual Security Zone.
     map_key_example: security_zone_1
     mandatory: true
     attributes:

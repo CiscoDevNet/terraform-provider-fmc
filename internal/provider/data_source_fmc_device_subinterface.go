@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -59,24 +60,24 @@ func (d *DeviceSubinterfaceDataSource) Metadata(_ context.Context, req datasourc
 func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device Subinterface.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Subinterface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the resource.",
+				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -85,7 +86,7 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.",
+				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{

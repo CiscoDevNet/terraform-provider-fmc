@@ -4,11 +4,15 @@
 
 The FMC provider provides resources to interact with a Cisco Secure FMC (Firewall Management Center) instance. It communicates with FMC via the REST API.
 
-All resources and data sources have been tested with the following releases.
+Resources and data sources have been tested with the following releases.
 
 | Platform | Version |
 | -------- | ------- |
 | FMC      | 7.2     |
+| FMC      | 7.4     |
+| FMC      | 7.6     |
+
+Please note that resources and data sources support depends on FMC version.
 
 Documentation: <https://registry.terraform.io/providers/netascode/fmc/latest>
 

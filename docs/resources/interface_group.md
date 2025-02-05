@@ -3,12 +3,12 @@
 page_title: "fmc_interface_group Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage an Interface Group.
+  This resource manages an Interface Group.
 ---
 
 # fmc_interface_group (Resource)
 
-This resource can manage an Interface Group.
+This resource manages an Interface Group.
 
 ## Example Usage
 
@@ -35,12 +35,12 @@ resource "fmc_interface_group" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `interfaces` (Attributes Set) (see [below for nested schema](#nestedatt--interfaces))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--interfaces"></a>
 ### Nested Schema for `interfaces`

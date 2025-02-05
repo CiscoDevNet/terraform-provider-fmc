@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcVLANTags(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.vlan_tag_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.vlan_tag_1.description", "My TAG id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.vlan_tag_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.vlan_tag_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.fmc_vlan_tags.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.fmc_vlan_tags.description", "My TAG id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tags.test", "items.fmc_vlan_tags.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tags.test", "items.fmc_vlan_tags.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -64,7 +64,7 @@ func TestAccFmcVLANTags(t *testing.T) {
 
 func testAccFmcVLANTagsConfig_minimum() string {
 	config := `resource "fmc_vlan_tags" "test" {` + "\n"
-	config += `	items = { "vlan_tag_1" = {` + "\n"
+	config += `	items = { "fmc_vlan_tags" = {` + "\n"
 	config += `		start_tag = 12` + "\n"
 	config += `		end_tag = 15` + "\n"
 	config += `	}}` + "\n"
@@ -78,7 +78,7 @@ func testAccFmcVLANTagsConfig_minimum() string {
 
 func testAccFmcVLANTagsConfig_all() string {
 	config := `resource "fmc_vlan_tags" "test" {` + "\n"
-	config += `	items = { "vlan_tag_1" = {` + "\n"
+	config += `	items = { "fmc_vlan_tags" = {` + "\n"
 	config += `		description = "My TAG id"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		start_tag = 12` + "\n"

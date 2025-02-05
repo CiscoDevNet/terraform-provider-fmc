@@ -66,25 +66,25 @@ func (r *DeviceBGPResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("Under BGP General Settings, BGP has to be enabled and AS Number assigned first.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -105,14 +105,14 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"as_number": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Autonomus System (AS) Number").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Autonomus System (AS) number").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"ipv4_address_family_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Address Family Type").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -139,7 +139,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 			},
 			"ipv4_bgp_redistribute_internal": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Redistribute IBGP into IGP. (Use filtering to limit the number of prefixes that are redistributed)").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.").String,
 				Optional:            true,
 			},
 			"ipv4_external_distance": schema.Int64Attribute{

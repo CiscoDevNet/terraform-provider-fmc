@@ -3,12 +3,18 @@
 page_title: "fmc_security_zones Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This plural resource manages a bulk of Security Zones. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting fmc_security_zones can thus take much more time than creating it
+  This resource manages Security Zones through bulk operations.
+  The following restrictions apply:
+  Bulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_security_zones (Resource)
 
-This plural resource manages a bulk of Security Zones. The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one. Updating/deleting `fmc_security_zones` can thus take much more time than creating it
+This resource manages Security Zones through bulk operations.
+
+The following restrictions apply:
+  - Bulk object deletion is not supported by FMC, it will be handled one-by-one
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -27,15 +33,15 @@ resource "fmc_security_zones" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. Renaming Security Zone in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

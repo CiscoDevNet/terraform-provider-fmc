@@ -3,12 +3,12 @@
 page_title: "fmc_fqdn_objects Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the FQDN Objects.
+  This data source reads the FQDN Objects.
 ---
 
 # fmc_fqdn_objects (Data Source)
 
-This data source can read the FQDN Objects.
+This data source reads the FQDN Objects.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_fqdn_objects" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of FQDNs. The key of the map is the name of the individual FQDN. Renaming FQDNs in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of FQDN Objects. The key of the map is the name of the individual FQDN Object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
@@ -41,6 +41,6 @@ Read-Only:
 - `description` (String) Optional user-created description.
 - `dns_resolution` (String) Type of DNS resolution.
 - `fqdn` (String) The fully qualified domain name.
-- `id` (String) UUID of the managed FQDN.
+- `id` (String) Id of the managed object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'FQDN'.

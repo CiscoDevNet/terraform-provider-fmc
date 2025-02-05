@@ -3,12 +3,12 @@
 page_title: "fmc_policy_assignment Resource - terraform-provider-fmc"
 subcategory: "Policy Assignments"
 description: |-
-  This resource can manage a Policy Assignment.
+  This resource manages a Policy Assignment.
 ---
 
 # fmc_policy_assignment (Resource)
 
-This resource can manage a Policy Assignment.
+This resource manages a Policy Assignment.
 
 ## Example Usage
 
@@ -39,11 +39,11 @@ resource "fmc_policy_assignment" "example" {
 ### Optional
 
 - `after_destroy_policy_id` (String) ID of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `policy_name` (String) Name of the policy to be assigned.
 - `type` (String) Type of the object; this is always 'PolicyAssignment'
 

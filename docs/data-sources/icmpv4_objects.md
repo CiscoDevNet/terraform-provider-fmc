@@ -3,12 +3,12 @@
 page_title: "fmc_icmpv4_objects Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the ICMPv4 Objects.
+  This data source reads the ICMPv4 Objects.
 ---
 
 # fmc_icmpv4_objects (Data Source)
 
-This data source can read the ICMPv4 Objects.
+This data source reads the ICMPv4 Objects.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_icmpv4_objects" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object. Renaming ICMPv4 objects in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
@@ -39,8 +39,8 @@ data "fmc_icmpv4_objects" "example" {
 Read-Only:
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
-- `description` (String) Optional description of the resource.
+- `description` (String) Description of the resource.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
-- `id` (String) UUID of the managed ICMPv4 object.
+- `id` (String) Id of the managed ICMPv4 object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String)

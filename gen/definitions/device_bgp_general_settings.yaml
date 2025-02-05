@@ -8,7 +8,7 @@ attributes:
     type: String
     reference: true
     requires_replace: true
-    description: UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: name
@@ -17,7 +17,7 @@ attributes:
     computed: true
   - model_name: asNumber
     type: String
-    description: Autonomous System (AS) number in asplain or asdot format
+    description: Autonomous System (AS) number in 'asplain' or 'asdot' format
     mandatory: true
     example: "65535"
     data_source_query: true
@@ -44,7 +44,7 @@ attributes:
     type: Bool
     exclude_example: true
     example: "false"
-    description: Enable logging of BGP neighbor status changes.
+    description: Logging of BGP neighbor status changes.
   - model_name: transportPathMtuDiscovery
     tf_name: tcp_path_mtu_discovery
     type: Bool

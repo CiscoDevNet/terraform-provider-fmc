@@ -5,13 +5,14 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the FQDN object.
     mandatory: true
     example: fqdn_1
     data_source_query: true
   - model_name: value
+    tf_name: fqdn
     type: String
-    description: The fully qualified domain name.
+    description: Fully qualified domain name.
     mandatory: true
     example: www.example.com
   - model_name: dnsResolution

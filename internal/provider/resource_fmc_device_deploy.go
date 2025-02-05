@@ -59,18 +59,18 @@ func (r *DeviceDeployResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceDeployResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device Deploy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource is used to trigger deployment to all deployable devices on each `terraform apply`.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -85,12 +85,12 @@ func (r *DeviceDeployResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 			},
 			"device_id_list": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of device ids to be deployed.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of device Ids to be deployed.").String,
 				ElementType:         types.StringType,
 				Required:            true,
 			},
 			"deployment_note": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User note.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Deployment note.").String,
 				Optional:            true,
 			},
 		},

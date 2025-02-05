@@ -10,7 +10,7 @@ attributes:
     example: "443"
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the object.
     mandatory: true
     example: tcp443
     data_source_query: true

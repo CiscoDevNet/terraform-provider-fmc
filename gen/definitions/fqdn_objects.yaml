@@ -1,10 +1,6 @@
 ---
 name: FQDN Objects
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns
-res_description: >-
-  This plural resource manages a bulk of FQDN.
-  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
-  Updating/deleting `fmc_fqdn_objecs` can thus take much more time than creating it
 doc_category: Objects
 is_bulk: true
 minimum_version_bulk_delete: "7.4"
@@ -12,15 +8,14 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of FQDNs. The key of the map is the name of the individual FQDN. Renaming FQDNs in bulk
-      is not yet implemented.
+      Map of FQDN Objects. The key of the map is the name of the individual FQDN Object.
     map_key_example: fqdn_1
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed FQDN.
+        description: Id of the managed object.
         exclude_example: true
         exclude_test: true
       - model_name: description

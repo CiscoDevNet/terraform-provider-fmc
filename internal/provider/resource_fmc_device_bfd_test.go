@@ -61,7 +61,7 @@ variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
 
 resource "fmc_bfd_template" "test" {
-  name = "BFD_Template1"
+  name = "fmc_device_bfd_bfd_template"
   hop_type = "SINGLE_HOP"
   echo = "DISABLED"
 }

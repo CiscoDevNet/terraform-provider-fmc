@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -58,20 +59,20 @@ func (d *DeviceBGPGeneralSettingsDataSource) Metadata(_ context.Context, req dat
 func (d *DeviceBGPGeneralSettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device BGP General Settings.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device BGP General Settings.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the parent device (fmc_device.example.id).",
+				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
 			"name": schema.StringAttribute{
@@ -79,7 +80,7 @@ func (d *DeviceBGPGeneralSettingsDataSource) Schema(ctx context.Context, req dat
 				Computed:            true,
 			},
 			"as_number": schema.StringAttribute{
-				MarkdownDescription: "Autonomous System (AS) number in asplain or asdot format",
+				MarkdownDescription: "Autonomous System (AS) number in 'asplain' or 'asdot' format",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -96,7 +97,7 @@ func (d *DeviceBGPGeneralSettingsDataSource) Schema(ctx context.Context, req dat
 				Computed:            true,
 			},
 			"log_neighbor_changes": schema.BoolAttribute{
-				MarkdownDescription: "Enable logging of BGP neighbor status changes.",
+				MarkdownDescription: "Logging of BGP neighbor status changes.",
 				Computed:            true,
 			},
 			"tcp_path_mtu_discovery": schema.BoolAttribute{

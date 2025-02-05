@@ -3,12 +3,12 @@
 page_title: "fmc_smart_license Resource - terraform-provider-fmc"
 subcategory: "License"
 description: |-
-  This resource can manage a Smart License.
+  This resource manages a Smart License.
 ---
 
 # fmc_smart_license (Resource)
 
-This resource can manage a Smart License.
+This resource manages a Smart License.
 
 ## Example Usage
 
@@ -39,5 +39,5 @@ resource "fmc_smart_license" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `registration_status` (String) Smart license registration status

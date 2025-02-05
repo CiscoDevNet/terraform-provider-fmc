@@ -3,12 +3,12 @@
 page_title: "fmc_host Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Host.
+  This resource manages a Host.
 ---
 
 # fmc_host (Resource)
 
-This resource can manage a Host.
+This resource manages a Host.
 
 ## Example Usage
 
@@ -31,13 +31,13 @@ resource "fmc_host" "example" {
 
 ### Optional
 
-- `description` (String) Description
-- `domain` (String) The name of the FMC domain
+- `description` (String) Description of the resource.
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'Host'.
 
 ## Import

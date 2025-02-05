@@ -1,10 +1,6 @@
 ---
 name: Networks
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networks
-res_description: >-
-  This plural resource manages a bulk of Networks.
-  The FMC API supports quick bulk creation of this resource. Deletion of this resource is done one-by-one or in bulk, depending of FMC version. Modification is always done one-by-one.
-  Updating/deleting `fmc_networks` can thus take much more time than creating it
 doc_category: Objects
 is_bulk: true
 minimum_version_bulk_delete: "7.4"
@@ -12,8 +8,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of networks. The key of the map is the name of the individual Network. Renaming Networks in bulk
-      is not yet implemented.
+      Map of networks. The key of the map is the name of the individual Network.
     map_key_example: networks_1
     mandatory: true
     attributes:

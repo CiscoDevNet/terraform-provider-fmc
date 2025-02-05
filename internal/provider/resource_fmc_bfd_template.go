@@ -65,25 +65,25 @@ func (r *BFDTemplateResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a BFD Template.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a BFD Template.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the bfd template object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the BFD Template object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -94,14 +94,14 @@ func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"hop_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The hop type.").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Hop type.").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SINGLE_HOP", "MULTI_HOP"),
 				},
 			},
 			"echo": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables/disables BFD echo.").AddStringEnumDescription("ENABLED", "DISABLED").String,
+				MarkdownDescription: helpers.NewAttributeDescription("BFD echo status.").AddStringEnumDescription("ENABLED", "DISABLED").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ENABLED", "DISABLED"),
@@ -147,14 +147,14 @@ func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"authentication_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Authentication types").AddStringEnumDescription("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Authentication type.").AddStringEnumDescription("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE"),
 				},
 			},
 			"authentication_password_encryption": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Determines if authentication_password is encrypted").AddStringEnumDescription("UN_ENCRYPTED", "ENCRYPTED", "NONE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Determines if `authentication_password` is encrypted").AddStringEnumDescription("UN_ENCRYPTED", "ENCRYPTED", "NONE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("UN_ENCRYPTED", "ENCRYPTED", "NONE"),

@@ -3,12 +3,12 @@
 page_title: "fmc_policy_assignment Data Source - terraform-provider-fmc"
 subcategory: "Policy Assignments"
 description: |-
-  This data source can read the Policy Assignment.
+  This data source reads the Policy Assignment.
 ---
 
 # fmc_policy_assignment (Data Source)
 
-This data source can read the Policy Assignment.
+This data source reads the Policy Assignment.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_policy_assignment" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `policy_name` (String) Name of the policy to be assigned.
 
 ### Read-Only

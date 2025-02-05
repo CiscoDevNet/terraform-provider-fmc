@@ -34,7 +34,7 @@ func TestAccFmcDeviceCluster(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_device_interface_name")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "name", "MyDeviceClusterName1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "name", "fmc_device_cluster"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_cluster.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "control_node_vni_prefix", "10.10.3.0/27"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "control_node_ccl_prefix", "10.10.4.0/27"))
@@ -86,7 +86,7 @@ variable "device_interface_name" { default = null } // tests will set $TF_VAR_de
 
 func testAccFmcDeviceClusterConfig_minimum() string {
 	config := `resource "fmc_device_cluster" "test" {` + "\n"
-	config += `	name = "MyDeviceClusterName1"` + "\n"
+	config += `	name = "fmc_device_cluster"` + "\n"
 	config += `	cluster_key = "cisco123"` + "\n"
 	config += `	control_node_device_id = var.device_id` + "\n"
 	config += `	control_node_ccl_prefix = "10.10.4.0/27"` + "\n"
@@ -105,7 +105,7 @@ func testAccFmcDeviceClusterConfig_minimum() string {
 
 func testAccFmcDeviceClusterConfig_all() string {
 	config := `resource "fmc_device_cluster" "test" {` + "\n"
-	config += `	name = "MyDeviceClusterName1"` + "\n"
+	config += `	name = "fmc_device_cluster"` + "\n"
 	config += `	cluster_key = "cisco123"` + "\n"
 	config += `	control_node_device_id = var.device_id` + "\n"
 	config += `	control_node_vni_prefix = "10.10.3.0/27"` + "\n"

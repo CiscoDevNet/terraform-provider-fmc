@@ -3,12 +3,12 @@
 page_title: "fmc_syslog_alerts Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the Syslog Alerts.
+  This data source reads the Syslog Alerts.
 ---
 
 # fmc_syslog_alerts (Data Source)
 
-This data source can read the Syslog Alerts.
+This data source reads the Syslog Alerts.
 
 ## Example Usage
 
@@ -26,12 +26,12 @@ data "fmc_syslog_alerts" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `items` (Attributes Map) Map of Syslog Alerts. The key of the map is the name of the individual Syslog Alert. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

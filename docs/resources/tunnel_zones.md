@@ -3,12 +3,19 @@
 page_title: "fmc_tunnel_zones Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Tunnel Zones.
+  This resource manages Tunnel Zones through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_tunnel_zones (Resource)
 
-This resource can manage a Tunnel Zones.
+This resource manages Tunnel Zones through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
+  - Updates are always done one-by-one.
 
 ## Example Usage
 
@@ -31,11 +38,11 @@ resource "fmc_tunnel_zones" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

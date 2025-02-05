@@ -3,12 +3,12 @@
 page_title: "fmc_device_vtep_policy Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device VTEP Policy.
+  This data source reads the Device VTEP Policy.
 ---
 
 # fmc_device_vtep_policy (Data Source)
 
-This data source can read the Device VTEP Policy.
+This data source reads the Device VTEP Policy.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_vtep_policy" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
-- `id` (String) The id of the object
+- `device_id` (String) Id of the parent device.
+- `id` (String) Id of the object
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
@@ -47,4 +47,4 @@ Read-Only:
 - `neighbor_address_literal` (String) Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address. Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.
 - `neighbor_discovery` (String) How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
 - `nve_number` (Number) VTEP NVE number, currently must always be 1.
-- `source_interface_id` (String) UUID of the source interface (e.g. fmc_physical_interface.example.id). It cannot refer to a subinterface.
+- `source_interface_id` (String) Id of the source interface. It cannot refer to a subinterface.

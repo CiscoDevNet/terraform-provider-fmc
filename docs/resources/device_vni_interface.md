@@ -3,12 +3,12 @@
 page_title: "fmc_device_vni_interface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device VNI Interface.
+  This resource manages a Device VNI Interface.
 ---
 
 # fmc_device_vni_interface (Resource)
 
-This resource can manage a Device VNI Interface.
+This resource manages a Device VNI Interface.
 
 ## Example Usage
 
@@ -34,14 +34,14 @@ resource "fmc_device_vni_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 - `vni_id` (Number) User-created VNI number for the interface, not exposed over the wire.
   - Range: `1`-`10000`
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `enable_proxy` (Boolean) Indicates whether to enable proxy.
   - Default value: `false`
 - `enabled` (Boolean) Indicates whether to enable the interface.
@@ -70,7 +70,7 @@ resource "fmc_device_vni_interface" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`

@@ -1,11 +1,6 @@
 ---
 name: VLAN Tag Groups
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/vlangrouptags
-res_description: >-
-  This plural resource manages a bulk of VLAN Tag Groups.
-  The FMC API supports quick bulk creation for this resource, but the deletion/modification is done one-by-one.
-  Updating and deleting `fmc_vlan_tag_groups` can thus take much more time than creating it (even >500 times more time,
-  i.e. >50000%, depending on the change size).
 is_bulk: true
 doc_category: Objects
 minimum_version_bulk_delete: "7.4"
@@ -15,7 +10,7 @@ attributes:
     description: >-
       Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group.
     mandatory: true
-    map_key_example: vlan_tag_group_1
+    map_key_example: fmc_vlan_tag_groups
     attributes:
       - model_name: id
         type: String
@@ -62,7 +57,7 @@ attributes:
             test_value: "22"
 test_prerequisites: |-
   resource "fmc_vlan_tag" "test" {
-    name        = "vlan_tag_1111"
+    name        = "fmc_vlan_tag_group_vlan_tag"
     description = "My TAG id"
     overridable = false
     start_tag   = 11

@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -60,20 +61,20 @@ func (d *BFDTemplateDataSource) Metadata(_ context.Context, req datasource.Metad
 func (d *BFDTemplateDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the BFD Template.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the BFD Template.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "The name of the bfd template object.",
+				MarkdownDescription: "Name of the BFD Template object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -82,11 +83,11 @@ func (d *BFDTemplateDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"hop_type": schema.StringAttribute{
-				MarkdownDescription: "The hop type.",
+				MarkdownDescription: "Hop type.",
 				Computed:            true,
 			},
 			"echo": schema.StringAttribute{
-				MarkdownDescription: "Enables/disables BFD echo.",
+				MarkdownDescription: "BFD echo status.",
 				Computed:            true,
 			},
 			"interval_time": schema.StringAttribute{
@@ -114,11 +115,11 @@ func (d *BFDTemplateDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"authentication_type": schema.StringAttribute{
-				MarkdownDescription: "Authentication types",
+				MarkdownDescription: "Authentication type.",
 				Computed:            true,
 			},
 			"authentication_password_encryption": schema.StringAttribute{
-				MarkdownDescription: "Determines if authentication_password is encrypted",
+				MarkdownDescription: "Determines if `authentication_password` is encrypted",
 				Computed:            true,
 			},
 		},

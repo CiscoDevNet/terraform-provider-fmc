@@ -3,12 +3,12 @@
 page_title: "fmc_device_vni_interface Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device VNI Interface.
+  This data source reads the Device VNI Interface.
 ---
 
 # fmc_device_vni_interface (Data Source)
 
-This data source can read the Device VNI Interface.
+This data source reads the Device VNI Interface.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_vni_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
-- `id` (String) The id of the object
+- `device_id` (String) Id of the parent device.
+- `id` (String) Id of the object
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 
 ### Read-Only
 

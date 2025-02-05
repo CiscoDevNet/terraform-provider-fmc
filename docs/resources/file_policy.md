@@ -3,18 +3,24 @@
 page_title: "fmc_file_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage a File Policy.
+  This resource manages a File Policy.
+  The following restrictions apply:
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4
 ---
 
 # fmc_file_policy (Resource)
 
-This resource can manage a File Policy.
+This resource manages a File Policy.
+
+The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
 
 ## Example Usage
 
 ```terraform
 resource "fmc_file_policy" "example" {
-  name                         = "file_policy_1"
+  name                         = "fmc_file_policy"
   description                  = "My file policy"
   first_time_file_analysis     = true
   custom_detection_list        = true
@@ -51,7 +57,7 @@ resource "fmc_file_policy" "example" {
 
 ### Required
 
-- `name` (String) The name of file policy.
+- `name` (String) Name of file policy.
 
 ### Optional
 
@@ -60,7 +66,7 @@ resource "fmc_file_policy" "example" {
 - `clean_list` (Boolean) Enable clean list
 - `custom_detection_list` (Boolean) Enable custom detection list
 - `description` (String) File policy description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `file_rules` (Attributes List) The ordered list of file rules. (see [below for nested schema](#nestedatt--file_rules))
 - `first_time_file_analysis` (Boolean) Analyze first-seen files while AMP cloud disposition is pending
 - `inspect_archives` (Boolean) Inspect Archives
@@ -71,7 +77,7 @@ resource "fmc_file_policy" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object
 
 <a id="nestedatt--file_rules"></a>
@@ -94,8 +100,8 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Unique identifier representing the File Rule.
-- `type` (String) The name of file rule type.
+- `id` (String) Id of File Rule
+- `type` (String) Type of File Rule.
 
 <a id="nestedatt--file_rules--file_categories"></a>
 ### Nested Schema for `file_rules.file_categories`

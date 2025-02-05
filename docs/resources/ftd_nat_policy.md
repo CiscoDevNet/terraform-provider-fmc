@@ -3,12 +3,12 @@
 page_title: "fmc_ftd_nat_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage a FTD NAT Policy.
+  This resource manages FTD Network Address Translation (NAT) policy with corresponding Manual and Auto NAT rules.
 ---
 
 # fmc_ftd_nat_policy (Resource)
 
-This resource can manage a FTD NAT Policy.
+This resource manages FTD Network Address Translation (NAT) policy with corresponding Manual and Auto NAT rules.
 
 ## Example Usage
 
@@ -42,18 +42,18 @@ resource "fmc_ftd_nat_policy" "example" {
 
 ### Required
 
-- `name` (String) The name of the FTD Network Address Translation (NAT) policy.
+- `name` (String) Name of the FTD Network Address Translation (NAT) policy.
 
 ### Optional
 
 - `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Policy description
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--auto_nat_rules"></a>
 ### Nested Schema for `auto_nat_rules`

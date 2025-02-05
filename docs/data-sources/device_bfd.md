@@ -3,12 +3,17 @@
 page_title: "fmc_device_bfd Data Source - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This data source can read the Device BFD.
+  This data source reads the Device BFD.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_device_bfd (Data Source)
 
-This data source can read the Device BFD.
+This data source reads the Device BFD.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 
@@ -24,20 +29,20 @@ data "fmc_device_bfd" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `interface_logical_name` (String) Logical Name of the interface of BFD assignment if SINGLE_HOP selected.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `interface_logical_name` (String) Logical Name of the interface for BFD assignment if SINGLE_HOP selected.
 
 ### Read-Only
 
-- `bfd_template_id` (String) ID of the BFD Template
-- `destination_host_object_id` (String) The ID of the destination host object if MULTI_HOP selected.
+- `bfd_template_id` (String) Id of the BFD Template
+- `destination_host_object_id` (String) Id of the destination host object if MULTI_HOP selected.
 - `hop_type` (String) BFD Hop type.
-- `interface_id` (String) ID of the interface of BFD assignment if SINGLE_HOP selected.
+- `interface_id` (String) Id of the interface for BFD assignment if SINGLE_HOP selected.
 - `slow_timer` (Number) BFD Slow Timer value in range: 1000-30000, default: 1000
-- `source_host_object_id` (String) The ID of the source host object if MULTI_HOP selected.
+- `source_host_object_id` (String) Id of the source host object if MULTI_HOP selected.
 - `type` (String) Type of the object; this value is always 'BFDPolicy'

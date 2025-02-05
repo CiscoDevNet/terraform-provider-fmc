@@ -3,12 +3,12 @@
 page_title: "fmc_file_types Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the File Types.
+  This data source reads the File Types.
 ---
 
 # fmc_file_types (Data Source)
 
-This data source can read the File Types.
+This data source reads the File Types.
 
 ## Example Usage
 
@@ -26,17 +26,17 @@ data "fmc_file_types" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `items` (Attributes Map) Map of File Types. The key of the map is the name of the individual File Type. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
 Read-Only:
 
-- `id` (String) UUID of the managed File Type.
+- `id` (String) Id of the managed File Type.
 - `type` (String) Type of the object; this value is always 'FileType'.

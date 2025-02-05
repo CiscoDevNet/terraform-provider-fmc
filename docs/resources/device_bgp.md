@@ -3,12 +3,12 @@
 page_title: "fmc_device_bgp Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  Under BGP General Settings, BGP has to be enabled and AS Number assigned first.
+  This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
 ---
 
 # fmc_device_bgp (Resource)
 
-Under BGP General Settings, BGP has to be enabled and AS Number assigned first.
+This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
 
 ## Example Usage
 
@@ -42,14 +42,14 @@ resource "fmc_device_bgp" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `ipv4_aggregate_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
 - `ipv4_auto_aummary` (Boolean) Summarize subnet routes into network level routes
-- `ipv4_bgp_redistribute_internal` (Boolean) Redistribute IBGP into IGP. (Use filtering to limit the number of prefixes that are redistributed)
+- `ipv4_bgp_redistribute_internal` (Boolean) Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.
 - `ipv4_bgp_supress_inactive` (Boolean) Suppresing advertise inactive routes
 - `ipv4_default_information_orginate` (Boolean) Generate default routes
 - `ipv4_external_distance` (Number) Administrative route distance for external routes
@@ -77,9 +77,9 @@ resource "fmc_device_bgp" "example" {
 
 ### Read-Only
 
-- `as_number` (String) Autonomus System (AS) Number
-- `id` (String) The id of the object
-- `ipv4_address_family_type` (String)
+- `as_number` (String) Autonomus System (AS) number
+- `id` (String) Id of the object
+- `ipv4_address_family_type` (String) IPv4 Address Family Type
 - `name` (String) Name of the object; this is always 'bgp'
 - `type` (String) Type of the object; this is always 'bgp'
 

@@ -30,8 +30,8 @@ import (
 
 func TestAccDataSourceFmcVLANTagGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "name", "vlan_tag_group_1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "description", "My vlan tag group name"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "name", "fmc_vlan_tag_group"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "description", "My VLAN Tag Group"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "overridable", "true"))
 	resource.Test(t, resource.TestCase{
@@ -57,7 +57,7 @@ func TestAccDataSourceFmcVLANTagGroup(t *testing.T) {
 
 const testAccDataSourceFmcVLANTagGroupPrerequisitesConfig = `
 resource "fmc_vlan_tag" "test" {
-  name        = "vlan_tag_1111"
+  name        = "fmc_vlan_tag_group_vlan_tag"
   description = "My TAG id"
   overridable = false
   start_tag   = 11
@@ -71,8 +71,8 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccDataSourceFmcVLANTagGroupConfig() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "vlan_tag_group_1"` + "\n"
-	config += `	description = "My vlan tag group name"` + "\n"
+	config += `	name = "fmc_vlan_tag_group"` + "\n"
+	config += `	description = "My VLAN Tag Group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"
@@ -93,8 +93,8 @@ func testAccDataSourceFmcVLANTagGroupConfig() string {
 
 func testAccNamedDataSourceFmcVLANTagGroupConfig() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "vlan_tag_group_1"` + "\n"
-	config += `	description = "My vlan tag group name"` + "\n"
+	config += `	name = "fmc_vlan_tag_group"` + "\n"
+	config += `	description = "My VLAN Tag Group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"

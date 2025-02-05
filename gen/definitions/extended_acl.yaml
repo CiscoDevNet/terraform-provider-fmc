@@ -6,13 +6,13 @@ minimum_version_create: "7.2"
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the Extended ACL.
     mandatory: true
     example: extended_acl_1
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the Extended ACL.
     example: "My Extended Access Control List"
   - model_name: entries
     type: List
@@ -24,14 +24,14 @@ attributes:
     attributes:
       - model_name: action
         type: String
-        description: "Indicates the redistribution access: PERMIT or DENY."
+        description: Rule action.
         enum_values: [PERMIT, DENY]
         example: DENY
         mandatory: true
         minimum_test_value: '"PERMIT"'
       - model_name: logLevel
         type: String
-        description: The logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
+        description: Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
         enum_values:
           - EMERGENCY
           - ALERT
@@ -45,7 +45,7 @@ attributes:
         example: WARNING
       - model_name: logging
         type: String
-        description: The logging mode.
+        description: Logging mode.
         enum_values:
           - PER_ACCESS_LIST_ENTRY
           - DEFAULT
@@ -56,7 +56,7 @@ attributes:
       - model_name: logInterval
         tf_name: log_interval_seconds
         type: Int64
-        description: The logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
+        description: Logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
         default_value: "300"
         example: "120"
       - model_name: literals
@@ -69,9 +69,11 @@ attributes:
             type: String
             id: true
             example: 10.1.1.0/24
+            description: IPv4 or IPv6 host or network.
           - model_name: type
             type: String
-            example: Network           
+            example: Network
+            description: Type of the object.
       - model_name: literals
         data_path: [destinationNetworks]
         tf_name: destination_network_literals
@@ -82,9 +84,11 @@ attributes:
             type: String
             id: true
             example: 10.2.2.2
+            description: IPv4 or IPv6 host or network.
           - model_name: type
             type: String
             example: Host
+            description: Type of the object.
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
@@ -130,12 +134,12 @@ attributes:
       - model_name: objects
         data_path: [destinationNetworks]
         tf_name: destination_network_objects
-        description: Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...).
+        description: Set of objects that represent destinations of traffic.
         type: Set
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_network.example.id, etc.).
+            description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_host.test.id
@@ -147,7 +151,7 @@ attributes:
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_port.example.id).
+            description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_port.test.id
@@ -159,7 +163,7 @@ attributes:
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_port.example.id).
+            description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_port.test.id
@@ -174,22 +178,27 @@ attributes:
             enum_values: [ PortLiteral, ICMPv4PortLiteral ]
             mandatory: true
             example: PortLiteral
+            description: Type of the object.
           - model_name: port
             type: String
             example: "80"
+            description: Port number.
           - model_name: protocol
             type: String
             example: "6"
             mandatory: true
+            description: IANA port number.
           - model_name: icmpType
             type: String
             example: "0"
             exclude_test: true
+            description: ICMP type.
           - model_name: code
             tf_name: icmp_code
             type: String
             example: "0"
             exclude_test: true
+            description: ICMP code.
       - model_name: literals
         data_path: [sourcePorts]
         tf_name: source_port_literals
@@ -201,41 +210,46 @@ attributes:
             enum_values: [ PortLiteral, ICMPv4PortLiteral ]
             mandatory: true
             example: PortLiteral
+            description: Type of the object.
           - model_name: port
             type: String
             example: "80"
+            description: Port number.
           - model_name: protocol
             type: String
             example: "6"
             mandatory: true
+            description: IANA port number.
           - model_name: icmpType
             type: String
             example: "0"
             exclude_test: true
+            description: ICMP type.
           - model_name: code
             tf_name: icmp_code
             type: String
             example: "0"
             exclude_test: true
+            description: ICMP code
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
-    name   = "mynetwork2"
+    name   = "fmc_extended_acl_network"
     prefix = "10.0.0.0/24"
   }
 
   resource "fmc_host" "test" {
-    name = "myhost2"
+    name = "fmc_extended_acl_host"
     ip   = "10.1.1.1"
   }
 
   resource "fmc_port" "test" {
-    name = "myport2"
+    name = "fmc_extended_acl_port"
     protocol = "TCP"
     port = "65000"
   }
 
   resource "fmc_sgt" "test" {
-    name = "mysgt2"
+    name = "fmc_extended_acl_sgt"
     tag = "11"
   }

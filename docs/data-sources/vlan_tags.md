@@ -3,19 +3,19 @@
 page_title: "fmc_vlan_tags Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the VLAN Tags.
+  This data source reads the VLAN Tags.
 ---
 
 # fmc_vlan_tags (Data Source)
 
-This data source can read the VLAN Tags.
+This data source reads the VLAN Tags.
 
 ## Example Usage
 
 ```terraform
 data "fmc_vlan_tags" "example" {
   items = {
-    "vlan_tag_1" = {
+    "fmc_vlan_tags" = {
     }
   }
 }
@@ -26,12 +26,12 @@ data "fmc_vlan_tags" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN tag object. Renaming URL object in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `domain` (String) Name of the FMC domain
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN tag object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`

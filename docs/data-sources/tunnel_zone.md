@@ -3,12 +3,12 @@
 page_title: "fmc_tunnel_zone Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Tunnel Zone.
+  This data source reads the Tunnel Zone.
 ---
 
 # fmc_tunnel_zone (Data Source)
 
-This data source can read the Tunnel Zone.
+This data source reads the Tunnel Zone.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_tunnel_zone" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) The name of the Tunnel Zone object.
 
 ### Read-Only

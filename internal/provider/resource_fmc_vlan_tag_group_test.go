@@ -31,8 +31,8 @@ import (
 
 func TestAccFmcVLANTagGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "name", "vlan_tag_group_1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "description", "My vlan tag group name"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "name", "fmc_vlan_tag_group"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "description", "My VLAN Tag Group"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_group.test", "overridable", "true"))
 
@@ -65,7 +65,7 @@ func TestAccFmcVLANTagGroup(t *testing.T) {
 
 const testAccFmcVLANTagGroupPrerequisitesConfig = `
 resource "fmc_vlan_tag" "test" {
-  name        = "vlan_tag_1111"
+  name        = "fmc_vlan_tag_group_vlan_tag"
   description = "My TAG id"
   overridable = false
   start_tag   = 11
@@ -79,7 +79,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccFmcVLANTagGroupConfig_minimum() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "vlan_tag_group_1"` + "\n"
+	config += `	name = "fmc_vlan_tag_group"` + "\n"
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"
 	config += `	}]` + "\n"
@@ -93,8 +93,8 @@ func testAccFmcVLANTagGroupConfig_minimum() string {
 
 func testAccFmcVLANTagGroupConfig_all() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "vlan_tag_group_1"` + "\n"
-	config += `	description = "My vlan tag group name"` + "\n"
+	config += `	name = "fmc_vlan_tag_group"` + "\n"
+	config += `	description = "My VLAN Tag Group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"
 	config += `		id = fmc_vlan_tag.test.id` + "\n"

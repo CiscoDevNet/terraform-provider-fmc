@@ -3,12 +3,12 @@
 page_title: "fmc_time_range Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Time Range.
+  This data source reads the Time Range.
 ---
 
 # fmc_time_range (Data Source)
 
-This data source can read the Time Range.
+This data source reads the Time Range.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_time_range" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the object
 
 ### Read-Only

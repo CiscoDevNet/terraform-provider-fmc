@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcBFDTemplate(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "name", "BFD_Template1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "name", "fmc_bfd_template"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_bfd_template.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "hop_type", "SINGLE_HOP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "echo", "ENABLED"))
@@ -75,7 +75,7 @@ func TestAccFmcBFDTemplate(t *testing.T) {
 
 func testAccFmcBFDTemplateConfig_minimum() string {
 	config := `resource "fmc_bfd_template" "test" {` + "\n"
-	config += `	name = "BFD_Template1"` + "\n"
+	config += `	name = "fmc_bfd_template"` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -87,7 +87,7 @@ func testAccFmcBFDTemplateConfig_minimum() string {
 
 func testAccFmcBFDTemplateConfig_all() string {
 	config := `resource "fmc_bfd_template" "test" {` + "\n"
-	config += `	name = "BFD_Template1"` + "\n"
+	config += `	name = "fmc_bfd_template"` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"
 	config += `	echo = "ENABLED"` + "\n"
 	config += `	interval_time = "MILLISECONDS"` + "\n"

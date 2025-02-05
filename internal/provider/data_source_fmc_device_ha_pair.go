@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/netascode/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/tidwall/gjson"
 )
 
@@ -58,25 +59,25 @@ func (d *DeviceHAPairDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: "This data source can read the Device HA Pair.",
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device HA Pair.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Optional:            true,
 				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "The name of the High Availability (HA) Pair.",
+				MarkdownDescription: "Name of the High Availability (HA) Pair.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the resource; This is always `DeviceHAPair`.",
+				MarkdownDescription: "Type of the object; This is always `DeviceHAPair`.",
 				Computed:            true,
 			},
 			"primary_device_id": schema.StringAttribute{

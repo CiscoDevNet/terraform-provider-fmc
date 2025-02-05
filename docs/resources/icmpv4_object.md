@@ -3,12 +3,12 @@
 page_title: "fmc_icmpv4_object Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage an ICMPv4 Object.
+  This resource manages an ICMPv4 Object.
 ---
 
 # fmc_icmpv4_object (Resource)
 
-This resource can manage an ICMPv4 Object.
+This resource manages an ICMPv4 Object.
 
 ## Example Usage
 
@@ -26,21 +26,21 @@ resource "fmc_icmpv4_object" "example" {
 
 ### Required
 
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the resource.
 
 ### Optional
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
-- `description` (String) Optional description of the resource.
-- `domain` (String) The name of the FMC domain
+- `description` (String) Description of the resource.
+- `domain` (String) Name of the FMC domain
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String)
 
 ## Import

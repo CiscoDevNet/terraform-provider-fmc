@@ -19,13 +19,13 @@ attributes:
     example: "0"
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the resource.
     mandatory: true
     example: icmpv4_net_unreachable
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional description of the resource.
+    description: Description of the resource.
     example: "ICMPv4 network unreachable response, type 3, code 0"
   - model_name: overridable
     type: Bool

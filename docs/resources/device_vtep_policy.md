@@ -3,12 +3,12 @@
 page_title: "fmc_device_vtep_policy Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource fmc_device_vtep_policy exists for a single fmc_device, because the FMC API responds with the same single UUID for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.
+  This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource fmc_device_vtep_policy exists for a single fmc_device, because the FMC API responds with the same single Id for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.
 ---
 
 # fmc_device_vtep_policy (Resource)
 
-This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single UUID for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.
+This resource can manage the Device VTEP Policy. Practicioners should ensure only one resource `fmc_device_vtep_policy` exists for a single `fmc_device`, because the FMC API responds with the same single Id for every request to create a new VTEP Policy on the same Device. Thus multiple resources per Device would unexpectedly overwrite the same set of settings.
 
 ## Example Usage
 
@@ -31,18 +31,18 @@ resource "fmc_device_vtep_policy" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `nve_enabled` (Boolean) Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.
   - Default value: `true`
 - `vteps` (Attributes List) List that can either be empty or contain one VTEP object. (see [below for nested schema](#nestedatt--vteps))
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--vteps"></a>
 ### Nested Schema for `vteps`
@@ -64,7 +64,7 @@ Optional:
 - `neighbor_address_literal` (String) Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address. Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.
 - `nve_number` (Number) VTEP NVE number, currently must always be 1.
   - Range: `1`-`1`
-- `source_interface_id` (String) UUID of the source interface (e.g. fmc_physical_interface.example.id). It cannot refer to a subinterface.
+- `source_interface_id` (String) Id of the source interface. It cannot refer to a subinterface.
 
 ## Import
 

@@ -3,19 +3,19 @@
 page_title: "fmc_fqdn_object Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a FQDN Object.
+  This resource manages a FQDN Object.
 ---
 
 # fmc_fqdn_object (Resource)
 
-This resource can manage a FQDN Object.
+This resource manages a FQDN Object.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_fqdn_object" "example" {
   name           = "fqdn_1"
-  value          = "www.example.com"
+  fqdn           = "www.example.com"
   dns_resolution = "IPV4_AND_IPV6"
   description    = "My FQDN Object"
 }
@@ -26,8 +26,8 @@ resource "fmc_fqdn_object" "example" {
 
 ### Required
 
-- `name` (String) User-created name of the resource.
-- `value` (String) The fully qualified domain name.
+- `fqdn` (String) Fully qualified domain name.
+- `name` (String) Name of the FQDN object.
 
 ### Optional
 
@@ -35,12 +35,12 @@ resource "fmc_fqdn_object" "example" {
 - `dns_resolution` (String) Type of DNS resolution.
   - Choices: `IPV4_ONLY`, `IPV6_ONLY`, `IPV4_AND_IPV6`
   - Default value: `IPV4_AND_IPV6`
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

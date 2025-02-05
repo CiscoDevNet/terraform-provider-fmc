@@ -495,14 +495,16 @@ func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 		}
 	}
 	if config.DsDescription == "" {
-		config.DsDescription = fmt.Sprintf("This data source can read the %s.", config.Name)
+		config.DsDescription = fmt.Sprintf("This data source reads the %s.", config.Name)
 	}
 	if config.ResDescription == "" {
 		name := strings.ToLower(config.Name)
-		if strings.HasPrefix(name, "a") || strings.HasPrefix(name, "e") || strings.HasPrefix(name, "i") || strings.HasPrefix(name, "o") || strings.HasPrefix(name, "u") {
-			config.ResDescription = fmt.Sprintf("This resource can manage an %s.", config.Name)
+		if config.IsBulk {
+			config.ResDescription = fmt.Sprintf("This resource manages %s through bulk operations.", config.Name)
+		} else if strings.HasPrefix(name, "a") || strings.HasPrefix(name, "e") || strings.HasPrefix(name, "i") || strings.HasPrefix(name, "o") || strings.HasPrefix(name, "u") {
+			config.ResDescription = fmt.Sprintf("This resource manages an %s.", config.Name)
 		} else {
-			config.ResDescription = fmt.Sprintf("This resource can manage a %s.", config.Name)
+			config.ResDescription = fmt.Sprintf("This resource manages a %s.", config.Name)
 		}
 	}
 	if config.TfName == "" {

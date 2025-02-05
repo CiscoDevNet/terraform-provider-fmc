@@ -3,12 +3,12 @@
 page_title: "fmc_host Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source can read the Host.
+  This data source reads the Host.
 ---
 
 # fmc_host (Data Source)
 
-This data source can read the Host.
+This data source reads the Host.
 
 ## Example Usage
 
@@ -23,13 +23,13 @@ data "fmc_host" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) The name of the host object.
 
 ### Read-Only
 
-- `description` (String) Description
+- `description` (String) Description of the resource.
 - `ip` (String) IP of the host.
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Host'.

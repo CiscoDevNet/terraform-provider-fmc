@@ -1,5 +1,5 @@
 resource "fmc_bfd_template" "example" {
-  name                               = "BFD_Template1"
+  name                               = "fmc_bfd_template"
   hop_type                           = "SINGLE_HOP"
   echo                               = "ENABLED"
   interval_time                      = "MILLISECONDS"

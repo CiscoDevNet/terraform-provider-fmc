@@ -3,12 +3,12 @@
 page_title: "fmc_device_subinterface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device Subinterface.
+  This resource manages a Device Subinterface.
 ---
 
 # fmc_device_subinterface (Resource)
 
-This resource can manage a Device Subinterface.
+This resource manages a Device Subinterface.
 
 ## Example Usage
 
@@ -33,7 +33,7 @@ resource "fmc_device_subinterface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 - `interface_name` (String) Name of the parent interface (fmc_device_physical_interface.example.name).
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
   - Range: `0`-`4294967295`
@@ -46,7 +46,7 @@ resource "fmc_device_subinterface" "example" {
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
 - `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
 - `enabled` (Boolean) Indicates whether to enable the interface.
@@ -95,7 +95,7 @@ resource "fmc_device_subinterface" "example" {
   - Range: `0`-`9000`
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
   - Range: `0`-`3600000`
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
   - Range: `64`-`9000`
@@ -112,9 +112,9 @@ resource "fmc_device_subinterface" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
-- `type` (String) Type of the resource.
+- `type` (String) Type of the object.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`

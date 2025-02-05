@@ -7,25 +7,23 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    description: UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: type
     type: String
     computed: true
-    description: Type of the resource.
+    description: Type of the object.
 # General
   - model_name: ifname
     tf_name: logical_name
     type: String
-    description: >-
-      Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
-      characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+    description: Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
     example: myinterface-0-1
     minimum_test_value: '"iface_minimum"'
   - model_name: enabled
     type: Bool
-    description: Indicates whether to enable the interface.
+    description: Enable the interface.
     default_value: true
     test_value: "true"
     exclude_example: true
@@ -54,9 +52,7 @@ attributes:
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
-    description: >-
-      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name
-      is set.
+    description: Id of the assigned security zone.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
   - model_name: type
@@ -86,7 +82,7 @@ attributes:
   - model_name: enableSGTPropagate
     tf_name: enable_sgt_propagate
     type: Bool
-    description: Indicates whether to propagate SGT.
+    description: Enable SGT propagation.
     default_value: "false"
     example: "false"
     exclude_test: true
@@ -96,13 +92,12 @@ attributes:
     example: "1"
     description: Value of Ether Channel ID, allowed range 1 to 48.
   - model_name: selectedInterfaces
-    description: >-
-      Set of objects representing physical interfaces (data.fmc_device_physical_interface or fmc_device_physical_interface).
+    description: Set of objects representing physical interfaces.
     type: Set
     attributes:
       - model_name: id
         type: String
-        description: UUID of the object (such as fmc_device_physical_interface.example.id, ...).
+        description: Id of the object.
         id: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: data.fmc_device_physical_interface.test.id

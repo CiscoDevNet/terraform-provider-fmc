@@ -30,16 +30,16 @@ import (
 
 func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "name", "POLICY1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "description", "My access control policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "name", "fmc_access_control_policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "description", "My Access Control Policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action", "BLOCK"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_begin", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_syslog_severity", "DEBUG"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "categories.0.name", "cat1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "categories.0.name", "category_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.action", "ALLOW"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.name", "rule1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.name", "rule_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.source_network_literals.0.value", "10.1.1.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.destination_network_literals.0.value", "10.2.2.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.vlan_tag_literals.0.start_tag", "11"))
@@ -76,23 +76,23 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 
 const testAccDataSourceFmcAccessControlPolicyPrerequisitesConfig = `
 resource "fmc_network" "test" {
-  name   = "NET_fmc_access_control_policy"
+  name   = "fmc_access_control_policy_network"
   prefix = "10.0.0.0/24"
 }
 
 resource "fmc_host" "test" {
-  name = "HOST_fmc_access_control_policy"
+  name = "fmc_access_control_policy_host"
   ip   = "10.1.1.1"
 }
 
 resource "fmc_port" "test" {
-  name     = "test_fmc_access_control_policy"
+  name     = "fmc_access_control_policy_port"
   protocol = "UDP"
   port     = "53"
 }
 
 resource "fmc_vlan_tag" "test" {
-  name      = "VLAN_TAG_fmc_access_control_policy"
+  name      = "fmc_access_control_policy_vlan_tag"
   start_tag = "10"
   end_tag   = "11"
 }
@@ -104,20 +104,20 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
-	config += `	name = "POLICY1"` + "\n"
-	config += `	description = "My access control policy"` + "\n"
+	config += `	name = "fmc_access_control_policy"` + "\n"
+	config += `	description = "My Access Control Policy"` + "\n"
 	config += `	default_action = "BLOCK"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	categories = [{` + "\n"
-	config += `		name = "cat1"` + "\n"
+	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
-	config += `		name = "rule1"` + "\n"
-	config += `		category_name = "cat1"` + "\n"
+	config += `		name = "rule_1"` + "\n"
+	config += `		category_name = "category_1"` + "\n"
 	config += `		enabled = true` + "\n"
 	config += `		source_network_literals = [{` + "\n"
 	config += `			value = "10.1.1.0/24"` + "\n"
@@ -168,20 +168,20 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 
 func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
-	config += `	name = "POLICY1"` + "\n"
-	config += `	description = "My access control policy"` + "\n"
+	config += `	name = "fmc_access_control_policy"` + "\n"
+	config += `	description = "My Access Control Policy"` + "\n"
 	config += `	default_action = "BLOCK"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	categories = [{` + "\n"
-	config += `		name = "cat1"` + "\n"
+	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
-	config += `		name = "rule1"` + "\n"
-	config += `		category_name = "cat1"` + "\n"
+	config += `		name = "rule_1"` + "\n"
+	config += `		category_name = "category_1"` + "\n"
 	config += `		enabled = true` + "\n"
 	config += `		source_network_literals = [{` + "\n"
 	config += `			value = "10.1.1.0/24"` + "\n"

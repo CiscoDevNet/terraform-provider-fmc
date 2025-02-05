@@ -16,7 +16,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed File Type.
+        description: Id of the managed File Type.
         exclude_example: true
         exclude_test: true        
       - model_name: type

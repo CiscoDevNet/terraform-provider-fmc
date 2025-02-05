@@ -3,12 +3,12 @@
 page_title: "fmc_device_bgp_general_settings Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device BGP General Settings.
+  This data source reads the Device BGP General Settings.
 ---
 
 # fmc_device_bgp_general_settings (Data Source)
 
-This data source can read the Device BGP General Settings.
+This data source reads the Device BGP General Settings.
 
 ## Example Usage
 
@@ -24,13 +24,13 @@ data "fmc_device_bgp_general_settings" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `as_number` (String) Autonomous System (AS) number in asplain or asdot format
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `as_number` (String) Autonomous System (AS) number in 'asplain' or 'asdot' format
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 
 ### Read-Only
 
@@ -45,7 +45,7 @@ data "fmc_device_bgp_general_settings" "example" {
 - `graceful_restart_stale_path_time` (Number) Stalepath Time in seconds
 - `hold_time` (Number) Hold time in seconds
 - `keepalive_interval` (Number) Keepalive interval in seconds
-- `log_neighbor_changes` (Boolean) Enable logging of BGP neighbor status changes.
+- `log_neighbor_changes` (Boolean) Logging of BGP neighbor status changes.
 - `min_hold_time` (Number) Minimum hold time (0 or 3-65535 seconds)
 - `missing_med_as_best` (Boolean) Treat missing MED as the best preferred path
 - `name` (String) Object name; Always set to 'AsaBGPGeneralTable'

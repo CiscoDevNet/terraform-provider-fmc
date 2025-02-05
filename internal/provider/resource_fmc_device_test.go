@@ -81,7 +81,7 @@ resource "fmc_access_control_policy" "device_test" {
 
 variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
 variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
-variable "license_capabilities" {} // tests will set $TF_VAR_license_capabilities
+variable "license_capabilities" { default = "BASE" } // tests will set $TF_VAR_license_capabilities
 `
 
 // End of section. //template:end testPrerequisites

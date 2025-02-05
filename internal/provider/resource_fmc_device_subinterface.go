@@ -65,32 +65,32 @@ func (r *DeviceSubinterfaceResource) Metadata(ctx context.Context, req resource.
 func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device Subinterface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device Subinterface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -104,7 +104,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.").String,
 				Optional:            true,
 			},
 			"enabled": schema.BoolAttribute{

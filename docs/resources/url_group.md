@@ -3,12 +3,12 @@
 page_title: "fmc_url_group Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage an URL Group.
+  This resource manages an URL Group.
 ---
 
 # fmc_url_group (Resource)
 
-This resource can manage an URL Group.
+This resource manages an URL Group.
 
 ## Example Usage
 
@@ -40,13 +40,13 @@ resource "fmc_url_group" "example" {
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 <a id="nestedatt--urls"></a>
 ### Nested Schema for `urls`

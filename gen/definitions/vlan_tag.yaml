@@ -5,14 +5,14 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the resource.
+    description: Name of the object.
     mandatory: true
-    example: vlan_tag_1
+    example: fmc_vlan_tag
     data_source_query: true
   - model_name: description
     type: String
     description: Optional user-created description.
-    example: "My TAG id"
+    example: "My VLAN Tag"
     mandatory: false
   - model_name: overridable
     type: Bool

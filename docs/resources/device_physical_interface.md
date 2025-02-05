@@ -3,12 +3,12 @@
 page_title: "fmc_device_physical_interface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource can manage a Device Physical Interface.
+  This resource manages a Device Physical Interface.
 ---
 
 # fmc_device_physical_interface (Resource)
 
-This resource can manage a Device Physical Interface.
+This resource manages a Device Physical Interface.
 
 ## Example Usage
 
@@ -32,7 +32,7 @@ resource "fmc_device_physical_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 - `mode` (String) Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
   - Choices: `INLINE`, `PASSIVE`, `TAP`, `ERSPAN`, `NONE`, `SWITCHPORT`
 - `name` (String) Name of the interface; it must already be present on the device.
@@ -44,7 +44,7 @@ resource "fmc_device_physical_interface" "example" {
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `duplex` (String) Duplex configuraion.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
@@ -101,7 +101,7 @@ resource "fmc_device_physical_interface" "example" {
   - Range: `0`-`3600000`
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_access` (Boolean) Indicates whether to enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
@@ -123,7 +123,7 @@ resource "fmc_device_physical_interface" "example" {
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the resource.
 
 <a id="nestedatt--arp_table_entries"></a>

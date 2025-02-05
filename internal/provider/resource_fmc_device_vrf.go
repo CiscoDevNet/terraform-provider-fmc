@@ -60,32 +60,32 @@ func (r *DeviceVRFResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *DeviceVRFResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage a Device VRF.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device VRF.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the parent device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the VRF").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the VRF").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -108,15 +108,15 @@ func (r *DeviceVRFResource) Schema(ctx context.Context, req resource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the member interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the member interface.").String,
 							Required:            true,
 						},
 						"interface_name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the member interface.").String,
 							Required:            true,
 						},
 						"interface_logical_name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Logical name of the interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Logical name of the member interface").String,
 							Required:            true,
 						},
 					},

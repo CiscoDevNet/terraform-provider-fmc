@@ -3,12 +3,12 @@
 page_title: "fmc_prefilter_policy Data Source - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This data source can read the Prefilter Policy.
+  This data source reads the Prefilter Policy.
 ---
 
 # fmc_prefilter_policy (Data Source)
 
-This data source can read the Prefilter Policy.
+This data source reads the Prefilter Policy.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_prefilter_policy" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the prefilter policy.
 
 ### Read-Only

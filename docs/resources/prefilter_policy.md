@@ -3,12 +3,12 @@
 page_title: "fmc_prefilter_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource can manage a Prefilter Policy.
+  This resource manages a Prefilter Policy.
 ---
 
 # fmc_prefilter_policy (Resource)
 
-This resource can manage a Prefilter Policy.
+This resource manages a Prefilter Policy.
 
 ## Example Usage
 
@@ -127,13 +127,13 @@ resource "fmc_prefilter_policy" "example" {
 - `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
 - `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when either default_action_log_begin or default_action_log_end is true.
 - `description` (String) Policy description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `rules` (Attributes List) The ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 
 ### Read-Only
 
 - `default_action_id` (String) Default action ID
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 - `type` (String) Object type; This is always `PrefilterPolicy`
 
 <a id="nestedatt--rules"></a>

@@ -1,7 +1,7 @@
 ---
 name: Device BGP
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bgp
-res_description: Under BGP General Settings, BGP has to be enabled and AS Number assigned first.
+res_description: This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
 doc_category: Devices
 test_tags: [TF_VAR_device_id]
 attributes:
@@ -9,7 +9,7 @@ attributes:
     type: String
     reference: true
     requires_replace: true
-    description: UUID of the parent device (fmc_device.example.id).
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: name
@@ -22,7 +22,7 @@ attributes:
     computed: true
   - model_name: asNumber
     type: String
-    description: Autonomus System (AS) Number
+    description: Autonomus System (AS) number
     computed: true
     data_source_query: true
 # BGP - IPv4 - General
@@ -31,6 +31,7 @@ attributes:
     data_path: [addressFamilyIPv4]
     type: String
     computed: true
+    description: IPv4 Address Family Type
   - model_name: id
     tf_name: ipv4_learned_route_map_id
     data_path: [addressFamilyIPv4, aftableMap]
@@ -67,7 +68,7 @@ attributes:
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
-    description: Redistribute IBGP into IGP. (Use filtering to limit the number of prefixes that are redistributed)
+    description: Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.
   - model_name: externalDistance
     tf_name: ipv4_external_distance
     data_path: [addressFamilyIPv4, distance]

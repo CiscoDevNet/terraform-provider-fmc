@@ -3,12 +3,12 @@
 page_title: "fmc_device Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device.
+  This data source reads the Device.
 ---
 
 # fmc_device (Data Source)
 
-This data source can read the Device.
+This data source reads the Device.
 
 ## Example Usage
 
@@ -23,8 +23,8 @@ data "fmc_device" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) User-specified name, must be unique.
 
 ### Read-Only

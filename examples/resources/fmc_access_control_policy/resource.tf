@@ -1,6 +1,6 @@
 resource "fmc_access_control_policy" "example" {
-  name                              = "POLICY1"
-  description                       = "My access control policy"
+  name                              = "fmc_access_control_policy"
+  description                       = "My Access Control Policy"
   default_action                    = "BLOCK"
   default_action_log_begin          = true
   default_action_log_end            = false
@@ -12,13 +12,13 @@ resource "fmc_access_control_policy" "example" {
   default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   categories = [
     {
-      name = "cat1"
+      name = "category_1"
     }
   ]
   rules = [
     {
       action = "ALLOW"
-      name   = "rule1"
+      name   = "rule_1"
       source_network_literals = [
         {
           value = "10.1.1.0/24"

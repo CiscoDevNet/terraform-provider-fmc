@@ -8,14 +8,14 @@ attributes:
     type: String
     reference: true
     requires_replace: true
-    description: UUID of the parent device.
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: name
     type: String
     mandatory: true
     requires_replace: true
-    description: The name of the VRF
+    description: Name of the VRF
     example: VRF_A
     data_source_query: true
   - model_name: type
@@ -33,7 +33,7 @@ attributes:
       - model_name: id
         tf_name: interface_id
         type: String
-        description: UUID of the member interface.
+        description: Id of the member interface.
         id: true
         mandatory: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
@@ -42,14 +42,14 @@ attributes:
         tf_name: interface_name
         mandatory: true
         type: String
-        description: Name of the interface.
+        description: Name of the member interface.
         example: GigabitEthernet0/0
         test_value: fmc_device_physical_interface.test.name
       - model_name: ifname
         tf_name: interface_logical_name
         mandatory: true
         type: String
-        description: Logical name of the interface
+        description: Logical name of the member interface
         example: outside
         test_value: fmc_device_physical_interface.test.logical_name
 test_prerequisites: |-

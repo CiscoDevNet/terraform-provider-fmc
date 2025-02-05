@@ -3,12 +3,12 @@
 page_title: "fmc_port Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource can manage a Port.
+  This resource manages a Port.
 ---
 
 # fmc_port (Resource)
 
-This resource can manage a Port.
+This resource manages a Port.
 
 ## Example Usage
 
@@ -26,19 +26,19 @@ resource "fmc_port" "example" {
 
 ### Required
 
-- `name` (String) User-created name of the resource.
+- `name` (String) Name of the object.
 - `protocol` (String) IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).
 
 ### Optional
 
 - `description` (String) Optional user-created description.
-- `domain` (String) The name of the FMC domain
+- `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `port` (String) Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
 
 ### Read-Only
 
-- `id` (String) The id of the object
+- `id` (String) Id of the object
 
 ## Import
 

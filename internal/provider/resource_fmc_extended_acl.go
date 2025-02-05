@@ -67,29 +67,29 @@ func (r *ExtendedACLResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource can manage an Extended ACL.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Extended ACL.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.2").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
-				MarkdownDescription: "The id of the object",
+				MarkdownDescription: "Id of the object",
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"domain": schema.StringAttribute{
-				MarkdownDescription: "The name of the FMC domain",
+				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Extended ACL.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Extended ACL.").String,
 				Optional:            true,
 			},
 			"entries": schema.ListNestedAttribute{
@@ -98,14 +98,14 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates the redistribution access: PERMIT or DENY.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Rule action.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
 						},
 						"log_level": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.").AddStringEnumDescription("EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTIFICATION", "INFORMATIONAL", "DEBUGGING").AddDefaultValueDescription("INFORMATIONAL").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.").AddStringEnumDescription("EMERGENCY", "ALERT", "CRITICAL", "ERROR", "WARNING", "NOTIFICATION", "INFORMATIONAL", "DEBUGGING").AddDefaultValueDescription("INFORMATIONAL").String,
 							Optional:            true,
 							Computed:            true,
 							Validators: []validator.String{
@@ -114,14 +114,14 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							Default: stringdefault.StaticString("INFORMATIONAL"),
 						},
 						"logging": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The logging mode.").AddStringEnumDescription("PER_ACCESS_LIST_ENTRY", "DEFAULT", "DISABLED").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Logging mode.").AddStringEnumDescription("PER_ACCESS_LIST_ENTRY", "DEFAULT", "DISABLED").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PER_ACCESS_LIST_ENTRY", "DEFAULT", "DISABLED"),
 							},
 						},
 						"log_interval_seconds": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.").AddDefaultValueDescription("300").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.").AddDefaultValueDescription("300").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             int64default.StaticInt64(300),
@@ -132,11 +132,11 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IPv4 or IPv6 host or network.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -148,11 +148,11 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IPv4 or IPv6 host or network.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -183,12 +183,12 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"destination_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -200,7 +200,7 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -212,7 +212,7 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_port.example.id).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -224,26 +224,26 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
 										},
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
 										Optional:            true,
 									},
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IANA port number.").String,
 										Required:            true,
 									},
 									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
 										Optional:            true,
 									},
 									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP code.").String,
 										Optional:            true,
 									},
 								},
@@ -255,26 +255,26 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
 										},
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
 										Optional:            true,
 									},
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IANA port number.").String,
 										Required:            true,
 									},
 									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
 										Optional:            true,
 									},
 									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP code").String,
 										Optional:            true,
 									},
 								},

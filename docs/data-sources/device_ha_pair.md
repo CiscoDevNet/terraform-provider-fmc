@@ -3,12 +3,12 @@
 page_title: "fmc_device_ha_pair Data Source - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This data source can read the Device HA Pair.
+  This data source reads the Device HA Pair.
 ---
 
 # fmc_device_ha_pair (Data Source)
 
-This data source can read the Device HA Pair.
+This data source reads the Device HA Pair.
 
 ## Example Usage
 
@@ -23,9 +23,9 @@ data "fmc_device_ha_pair" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of the High Availability (HA) Pair.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the High Availability (HA) Pair.
 
 ### Read-Only
 
@@ -61,4 +61,4 @@ data "fmc_device_ha_pair" "example" {
 - `state_link_secondary_ip` (String) The IP of secondary node interface.
 - `state_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
 - `state_link_use_same_as_ha` (Boolean) Use the same link for state and HA.
-- `type` (String) Type of the resource; This is always `DeviceHAPair`.
+- `type` (String) Type of the object; This is always `DeviceHAPair`.

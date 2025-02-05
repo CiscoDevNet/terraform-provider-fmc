@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcVLANTagGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.description", "My vlan tag group name"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_groups.test", "items.vlan_tag_group_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_groups.test", "items.fmc_vlan_tag_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vlan_tag_groups.test", "items.fmc_vlan_tag_groups.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_groups.test", "items.fmc_vlan_tag_groups.description", "My vlan tag group name"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vlan_tag_groups.test", "items.fmc_vlan_tag_groups.overridable", "true"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -61,7 +61,7 @@ func TestAccFmcVLANTagGroups(t *testing.T) {
 
 const testAccFmcVLANTagGroupsPrerequisitesConfig = `
 resource "fmc_vlan_tag" "test" {
-  name        = "vlan_tag_1111"
+  name        = "fmc_vlan_tag_group_vlan_tag"
   description = "My TAG id"
   overridable = false
   start_tag   = 11
@@ -75,7 +75,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccFmcVLANTagGroupsConfig_minimum() string {
 	config := `resource "fmc_vlan_tag_groups" "test" {` + "\n"
-	config += `	items = { "vlan_tag_group_1" = {` + "\n"
+	config += `	items = { "fmc_vlan_tag_groups" = {` + "\n"
 	config += `		vlan_tags = [{` + "\n"
 	config += `			id = fmc_vlan_tag.test.id` + "\n"
 	config += `		}]` + "\n"
@@ -90,7 +90,7 @@ func testAccFmcVLANTagGroupsConfig_minimum() string {
 
 func testAccFmcVLANTagGroupsConfig_all() string {
 	config := `resource "fmc_vlan_tag_groups" "test" {` + "\n"
-	config += `	items = { "vlan_tag_group_1" = {` + "\n"
+	config += `	items = { "fmc_vlan_tag_groups" = {` + "\n"
 	config += `		description = "My vlan tag group name"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		vlan_tags = [{` + "\n"

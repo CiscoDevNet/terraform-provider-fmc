@@ -3,12 +3,12 @@
 page_title: "fmc_device_physical_interface Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This data source can read the Device Physical Interface.
+  This data source reads the Device Physical Interface.
 ---
 
 # fmc_device_physical_interface (Data Source)
 
-This data source can read the Device Physical Interface.
+This data source reads the Device Physical Interface.
 
 ## Example Usage
 
@@ -24,12 +24,12 @@ data "fmc_device_physical_interface" "example" {
 
 ### Required
 
-- `device_id` (String) UUID of the parent device (fmc_device.example.id).
+- `device_id` (String) Id of the parent device.
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
 - `name` (String) Name of the interface; it must already be present on the device.
 
 ### Read-Only
@@ -82,7 +82,7 @@ data "fmc_device_physical_interface" "example" {
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Must be non-empty in order to set security_zone_id, mtu, inline sets, etc.
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_access` (Boolean) Indicates whether to enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.

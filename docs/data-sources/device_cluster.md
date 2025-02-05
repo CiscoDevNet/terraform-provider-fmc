@@ -3,12 +3,12 @@
 page_title: "fmc_device_cluster Data Source - terraform-provider-fmc"
 subcategory: "Device"
 description: |-
-  This data source can read the Device Cluster.
+  This data source reads the Device Cluster.
 ---
 
 # fmc_device_cluster (Data Source)
 
-This data source can read the Device Cluster.
+This data source reads the Device Cluster.
 
 ## Example Usage
 
@@ -23,16 +23,16 @@ data "fmc_device_cluster" "example" {
 
 ### Optional
 
-- `domain` (String) The name of the FMC domain
-- `id` (String) The id of the object
-- `name` (String) The name of the FTD Cluster.
+- `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `name` (String) Name of the FTD Cluster.
 
 ### Read-Only
 
 - `cluster_key` (String) Secret key for the cluster, between 1 nd 63 characters.
 - `control_node_ccl_ipv4_address` (String) Cluster control link IPv4 address / VTEP IPv4 address.
 - `control_node_ccl_prefix` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
-- `control_node_device_id` (String) Cluster control node device ID.
+- `control_node_device_id` (String) Cluster Control Node device ID.
 - `control_node_interface_id` (String) Cluster control link interface ID.
 - `control_node_interface_name` (String) Cluster control link interface Name.
 - `control_node_interface_type` (String) Cluster control link interface Type.
@@ -46,6 +46,6 @@ data "fmc_device_cluster" "example" {
 
 Read-Only:
 
-- `data_node_ccl_ipv4_address` (String) Cluster data node link IPv4 address / VTEP IPv4 address.
-- `data_node_device_id` (String) Cluster data node device ID.
+- `data_node_ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
+- `data_node_device_id` (String) Cluster Data Node device ID.
 - `data_node_priority` (Number) Priority of cluster data node.

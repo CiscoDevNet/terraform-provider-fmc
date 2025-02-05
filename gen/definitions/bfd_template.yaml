@@ -7,8 +7,8 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of the bfd template object.
-    example: BFD_Template1
+    description: Name of the BFD Template object.
+    example: fmc_bfd_template
     data_source_query: true
   # Type is mentioned twice on purpose. We want this field as readable, but also as readonly attribute
   - model_name: type
@@ -22,12 +22,12 @@ attributes:
   - model_name: hopType
     type: String
     mandatory: true
-    description: The hop type.
+    description: Hop type.
     enum_values: [ SINGLE_HOP, MULTI_HOP ]
     example: "SINGLE_HOP"
   - model_name: echo
     type: String
-    description: "Enables/disables BFD echo."
+    description: BFD echo status.
     enum_values: [ ENABLED, DISABLED ]
     example: "ENABLED"
   - model_name: txRxInterval
@@ -73,13 +73,13 @@ attributes:
     tf_name: authentication_type
     data_path: [authentication]
     type: String
-    description: "Authentication types"
+    description: Authentication type.
     example: "MD5"
     enum_values: [MD5, METICULOUSMD5, METICULOUSSHA1, SHA1, NONE]
   - model_name: pwdEncryption
     tf_name: authentication_password_encryption
     data_path: [authentication]
     type: String
-    description: "Determines if authentication_password is encrypted"
+    description: Determines if `authentication_password` is encrypted
     example: "UN_ENCRYPTED"
     enum_values: [UN_ENCRYPTED, ENCRYPTED, NONE]
