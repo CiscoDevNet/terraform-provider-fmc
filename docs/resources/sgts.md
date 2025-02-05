@@ -24,7 +24,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_sgts" "example" {
   items = {
-    sgt_1 = {
+    my_sgts = {
       description = "My SGT object"
       tag         = "11"
     }
@@ -56,11 +56,11 @@ Required:
 
 Optional:
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 
 Read-Only:
 
-- `id` (String) UUID of the managed SGT.
+- `id` (String) Id of the managed SGT.
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.
 
 ## Import

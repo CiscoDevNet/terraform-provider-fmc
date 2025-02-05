@@ -15,7 +15,7 @@ This data source reads the Port Groups.
 ```terraform
 data "fmc_port_groups" "example" {
   items = {
-    "port_group_1" = {
+    "my_port_groups" = {
     }
   }
 }
@@ -38,8 +38,8 @@ data "fmc_port_groups" "example" {
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
-- `id` (String) UUID of the managed Port Groups.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed Port Groups.
 - `objects` (Attributes Set) (see [below for nested schema](#nestedatt--items--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
@@ -49,5 +49,5 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the port (such as fmc_port.test.id, etc.).
+- `id` (String) Id of the port object.
 - `type` (String)

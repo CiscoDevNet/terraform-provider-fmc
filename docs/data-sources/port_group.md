@@ -25,11 +25,11 @@ data "fmc_port_group" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User-created name of the object.
+- `name` (String) Name of the object.
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `objects` (Attributes Set) (see [below for nested schema](#nestedatt--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
@@ -39,5 +39,5 @@ data "fmc_port_group" "example" {
 
 Read-Only:
 
-- `id` (String) UUID of the port (such as fmc_port.test.id, etc.).
+- `id` (String) Id of the port object.
 - `type` (String)

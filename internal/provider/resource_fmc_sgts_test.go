@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcSGTs(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_sgts.test", "items.sgt_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_sgts.test", "items.sgt_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgts.test", "items.sgt_1.description", "My SGT object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgts.test", "items.sgt_1.tag", "11"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_sgts.test", "items.my_sgts.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_sgts.test", "items.my_sgts.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgts.test", "items.my_sgts.description", "My SGT object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgts.test", "items.my_sgts.tag", "11"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -64,7 +64,7 @@ func TestAccFmcSGTs(t *testing.T) {
 
 func testAccFmcSGTsConfig_minimum() string {
 	config := `resource "fmc_sgts" "test" {` + "\n"
-	config += `	items = { "sgt_1" = {` + "\n"
+	config += `	items = { "my_sgts" = {` + "\n"
 	config += `		tag = "11"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -77,7 +77,7 @@ func testAccFmcSGTsConfig_minimum() string {
 
 func testAccFmcSGTsConfig_all() string {
 	config := `resource "fmc_sgts" "test" {` + "\n"
-	config += `	items = { "sgt_1" = {` + "\n"
+	config += `	items = { "my_sgts" = {` + "\n"
 	config += `		description = "My SGT object"` + "\n"
 	config += `		tag = "11"` + "\n"
 	config += `	}}` + "\n"

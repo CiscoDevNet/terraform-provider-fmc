@@ -1,6 +1,6 @@
 resource "fmc_vlan_tags" "example" {
   items = {
-    fmc_vlan_tags = {
+    my_vlan_tags = {
       description = "My TAG id"
       overridable = true
       start_tag   = "12"

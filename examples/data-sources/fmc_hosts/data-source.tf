@@ -1,6 +1,6 @@
 data "fmc_hosts" "example" {
   items = {
-    "hosts_1" = {
+    "my_hosts" = {
     }
   }
 }

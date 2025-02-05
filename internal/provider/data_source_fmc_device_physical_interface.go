@@ -100,7 +100,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.",
+				MarkdownDescription: "Id of the assigned security zone. Can only be used when logical_name is set.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -261,7 +261,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the assigned DHCPv6 pool",
+				MarkdownDescription: "Id of the assigned DHCPv6 pool",
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{

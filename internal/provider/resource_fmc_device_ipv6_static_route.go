@@ -102,7 +102,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 							Optional:            true,
 						},
 					},
@@ -116,7 +116,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"gateway_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the next hop for this route. Exactly one of `gateway_object_id` or `gateway_literal` must be present.").String,
 				Optional:            true,
 			},
 			"gateway_literal": schema.StringAttribute{

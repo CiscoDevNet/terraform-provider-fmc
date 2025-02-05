@@ -25,12 +25,12 @@ data "fmc_icmpv4_object" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the resource.
+- `name` (String) Name of the object.
 
 ### Read-Only
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String)

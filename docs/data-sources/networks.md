@@ -15,7 +15,7 @@ This data source reads the Networks.
 ```terraform
 data "fmc_networks" "example" {
   items = {
-    "networks_1" = {
+    "my_networks_object" = {
     }
   }
 }
@@ -38,8 +38,8 @@ data "fmc_networks" "example" {
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
-- `id` (String) UUID of the managed Network.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed Network.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `prefix` (String) Prefix of the network.
 - `type` (String) Type of the object; this value is always 'Network'.

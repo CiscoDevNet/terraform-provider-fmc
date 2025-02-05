@@ -61,17 +61,17 @@ resource "fmc_vlan_tag_groups" "example" {
 
 Required:
 
-- `vlan_tags` (Attributes Set) (see [below for nested schema](#nestedatt--items--vlan_tags))
+- `vlan_tags` (Attributes Set) Set of VLAN Tag objects to be included in the VLAN Tag group. (see [below for nested schema](#nestedatt--items--vlan_tags))
 
 Optional:
 
-- `description` (String) Optional user-created description.
-- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--items--literals))
+- `description` (String) Description of the object.
+- `literals` (Attributes Set) Set of literal values to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--items--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed URL Groups.
+- `id` (String) Id of the managed VLAN Tag Group.
 - `type` (String) Type of the object; this value is always 'VlanGroupTag'
 
 <a id="nestedatt--items--vlan_tags"></a>
@@ -79,7 +79,7 @@ Read-Only:
 
 Optional:
 
-- `id` (String) UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).
+- `id` (String) Id of the vlan_tag.
 
 
 <a id="nestedatt--items--literals"></a>

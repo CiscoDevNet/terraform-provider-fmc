@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ports" "example" {
   items = {
-    ports_1 = {
+    my_ports = {
       port        = "443"
       protocol    = "TCP"
       description = "Port TCP/443 (HTTPS)"
@@ -55,13 +55,13 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `port` (String) Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Port.
+- `id` (String) Id of the managed Port.
 - `type` (String) Type of the object; this value is always 'ProtocolPortObject'.
 
 ## Import

@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ranges" "example" {
   items = {
-    ranges_1 = {
+    my_ranges = {
       description = "My Range 1"
       ip_range    = "10.0.0.1-10.0.0.9"
     }
@@ -54,12 +54,12 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Host.
+- `id` (String) Id of the managed Range.
 - `type` (String) Type of the object; this value is always 'Range'.
 
 ## Import

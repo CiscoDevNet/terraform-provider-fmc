@@ -25,10 +25,10 @@ data "fmc_network_analysis_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity' or 'Security Over Connectivity'.
+- `name` (String) Name of the policy.
 
 ### Read-Only
 
-- `base_policy_id` (String) UUID of the base policy (such as data.fmc_network_analysis_policy.example.id).
-- `description` (String) Optional description of the policy.
+- `base_policy_id` (String) Id of the base policy.
+- `description` (String) Description of the policy.
 - `inspection_mode` (String) Inspection mode.

@@ -72,12 +72,12 @@ func (d *VLANTagGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User-created name of the object.",
+				MarkdownDescription: "Name of the VLAN Tag Group object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -89,19 +89,19 @@ func (d *VLANTagGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"vlan_tags": schema.SetNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Set of VLAN Tag objects to be included in the VLAN Tag Group.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).",
+							MarkdownDescription: "Id of the vlan_tag.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"literals": schema.SetNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Set of literal values to be included in the VLAN Tag Group.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

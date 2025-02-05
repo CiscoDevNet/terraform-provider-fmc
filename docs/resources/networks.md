@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_networks" "example" {
   items = {
-    networks_1 = {
+    my_networks_object = {
       description = "My Network 1"
       prefix      = "10.1.1.0/24"
     }
@@ -54,12 +54,12 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Network.
+- `id` (String) Id of the managed Network.
 - `type` (String) Type of the object; this value is always 'Network'.
 
 ## Import

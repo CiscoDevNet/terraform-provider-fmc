@@ -5,13 +5,13 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the object.
+    description: Name of the object.
     mandatory: true
-    example: url_group_1
+    example: my_url_group
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My URL group"
   - model_name: overridable
     type: Bool
@@ -22,15 +22,17 @@ attributes:
     tf_name: urls
     type: Set
     mandatory: true
+    description: Set of URL objects to be included in the URL group.
     attributes:
       - model_name: id
         type: String
-        description: UUID of the object (such as fmc_url.example.id, etc.).
+        description: Id of the object.
         id: true
         example: 0050568A-FAC7-0ed3-0000-004294987896
         test_value: fmc_url.test.id
   - model_name: literals
     type: Set
+    description: Set of literal values to be included in the URL group.
     attributes:
       - model_name: url
         type: String
@@ -39,6 +41,6 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_url" "test" {
-    name        = "url_1"
+    name        = "fmc_url_group_url"
     url         = "https://www.example.com/app"
   }

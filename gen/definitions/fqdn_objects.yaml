@@ -9,7 +9,7 @@ attributes:
     type: Map
     description: >-
       Map of FQDN Objects. The key of the map is the name of the individual FQDN Object.
-    map_key_example: fqdn_1
+    map_key_example: my_fqdn_objects
     mandatory: true
     attributes:
       - model_name: id
@@ -20,7 +20,7 @@ attributes:
         exclude_test: true
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "My FQDN 1"
       - model_name: overridable
         type: Bool
@@ -31,7 +31,7 @@ attributes:
         tf_name: fqdn
         type: String
         mandatory: true
-        description: The fully qualified domain name.
+        description: Fully Qualified Domain Name.
         example: www.example.com
       - model_name: dnsResolution
         tf_name: dns_resolution

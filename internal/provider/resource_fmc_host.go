@@ -78,7 +78,7 @@ func (r *HostResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the host object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the host object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -89,7 +89,7 @@ func (r *HostResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"ip": schema.StringAttribute{

@@ -9,13 +9,13 @@ attributes:
     type: Map
     description: >-
       Map of ports. The key of the map is the name of the individual Port.
-    map_key_example: ports_1
+    map_key_example: my_ports
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Port.
+        description: Id of the managed Port.
         exclude_example: true
         exclude_test: true
       - model_name: port
@@ -34,7 +34,7 @@ attributes:
         example: TCP
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "Port TCP/443 (HTTPS)"
       - model_name: overridable
         type: Bool

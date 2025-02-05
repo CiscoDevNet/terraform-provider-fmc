@@ -15,7 +15,7 @@ This data source reads the Ranges.
 ```terraform
 data "fmc_ranges" "example" {
   items = {
-    "ranges_1" = {
+    "my_ranges" = {
     }
   }
 }
@@ -38,8 +38,8 @@ data "fmc_ranges" "example" {
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
-- `id` (String) UUID of the managed Host.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed Range.
 - `ip_range` (String) Range of addresses, IPv4 or IPv6.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Range'.

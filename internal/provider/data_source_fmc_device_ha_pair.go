@@ -81,15 +81,15 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"primary_device_id": schema.StringAttribute{
-				MarkdownDescription: "ID of primary FTD in the HA Pair.",
+				MarkdownDescription: "Id of primary FTD in the HA Pair.",
 				Computed:            true,
 			},
 			"secondary_device_id": schema.StringAttribute{
-				MarkdownDescription: "ID of secondary FTD in the HA Pair.",
+				MarkdownDescription: "Id of secondary FTD in the HA Pair.",
 				Computed:            true,
 			},
 			"ha_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of High Availability Link interface.",
+				MarkdownDescription: "Id of High Availability Link interface.",
 				Computed:            true,
 			},
 			"ha_link_interface_name": schema.StringAttribute{
@@ -101,7 +101,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"ha_link_logical_name": schema.StringAttribute{
-				MarkdownDescription: "The logical name of failover interface.",
+				MarkdownDescription: "Logical name of failover interface.",
 				Computed:            true,
 			},
 			"ha_link_use_ipv6": schema.BoolAttribute{
@@ -109,11 +109,11 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"ha_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: "The IP of primary node interface.",
+				MarkdownDescription: "IP of primary node interface.",
 				Computed:            true,
 			},
 			"ha_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: "The IP of secondary node interface.",
+				MarkdownDescription: "IP of secondary node interface.",
 				Computed:            true,
 			},
 			"ha_link_netmask": schema.StringAttribute{
@@ -145,11 +145,11 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"state_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: "The IP of primary node interface.",
+				MarkdownDescription: "IP of primary node interface.",
 				Computed:            true,
 			},
 			"state_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: "The IP of secondary node interface.",
+				MarkdownDescription: "IP of secondary node interface.",
 				Computed:            true,
 			},
 			"state_link_netmask": schema.StringAttribute{

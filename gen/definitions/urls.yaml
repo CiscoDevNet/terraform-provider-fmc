@@ -8,15 +8,14 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of security zones. The key of the map is the name of the individual URL object. Renaming URL object in bulk
-      is not yet implemented.
+      Map of security zones. The key of the map is the name of the individual URL object.
     map_key_example: url_1
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed URL object.
+        description: Id of the managed URL object.
         exclude_example: true
         exclude_test: true
       - model_name: url
@@ -26,7 +25,7 @@ attributes:
         example: "https://www.example.com/app"
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "My URL"
       - model_name: overridable
         type: Bool

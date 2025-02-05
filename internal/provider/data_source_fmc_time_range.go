@@ -81,7 +81,7 @@ func (d *TimeRangeDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Object description",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"start_time": schema.StringAttribute{

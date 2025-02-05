@@ -15,7 +15,7 @@ This data source reads the Tunnel Zones.
 ```terraform
 data "fmc_tunnel_zones" "example" {
   items = {
-    "TunnelZone1" = {
+    "my_tunnel_zones" = {
     }
   }
 }
@@ -38,6 +38,6 @@ data "fmc_tunnel_zones" "example" {
 
 Read-Only:
 
-- `description` (String) Description
-- `id` (String) UUID of the managed Tunnel Zone.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed Tunnel Zone.
 - `type` (String) Type of the object; this value is always 'TunnelTag'.

@@ -31,12 +31,12 @@ import (
 
 func TestAccFmcICMPv4Objects(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_objects.test", "items.icmpv4_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.description", "ICMPv4 network unreachable response, type 3, code 0"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.icmp_type", "3"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.icmpv4_1.code", "0"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_objects.test", "items.icmpv4_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.description", "ICMPv4 network unreachable response, type 3, code 0"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.icmp_type", "3"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.code", "0"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_icmpv4_objects.test", "items.my_icmpv4_objects.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -66,7 +66,7 @@ func TestAccFmcICMPv4Objects(t *testing.T) {
 
 func testAccFmcICMPv4ObjectsConfig_minimum() string {
 	config := `resource "fmc_icmpv4_objects" "test" {` + "\n"
-	config += `	items = { "icmpv4_1" = {` + "\n"
+	config += `	items = { "my_icmpv4_objects" = {` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
@@ -78,7 +78,7 @@ func testAccFmcICMPv4ObjectsConfig_minimum() string {
 
 func testAccFmcICMPv4ObjectsConfig_all() string {
 	config := `resource "fmc_icmpv4_objects" "test" {` + "\n"
-	config += `	items = { "icmpv4_1" = {` + "\n"
+	config += `	items = { "my_icmpv4_objects" = {` + "\n"
 	config += `		description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		icmp_type = 3` + "\n"

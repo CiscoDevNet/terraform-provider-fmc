@@ -80,7 +80,7 @@ resource "fmc_device_physical_interface" "example" {
 - `ipv6_dhcp` (Boolean) Enable DHCPv6 client.
 - `ipv6_dhcp_client_pd_hint_prefixes` (String) Hint Prefixes for Prefix Delegation (PD)
 - `ipv6_dhcp_client_pd_prefix_name` (String) Prefix Name for Prefix Delegation (PD)
-- `ipv6_dhcp_pool_id` (String) UUID of the assigned DHCPv6 pool
+- `ipv6_dhcp_pool_id` (String) Id of the assigned DHCPv6 pool
 - `ipv6_dhcp_pool_type` (String) Type of the object; this value is always 'IPv6AddressPool'.
 - `ipv6_enable` (Boolean) Indicates whether to enable IPv6.
 - `ipv6_enable_auto_config` (Boolean) Indicates whether to enable IPv6 autoconfiguration.
@@ -116,7 +116,7 @@ resource "fmc_device_physical_interface" "example" {
   - Range: `1`-`30`
 - `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
   - Range: `0`-`65535`
-- `security_zone_id` (String) UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.
+- `security_zone_id` (String) Id of the assigned security zone. Can only be used when logical_name is set.
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.

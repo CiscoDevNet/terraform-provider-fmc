@@ -73,7 +73,7 @@ func (d *TimeRangesDataSource) Schema(ctx context.Context, req datasource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed Time Range.",
+							MarkdownDescription: "Id of the managed Time Range.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -81,7 +81,7 @@ func (d *TimeRangesDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Object description",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"start_time": schema.StringAttribute{

@@ -97,21 +97,21 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"primary_device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of primary FTD in the HA Pair.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of primary FTD in the HA Pair.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"secondary_device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of secondary FTD in the HA Pair.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of secondary FTD in the HA Pair.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ha_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of High Availability Link interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of High Availability Link interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -132,7 +132,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The logical name of failover interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of failover interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -148,14 +148,14 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The IP of primary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ha_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The IP of secondary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -211,14 +211,14 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"state_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The IP of primary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node interface.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The IP of secondary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node interface.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

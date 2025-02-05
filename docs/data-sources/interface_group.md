@@ -25,7 +25,7 @@ data "fmc_interface_group" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User-created name of the object.
+- `name` (String) Name of the object.
 
 ### Read-Only
 
@@ -37,4 +37,4 @@ data "fmc_interface_group" "example" {
 
 Read-Only:
 
-- `id` (String) UUID of the interface (such as fmc_device_physical_interface.example.id, etc.).
+- `id` (String) Id of the interface.

@@ -92,7 +92,7 @@ func (r *SGTsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed SGT.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed SGT.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -106,7 +106,7 @@ func (r *SGTsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"tag": schema.StringAttribute{

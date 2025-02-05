@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcURL(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "name", "url_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "name", "my_url"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "url", "https://www.example.com/app"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "description", "My URL"))
 	resource.Test(t, resource.TestCase{
@@ -59,7 +59,7 @@ func TestAccDataSourceFmcURL(t *testing.T) {
 
 func testAccDataSourceFmcURLConfig() string {
 	config := `resource "fmc_url" "test" {` + "\n"
-	config += `	name = "url_1"` + "\n"
+	config += `	name = "my_url"` + "\n"
 	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	description = "My URL"` + "\n"
 	config += `	overridable = true` + "\n"
@@ -75,7 +75,7 @@ func testAccDataSourceFmcURLConfig() string {
 
 func testAccNamedDataSourceFmcURLConfig() string {
 	config := `resource "fmc_url" "test" {` + "\n"
-	config += `	name = "url_1"` + "\n"
+	config += `	name = "my_url"` + "\n"
 	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	description = "My URL"` + "\n"
 	config += `	overridable = true` + "\n"

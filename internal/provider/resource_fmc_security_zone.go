@@ -80,7 +80,7 @@ func (r *SecurityZoneResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-provided resource name.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
 				Required:            true,
 			},
 			"interface_type": schema.StringAttribute{

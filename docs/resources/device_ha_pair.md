@@ -14,19 +14,19 @@ This device manages FTD HA Pair configuration. This is resource may be re-design
 
 ```terraform
 resource "fmc_device_ha_pair" "example" {
-  name                             = "FTD_HA"
+  name                             = "Device_HA_Pair"
   primary_device_id                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   secondary_device_id              = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   ha_link_interface_id             = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   ha_link_interface_name           = "GigabitEthernet0/0"
-  ha_link_interface_type           = ""
+  ha_link_interface_type           = "PhysicalInterface"
   ha_link_logical_name             = "LAN-INTERFACE"
   ha_link_use_ipv6                 = false
   ha_link_primary_ip               = "1.1.1.1"
   ha_link_secondary_ip             = "1.1.1.2"
   ha_link_netmask                  = "255.255.255.0"
   state_link_use_same_as_ha        = false
-  state_link_interface_id          = "76d24097-hj7r-7786-a4d0-a8c07ac08470"
+  state_link_interface_id          = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   state_link_interface_name        = "GigabitEthernet0/0"
   state_link_interface_type        = "PhysicalInterface"
   state_link_logical_name          = "Stateful-INTERFACE"
@@ -52,16 +52,16 @@ resource "fmc_device_ha_pair" "example" {
 
 ### Required
 
-- `ha_link_interface_id` (String) ID of High Availability Link interface.
+- `ha_link_interface_id` (String) Id of High Availability Link interface.
 - `ha_link_interface_name` (String) Name of High Availability Link interface.
 - `ha_link_interface_type` (String) Type of High Availability Link interface.
-- `ha_link_logical_name` (String) The logical name of failover interface.
+- `ha_link_logical_name` (String) Logical name of failover interface.
 - `ha_link_netmask` (String) Subnet mask for HA link.
-- `ha_link_primary_ip` (String) The IP of primary node interface.
-- `ha_link_secondary_ip` (String) The IP of secondary node interface.
+- `ha_link_primary_ip` (String) IP of primary node interface.
+- `ha_link_secondary_ip` (String) IP of secondary node interface.
 - `name` (String) Name of the High Availability (HA) Pair.
-- `primary_device_id` (String) ID of primary FTD in the HA Pair.
-- `secondary_device_id` (String) ID of secondary FTD in the HA Pair.
+- `primary_device_id` (String) Id of primary FTD in the HA Pair.
+- `secondary_device_id` (String) Id of secondary FTD in the HA Pair.
 - `state_link_use_same_as_ha` (Boolean) Use the same link for state and HA.
 
 ### Optional
@@ -105,8 +105,8 @@ resource "fmc_device_ha_pair" "example" {
 - `state_link_interface_type` (String) Type of state link interface.
 - `state_link_logical_name` (String)
 - `state_link_netmask` (String) Subnet mask for state link.
-- `state_link_primary_ip` (String) The IP of primary node interface.
-- `state_link_secondary_ip` (String) The IP of secondary node interface.
+- `state_link_primary_ip` (String) IP of primary node interface.
+- `state_link_secondary_ip` (String) IP of secondary node interface.
 - `state_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
 
 ### Read-Only

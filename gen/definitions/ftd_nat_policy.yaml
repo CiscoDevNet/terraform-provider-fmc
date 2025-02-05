@@ -8,11 +8,11 @@ attributes:
     type: String
     mandatory: true
     description: Name of the FTD Network Address Translation (NAT) policy.
-    example: nat_policy_1
+    example: my_ftd_nat_policy
     data_source_query: true
   - model_name: description
     type: String
-    description: Policy description
+    description: Description of the object.
     example: My nat policy
   - model_name: dummy_manual_nat_rules
     tf_name: manual_nat_rules
@@ -22,13 +22,13 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: Identifier of the manual nat rule.
+        description: Id of the manual nat rule.
         resource_id: true
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
-        description: Manual nat rule description
+        description: Description of Manual NAT rule.
         example: My manual nat rule 1
       - model_name: enabled
         type: Bool
@@ -195,7 +195,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: Identifier of the auto nat rule.
+        description: Id of the Auto NAT rule.
         resource_id: true
         exclude_example: true
         exclude_test: true

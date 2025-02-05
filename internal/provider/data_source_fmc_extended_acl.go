@@ -134,24 +134,24 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							},
 						},
 						"source_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).",
+							MarkdownDescription: "Set of objects that represent sources of traffic (Host, Network, Range).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_network.example.id, etc.).",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},
 							},
 						},
 						"source_sgt_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of SGT that represent tag of source traffic (fmc_sgts).",
+							MarkdownDescription: "Set of SGT that represent tag of source traffic.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_sgts.example.id, etc.).",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},

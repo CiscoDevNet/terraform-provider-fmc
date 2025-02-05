@@ -38,5 +38,5 @@ data "fmc_syslog_alerts" "example" {
 
 Read-Only:
 
-- `id` (String) UUID of the managed Syslog Alert.
+- `id` (String) Id of the managed Syslog Alert.
 - `type` (String) Type of the object; this value is always 'SyslogAlert'.

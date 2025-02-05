@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcFilePolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_file_policy.test", "name", "fmc_file_policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_file_policy.test", "name", "my_file_policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_file_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_file_policy.test", "description", "My file policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_file_policy.test", "first_time_file_analysis", "true"))
@@ -82,7 +82,7 @@ func TestAccFmcFilePolicy(t *testing.T) {
 
 func testAccFmcFilePolicyConfig_minimum() string {
 	config := `resource "fmc_file_policy" "test" {` + "\n"
-	config += `	name = "fmc_file_policy"` + "\n"
+	config += `	name = "my_file_policy"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -93,7 +93,7 @@ func testAccFmcFilePolicyConfig_minimum() string {
 
 func testAccFmcFilePolicyConfig_all() string {
 	config := `resource "fmc_file_policy" "test" {` + "\n"
-	config += `	name = "fmc_file_policy"` + "\n"
+	config += `	name = "my_file_policy"` + "\n"
 	config += `	description = "My file policy"` + "\n"
 	config += `	first_time_file_analysis = true` + "\n"
 	config += `	custom_detection_list = true` + "\n"

@@ -41,7 +41,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: UUID of the object (such as fmc_network.example.id, etc.).
+        description: Id of the object.
         id: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: data.fmc_host.test.id
@@ -60,7 +60,7 @@ attributes:
     data_path: [gateway, object]
     tf_name: gateway_object_id
     description: >-
-      UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id`
+      Id of the next hop for this route. Exactly one of `gateway_object_id`
       or `gateway_literal` must be present.
     type: String
     exclude_example: true

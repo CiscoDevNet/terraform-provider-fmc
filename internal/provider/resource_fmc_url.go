@@ -86,7 +86,7 @@ func (r *URLResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{

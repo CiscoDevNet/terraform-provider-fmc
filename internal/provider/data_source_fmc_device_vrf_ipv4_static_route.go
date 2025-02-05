@@ -75,20 +75,20 @@ func (d *DeviceVRFIPv4StaticRouteDataSource) Schema(ctx context.Context, req dat
 				Required:            true,
 			},
 			"interface_logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical name of the parent interface (fmc_device_physical_interface.example.logical_name or fmc_device_subinterface.example.logical_name). For transparent mode, any bridge group member interface. For routed mode with bridge groups, any bridge group member interface for the BVI name.",
+				MarkdownDescription: "Logical name of the parent interface. For transparent mode, any bridge group member interface. For routed mode with bridge groups, any bridge group member interface for the BVI name.",
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the same interface which has been given by `interface_logical_name` (e.g. fmc_device_physical_interface.example.id or fmc_device_subinterface.example.id). The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).",
+				MarkdownDescription: "Id of the interface provided in `interface_logical_name`. The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).",
 				Computed:            true,
 			},
 			"destination_networks": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of the destination networks matching this route (fmc_network, fmc_host, but not fmc_range).",
+				MarkdownDescription: "Set of the destination networks matching this route (Host, Networks or Ranges).",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the object (such as fmc_network.example.id, etc.).",
+							MarkdownDescription: "Id of the network object.",
 							Computed:            true,
 						},
 					},
@@ -99,11 +99,11 @@ func (d *DeviceVRFIPv4StaticRouteDataSource) Schema(ctx context.Context, req dat
 				Computed:            true,
 			},
 			"gateway_host_object_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
+				MarkdownDescription: "Id of the next hop for this route. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.",
 				Computed:            true,
 			},
 			"gateway_host_literal": schema.StringAttribute{
-				MarkdownDescription: "The next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
+				MarkdownDescription: "Next hop for this route as a literal IPv4 address. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
 				Computed:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{

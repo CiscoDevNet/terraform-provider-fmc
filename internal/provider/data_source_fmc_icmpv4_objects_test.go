@@ -30,12 +30,12 @@ import (
 
 func TestAccDataSourceFmcICMPv4Objects(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_objects.test", "items.icmpv4_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.description", "ICMPv4 network unreachable response, type 3, code 0"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.icmp_type", "3"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.icmpv4_1.code", "0"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_objects.test", "items.icmpv4_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.description", "ICMPv4 network unreachable response, type 3, code 0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.icmp_type", "3"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.code", "0"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_objects.test", "items.my_icmpv4_objects.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -58,7 +58,7 @@ func TestAccDataSourceFmcICMPv4Objects(t *testing.T) {
 
 func testAccDataSourceFmcICMPv4ObjectsConfig() string {
 	config := `resource "fmc_icmpv4_objects" "test" {` + "\n"
-	config += `	items = { "icmpv4_1" = {` + "\n"
+	config += `	items = { "my_icmpv4_objects" = {` + "\n"
 	config += `		description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		icmp_type = 3` + "\n"
@@ -70,7 +70,7 @@ func testAccDataSourceFmcICMPv4ObjectsConfig() string {
 		data "fmc_icmpv4_objects" "test" {
 			depends_on = [fmc_icmpv4_objects.test]
 			items = {
-				"icmpv4_1" = {
+				"my_icmpv4_objects" = {
 				}
 			}
 		}

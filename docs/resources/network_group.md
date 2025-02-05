@@ -14,7 +14,7 @@ This resource manages a Network Group.
 
 ```terraform
 resource "fmc_network_group" "example" {
-  name        = "net_group_1"
+  name        = "my_network_group"
   description = "My Network Group 1"
   objects = [
     {
@@ -34,11 +34,11 @@ resource "fmc_network_group" "example" {
 
 ### Required
 
-- `name` (String) Name of the managed Network Group.
+- `name` (String) Name of the Network Group object.
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the ojbect.
 - `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) Set of literal values (Host or Network). (see [below for nested schema](#nestedatt--literals))
 - `objects` (Attributes Set) Set of network objects (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--objects))

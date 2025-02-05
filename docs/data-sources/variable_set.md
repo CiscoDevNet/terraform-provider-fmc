@@ -29,5 +29,5 @@ data "fmc_variable_set" "example" {
 
 ### Read-Only
 
-- `description` (String) Optional description of the policy.
+- `description` (String) Description of the object.
 - `type` (String) Type of the object; this value is always 'VariableSet'.

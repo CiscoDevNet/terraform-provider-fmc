@@ -10,12 +10,12 @@ attributes:
     description: >-
       Map of port groups. The key of the map is the name of the individual Port Group.
     mandatory: true
-    map_key_example: port_group_1
+    map_key_example: my_port_groups
     attributes:
     - model_name: id
       type: String
       resource_id: true
-      description: UUID of the managed Port Groups.
+      description: Id of the managed Port Groups.
       exclude_example: true
       exclude_test: true
     - model_name: type
@@ -24,7 +24,7 @@ attributes:
       computed: true
     - model_name: description
       type: String
-      description: Optional user-created description.
+      description: Description of the object.
       example: "My port group description"
     - model_name: overridable
       type: Bool
@@ -37,7 +37,7 @@ attributes:
       attributes:
         - model_name: id
           type: String
-          description: UUID of the port (such as fmc_port.test.id, etc.).
+          description: Id of the port object.
           id: true
           example: 0050568A-232D-0ed3-0000-004294971602
           test_value: fmc_port.test.id
@@ -49,7 +49,7 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_port" "test" {
-    name        = "port_1"
+    name        = "my_port_groups_port"
     description = "My PORT id"
     protocol    = "TCP"
     port        = "443"

@@ -16,7 +16,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Syslog Alert.
+        description: Id of the managed Syslog Alert.
         exclude_example: true
         exclude_test: true
       - model_name: type

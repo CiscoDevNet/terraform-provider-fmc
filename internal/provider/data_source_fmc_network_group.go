@@ -72,12 +72,12 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the managed Network Group.",
+				MarkdownDescription: "Name of the Network Group object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the ojbect.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{

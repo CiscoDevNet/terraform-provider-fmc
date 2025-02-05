@@ -80,7 +80,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -91,7 +91,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{
@@ -104,7 +104,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the port (such as fmc_port.test.id, etc.).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the port object.").String,
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{

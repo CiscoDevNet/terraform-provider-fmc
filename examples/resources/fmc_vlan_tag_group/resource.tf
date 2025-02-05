@@ -1,5 +1,5 @@
 resource "fmc_vlan_tag_group" "example" {
-  name        = "fmc_vlan_tag_group"
+  name        = "my_vlan_tag_group"
   description = "My VLAN Tag Group"
   overridable = true
   vlan_tags = [

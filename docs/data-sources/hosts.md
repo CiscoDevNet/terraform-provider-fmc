@@ -15,7 +15,7 @@ This data source reads the Hosts.
 ```terraform
 data "fmc_hosts" "example" {
   items = {
-    "hosts_1" = {
+    "my_hosts" = {
     }
   }
 }
@@ -38,8 +38,8 @@ data "fmc_hosts" "example" {
 
 Read-Only:
 
-- `description` (String) Description of the resource.
-- `id` (String) Id of the managed Host.
+- `description` (String) Description of the object.
+- `id` (String) Id of the Host object.
 - `ip` (String) IP of the host.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Host'.

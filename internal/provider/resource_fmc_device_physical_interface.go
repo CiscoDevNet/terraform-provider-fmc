@@ -123,7 +123,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone. Can only be used when logical_name is set.").String,
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
@@ -313,7 +313,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned DHCPv6 pool").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned DHCPv6 pool").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{

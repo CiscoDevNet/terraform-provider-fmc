@@ -29,7 +29,7 @@ data "fmc_time_range" "example" {
 
 ### Read-Only
 
-- `description` (String) Object description
+- `description` (String) Description of the object.
 - `end_time` (String) Date and time at which the time range object stops being effective. If not specified 'never ends' is assumed.
 - `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time. (see [below for nested schema](#nestedatt--recurrence_list))
 - `start_time` (String) Date and time at which the time range object starts being effective. If not specified 'starts now' is assumed.

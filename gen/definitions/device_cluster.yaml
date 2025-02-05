@@ -9,7 +9,7 @@ attributes:
     type: String
     mandatory: true
     description: Name of the FTD Cluster.
-    example: fmc_device_cluster
+    example: my_device_cluster
     data_source_query: true
   - model_name: type
     type: String

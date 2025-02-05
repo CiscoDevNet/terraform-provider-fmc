@@ -92,7 +92,7 @@ func (r *TimeRangeResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Object description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"start_time": schema.StringAttribute{

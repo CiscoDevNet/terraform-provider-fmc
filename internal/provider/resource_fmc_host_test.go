@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "name", "HOST1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "name", "my_host"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_host.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "description", "My host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "ip", "10.1.1.1"))
@@ -69,7 +69,7 @@ func TestAccFmcHost(t *testing.T) {
 
 func testAccFmcHostConfig_minimum() string {
 	config := `resource "fmc_host" "test" {` + "\n"
-	config += `	name = "HOST1"` + "\n"
+	config += `	name = "my_host"` + "\n"
 	config += `	ip = "10.1.1.1"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -81,7 +81,7 @@ func testAccFmcHostConfig_minimum() string {
 
 func testAccFmcHostConfig_all() string {
 	config := `resource "fmc_host" "test" {` + "\n"
-	config += `	name = "HOST1"` + "\n"
+	config += `	name = "my_host"` + "\n"
 	config += `	description = "My host object"` + "\n"
 	config += `	ip = "10.1.1.1"` + "\n"
 	config += `	overridable = true` + "\n"

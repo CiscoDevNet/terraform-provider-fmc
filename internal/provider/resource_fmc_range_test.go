@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcRange(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "name", "range1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "name", "my_range"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "ip_range", "10.0.0.1-10.0.0.9"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_range.test", "description", "My range"))
 
@@ -67,7 +67,7 @@ func TestAccFmcRange(t *testing.T) {
 
 func testAccFmcRangeConfig_minimum() string {
 	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
+	config += `	name = "my_range"` + "\n"
 	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -79,7 +79,7 @@ func testAccFmcRangeConfig_minimum() string {
 
 func testAccFmcRangeConfig_all() string {
 	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
+	config += `	name = "my_range"` + "\n"
 	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
 	config += `	description = "My range"` + "\n"
 	config += `	overridable = true` + "\n"

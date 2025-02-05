@@ -7,7 +7,7 @@ attributes:
     type: String
     description: Name of the object.
     mandatory: true
-    example: range1
+    example: my_range
     data_source_query: true
   - model_name: value
     tf_name: ip_range

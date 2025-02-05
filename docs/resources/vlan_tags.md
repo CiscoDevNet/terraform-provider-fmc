@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_vlan_tags" "example" {
   items = {
-    fmc_vlan_tags = {
+    my_vlan_tags = {
       description = "My TAG id"
       overridable = true
       start_tag   = "12"
@@ -37,7 +37,7 @@ resource "fmc_vlan_tags" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN tag object. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN Tag object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -52,17 +52,17 @@ resource "fmc_vlan_tags" "example" {
 
 Required:
 
-- `end_tag` (String)
-- `start_tag` (String)
+- `end_tag` (String) VLAN Tag end value.
+- `start_tag` (String) VLAN Tag starting value.
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Vlan tag object.
+- `id` (String) Id of the managed VLAN Tag object.
 - `type` (String) Type of the object; this value is always 'VlanTag'
 
 ## Import

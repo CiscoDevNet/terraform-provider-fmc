@@ -11,13 +11,13 @@ attributes:
     type: Map
     description: >-
       Map of SGTs. The key of the map is the name of the individual SGT.
-    map_key_example: sgt_1
+    map_key_example: my_sgts
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed SGT.
+        description: Id of the managed SGT.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -26,7 +26,7 @@ attributes:
         computed: true
       - model_name: description
         type: String
-        description: Description
+        description: Description of the object.
         example: My SGT object
       - model_name: tag
         type: String

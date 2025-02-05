@@ -14,7 +14,7 @@ This resource manages a Network.
 
 ```terraform
 resource "fmc_network" "example" {
-  name        = "fmc_network_1"
+  name        = "my_network_object"
   description = "My network object"
   prefix      = "10.1.2.0/24"
   overridable = true
@@ -31,7 +31,7 @@ resource "fmc_network" "example" {
 
 ### Optional
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
 

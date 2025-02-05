@@ -92,7 +92,7 @@ func (r *SecurityZonesResource) Schema(ctx context.Context, req resource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Security Zone.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Security Zone.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),

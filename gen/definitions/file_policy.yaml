@@ -3,12 +3,13 @@ name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
 doc_category: Policy
 minimum_version_create: "7.4"
+res_description: This resource manages File Policy with corresponding rules.
 attributes:
   - model_name: name
     type: String
     mandatory: true
     description: Name of file policy.
-    example: fmc_file_policy
+    example: my_file_policy
     data_source_query: true
   - model_name: type
     type: String

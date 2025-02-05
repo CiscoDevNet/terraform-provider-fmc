@@ -20,8 +20,7 @@ attributes:
     tf_name: interface_logical_name
     type: String
     description:
-      Logical name of the parent interface (fmc_device_physical_interface.example.logical_name or
-      fmc_device_subinterface.example.logical_name).
+      Logical name of the parent interface.
       For transparent mode, any bridge group member interface.
       For routed mode with bridge groups, any bridge group member interface for the BVI name.
     mandatory: true
@@ -33,8 +32,7 @@ attributes:
     type: String
     write_only: true
     description:
-      UUID of the same interface which has been given by `interface_logical_name` (e.g.
-      fmc_device_physical_interface.example.id or fmc_device_subinterface.example.id).
+      Id of the interface provided in `interface_logical_name`.
       The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource
       before the static route resource (and destroys the interface resource only after the static route has been
       destroyed).
@@ -43,14 +41,13 @@ attributes:
     test_value: fmc_device_physical_interface.test.id
   - model_name: selectedNetworks
     tf_name: destination_networks
-    description: >-
-      Set of the destination networks matching this route (fmc_network, fmc_host, but not fmc_range).
+    description: Set of the destination networks matching this route (Host, Networks or Ranges).
     mandatory: true
     type: Set
     attributes:
       - model_name: id
         type: String
-        description: UUID of the object (such as fmc_network.example.id, etc.).
+        description: Id of the object.
         id: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: data.fmc_host.test.id
@@ -69,7 +66,7 @@ attributes:
     data_path: [gateway, object]
     tf_name: gateway_object_id
     description: >-
-      UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id`
+      Id of the next hop for this route. Exactly one of `gateway_object_id`
       or `gateway_literal` must be present.
     type: String
     exclude_example: true
@@ -79,7 +76,7 @@ attributes:
     tf_name: gateway_literal
     type: String
     description: >-
-      The next hop for this route as a literal IPv6 address. Exactly one of `gateway_object_id`
+      Next hop for this route as a literal IPv6 address. Exactly one of `gateway_object_id`
       or `gateway_literal` must be present.
     example: 2024::1
     exclude_test: true

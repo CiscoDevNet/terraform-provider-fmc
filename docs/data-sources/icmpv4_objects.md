@@ -15,7 +15,7 @@ This data source reads the ICMPv4 Objects.
 ```terraform
 data "fmc_icmpv4_objects" "example" {
   items = {
-    "icmpv4_1" = {
+    "my_icmpv4_objects" = {
     }
   }
 }
@@ -39,7 +39,7 @@ data "fmc_icmpv4_objects" "example" {
 Read-Only:
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
 - `id` (String) Id of the managed ICMPv4 object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.

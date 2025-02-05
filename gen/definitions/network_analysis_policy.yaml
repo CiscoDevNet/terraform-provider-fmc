@@ -5,21 +5,19 @@ doc_category: Policy
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity'
-      or 'Security Over Connectivity'.
+    description: Name of the policy.
     mandatory: true
-    example: net_analysis_policy_1
+    example: my_network_analysis_policy
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional description of the policy.
+    description: Description of the policy.
     example: "My network analysis policy"
   - model_name: id
     data_path: [basePolicy]
     tf_name: base_policy_id
     type: String
-    description: UUID of the base policy (such as data.fmc_network_analysis_policy.example.id).
+    description: Id of the base policy.
     mandatory: true
     test_value: data.fmc_network_analysis_policy.builtin.id
   - model_name: inspectionMode

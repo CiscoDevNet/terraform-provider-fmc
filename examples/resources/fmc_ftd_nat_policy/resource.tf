@@ -1,5 +1,5 @@
 resource "fmc_ftd_nat_policy" "example" {
-  name        = "nat_policy_1"
+  name        = "my_ftd_nat_policy"
   description = "My nat policy"
   manual_nat_rules = [
     {

@@ -14,7 +14,7 @@ This device manages FTD Device Cluster configuration. This is resource may be re
 
 ```terraform
 resource "fmc_device_cluster" "example" {
-  name                          = "fmc_device_cluster"
+  name                          = "my_device_cluster"
   cluster_key                   = "cisco123"
   control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_vni_prefix       = "10.10.3.0/27"

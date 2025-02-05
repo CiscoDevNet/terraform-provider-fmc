@@ -8,7 +8,7 @@ attributes:
     type: String
     mandatory: true
     description: Name of the Access Control Policy.
-    example: fmc_access_control_policy
+    example: my_access_control_policy
     data_source_query: true
   - model_name: description
     type: String

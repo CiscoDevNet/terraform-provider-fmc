@@ -15,7 +15,7 @@ This data source reads the SGTs.
 ```terraform
 data "fmc_sgts" "example" {
   items = {
-    "sgt_1" = {
+    "my_sgts" = {
     }
   }
 }
@@ -38,7 +38,7 @@ data "fmc_sgts" "example" {
 
 Read-Only:
 
-- `description` (String) Description
-- `id` (String) UUID of the managed SGT.
+- `description` (String) Description of the object.
+- `id` (String) Id of the managed SGT.
 - `tag` (String) Security Group Tag.
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.

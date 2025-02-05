@@ -80,15 +80,15 @@ func (r *IntrusionPolicyResource) Schema(ctx context.Context, req resource.Schem
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity' or 'Security Over Connectivity'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the policy.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional description of the policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the policy.").String,
 				Optional:            true,
 			},
 			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the base policy (such as data.fmc_intrusion_policy.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the base policy.").String,
 				Required:            true,
 			},
 			"inspection_mode": schema.StringAttribute{

@@ -98,7 +98,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -106,7 +106,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 							Optional:            true,
 						},
 						"fqdn": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The fully qualified domain name.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Fully Qualified Domain Name.").String,
 							Required:            true,
 						},
 						"dns_resolution": schema.StringAttribute{

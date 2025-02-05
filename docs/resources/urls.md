@@ -35,7 +35,7 @@ resource "fmc_urls" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual URL object. Renaming URL object in bulk is not yet implemented. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual URL object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -54,12 +54,12 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed URL object.
+- `id` (String) Id of the managed URL object.
 
 ## Import
 

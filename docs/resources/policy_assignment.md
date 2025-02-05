@@ -31,14 +31,14 @@ resource "fmc_policy_assignment" "example" {
 
 ### Required
 
-- `policy_id` (String) ID of the policy to be assigned.
+- `policy_id` (String) Id of the policy to be assigned.
 - `policy_type` (String) Type of the policy to be assigned.
   - Choices: `FTDNatPolicy`, `HealthPolicy`, `AccessPolicy`
 - `targets` (Attributes Set) List of devices to which policy should be attached (see [below for nested schema](#nestedatt--targets))
 
 ### Optional
 
-- `after_destroy_policy_id` (String) ID of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
+- `after_destroy_policy_id` (String) Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only
@@ -52,7 +52,7 @@ resource "fmc_policy_assignment" "example" {
 
 Required:
 
-- `id` (String) ID of the device to which policy should be attached
+- `id` (String) Id of the device to which policy should be attached
 - `type` (String) Type of the device to which policy should be attached
   - Choices: `Device`, `DeviceHAPair`, `DeviceGroup`
 

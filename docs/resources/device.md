@@ -14,7 +14,7 @@ This resource manages a Device.
 
 ```terraform
 resource "fmc_device" "example" {
-  name                 = "MyDeviceName1"
+  name                 = "my_device"
   host_name            = "10.0.0.1"
   license_capabilities = ["ESSENTIALS"]
   registration_key     = "key1"
@@ -30,7 +30,7 @@ resource "fmc_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
+- `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
   - Choices: `ESSENTIALS`, `IPS`, `URL`, `MALWARE_DEFENSE`, `CARRIER`, `SECURE_CLIENT_PREMIER`, `SECURE_CLIENT_PREMIER_ADVANTAGE`, `SECURE_CLIENT_VPNOnly`, `BASE`, `THREAT`, `PROTECT`, `CONTROL`, `URLFilter`, `MALWARE`, `VPN`, `SSL`
@@ -39,11 +39,11 @@ resource "fmc_device" "example" {
 
 ### Optional
 
-- `device_group_id` (String) ID of the device group.
+- `device_group_id` (String) Id of the device group.
 - `domain` (String) Name of the FMC domain
-- `health_policy_id` (String) The UUID of the assigned Health policy.
+- `health_policy_id` (String) Id of the assigned Health policy.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
-- `nat_policy_id` (String) The UUID of the assigned NAT policy.
+- `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
   - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `Legacy`

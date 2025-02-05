@@ -29,7 +29,7 @@ data "fmc_standard_acl" "example" {
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `entries` (Attributes List) Ordered list of ACL's entries. (see [below for nested schema](#nestedatt--entries))
 
 <a id="nestedatt--entries"></a>
@@ -39,7 +39,7 @@ Read-Only:
 
 - `action` (String) Indicates the redistribution access: PERMIT or DENY.
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--entries--literals))
-- `objects` (Attributes Set) Set of objects (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--objects))
+- `objects` (Attributes Set) Set of objects (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--objects))
 
 <a id="nestedatt--entries--literals"></a>
 ### Nested Schema for `entries.literals`
@@ -54,5 +54,5 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_network.this.id, etc.).
+- `id` (String) Id of the object.
 - `type` (String) Type of the object (such as fmc_network.this.type, etc.).

@@ -365,7 +365,7 @@ attributes:
     data_path: [ipv6,ipv6DHCPPool]
     tf_name: ipv6_dhcp_pool_id
     type: String
-    description: UUID of the assigned DHCPv6 pool
+    description: Id of the assigned DHCPv6 pool
     exclude_example: true
     exclude_test: true
   - model_name: type

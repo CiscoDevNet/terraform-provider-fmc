@@ -72,11 +72,11 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed URL Groups.",
+							MarkdownDescription: "Id of the managed URL Group.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Optional user-created description.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -84,19 +84,19 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:            true,
 						},
 						"urls": schema.SetNestedAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Set of URL objects to be included in the URL group.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_url.example.id, etc.).",
+										MarkdownDescription: "Id of the object (such as fmc_url.example.id, etc.).",
 										Computed:            true,
 									},
 								},
 							},
 						},
 						"literals": schema.SetNestedAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Set of literal values to be included in the URL group.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

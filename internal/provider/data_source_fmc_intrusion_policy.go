@@ -72,16 +72,16 @@ func (d *IntrusionPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity' or 'Security Over Connectivity'.",
+				MarkdownDescription: "Name of the policy.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional description of the policy.",
+				MarkdownDescription: "Description of the policy.",
 				Computed:            true,
 			},
 			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the base policy (such as data.fmc_intrusion_policy.example.id).",
+				MarkdownDescription: "Id of the base policy.",
 				Computed:            true,
 			},
 			"inspection_mode": schema.StringAttribute{

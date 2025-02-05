@@ -88,7 +88,7 @@ func (r *PortsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Port.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Port.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -103,7 +103,7 @@ func (r *PortsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Required:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{

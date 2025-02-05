@@ -75,7 +75,7 @@ attributes:
     tf_name: security_zone_id
     type: String
     description: >-
-      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when `logical_name`
+      Id of the assigned security zone. Can only be used when `logical_name`
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_security_zone.test.id

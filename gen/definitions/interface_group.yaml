@@ -6,9 +6,9 @@ test_tags: [TF_VAR_device_id]
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the object.
+    description: Name of the object.
     mandatory: true
-    example: interface_group_1
+    example: my_interface_group
     data_source_query: true
   - model_name: interfaceMode
     type: String
@@ -21,7 +21,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: UUID of the interface (such as fmc_device_physical_interface.example.id, etc.).
+        description: Id of the interface.
         id: true
         example: 0050568A-4E02-1ed3-0000-004294969198
         test_value: fmc_device_physical_interface.test.id

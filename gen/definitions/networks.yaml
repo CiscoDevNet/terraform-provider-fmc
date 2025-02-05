@@ -9,18 +9,18 @@ attributes:
     type: Map
     description: >-
       Map of networks. The key of the map is the name of the individual Network.
-    map_key_example: networks_1
+    map_key_example: my_networks_object
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Network.
+        description: Id of the managed Network.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "My Network 1"
       - model_name: overridable
         type: Bool

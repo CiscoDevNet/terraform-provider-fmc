@@ -15,7 +15,7 @@ This data source reads the Security Zones.
 ```terraform
 data "fmc_security_zones" "example" {
   items = {
-    "security_zone_1" = {
+    "my_security_zones" = {
     }
   }
 }
@@ -38,6 +38,6 @@ data "fmc_security_zones" "example" {
 
 Read-Only:
 
-- `id` (String) UUID of the managed Security Zone.
+- `id` (String) Id of the managed Security Zone.
 - `interface_type` (String) The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.
 - `type` (String) Type of the object; this value is always 'SecurityZone'.

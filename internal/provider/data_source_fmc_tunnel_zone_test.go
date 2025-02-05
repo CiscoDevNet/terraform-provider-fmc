@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcTunnelZone(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_tunnel_zone.test", "name", "TunnelZone1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_tunnel_zone.test", "name", "my_tunnel_zone"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_tunnel_zone.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_tunnel_zone.test", "description", "My Tunnel Zone object"))
 	resource.Test(t, resource.TestCase{
@@ -59,7 +59,7 @@ func TestAccDataSourceFmcTunnelZone(t *testing.T) {
 
 func testAccDataSourceFmcTunnelZoneConfig() string {
 	config := `resource "fmc_tunnel_zone" "test" {` + "\n"
-	config += `	name = "TunnelZone1"` + "\n"
+	config += `	name = "my_tunnel_zone"` + "\n"
 	config += `	description = "My Tunnel Zone object"` + "\n"
 	config += `}` + "\n"
 
@@ -73,7 +73,7 @@ func testAccDataSourceFmcTunnelZoneConfig() string {
 
 func testAccNamedDataSourceFmcTunnelZoneConfig() string {
 	config := `resource "fmc_tunnel_zone" "test" {` + "\n"
-	config += `	name = "TunnelZone1"` + "\n"
+	config += `	name = "my_tunnel_zone"` + "\n"
 	config += `	description = "My Tunnel Zone object"` + "\n"
 	config += `}` + "\n"
 

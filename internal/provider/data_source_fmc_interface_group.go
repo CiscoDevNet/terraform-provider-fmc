@@ -72,7 +72,7 @@ func (d *InterfaceGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User-created name of the object.",
+				MarkdownDescription: "Name of the object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -86,7 +86,7 @@ func (d *InterfaceGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the interface (such as fmc_device_physical_interface.example.id, etc.).",
+							MarkdownDescription: "Id of the interface.",
 							Computed:            true,
 						},
 					},

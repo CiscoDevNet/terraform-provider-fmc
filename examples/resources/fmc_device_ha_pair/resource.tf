@@ -1,17 +1,17 @@
 resource "fmc_device_ha_pair" "example" {
-  name                             = "FTD_HA"
+  name                             = "Device_HA_Pair"
   primary_device_id                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   secondary_device_id              = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   ha_link_interface_id             = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   ha_link_interface_name           = "GigabitEthernet0/0"
-  ha_link_interface_type           = ""
+  ha_link_interface_type           = "PhysicalInterface"
   ha_link_logical_name             = "LAN-INTERFACE"
   ha_link_use_ipv6                 = false
   ha_link_primary_ip               = "1.1.1.1"
   ha_link_secondary_ip             = "1.1.1.2"
   ha_link_netmask                  = "255.255.255.0"
   state_link_use_same_as_ha        = false
-  state_link_interface_id          = "76d24097-hj7r-7786-a4d0-a8c07ac08470"
+  state_link_interface_id          = "96d24097-41c4-4332-a4d0-a8c07ac08482"
   state_link_interface_name        = "GigabitEthernet0/0"
   state_link_interface_type        = "PhysicalInterface"
   state_link_logical_name          = "Stateful-INTERFACE"

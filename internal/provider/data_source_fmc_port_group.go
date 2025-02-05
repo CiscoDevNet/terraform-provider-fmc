@@ -72,7 +72,7 @@ func (d *PortGroupDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User-created name of the object.",
+				MarkdownDescription: "Name of the object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *PortGroupDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
@@ -94,7 +94,7 @@ func (d *PortGroupDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the port (such as fmc_port.test.id, etc.).",
+							MarkdownDescription: "Id of the port object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

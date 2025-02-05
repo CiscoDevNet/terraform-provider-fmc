@@ -78,7 +78,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Policy description.",
+				MarkdownDescription: "Description of the prefilter policy.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -143,11 +143,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"tunnel_zone_id": schema.StringAttribute{
-							MarkdownDescription: "UUID of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.",
+							MarkdownDescription: "Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.",
 							Computed:            true,
 						},
 						"time_range_id": schema.StringAttribute{
-							MarkdownDescription: "UUID of Time Range object applied to the rule.",
+							MarkdownDescription: "Id of Time Range object applied to the rule.",
 							Computed:            true,
 						},
 						"source_interfaces": schema.SetNestedAttribute{
@@ -156,7 +156,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
@@ -172,7 +172,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
@@ -200,7 +200,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object",
+										MarkdownDescription: "Id of the object",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
@@ -228,7 +228,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
@@ -260,7 +260,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_vlan_tag.example.id, etc.).",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},
@@ -288,7 +288,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},
@@ -316,7 +316,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},

@@ -6,8 +6,8 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: User-provided resource name.
-    example: security_zone_1
+    description: Name of the object.
+    example: my_security_zone
     data_source_query: true
   - model_name: interfaceMode
     tf_name: interface_type

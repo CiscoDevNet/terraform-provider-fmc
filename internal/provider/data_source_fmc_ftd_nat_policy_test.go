@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcFTDNATPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "name", "nat_policy_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "name", "my_ftd_nat_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "description", "My nat policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manual_nat_rules.0.description", "My manual nat rule 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manual_nat_rules.0.enabled", "true"))
@@ -84,7 +84,7 @@ resource "fmc_hosts" "test" {
 
 func testAccDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
-	config += `	name = "nat_policy_1"` + "\n"
+	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
@@ -112,7 +112,7 @@ func testAccDataSourceFmcFTDNATPolicyConfig() string {
 
 func testAccNamedDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
-	config += `	name = "nat_policy_1"` + "\n"
+	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"

@@ -9,18 +9,18 @@ attributes:
     type: Map
     description: >-
       Map of ranges. The key of the map is the name of the individual Range.
-    map_key_example: ranges_1
+    map_key_example: my_ranges
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Host.
+        description: Id of the managed Range.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "My Range 1"
       - model_name: overridable
         type: Bool

@@ -8,11 +8,11 @@ attributes:
     type: String
     description: Name of the object.
     mandatory: true
-    example: stdacl1
+    example: my_standard_acl
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My standard ACL"
   - model_name: entries
     type: List
@@ -31,13 +31,13 @@ attributes:
         mandatory: true
       - model_name: objects
         data_path: [networks]
-        description: Set of objects (fmc_network, fmc_host, ...).
+        description: Set of objects (Host, Network, Range).
         exclude_test: true # conflict with literals below
         type: Set
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_network.this.id, etc.).
+            description: Id of the object.
             id: true
             exclude_example: true
           - model_name: type

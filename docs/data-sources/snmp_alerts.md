@@ -38,5 +38,5 @@ data "fmc_snmp_alerts" "example" {
 
 Read-Only:
 
-- `id` (String) UUID of the managed SNMP Alert.
+- `id` (String) Id of the managed SNMP Alert.
 - `type` (String) Type of the object; this value is always 'SNMPAlert'.

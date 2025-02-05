@@ -1,4 +1,4 @@
 resource "fmc_security_zone" "example" {
-  name           = "security_zone_1"
+  name           = "my_security_zone"
   interface_type = "ROUTED"
 }

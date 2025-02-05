@@ -3,18 +3,18 @@
 page_title: "fmc_prefilter_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource manages a Prefilter Policy.
+  This resource manages Prefilter Policy with corresponding rules.
 ---
 
 # fmc_prefilter_policy (Resource)
 
-This resource manages a Prefilter Policy.
+This resource manages Prefilter Policy with corresponding rules.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_prefilter_policy" "example" {
-  name                              = "POLICY1"
+  name                              = "my_prefilter_policy"
   description                       = "My prefilter policy"
   default_action                    = "BLOCK_TUNNELS"
   default_action_log_begin          = true
@@ -126,7 +126,7 @@ resource "fmc_prefilter_policy" "example" {
 - `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
 - `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
 - `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `description` (String) Policy description.
+- `description` (String) Description of the prefilter policy.
 - `domain` (String) Name of the FMC domain
 - `rules` (Attributes List) The ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 
@@ -172,8 +172,8 @@ Optional:
 - `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
-- `time_range_id` (String) UUID of Time Range object applied to the rule.
-- `tunnel_zone_id` (String) UUID of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
+- `time_range_id` (String) Id of Time Range object applied to the rule.
+- `tunnel_zone_id` (String) Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
 - `vlan_tag_objects` (Attributes Set) Set of objects representing vlan tags or vlan tag groups (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
@@ -186,7 +186,7 @@ Read-Only:
 
 Optional:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object.
 
 
@@ -203,7 +203,7 @@ Optional:
 
 Required:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object
 
 
@@ -224,7 +224,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--source_interfaces"></a>
@@ -232,7 +232,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object.
 
 
@@ -249,7 +249,7 @@ Optional:
 
 Required:
 
-- `id` (String) UUID of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object
 
 
@@ -270,7 +270,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--vlan_tag_literals"></a>
@@ -287,7 +287,7 @@ Required:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_vlan_tag.example.id, etc.).
+- `id` (String) Id of the object.
 
 ## Import
 

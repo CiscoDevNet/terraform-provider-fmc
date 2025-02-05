@@ -84,7 +84,7 @@ func (d *DeviceIPv6StaticRouteDataSource) Schema(ctx context.Context, req dataso
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the object (such as fmc_network.example.id, etc.).",
+							MarkdownDescription: "Id of the object.",
 							Computed:            true,
 						},
 					},
@@ -95,7 +95,7 @@ func (d *DeviceIPv6StaticRouteDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"gateway_object_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the next hop for this route (such as fmc_host.example.id). Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
+				MarkdownDescription: "Id of the next hop for this route. Exactly one of `gateway_object_id` or `gateway_literal` must be present.",
 				Computed:            true,
 			},
 			"gateway_literal": schema.StringAttribute{

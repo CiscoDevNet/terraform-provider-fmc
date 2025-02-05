@@ -90,7 +90,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Port Groups.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Port Groups.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -104,7 +104,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -117,7 +117,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the port (such as fmc_port.test.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the port object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{

@@ -35,13 +35,13 @@ data "fmc_device_ha_pair" "example" {
 - `encryption_key_generation_scheme` (String) Select the encyption key generation scheme.
 - `failed_interfaces_limit` (Number) Number of Failed Interfaces that triggers failover.
 - `failed_interfaces_percent` (Number) Percentage of Failed Interfaces that triggers failover.
-- `ha_link_interface_id` (String) ID of High Availability Link interface.
+- `ha_link_interface_id` (String) Id of High Availability Link interface.
 - `ha_link_interface_name` (String) Name of High Availability Link interface.
 - `ha_link_interface_type` (String) Type of High Availability Link interface.
-- `ha_link_logical_name` (String) The logical name of failover interface.
+- `ha_link_logical_name` (String) Logical name of failover interface.
 - `ha_link_netmask` (String) Subnet mask for HA link.
-- `ha_link_primary_ip` (String) The IP of primary node interface.
-- `ha_link_secondary_ip` (String) The IP of secondary node interface.
+- `ha_link_primary_ip` (String) IP of primary node interface.
+- `ha_link_secondary_ip` (String) IP of secondary node interface.
 - `ha_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
 - `interface_hold_time` (Number) Interface Hold Time in seconds
 - `interface_poll_time` (Number) Peer Pool Time (1-15 SEC or 500-999 MSEC)
@@ -50,15 +50,15 @@ data "fmc_device_ha_pair" "example" {
 - `peer_hold_time_unit` (String) Peer Hold Time Unit
 - `peer_poll_time` (Number) Peer Pool Time (1-15 SEC or 200-999 MSEC)
 - `peer_poll_time_unit` (String) Peer Pool Time Unit
-- `primary_device_id` (String) ID of primary FTD in the HA Pair.
-- `secondary_device_id` (String) ID of secondary FTD in the HA Pair.
+- `primary_device_id` (String) Id of primary FTD in the HA Pair.
+- `secondary_device_id` (String) Id of secondary FTD in the HA Pair.
 - `state_link_interface_id` (String) ID of physical interface.
 - `state_link_interface_name` (String) Name of state link interface.
 - `state_link_interface_type` (String) Type of state link interface.
 - `state_link_logical_name` (String)
 - `state_link_netmask` (String) Subnet mask for state link.
-- `state_link_primary_ip` (String) The IP of primary node interface.
-- `state_link_secondary_ip` (String) The IP of secondary node interface.
+- `state_link_primary_ip` (String) IP of primary node interface.
+- `state_link_secondary_ip` (String) IP of secondary node interface.
 - `state_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
 - `state_link_use_same_as_ha` (Boolean) Use the same link for state and HA.
 - `type` (String) Type of the object; This is always `DeviceHAPair`.

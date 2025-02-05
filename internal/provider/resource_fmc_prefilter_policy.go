@@ -70,7 +70,7 @@ func (r *PrefilterPolicyResource) Metadata(ctx context.Context, req resource.Met
 func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Prefilter Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Prefilter Policy with corresponding rules.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -92,7 +92,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Policy description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the prefilter policy.").String,
 				Optional:            true,
 			},
 			"type": schema.StringAttribute{
@@ -174,11 +174,11 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"tunnel_zone_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.").String,
 							Optional:            true,
 						},
 						"time_range_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of Time Range object applied to the rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Time Range object applied to the rule.").String,
 							Optional:            true,
 						},
 						"source_interfaces": schema.SetNestedAttribute{
@@ -187,7 +187,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
@@ -203,7 +203,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
@@ -231,7 +231,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
@@ -259,7 +259,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
@@ -291,7 +291,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_vlan_tag.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -319,7 +319,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
@@ -347,7 +347,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},

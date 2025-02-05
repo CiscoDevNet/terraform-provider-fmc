@@ -98,7 +98,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"device_group_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the device group.",
+				MarkdownDescription: "Id of the device group.",
 				Computed:            true,
 			},
 			"prohibit_packet_transfer": schema.BoolAttribute{
@@ -118,15 +118,15 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.",
+				MarkdownDescription: "Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.",
 				Computed:            true,
 			},
 			"nat_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The UUID of the assigned NAT policy.",
+				MarkdownDescription: "Id of the assigned FTD NAT policy.",
 				Computed:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The UUID of the assigned Health policy.",
+				MarkdownDescription: "Id of the assigned Health policy.",
 				Computed:            true,
 			},
 			"info_version": schema.StringAttribute{

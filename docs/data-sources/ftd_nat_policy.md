@@ -30,7 +30,7 @@ data "fmc_ftd_nat_policy" "example" {
 ### Read-Only
 
 - `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
-- `description` (String) Policy description
+- `description` (String) Description of the object.
 - `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 <a id="nestedatt--auto_nat_rules"></a>
@@ -40,7 +40,7 @@ Read-Only:
 
 - `destination_interface_id` (String) ID of destination security zone or interface group
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
-- `id` (String) Identifier of the auto nat rule.
+- `id` (String) Id of the Auto NAT rule.
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
 - `nat_type` (String) Type of the rule
 - `net_to_net` (Boolean) Net to Net Mapping
@@ -61,11 +61,11 @@ Read-Only:
 
 Read-Only:
 
-- `description` (String) Manual nat rule description
+- `description` (String) Description of Manual NAT rule.
 - `destination_interface_id` (String) ID of destination security zone or interface group
 - `enabled` (Boolean) Indicates if the rule is enabled.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
-- `id` (String) Identifier of the manual nat rule.
+- `id` (String) Id of the manual nat rule.
 - `interface_in_original_destination` (Boolean) Use interface address as original destination
 - `interface_in_translated_source` (Boolean) Translate source network to destination interface address
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.

@@ -85,7 +85,7 @@ func (d *PortDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{

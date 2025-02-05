@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcPrefilterPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "name", "POLICY1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "name", "my_prefilter_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "description", "My prefilter policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_prefilter_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action", "BLOCK_TUNNELS"))
@@ -84,29 +84,29 @@ func TestAccFmcPrefilterPolicy(t *testing.T) {
 
 const testAccFmcPrefilterPolicyPrerequisitesConfig = `
 resource "fmc_network" "test" {
-  name   = "NET_fmc_access_control_policy"
+  name   = "fmc_prefilter_policy_network"
   prefix = "10.0.0.0/24"
 }
 
 resource "fmc_host" "test" {
-  name = "HOST_fmc_access_control_policy"
+  name = "fmc_prefilter_policy_host"
   ip   = "10.1.1.1"
 }
 
 resource "fmc_port" "test" {
-  name     = "test_fmc_access_control_policy"
+  name     = "fmc_prefilter_policy_port"
   protocol = "UDP"
   port     = "53"
 }
 
 resource "fmc_vlan_tag" "test" {
-  name      = "VLAN_TAG_fmc_access_control_policy"
+  name      = "fmc_prefilter_policy_vlan_tag"
   start_tag = "10"
   end_tag   = "11" 
 }
 
 resource "fmc_security_zone" "test" {
-  name           = "security_zone_1"
+  name           = "fmc_prefilter_policy_security_zone"
   interface_type = "ROUTED"
 }
 `
@@ -117,7 +117,7 @@ resource "fmc_security_zone" "test" {
 
 func testAccFmcPrefilterPolicyConfig_minimum() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
-	config += `	name = "POLICY1"` + "\n"
+	config += `	name = "my_prefilter_policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -129,7 +129,7 @@ func testAccFmcPrefilterPolicyConfig_minimum() string {
 
 func testAccFmcPrefilterPolicyConfig_all() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
-	config += `	name = "POLICY1"` + "\n"
+	config += `	name = "my_prefilter_policy"` + "\n"
 	config += `	description = "My prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"

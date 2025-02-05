@@ -88,14 +88,14 @@ func (r *NetworksResource) Schema(ctx context.Context, req resource.SchemaReques
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Network.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{

@@ -87,7 +87,7 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"entries": schema.ListNestedAttribute{
@@ -103,12 +103,12 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects (Host, Network, Range).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.this.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{

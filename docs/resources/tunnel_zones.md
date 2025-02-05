@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_tunnel_zones" "example" {
   items = {
-    TunnelZone1 = {
+    my_tunnel_zones = {
       description = "My Tunnel Zone object"
     }
   }
@@ -49,11 +49,11 @@ resource "fmc_tunnel_zones" "example" {
 
 Optional:
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Tunnel Zone.
+- `id` (String) Id of the managed Tunnel Zone.
 - `type` (String) Type of the object; this value is always 'TunnelTag'.
 
 ## Import

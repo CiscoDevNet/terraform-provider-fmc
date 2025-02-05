@@ -88,7 +88,7 @@ func (r *TunnelZonesResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Tunnel Zone.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Tunnel Zone.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -102,7 +102,7 @@ func (r *TunnelZonesResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 					},

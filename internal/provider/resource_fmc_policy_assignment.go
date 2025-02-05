@@ -104,7 +104,7 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the policy to be assigned.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the policy to be assigned.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -118,7 +118,7 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"after_destroy_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.").String,
 				Optional:            true,
 			},
 			"targets": schema.SetNestedAttribute{
@@ -127,7 +127,7 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the device to which policy should be attached").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the device to which policy should be attached").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{

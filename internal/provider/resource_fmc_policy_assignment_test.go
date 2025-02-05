@@ -63,7 +63,7 @@ func TestAccFmcPolicyAssignment(t *testing.T) {
 
 const testAccFmcPolicyAssignmentPrerequisitesConfig = `
 resource "fmc_ftd_nat_policy" "example" {
-  name = "pa_nat_policy"
+  name = "fmc_policy_assignment_nat_policy"
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id

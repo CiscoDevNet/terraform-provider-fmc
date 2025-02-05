@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcTunnelZone(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_tunnel_zone.test", "name", "TunnelZone1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_tunnel_zone.test", "name", "my_tunnel_zone"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_tunnel_zone.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_tunnel_zone.test", "description", "My Tunnel Zone object"))
 
@@ -67,7 +67,7 @@ func TestAccFmcTunnelZone(t *testing.T) {
 
 func testAccFmcTunnelZoneConfig_minimum() string {
 	config := `resource "fmc_tunnel_zone" "test" {` + "\n"
-	config += `	name = "TunnelZone1"` + "\n"
+	config += `	name = "my_tunnel_zone"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -78,7 +78,7 @@ func testAccFmcTunnelZoneConfig_minimum() string {
 
 func testAccFmcTunnelZoneConfig_all() string {
 	config := `resource "fmc_tunnel_zone" "test" {` + "\n"
-	config += `	name = "TunnelZone1"` + "\n"
+	config += `	name = "my_tunnel_zone"` + "\n"
 	config += `	description = "My Tunnel Zone object"` + "\n"
 	config += `}` + "\n"
 	return config

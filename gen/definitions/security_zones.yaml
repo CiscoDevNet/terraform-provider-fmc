@@ -10,13 +10,13 @@ attributes:
     type: Map
     description: >-
       Map of security zones. The key of the map is the name of the individual Security Zone.
-    map_key_example: security_zone_1
+    map_key_example: my_security_zones
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Security Zone.
+        description: Id of the managed Security Zone.
         exclude_example: true
         exclude_test: true
       - model_name: interfaceMode

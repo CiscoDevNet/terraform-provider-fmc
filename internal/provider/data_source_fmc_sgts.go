@@ -72,7 +72,7 @@ func (d *SGTsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed SGT.",
+							MarkdownDescription: "Id of the managed SGT.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -80,7 +80,7 @@ func (d *SGTsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Description",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"tag": schema.StringAttribute{

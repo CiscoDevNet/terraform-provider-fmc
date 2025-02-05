@@ -25,7 +25,7 @@ data "fmc_security_zone" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User-provided resource name.
+- `name` (String) Name of the object.
 
 ### Read-Only
 

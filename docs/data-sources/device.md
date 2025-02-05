@@ -29,9 +29,9 @@ data "fmc_device" "example" {
 
 ### Read-Only
 
-- `access_policy_id` (String) The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
-- `device_group_id` (String) ID of the device group.
-- `health_policy_id` (String) The UUID of the assigned Health policy.
+- `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
+- `device_group_id` (String) Id of the device group.
+- `health_policy_id` (String) Id of the assigned Health policy.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
 - `info_deployed_access_policy_name` (String) Deployed Access Control Policy Name - Informational only.
 - `info_deployed_health_policy_name` (String) Deployed Health Policy Name - Informational only.
@@ -47,7 +47,7 @@ data "fmc_device" "example" {
 - `info_version` (String) Version of the registered device - Informational only.
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
-- `nat_policy_id` (String) The UUID of the assigned NAT policy.
+- `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.

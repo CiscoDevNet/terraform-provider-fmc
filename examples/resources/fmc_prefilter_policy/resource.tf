@@ -1,5 +1,5 @@
 resource "fmc_prefilter_policy" "example" {
-  name                              = "POLICY1"
+  name                              = "my_prefilter_policy"
   description                       = "My prefilter policy"
   default_action                    = "BLOCK_TUNNELS"
   default_action_log_begin          = true

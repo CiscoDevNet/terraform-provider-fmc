@@ -36,7 +36,7 @@ data "fmc_prefilter_policy" "example" {
 - `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
 - `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
 - `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `description` (String) Policy description.
+- `description` (String) Description of the prefilter policy.
 - `rules` (Attributes List) The ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 - `type` (String) Object type; This is always `PrefilterPolicy`
 
@@ -69,8 +69,8 @@ Read-Only:
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (Port or Port Groups). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--source_port_objects))
 - `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
-- `time_range_id` (String) UUID of Time Range object applied to the rule.
-- `tunnel_zone_id` (String) UUID of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
+- `time_range_id` (String) Id of Time Range object applied to the rule.
+- `tunnel_zone_id` (String) Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
 - `vlan_tag_objects` (Attributes Set) Set of objects representing vlan tags or vlan tag groups (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
@@ -79,7 +79,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object.
 
 
@@ -96,7 +96,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object
 
 
@@ -114,7 +114,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--source_interfaces"></a>
@@ -122,7 +122,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 - `type` (String) Type of the object.
 
 
@@ -139,7 +139,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object
+- `id` (String) Id of the object
 - `type` (String) Type of the object
 
 
@@ -157,7 +157,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object.
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--rules--vlan_tag_literals"></a>
@@ -174,4 +174,4 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_vlan_tag.example.id, etc.).
+- `id` (String) Id of the object.

@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcTimeRange(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_time_range.test", "name", "time_range_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_time_range.test", "name", "my_time_range"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_time_range.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_time_range.test", "description", "My time range object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_time_range.test", "start_time", "2025-01-07T20:20"))
@@ -66,7 +66,7 @@ func TestAccDataSourceFmcTimeRange(t *testing.T) {
 
 func testAccDataSourceFmcTimeRangeConfig() string {
 	config := `resource "fmc_time_range" "test" {` + "\n"
-	config += `	name = "time_range_1"` + "\n"
+	config += `	name = "my_time_range"` + "\n"
 	config += `	description = "My time range object"` + "\n"
 	config += `	start_time = "2025-01-07T20:20"` + "\n"
 	config += `	end_time = "2025-01-22T09:20"` + "\n"
@@ -89,7 +89,7 @@ func testAccDataSourceFmcTimeRangeConfig() string {
 
 func testAccNamedDataSourceFmcTimeRangeConfig() string {
 	config := `resource "fmc_time_range" "test" {` + "\n"
-	config += `	name = "time_range_1"` + "\n"
+	config += `	name = "my_time_range"` + "\n"
 	config += `	description = "My time range object"` + "\n"
 	config += `	start_time = "2025-01-07T20:20"` + "\n"
 	config += `	end_time = "2025-01-22T09:20"` + "\n"

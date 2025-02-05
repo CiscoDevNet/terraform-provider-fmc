@@ -14,7 +14,7 @@ This resource manages a VLAN Tag.
 
 ```terraform
 resource "fmc_vlan_tag" "example" {
-  name        = "fmc_vlan_tag"
+  name        = "my_vlan_tag"
   description = "My VLAN Tag"
   overridable = true
   start_tag   = "12"
@@ -27,13 +27,13 @@ resource "fmc_vlan_tag" "example" {
 
 ### Required
 
-- `end_tag` (String)
+- `end_tag` (String) VLAN Tag end value.
 - `name` (String) Name of the object.
-- `start_tag` (String)
+- `start_tag` (String) VLAN Tag starting value.
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 

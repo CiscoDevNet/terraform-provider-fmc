@@ -14,7 +14,7 @@ This resource manages an Intrusion Policy.
 
 ```terraform
 resource "fmc_intrusion_policy" "example" {
-  name            = "fmc_intrusion_policy"
+  name            = "my_intrusion_policy"
   description     = "My IPS Policy"
   base_policy_id  = ""
   inspection_mode = "PREVENTION"
@@ -26,12 +26,12 @@ resource "fmc_intrusion_policy" "example" {
 
 ### Required
 
-- `base_policy_id` (String) UUID of the base policy (such as data.fmc_intrusion_policy.example.id).
-- `name` (String) Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity' or 'Security Over Connectivity'.
+- `base_policy_id` (String) Id of the base policy.
+- `name` (String) Name of the policy.
 
 ### Optional
 
-- `description` (String) Optional description of the policy.
+- `description` (String) Description of the policy.
 - `domain` (String) Name of the FMC domain
 - `inspection_mode` (String) Inspection mode.
   - Choices: `PREVENTION`, `DETECTION`

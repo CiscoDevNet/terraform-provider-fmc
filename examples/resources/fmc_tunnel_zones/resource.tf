@@ -1,6 +1,6 @@
 resource "fmc_tunnel_zones" "example" {
   items = {
-    TunnelZone1 = {
+    my_tunnel_zones = {
       description = "My Tunnel Zone object"
     }
   }

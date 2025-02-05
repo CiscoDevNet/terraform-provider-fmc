@@ -77,7 +77,7 @@ func (d *VariableSetDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional description of the policy.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{

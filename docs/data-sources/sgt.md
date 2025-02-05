@@ -25,10 +25,10 @@ data "fmc_sgt" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) The name of the SGT object.
+- `name` (String) Name of the SGT object.
 
 ### Read-Only
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 - `tag` (String) Security Group Tag.
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.

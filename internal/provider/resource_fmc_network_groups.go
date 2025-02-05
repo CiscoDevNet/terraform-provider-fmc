@@ -87,14 +87,14 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Network Group.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -102,17 +102,17 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							Optional:            true,
 						},
 						"network_groups": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not UUIDs) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its UUID. Renaming a group contained in `network_groups` is not yet implemented, while it works in `objects`.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of network objects (Hosts, Networs, Ranges or FQDNs).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, fmc_host.example.id, fmc_network_groups.another.items[\"example\"].id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the network object.").String,
 										Optional:            true,
 									},
 								},
@@ -124,7 +124,7 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
 										Optional:            true,
 									},
 								},

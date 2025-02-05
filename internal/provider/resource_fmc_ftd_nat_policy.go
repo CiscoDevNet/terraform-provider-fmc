@@ -90,7 +90,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Policy description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
@@ -99,11 +99,11 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier of the manual nat rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the manual nat rule.").String,
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Manual nat rule description").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of Manual NAT rule.").String,
 							Optional:            true,
 						},
 						"enabled": schema.BoolAttribute{
@@ -209,7 +209,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identifier of the auto nat rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Auto NAT rule.").String,
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{

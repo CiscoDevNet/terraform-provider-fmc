@@ -9,13 +9,13 @@ attributes:
     type: Map
     description: >-
       Map of Tunnel Zones. The key of the map is the name of the individual Tunnel Zone.
-    map_key_example: TunnelZone1
+    map_key_example: my_tunnel_zones
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Tunnel Zone.
+        description: Id of the managed Tunnel Zone.
         exclude_example: true
         exclude_test: true
       # Type is defined twice on purpose, to be read-only attribute and to be in POST body
@@ -29,5 +29,5 @@ attributes:
         computed: true
       - model_name: description
         type: String
-        description: Description
+        description: Description of the object.
         example: My Tunnel Zone object

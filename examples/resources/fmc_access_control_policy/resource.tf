@@ -1,5 +1,5 @@
 resource "fmc_access_control_policy" "example" {
-  name                              = "fmc_access_control_policy"
+  name                              = "my_access_control_policy"
   description                       = "My Access Control Policy"
   default_action                    = "BLOCK"
   default_action_log_begin          = true

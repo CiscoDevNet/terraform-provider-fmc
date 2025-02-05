@@ -81,7 +81,7 @@ func (d *PolicyAssignmentDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 			},
 			"policy_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the policy to be assigned.",
+				MarkdownDescription: "Id of the policy to be assigned.",
 				Computed:            true,
 			},
 			"policy_type": schema.StringAttribute{
@@ -89,7 +89,7 @@ func (d *PolicyAssignmentDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 			},
 			"after_destroy_policy_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.",
+				MarkdownDescription: "Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.",
 				Computed:            true,
 			},
 			"targets": schema.SetNestedAttribute{
@@ -98,7 +98,7 @@ func (d *PolicyAssignmentDataSource) Schema(ctx context.Context, req datasource.
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the device to which policy should be attached",
+							MarkdownDescription: "Id of the device to which policy should be attached",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

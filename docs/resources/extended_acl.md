@@ -20,7 +20,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_extended_acl" "example" {
-  name        = "extended_acl_1"
+  name        = "my_extended_acl"
   description = "My Extended Access Control List"
   entries = [
     {
@@ -127,10 +127,10 @@ Optional:
   - Choices: `EMERGENCY`, `ALERT`, `CRITICAL`, `ERROR`, `WARNING`, `NOTIFICATION`, `INFORMATIONAL`, `DEBUGGING`
   - Default value: `INFORMATIONAL`
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_network_literals))
-- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--source_network_objects))
+- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports. (see [below for nested schema](#nestedatt--entries--source_port_objects))
-- `source_sgt_objects` (Attributes Set) Set of SGT that represent tag of source traffic (fmc_sgts). (see [below for nested schema](#nestedatt--entries--source_sgt_objects))
+- `source_sgt_objects` (Attributes Set) Set of SGT that represent tag of source traffic. (see [below for nested schema](#nestedatt--entries--source_sgt_objects))
 
 <a id="nestedatt--entries--destination_network_literals"></a>
 ### Nested Schema for `entries.destination_network_literals`
@@ -187,7 +187,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--entries--source_port_literals"></a>
@@ -219,7 +219,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_sgts.example.id, etc.).
+- `id` (String) Id of the object.
 
 ## Import
 

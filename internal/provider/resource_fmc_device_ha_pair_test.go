@@ -34,7 +34,7 @@ func TestAccFmcDeviceHAPair(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_device_2_id")
 	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "name", "FTD_HA"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "name", "Device_HA_Pair"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_ha_pair.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "ha_link_interface_name", "GigabitEthernet0/0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "ha_link_logical_name", "LAN-INTERFACE"))
@@ -96,12 +96,12 @@ variable "device_2_id" { default = null } // tests will set $TF_VAR_device_2_id
 
 func testAccFmcDeviceHAPairConfig_minimum() string {
 	config := `resource "fmc_device_ha_pair" "test" {` + "\n"
-	config += `	name = "FTD_HA"` + "\n"
+	config += `	name = "Device_HA_Pair"` + "\n"
 	config += `	primary_device_id = var.device_id` + "\n"
 	config += `	secondary_device_id = var.device_2_id` + "\n"
 	config += `	ha_link_interface_id = "96d24097-41c4-4332-a4d0-a8c07ac08482"` + "\n"
 	config += `	ha_link_interface_name = "GigabitEthernet0/0"` + "\n"
-	config += `	ha_link_interface_type = ""` + "\n"
+	config += `	ha_link_interface_type = "PhysicalInterface"` + "\n"
 	config += `	ha_link_logical_name = "LAN-INTERFACE"` + "\n"
 	config += `	ha_link_primary_ip = "1.1.1.1"` + "\n"
 	config += `	ha_link_secondary_ip = "1.1.1.2"` + "\n"
@@ -117,19 +117,19 @@ func testAccFmcDeviceHAPairConfig_minimum() string {
 
 func testAccFmcDeviceHAPairConfig_all() string {
 	config := `resource "fmc_device_ha_pair" "test" {` + "\n"
-	config += `	name = "FTD_HA"` + "\n"
+	config += `	name = "Device_HA_Pair"` + "\n"
 	config += `	primary_device_id = var.device_id` + "\n"
 	config += `	secondary_device_id = var.device_2_id` + "\n"
 	config += `	ha_link_interface_id = "96d24097-41c4-4332-a4d0-a8c07ac08482"` + "\n"
 	config += `	ha_link_interface_name = "GigabitEthernet0/0"` + "\n"
-	config += `	ha_link_interface_type = ""` + "\n"
+	config += `	ha_link_interface_type = "PhysicalInterface"` + "\n"
 	config += `	ha_link_logical_name = "LAN-INTERFACE"` + "\n"
 	config += `	ha_link_use_ipv6 = false` + "\n"
 	config += `	ha_link_primary_ip = "1.1.1.1"` + "\n"
 	config += `	ha_link_secondary_ip = "1.1.1.2"` + "\n"
 	config += `	ha_link_netmask = "255.255.255.0"` + "\n"
 	config += `	state_link_use_same_as_ha = false` + "\n"
-	config += `	state_link_interface_id = "76d24097-hj7r-7786-a4d0-a8c07ac08470"` + "\n"
+	config += `	state_link_interface_id = "96d24097-41c4-4332-a4d0-a8c07ac08482"` + "\n"
 	config += `	state_link_interface_name = "GigabitEthernet0/0"` + "\n"
 	config += `	state_link_interface_type = "PhysicalInterface"` + "\n"
 	config += `	state_link_logical_name = "Stateful-INTERFACE"` + "\n"

@@ -80,7 +80,7 @@ func (r *SGTResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the SGT object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the SGT object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -91,7 +91,7 @@ func (r *SGTResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"tag": schema.StringAttribute{

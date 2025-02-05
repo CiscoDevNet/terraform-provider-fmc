@@ -15,7 +15,7 @@ This data source reads the FQDN Objects.
 ```terraform
 data "fmc_fqdn_objects" "example" {
   items = {
-    "fqdn_1" = {
+    "my_fqdn_objects" = {
     }
   }
 }
@@ -38,9 +38,9 @@ data "fmc_fqdn_objects" "example" {
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `dns_resolution` (String) Type of DNS resolution.
-- `fqdn` (String) The fully qualified domain name.
+- `fqdn` (String) Fully Qualified Domain Name.
 - `id` (String) Id of the managed object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'FQDN'.

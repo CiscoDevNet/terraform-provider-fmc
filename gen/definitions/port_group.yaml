@@ -5,9 +5,9 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the object.
+    description: Name of the object.
     mandatory: true
-    example: portgroup_obj1
+    example: my_port_group
     data_source_query: true
   - model_name: type
     type: String
@@ -15,7 +15,7 @@ attributes:
     computed: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My port group description"
   - model_name: overridable
     type: Bool
@@ -28,7 +28,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: UUID of the port (such as fmc_port.test.id, etc.).
+        description: Id of the port object.
         id: true
         example: 0050568A-232D-0ed3-0000-004294971602
         test_value: fmc_port.test.id
@@ -40,7 +40,7 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_port" "test" {
-    name        = "port_1"
+    name        = "fmc_port_group_port"
     description = "My PORT id"
     protocol    = "TCP"
     port        = "443"

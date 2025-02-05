@@ -9,7 +9,7 @@ attributes:
     type: Map
     description: >-
       Map of icmpv4s. The key of the map is the name of the individual ICMPv4 Object.
-    map_key_example: icmpv4_1
+    map_key_example: my_icmpv4_objects
     mandatory: true
     attributes:
       - model_name: id
@@ -20,7 +20,7 @@ attributes:
         exclude_test: true
       - model_name: description
         type: String
-        description: Description of the resource.
+        description: Description of the object.
         example: "ICMPv4 network unreachable response, type 3, code 0"
       - model_name: overridable
         type: Bool

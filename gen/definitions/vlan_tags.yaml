@@ -8,19 +8,19 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of security zones. The key of the map is the name of the individual VLAN tag object.
-    map_key_example: fmc_vlan_tags
+      Map of security zones. The key of the map is the name of the individual VLAN Tag object.
+    map_key_example: my_vlan_tags
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Vlan tag object.
+        description: Id of the managed VLAN Tag object.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
-        description: Optional user-created description.
+        description: Description of the object.
         example: "My TAG id"
         mandatory: false
       - model_name: overridable
@@ -42,9 +42,11 @@ attributes:
         test_value: "12"
         data_path: ["data"]
         mandatory: true
+        description: VLAN Tag starting value.
       - model_name: endTag
         type: String
         example: "15"
         test_value: "15"
         data_path: ["data"]
         mandatory: true
+        description: VLAN Tag end value.

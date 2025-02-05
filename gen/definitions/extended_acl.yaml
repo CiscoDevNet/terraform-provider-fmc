@@ -8,7 +8,7 @@ attributes:
     type: String
     description: Name of the Extended ACL.
     mandatory: true
-    example: extended_acl_1
+    example: my_extended_acl
     data_source_query: true
   - model_name: description
     type: String
@@ -92,24 +92,24 @@ attributes:
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
-        description: Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).
+        description: Set of objects that represent sources of traffic (Host, Network, Range).
         type: Set
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_network.example.id, etc.).
+            description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_network.test.id
       - model_name: objects
         data_path: [securityGroupTags]
         tf_name: source_sgt_objects
-        description: Set of SGT that represent tag of source traffic (fmc_sgts).
+        description: Set of SGT that represent tag of source traffic.
         type: Set
         attributes:
           - model_name: id
             type: String
-            description: UUID of the object (such as fmc_sgts.example.id, etc.).
+            description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_sgt.test.id   

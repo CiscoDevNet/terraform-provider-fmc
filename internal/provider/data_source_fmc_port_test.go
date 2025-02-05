@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcPort(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port.test", "port", "443"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port.test", "name", "tcp443"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port.test", "name", "my_port"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port.test", "protocol", "TCP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port.test", "description", "Port TCP/443 (HTTPS)"))
 	resource.Test(t, resource.TestCase{
@@ -61,7 +61,7 @@ func TestAccDataSourceFmcPort(t *testing.T) {
 func testAccDataSourceFmcPortConfig() string {
 	config := `resource "fmc_port" "test" {` + "\n"
 	config += `	port = "443"` + "\n"
-	config += `	name = "tcp443"` + "\n"
+	config += `	name = "my_port"` + "\n"
 	config += `	protocol = "TCP"` + "\n"
 	config += `	description = "Port TCP/443 (HTTPS)"` + "\n"
 	config += `	overridable = true` + "\n"
@@ -78,7 +78,7 @@ func testAccDataSourceFmcPortConfig() string {
 func testAccNamedDataSourceFmcPortConfig() string {
 	config := `resource "fmc_port" "test" {` + "\n"
 	config += `	port = "443"` + "\n"
-	config += `	name = "tcp443"` + "\n"
+	config += `	name = "my_port"` + "\n"
 	config += `	protocol = "TCP"` + "\n"
 	config += `	description = "Port TCP/443 (HTTPS)"` + "\n"
 	config += `	overridable = true` + "\n"

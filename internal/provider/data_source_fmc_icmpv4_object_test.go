@@ -32,7 +32,7 @@ func TestAccDataSourceFmcICMPv4Object(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "icmp_type", "3"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "code", "0"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "name", "icmpv4_net_unreachable"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "name", "my_icmpv4_object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv4_object.test", "description", "ICMPv4 network unreachable response, type 3, code 0"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_icmpv4_object.test", "type"))
 	resource.Test(t, resource.TestCase{
@@ -63,7 +63,7 @@ func testAccDataSourceFmcICMPv4ObjectConfig() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
 	config += `	icmp_type = 3` + "\n"
 	config += `	code = 0` + "\n"
-	config += `	name = "icmpv4_net_unreachable"` + "\n"
+	config += `	name = "my_icmpv4_object"` + "\n"
 	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
@@ -80,7 +80,7 @@ func testAccNamedDataSourceFmcICMPv4ObjectConfig() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
 	config += `	icmp_type = 3` + "\n"
 	config += `	code = 0` + "\n"
-	config += `	name = "icmpv4_net_unreachable"` + "\n"
+	config += `	name = "my_icmpv4_object"` + "\n"
 	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"

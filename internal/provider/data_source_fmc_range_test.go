@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcRange(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "name", "range1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "name", "my_range"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "ip_range", "10.0.0.1-10.0.0.9"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_range.test", "description", "My range"))
 	resource.Test(t, resource.TestCase{
@@ -59,7 +59,7 @@ func TestAccDataSourceFmcRange(t *testing.T) {
 
 func testAccDataSourceFmcRangeConfig() string {
 	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
+	config += `	name = "my_range"` + "\n"
 	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
 	config += `	description = "My range"` + "\n"
 	config += `	overridable = true` + "\n"
@@ -75,7 +75,7 @@ func testAccDataSourceFmcRangeConfig() string {
 
 func testAccNamedDataSourceFmcRangeConfig() string {
 	config := `resource "fmc_range" "test" {` + "\n"
-	config += `	name = "range1"` + "\n"
+	config += `	name = "my_range"` + "\n"
 	config += `	ip_range = "10.0.0.1-10.0.0.9"` + "\n"
 	config += `	description = "My range"` + "\n"
 	config += `	overridable = true` + "\n"

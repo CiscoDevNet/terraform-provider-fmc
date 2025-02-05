@@ -29,7 +29,7 @@ data "fmc_fqdn_object" "example" {
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `dns_resolution` (String) Type of DNS resolution.
-- `fqdn` (String) Fully qualified domain name.
+- `fqdn` (String) Fully Qualified Domain Name.
 - `overridable` (Boolean) Indicates whether object values can be overridden.

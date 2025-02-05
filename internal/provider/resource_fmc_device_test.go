@@ -74,8 +74,8 @@ func TestAccFmcDevice(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDevicePrerequisitesConfig = `
-resource "fmc_access_control_policy" "device_test" {
-  name = "test_fmc_device_1"
+resource "fmc_access_control_policy" "test" {
+  name = "fmc_device_access_control_policy"
   default_action = "BLOCK"
 }
 
@@ -90,11 +90,11 @@ variable "license_capabilities" { default = "BASE" } // tests will set $TF_VAR_l
 
 func testAccFmcDeviceConfig_minimum() string {
 	config := `resource "fmc_device" "test" {` + "\n"
-	config += `	name = "MyDeviceName1"` + "\n"
+	config += `	name = "my_device"` + "\n"
 	config += `	host_name = var.ftd_addr` + "\n"
 	config += `	license_capabilities = [var.license_capabilities]` + "\n"
 	config += `	registration_key = var.device_registration_key` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.device_test.id` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -105,13 +105,13 @@ func testAccFmcDeviceConfig_minimum() string {
 
 func testAccFmcDeviceConfig_all() string {
 	config := `resource "fmc_device" "test" {` + "\n"
-	config += `	name = "MyDeviceName1"` + "\n"
+	config += `	name = "my_device"` + "\n"
 	config += `	host_name = var.ftd_addr` + "\n"
 	config += `	license_capabilities = [var.license_capabilities]` + "\n"
 	config += `	registration_key = var.device_registration_key` + "\n"
 	config += `	performance_tier = "FTDv5"` + "\n"
 	config += `	snort_engine = "SNORT3"` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.device_test.id` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }

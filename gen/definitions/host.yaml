@@ -6,8 +6,8 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of the host object.
-    example: HOST1
+    description: Name of the host object.
+    example: my_host
     data_source_query: true
   - model_name: type
     type: String
@@ -15,7 +15,7 @@ attributes:
     computed: true
   - model_name: description
     type: String
-    description: Description of the resource.
+    description: Description of the object.
     example: My host object
   - model_name: value
     tf_name: ip

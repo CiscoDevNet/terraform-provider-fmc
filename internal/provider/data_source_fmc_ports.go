@@ -72,7 +72,7 @@ func (d *PortsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed Port.",
+							MarkdownDescription: "Id of the managed Port.",
 							Computed:            true,
 						},
 						"port": schema.StringAttribute{
@@ -84,7 +84,7 @@ func (d *PortsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Optional user-created description.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

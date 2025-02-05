@@ -78,7 +78,7 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Policy description",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
@@ -87,11 +87,11 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Identifier of the manual nat rule.",
+							MarkdownDescription: "Id of the manual nat rule.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Manual nat rule description",
+							MarkdownDescription: "Description of Manual NAT rule.",
 							Computed:            true,
 						},
 						"enabled": schema.BoolAttribute{
@@ -191,7 +191,7 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Identifier of the auto nat rule.",
+							MarkdownDescription: "Id of the Auto NAT rule.",
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{

@@ -1,5 +1,5 @@
 resource "fmc_network_group" "example" {
-  name        = "net_group_1"
+  name        = "my_network_group"
   description = "My Network Group 1"
   objects = [
     {

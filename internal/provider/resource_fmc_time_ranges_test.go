@@ -31,16 +31,16 @@ import (
 
 func TestAccFmcTimeRanges(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_time_ranges.test", "items.time_range_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_time_ranges.test", "items.time_range_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.description", "My time range object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.start_time", "2025-01-07T20:20"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.end_time", "2025-01-22T09:20"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.recurrence_list.0.recurrence_type", "RANGE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.recurrence_list.0.range_start_time", "09:00"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.recurrence_list.0.range_end_time", "17:00"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.recurrence_list.0.range_start_day", "MON"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.time_range_1.recurrence_list.0.range_end_day", "FRI"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_time_ranges.test", "items.my_time_ranges.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_time_ranges.test", "items.my_time_ranges.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.description", "My time range object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.start_time", "2025-01-07T20:20"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.end_time", "2025-01-22T09:20"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.recurrence_list.0.recurrence_type", "RANGE"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.recurrence_list.0.range_start_time", "09:00"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.recurrence_list.0.range_end_time", "17:00"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.recurrence_list.0.range_start_day", "MON"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_ranges.test", "items.my_time_ranges.recurrence_list.0.range_end_day", "FRI"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -70,7 +70,7 @@ func TestAccFmcTimeRanges(t *testing.T) {
 
 func testAccFmcTimeRangesConfig_minimum() string {
 	config := `resource "fmc_time_ranges" "test" {` + "\n"
-	config += `	items = { "time_range_1" = {` + "\n"
+	config += `	items = { "my_time_ranges" = {` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
@@ -82,7 +82,7 @@ func testAccFmcTimeRangesConfig_minimum() string {
 
 func testAccFmcTimeRangesConfig_all() string {
 	config := `resource "fmc_time_ranges" "test" {` + "\n"
-	config += `	items = { "time_range_1" = {` + "\n"
+	config += `	items = { "my_time_ranges" = {` + "\n"
 	config += `		description = "My time range object"` + "\n"
 	config += `		start_time = "2025-01-07T20:20"` + "\n"
 	config += `		end_time = "2025-01-22T09:20"` + "\n"

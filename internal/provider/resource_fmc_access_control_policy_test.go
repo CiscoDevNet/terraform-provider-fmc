@@ -32,7 +32,7 @@ import (
 
 func TestAccFmcAccessControlPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "name", "fmc_access_control_policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "name", "my_access_control_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "description", "My Access Control Policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action", "BLOCK"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_log_begin", "true"))
@@ -113,7 +113,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccFmcAccessControlPolicyConfig_minimum() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
-	config += `	name = "fmc_access_control_policy"` + "\n"
+	config += `	name = "my_access_control_policy"` + "\n"
 	config += `	default_action = "BLOCK"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -125,7 +125,7 @@ func testAccFmcAccessControlPolicyConfig_minimum() string {
 
 func testAccFmcAccessControlPolicyConfig_all() string {
 	config := `resource "fmc_access_control_policy" "test" {` + "\n"
-	config += `	name = "fmc_access_control_policy"` + "\n"
+	config += `	name = "my_access_control_policy"` + "\n"
 	config += `	description = "My Access Control Policy"` + "\n"
 	config += `	default_action = "BLOCK"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"

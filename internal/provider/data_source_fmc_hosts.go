@@ -72,11 +72,11 @@ func (d *HostsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Host.",
+							MarkdownDescription: "Id of the Host object.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Description of the resource.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

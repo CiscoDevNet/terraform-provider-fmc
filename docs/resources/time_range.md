@@ -14,7 +14,7 @@ This resource manages a Time Range.
 
 ```terraform
 resource "fmc_time_range" "example" {
-  name        = "time_range_1"
+  name        = "my_time_range"
   description = "My time range object"
   start_time  = "2025-01-07T20:20"
   end_time    = "2025-01-22T09:20"
@@ -39,7 +39,7 @@ resource "fmc_time_range" "example" {
 
 ### Optional
 
-- `description` (String) Object description
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `end_time` (String) Date and time at which the time range object stops being effective. If not specified 'never ends' is assumed.
 - `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time. (see [below for nested schema](#nestedatt--recurrence_list))

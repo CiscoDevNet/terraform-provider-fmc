@@ -1,6 +1,6 @@
 resource "fmc_security_zones" "example" {
   items = {
-    security_zone_1 = {
+    my_security_zones = {
       interface_type = "ROUTED"
     }
   }

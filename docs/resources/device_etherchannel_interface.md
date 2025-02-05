@@ -87,7 +87,7 @@ resource "fmc_device_etherchannel_interface" "example" {
 - `ipv6_dhcp` (Boolean) Enable DHCPv6 client.
 - `ipv6_dhcp_client_pd_hint_prefixes` (String) Hint Prefixes for Prefix Delegation (PD)
 - `ipv6_dhcp_client_pd_prefix_name` (String) Prefix Name for Prefix Delegation
-- `ipv6_dhcp_pool_id` (String) UUID of the assigned DHCPv6 pool
+- `ipv6_dhcp_pool_id` (String) Id of the assigned DHCPv6 pool
 - `ipv6_dhcp_pool_type` (String) Type of the object; this value is always 'IPv6AddressPool'.
 - `ipv6_enable` (Boolean) Indicates whether to enable IPv6.
 - `ipv6_enable_auto_config` (Boolean) Indicates whether to enable IPv6 autoconfiguration.

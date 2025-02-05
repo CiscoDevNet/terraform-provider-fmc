@@ -21,7 +21,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_security_zones" "example" {
   items = {
-    security_zone_1 = {
+    my_security_zones = {
       interface_type = "ROUTED"
     }
   }
@@ -53,7 +53,7 @@ Required:
 
 Read-Only:
 
-- `id` (String) UUID of the managed Security Zone.
+- `id` (String) Id of the managed Security Zone.
 - `type` (String) Type of the object; this value is always 'SecurityZone'.
 
 ## Import

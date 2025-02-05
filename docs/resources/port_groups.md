@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_port_groups" "example" {
   items = {
-    port_group_1 = {
+    my_port_groups = {
       description = "My port group description"
       objects = [
         {
@@ -59,12 +59,12 @@ Required:
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Port Groups.
+- `id` (String) Id of the managed Port Groups.
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
 <a id="nestedatt--items--objects"></a>
@@ -76,7 +76,7 @@ Required:
 
 Optional:
 
-- `id` (String) UUID of the port (such as fmc_port.test.id, etc.).
+- `id` (String) Id of the port object.
 
 ## Import
 

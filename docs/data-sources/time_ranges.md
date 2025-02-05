@@ -15,7 +15,7 @@ This data source reads the Time Ranges.
 ```terraform
 data "fmc_time_ranges" "example" {
   items = {
-    "time_range_1" = {
+    "my_time_ranges" = {
     }
   }
 }
@@ -38,9 +38,9 @@ data "fmc_time_ranges" "example" {
 
 Read-Only:
 
-- `description` (String) Object description
+- `description` (String) Description of the object.
 - `end_time` (String) Date and time at which the time range object stops being effective. If not specified 'never ends' is assumed.
-- `id` (String) UUID of the managed Time Range.
+- `id` (String) Id of the managed Time Range.
 - `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time. (see [below for nested schema](#nestedatt--items--recurrence_list))
 - `start_time` (String) Date and time at which the time range object starts being effective. If not specified 'starts now' is assumed.
 - `type` (String) Type of the object; this is always 'TimeRange'.

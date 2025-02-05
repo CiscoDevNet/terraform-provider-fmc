@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_hosts" "example" {
   items = {
-    hosts_1 = {
+    my_hosts = {
       description = "My Host 1"
       ip          = "10.1.1.1"
     }
@@ -54,12 +54,12 @@ Required:
 
 Optional:
 
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) Id of the managed Host.
+- `id` (String) Id of the Host object.
 - `type` (String) Type of the object; this value is always 'Host'.
 
 ## Import

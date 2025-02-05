@@ -1,6 +1,6 @@
 resource "fmc_network_groups" "example" {
   items = {
-    net_group_1 = {
+    my_network_groups = {
       description    = "My Network Group 1"
       network_groups = ["child_group_1"]
       objects = [

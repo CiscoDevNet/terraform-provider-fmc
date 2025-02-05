@@ -14,7 +14,7 @@ attributes:
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional description of the policy.
+    description: Description of the object.
     example: "My customized variable set"
   - model_name: type
     type: String

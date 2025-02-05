@@ -7,8 +7,8 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: The name of the SGT object.
-    example: SGT1
+    description: Name of the SGT object.
+    example: my_sgt
     data_source_query: true
   - model_name: type
     type: String
@@ -16,7 +16,7 @@ attributes:
     computed: true
   - model_name: description
     type: String
-    description: Description
+    description: Description of the object.
     example: My SGT object
   - model_name: tag
     type: String

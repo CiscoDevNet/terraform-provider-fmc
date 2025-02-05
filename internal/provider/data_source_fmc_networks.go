@@ -72,11 +72,11 @@ func (d *NetworksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed Network.",
+							MarkdownDescription: "Id of the managed Network.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Optional user-created description.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

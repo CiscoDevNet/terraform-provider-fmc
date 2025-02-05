@@ -83,12 +83,12 @@ func (r *URLsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual URL object. Renaming URL object in bulk is not yet implemented.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual URL object.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed URL object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed URL object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -99,7 +99,7 @@ func (r *URLsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 							Required:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{

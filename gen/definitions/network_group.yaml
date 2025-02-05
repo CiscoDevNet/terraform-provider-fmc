@@ -5,13 +5,13 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: Name of the managed Network Group.
-    example: net_group_1
+    description: Name of the Network Group object.
+    example: my_network_group
     mandatory: true
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the ojbect.
     example: "My Network Group 1"
   - model_name: overridable
     type: Bool

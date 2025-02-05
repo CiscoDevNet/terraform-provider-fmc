@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcPortGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_groups.test", "items.port_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_groups.test", "items.port_group_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.description", "My port group description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.objects.0.type", "ProtocolPortObject"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_groups.test", "items.my_port_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_groups.test", "items.my_port_groups.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.my_port_groups.description", "My port group description"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.my_port_groups.objects.0.type", "ProtocolPortObject"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -61,7 +61,7 @@ func TestAccFmcPortGroups(t *testing.T) {
 
 const testAccFmcPortGroupsPrerequisitesConfig = `
 resource "fmc_port" "test" {
-  name        = "port_1"
+  name        = "my_port_groups_port"
   description = "My PORT id"
   protocol    = "TCP"
   port        = "443"
@@ -74,7 +74,7 @@ resource "fmc_port" "test" {
 
 func testAccFmcPortGroupsConfig_minimum() string {
 	config := `resource "fmc_port_groups" "test" {` + "\n"
-	config += `	items = { "port_group_1" = {` + "\n"
+	config += `	items = { "my_port_groups" = {` + "\n"
 	config += `		objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `			type = "ProtocolPortObject"` + "\n"
@@ -90,7 +90,7 @@ func testAccFmcPortGroupsConfig_minimum() string {
 
 func testAccFmcPortGroupsConfig_all() string {
 	config := `resource "fmc_port_groups" "test" {` + "\n"
-	config += `	items = { "port_group_1" = {` + "\n"
+	config += `	items = { "my_port_groups" = {` + "\n"
 	config += `		description = "My port group description"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		objects = [{` + "\n"

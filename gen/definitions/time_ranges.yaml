@@ -9,13 +9,13 @@ attributes:
     type: Map
     description: >-
       Map of Time Ranges. The key of the map is the name of the individual Time Range.
-    map_key_example: time_range_1
+    map_key_example: my_time_ranges
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: UUID of the managed Time Range.
+        description: Id of the managed Time Range.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -24,7 +24,7 @@ attributes:
         computed: true
       - model_name: description
         type: String
-        description: Object description
+        description: Description of the object.
         example: My time range object
       - model_name: effectiveStartDateTime
         tf_name: start_time

@@ -14,7 +14,7 @@ This resource manages a FQDN Object.
 
 ```terraform
 resource "fmc_fqdn_object" "example" {
-  name           = "fqdn_1"
+  name           = "my_fqdn_object"
   fqdn           = "www.example.com"
   dns_resolution = "IPV4_AND_IPV6"
   description    = "My FQDN Object"
@@ -26,12 +26,12 @@ resource "fmc_fqdn_object" "example" {
 
 ### Required
 
-- `fqdn` (String) Fully qualified domain name.
+- `fqdn` (String) Fully Qualified Domain Name.
 - `name` (String) Name of the FQDN object.
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `dns_resolution` (String) Type of DNS resolution.
   - Choices: `IPV4_ONLY`, `IPV6_ONLY`, `IPV4_AND_IPV6`
   - Default value: `IPV4_AND_IPV6`

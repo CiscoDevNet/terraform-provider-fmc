@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcStandardACL(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_standard_acl.test", "name", "stdacl1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_standard_acl.test", "name", "my_standard_acl"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_standard_acl.test", "description", "My standard ACL"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_standard_acl.test", "entries.0.action", "DENY"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_standard_acl.test", "entries.0.literals.0.value", "10.1.1.0/24"))
@@ -68,7 +68,7 @@ func TestAccFmcStandardACL(t *testing.T) {
 
 func testAccFmcStandardACLConfig_minimum() string {
 	config := `resource "fmc_standard_acl" "test" {` + "\n"
-	config += `	name = "stdacl1"` + "\n"
+	config += `	name = "my_standard_acl"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "PERMIT"` + "\n"
 	config += `		literals = [{` + "\n"
@@ -85,7 +85,7 @@ func testAccFmcStandardACLConfig_minimum() string {
 
 func testAccFmcStandardACLConfig_all() string {
 	config := `resource "fmc_standard_acl" "test" {` + "\n"
-	config += `	name = "stdacl1"` + "\n"
+	config += `	name = "my_standard_acl"` + "\n"
 	config += `	description = "My standard ACL"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "DENY"` + "\n"

@@ -1,6 +1,6 @@
 resource "fmc_hosts" "example" {
   items = {
-    hosts_1 = {
+    my_hosts = {
       description = "My Host 1"
       ip          = "10.1.1.1"
     }

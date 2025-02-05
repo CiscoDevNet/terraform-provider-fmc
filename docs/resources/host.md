@@ -14,7 +14,7 @@ This resource manages a Host.
 
 ```terraform
 resource "fmc_host" "example" {
-  name        = "HOST1"
+  name        = "my_host"
   description = "My host object"
   ip          = "10.1.1.1"
   overridable = true
@@ -27,11 +27,11 @@ resource "fmc_host" "example" {
 ### Required
 
 - `ip` (String) IP of the host.
-- `name` (String) The name of the host object.
+- `name` (String) Name of the host object.
 
 ### Optional
 
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Whether the object values can be overridden.
 

@@ -72,7 +72,7 @@ func (d *SecurityZonesDataSource) Schema(ctx context.Context, req datasource.Sch
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed Security Zone.",
+							MarkdownDescription: "Id of the managed Security Zone.",
 							Computed:            true,
 						},
 						"interface_type": schema.StringAttribute{

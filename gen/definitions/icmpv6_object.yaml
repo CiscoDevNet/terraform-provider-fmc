@@ -19,13 +19,13 @@ attributes:
     example: "3"
   - model_name: name
     type: String
-    description: Name of the resource.
+    description: Name of the object.
     mandatory: true
-    example: icmpv6_addr_unreachable
+    example: my_icmpv6_object
     data_source_query: true
   - model_name: description
     type: String
-    description: Description of the resource.
+    description: Description of the object.
     example: "ICMPv6 address unreachable response, type 1, code 3"
   - model_name: overridable
     type: Bool

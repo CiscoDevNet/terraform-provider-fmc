@@ -30,10 +30,10 @@ import (
 
 func TestAccDataSourceFmcSGTs(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_sgts.test", "items.sgt_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_sgts.test", "items.sgt_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_sgts.test", "items.sgt_1.description", "My SGT object"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_sgts.test", "items.sgt_1.tag", "11"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_sgts.test", "items.my_sgts.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_sgts.test", "items.my_sgts.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_sgts.test", "items.my_sgts.description", "My SGT object"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_sgts.test", "items.my_sgts.tag", "11"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -56,7 +56,7 @@ func TestAccDataSourceFmcSGTs(t *testing.T) {
 
 func testAccDataSourceFmcSGTsConfig() string {
 	config := `resource "fmc_sgts" "test" {` + "\n"
-	config += `	items = { "sgt_1" = {` + "\n"
+	config += `	items = { "my_sgts" = {` + "\n"
 	config += `		description = "My SGT object"` + "\n"
 	config += `		tag = "11"` + "\n"
 	config += `	}}` + "\n"
@@ -66,7 +66,7 @@ func testAccDataSourceFmcSGTsConfig() string {
 		data "fmc_sgts" "test" {
 			depends_on = [fmc_sgts.test]
 			items = {
-				"sgt_1" = {
+				"my_sgts" = {
 				}
 			}
 		}

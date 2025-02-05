@@ -72,7 +72,7 @@ func (d *TunnelZoneDataSource) Schema(ctx context.Context, req datasource.Schema
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "The name of the Tunnel Zone object.",
+				MarkdownDescription: "Name of the Tunnel Zone object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *TunnelZoneDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 		},

@@ -20,7 +20,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_standard_acl" "example" {
-  name        = "stdacl1"
+  name        = "my_standard_acl"
   description = "My standard ACL"
   entries = [
     {
@@ -49,7 +49,7 @@ resource "fmc_standard_acl" "example" {
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only
@@ -67,7 +67,7 @@ Required:
 Optional:
 
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--entries--literals))
-- `objects` (Attributes Set) Set of objects (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--entries--objects))
+- `objects` (Attributes Set) Set of objects (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--objects))
 
 <a id="nestedatt--entries--literals"></a>
 ### Nested Schema for `entries.literals`
@@ -82,7 +82,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.this.id, etc.).
+- `id` (String) Id of the object.
 - `type` (String) Type of the object (such as fmc_network.this.type, etc.).
 
 ## Import

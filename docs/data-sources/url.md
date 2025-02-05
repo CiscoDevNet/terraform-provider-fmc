@@ -29,6 +29,6 @@ data "fmc_url" "example" {
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `url` (String) URL value.

@@ -1,4 +1,4 @@
 resource "fmc_tunnel_zone" "example" {
-  name        = "TunnelZone1"
+  name        = "my_tunnel_zone"
   description = "My Tunnel Zone object"
 }

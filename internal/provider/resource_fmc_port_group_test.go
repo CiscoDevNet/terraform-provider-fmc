@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcPortGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "name", "portgroup_obj1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "name", "my_port_group"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_port_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "description", "My port group description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_group.test", "objects.0.type", "ProtocolPortObject"))
@@ -65,7 +65,7 @@ func TestAccFmcPortGroup(t *testing.T) {
 
 const testAccFmcPortGroupPrerequisitesConfig = `
 resource "fmc_port" "test" {
-  name        = "port_1"
+  name        = "fmc_port_group_port"
   description = "My PORT id"
   protocol    = "TCP"
   port        = "443"
@@ -78,7 +78,7 @@ resource "fmc_port" "test" {
 
 func testAccFmcPortGroupConfig_minimum() string {
 	config := `resource "fmc_port_group" "test" {` + "\n"
-	config += `	name = "portgroup_obj1"` + "\n"
+	config += `	name = "my_port_group"` + "\n"
 	config += `	objects = [{` + "\n"
 	config += `		id = fmc_port.test.id` + "\n"
 	config += `		type = "ProtocolPortObject"` + "\n"
@@ -93,7 +93,7 @@ func testAccFmcPortGroupConfig_minimum() string {
 
 func testAccFmcPortGroupConfig_all() string {
 	config := `resource "fmc_port_group" "test" {` + "\n"
-	config += `	name = "portgroup_obj1"` + "\n"
+	config += `	name = "my_port_group"` + "\n"
 	config += `	description = "My port group description"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	objects = [{` + "\n"

@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcExtendedACL(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_acl.test", "name", "extended_acl_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_acl.test", "name", "my_extended_acl"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_acl.test", "description", "My Extended Access Control List"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_acl.test", "entries.0.action", "DENY"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_acl.test", "entries.0.log_level", "WARNING"))
@@ -96,7 +96,7 @@ resource "fmc_sgt" "test" {
 
 func testAccDataSourceFmcExtendedACLConfig() string {
 	config := `resource "fmc_extended_acl" "test" {` + "\n"
-	config += `	name = "extended_acl_1"` + "\n"
+	config += `	name = "my_extended_acl"` + "\n"
 	config += `	description = "My Extended Access Control List"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "DENY"` + "\n"
@@ -149,7 +149,7 @@ func testAccDataSourceFmcExtendedACLConfig() string {
 
 func testAccNamedDataSourceFmcExtendedACLConfig() string {
 	config := `resource "fmc_extended_acl" "test" {` + "\n"
-	config += `	name = "extended_acl_1"` + "\n"
+	config += `	name = "my_extended_acl"` + "\n"
 	config += `	description = "My Extended Access Control List"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "DENY"` + "\n"

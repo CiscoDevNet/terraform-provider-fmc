@@ -72,7 +72,7 @@ func (d *SNMPAlertsDataSource) Schema(ctx context.Context, req datasource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed SNMP Alert.",
+							MarkdownDescription: "Id of the managed SNMP Alert.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

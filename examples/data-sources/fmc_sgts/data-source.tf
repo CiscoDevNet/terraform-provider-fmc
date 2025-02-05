@@ -1,6 +1,6 @@
 data "fmc_sgts" "example" {
   items = {
-    "sgt_1" = {
+    "my_sgts" = {
     }
   }
 }

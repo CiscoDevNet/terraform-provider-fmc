@@ -5,21 +5,19 @@ doc_category: Policy
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the policy. Names for built-in policies are, for example, 'Balanced Security and Connectivity'
-      or 'Security Over Connectivity'.
+    description: Name of the policy.
     mandatory: true
-    example: fmc_intrusion_policy
+    example: my_intrusion_policy
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional description of the policy.
+    description: Description of the policy.
     example: "My IPS Policy"
   - model_name: id
     data_path: [basePolicy]
     tf_name: base_policy_id
     type: String
-    description: UUID of the base policy (such as data.fmc_intrusion_policy.example.id).
+    description: Id of the base policy.
     mandatory: true
     test_value: data.fmc_intrusion_policy.builtin.id
   - model_name: inspectionMode

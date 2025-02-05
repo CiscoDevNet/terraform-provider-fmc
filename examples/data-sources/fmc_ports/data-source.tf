@@ -1,6 +1,6 @@
 data "fmc_ports" "example" {
   items = {
-    "ports_1" = {
+    "my_ports" = {
     }
   }
 }

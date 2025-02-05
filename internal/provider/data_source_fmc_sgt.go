@@ -72,7 +72,7 @@ func (d *SGTDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "The name of the SGT object.",
+				MarkdownDescription: "Name of the SGT object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *SGTDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"tag": schema.StringAttribute{

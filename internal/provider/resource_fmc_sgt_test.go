@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcSGT(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgt.test", "name", "SGT1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgt.test", "name", "my_sgt"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_sgt.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgt.test", "description", "My SGT object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sgt.test", "tag", "11"))
@@ -68,7 +68,7 @@ func TestAccFmcSGT(t *testing.T) {
 
 func testAccFmcSGTConfig_minimum() string {
 	config := `resource "fmc_sgt" "test" {` + "\n"
-	config += `	name = "SGT1"` + "\n"
+	config += `	name = "my_sgt"` + "\n"
 	config += `	tag = "11"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -80,7 +80,7 @@ func testAccFmcSGTConfig_minimum() string {
 
 func testAccFmcSGTConfig_all() string {
 	config := `resource "fmc_sgt" "test" {` + "\n"
-	config += `	name = "SGT1"` + "\n"
+	config += `	name = "my_sgt"` + "\n"
 	config += `	description = "My SGT object"` + "\n"
 	config += `	tag = "11"` + "\n"
 	config += `}` + "\n"

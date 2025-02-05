@@ -7,12 +7,12 @@ attributes:
     type: String
     description: Name of the FQDN object.
     mandatory: true
-    example: fqdn_1
+    example: my_fqdn_object
     data_source_query: true
   - model_name: value
     tf_name: fqdn
     type: String
-    description: Fully qualified domain name.
+    description: Fully Qualified Domain Name.
     mandatory: true
     example: www.example.com
   - model_name: dnsResolution
@@ -23,7 +23,7 @@ attributes:
     example: IPV4_AND_IPV6
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My FQDN Object"
   - model_name: overridable
     type: Bool

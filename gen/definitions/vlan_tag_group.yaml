@@ -5,13 +5,13 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: User-created name of the object.
+    description: Name of the VLAN Tag Group object.
     mandatory: true
-    example: fmc_vlan_tag_group
+    example: my_vlan_tag_group
     data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My VLAN Tag Group"
   - model_name: type
     type: String
@@ -25,15 +25,17 @@ attributes:
     tf_name: vlan_tags
     type: Set
     mandatory: true
+    description: Set of VLAN Tag objects to be included in the VLAN Tag Group.
     attributes:
       - model_name: id
         type: String
-        description: UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).
+        description: Id of the vlan_tag.
         id: true
         example: 0050568A-4E02-1ed3-0000-004294969198
         test_value: fmc_vlan_tag.test.id
   - model_name: literals
     type: Set
+    description: Set of literal values to be included in the VLAN Tag Group.
     attributes:
       - model_name: startTag
         type: String

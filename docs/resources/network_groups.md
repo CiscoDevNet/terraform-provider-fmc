@@ -15,7 +15,7 @@ This resource manages a Network Groups.
 ```terraform
 resource "fmc_network_groups" "example" {
   items = {
-    net_group_1 = {
+    my_network_groups = {
       description    = "My Network Group 1"
       network_groups = ["child_group_1"]
       objects = [
@@ -49,22 +49,22 @@ resource "fmc_network_groups" "example" {
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--items--literals))
-- `network_groups` (Set of String) Set of names (not UUIDs) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its UUID. Renaming a group contained in `network_groups` is not yet implemented, while it works in `objects`.
-- `objects` (Attributes Set) Set of objects (fmc_network, fmc_host, ...). (see [below for nested schema](#nestedatt--items--objects))
+- `network_groups` (Set of String) Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.
+- `objects` (Attributes Set) Set of network objects (Hosts, Networs, Ranges or FQDNs). (see [below for nested schema](#nestedatt--items--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Network Group.
+- `id` (String) Id of the managed Network Group.
 
 <a id="nestedatt--items--literals"></a>
 ### Nested Schema for `items.literals`
 
 Optional:
 
-- `value` (String)
+- `value` (String) IP address or network in CIDR format.
 
 
 <a id="nestedatt--items--objects"></a>
@@ -72,7 +72,7 @@ Optional:
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_network.example.id, fmc_host.example.id, fmc_network_groups.another.items["example"].id, etc.).
+- `id` (String) Id of the network object.
 
 ## Import
 

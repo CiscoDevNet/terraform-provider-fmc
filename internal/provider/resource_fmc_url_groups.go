@@ -88,14 +88,14 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed URL Groups.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed URL Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -103,19 +103,19 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 							Optional:            true,
 						},
 						"urls": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of URL objects to be included in the URL group.").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_url.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object (such as fmc_url.example.id, etc.).").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"literals": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of literal values to be included in the URL group.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

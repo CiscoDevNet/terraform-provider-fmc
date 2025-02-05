@@ -32,9 +32,9 @@ import (
 
 func TestAccFmcNetworkGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_network_groups.test", "items.net_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_groups.test", "items.net_group_1.description", "My Network Group 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_groups.test", "items.net_group_1.literals.0.value", "10.1.1.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_network_groups.test", "items.my_network_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_groups.test", "items.my_network_groups.description", "My Network Group 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_groups.test", "items.my_network_groups.literals.0.value", "10.1.1.0/24"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -82,7 +82,7 @@ func testAccFmcNetworkGroupsConfig_minimum() string {
 
 func testAccFmcNetworkGroupsConfig_all() string {
 	config := `resource "fmc_network_groups" "test" {` + "\n"
-	config += `	items = { "net_group_1" = {` + "\n"
+	config += `	items = { "my_network_groups" = {` + "\n"
 	config += `		description = "My Network Group 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		objects = [{` + "\n"

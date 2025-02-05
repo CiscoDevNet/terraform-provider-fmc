@@ -19,7 +19,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_bfd_template" "example" {
-  name                               = "fmc_bfd_template"
+  name                               = "my_bfd_template"
   hop_type                           = "SINGLE_HOP"
   echo                               = "ENABLED"
   interval_time                      = "MILLISECONDS"

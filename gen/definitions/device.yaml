@@ -10,7 +10,7 @@ attributes:
     mandatory: true
     description: User-specified name, must be unique.
     data_source_query: true
-    example: MyDeviceName1
+    example: my_device
   # type is set twice on purpose - to make sure this is part of POST request and to make it computed field
   - model_name: type
     type: String
@@ -54,7 +54,7 @@ attributes:
     tf_name: device_group_id
     data_path: [ deviceGroup ]
     type: String
-    description: ID of the device group.
+    description: Id of the device group.
     exclude_example: true
     exclude_test: true
   - model_name: prohibitPacketTransfer
@@ -85,20 +85,20 @@ attributes:
     type: String
     mandatory: true
     data_path: [ accessPolicy ]
-    description: The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.
+    description: Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_access_control_policy.device_test.id
+    test_value: fmc_access_control_policy.test.id
   - model_name: dummy_nat_policy_id
     tf_name: nat_policy_id
     type: String
-    description: The UUID of the assigned NAT policy.
+    description: Id of the assigned FTD NAT policy.
     exclude_example: true
     exclude_test: true
   - model_name: id
     data_path: [ healthPolicy ]
     tf_name: health_policy_id
     type: String
-    description: The UUID of the assigned Health policy.
+    description: Id of the assigned Health policy.
     exclude_example: true
     exclude_test: true
 # Computed - informational only
@@ -182,8 +182,8 @@ attributes:
     computed_refresh_value: true
 
 test_prerequisites: |-
-  resource "fmc_access_control_policy" "device_test" {
-    name = "test_fmc_device_1"
+  resource "fmc_access_control_policy" "test" {
+    name = "fmc_device_access_control_policy"
     default_action = "BLOCK"
   }
 

@@ -124,7 +124,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Required:            true,
 			},
 			"device_group_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the device group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the device group.").String,
 				Optional:            true,
 			},
 			"prohibit_packet_transfer": schema.BoolAttribute{
@@ -150,15 +150,15 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The UUID of the assigned access control policy. For example `fmc_access_control_policy.example.id`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.").String,
 				Required:            true,
 			},
 			"nat_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The UUID of the assigned NAT policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned FTD NAT policy.").String,
 				Optional:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The UUID of the assigned Health policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy.").String,
 				Optional:            true,
 			},
 			"info_version": schema.StringAttribute{

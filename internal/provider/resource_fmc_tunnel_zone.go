@@ -78,7 +78,7 @@ func (r *TunnelZoneResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The name of the Tunnel Zone object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Tunnel Zone object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -89,7 +89,7 @@ func (r *TunnelZoneResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 		},

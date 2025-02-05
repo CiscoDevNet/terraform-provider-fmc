@@ -83,19 +83,19 @@ func (r *VLANTagsResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual VLAN tag object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual VLAN Tag object.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Vlan tag object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed VLAN Tag object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -110,11 +110,11 @@ func (r *VLANTagsResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"start_tag": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("VLAN Tag starting value.").String,
 							Required:            true,
 						},
 						"end_tag": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("VLAN Tag end value.").String,
 							Required:            true,
 						},
 					},

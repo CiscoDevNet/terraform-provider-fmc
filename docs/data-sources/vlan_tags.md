@@ -15,7 +15,7 @@ This data source reads the VLAN Tags.
 ```terraform
 data "fmc_vlan_tags" "example" {
   items = {
-    "fmc_vlan_tags" = {
+    "my_vlan_tags" = {
     }
   }
 }
@@ -27,7 +27,7 @@ data "fmc_vlan_tags" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN tag object. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN Tag object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -38,9 +38,9 @@ data "fmc_vlan_tags" "example" {
 
 Read-Only:
 
-- `description` (String) Optional user-created description.
-- `end_tag` (String)
-- `id` (String) UUID of the managed Vlan tag object.
+- `description` (String) Description of the object.
+- `end_tag` (String) VLAN Tag end value.
+- `id` (String) Id of the managed VLAN Tag object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `start_tag` (String)
+- `start_tag` (String) VLAN Tag starting value.
 - `type` (String) Type of the object; this value is always 'VlanTag'

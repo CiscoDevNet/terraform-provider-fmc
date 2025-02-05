@@ -80,7 +80,7 @@ func (r *InterfaceGroupResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-created name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
 				Required:            true,
 			},
 			"interface_mode": schema.StringAttribute{
@@ -96,7 +96,7 @@ func (r *InterfaceGroupResource) Schema(ctx context.Context, req resource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the interface (such as fmc_device_physical_interface.example.id, etc.).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
 							Optional:            true,
 						},
 					},

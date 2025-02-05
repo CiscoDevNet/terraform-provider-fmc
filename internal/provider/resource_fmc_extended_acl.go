@@ -159,24 +159,24 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"source_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (fmc_network, fmc_host, ...).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_network.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"source_sgt_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of SGT that represent tag of source traffic (fmc_sgts).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of SGT that represent tag of source traffic.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the object (such as fmc_sgts.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},

@@ -1,5 +1,5 @@
 resource "fmc_extended_acl" "example" {
-  name        = "extended_acl_1"
+  name        = "my_extended_acl"
   description = "My Extended Access Control List"
   entries = [
     {

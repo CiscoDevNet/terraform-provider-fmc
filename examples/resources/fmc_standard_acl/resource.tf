@@ -1,5 +1,5 @@
 resource "fmc_standard_acl" "example" {
-  name        = "stdacl1"
+  name        = "my_standard_acl"
   description = "My standard ACL"
   entries = [
     {

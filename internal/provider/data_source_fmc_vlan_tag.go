@@ -77,7 +77,7 @@ func (d *VLANTagDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
@@ -89,11 +89,11 @@ func (d *VLANTagDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed:            true,
 			},
 			"start_tag": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "VLAN Tag starting value.",
 				Computed:            true,
 			},
 			"end_tag": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "VLAN Tag end value.",
 				Computed:            true,
 			},
 		},

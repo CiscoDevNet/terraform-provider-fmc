@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcNetworkAnalysisPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_analysis_policy.test", "name", "net_analysis_policy_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_analysis_policy.test", "name", "my_network_analysis_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_analysis_policy.test", "description", "My network analysis policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_analysis_policy.test", "inspection_mode", "PREVENTION"))
 	resource.Test(t, resource.TestCase{
@@ -66,7 +66,7 @@ data "fmc_network_analysis_policy" "builtin" {
 
 func testAccDataSourceFmcNetworkAnalysisPolicyConfig() string {
 	config := `resource "fmc_network_analysis_policy" "test" {` + "\n"
-	config += `	name = "net_analysis_policy_1"` + "\n"
+	config += `	name = "my_network_analysis_policy"` + "\n"
 	config += `	description = "My network analysis policy"` + "\n"
 	config += `	base_policy_id = data.fmc_network_analysis_policy.builtin.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"
@@ -82,7 +82,7 @@ func testAccDataSourceFmcNetworkAnalysisPolicyConfig() string {
 
 func testAccNamedDataSourceFmcNetworkAnalysisPolicyConfig() string {
 	config := `resource "fmc_network_analysis_policy" "test" {` + "\n"
-	config += `	name = "net_analysis_policy_1"` + "\n"
+	config += `	name = "my_network_analysis_policy"` + "\n"
 	config += `	description = "My network analysis policy"` + "\n"
 	config += `	base_policy_id = data.fmc_network_analysis_policy.builtin.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"

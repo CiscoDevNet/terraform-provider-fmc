@@ -29,7 +29,7 @@ data "fmc_port" "example" {
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `port` (String) Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
 - `protocol` (String) IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).

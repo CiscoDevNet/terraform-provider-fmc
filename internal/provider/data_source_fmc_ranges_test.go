@@ -30,11 +30,11 @@ import (
 
 func TestAccDataSourceFmcRanges(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ranges.test", "items.ranges_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.description", "My Range 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.ranges_1.ip_range", "10.0.0.1-10.0.0.9"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ranges.test", "items.ranges_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ranges.test", "items.my_ranges.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.my_ranges.description", "My Range 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.my_ranges.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ranges.test", "items.my_ranges.ip_range", "10.0.0.1-10.0.0.9"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ranges.test", "items.my_ranges.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -57,7 +57,7 @@ func TestAccDataSourceFmcRanges(t *testing.T) {
 
 func testAccDataSourceFmcRangesConfig() string {
 	config := `resource "fmc_ranges" "test" {` + "\n"
-	config += `	items = { "ranges_1" = {` + "\n"
+	config += `	items = { "my_ranges" = {` + "\n"
 	config += `		description = "My Range 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"
@@ -68,7 +68,7 @@ func testAccDataSourceFmcRangesConfig() string {
 		data "fmc_ranges" "test" {
 			depends_on = [fmc_ranges.test]
 			items = {
-				"ranges_1" = {
+				"my_ranges" = {
 				}
 			}
 		}

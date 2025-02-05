@@ -30,9 +30,9 @@ import (
 
 func TestAccDataSourceFmcSecurityZones(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.security_zone_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zones.test", "items.security_zone_1.interface_type", "ROUTED"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.security_zone_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.my_security_zones.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zones.test", "items.my_security_zones.interface_type", "ROUTED"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zones.test", "items.my_security_zones.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -55,7 +55,7 @@ func TestAccDataSourceFmcSecurityZones(t *testing.T) {
 
 func testAccDataSourceFmcSecurityZonesConfig() string {
 	config := `resource "fmc_security_zones" "test" {` + "\n"
-	config += `	items = { "security_zone_1" = {` + "\n"
+	config += `	items = { "my_security_zones" = {` + "\n"
 	config += `		interface_type = "ROUTED"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -64,7 +64,7 @@ func testAccDataSourceFmcSecurityZonesConfig() string {
 		data "fmc_security_zones" "test" {
 			depends_on = [fmc_security_zones.test]
 			items = {
-				"security_zone_1" = {
+				"my_security_zones" = {
 				}
 			}
 		}

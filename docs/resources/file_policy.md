@@ -3,14 +3,14 @@
 page_title: "fmc_file_policy Resource - terraform-provider-fmc"
 subcategory: "Policy"
 description: |-
-  This resource manages a File Policy.
+  This resource manages File Policy with corresponding rules.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4
 ---
 
 # fmc_file_policy (Resource)
 
-This resource manages a File Policy.
+This resource manages File Policy with corresponding rules.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
@@ -20,7 +20,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_file_policy" "example" {
-  name                         = "fmc_file_policy"
+  name                         = "my_file_policy"
   description                  = "My file policy"
   first_time_file_analysis     = true
   custom_detection_list        = true

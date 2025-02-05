@@ -32,7 +32,7 @@ func TestAccDataSourceFmcICMPv6Object(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv6_object.test", "icmp_type", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv6_object.test", "code", "3"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv6_object.test", "name", "icmpv6_addr_unreachable"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv6_object.test", "name", "my_icmpv6_object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_icmpv6_object.test", "description", "ICMPv6 address unreachable response, type 1, code 3"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -62,7 +62,7 @@ func testAccDataSourceFmcICMPv6ObjectConfig() string {
 	config := `resource "fmc_icmpv6_object" "test" {` + "\n"
 	config += `	icmp_type = 1` + "\n"
 	config += `	code = 3` + "\n"
-	config += `	name = "icmpv6_addr_unreachable"` + "\n"
+	config += `	name = "my_icmpv6_object"` + "\n"
 	config += `	description = "ICMPv6 address unreachable response, type 1, code 3"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
@@ -79,7 +79,7 @@ func testAccNamedDataSourceFmcICMPv6ObjectConfig() string {
 	config := `resource "fmc_icmpv6_object" "test" {` + "\n"
 	config += `	icmp_type = 1` + "\n"
 	config += `	code = 3` + "\n"
-	config += `	name = "icmpv6_addr_unreachable"` + "\n"
+	config += `	name = "my_icmpv6_object"` + "\n"
 	config += `	description = "ICMPv6 address unreachable response, type 1, code 3"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"

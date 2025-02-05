@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcTimeRange(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_range.test", "name", "time_range_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_range.test", "name", "my_time_range"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_time_range.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_range.test", "description", "My time range object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_time_range.test", "start_time", "2025-01-07T20:20"))
@@ -74,7 +74,7 @@ func TestAccFmcTimeRange(t *testing.T) {
 
 func testAccFmcTimeRangeConfig_minimum() string {
 	config := `resource "fmc_time_range" "test" {` + "\n"
-	config += `	name = "time_range_1"` + "\n"
+	config += `	name = "my_time_range"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -85,7 +85,7 @@ func testAccFmcTimeRangeConfig_minimum() string {
 
 func testAccFmcTimeRangeConfig_all() string {
 	config := `resource "fmc_time_range" "test" {` + "\n"
-	config += `	name = "time_range_1"` + "\n"
+	config += `	name = "my_time_range"` + "\n"
 	config += `	description = "My time range object"` + "\n"
 	config += `	start_time = "2025-01-07T20:20"` + "\n"
 	config += `	end_time = "2025-01-22T09:20"` + "\n"

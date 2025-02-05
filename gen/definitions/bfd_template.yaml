@@ -8,7 +8,7 @@ attributes:
     type: String
     mandatory: true
     description: Name of the BFD Template object.
-    example: fmc_bfd_template
+    example: my_bfd_template
     data_source_query: true
   # Type is mentioned twice on purpose. We want this field as readable, but also as readonly attribute
   - model_name: type

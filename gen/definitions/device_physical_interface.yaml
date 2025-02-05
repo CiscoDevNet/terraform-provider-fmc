@@ -57,7 +57,7 @@ attributes:
     tf_name: security_zone_id
     type: String
     description: >-
-      UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name
+      Id of the assigned security zone. Can only be used when logical_name
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
@@ -348,7 +348,7 @@ attributes:
   - model_name: id
     data_path: [ipv6,ipv6DHCPPool]
     tf_name: ipv6_dhcp_pool_id
-    description: UUID of the assigned DHCPv6 pool
+    description: Id of the assigned DHCPv6 pool
     type: String
     exclude_example: true
     exclude_test: true

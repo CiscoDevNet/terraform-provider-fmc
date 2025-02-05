@@ -21,7 +21,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_time_ranges" "example" {
   items = {
-    time_range_1 = {
+    my_time_ranges = {
       description = "My time range object"
       start_time  = "2025-01-07T20:20"
       end_time    = "2025-01-22T09:20"
@@ -59,14 +59,14 @@ resource "fmc_time_ranges" "example" {
 
 Optional:
 
-- `description` (String) Object description
+- `description` (String) Description of the object.
 - `end_time` (String) Date and time at which the time range object stops being effective. If not specified 'never ends' is assumed.
 - `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time. (see [below for nested schema](#nestedatt--items--recurrence_list))
 - `start_time` (String) Date and time at which the time range object starts being effective. If not specified 'starts now' is assumed.
 
 Read-Only:
 
-- `id` (String) UUID of the managed Time Range.
+- `id` (String) Id of the managed Time Range.
 - `type` (String) Type of the object; this is always 'TimeRange'.
 
 <a id="nestedatt--items--recurrence_list"></a>

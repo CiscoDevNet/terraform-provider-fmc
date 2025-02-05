@@ -25,14 +25,14 @@ data "fmc_url_group" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User-created name of the object.
+- `name` (String) Name of the object.
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
-- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
+- `description` (String) Description of the object.
+- `literals` (Attributes Set) Set of literal values to be included in the URL group. (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
-- `urls` (Attributes Set) (see [below for nested schema](#nestedatt--urls))
+- `urls` (Attributes Set) Set of URL objects to be included in the URL group. (see [below for nested schema](#nestedatt--urls))
 
 <a id="nestedatt--literals"></a>
 ### Nested Schema for `literals`
@@ -47,4 +47,4 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) UUID of the object (such as fmc_url.example.id, etc.).
+- `id` (String) Id of the object.

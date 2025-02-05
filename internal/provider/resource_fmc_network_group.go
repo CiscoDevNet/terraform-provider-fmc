@@ -78,11 +78,11 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the managed Network Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Network Group object.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the ojbect.").String,
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{

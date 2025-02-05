@@ -1,6 +1,6 @@
 resource "fmc_time_ranges" "example" {
   items = {
-    time_range_1 = {
+    my_time_ranges = {
       description = "My time range object"
       start_time  = "2025-01-07T20:20"
       end_time    = "2025-01-22T09:20"

@@ -15,7 +15,7 @@ This resource manages a Port.
 ```terraform
 resource "fmc_port" "example" {
   port        = "443"
-  name        = "tcp443"
+  name        = "my_port"
   protocol    = "TCP"
   description = "Port TCP/443 (HTTPS)"
 }
@@ -31,7 +31,7 @@ resource "fmc_port" "example" {
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `port` (String) Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.

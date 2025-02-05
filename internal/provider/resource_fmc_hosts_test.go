@@ -31,11 +31,11 @@ import (
 
 func TestAccFmcHosts(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.description", "My Host 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.hosts_1.ip", "10.1.1.1"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.hosts_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.my_hosts.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.my_hosts.description", "My Host 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.my_hosts.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_hosts.test", "items.my_hosts.ip", "10.1.1.1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_hosts.test", "items.my_hosts.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -65,7 +65,7 @@ func TestAccFmcHosts(t *testing.T) {
 
 func testAccFmcHostsConfig_minimum() string {
 	config := `resource "fmc_hosts" "test" {` + "\n"
-	config += `	items = { "hosts_1" = {` + "\n"
+	config += `	items = { "my_hosts" = {` + "\n"
 	config += `		ip = "10.1.1.1"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -78,7 +78,7 @@ func testAccFmcHostsConfig_minimum() string {
 
 func testAccFmcHostsConfig_all() string {
 	config := `resource "fmc_hosts" "test" {` + "\n"
-	config += `	items = { "hosts_1" = {` + "\n"
+	config += `	items = { "my_hosts" = {` + "\n"
 	config += `		description = "My Host 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		ip = "10.1.1.1"` + "\n"

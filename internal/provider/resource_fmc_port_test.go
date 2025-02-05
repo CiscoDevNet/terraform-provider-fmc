@@ -32,7 +32,7 @@ import (
 func TestAccFmcPort(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port.test", "port", "443"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port.test", "name", "tcp443"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port.test", "name", "my_port"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port.test", "protocol", "TCP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_port.test", "description", "Port TCP/443 (HTTPS)"))
 
@@ -68,7 +68,7 @@ func TestAccFmcPort(t *testing.T) {
 
 func testAccFmcPortConfig_minimum() string {
 	config := `resource "fmc_port" "test" {` + "\n"
-	config += `	name = "tcp443"` + "\n"
+	config += `	name = "my_port"` + "\n"
 	config += `	protocol = "TCP"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -81,7 +81,7 @@ func testAccFmcPortConfig_minimum() string {
 func testAccFmcPortConfig_all() string {
 	config := `resource "fmc_port" "test" {` + "\n"
 	config += `	port = "443"` + "\n"
-	config += `	name = "tcp443"` + "\n"
+	config += `	name = "my_port"` + "\n"
 	config += `	protocol = "TCP"` + "\n"
 	config += `	description = "Port TCP/443 (HTTPS)"` + "\n"
 	config += `	overridable = true` + "\n"

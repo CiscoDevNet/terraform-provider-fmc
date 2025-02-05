@@ -30,12 +30,12 @@ import (
 
 func TestAccDataSourceFmcPortGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port_groups.test", "items.port_group_1.description", "My port group description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.port_group_1.objects.0.type", "ProtocolPortObject"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.port_group_1.objects.0.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port_groups.test", "items.port_group_1.objects.0.type", "ProtocolPortObject"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.my_port_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.my_port_groups.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port_groups.test", "items.my_port_groups.description", "My port group description"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_port_groups.test", "items.my_port_groups.objects.0.type", "ProtocolPortObject"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_port_groups.test", "items.my_port_groups.objects.0.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_port_groups.test", "items.my_port_groups.objects.0.type", "ProtocolPortObject"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -55,7 +55,7 @@ func TestAccDataSourceFmcPortGroups(t *testing.T) {
 
 const testAccDataSourceFmcPortGroupsPrerequisitesConfig = `
 resource "fmc_port" "test" {
-  name        = "port_1"
+  name        = "my_port_groups_port"
   description = "My PORT id"
   protocol    = "TCP"
   port        = "443"
@@ -68,7 +68,7 @@ resource "fmc_port" "test" {
 
 func testAccDataSourceFmcPortGroupsConfig() string {
 	config := `resource "fmc_port_groups" "test" {` + "\n"
-	config += `	items = { "port_group_1" = {` + "\n"
+	config += `	items = { "my_port_groups" = {` + "\n"
 	config += `		description = "My port group description"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		objects = [{` + "\n"
@@ -82,7 +82,7 @@ func testAccDataSourceFmcPortGroupsConfig() string {
 		data "fmc_port_groups" "test" {
 			depends_on = [fmc_port_groups.test]
 			items = {
-				"port_group_1" = {
+				"my_port_groups" = {
 				}
 			}
 		}

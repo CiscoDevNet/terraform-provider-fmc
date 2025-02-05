@@ -14,7 +14,7 @@ This resource manages an URL Group.
 
 ```terraform
 resource "fmc_url_group" "example" {
-  name        = "url_group_1"
+  name        = "my_url_group"
   description = "My URL group"
   urls = [
     {
@@ -34,14 +34,14 @@ resource "fmc_url_group" "example" {
 
 ### Required
 
-- `name` (String) User-created name of the object.
-- `urls` (Attributes Set) (see [below for nested schema](#nestedatt--urls))
+- `name` (String) Name of the object.
+- `urls` (Attributes Set) Set of URL objects to be included in the URL group. (see [below for nested schema](#nestedatt--urls))
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `literals` (Attributes Set) (see [below for nested schema](#nestedatt--literals))
+- `literals` (Attributes Set) Set of literal values to be included in the URL group. (see [below for nested schema](#nestedatt--literals))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only
@@ -53,7 +53,7 @@ resource "fmc_url_group" "example" {
 
 Optional:
 
-- `id` (String) UUID of the object (such as fmc_url.example.id, etc.).
+- `id` (String) Id of the object.
 
 
 <a id="nestedatt--literals"></a>

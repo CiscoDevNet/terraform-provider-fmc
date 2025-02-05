@@ -1,5 +1,5 @@
 resource "fmc_url" "example" {
-  name        = "url_1"
+  name        = "my_url"
   url         = "https://www.example.com/app"
   description = "My URL"
 }

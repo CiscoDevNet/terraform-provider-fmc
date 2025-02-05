@@ -14,7 +14,7 @@ This resource manages a Tunnel Zone.
 
 ```terraform
 resource "fmc_tunnel_zone" "example" {
-  name        = "TunnelZone1"
+  name        = "my_tunnel_zone"
   description = "My Tunnel Zone object"
 }
 ```
@@ -24,11 +24,11 @@ resource "fmc_tunnel_zone" "example" {
 
 ### Required
 
-- `name` (String) The name of the Tunnel Zone object.
+- `name` (String) Name of the Tunnel Zone object.
 
 ### Optional
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

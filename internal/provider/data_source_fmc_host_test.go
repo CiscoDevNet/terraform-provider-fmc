@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "name", "HOST1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "name", "my_host"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_host.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "description", "My host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host.test", "ip", "10.1.1.1"))
@@ -61,7 +61,7 @@ func TestAccDataSourceFmcHost(t *testing.T) {
 
 func testAccDataSourceFmcHostConfig() string {
 	config := `resource "fmc_host" "test" {` + "\n"
-	config += `	name = "HOST1"` + "\n"
+	config += `	name = "my_host"` + "\n"
 	config += `	description = "My host object"` + "\n"
 	config += `	ip = "10.1.1.1"` + "\n"
 	config += `	overridable = true` + "\n"
@@ -77,7 +77,7 @@ func testAccDataSourceFmcHostConfig() string {
 
 func testAccNamedDataSourceFmcHostConfig() string {
 	config := `resource "fmc_host" "test" {` + "\n"
-	config += `	name = "HOST1"` + "\n"
+	config += `	name = "my_host"` + "\n"
 	config += `	description = "My host object"` + "\n"
 	config += `	ip = "10.1.1.1"` + "\n"
 	config += `	overridable = true` + "\n"

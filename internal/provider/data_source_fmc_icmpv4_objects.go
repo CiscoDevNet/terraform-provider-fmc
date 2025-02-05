@@ -76,7 +76,7 @@ func (d *ICMPv4ObjectsDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Description of the resource.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

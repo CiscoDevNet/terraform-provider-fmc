@@ -97,7 +97,7 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description of the resource.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{

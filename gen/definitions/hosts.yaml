@@ -9,18 +9,18 @@ attributes:
     type: Map
     description: >-
       Map of hosts. The key of the map is the name of the individual Host.
-    map_key_example: hosts_1
+    map_key_example: my_hosts
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Host.
+        description: Id of the Host object.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
-        description: Description of the resource.
+        description: Description of the object.
         example: "My Host 1"
       - model_name: overridable
         type: Bool

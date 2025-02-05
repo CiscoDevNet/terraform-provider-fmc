@@ -72,7 +72,7 @@ func (d *SecurityZoneDataSource) Schema(ctx context.Context, req datasource.Sche
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User-provided resource name.",
+				MarkdownDescription: "Name of the object.",
 				Optional:            true,
 				Computed:            true,
 			},

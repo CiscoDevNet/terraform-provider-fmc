@@ -1,5 +1,5 @@
 resource "fmc_url_group" "example" {
-  name        = "url_group_1"
+  name        = "my_url_group"
   description = "My URL group"
   urls = [
     {

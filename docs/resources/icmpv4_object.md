@@ -16,7 +16,7 @@ This resource manages an ICMPv4 Object.
 resource "fmc_icmpv4_object" "example" {
   icmp_type   = 3
   code        = 0
-  name        = "icmpv4_net_unreachable"
+  name        = "my_icmpv4_object"
   description = "ICMPv4 network unreachable response, type 3, code 0"
 }
 ```
@@ -26,13 +26,13 @@ resource "fmc_icmpv4_object" "example" {
 
 ### Required
 
-- `name` (String) Name of the resource.
+- `name` (String) Name of the object.
 
 ### Optional
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`

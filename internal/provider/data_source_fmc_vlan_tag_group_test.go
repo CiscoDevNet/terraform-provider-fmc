@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcVLANTagGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "name", "fmc_vlan_tag_group"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "name", "my_vlan_tag_group"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "description", "My VLAN Tag Group"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vlan_tag_group.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vlan_tag_group.test", "overridable", "true"))
@@ -71,7 +71,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccDataSourceFmcVLANTagGroupConfig() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "fmc_vlan_tag_group"` + "\n"
+	config += `	name = "my_vlan_tag_group"` + "\n"
 	config += `	description = "My VLAN Tag Group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"
@@ -93,7 +93,7 @@ func testAccDataSourceFmcVLANTagGroupConfig() string {
 
 func testAccNamedDataSourceFmcVLANTagGroupConfig() string {
 	config := `resource "fmc_vlan_tag_group" "test" {` + "\n"
-	config += `	name = "fmc_vlan_tag_group"` + "\n"
+	config += `	name = "my_vlan_tag_group"` + "\n"
 	config += `	description = "My VLAN Tag Group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	vlan_tags = [{` + "\n"

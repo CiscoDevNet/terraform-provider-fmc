@@ -30,11 +30,11 @@ import (
 
 func TestAccDataSourceFmcFQDNObjects(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_fqdn_objects.test", "items.fqdn_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.fqdn_1.description", "My FQDN 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.fqdn_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.fqdn_1.fqdn", "www.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.fqdn_1.dns_resolution", "IPV4_AND_IPV6"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_fqdn_objects.test", "items.my_fqdn_objects.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.my_fqdn_objects.description", "My FQDN 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.my_fqdn_objects.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.my_fqdn_objects.fqdn", "www.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_objects.test", "items.my_fqdn_objects.dns_resolution", "IPV4_AND_IPV6"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -57,7 +57,7 @@ func TestAccDataSourceFmcFQDNObjects(t *testing.T) {
 
 func testAccDataSourceFmcFQDNObjectsConfig() string {
 	config := `resource "fmc_fqdn_objects" "test" {` + "\n"
-	config += `	items = { "fqdn_1" = {` + "\n"
+	config += `	items = { "my_fqdn_objects" = {` + "\n"
 	config += `		description = "My FQDN 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		fqdn = "www.example.com"` + "\n"
@@ -69,7 +69,7 @@ func testAccDataSourceFmcFQDNObjectsConfig() string {
 		data "fmc_fqdn_objects" "test" {
 			depends_on = [fmc_fqdn_objects.test]
 			items = {
-				"fqdn_1" = {
+				"my_fqdn_objects" = {
 				}
 			}
 		}

@@ -30,11 +30,11 @@ import (
 
 func TestAccDataSourceFmcHosts(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test", "items.hosts_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.description", "My Host 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.hosts_1.ip", "10.1.1.1"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test", "items.hosts_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test", "items.my_hosts.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.my_hosts.description", "My Host 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.my_hosts.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test", "items.my_hosts.ip", "10.1.1.1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test", "items.my_hosts.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -57,7 +57,7 @@ func TestAccDataSourceFmcHosts(t *testing.T) {
 
 func testAccDataSourceFmcHostsConfig() string {
 	config := `resource "fmc_hosts" "test" {` + "\n"
-	config += `	items = { "hosts_1" = {` + "\n"
+	config += `	items = { "my_hosts" = {` + "\n"
 	config += `		description = "My Host 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		ip = "10.1.1.1"` + "\n"
@@ -68,7 +68,7 @@ func testAccDataSourceFmcHostsConfig() string {
 		data "fmc_hosts" "test" {
 			depends_on = [fmc_hosts.test]
 			items = {
-				"hosts_1" = {
+				"my_hosts" = {
 				}
 			}
 		}

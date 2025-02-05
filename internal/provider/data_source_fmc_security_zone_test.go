@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcSecurityZone(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zone.test", "name", "security_zone_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zone.test", "name", "my_security_zone"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_zone.test", "interface_type", "ROUTED"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_zone.test", "type"))
 	resource.Test(t, resource.TestCase{
@@ -59,7 +59,7 @@ func TestAccDataSourceFmcSecurityZone(t *testing.T) {
 
 func testAccDataSourceFmcSecurityZoneConfig() string {
 	config := `resource "fmc_security_zone" "test" {` + "\n"
-	config += `	name = "security_zone_1"` + "\n"
+	config += `	name = "my_security_zone"` + "\n"
 	config += `	interface_type = "ROUTED"` + "\n"
 	config += `}` + "\n"
 
@@ -73,7 +73,7 @@ func testAccDataSourceFmcSecurityZoneConfig() string {
 
 func testAccNamedDataSourceFmcSecurityZoneConfig() string {
 	config := `resource "fmc_security_zone" "test" {` + "\n"
-	config += `	name = "security_zone_1"` + "\n"
+	config += `	name = "my_security_zone"` + "\n"
 	config += `	interface_type = "ROUTED"` + "\n"
 	config += `}` + "\n"
 

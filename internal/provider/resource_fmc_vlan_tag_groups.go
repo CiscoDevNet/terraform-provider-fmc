@@ -88,7 +88,7 @@ func (r *VLANTagGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed URL Groups.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed VLAN Tag Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -102,7 +102,7 @@ func (r *VLANTagGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -110,19 +110,19 @@ func (r *VLANTagGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							Optional:            true,
 						},
 						"vlan_tags": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of VLAN Tag objects to be included in the VLAN Tag group.").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("UUID of the vlan_tag (such as fmc_vlan_tag.test.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the vlan_tag.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"literals": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of literal values to be included in the VLAN Tag Group.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

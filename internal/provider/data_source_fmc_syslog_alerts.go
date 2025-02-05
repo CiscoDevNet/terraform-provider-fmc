@@ -72,7 +72,7 @@ func (d *SyslogAlertsDataSource) Schema(ctx context.Context, req datasource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the managed Syslog Alert.",
+							MarkdownDescription: "Id of the managed Syslog Alert.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

@@ -91,7 +91,7 @@ func (r *TimeRangesResource) Schema(ctx context.Context, req resource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("UUID of the managed Time Range.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Time Range.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
@@ -105,7 +105,7 @@ func (r *TimeRangesResource) Schema(ctx context.Context, req resource.SchemaRequ
 							},
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Object description").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
 						},
 						"start_time": schema.StringAttribute{

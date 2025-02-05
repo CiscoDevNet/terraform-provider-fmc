@@ -1,5 +1,5 @@
 resource "fmc_port_group" "example" {
-  name        = "portgroup_obj1"
+  name        = "my_port_group"
   description = "My port group description"
   objects = [
     {

@@ -30,9 +30,9 @@ import (
 
 func TestAccDataSourceFmcTunnelZones(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_tunnel_zones.test", "items.TunnelZone1.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_tunnel_zones.test", "items.TunnelZone1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_tunnel_zones.test", "items.TunnelZone1.description", "My Tunnel Zone object"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_tunnel_zones.test", "items.my_tunnel_zones.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_tunnel_zones.test", "items.my_tunnel_zones.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_tunnel_zones.test", "items.my_tunnel_zones.description", "My Tunnel Zone object"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -55,7 +55,7 @@ func TestAccDataSourceFmcTunnelZones(t *testing.T) {
 
 func testAccDataSourceFmcTunnelZonesConfig() string {
 	config := `resource "fmc_tunnel_zones" "test" {` + "\n"
-	config += `	items = { "TunnelZone1" = {` + "\n"
+	config += `	items = { "my_tunnel_zones" = {` + "\n"
 	config += `		description = "My Tunnel Zone object"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -64,7 +64,7 @@ func testAccDataSourceFmcTunnelZonesConfig() string {
 		data "fmc_tunnel_zones" "test" {
 			depends_on = [fmc_tunnel_zones.test]
 			items = {
-				"TunnelZone1" = {
+				"my_tunnel_zones" = {
 				}
 			}
 		}

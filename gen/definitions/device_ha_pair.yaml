@@ -10,7 +10,7 @@ attributes:
     mandatory: true
     description: Name of the High Availability (HA) Pair.
     data_source_query: true
-    example: FTD_HA
+    example: Device_HA_Pair
   - model_name: type
     type: String
     description: Type of the object; This is always `DeviceHAPair`.
@@ -21,7 +21,7 @@ attributes:
     tf_name: primary_device_id
     requires_replace: true
     data_path: [primary]
-    description: ID of primary FTD in the HA Pair.
+    description: Id of primary FTD in the HA Pair.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: id
@@ -30,7 +30,7 @@ attributes:
     tf_name: secondary_device_id
     requires_replace: true
     data_path: [secondary]
-    description: ID of secondary FTD in the HA Pair.
+    description: Id of secondary FTD in the HA Pair.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     test_value: var.device_2_id
 # HA Link
@@ -39,7 +39,7 @@ attributes:
     mandatory: true
     tf_name: ha_link_interface_id
     data_path: [ftdHABootstrap,lanFailover,interfaceObject]
-    description: ID of High Availability Link interface.
+    description: Id of High Availability Link interface.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
     requires_replace: true
@@ -59,13 +59,14 @@ attributes:
     data_path: [ftdHABootstrap,lanFailover,interfaceObject]
     write_only: true
     requires_replace: true
+    example: PhysicalInterface
   - model_name: logicalName
     type: String
     mandatory: true
     tf_name: ha_link_logical_name
     data_path: [ftdHABootstrap,lanFailover]
     example: LAN-INTERFACE
-    description: The logical name of failover interface.
+    description: Logical name of failover interface.
     requires_replace: true
   - model_name: useIPv6Address
     type: Bool
@@ -80,7 +81,7 @@ attributes:
     mandatory: true
     type: String
     data_path: [ftdHABootstrap,lanFailover]
-    description: The IP of primary node interface.
+    description: IP of primary node interface.
     example: "1.1.1.1"
     requires_replace: true
   - model_name: standbyIP
@@ -89,7 +90,7 @@ attributes:
     tf_name: ha_link_secondary_ip
     data_path: [ftdHABootstrap,lanFailover]
     example: "1.1.1.2"
-    description: The IP of secondary node interface.
+    description: IP of secondary node interface.
     requires_replace: true
   - model_name: subnetMask
     type: String
@@ -114,7 +115,7 @@ attributes:
     tf_name: state_link_interface_id
     data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
     description: ID of physical interface.
-    example: 76d24097-hj7r-7786-a4d0-a8c07ac08470
+    example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
     requires_replace: true
   - model_name: name
@@ -150,14 +151,14 @@ attributes:
     type: String
     data_path: [ftdHABootstrap,statefulFailover]
     example: "10.10.10.1"
-    description: The IP of primary node interface.
+    description: IP of primary node interface.
     requires_replace: true
   - model_name: standbyIP
     type: String
     tf_name: state_link_secondary_ip
     data_path: [ftdHABootstrap,statefulFailover]
     example: "10.10.10.2"
-    description: The IP of secondary node interface.
+    description: IP of secondary node interface.
     requires_replace: true
   - model_name: subnetMask
     type: String

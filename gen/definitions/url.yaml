@@ -7,7 +7,7 @@ attributes:
     type: String
     description: Name of the object.
     mandatory: true
-    example: url_1
+    example: my_url
     data_source_query: true
   - model_name: url
     type: String
@@ -16,7 +16,7 @@ attributes:
     example: "https://www.example.com/app"
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My URL"
   - model_name: overridable
     type: Bool

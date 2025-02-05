@@ -31,11 +31,11 @@ import (
 
 func TestAccFmcRanges(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.ranges_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.description", "My Range 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.ranges_1.ip_range", "10.0.0.1-10.0.0.9"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.ranges_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.my_ranges.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.my_ranges.description", "My Range 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.my_ranges.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ranges.test", "items.my_ranges.ip_range", "10.0.0.1-10.0.0.9"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ranges.test", "items.my_ranges.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -65,7 +65,7 @@ func TestAccFmcRanges(t *testing.T) {
 
 func testAccFmcRangesConfig_minimum() string {
 	config := `resource "fmc_ranges" "test" {` + "\n"
-	config += `	items = { "ranges_1" = {` + "\n"
+	config += `	items = { "my_ranges" = {` + "\n"
 	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -78,7 +78,7 @@ func testAccFmcRangesConfig_minimum() string {
 
 func testAccFmcRangesConfig_all() string {
 	config := `resource "fmc_ranges" "test" {` + "\n"
-	config += `	items = { "ranges_1" = {` + "\n"
+	config += `	items = { "my_ranges" = {` + "\n"
 	config += `		description = "My Range 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		ip_range = "10.0.0.1-10.0.0.9"` + "\n"

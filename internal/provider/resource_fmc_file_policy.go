@@ -71,7 +71,7 @@ func (r *FilePolicyResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a File Policy.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages File Policy with corresponding rules.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

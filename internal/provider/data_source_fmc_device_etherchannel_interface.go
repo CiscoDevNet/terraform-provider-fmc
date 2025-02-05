@@ -285,7 +285,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the assigned DHCPv6 pool",
+				MarkdownDescription: "Id of the assigned DHCPv6 pool",
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{

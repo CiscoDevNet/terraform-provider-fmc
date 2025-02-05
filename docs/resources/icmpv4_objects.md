@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_icmpv4_objects" "example" {
   items = {
-    icmpv4_1 = {
+    my_icmpv4_objects = {
       description = "ICMPv4 network unreachable response, type 3, code 0"
       icmp_type   = 3
       code        = 0
@@ -53,7 +53,7 @@ Optional:
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`
 - `overridable` (Boolean) Indicates whether object values can be overridden.

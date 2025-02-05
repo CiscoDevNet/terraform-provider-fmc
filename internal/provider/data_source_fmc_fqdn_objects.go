@@ -76,7 +76,7 @@ func (d *FQDNObjectsDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
-							MarkdownDescription: "Optional user-created description.",
+							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
@@ -84,7 +84,7 @@ func (d *FQDNObjectsDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"fqdn": schema.StringAttribute{
-							MarkdownDescription: "The fully qualified domain name.",
+							MarkdownDescription: "Fully Qualified Domain Name.",
 							Computed:            true,
 						},
 						"dns_resolution": schema.StringAttribute{

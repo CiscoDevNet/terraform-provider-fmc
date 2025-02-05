@@ -20,7 +20,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_sgt" "example" {
-  name        = "SGT1"
+  name        = "my_sgt"
   description = "My SGT object"
   tag         = "11"
 }
@@ -31,12 +31,12 @@ resource "fmc_sgt" "example" {
 
 ### Required
 
-- `name` (String) The name of the SGT object.
+- `name` (String) Name of the SGT object.
 - `tag` (String) Security Group Tag.
 
 ### Optional
 
-- `description` (String) Description
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

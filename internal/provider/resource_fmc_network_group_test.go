@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcNetworkGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_group.test", "name", "net_group_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_group.test", "name", "my_network_group"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_group.test", "description", "My Network Group 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_network_group.test", "literals.0.value", "10.1.1.0/24"))
 
@@ -75,7 +75,7 @@ resource "fmc_range" "test" {
 
 func testAccFmcNetworkGroupConfig_minimum() string {
 	config := `resource "fmc_network_group" "test" {` + "\n"
-	config += `	name = "net_group_1"` + "\n"
+	config += `	name = "my_network_group"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 	return config
@@ -87,7 +87,7 @@ func testAccFmcNetworkGroupConfig_minimum() string {
 
 func testAccFmcNetworkGroupConfig_all() string {
 	config := `resource "fmc_network_group" "test" {` + "\n"
-	config += `	name = "net_group_1"` + "\n"
+	config += `	name = "my_network_group"` + "\n"
 	config += `	description = "My Network Group 1"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	objects = [{` + "\n"
@@ -125,7 +125,7 @@ func TestAccFmcNetworkGroup_Extended(t *testing.T) {
 
 	config += `resource "fmc_fqdn_object" "ng_fqdn1" {` + "\n"
 	config += `  name  = "ng_fqdn1"` + "\n"
-	config += `  value = "www.example.com"` + "\n"
+	config += `  fqdn = "www.example.com"` + "\n"
 	config += `}` + "\n"
 
 	config += `resource "fmc_network_group" "ng1" {` + "\n"

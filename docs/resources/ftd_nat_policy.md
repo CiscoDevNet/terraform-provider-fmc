@@ -14,7 +14,7 @@ This resource manages FTD Network Address Translation (NAT) policy with correspo
 
 ```terraform
 resource "fmc_ftd_nat_policy" "example" {
-  name        = "nat_policy_1"
+  name        = "my_ftd_nat_policy"
   description = "My nat policy"
   manual_nat_rules = [
     {
@@ -47,7 +47,7 @@ resource "fmc_ftd_nat_policy" "example" {
 ### Optional
 
 - `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
-- `description` (String) Policy description
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
@@ -83,7 +83,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Identifier of the auto nat rule.
+- `id` (String) Id of the Auto NAT rule.
 
 
 <a id="nestedatt--manual_nat_rules"></a>
@@ -98,7 +98,7 @@ Required:
 
 Optional:
 
-- `description` (String) Manual nat rule description
+- `description` (String) Description of Manual NAT rule.
 - `destination_interface_id` (String) ID of destination security zone or interface group
 - `enabled` (Boolean) Indicates if the rule is enabled.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
@@ -122,7 +122,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Identifier of the manual nat rule.
+- `id` (String) Id of the manual nat rule.
 
 ## Import
 

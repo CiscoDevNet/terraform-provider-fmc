@@ -19,7 +19,7 @@ attributes:
   - model_name: id
     tf_name: policy_id
     type: String
-    description: ID of the policy to be assigned.
+    description: Id of the policy to be assigned.
     id: true
     mandatory: true
     example: 0050568A-2561-0ed3-0000-004294972836
@@ -37,7 +37,7 @@ attributes:
     tf_name: after_destroy_policy_id
     write_only: true
     type: String
-    description: ID of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
+    description: Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
     example: 0050568A-2561-0ed3-0000-004294972836
     exclude_test: true
   - model_name: targets
@@ -49,7 +49,7 @@ attributes:
         type: String
         id: true
         mandatory: true
-        description: ID of the device to which policy should be attached
+        description: Id of the device to which policy should be attached
         example: "9862719c-8d5f-11ef-99a6-aef0794da1c1"
         test_value: var.device_id
       - model_name: type
@@ -61,7 +61,7 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_ftd_nat_policy" "example" {
-    name = "pa_nat_policy"
+    name = "fmc_policy_assignment_nat_policy"
   }
 
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

@@ -1,6 +1,6 @@
 data "fmc_icmpv4_objects" "example" {
   items = {
-    "icmpv4_1" = {
+    "my_icmpv4_objects" = {
     }
   }
 }

@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_fqdn_objects" "example" {
   items = {
-    fqdn_1 = {
+    my_fqdn_objects = {
       description    = "My FQDN 1"
       fqdn           = "www.example.com"
       dns_resolution = "IPV4_AND_IPV6"
@@ -51,11 +51,11 @@ resource "fmc_fqdn_objects" "example" {
 
 Required:
 
-- `fqdn` (String) The fully qualified domain name.
+- `fqdn` (String) Fully Qualified Domain Name.
 
 Optional:
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `dns_resolution` (String) Type of DNS resolution.
   - Choices: `IPV4_ONLY`, `IPV6_ONLY`, `IPV4_AND_IPV6`
   - Default value: `IPV4_AND_IPV6`

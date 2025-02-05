@@ -122,7 +122,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned security zone (fmc_security_zone.example.id). Can only be used when logical_name is set.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone. Can only be used when logical_name is set.").String,
 				Optional:            true,
 			},
 			"mtu": schema.Int64Attribute{
@@ -328,7 +328,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UUID of the assigned DHCPv6 pool").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned DHCPv6 pool").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{

@@ -1,5 +1,5 @@
 resource "fmc_device" "example" {
-  name                 = "MyDeviceName1"
+  name                 = "my_device"
   host_name            = "10.0.0.1"
   license_capabilities = ["ESSENTIALS"]
   registration_key     = "key1"

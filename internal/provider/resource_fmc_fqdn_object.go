@@ -85,7 +85,7 @@ func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Required:            true,
 			},
 			"fqdn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Fully qualified domain name.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Fully Qualified Domain Name.").String,
 				Required:            true,
 			},
 			"dns_resolution": schema.StringAttribute{
@@ -98,7 +98,7 @@ func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default: stringdefault.StaticString("IPV4_AND_IPV6"),
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{

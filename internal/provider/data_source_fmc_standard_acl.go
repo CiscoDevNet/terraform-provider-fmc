@@ -77,7 +77,7 @@ func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"entries": schema.ListNestedAttribute{
@@ -90,12 +90,12 @@ func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects (fmc_network, fmc_host, ...).",
+							MarkdownDescription: "Set of objects (Host, Network, Range).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "UUID of the object (such as fmc_network.this.id, etc.).",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{

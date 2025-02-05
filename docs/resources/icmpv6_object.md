@@ -16,7 +16,7 @@ This resource manages an ICMPv6 Object.
 resource "fmc_icmpv6_object" "example" {
   icmp_type   = 1
   code        = 3
-  name        = "icmpv6_addr_unreachable"
+  name        = "my_icmpv6_object"
   description = "ICMPv6 address unreachable response, type 1, code 3"
 }
 ```
@@ -26,13 +26,13 @@ resource "fmc_icmpv6_object" "example" {
 
 ### Required
 
-- `name` (String) Name of the resource.
+- `name` (String) Name of the object.
 
 ### Optional
 
 - `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
-- `description` (String) Description of the resource.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
   - Range: `0`-`255`
