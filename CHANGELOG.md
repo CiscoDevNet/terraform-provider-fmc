@@ -1,3 +1,3 @@
-## 0.1.0 (unreleased)
+## 2.0.0-beta0
 
 - Initial release
