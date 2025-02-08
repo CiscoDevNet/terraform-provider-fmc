@@ -4,7 +4,7 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/snmpalerts
 no_resource: true
 no_import: true
 is_bulk: true
-doc_category: Policy
+doc_category: Policies
 attributes:
   - model_name: items
     type: Map
@@ -23,4 +23,3 @@ attributes:
         type: String
         description: Type of the object; this value is always 'SNMPAlert'.
         computed: true
-

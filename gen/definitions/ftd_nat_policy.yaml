@@ -2,7 +2,7 @@
 name: FTD NAT Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdnatpolicies
 res_description: This resource manages FTD Network Address Translation (NAT) policy with corresponding Manual and Auto NAT rules.
-doc_category: Policy
+doc_category: Policies
 attributes:
   - model_name: name
     type: String
@@ -262,8 +262,8 @@ attributes:
         type: String
         description: Service protocol
         enum_values:
-        - TCP
-        - UDP
+          - TCP
+          - UDP
         example: TCP
         exclude_example: true
         exclude_test: true
@@ -327,4 +327,3 @@ test_prerequisites: |-
       }
     }
   }
-

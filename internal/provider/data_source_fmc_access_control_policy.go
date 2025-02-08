@@ -110,7 +110,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"prefilter_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Prefilter Policy. ",
+				MarkdownDescription: "Id of the Prefilter Policy.",
 				Computed:            true,
 			},
 			"default_action_syslog_severity": schema.StringAttribute{

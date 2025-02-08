@@ -3,7 +3,7 @@ name: Syslog Alert
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/syslogalerts
 no_resource: true
 no_import: true
-doc_category: Policy
+doc_category: Policies
 attributes:
   - model_name: name
     type: String
@@ -16,4 +16,3 @@ attributes:
     type: String
     description: Type of the object; this value is always 'SyslogAlert'.
     computed: true
-

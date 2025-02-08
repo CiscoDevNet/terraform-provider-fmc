@@ -2,7 +2,7 @@
 name: Device HA Pair Monitoring
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/monitoredinterfaces
 put_create: true
-doc_category: Device
+doc_category: Devices
 test_tags: [TF_VAR_device_ha_id]
 attributes:
   - tf_name: device_id
@@ -15,7 +15,7 @@ attributes:
     type: String
     computed: true
     description: Type of the resource.
-# General
+  # General
   - model_name: name
     tf_name: logical_name
     description: Logical Name of the monitored interface.

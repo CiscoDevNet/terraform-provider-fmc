@@ -1,7 +1,7 @@
 ---
 name: Smart License
 rest_endpoint: /api/fmc_platform/v1/license/smartlicenses
-doc_category: License
+doc_category: Licenses
 no_import: true
 no_data_source: true
 skip_test: true

@@ -1,10 +1,10 @@
 ---
 name: Prefilter Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/prefilterpolicies
-doc_category: Policy
+doc_category: Policies
 res_description: This resource manages Prefilter Policy with corresponding rules.
 attributes:
-# General
+  # General
   - model_name: name
     type: String
     mandatory: true
@@ -27,7 +27,7 @@ attributes:
     enum_values: [BLOCK_TUNNELS, ANALYZE_TUNNELS]
     description: Specifies the default action to take when none of the rules meet the conditions.
     example: BLOCK_TUNNELS
-# General - Default Action
+  # General - Default Action
   - model_name: id
     data_path: [defaultAction]
     tf_name: default_action_id
@@ -76,7 +76,7 @@ attributes:
     ordered_list: true
     description: The ordered list of rules.
     attributes:
-# General
+      # General
       - model_name: id
         type: String
         description: Id of the prefilter rule.
@@ -138,7 +138,7 @@ attributes:
       #  data_path: [timeRangeObjects.0]
       #  type: String
       #  value: TimeRange
-# Interface objects
+      # Interface objects
       - model_name: objects
         data_path: [sourceInterfaces]
         tf_name: source_interfaces
@@ -173,7 +173,7 @@ attributes:
             description: Type of the object.
             example: SecurityZone
             exclude_test: true
-# Tunnel endpoints / Networks
+      # Tunnel endpoints / Networks
       - model_name: literals
         data_path: [sourceNetworks]
         tf_name: source_network_literals
@@ -238,7 +238,7 @@ attributes:
             description: Type of the object
             example: Network
             test_value: fmc_host.test.type
-# VLAN Tags
+      # VLAN Tags
       - model_name: literals
         data_path: [vlanTags]
         tf_name: vlan_tag_literals
@@ -264,7 +264,7 @@ attributes:
             description: Id of the object.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_vlan_tag.test.id
-# Ports
+      # Ports
       - model_name: literals
         data_path: [sourcePorts]
         tf_name: source_port_literals
@@ -333,15 +333,15 @@ attributes:
           - model_name: type
             type: String
             value: AnyNonEmptyString
-# Encapsulation & ports
+      # Encapsulation & ports
       - model_name: encapsulationPorts
         type: Set
         element_type: String
         description: List of encapsulation ports to be used.
-        enum_values: [ GRE, IP_IN_IP, IPV6_IN_IP, TEREDO ]
+        enum_values: [GRE, IP_IN_IP, IPV6_IN_IP, TEREDO]
         example: GRE
         exclude_test: true
-# Logging
+      # Logging
       - model_name: logBegin
         type: Bool
         description: Log events at the beginning of the connection. Default is false.

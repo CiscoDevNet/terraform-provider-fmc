@@ -1,7 +1,7 @@
 ---
 name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
-doc_category: Policy
+doc_category: Policies
 minimum_version_create: "7.4"
 res_description: This resource manages File Policy with corresponding rules.
 attributes:
@@ -94,7 +94,8 @@ attributes:
         example: ANY
       - model_name: action
         type: String
-        enum_values: [DETECT, BLOCK_WITH_RESET, DETECT_MALWARE, BLOCK_MALWARE_WITH_RESET]
+        enum_values:
+          [DETECT, BLOCK_WITH_RESET, DETECT_MALWARE, BLOCK_MALWARE_WITH_RESET]
         mandatory: true
         description: Action to be performed on a file.
         example: DETECT
@@ -153,14 +154,3 @@ attributes:
             default_value: FileType
             exclude_example: true
             exclude_test: true
-
-
-
-
-
-
-
-
-
-
-

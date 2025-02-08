@@ -1,7 +1,7 @@
 ---
 name: Access Control Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies
-doc_category: Policy
+doc_category: Policies
 res_description: This resource manages Access Control Policy (ACP) with corresponding Access Rules and Categories.
 attributes:
   - model_name: name
@@ -71,9 +71,9 @@ attributes:
     tf_name: prefilter_policy_id
     type: String
     description: >-
-      Id of the Prefilter Policy. 
+      Id of the Prefilter Policy.
     example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
-    exclude_test: true    
+    exclude_test: true
   - model_name: syslogSeverity
     data_path: [defaultAction]
     tf_name: default_action_syslog_severity
@@ -627,7 +627,7 @@ attributes:
         type: String
         description: Id of Time Range object applied to the rule.
         example: 0050568A-7F57-0ed3-0000-004294975576
-        exclude_test: true        
+        exclude_test: true
       - model_name: id
         data_path: [variableSet]
         tf_name: variable_set_id

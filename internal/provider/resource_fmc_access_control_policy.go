@@ -133,7 +133,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"prefilter_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the Prefilter Policy. ").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Prefilter Policy.").String,
 				Optional:            true,
 			},
 			"default_action_syslog_severity": schema.StringAttribute{

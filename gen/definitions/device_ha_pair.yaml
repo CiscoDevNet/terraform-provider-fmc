@@ -1,7 +1,7 @@
 ---
 name: Device HA Pair
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs
-doc_category: Device
+doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_device_2_id]
 res_description: This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
 attributes:
@@ -33,12 +33,12 @@ attributes:
     description: Id of secondary FTD in the HA Pair.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     test_value: var.device_2_id
-# HA Link
+  # HA Link
   - model_name: id
     type: String
     mandatory: true
     tf_name: ha_link_interface_id
-    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    data_path: [ftdHABootstrap, lanFailover, interfaceObject]
     description: Id of High Availability Link interface.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
@@ -46,7 +46,7 @@ attributes:
   - model_name: name
     type: String
     tf_name: ha_link_interface_name
-    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    data_path: [ftdHABootstrap, lanFailover, interfaceObject]
     description: Name of High Availability Link interface.
     example: GigabitEthernet0/0
     mandatory: true
@@ -56,7 +56,7 @@ attributes:
     mandatory: true
     tf_name: ha_link_interface_type
     description: Type of High Availability Link interface.
-    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    data_path: [ftdHABootstrap, lanFailover, interfaceObject]
     write_only: true
     requires_replace: true
     example: PhysicalInterface
@@ -64,7 +64,7 @@ attributes:
     type: String
     mandatory: true
     tf_name: ha_link_logical_name
-    data_path: [ftdHABootstrap,lanFailover]
+    data_path: [ftdHABootstrap, lanFailover]
     example: LAN-INTERFACE
     description: Logical name of failover interface.
     requires_replace: true
@@ -72,7 +72,7 @@ attributes:
     type: Bool
     tf_name: ha_link_use_ipv6
     default_value: false
-    data_path: [ftdHABootstrap,lanFailover]
+    data_path: [ftdHABootstrap, lanFailover]
     example: false
     description: Use IPv6 addressing for HA communication.
     requires_replace: true
@@ -80,7 +80,7 @@ attributes:
     tf_name: ha_link_primary_ip
     mandatory: true
     type: String
-    data_path: [ftdHABootstrap,lanFailover]
+    data_path: [ftdHABootstrap, lanFailover]
     description: IP of primary node interface.
     example: "1.1.1.1"
     requires_replace: true
@@ -88,7 +88,7 @@ attributes:
     type: String
     mandatory: true
     tf_name: ha_link_secondary_ip
-    data_path: [ftdHABootstrap,lanFailover]
+    data_path: [ftdHABootstrap, lanFailover]
     example: "1.1.1.2"
     description: IP of secondary node interface.
     requires_replace: true
@@ -96,11 +96,11 @@ attributes:
     type: String
     tf_name: ha_link_netmask
     mandatory: true
-    data_path: [ftdHABootstrap,lanFailover]
+    data_path: [ftdHABootstrap, lanFailover]
     description: Subnet mask for HA link.
     example: "255.255.255.0"
     requires_replace: true
-# State Link
+  # State Link
   - model_name: useSameLinkForFailovers
     tf_name: state_link_use_same_as_ha
     type: Bool
@@ -113,7 +113,7 @@ attributes:
   - model_name: id
     type: String
     tf_name: state_link_interface_id
-    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    data_path: [ftdHABootstrap, statefulFailover, interfaceObject]
     description: ID of physical interface.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
@@ -121,14 +121,14 @@ attributes:
   - model_name: name
     type: String
     tf_name: state_link_interface_name
-    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    data_path: [ftdHABootstrap, statefulFailover, interfaceObject]
     description: Name of state link interface.
     example: GigabitEthernet0/0
     requires_replace: true
   - model_name: type
     type: String
     tf_name: state_link_interface_type
-    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    data_path: [ftdHABootstrap, statefulFailover, interfaceObject]
     description: Type of state link interface.
     example: PhysicalInterface
     write_only: true
@@ -136,38 +136,38 @@ attributes:
   - model_name: logicalName
     type: String
     tf_name: state_link_logical_name
-    data_path: [ftdHABootstrap,statefulFailover]
+    data_path: [ftdHABootstrap, statefulFailover]
     example: Stateful-INTERFACE
     requires_replace: true
   - model_name: useIPv6Address
     type: Bool
     tf_name: state_link_use_ipv6
-    data_path: [ftdHABootstrap,statefulFailover]
+    data_path: [ftdHABootstrap, statefulFailover]
     example: false
     description: Use IPv6 addressing for HA communication.
     requires_replace: true
   - model_name: activeIP
     tf_name: state_link_primary_ip
     type: String
-    data_path: [ftdHABootstrap,statefulFailover]
+    data_path: [ftdHABootstrap, statefulFailover]
     example: "10.10.10.1"
     description: IP of primary node interface.
     requires_replace: true
   - model_name: standbyIP
     type: String
     tf_name: state_link_secondary_ip
-    data_path: [ftdHABootstrap,statefulFailover]
+    data_path: [ftdHABootstrap, statefulFailover]
     example: "10.10.10.2"
     description: IP of secondary node interface.
     requires_replace: true
   - model_name: subnetMask
     type: String
     tf_name: state_link_netmask
-    data_path: [ftdHABootstrap,statefulFailover]
+    data_path: [ftdHABootstrap, statefulFailover]
     example: "255.255.255.0"
     description: Subnet mask for state link.
     requires_replace: true
-# IPsec Encryption
+  # IPsec Encryption
   - model_name: isEncryptionEnabled
     tf_name: encryption_enabled
     type: Bool
@@ -181,7 +181,7 @@ attributes:
     data_path: [ftdHABootstrap]
     description: Select the encyption key generation scheme.
     example: "AUTO"
-    enum_values: [ AUTO, CUSTOM ]
+    enum_values: [AUTO, CUSTOM]
     write_only: true
     requires_replace: true
   - model_name: sharedKey
@@ -193,7 +193,7 @@ attributes:
     exclude_test: true
     write_only: true
     requires_replace: true
-# Failover trigger criteria - Interface Failure Treshold ### Changes in this section will require changes in `go` code
+  # Failover trigger criteria - Interface Failure Treshold ### Changes in this section will require changes in `go` code
   - model_name: percentFailedInterfaceExceed
     data_path: [ftdHAFailoverTriggerCriteria]
     tf_name: failed_interfaces_percent
@@ -211,7 +211,7 @@ attributes:
     min_int: 1
     max_int: 211
     example: 1
-# Failover trigger criteria - Hello Packet Intervals ### Changes in this section will require changes in `go` code
+  # Failover trigger criteria - Hello Packet Intervals ### Changes in this section will require changes in `go` code
   - model_name: peerPollTime
     data_path: [ftdHAFailoverTriggerCriteria]
     type: Int64
@@ -224,7 +224,7 @@ attributes:
     data_path: [ftdHAFailoverTriggerCriteria]
     type: String
     description: Peer Pool Time Unit
-    enum_values: [ SEC, MSEC ]
+    enum_values: [SEC, MSEC]
     default_value: SEC
     example: SEC
   - model_name: peerHoldTime
@@ -239,7 +239,7 @@ attributes:
     data_path: [ftdHAFailoverTriggerCriteria]
     type: String
     description: Peer Hold Time Unit
-    enum_values: [ SEC, MSEC ]
+    enum_values: [SEC, MSEC]
     default_value: SEC
     example: SEC
   - model_name: interfacePollTime
@@ -254,7 +254,7 @@ attributes:
     data_path: [ftdHAFailoverTriggerCriteria]
     type: String
     description: Peer Pool Time Unit
-    enum_values: [ SEC, MSEC ]
+    enum_values: [SEC, MSEC]
     default_value: SEC
     example: SEC
   - model_name: interfaceHoldTime
@@ -265,11 +265,11 @@ attributes:
     max_int: 75
     default_value: 25
     example: 25
-# Other
+  # Other
   - model_name: action
     type: String
     description: FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
-    enum_values: [ SWITCH, HABREAK ]
+    enum_values: [SWITCH, HABREAK]
     exclude_test: true
     exclude_example: true
 

@@ -1,7 +1,7 @@
 ---
 name: Policy Assignment
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments
-doc_category: Policy Assignments
+doc_category: Policies
 test_tags: [TF_VAR_device_id]
 skip_minimum_test: true
 attributes:
@@ -54,7 +54,7 @@ attributes:
         test_value: var.device_id
       - model_name: type
         type: String
-        enum_values: [Device,DeviceHAPair,DeviceGroup]
+        enum_values: [Device, DeviceHAPair, DeviceGroup]
         description: Type of the device to which policy should be attached
         mandatory: true
         example: Device

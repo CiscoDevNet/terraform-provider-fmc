@@ -1,8 +1,8 @@
 ---
 name: Device BFD
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bfdpolicies
-doc_category: Device
-test_tags: [TF_VAR_device_id,TF_VAR_interface_name]
+doc_category: Devices
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 minimum_version: "7.4"
 skip_minimum_test: true
 attributes:
@@ -16,11 +16,11 @@ attributes:
     type: String
     computed: true
     description: Type of the object; this value is always 'BFDPolicy'
-# General
+  # General
   - model_name: hopType
     description: BFD Hop type.
     mandatory: true
-    enum_values: [ SINGLE_HOP, MULTI_HOP ]
+    enum_values: [SINGLE_HOP, MULTI_HOP]
     type: String
     example: SINGLE_HOP
   - model_name: id
