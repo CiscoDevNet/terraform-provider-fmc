@@ -161,54 +161,6 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy.").String,
 				Optional:            true,
 			},
-			"info_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Version of the registered device - Informational only.").String,
-				Computed:            true,
-			},
-			"info_health_status": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Health Status of the device - Informational only.").String,
-				Computed:            true,
-			},
-			"info_health_message": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Health Message of the device - Informational only.").String,
-				Computed:            true,
-			},
-			"info_is_connected": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Shows if the device is connected - Informational only.").String,
-				Computed:            true,
-			},
-			"info_deployment_status": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Shows deployment status - Informational only.").String,
-				Computed:            true,
-			},
-			"info_ftd_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("FTD Mode - Informational only.").String,
-				Computed:            true,
-			},
-			"info_device_serial_number": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Device Serial Number - Informational only.").String,
-				Computed:            true,
-			},
-			"info_snort_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Snort Version - Informational only.").String,
-				Computed:            true,
-			},
-			"info_vdb_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VDB Version - Informational only.").String,
-				Computed:            true,
-			},
-			"info_lsp_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("LSP Version - Informational only.").String,
-				Computed:            true,
-			},
-			"info_deployed_access_policy_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Deployed Access Control Policy Name - Informational only.").String,
-				Computed:            true,
-			},
-			"info_deployed_health_policy_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Deployed Health Policy Name - Informational only.").String,
-				Computed:            true,
-			},
 		},
 	}
 }

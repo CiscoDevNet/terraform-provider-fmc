@@ -129,54 +129,6 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Id of the assigned Health policy.",
 				Computed:            true,
 			},
-			"info_version": schema.StringAttribute{
-				MarkdownDescription: "Version of the registered device - Informational only.",
-				Computed:            true,
-			},
-			"info_health_status": schema.StringAttribute{
-				MarkdownDescription: "Health Status of the device - Informational only.",
-				Computed:            true,
-			},
-			"info_health_message": schema.StringAttribute{
-				MarkdownDescription: "Health Message of the device - Informational only.",
-				Computed:            true,
-			},
-			"info_is_connected": schema.BoolAttribute{
-				MarkdownDescription: "Shows if the device is connected - Informational only.",
-				Computed:            true,
-			},
-			"info_deployment_status": schema.StringAttribute{
-				MarkdownDescription: "Shows deployment status - Informational only.",
-				Computed:            true,
-			},
-			"info_ftd_mode": schema.StringAttribute{
-				MarkdownDescription: "FTD Mode - Informational only.",
-				Computed:            true,
-			},
-			"info_device_serial_number": schema.StringAttribute{
-				MarkdownDescription: "Device Serial Number - Informational only.",
-				Computed:            true,
-			},
-			"info_snort_version": schema.StringAttribute{
-				MarkdownDescription: "Snort Version - Informational only.",
-				Computed:            true,
-			},
-			"info_vdb_version": schema.StringAttribute{
-				MarkdownDescription: "VDB Version - Informational only.",
-				Computed:            true,
-			},
-			"info_lsp_version": schema.StringAttribute{
-				MarkdownDescription: "LSP Version - Informational only.",
-				Computed:            true,
-			},
-			"info_deployed_access_policy_name": schema.StringAttribute{
-				MarkdownDescription: "Deployed Access Control Policy Name - Informational only.",
-				Computed:            true,
-			},
-			"info_deployed_health_policy_name": schema.StringAttribute{
-				MarkdownDescription: "Deployed Health Policy Name - Informational only.",
-				Computed:            true,
-			},
 		},
 	}
 }
