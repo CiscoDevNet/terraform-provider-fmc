@@ -1,4 +1,4 @@
-module github.com/netascode/terraform-provider-fmc
+module github.com/CiscoDevNet/terraform-provider-fmc
 
 go 1.22.7
 

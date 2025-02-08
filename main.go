@@ -22,8 +22,8 @@ import (
 	"flag"
 	"log"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider"
 	"github.com/hashicorp/terraform-plugin-framework/providerserver"
-	"github.com/netascode/terraform-provider-fmc/internal/provider"
 )
 
 // Run "go generate" to format example terraform files and generate the docs for the registry/website
@@ -61,7 +61,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "registry.terraform.io/netascode/fmc",
+		Address: "registry.terraform.io/CiscoDevNet/fmc",
 		Debug:   debug,
 	}
 

@@ -1,4 +1,4 @@
-[![Tests](https://github.com/netascode/terraform-provider-fmc/actions/workflows/test.yml/badge.svg)](https://github.com/netascode/terraform-provider-fmc/actions/workflows/test.yml)
+[![Tests](https://github.com/CiscoDevNet/terraform-provider-fmc/actions/workflows/test.yml/badge.svg)](https://github.com/CiscoDevNet/terraform-provider-fmc/actions/workflows/test.yml)
 
 # Terraform Provider FMC
 
@@ -14,7 +14,7 @@ Resources and data sources have been tested with the following releases.
 
 Please note that resources and data sources support depends on FMC version.
 
-Documentation: <https://registry.terraform.io/providers/netascode/fmc/latest>
+Documentation: <https://registry.terraform.io/providers/CiscoDevNet/fmc/latest>
 
 ## Requirements
 
@@ -51,7 +51,7 @@ This Terraform Provider is available to install automatically via `terraform ini
 [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin)
 After placing it into your plugins directory,  run `terraform init` to initialize it.
 
-Additional documentation, including available resources and their arguments/attributes can be found on the [Terraform documentation website](https://registry.terraform.io/providers/netascode/fmc/latest/docs).
+Additional documentation, including available resources and their arguments/attributes can be found on the [Terraform documentation website](https://registry.terraform.io/providers/CiscoDevNet/fmc/latest/docs).
 
 ## Developing the Provider
 

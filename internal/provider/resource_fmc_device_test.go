@@ -22,8 +22,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/ftd"
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
-	"github.com/netascode/terraform-provider-fmc/internal/ftd"
 )
 
 // End of section. //template:end imports
