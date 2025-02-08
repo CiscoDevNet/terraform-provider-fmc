@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-beta0
+## 2.0.0-beta1
 
 - Initial release
 
