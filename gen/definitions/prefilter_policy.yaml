@@ -1,0 +1,415 @@
+---
+name: Prefilter Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/prefilterpolicies
+doc_category: Policy
+res_description: This resource manages Prefilter Policy with corresponding rules.
+attributes:
+# General
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the prefilter policy.
+    example: my_prefilter_policy
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the prefilter policy.
+    example: My prefilter policy
+  - model_name: type
+    type: String
+    description: Object type; This is always `PrefilterPolicy`
+    computed: true
+  - model_name: action
+    data_path: [defaultAction]
+    tf_name: default_action
+    mandatory: true
+    type: String
+    enum_values: [BLOCK_TUNNELS, ANALYZE_TUNNELS]
+    description: Specifies the default action to take when none of the rules meet the conditions.
+    example: BLOCK_TUNNELS
+# General - Default Action
+  - model_name: id
+    data_path: [defaultAction]
+    tf_name: default_action_id
+    type: String
+    description: Default action ID
+    computed: true
+  - model_name: logBegin
+    data_path: [defaultAction]
+    tf_name: default_action_log_begin
+    type: Bool
+    description: Log events at the beginning of the connection.
+    example: "true"
+  - model_name: logEnd
+    data_path: [defaultAction]
+    tf_name: default_action_log_end
+    type: Bool
+    description: Log events at the end of the connection.
+    example: "false"
+  - model_name: sendEventsToFMC
+    data_path: [defaultAction]
+    tf_name: default_action_send_events_to_fmc
+    type: Bool
+    description: Send events to the Firepower Management Center event viewer.
+    example: "true"
+  - model_name: id
+    data_path: [defaultAction, syslogConfig]
+    tf_name: default_action_syslog_config_id
+    type: String
+    description: >-
+      UUID of the syslog config.
+      Can be set only when either default_action_log_begin or default_action_log_end is true.
+    example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
+    exclude_test: true
+  - model_name: id
+    data_path: [defaultAction, snmpConfig]
+    tf_name: default_action_snmp_config_id
+    type: String
+    description: >-
+      UUID of the SNMP alert.
+      Can be set only when either default_action_log_begin or default_action_log_end is true.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+  - model_name: dummy_rules
+    tf_name: rules
+    type: List
+    ordered_list: true
+    description: The ordered list of rules.
+    attributes:
+# General
+      - model_name: id
+        type: String
+        description: Id of the prefilter rule.
+        exclude_example: true
+        exclude_test: true
+        resource_id: true
+      - model_name: type
+        type: String
+        description: Object type; This is always `PrefilterRule`
+        value: PrefilterRule
+      - model_name: name
+        type: String
+        description: Name of the rule.
+        mandatory: true
+        example: rule1
+      - model_name: ruleType
+        type: String
+        description: >-
+          Type of the rule.
+          At least one Encapsulation Port Object (encapsulation_ports) is mandatory to be specified for TUNNEL Rules.
+        mandatory: true
+        enum_values: [PREFILTER, TUNNEL]
+        example: PREFILTER
+      - model_name: enabled
+        type: Bool
+        description: Indicates whether the prefilter rule is in effect (true) or not (false). Default is true.
+        default_value: "true"
+        example: "true"
+      - model_name: action
+        type: String
+        description: What to do when the conditions defined by the rule are met.
+        mandatory: true
+        enum_values: [FASTPATH, ANALYZE, BLOCK]
+        example: FASTPATH
+      - model_name: bidirectional
+        type: Bool
+        description: Indicates whether the rule is bidirectional. Can be true only for TUNNEL rules. Default is false.
+        exclude_example: true
+        test_value: "false"
+      - model_name: id
+        data_path: [tunnelZone, objects.0]
+        tf_name: tunnel_zone_id
+        type: String
+        description: Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
+        example: 0050568A-7F57-0ed3-0000-004294975576
+        exclude_test: true
+      #- model_name: type
+      #  data_path: [tunnelZone, objects.0]
+      #  type: String
+      #  value: TunnelTag
+      - model_name: id
+        data_path: [timeRangeObjects.0]
+        tf_name: time_range_id
+        type: String
+        description: Id of Time Range object applied to the rule.
+        example: 0050568A-7F57-0ed3-0000-004294975576
+        exclude_test: true
+      #- model_name: type
+      #  data_path: [timeRangeObjects.0]
+      #  type: String
+      #  value: TimeRange
+# Interface objects
+      - model_name: objects
+        data_path: [sourceInterfaces]
+        tf_name: source_interfaces
+        description: Set of objects that represent source interfaces.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_security_zone.test.id
+            id: true
+          - model_name: type
+            type: String
+            description: Type of the object.
+            example: SecurityZone
+            exclude_test: true
+      - model_name: objects
+        data_path: [destinationInterfaces]
+        tf_name: destination_interfaces
+        description: Set of objects that represent destination interfaces.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_security_zone.test.id
+            id: true
+          - model_name: type
+            type: String
+            description: Type of the object.
+            example: SecurityZone
+            exclude_test: true
+# Tunnel endpoints / Networks
+      - model_name: literals
+        data_path: [sourceNetworks]
+        tf_name: source_network_literals
+        description: Set of objects that represent sources of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            example: 10.1.1.0/24
+            id: true
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+      - model_name: objects
+        data_path: [sourceNetworks]
+        tf_name: source_network_objects
+        description: Set of objects that represent sources of traffic (Networks, Hosts, Ranges or Network Groups).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            mandatory: true
+            test_value: fmc_network.test.id
+            id: true
+          - model_name: type
+            type: String
+            description: Type of the object
+            example: Network
+            mandatory: true
+            test_value: fmc_network.test.type
+      - model_name: literals
+        data_path: [destinationNetworks]
+        tf_name: destination_network_literals
+        description: Set of objects that represent destinations of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            example: 10.2.2.0/24
+            id: true
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+      - model_name: objects
+        data_path: [destinationNetworks]
+        tf_name: destination_network_objects
+        description: Set of objects that represent destinations of traffic (Networks, Hosts, Ranges or Network Groups).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_host.test.id
+            id: true
+            mandatory: true
+          - model_name: type
+            type: String
+            mandatory: true
+            description: Type of the object
+            example: Network
+            test_value: fmc_host.test.type
+# VLAN Tags
+      - model_name: literals
+        data_path: [vlanTags]
+        tf_name: vlan_tag_literals
+        description: Set of objects that represent vlan tags (literally specified).
+        type: Set
+        attributes:
+          - model_name: startTag
+            type: String
+            example: "11"
+            mandatory: true
+          - model_name: endTag
+            type: String
+            example: "22"
+            mandatory: true
+      - model_name: objects
+        data_path: [vlanTags]
+        tf_name: vlan_tag_objects
+        description: Set of objects representing vlan tags or vlan tag groups
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_vlan_tag.test.id
+# Ports
+      - model_name: literals
+        data_path: [sourcePorts]
+        tf_name: source_port_literals
+        description: >-
+          Set of objects that represent protocol/port (literally specified).
+          Can be only set for PREFILTER rules.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            value: PortLiteral
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+          - model_name: port
+            type: String
+            example: "80"
+      - model_name: objects
+        data_path: [sourcePorts]
+        tf_name: source_port_objects
+        description: >-
+          Set of objects representing source ports associated with the rule (Port or Port Groups).
+          Can be only set for PREFILTER rules.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_port.test.id
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+      - model_name: literals
+        data_path: [destinationPorts]
+        tf_name: destination_port_literals
+        description: >-
+          Set of objects that represent protocol/port (literally specified).
+          Can be only set for PREFILTER rules.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            value: PortLiteral
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+          - model_name: port
+            type: String
+            example: "80"
+      - model_name: objects
+        data_path: [destinationPorts]
+        tf_name: destination_port_objects
+        description: >-
+          Set of objects representing destination ports associated with the rule (Port or Port Groups).
+          Can be only set for PREFILTER rules.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_port.test.id
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString
+# Encapsulation & ports
+      - model_name: encapsulationPorts
+        type: Set
+        element_type: String
+        description: List of encapsulation ports to be used.
+        enum_values: [ GRE, IP_IN_IP, IPV6_IN_IP, TEREDO ]
+        example: GRE
+        exclude_test: true
+# Logging
+      - model_name: logBegin
+        type: Bool
+        description: Log events at the beginning of the connection. Default is false.
+        example: "true"
+      - model_name: logEnd
+        type: Bool
+        description: Log events at the end of the connection. Default is false.
+        example: "true"
+      - model_name: sendEventsToFMC
+        tf_name: send_events_to_fmc
+        type: Bool
+        description: Send events to the Firepower Management Center event viewer. Default is false.
+        example: "true"
+      - model_name: enableSyslog
+        tf_name: send_syslog
+        type: Bool
+        description: Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging. Default is false.
+        example: "true"
+        exclude_test: true
+      - model_name: id
+        data_path: [syslogConfig]
+        tf_name: syslog_config_id
+        type: String
+        description: >-
+          UUID of the syslog config. Can be set only when send_syslog is true and either
+          log_begin or log_end is true. If not set, the default policy syslog configuration
+          in Access Control Logging applies.
+        example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
+        exclude_test: true
+      - model_name: syslogSeverity
+        type: String
+        description: Override the Severity of syslog alerts.
+        enum_values: [ALERT, CRIT, DEBUG, EMERG, ERR, INFO, NOTICE, WARNING]
+        example: "DEBUG"
+        exclude_test: true
+      - model_name: id
+        data_path: [snmpConfig]
+        tf_name: snmp_config_id
+        type: String
+        description: >-
+          UUID of the SNMP alert associated with the prefilter rule. Can be set only when either log_begin or log_end is true.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_network" "test" {
+    name   = "fmc_prefilter_policy_network"
+    prefix = "10.0.0.0/24"
+  }
+
+  resource "fmc_host" "test" {
+    name = "fmc_prefilter_policy_host"
+    ip   = "10.1.1.1"
+  }
+
+  resource "fmc_port" "test" {
+    name     = "fmc_prefilter_policy_port"
+    protocol = "UDP"
+    port     = "53"
+  }
+
+  resource "fmc_vlan_tag" "test" {
+    name      = "fmc_prefilter_policy_vlan_tag"
+    start_tag = "10"
+    end_tag   = "11" 
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "fmc_prefilter_policy_security_zone"
+    interface_type = "ROUTED"
+  }

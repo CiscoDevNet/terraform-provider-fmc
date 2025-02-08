@@ -1,0 +1,47 @@
+---
+name: Port Group
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/portobjectgroups
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the object.
+    mandatory: true
+    example: my_port_group
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'PortObjectGroup'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My port group description"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"
+  - model_name: objects
+    type: Set
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the port object.
+        id: true
+        example: 0050568A-232D-0ed3-0000-004294971602
+        test_value: fmc_port.test.id
+      - model_name: type
+        type: String
+        mandatory: true
+        enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
+        example: ProtocolPortObject
+
+test_prerequisites: |-
+  resource "fmc_port" "test" {
+    name        = "fmc_port_group_port"
+    description = "My PORT id"
+    protocol    = "TCP"
+    port        = "443"
+  }

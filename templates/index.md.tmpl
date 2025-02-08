@@ -1,0 +1,24 @@
+
+---
+layout: ""
+page_title: "Provider: FMC"
+description: |-
+  The FMC provider provides resources to interact with a Cisco Secure FMC (Firewall Management Center) instance.
+
+---
+
+# FMC Provider
+
+The FMC provider provides resources to interact with a Cisco Secure FMC (Firewall Management Center) instance. It communicates with FMC via the REST API.
+
+All resources and data sources have been tested with the following releases.
+
+| Platform | Version |
+| -------- | ------- |
+| FMC      | 7.2     |
+
+## Example Usage
+
+{{tffile "examples/provider/provider.tf"}}
+
+{{ .SchemaMarkdown | trimspace }}

@@ -1,0 +1,52 @@
+---
+name: VLAN Tags
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/vlantags
+is_bulk: true
+doc_category: Objects
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of security zones. The key of the map is the name of the individual VLAN Tag object.
+    map_key_example: my_vlan_tags
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed VLAN Tag object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My TAG id"
+        mandatory: false
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        example: true
+        # Type is defined twice on purpose, as this needs to be an attribute, but also is required for POST/PUT requests
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'VlanTag'
+        computed: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'VlanTag'
+        value: VlanTag
+      - model_name: startTag
+        type: String
+        example: "12"
+        test_value: "12"
+        data_path: ["data"]
+        mandatory: true
+        description: VLAN Tag starting value.
+      - model_name: endTag
+        type: String
+        example: "15"
+        test_value: "15"
+        data_path: ["data"]
+        mandatory: true
+        description: VLAN Tag end value.

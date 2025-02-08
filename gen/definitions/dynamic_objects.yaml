@@ -1,0 +1,40 @@
+---
+name: Dynamic Objects
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/dynamicobjects
+res_description: This resource manages Dynamic Objects through bulk operations.
+doc_category: Objects
+is_bulk: true
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Dynamic Objects. The key of the map is the name of the individual Dynamic Object.
+    map_key_example: dynamic_object_1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Dynamic Object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'DynamicObject'.
+        computed: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My Dynamic Object 1"
+      - model_name: objectType
+        mandatory: true
+        type: String
+        description: Type of dynamic object mappings.
+        example: IP
+        enum_values: ["IP"]
+      - model_name: mappings
+        type: Set
+        element_type: String
+        description: List of mappings.
+        example: "10.0.0.1"
+

@@ -1,0 +1,38 @@
+---
+name: Interface Group
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/interfacegroups
+doc_category: Objects
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the object.
+    mandatory: true
+    example: my_interface_group
+    data_source_query: true
+  - model_name: interfaceMode
+    type: String
+    description: All interfaces' types must match the interface mode.
+    enum_values: [INLINE, SWITCHED, ROUTED]
+    mandatory: true
+    example: ROUTED
+  - model_name: interfaces
+    type: Set
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the interface.
+        id: true
+        example: 0050568A-4E02-1ed3-0000-004294969198
+        test_value: fmc_device_physical_interface.test.id
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id    = var.device_id
+    name         = "GigabitEthernet0/1"
+    logical_name = "myinterface-0-1"
+    mode         = "NONE"
+    enabled      = true
+  }

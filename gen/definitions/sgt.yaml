@@ -1,0 +1,25 @@
+---
+name: SGT
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securitygrouptags
+doc_category: Objects
+minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the SGT object.
+    example: my_sgt
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SecurityGroupTag'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My SGT object
+  - model_name: tag
+    type: String
+    mandatory: true
+    description: Security Group Tag.
+    example: "11"

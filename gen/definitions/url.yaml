@@ -1,0 +1,25 @@
+---
+name: URL
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/urls
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the object.
+    mandatory: true
+    example: my_url
+    data_source_query: true
+  - model_name: url
+    type: String
+    description: URL value.
+    mandatory: true
+    example: "https://www.example.com/app"
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My URL"
+  - model_name: overridable
+    type: Bool
+    description: Indicates whether object values can be overridden.
+    exclude_example: true
+    test_value: "true"

@@ -1,0 +1,56 @@
+---
+name: Port Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/portobjectgroups
+is_bulk: true
+doc_category: Objects
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of port groups. The key of the map is the name of the individual Port Group.
+    mandatory: true
+    map_key_example: my_port_groups
+    attributes:
+    - model_name: id
+      type: String
+      resource_id: true
+      description: Id of the managed Port Groups.
+      exclude_example: true
+      exclude_test: true
+    - model_name: type
+      type: String
+      description: Type of the object; this value is always 'PortObjectGroup'.
+      computed: true
+    - model_name: description
+      type: String
+      description: Description of the object.
+      example: "My port group description"
+    - model_name: overridable
+      type: Bool
+      description: Indicates whether object values can be overridden.
+      exclude_example: true
+      test_value: "true"
+    - model_name: objects
+      type: Set
+      mandatory: true
+      attributes:
+        - model_name: id
+          type: String
+          description: Id of the port object.
+          id: true
+          example: 0050568A-232D-0ed3-0000-004294971602
+          test_value: fmc_port.test.id
+        - model_name: type
+          type: String
+          mandatory: true
+          enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
+          example: ProtocolPortObject
+
+test_prerequisites: |-
+  resource "fmc_port" "test" {
+    name        = "my_port_groups_port"
+    description = "My PORT id"
+    protocol    = "TCP"
+    port        = "443"
+  }

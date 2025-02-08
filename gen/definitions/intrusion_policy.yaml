@@ -1,0 +1,33 @@
+---
+name: Intrusion Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/intrusionpolicies
+doc_category: Policy
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the policy.
+    mandatory: true
+    example: my_intrusion_policy
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the policy.
+    example: "My IPS Policy"
+  - model_name: id
+    data_path: [basePolicy]
+    tf_name: base_policy_id
+    type: String
+    description: Id of the base policy.
+    mandatory: true
+    test_value: data.fmc_intrusion_policy.builtin.id
+  - model_name: inspectionMode
+    type: String
+    description: Inspection mode.
+    enum_values: [PREVENTION, DETECTION]
+    example: PREVENTION
+    requires_replace: true # UI shows mismatch after update. It seems an update never changes associated snort2 policy.
+
+test_prerequisites: |-
+  data "fmc_intrusion_policy" "builtin" {
+    name = "Balanced Security and Connectivity"
+  }

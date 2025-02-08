@@ -1,0 +1,278 @@
+---
+name: Device HA Pair
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs
+doc_category: Device
+test_tags: [TF_VAR_device_id, TF_VAR_device_2_id]
+res_description: This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the High Availability (HA) Pair.
+    data_source_query: true
+    example: Device_HA_Pair
+  - model_name: type
+    type: String
+    description: Type of the object; This is always `DeviceHAPair`.
+    computed: true
+  - model_name: id
+    type: String
+    mandatory: true
+    tf_name: primary_device_id
+    requires_replace: true
+    data_path: [primary]
+    description: Id of primary FTD in the HA Pair.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: id
+    type: String
+    mandatory: true
+    tf_name: secondary_device_id
+    requires_replace: true
+    data_path: [secondary]
+    description: Id of secondary FTD in the HA Pair.
+    example: 96d24097-41c4-4332-a4d0-a8c07ac08482
+    test_value: var.device_2_id
+# HA Link
+  - model_name: id
+    type: String
+    mandatory: true
+    tf_name: ha_link_interface_id
+    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    description: Id of High Availability Link interface.
+    example: 96d24097-41c4-4332-a4d0-a8c07ac08482
+    write_only: true
+    requires_replace: true
+  - model_name: name
+    type: String
+    tf_name: ha_link_interface_name
+    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    description: Name of High Availability Link interface.
+    example: GigabitEthernet0/0
+    mandatory: true
+    requires_replace: true
+  - model_name: type
+    type: String
+    mandatory: true
+    tf_name: ha_link_interface_type
+    description: Type of High Availability Link interface.
+    data_path: [ftdHABootstrap,lanFailover,interfaceObject]
+    write_only: true
+    requires_replace: true
+    example: PhysicalInterface
+  - model_name: logicalName
+    type: String
+    mandatory: true
+    tf_name: ha_link_logical_name
+    data_path: [ftdHABootstrap,lanFailover]
+    example: LAN-INTERFACE
+    description: Logical name of failover interface.
+    requires_replace: true
+  - model_name: useIPv6Address
+    type: Bool
+    tf_name: ha_link_use_ipv6
+    default_value: false
+    data_path: [ftdHABootstrap,lanFailover]
+    example: false
+    description: Use IPv6 addressing for HA communication.
+    requires_replace: true
+  - model_name: activeIP
+    tf_name: ha_link_primary_ip
+    mandatory: true
+    type: String
+    data_path: [ftdHABootstrap,lanFailover]
+    description: IP of primary node interface.
+    example: "1.1.1.1"
+    requires_replace: true
+  - model_name: standbyIP
+    type: String
+    mandatory: true
+    tf_name: ha_link_secondary_ip
+    data_path: [ftdHABootstrap,lanFailover]
+    example: "1.1.1.2"
+    description: IP of secondary node interface.
+    requires_replace: true
+  - model_name: subnetMask
+    type: String
+    tf_name: ha_link_netmask
+    mandatory: true
+    data_path: [ftdHABootstrap,lanFailover]
+    description: Subnet mask for HA link.
+    example: "255.255.255.0"
+    requires_replace: true
+# State Link
+  - model_name: useSameLinkForFailovers
+    tf_name: state_link_use_same_as_ha
+    type: Bool
+    mandatory: true
+    data_path: [ftdHABootstrap]
+    example: false
+    description: Use the same link for state and HA.
+    write_only: true
+    requires_replace: true
+  - model_name: id
+    type: String
+    tf_name: state_link_interface_id
+    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    description: ID of physical interface.
+    example: 96d24097-41c4-4332-a4d0-a8c07ac08482
+    write_only: true
+    requires_replace: true
+  - model_name: name
+    type: String
+    tf_name: state_link_interface_name
+    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    description: Name of state link interface.
+    example: GigabitEthernet0/0
+    requires_replace: true
+  - model_name: type
+    type: String
+    tf_name: state_link_interface_type
+    data_path: [ftdHABootstrap,statefulFailover,interfaceObject]
+    description: Type of state link interface.
+    example: PhysicalInterface
+    write_only: true
+    requires_replace: true
+  - model_name: logicalName
+    type: String
+    tf_name: state_link_logical_name
+    data_path: [ftdHABootstrap,statefulFailover]
+    example: Stateful-INTERFACE
+    requires_replace: true
+  - model_name: useIPv6Address
+    type: Bool
+    tf_name: state_link_use_ipv6
+    data_path: [ftdHABootstrap,statefulFailover]
+    example: false
+    description: Use IPv6 addressing for HA communication.
+    requires_replace: true
+  - model_name: activeIP
+    tf_name: state_link_primary_ip
+    type: String
+    data_path: [ftdHABootstrap,statefulFailover]
+    example: "10.10.10.1"
+    description: IP of primary node interface.
+    requires_replace: true
+  - model_name: standbyIP
+    type: String
+    tf_name: state_link_secondary_ip
+    data_path: [ftdHABootstrap,statefulFailover]
+    example: "10.10.10.2"
+    description: IP of secondary node interface.
+    requires_replace: true
+  - model_name: subnetMask
+    type: String
+    tf_name: state_link_netmask
+    data_path: [ftdHABootstrap,statefulFailover]
+    example: "255.255.255.0"
+    description: Subnet mask for state link.
+    requires_replace: true
+# IPsec Encryption
+  - model_name: isEncryptionEnabled
+    tf_name: encryption_enabled
+    type: Bool
+    data_path: [ftdHABootstrap]
+    description: Use encryption for communication.
+    example: "true"
+    requires_replace: true
+  - model_name: encKeyGenerationScheme
+    tf_name: encryption_key_generation_scheme
+    type: String
+    data_path: [ftdHABootstrap]
+    description: Select the encyption key generation scheme.
+    example: "AUTO"
+    enum_values: [ AUTO, CUSTOM ]
+    write_only: true
+    requires_replace: true
+  - model_name: sharedKey
+    type: String
+    data_path: [ftdHABootstrap]
+    tf_name: encryption_key
+    description: Pass shared key for encryption if CUSTOM key geneeration scheme is selected.
+    exclude_example: true
+    exclude_test: true
+    write_only: true
+    requires_replace: true
+# Failover trigger criteria - Interface Failure Treshold ### Changes in this section will require changes in `go` code
+  - model_name: percentFailedInterfaceExceed
+    data_path: [ftdHAFailoverTriggerCriteria]
+    tf_name: failed_interfaces_percent
+    type: Int64
+    description: Percentage of Failed Interfaces that triggers failover.
+    min_int: 1
+    max_int: 100
+    exclude_test: true
+    exclude_example: true
+  - model_name: noOfFailedInterfaceLimit
+    data_path: [ftdHAFailoverTriggerCriteria]
+    tf_name: failed_interfaces_limit
+    description: Number of Failed Interfaces that triggers failover.
+    type: Int64
+    min_int: 1
+    max_int: 211
+    example: 1
+# Failover trigger criteria - Hello Packet Intervals ### Changes in this section will require changes in `go` code
+  - model_name: peerPollTime
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: Int64
+    description: Peer Pool Time (1-15 SEC or 200-999 MSEC)
+    min_int: 1
+    max_int: 999
+    default_value: 1
+    example: 1
+  - model_name: peerPollTimeUnit
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: String
+    description: Peer Pool Time Unit
+    enum_values: [ SEC, MSEC ]
+    default_value: SEC
+    example: SEC
+  - model_name: peerHoldTime
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: Int64
+    description: Peer Hold Time (3-45 SEC or 800-999 MSEC)
+    min_int: 3
+    max_int: 999
+    default_value: 15
+    example: 15
+  - model_name: peerHoldTimeUnit
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: String
+    description: Peer Hold Time Unit
+    enum_values: [ SEC, MSEC ]
+    default_value: SEC
+    example: SEC
+  - model_name: interfacePollTime
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: Int64
+    description: Peer Pool Time (1-15 SEC or 500-999 MSEC)
+    min_int: 1
+    max_int: 999
+    default_value: 5
+    example: 5
+  - model_name: interfacePollTimeUnit
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: String
+    description: Peer Pool Time Unit
+    enum_values: [ SEC, MSEC ]
+    default_value: SEC
+    example: SEC
+  - model_name: interfaceHoldTime
+    data_path: [ftdHAFailoverTriggerCriteria]
+    type: Int64
+    description: Interface Hold Time in seconds
+    min_int: 25
+    max_int: 75
+    default_value: 25
+    example: 25
+# Other
+  - model_name: action
+    type: String
+    description: FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
+    enum_values: [ SWITCH, HABREAK ]
+    exclude_test: true
+    exclude_example: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "device_2_id" { default = null } // tests will set $TF_VAR_device_2_id

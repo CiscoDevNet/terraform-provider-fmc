@@ -1,0 +1,40 @@
+---
+name: Smart License
+rest_endpoint: /api/fmc_platform/v1/license/smartlicenses
+doc_category: License
+no_import: true
+no_data_source: true
+skip_test: true
+attributes:
+  - model_name: registrationType
+    type: String
+    description: Smart license mode
+    enum_values: [REGISTER, EVALUATION]
+    example: REGISTER
+    mandatory: true
+    write_only: true
+  - model_name: token
+    type: String
+    description: Registration token. Mandatory when registration_type is set to REGISTER.
+    example: "X2M3YmJlY..."
+    write_only: true
+  - model_name: regStatus
+    tf_name: registration_status
+    type: String
+    description: Smart license registration status
+    computed: true
+    computed_refresh_value: true
+  - model_name: dummy_force
+    tf_name: force
+    type: Bool
+    description: Set to true to force Smart License re-registration. This will take effect on each apply.
+    example: "false"
+    default_value: "false"
+    write_only: true
+  - model_name: dummy_retain_registration
+    tf_name: retain_registration
+    type: Bool
+    description: Set to true to keep registration after the resource is destroyed.
+    example: "false"
+    default_value: "false"
+    write_only: true

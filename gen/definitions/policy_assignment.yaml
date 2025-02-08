@@ -1,0 +1,67 @@
+---
+name: Policy Assignment
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments
+doc_category: Policy Assignments
+test_tags: [TF_VAR_device_id]
+skip_minimum_test: true
+attributes:
+  - model_name: type
+    type: String
+    description: Type of the object; this is always 'PolicyAssignment'
+    computed: true
+  - model_name: name
+    tf_name: policy_name
+    data_path: ["policy"]
+    type: String
+    description: Name of the policy to be assigned.
+    computed: true
+    data_source_query: true
+  - model_name: id
+    tf_name: policy_id
+    type: String
+    description: Id of the policy to be assigned.
+    id: true
+    mandatory: true
+    example: 0050568A-2561-0ed3-0000-004294972836
+    data_path: ["policy"]
+    test_value: fmc_ftd_nat_policy.example.id
+  - model_name: type
+    tf_name: policy_type
+    data_path: ["policy"]
+    type: String
+    description: Type of the policy to be assigned.
+    mandatory: true
+    example: FTDNatPolicy
+    enum_values: ["FTDNatPolicy", "HealthPolicy", "AccessPolicy"]
+  - model_name: dummy_after_destroy_policy_id
+    tf_name: after_destroy_policy_id
+    write_only: true
+    type: String
+    description: Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
+    example: 0050568A-2561-0ed3-0000-004294972836
+    exclude_test: true
+  - model_name: targets
+    type: Set
+    mandatory: true
+    description: List of devices to which policy should be attached
+    attributes:
+      - model_name: id
+        type: String
+        id: true
+        mandatory: true
+        description: Id of the device to which policy should be attached
+        example: "9862719c-8d5f-11ef-99a6-aef0794da1c1"
+        test_value: var.device_id
+      - model_name: type
+        type: String
+        enum_values: [Device,DeviceHAPair,DeviceGroup]
+        description: Type of the device to which policy should be attached
+        mandatory: true
+        example: Device
+
+test_prerequisites: |-
+  resource "fmc_ftd_nat_policy" "example" {
+    name = "fmc_policy_assignment_nat_policy"
+  }
+
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

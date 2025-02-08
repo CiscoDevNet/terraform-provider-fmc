@@ -1,0 +1,217 @@
+---
+name: Device VNI Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vniinterfaces
+doc_category: Devices
+test_tags: [TF_VAR_device_id]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_device_physical_interface.test.device_id
+  - model_name: vniId
+    type: Int64
+    description: User-created VNI number for the interface, not exposed over the wire.
+    example: "42"
+    mandatory: true
+    requires_replace: true
+    min_int: 1
+    max_int: 10000
+  - model_name: multicastGroupAddress
+    type: String
+    description:
+      Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to
+      DEFAULT_MULTICAST_GROUP.
+      If unset, the default group from the VTEP source interface is used.
+    example: 224.0.0.24
+  - model_name: segmentId
+    type: Int64
+    description: VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+    min_int: 1
+    max_int: 16777215
+    example: 501
+    minimum_test_value: "401"
+  - model_name: vtepID
+    tf_name: nve_number
+    type: Int64
+    description: VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.
+    min_int: 1
+    max_int: 10000
+    example: 1
+    minimum_test_value: "null"
+    test_value: fmc_device_vtep_policy.test.vteps[0].nve_number
+  - model_name: enabled
+    type: Bool
+    description: Indicates whether to enable the interface.
+    default_value: "true"
+    test_value: "true"
+    exclude_example: true
+  - model_name: ifname
+    tf_name: logical_name
+    type: String
+    description: >-
+      Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
+      characters. Can only be used when `segment_id` is set.
+    example: vni42
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: my description
+  - model_name: MTU
+    tf_name: mtu
+    type: Int64
+    description: Maximum transmission unit. Can only be used when logical_name is set on the parent interface.
+    exclude_example: true
+    exclude_test: true
+  - model_name: priority
+    type: Int64
+    description: Priority 0-65535.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: [securityZone]
+    tf_name: security_zone_id
+    type: String
+    description: >-
+      Id of the assigned security zone. Can only be used when `logical_name`
+      is set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_security_zone.test.id
+    minimum_test_value: "null"
+  - model_name: type
+    data_path: [securityZone]
+    type: String
+    value: SecurityZone
+  - model_name: address
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_address
+    type: String
+    description: Static IPv4 address.
+    example: "10.2.2.2"
+  - model_name: netmask
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_netmask
+    type: String
+    description: Netmask (width) for ipv4_static_address.
+    example: "24"
+  - model_name: enableDefaultRouteDHCP
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_obtain_route
+    type: Bool
+    description: >-
+      Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
+      from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1.
+      Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be
+      non-null.
+      The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+    exclude_example: true
+    exclude_test: true
+  - model_name: dhcpRouteMetric
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_route_metric
+    type: Int64
+    description: >-
+      The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be
+      null when using ipv4_static_address.
+    min_int: 1
+    max_int: 255
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableIPV6
+    data_path: [ipv6]
+    tf_name: ipv6_enable
+    description: Indicates whether to enable IPv6.
+    type: Bool
+    example: "true"
+  - model_name: enforceEUI64
+    data_path: [ipv6]
+    tf_name: ipv6_enforce_eui
+    description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    type: Bool
+    exclude_example: true
+    test_value: "true"
+  - model_name: enableAutoConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_auto_config
+    description: Indicates whether to enable IPv6 autoconfiguration.
+    type: Bool
+    example: "true"
+  - model_name: enableDHCPAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_dhcp_address
+    description: Indicates whether to enable DHCPv6 for address config.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableDHCPNonAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_enable_dhcp_nonaddress
+    description: Indicates whether to enable DHCPv6 for non-address config.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableRA
+    data_path: [ipv6]
+    tf_name: ipv6_enable_ra
+    description: Indicates whether to enable IPv6 router advertisement (RA).
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: addresses
+    data_path: [ipv6]
+    tf_name: ipv6_addresses
+    type: List
+    exclude_example: true
+    attributes:
+      - model_name: address
+        type: String
+        description: IPv6 address without a slash and prefix.
+        id: true
+        exclude_example: true
+        test_value: '"2005::"'
+      - model_name: prefix
+        type: String
+        description: Prefix width for the IPv6 address.
+        id: true
+        exclude_example: true
+        test_value: "56"
+      - model_name: enforceEUI64
+        tf_name: enforce_eui
+        description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        type: Bool
+        exclude_example: true
+        test_value: "false"
+  - model_name: enableProxy
+    type: Bool
+    description: Indicates whether to enable proxy.
+    default_value: "false"
+    exclude_example: true
+    exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_device_physical_interface" "test" {
+    device_id    = var.device_id
+    name         = "GigabitEthernet0/1"
+    mode         = "NONE"
+    logical_name = "myinterface-0-1"
+    mtu          = 9000
+  }
+
+  resource "fmc_device_vtep_policy" "test" {
+    device_id = var.device_id
+    vteps = [{
+      nve_number               = 1
+      source_interface_id      = fmc_device_physical_interface.test.id
+      neighbor_discovery       = "DEFAULT_MULTICAST_GROUP"
+      neighbor_address_literal = "224.0.0.1"
+    }]
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "routed1"
+    interface_type = "ROUTED"
+  }
+
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

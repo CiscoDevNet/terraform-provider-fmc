@@ -1,0 +1,54 @@
+---
+name: URL Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/urlgroups
+is_bulk: true
+doc_category: Objects
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of url groups. The key of the map is the name of the individual URL Group.
+    mandatory: true
+    map_key_example: url_group_1
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed URL Group.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My URL group"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        exclude_example: true
+        test_value: "true"
+      - model_name: objects
+        tf_name: urls
+        type: Set
+        mandatory: true
+        description: Set of URL objects to be included in the URL group.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object (such as fmc_url.example.id, etc.).
+            id: true
+            example: 0050568A-FAC7-0ed3-0000-004294987896
+            test_value: fmc_url.test.id
+      - model_name: literals
+        type: Set
+        description: Set of literal values to be included in the URL group.
+        attributes:
+          - model_name: url
+            type: String
+            description: URL literal value.
+            example: "https://www.example.com/app"
+test_prerequisites: |-
+  resource "fmc_url" "test" {
+    name        = "url_1"
+    url         = "https://www.example.com/app"
+  }

@@ -1,0 +1,19 @@
+---
+name: Syslog Alert
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/syslogalerts
+no_resource: true
+no_import: true
+doc_category: Policy
+attributes:
+  - model_name: name
+    type: String
+    description: >-
+      Name of the Syslog Alert. There is no built-in Syslog alert.
+    mandatory: true
+    example: test_syslog_alert_1
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SyslogAlert'.
+    computed: true
+
