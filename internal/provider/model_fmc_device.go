@@ -149,11 +149,6 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.ProhibitPacketTransfer = types.BoolNull()
 	}
-	if value := res.Get("performanceTier"); value.Exists() {
-		data.PerformanceTier = types.StringValue(value.String())
-	} else {
-		data.PerformanceTier = types.StringNull()
-	}
 	if value := res.Get("snortEngine"); value.Exists() {
 		data.SnortEngine = types.StringValue(value.String())
 	} else {
@@ -219,11 +214,6 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.ProhibitPacketTransfer = types.BoolValue(value.Bool())
 	} else {
 		data.ProhibitPacketTransfer = types.BoolNull()
-	}
-	if value := res.Get("performanceTier"); value.Exists() && !data.PerformanceTier.IsNull() {
-		data.PerformanceTier = types.StringValue(value.String())
-	} else {
-		data.PerformanceTier = types.StringNull()
 	}
 	if value := res.Get("snortEngine"); value.Exists() && !data.SnortEngine.IsNull() {
 		data.SnortEngine = types.StringValue(value.String())

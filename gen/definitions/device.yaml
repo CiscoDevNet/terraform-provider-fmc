@@ -2,9 +2,9 @@
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
 doc_category: Devices
-test_tags: [TF_VAR_device_registration_key,TF_VAR_license_capabilities]
+test_tags: [TF_VAR_device_registration_key, TF_VAR_license_capabilities]
 attributes:
-# General
+  # General
   - model_name: name
     type: String
     mandatory: true
@@ -38,7 +38,25 @@ attributes:
     type: Set
     element_type: String
     mandatory: true
-    enum_values: [ ESSENTIALS, IPS, URL, MALWARE_DEFENSE, CARRIER, SECURE_CLIENT_PREMIER, SECURE_CLIENT_PREMIER_ADVANTAGE, SECURE_CLIENT_VPNOnly, BASE, THREAT, PROTECT, CONTROL, URLFilter, MALWARE, VPN, SSL ]
+    enum_values:
+      [
+        ESSENTIALS,
+        IPS,
+        URL,
+        MALWARE_DEFENSE,
+        CARRIER,
+        SECURE_CLIENT_PREMIER,
+        SECURE_CLIENT_PREMIER_ADVANTAGE,
+        SECURE_CLIENT_VPNOnly,
+        BASE,
+        THREAT,
+        PROTECT,
+        CONTROL,
+        URLFilter,
+        MALWARE,
+        VPN,
+        SSL,
+      ]
     description: "Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory"
     example: ESSENTIALS
     test_value: "[var.license_capabilities]"
@@ -52,7 +70,7 @@ attributes:
     test_value: var.device_registration_key
   - model_name: id
     tf_name: device_group_id
-    data_path: [ deviceGroup ]
+    data_path: [deviceGroup]
     type: String
     description: Id of the device group.
     exclude_example: true
@@ -64,27 +82,28 @@ attributes:
     exclude_test: true
   - model_name: performanceTier
     type: String
+    write_only: true
     description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
     enum_values: [FTDv5, FTDv10, FTDv20, FTDv30, FTDv50, Legacy]
     example: FTDv5
   - model_name: snortEngine
     type: String
     description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
-    enum_values: [ SNORT2, SNORT3]
+    enum_values: [SNORT2, SNORT3]
     example: SNORT3
   - model_name: enableOGS
-    data_path: [ advanced ]
+    data_path: [advanced]
     tf_name: object_group_search
     type: Bool
     description: Enables Object Group Search
     example: "true"
     exclude_test: true
-# Policy assignments
+  # Policy assignments
   - model_name: id
     tf_name: access_policy_id
     type: String
     mandatory: true
-    data_path: [ accessPolicy ]
+    data_path: [accessPolicy]
     description: Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_access_control_policy.test.id
@@ -95,7 +114,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: id
-    data_path: [ healthPolicy ]
+    data_path: [healthPolicy]
     tf_name: health_policy_id
     type: String
     description: Id of the assigned Health policy.
