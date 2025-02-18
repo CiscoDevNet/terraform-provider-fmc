@@ -143,6 +143,35 @@ resource "fmc_access_control_policy" "example" {
           id = "bb18bf88-eddc-11ef-83d2-b4300fadd560"
         }
       ]
+      application_filters = [
+        {
+          types = [
+            {
+              id = "WEBAPP"
+            }
+          ]
+          risks = [
+            {
+              id = "VERY_LOW"
+            }
+          ]
+          business_relevances = [
+            {
+              id = "LOW"
+            }
+          ]
+          categories = [
+            {
+              id = "118"
+            }
+          ]
+          tags = [
+            {
+              id = "24"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

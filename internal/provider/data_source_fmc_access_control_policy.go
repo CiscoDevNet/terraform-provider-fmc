@@ -506,14 +506,82 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"application_filter_objects": schema.ListNestedAttribute{
-							MarkdownDescription: "List of application filtering conditions objects.",
+						"application_filter_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of Application Filtering objects.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: "Id of the Application Filter.",
 										Computed:            true,
+									},
+								},
+							},
+						},
+						"application_filters": schema.ListNestedAttribute{
+							MarkdownDescription: "List of Application Filtering conditions.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"types": schema.SetNestedAttribute{
+										MarkdownDescription: "Set of Application Types.",
+										Computed:            true,
+										NestedObject: schema.NestedAttributeObject{
+											Attributes: map[string]schema.Attribute{
+												"id": schema.StringAttribute{
+													MarkdownDescription: "Id of the Application Type.",
+													Computed:            true,
+												},
+											},
+										},
+									},
+									"risks": schema.SetNestedAttribute{
+										MarkdownDescription: "Set of Application Risk levels.",
+										Computed:            true,
+										NestedObject: schema.NestedAttributeObject{
+											Attributes: map[string]schema.Attribute{
+												"id": schema.StringAttribute{
+													MarkdownDescription: "Id of the Application Risk level.",
+													Computed:            true,
+												},
+											},
+										},
+									},
+									"business_relevances": schema.SetNestedAttribute{
+										MarkdownDescription: "Set of Application Business Relevance levels.",
+										Computed:            true,
+										NestedObject: schema.NestedAttributeObject{
+											Attributes: map[string]schema.Attribute{
+												"id": schema.StringAttribute{
+													MarkdownDescription: "Id of the Application Business Relevance level.",
+													Computed:            true,
+												},
+											},
+										},
+									},
+									"categories": schema.SetNestedAttribute{
+										MarkdownDescription: "Set of Application Categories.",
+										Computed:            true,
+										NestedObject: schema.NestedAttributeObject{
+											Attributes: map[string]schema.Attribute{
+												"id": schema.StringAttribute{
+													MarkdownDescription: "Id of the Application Category.",
+													Computed:            true,
+												},
+											},
+										},
+									},
+									"tags": schema.SetNestedAttribute{
+										MarkdownDescription: "Set of Application Tags.",
+										Computed:            true,
+										NestedObject: schema.NestedAttributeObject{
+											Attributes: map[string]schema.Attribute{
+												"id": schema.StringAttribute{
+													MarkdownDescription: "Id of the Application Tag.",
+													Computed:            true,
+												},
+											},
+										},
 									},
 								},
 							},
