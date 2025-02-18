@@ -102,6 +102,8 @@ type AccessControlPolicyRules struct {
 	IntrusionPolicyId          types.String                                         `tfsdk:"intrusion_policy_id"`
 	TimeRangeId                types.String                                         `tfsdk:"time_range_id"`
 	VariableSetId              types.String                                         `tfsdk:"variable_set_id"`
+	Applications               []AccessControlPolicyRulesApplications               `tfsdk:"applications"`
+	ApplicationFilterObjects   []AccessControlPolicyRulesApplicationFilterObjects   `tfsdk:"application_filter_objects"`
 }
 
 type AccessControlPolicyRulesSourceNetworkLiterals struct {
@@ -170,6 +172,12 @@ type AccessControlPolicyRulesUrlObjects struct {
 type AccessControlPolicyRulesUrlCategories struct {
 	Id         types.String `tfsdk:"id"`
 	Reputation types.String `tfsdk:"reputation"`
+}
+type AccessControlPolicyRulesApplications struct {
+	Id types.String `tfsdk:"id"`
+}
+type AccessControlPolicyRulesApplicationFilterObjects struct {
+	Id types.String `tfsdk:"id"`
 }
 
 // End of section. //template:end types
@@ -562,6 +570,26 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			}
 			if !item.VariableSetId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "variableSet.id", item.VariableSetId.ValueString())
+			}
+			if len(item.Applications) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "applications.applications", []interface{}{})
+				for _, childItem := range item.Applications {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "applications.applications.-1", itemChildBody)
+				}
+			}
+			if len(item.ApplicationFilterObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "applications.applicationFilters", []interface{}{})
+				for _, childItem := range item.ApplicationFilterObjects {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "applications.applicationFilters.-1", itemChildBody)
+				}
 			}
 			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
 		}
@@ -1069,6 +1097,34 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.VariableSetId = types.StringValue(value.String())
 			} else {
 				data.VariableSetId = types.StringNull()
+			}
+			if value := res.Get("applications.applications"); value.Exists() {
+				data.Applications = make([]AccessControlPolicyRulesApplications, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesApplications{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).Applications = append((*parent).Applications, data)
+					return true
+				})
+			}
+			if value := res.Get("applications.applicationFilters"); value.Exists() {
+				data.ApplicationFilterObjects = make([]AccessControlPolicyRulesApplicationFilterObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesApplicationFilterObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).ApplicationFilterObjects = append((*parent).ApplicationFilterObjects, data)
+					return true
+				})
 			}
 			(*parent).Rules = append((*parent).Rules, data)
 			return true
@@ -2120,6 +2176,92 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.VariableSetId = types.StringValue(value.String())
 		} else {
 			data.VariableSetId = types.StringNull()
+		}
+		for i := 0; i < len(data.Applications); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Applications[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Applications[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("applications.applications").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Applications[%d] = %+v",
+					i,
+					(*parent).Applications[i],
+				))
+				(*parent).Applications = slices.Delete((*parent).Applications, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).Applications[i] = data
+		}
+		for i := 0; i < len(data.ApplicationFilterObjects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.ApplicationFilterObjects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).ApplicationFilterObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("applications.applicationFilters").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing ApplicationFilterObjects[%d] = %+v",
+					i,
+					(*parent).ApplicationFilterObjects[i],
+				))
+				(*parent).ApplicationFilterObjects = slices.Delete((*parent).ApplicationFilterObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).ApplicationFilterObjects[i] = data
 		}
 		(*parent).Rules[i] = data
 	}

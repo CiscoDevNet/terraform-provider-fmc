@@ -555,6 +555,30 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the Variable Set for the rule action.").String,
 							Optional:            true,
 						},
+						"applications": schema.SetNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set of applications.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the Application.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
+						"application_filter_objects": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of application filtering conditions objects.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the Application Filter.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},

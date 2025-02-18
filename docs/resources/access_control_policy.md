@@ -148,6 +148,16 @@ resource "fmc_access_control_policy" "example" {
       intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       time_range_id       = "0050568A-7F57-0ed3-0000-004294975576"
       variable_set_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      applications = [
+        {
+          id = "7967"
+        }
+      ]
+      application_filter_objects = [
+        {
+          id = "bb18bf88-eddc-11ef-83d2-b4300fadd560"
+        }
+      ]
     }
   ]
 }
@@ -216,6 +226,8 @@ Required:
 
 Optional:
 
+- `application_filter_objects` (Attributes List) List of application filtering conditions objects. (see [below for nested schema](#nestedatt--rules--application_filter_objects))
+- `applications` (Attributes Set) Set of applications. (see [below for nested schema](#nestedatt--rules--applications))
 - `category_name` (String) Name of the category that owns this rule (`name` from `categories` list).
 - `description` (String) Rule description.
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic. (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
@@ -262,6 +274,22 @@ Optional:
 Read-Only:
 
 - `id` (String) Id of the Access Rule.
+
+<a id="nestedatt--rules--application_filter_objects"></a>
+### Nested Schema for `rules.application_filter_objects`
+
+Optional:
+
+- `id` (String) Id of the Application Filter.
+
+
+<a id="nestedatt--rules--applications"></a>
+### Nested Schema for `rules.applications`
+
+Optional:
+
+- `id` (String) Id of the Application.
+
 
 <a id="nestedatt--rules--destination_dynamic_objects"></a>
 ### Nested Schema for `rules.destination_dynamic_objects`

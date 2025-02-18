@@ -60,6 +60,8 @@ Read-Only:
 Read-Only:
 
 - `action` (String) Rule action.
+- `application_filter_objects` (Attributes List) List of application filtering conditions objects. (see [below for nested schema](#nestedatt--rules--application_filter_objects))
+- `applications` (Attributes Set) Set of applications. (see [below for nested schema](#nestedatt--rules--applications))
 - `category_name` (String) Name of the category that owns this rule (`name` from `categories` list).
 - `description` (String) Rule description.
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic. (see [below for nested schema](#nestedatt--rules--destination_dynamic_objects))
@@ -96,6 +98,22 @@ Read-Only:
 - `variable_set_id` (String) Id of the Variable Set for the rule action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
 - `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags or vlan tags group. (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
+
+<a id="nestedatt--rules--application_filter_objects"></a>
+### Nested Schema for `rules.application_filter_objects`
+
+Read-Only:
+
+- `id` (String) Id of the Application Filter.
+
+
+<a id="nestedatt--rules--applications"></a>
+### Nested Schema for `rules.applications`
+
+Read-Only:
+
+- `id` (String) Id of the Application.
+
 
 <a id="nestedatt--rules--destination_dynamic_objects"></a>
 ### Nested Schema for `rules.destination_dynamic_objects`

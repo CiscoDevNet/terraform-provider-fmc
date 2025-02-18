@@ -494,6 +494,30 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							MarkdownDescription: "Id of the Variable Set for the rule action.",
 							Computed:            true,
 						},
+						"applications": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of applications.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the Application.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"application_filter_objects": schema.ListNestedAttribute{
+							MarkdownDescription: "List of application filtering conditions objects.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the Application Filter.",
+										Computed:            true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},

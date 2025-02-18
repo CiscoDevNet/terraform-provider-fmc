@@ -636,6 +636,91 @@ attributes:
           Id of the Variable Set for the rule action.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
+      - model_name: applications
+        data_path: [applications]
+        type: Set
+        description: Set of applications.
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Application.
+            id: true
+            example: "7967"
+      - model_name: applicationFilters
+        data_path: [applications]
+        tf_name: application_filter_objects
+        type: List
+        description: List of application filtering conditions objects.
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Application Filter.
+            id: true
+            example: "bb18bf88-eddc-11ef-83d2-b4300fadd560"
+
+# ordered_list not yet implemented at this depth
+#      - model_name: inlineApplicationFilters
+#        data_path: [applications]
+#        tf_name: application_filters
+#        type: List
+#        description: >-
+#          List of application filtering conditions.
+#        ordered_list: true
+#        attributes:
+#        - model_name: applicationTypes
+#          tf_name: types
+#          type: Set
+#          description: >-
+#            Set of Application Types.
+#          attributes:
+#            - model_name: id
+#              type: String
+#              description: Id of the Application Type.
+#              example: "WEBAPP"
+#              id: true
+#        - model_name: risks
+#          type: Set
+#          description: >-
+#            Set of Application Risks.
+#          attributes:
+#            - model_name: id
+#              type: String
+#              description: Id of the Application Risk.
+#              example: "VERY_LOW"
+#              id: true
+#        - model_name: productivities
+#          tf_name: business_relevances
+#          type: Set
+#          description: >-
+#            Set of Application Business Relevances.
+#          attributes:
+#            - model_name: id
+#              type: String
+#              description: Id of the Application Business Relevance.
+#              example: "LOW"
+#             id: true
+#        - model_name: categories
+#          type: Set
+#          description: >-
+#            Set of Application Categories.
+#          attributes:
+#            - model_name: id
+#              type: String
+#              description: Id of the Application Category.
+#              example: "118"
+#              id: true
+#       - model_name: tags
+#          type: Set
+#          description: >-
+#            Set of Application Tags.
+#          attributes:
+#            - model_name: id
+#              type: String
+#              description: Id of the Application Tag.
+#             example: "24"
+#             id: true
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
