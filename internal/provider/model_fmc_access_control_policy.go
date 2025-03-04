@@ -203,6 +203,10 @@ func (r AccessControlPolicyRules) GetSection() string {
 	return "default"
 }
 
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+
+// End of section. //template:end minimumVersions
+
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data AccessControlPolicy) getPath() string {
