@@ -38,6 +38,7 @@ type FTDNATPolicy struct {
 	Domain         types.String                 `tfsdk:"domain"`
 	Name           types.String                 `tfsdk:"name"`
 	Description    types.String                 `tfsdk:"description"`
+	Type           types.String                 `tfsdk:"type"`
 	ManualNatRules []FTDNATPolicyManualNatRules `tfsdk:"manual_nat_rules"`
 	AutoNatRules   []FTDNATPolicyAutoNatRules   `tfsdk:"auto_nat_rules"`
 }
@@ -266,6 +267,11 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 	if value := res.Get("dummy_manual_nat_rules"); value.Exists() {
 		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0)
@@ -505,6 +511,11 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 	{
 		l := len(res.Get("dummy_manual_nat_rules").Array())
@@ -770,6 +781,13 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *FTDNATPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 	for i := range data.ManualNatRules {
 		r := res.Get(fmt.Sprintf("dummy_manual_nat_rules.%d", i))
 		if v := data.ManualNatRules[i]; v.Id.IsUnknown() {

@@ -38,6 +38,7 @@ type NetworkGroup struct {
 	Domain      types.String           `tfsdk:"domain"`
 	Name        types.String           `tfsdk:"name"`
 	Description types.String           `tfsdk:"description"`
+	Type        types.String           `tfsdk:"type"`
 	Overridable types.Bool             `tfsdk:"overridable"`
 	Objects     []NetworkGroupObjects  `tfsdk:"objects"`
 	Literals    []NetworkGroupLiterals `tfsdk:"literals"`
@@ -121,6 +122,11 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("overridable"); value.Exists() {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
@@ -174,6 +180,11 @@ func (data *NetworkGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())
@@ -275,6 +286,13 @@ func (data *NetworkGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *NetworkGroup) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns

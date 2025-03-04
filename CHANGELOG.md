@@ -1,6 +1,8 @@
 ## 2.0.0-beta2 (Unreleased)
 
 - (Fix) Update minimum FMC version for `file_type` and `file_category` data sources
+- (Fix) Align fields in ipv4/ipv6/vrf_ipv4/vrf_ipv6 static_route resources
+- (Enhancement) Add `type` field to multiple resources
 
 ## 2.0.0-beta1
 

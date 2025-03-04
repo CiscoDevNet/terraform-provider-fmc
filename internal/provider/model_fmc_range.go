@@ -37,6 +37,7 @@ type Range struct {
 	IpRange     types.String `tfsdk:"ip_range"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
+	Type        types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -100,6 +101,11 @@ func (data *Range) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -131,6 +137,11 @@ func (data *Range) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -140,6 +151,13 @@ func (data *Range) fromBodyPartial(ctx context.Context, res gjson.Result) {
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *Range) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
