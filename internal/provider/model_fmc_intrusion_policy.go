@@ -35,11 +35,16 @@ type IntrusionPolicy struct {
 	Domain         types.String `tfsdk:"domain"`
 	Name           types.String `tfsdk:"name"`
 	Description    types.String `tfsdk:"description"`
+	Type           types.String `tfsdk:"type"`
 	BasePolicyId   types.String `tfsdk:"base_policy_id"`
 	InspectionMode types.String `tfsdk:"inspection_mode"`
 }
 
 // End of section. //template:end types
+
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+
+// End of section. //template:end minimumVersions
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
@@ -86,6 +91,11 @@ func (data *IntrusionPolicy) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("basePolicy.id"); value.Exists() {
 		data.BasePolicyId = types.StringValue(value.String())
 	} else {
@@ -117,6 +127,11 @@ func (data *IntrusionPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("basePolicy.id"); value.Exists() && !data.BasePolicyId.IsNull() {
 		data.BasePolicyId = types.StringValue(value.String())
 	} else {
@@ -136,6 +151,13 @@ func (data *IntrusionPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *IntrusionPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns

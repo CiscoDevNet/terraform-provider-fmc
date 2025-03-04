@@ -50,7 +50,6 @@ var (
 	_ resource.Resource                = &ExtendedACLResource{}
 	_ resource.ResourceWithImportState = &ExtendedACLResource{}
 )
-var minFMCVersionCreateExtendedACL = version.Must(version.NewVersion("7.2"))
 
 func NewExtendedACLResource() resource.Resource {
 	return &ExtendedACLResource{}
@@ -91,6 +90,13 @@ func (r *ExtendedACLResource) Schema(ctx context.Context, req resource.SchemaReq
 			"description": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the Extended ACL.").String,
 				Optional:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ExtendedAccessList'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"entries": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of ACL's entries.").String,

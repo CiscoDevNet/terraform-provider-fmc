@@ -48,7 +48,6 @@ var (
 	_ resource.Resource                = &StandardACLResource{}
 	_ resource.ResourceWithImportState = &StandardACLResource{}
 )
-var minFMCVersionCreateStandardACL = version.Must(version.NewVersion("7.2"))
 
 func NewStandardACLResource() resource.Resource {
 	return &StandardACLResource{}
@@ -89,6 +88,13 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 			"description": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'StandardAccessList'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"entries": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of ACL's entries.").String,

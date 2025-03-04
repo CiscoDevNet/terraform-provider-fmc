@@ -48,7 +48,6 @@ var (
 	_ resource.Resource                = &URLGroupsResource{}
 	_ resource.ResourceWithImportState = &URLGroupsResource{}
 )
-var minFMCVersionBulkDeleteURLGroups = version.Must(version.NewVersion("7.4"))
 
 func NewURLGroupsResource() resource.Resource {
 	return &URLGroupsResource{}
@@ -97,6 +96,13 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 							Optional:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'UrlGroup'.").String,
+							Computed:            true,
+							PlanModifiers: []planmodifier.String{
+								stringplanmodifier.UseStateForUnknown(),
+							},
 						},
 						"overridable": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,

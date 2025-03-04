@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -38,6 +39,7 @@ type StandardACL struct {
 	Domain      types.String         `tfsdk:"domain"`
 	Name        types.String         `tfsdk:"name"`
 	Description types.String         `tfsdk:"description"`
+	Type        types.String         `tfsdk:"type"`
 	Entries     []StandardACLEntries `tfsdk:"entries"`
 }
 
@@ -56,6 +58,11 @@ type StandardACLEntriesLiterals struct {
 }
 
 // End of section. //template:end types
+
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionCreateStandardACL = version.Must(version.NewVersion("7.2"))
+
+// End of section. //template:end minimumVersions
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
@@ -130,6 +137,11 @@ func (data *StandardACL) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("entries"); value.Exists() {
 		data.Entries = make([]StandardACLEntries, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
@@ -197,6 +209,11 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		data.Description = types.StringValue(value.String())
 	} else {
 		data.Description = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 	{
 		l := len(res.Get("entries").Array())
@@ -320,6 +337,13 @@ func (data *StandardACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *StandardACL) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
