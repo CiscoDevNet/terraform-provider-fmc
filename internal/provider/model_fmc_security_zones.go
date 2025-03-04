@@ -237,7 +237,7 @@ func (data *SecurityZones) Clone() SecurityZones {
 func (data SecurityZones) toBodyNonBulk(ctx context.Context, state SecurityZones) string {
 	// This is one-by-one update, so only one element to update is expected
 	if len(data.Items) > 1 {
-		tflog.Error(ctx, "Found more than one element to chage. Only one will be changed.")
+		tflog.Error(ctx, "Found more than one element to change. Only one will be changed.")
 	}
 
 	// Utilize existing toBody function
