@@ -277,7 +277,7 @@ func (data *ICMPv4Objects) Clone() ICMPv4Objects {
 func (data ICMPv4Objects) toBodyNonBulk(ctx context.Context, state ICMPv4Objects) string {
 	// This is one-by-one update, so only one element to update is expected
 	if len(data.Items) > 1 {
-		tflog.Error(ctx, "Found more than one element to chage. Only one will be changed.")
+		tflog.Error(ctx, "Found more than one element to change. Only one will be changed.")
 	}
 
 	// Utilize existing toBody function
