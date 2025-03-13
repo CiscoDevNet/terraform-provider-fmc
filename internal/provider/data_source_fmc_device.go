@@ -212,7 +212,24 @@ func (d *DeviceDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	res = config.fromBodyPolicy(ctx, res, policies)
+	// Get HA Pairs
+	haPairs, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs?expanded=true", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve HA Pairs (GET), got error: %s, %s", err, haPairs.String()))
+		return
+	}
+
+	// Get Clusters
+	clusters, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster?expanded=true", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Clusters (GET), got error: %s, %s", err, haPairs.String()))
+		return
+	}
+
+	// Check if device is member of either HAPair or Cluster
+	haMembershipStatus := config.checkHaMembership(ctx, haPairs, clusters)
+
+	res = config.fromBodyPolicy(ctx, res, policies, haMembershipStatus)
 	config.fromBody(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))

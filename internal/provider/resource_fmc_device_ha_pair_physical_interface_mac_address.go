@@ -25,13 +25,11 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -43,26 +41,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceClusterResource{}
-	_ resource.ResourceWithImportState = &DeviceClusterResource{}
+	_ resource.Resource                = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
+	_ resource.ResourceWithImportState = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
 )
 
-func NewDeviceClusterResource() resource.Resource {
-	return &DeviceClusterResource{}
+func NewDeviceHAPairPhysicalInterfaceMACAddressResource() resource.Resource {
+	return &DeviceHAPairPhysicalInterfaceMACAddressResource{}
 }
 
-type DeviceClusterResource struct {
+type DeviceHAPairPhysicalInterfaceMACAddressResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_cluster"
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
 }
 
-func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\nConfiguration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Physical Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -79,84 +77,47 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the FTD Cluster.").String,
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA Pair device.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource; This is always `DeviceCluster`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource; This is always `FailoverInterfaceMacAddressConfig`.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"cluster_key": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Secret key for the cluster, between 1 nd 63 characters.").String,
+			"interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Interface physical name.").String,
 				Required:            true,
-			},
-			"control_node_device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Node device ID.").String,
-				Required:            true,
-			},
-			"control_node_vni_prefix": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
-				Required:            true,
-			},
-			"control_node_ccl_prefix": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network").String,
-				Required:            true,
-			},
-			"control_node_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link interface ID.").String,
-				Required:            true,
-			},
-			"control_node_interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link interface Name.").String,
-				Required:            true,
-			},
-			"control_node_interface_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link interface Type.").String,
-				Required:            true,
-			},
-			"control_node_ccl_ipv4_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link IPv4 address / VTEP IPv4 address.").String,
-				Required:            true,
-			},
-			"control_node_priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority of cluster controle node.").AddIntegerRangeDescription(1, 255).String,
-				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 255),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"data_devices": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of data nodes where hardware needs to match the control node hardware.").String,
-				Optional:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"data_node_device_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node device ID.").String,
-							Required:            true,
-						},
-						"data_node_ccl_ipv4_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node link IPv4 address / VTEP IPv4 address.").String,
-							Required:            true,
-						},
-						"data_node_priority": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Priority of cluster data node.").AddIntegerRangeDescription(1, 255).String,
-							Required:            true,
-							Validators: []validator.Int64{
-								int64validator.Between(1, 255),
-							},
-						},
-					},
+			"interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
 				},
+			},
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address of the active interface.").String,
+				Required:            true,
+			},
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address of the standby interface.").String,
+				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *DeviceClusterResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -166,8 +127,10 @@ func (r *DeviceClusterResource) Configure(_ context.Context, req resource.Config
 
 // End of section. //template:end model
 
-func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceCluster
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -184,47 +147,29 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceCluster{})
+	body := plan.toBody(ctx, DeviceHAPairPhysicalInterfaceMACAddress{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
-	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
-
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
-		return
-	}
-
-	check, err := r.client.Get(plan.getPath())
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, check))
-		return
-	}
-	name := "items.#(name==" + url.QueryEscape(plan.Name.ValueString()) + ").id"
-	id := check.Get(name).String()
-	plan.Id = types.StringValue(id)
-
-	if plan.Id.ValueString() == "" {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("No Cluster named %q: %s", plan.Name.ValueString(), check))
-		return
-	}
+	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
+
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
+// End of section. //template:end create
+
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DeviceClusterResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceCluster
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -275,8 +220,8 @@ func (r *DeviceClusterResource) Read(ctx context.Context, req resource.ReadReque
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceCluster
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -313,8 +258,10 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 
 // End of section. //template:end update
 
-func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceCluster
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
+
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -329,19 +276,9 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	// Delete should break the cluster, instead of deleting it
-	body := state.toBodyPutDelete(ctx, DeviceCluster{})
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration (PUT), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
-
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -350,10 +287,22 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 	resp.State.RemoveResource(ctx)
 }
 
+// End of section. //template:end delete
+
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *DeviceClusterResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	idParts := strings.Split(req.ID, ",")
+
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Expected import identifier with format: <device_id>,<id>. Got: %q", req.ID),
+		)
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

@@ -2,7 +2,7 @@
 name: Device Cluster
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster
 doc_category: Devices
-res_description: This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
+res_description: This device manages FTD Device Cluster configuration.\nConfiguration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
 test_tags: [TF_VAR_device_id, TF_VAR_device_interface_name]
 attributes:
   - model_name: name
@@ -36,6 +36,7 @@ attributes:
     type: String
     description: Cluster Control VXLAN Network Identifier (VNI) Network
     example: 10.10.3.0/27
+    mandatory: true
   - model_name: cclNetwork
     tf_name: control_node_ccl_prefix
     data_path: [commonBootstrap]
@@ -84,7 +85,7 @@ attributes:
     example: 1
     description: Priority of cluster controle node.
   - model_name: dataDevices
-    type: List
+    type: Set
     description: List of data nodes where hardware needs to match the control node hardware.
     attributes:
       - model_name: id
@@ -94,6 +95,7 @@ attributes:
         mandatory: true
         description: Cluster Data Node device ID.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        id: true
       - model_name: cclIp
         tf_name: data_node_ccl_ipv4_address
         data_path: [clusterNodeBootstrap]

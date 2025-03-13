@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DeviceClusterDataSource{}
-	_ datasource.DataSourceWithConfigure = &DeviceClusterDataSource{}
+	_ datasource.DataSource              = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
 )
 
-func NewDeviceClusterDataSource() datasource.DataSource {
-	return &DeviceClusterDataSource{}
+func NewDeviceHAPairPhysicalInterfaceMACAddressDataSource() datasource.DataSource {
+	return &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
 }
 
-type DeviceClusterDataSource struct {
+type DeviceHAPairPhysicalInterfaceMACAddressDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DeviceClusterDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_cluster"
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
 }
 
-func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Cluster.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device HA Pair Physical Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -71,84 +71,44 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the FTD Cluster.",
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the parent HA Pair device.",
+				Required:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the resource; This is always `FailoverInterfaceMacAddressConfig`.",
+				Computed:            true,
+			},
+			"interface_name": schema.StringAttribute{
+				MarkdownDescription: "Interface physical name.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the resource; This is always `DeviceCluster`.",
+			"interface_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the interface.",
 				Computed:            true,
 			},
-			"cluster_key": schema.StringAttribute{
-				MarkdownDescription: "Secret key for the cluster, between 1 nd 63 characters.",
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address of the active interface.",
 				Computed:            true,
 			},
-			"control_node_device_id": schema.StringAttribute{
-				MarkdownDescription: "Cluster Control Node device ID.",
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address of the standby interface.",
 				Computed:            true,
-			},
-			"control_node_vni_prefix": schema.StringAttribute{
-				MarkdownDescription: "Cluster Control VXLAN Network Identifier (VNI) Network",
-				Computed:            true,
-			},
-			"control_node_ccl_prefix": schema.StringAttribute{
-				MarkdownDescription: "Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network",
-				Computed:            true,
-			},
-			"control_node_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Cluster control link interface ID.",
-				Computed:            true,
-			},
-			"control_node_interface_name": schema.StringAttribute{
-				MarkdownDescription: "Cluster control link interface Name.",
-				Computed:            true,
-			},
-			"control_node_interface_type": schema.StringAttribute{
-				MarkdownDescription: "Cluster control link interface Type.",
-				Computed:            true,
-			},
-			"control_node_ccl_ipv4_address": schema.StringAttribute{
-				MarkdownDescription: "Cluster control link IPv4 address / VTEP IPv4 address.",
-				Computed:            true,
-			},
-			"control_node_priority": schema.Int64Attribute{
-				MarkdownDescription: "Priority of cluster controle node.",
-				Computed:            true,
-			},
-			"data_devices": schema.SetNestedAttribute{
-				MarkdownDescription: "List of data nodes where hardware needs to match the control node hardware.",
-				Computed:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"data_node_device_id": schema.StringAttribute{
-							MarkdownDescription: "Cluster Data Node device ID.",
-							Computed:            true,
-						},
-						"data_node_ccl_ipv4_address": schema.StringAttribute{
-							MarkdownDescription: "Cluster Data Node link IPv4 address / VTEP IPv4 address.",
-							Computed:            true,
-						},
-						"data_node_priority": schema.Int64Attribute{
-							MarkdownDescription: "Priority of cluster data node.",
-							Computed:            true,
-						},
-					},
-				},
 			},
 		},
 	}
 }
-func (d *DeviceClusterDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
-			path.MatchRoot("name"),
+			path.MatchRoot("interface_name"),
 		),
 	}
 }
 
-func (d *DeviceClusterDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -160,8 +120,8 @@ func (d *DeviceClusterDataSource) Configure(_ context.Context, req datasource.Co
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DeviceClusterDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DeviceCluster
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -177,7 +137,7 @@ func (d *DeviceClusterDataSource) Read(ctx context.Context, req datasource.ReadR
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
-	if config.Id.IsNull() && !config.Name.IsNull() {
+	if config.Id.IsNull() && !config.InterfaceName.IsNull() {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
@@ -189,9 +149,9 @@ func (d *DeviceClusterDataSource) Read(ctx context.Context, req datasource.ReadR
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("name").String() {
+					if config.InterfaceName.ValueString() == v.Get("physicalInterface.name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_name '%v', id: %v", config.Id.String(), config.InterfaceName.ValueString(), config.Id.String()))
 						return false
 					}
 					return true
@@ -204,7 +164,7 @@ func (d *DeviceClusterDataSource) Read(ctx context.Context, req datasource.ReadR
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_name: %s", config.InterfaceName.ValueString()))
 			return
 		}
 	}

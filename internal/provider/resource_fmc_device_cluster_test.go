@@ -89,6 +89,7 @@ func testAccFmcDeviceClusterConfig_minimum() string {
 	config += `	name = "my_device_cluster"` + "\n"
 	config += `	cluster_key = "cisco123"` + "\n"
 	config += `	control_node_device_id = var.device_id` + "\n"
+	config += `	control_node_vni_prefix = "10.10.3.0/27"` + "\n"
 	config += `	control_node_ccl_prefix = "10.10.4.0/27"` + "\n"
 	config += `	control_node_interface_id = data.fmc_device_physical_interface.test.id` + "\n"
 	config += `	control_node_interface_name = data.fmc_device_physical_interface.test.name` + "\n"

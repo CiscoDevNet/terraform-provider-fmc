@@ -43,7 +43,7 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 			diag.AddError("Client Error", fmt.Sprintf("API task for the new device failed: %s, %s", task.Get("message"), task.Get("description")))
 			return diag
 		}
-		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" && stat != "DEPLOYING" {
+		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" && stat != "DEPLOYING" && stat != "UNKNOWN" {
 			break
 		}
 		time.Sleep(atom)

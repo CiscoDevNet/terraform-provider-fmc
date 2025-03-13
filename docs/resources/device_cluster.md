@@ -3,12 +3,14 @@
 page_title: "fmc_device_cluster Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
+  This device manages FTD Device Cluster configuration.
+  Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
 ---
 
 # fmc_device_cluster (Resource)
 
-This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
+This device manages FTD Device Cluster configuration.
+Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
 
 ## Example Usage
 
@@ -48,12 +50,12 @@ resource "fmc_device_cluster" "example" {
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
   - Range: `1`-`255`
+- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `name` (String) Name of the FTD Cluster.
 
 ### Optional
 
-- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
-- `data_devices` (Attributes List) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
+- `data_devices` (Attributes Set) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

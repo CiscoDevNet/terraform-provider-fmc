@@ -95,6 +95,9 @@ func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resourc
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the monitored interface.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"monitor_interface": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Monitor this interface for failures.").String,

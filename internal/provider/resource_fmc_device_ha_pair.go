@@ -23,10 +23,10 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -68,7 +68,7 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\nConfiguration of the HA Pair is taken from the primary device. Nevertheless, please make sure that the Terraform configuration of primary and secondary devices is consistent.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -353,6 +353,15 @@ func (r *DeviceHAPairResource) Configure(_ context.Context, req resource.Configu
 
 // End of section. //template:end model
 
+func (r DeviceHAPairResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.ExactlyOneOf(
+			path.MatchRoot("failed_interfaces_percent"),
+			path.MatchRoot("failed_interfaces_limit"),
+		),
+	}
+}
+
 func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceHAPair
 
@@ -382,23 +391,9 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
 
-	const atom time.Duration = 5 * time.Second
-	// We need device's UUID, but it only shows after the task succeeds. Poll the task.
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
-		task, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(taskID), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
-			return
-		}
-		stat := strings.ToUpper(task.Get("status").String())
-		if stat == "FAILED" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("API task for the new HA Pair failed: %s, %s", task.Get("message"), task.Get("description")))
-			return
-		}
-		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" {
-			break
-		}
-		time.Sleep(atom)
+	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
 	}
 
 	check, err := r.client.Get(plan.getPath())
@@ -548,6 +543,7 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
+
 	// Start of HA Break code
 	body := state.toBodyPutDelete(ctx, DeviceHAPair{})
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
@@ -561,24 +557,11 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
 
-	const atom time.Duration = 5 * time.Second
-	// We need device's UUID, but it only shows after the task succeeds. Poll the task.
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
-		task, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(taskID), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
-			return
-		}
-		stat := strings.ToUpper(task.Get("status").String())
-		if stat == "FAILED" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("API task for the new device failed: %s, %s", task.Get("message"), task.Get("description")))
-			return
-		}
-		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" {
-			break
-		}
-		time.Sleep(atom)
+	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
 	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 
 	resp.State.RemoveResource(ctx)

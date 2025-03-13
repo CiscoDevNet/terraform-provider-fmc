@@ -38,7 +38,7 @@ data "fmc_device_cluster" "example" {
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
 - `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
-- `data_devices` (Attributes List) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
+- `data_devices` (Attributes Set) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
 - `type` (String) Type of the resource; This is always `DeviceCluster`.
 
 <a id="nestedatt--data_devices"></a>
