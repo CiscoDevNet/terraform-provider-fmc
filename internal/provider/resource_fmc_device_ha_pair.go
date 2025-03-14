@@ -389,7 +389,7 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 
 	// Adding code to poll object
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
 	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
@@ -555,7 +555,7 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	// Adding code to poll object
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", state.Id.ValueString(), taskID))
 
 	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {

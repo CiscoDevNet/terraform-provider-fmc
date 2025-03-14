@@ -206,7 +206,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
 	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {

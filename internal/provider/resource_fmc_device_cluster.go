@@ -35,6 +35,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -192,7 +193,7 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
 	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
@@ -273,8 +274,6 @@ func (r *DeviceClusterResource) Read(ctx context.Context, req resource.ReadReque
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceCluster
 
@@ -298,11 +297,87 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-		return
+	// Check if name has changed
+	if plan.Name.ValueString() != state.Name.ValueString() {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Name has changed", plan.Id.ValueString()))
+		body := plan.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "UPDATE_CLUSTER_NAME")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+	}
+
+	// Get list of state data devices
+	stateDevices := make([]string, len(state.DataDevices))
+	for i, v := range state.DataDevices {
+		stateDevices[i] = v.DataNodeDeviceId.ValueString()
+	}
+
+	// Get list of plan data devices
+	planDevices := make([]string, len(plan.DataDevices))
+	for i, v := range plan.DataDevices {
+		planDevices[i] = v.DataNodeDeviceId.ValueString()
+	}
+
+	// Check if any device needs to be removed from cluster
+	toBeRemoved := plan
+	toBeRemoved.DataDevices = []DeviceClusterDataDevices{}
+	for _, v := range state.DataDevices {
+		if !helpers.Contains(planDevices, v.DataNodeDeviceId.ValueString()) {
+			toBeRemoved.DataDevices = append(toBeRemoved.DataDevices, v)
+		}
+	}
+
+	if len(toBeRemoved.DataDevices) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be removed from cluster: %v", plan.Id.ValueString(), toBeRemoved.DataDevices))
+		body := toBeRemoved.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "REMOVE_NODES")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Adding code to poll object
+		taskID := res.Get("metadata.task.id").String()
+		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+
+		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+
+	}
+
+	// Check if any device needs to be added to cluster
+	toBeAdded := plan
+	toBeAdded.DataDevices = []DeviceClusterDataDevices{}
+	for _, v := range plan.DataDevices {
+		if !helpers.Contains(stateDevices, v.DataNodeDeviceId.ValueString()) {
+			toBeAdded.DataDevices = append(toBeAdded.DataDevices, v)
+		}
+	}
+
+	if len(toBeAdded.DataDevices) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be added to cluster: %v", plan.Id.ValueString(), toBeAdded.DataDevices))
+		body := toBeAdded.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "ADD_NODES")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Adding code to poll object
+		taskID := res.Get("metadata.task.id").String()
+		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+
+		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
@@ -310,8 +385,6 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceCluster
