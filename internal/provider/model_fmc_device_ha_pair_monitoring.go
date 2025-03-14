@@ -286,7 +286,7 @@ func (data *DeviceHAPairMonitoring) fromBodyUnknowns(ctx context.Context, res gj
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
 func (data DeviceHAPairMonitoring) toBodyPutDelete(ctx context.Context, state DeviceHAPairMonitoring) string {
 	body := ""
-	body, _ = sjson.Set(body, "monitorForFailures", false)
+	body, _ = sjson.Set(body, "monitorForFailures", true)
 	if data.Ipv4ActiveAddress.ValueString() != "" {
 		body, _ = sjson.Set(body, "ipv4Configuration.activeIPv4Address", data.Ipv4ActiveAddress.ValueString())
 	}

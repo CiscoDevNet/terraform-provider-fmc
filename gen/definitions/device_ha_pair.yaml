@@ -3,7 +3,7 @@ name: Device HA Pair
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs
 doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_device_2_id]
-res_description: This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.
+res_description: This device manages FTD HA Pair configuration.\nConfiguration of the HA Pair is taken from the primary device. Nevertheless, please make sure that the Terraform configuration of primary and secondary devices is consistent.
 attributes:
   - model_name: name
     type: String

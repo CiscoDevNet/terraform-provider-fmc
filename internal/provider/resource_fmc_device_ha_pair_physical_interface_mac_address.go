@@ -33,7 +33,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -42,26 +41,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceHAPairMonitoringResource{}
-	_ resource.ResourceWithImportState = &DeviceHAPairMonitoringResource{}
+	_ resource.Resource                = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
+	_ resource.ResourceWithImportState = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
 )
 
-func NewDeviceHAPairMonitoringResource() resource.Resource {
-	return &DeviceHAPairMonitoringResource{}
+func NewDeviceHAPairPhysicalInterfaceMACAddressResource() resource.Resource {
+	return &DeviceHAPairPhysicalInterfaceMACAddressResource{}
 }
 
-type DeviceHAPairMonitoringResource struct {
+type DeviceHAPairPhysicalInterfaceMACAddressResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceHAPairMonitoringResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_monitoring"
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
 }
 
-func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Monitoring.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Physical Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -79,69 +78,46 @@ func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA device (fmc_device.example.id).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA Pair device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource; This is always `FailoverInterfaceMacAddressConfig`.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the monitored interface.").String,
+			"interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Interface physical name.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"monitor_interface": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Monitor this interface for failures.").String,
+			"interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address of the active interface.").String,
 				Required:            true,
 			},
-			"ipv4_active_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Active IPv4 address from the interface.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
-			"ipv4_standby_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.").String,
-				Optional:            true,
-			},
-			"ipv4_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Network Mask assigned on the interface.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
-			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
-				Optional:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"active_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Active IPv6 address with prefix. Address has to be configured on the interface.").String,
-							Optional:            true,
-						},
-						"standby_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Standby IPv6 address. Address has to be from the same subnet as active IPv6 address.").String,
-							Optional:            true,
-						},
-					},
-				},
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address of the standby interface.").String,
+				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *DeviceHAPairMonitoringResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -153,8 +129,8 @@ func (r *DeviceHAPairMonitoringResource) Configure(_ context.Context, req resour
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *DeviceHAPairMonitoringResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceHAPairMonitoring
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -168,44 +144,11 @@ func (r *DeviceHAPairMonitoringResource) Create(ctx context.Context, req resourc
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object logical_name %s", plan.Id, plan.LogicalName))
-	if plan.Id.ValueString() == "" && plan.LogicalName.ValueString() != "" {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
-			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.LogicalName.ValueString() == v.Get("name").String() {
-						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%s', id: %s", plan.Id, plan.LogicalName.ValueString(), plan.Id))
-						return false
-					}
-					return true
-				})
-			}
-			if plan.Id.ValueString() != "" || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %s", plan.LogicalName.ValueString()))
-			return
-		}
-	}
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceHAPairMonitoring{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBody(ctx, DeviceHAPairPhysicalInterfaceMACAddress{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -225,8 +168,8 @@ func (r *DeviceHAPairMonitoringResource) Create(ctx context.Context, req resourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DeviceHAPairMonitoringResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceHAPairMonitoring
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -277,8 +220,8 @@ func (r *DeviceHAPairMonitoringResource) Read(ctx context.Context, req resource.
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *DeviceHAPairMonitoringResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceHAPairMonitoring
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -315,8 +258,10 @@ func (r *DeviceHAPairMonitoringResource) Update(ctx context.Context, req resourc
 
 // End of section. //template:end update
 
-func (r *DeviceHAPairMonitoringResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceHAPairMonitoring
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
+
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -331,10 +276,9 @@ func (r *DeviceHAPairMonitoringResource) Delete(ctx context.Context, req resourc
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	body := state.toBodyPutDelete(ctx, DeviceHAPairMonitoring{})
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration (PUT), got error: %s, %s", err, res.String()))
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -343,9 +287,11 @@ func (r *DeviceHAPairMonitoringResource) Delete(ctx context.Context, req resourc
 	resp.State.RemoveResource(ctx)
 }
 
+// End of section. //template:end delete
+
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *DeviceHAPairMonitoringResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {

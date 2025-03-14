@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
@@ -36,6 +35,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -63,7 +63,7 @@ func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.Metad
 func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\nConfiguration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -101,7 +101,7 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
-				Optional:            true,
+				Required:            true,
 			},
 			"control_node_ccl_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network").String,
@@ -130,7 +130,7 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 					int64validator.Between(1, 255),
 				},
 			},
-			"data_devices": schema.ListNestedAttribute{
+			"data_devices": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of data nodes where hardware needs to match the control node hardware.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -193,31 +193,11 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-	const atom time.Duration = 5 * time.Second
-	// We need device's UUID, but it only shows after the task succeeds. Poll the task.
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
-		task, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(taskID), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
-			return
-		}
-		stat := strings.ToUpper(task.Get("status").String())
-		if stat == "FAILED" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("API task for the new device failed: %s, %s", task.Get("message"), task.Get("description")))
-			return
-		}
-		if stat == "UNKNOWN" {
-			//how to check if field exist?
-			sub_stat := strings.ToUpper(task.Get("subTasks.0.status").String())
-			if sub_stat != "PENDING" && stat != "RUNNING" {
-				break
-			}
-		} else if stat != "PENDING" && stat != "RUNNING" {
-			break
-		}
-		time.Sleep(atom)
+	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
 	}
 
 	check, err := r.client.Get(plan.getPath())
@@ -294,8 +274,6 @@ func (r *DeviceClusterResource) Read(ctx context.Context, req resource.ReadReque
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceCluster
 
@@ -319,11 +297,87 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-		return
+	// Check if name has changed
+	if plan.Name.ValueString() != state.Name.ValueString() {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Name has changed", plan.Id.ValueString()))
+		body := plan.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "UPDATE_CLUSTER_NAME")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+	}
+
+	// Get list of state data devices
+	stateDevices := make([]string, len(state.DataDevices))
+	for i, v := range state.DataDevices {
+		stateDevices[i] = v.DataNodeDeviceId.ValueString()
+	}
+
+	// Get list of plan data devices
+	planDevices := make([]string, len(plan.DataDevices))
+	for i, v := range plan.DataDevices {
+		planDevices[i] = v.DataNodeDeviceId.ValueString()
+	}
+
+	// Check if any device needs to be removed from cluster
+	toBeRemoved := plan
+	toBeRemoved.DataDevices = []DeviceClusterDataDevices{}
+	for _, v := range state.DataDevices {
+		if !helpers.Contains(planDevices, v.DataNodeDeviceId.ValueString()) {
+			toBeRemoved.DataDevices = append(toBeRemoved.DataDevices, v)
+		}
+	}
+
+	if len(toBeRemoved.DataDevices) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be removed from cluster: %v", plan.Id.ValueString(), toBeRemoved.DataDevices))
+		body := toBeRemoved.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "REMOVE_NODES")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Adding code to poll object
+		taskID := res.Get("metadata.task.id").String()
+		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+
+		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+
+	}
+
+	// Check if any device needs to be added to cluster
+	toBeAdded := plan
+	toBeAdded.DataDevices = []DeviceClusterDataDevices{}
+	for _, v := range plan.DataDevices {
+		if !helpers.Contains(stateDevices, v.DataNodeDeviceId.ValueString()) {
+			toBeAdded.DataDevices = append(toBeAdded.DataDevices, v)
+		}
+	}
+
+	if len(toBeAdded.DataDevices) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be added to cluster: %v", plan.Id.ValueString(), toBeAdded.DataDevices))
+		body := toBeAdded.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "ADD_NODES")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Adding code to poll object
+		taskID := res.Get("metadata.task.id").String()
+		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+
+		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
@@ -331,10 +385,6 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
-
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
 
 func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceCluster
@@ -352,9 +402,19 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+	// Delete should break the cluster, instead of deleting it
+	body := state.toBodyPutDelete(ctx, DeviceCluster{})
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+
+	taskID := res.Get("metadata.task.id").String()
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+
+	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -362,8 +422,6 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
