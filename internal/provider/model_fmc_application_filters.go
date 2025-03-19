@@ -24,6 +24,7 @@ import (
 	"maps"
 	"slices"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -76,6 +77,12 @@ type ApplicationFiltersItemsFiltersTags struct {
 }
 
 // End of section. //template:end types
+
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionBulkCreateApplicationFilters = version.Must(version.NewVersion("999"))
+var minFMCVersionBulkDeleteApplicationFilters = version.Must(version.NewVersion("999"))
+
+// End of section. //template:end minimumVersions
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 

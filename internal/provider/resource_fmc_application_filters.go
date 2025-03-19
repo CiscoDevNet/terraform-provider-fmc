@@ -50,8 +50,6 @@ var (
 	_ resource.Resource                = &ApplicationFiltersResource{}
 	_ resource.ResourceWithImportState = &ApplicationFiltersResource{}
 )
-var minFMCVersionBulkCreateApplicationFilters = version.Must(version.NewVersion("999"))
-var minFMCVersionBulkDeleteApplicationFilters = version.Must(version.NewVersion("999"))
 
 func NewApplicationFiltersResource() resource.Resource {
 	return &ApplicationFiltersResource{}
