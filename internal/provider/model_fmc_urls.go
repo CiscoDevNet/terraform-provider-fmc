@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -44,9 +45,15 @@ type URLsItems struct {
 	Url         types.String `tfsdk:"url"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
+	Type        types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
+
+// Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionBulkDeleteURLs = version.Must(version.NewVersion("7.4"))
+
+// End of section. //template:end minimumVersions
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
@@ -130,6 +137,11 @@ func (data *URLs) fromBody(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Overridable = types.BoolNull()
 		}
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
 		(*parent).Items[k] = data
 	}
 }
@@ -178,6 +190,11 @@ func (data *URLs) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Overridable = types.BoolNull()
 		}
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
 		(*parent).Items[i] = data
 	}
 }
@@ -213,6 +230,14 @@ func (data *URLs) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 				v.Id = types.StringValue(value.String())
 			} else {
 				v.Id = types.StringNull()
+			}
+			data.Items[i] = v
+		}
+		if v := data.Items[i]; v.Type.IsUnknown() {
+			if value := r.Get("type"); value.Exists() {
+				v.Type = types.StringValue(value.String())
+			} else {
+				v.Type = types.StringNull()
 			}
 			data.Items[i] = v
 		}

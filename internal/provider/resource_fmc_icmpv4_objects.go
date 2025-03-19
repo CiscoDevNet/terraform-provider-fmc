@@ -50,7 +50,6 @@ var (
 	_ resource.Resource                = &ICMPv4ObjectsResource{}
 	_ resource.ResourceWithImportState = &ICMPv4ObjectsResource{}
 )
-var minFMCVersionBulkDeleteICMPv4Objects = version.Must(version.NewVersion("7.4"))
 
 func NewICMPv4ObjectsResource() resource.Resource {
 	return &ICMPv4ObjectsResource{}
@@ -119,7 +118,7 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPV4Object'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
