@@ -294,6 +294,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 	return []func() resource.Resource{
 		NewAccessControlPolicyResource,
 		NewApplicationFilterResource,
+		NewApplicationFiltersResource,
 		NewBFDTemplateResource,
 		NewDeviceResource,
 		NewDeviceBFDResource,
@@ -369,6 +370,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewApplicationCategoriesDataSource,
 		NewApplicationCategoryDataSource,
 		NewApplicationFilterDataSource,
+		NewApplicationFiltersDataSource,
 		NewApplicationRiskDataSource,
 		NewApplicationRisksDataSource,
 		NewApplicationTagDataSource,
