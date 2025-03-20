@@ -293,6 +293,8 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAccessControlPolicyResource,
+		NewApplicationFilterResource,
+		NewApplicationFiltersResource,
 		NewBFDTemplateResource,
 		NewDeviceResource,
 		NewDeviceBFDResource,
@@ -363,6 +365,20 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataSource {
 	return []func() datasource.DataSource{
 		NewAccessControlPolicyDataSource,
+		NewApplicationDataSource,
+		NewApplicationBusinessRelevanceDataSource,
+		NewApplicationBusinessRelevancesDataSource,
+		NewApplicationCategoriesDataSource,
+		NewApplicationCategoryDataSource,
+		NewApplicationFilterDataSource,
+		NewApplicationFiltersDataSource,
+		NewApplicationRiskDataSource,
+		NewApplicationRisksDataSource,
+		NewApplicationTagDataSource,
+		NewApplicationTagsDataSource,
+		NewApplicationTypeDataSource,
+		NewApplicationTypesDataSource,
+		NewApplicationsDataSource,
 		NewBFDTemplateDataSource,
 		NewDeviceDataSource,
 		NewDeviceBFDDataSource,
