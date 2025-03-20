@@ -22,7 +22,6 @@ import (
 	"context"
 	"fmt"
 	"slices"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -268,8 +267,8 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 		data.ControlNodePriority = types.Int64Null()
 	}
 	for i := 0; i < len(data.DataDevices); i++ {
-		keys := [...]string{"deviceDetails.id", "clusterNodeBootstrap.cclIp", "clusterNodeBootstrap.priority"}
-		keyValues := [...]string{data.DataDevices[i].DataNodeDeviceId.ValueString(), data.DataDevices[i].DataNodeCclIpv4Address.ValueString(), strconv.FormatInt(data.DataDevices[i].DataNodePriority.ValueInt64(), 10)}
+		keys := [...]string{"deviceDetails.id"}
+		keyValues := [...]string{data.DataDevices[i].DataNodeDeviceId.ValueString()}
 
 		parent := &data
 		data := (*parent).DataDevices[i]
@@ -347,3 +346,14 @@ func (data *DeviceCluster) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
 
 // End of section. //template:end toBodyNonBulk
+
+// Instead of deleting the cluster (which will de-register the appliances) we break it,
+// making devices go back into standalone mode
+func (data DeviceCluster) toBodyPutDelete(ctx context.Context, state DeviceCluster) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	body, _ = sjson.Set(body, "action", "BREAK")
+	return body
+}
