@@ -15,7 +15,7 @@ This data source reads the IPv6 Address Pools.
 ```terraform
 data "fmc_ipv6_address_pools" "example" {
   items = {
-    "my_ipv6_address_pool" = {
+    "my_ipv6_address_pools" = {
     }
   }
 }

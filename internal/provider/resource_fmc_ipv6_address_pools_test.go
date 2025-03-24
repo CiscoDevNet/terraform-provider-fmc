@@ -31,12 +31,12 @@ import (
 
 func TestAccFmcIPv6AddressPools(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.description", "My IPv4 Address Pool object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.start_address", "2001:db8::1/64"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.number_of_addresses", "10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pool.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.description", "My IPv6 Address Pool object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.start_address", "2001:db8::1/64"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.number_of_addresses", "10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_address_pools.test", "items.my_ipv6_address_pools.overridable", "true"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -66,7 +66,7 @@ func TestAccFmcIPv6AddressPools(t *testing.T) {
 
 func testAccFmcIPv6AddressPoolsConfig_minimum() string {
 	config := `resource "fmc_ipv6_address_pools" "test" {` + "\n"
-	config += `	items = { "my_ipv6_address_pool" = {` + "\n"
+	config += `	items = { "my_ipv6_address_pools" = {` + "\n"
 	config += `		start_address = "2001:db8::1/64"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -79,8 +79,8 @@ func testAccFmcIPv6AddressPoolsConfig_minimum() string {
 
 func testAccFmcIPv6AddressPoolsConfig_all() string {
 	config := `resource "fmc_ipv6_address_pools" "test" {` + "\n"
-	config += `	items = { "my_ipv6_address_pool" = {` + "\n"
-	config += `		description = "My IPv4 Address Pool object"` + "\n"
+	config += `	items = { "my_ipv6_address_pools" = {` + "\n"
+	config += `		description = "My IPv6 Address Pool object"` + "\n"
 	config += `		start_address = "2001:db8::1/64"` + "\n"
 	config += `		number_of_addresses = 10` + "\n"
 	config += `		overridable = true` + "\n"

@@ -32,7 +32,7 @@ func TestAccDataSourceFmcIPv6AddressPool(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "name", "my_ipv6_address_pool"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv6_address_pool.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "description", "My IPv4 Address Pool object"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "description", "My IPv6 Address Pool object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "start_address", "2001:db8::1/64"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "number_of_addresses", "10"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv6_address_pool.test", "overridable", "true"))
@@ -63,7 +63,7 @@ func TestAccDataSourceFmcIPv6AddressPool(t *testing.T) {
 func testAccDataSourceFmcIPv6AddressPoolConfig() string {
 	config := `resource "fmc_ipv6_address_pool" "test" {` + "\n"
 	config += `	name = "my_ipv6_address_pool"` + "\n"
-	config += `	description = "My IPv4 Address Pool object"` + "\n"
+	config += `	description = "My IPv6 Address Pool object"` + "\n"
 	config += `	start_address = "2001:db8::1/64"` + "\n"
 	config += `	number_of_addresses = 10` + "\n"
 	config += `	overridable = true` + "\n"
@@ -80,7 +80,7 @@ func testAccDataSourceFmcIPv6AddressPoolConfig() string {
 func testAccNamedDataSourceFmcIPv6AddressPoolConfig() string {
 	config := `resource "fmc_ipv6_address_pool" "test" {` + "\n"
 	config += `	name = "my_ipv6_address_pool"` + "\n"
-	config += `	description = "My IPv4 Address Pool object"` + "\n"
+	config += `	description = "My IPv6 Address Pool object"` + "\n"
 	config += `	start_address = "2001:db8::1/64"` + "\n"
 	config += `	number_of_addresses = 10` + "\n"
 	config += `	overridable = true` + "\n"
