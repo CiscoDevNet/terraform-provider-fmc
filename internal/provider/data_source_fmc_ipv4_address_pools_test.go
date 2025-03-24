@@ -30,12 +30,12 @@ import (
 
 func TestAccDataSourceFmcIPv4AddressPools(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.description", "My IPv4 Address Pool object"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.range", "10.0.0.10-10.0.0.20"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.mask", "255.255.255.0"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pool.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.description", "My IPv4 Address Pool object"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.range", "10.0.0.10-10.0.0.20"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.mask", "255.255.255.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.overridable", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -58,7 +58,7 @@ func TestAccDataSourceFmcIPv4AddressPools(t *testing.T) {
 
 func testAccDataSourceFmcIPv4AddressPoolsConfig() string {
 	config := `resource "fmc_ipv4_address_pools" "test" {` + "\n"
-	config += `	items = { "my_ipv4_address_pool" = {` + "\n"
+	config += `	items = { "my_ipv4_address_pools" = {` + "\n"
 	config += `		description = "My IPv4 Address Pool object"` + "\n"
 	config += `		range = "10.0.0.10-10.0.0.20"` + "\n"
 	config += `		mask = "255.255.255.0"` + "\n"
@@ -70,7 +70,7 @@ func testAccDataSourceFmcIPv4AddressPoolsConfig() string {
 		data "fmc_ipv4_address_pools" "test" {
 			depends_on = [fmc_ipv4_address_pools.test]
 			items = {
-				"my_ipv4_address_pool" = {
+				"my_ipv4_address_pools" = {
 				}
 			}
 		}

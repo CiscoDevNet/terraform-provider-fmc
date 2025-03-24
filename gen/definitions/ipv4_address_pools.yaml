@@ -10,7 +10,7 @@ attributes:
     type: Map
     description: >-
       Map of IPv4 Address Pools. The key of the map is the name of the individual IPv4 Address Pool.
-    map_key_example: my_ipv4_address_pool
+    map_key_example: my_ipv4_address_pools
     mandatory: true
     attributes:
       - model_name: id
