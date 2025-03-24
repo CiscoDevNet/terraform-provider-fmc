@@ -1,0 +1,37 @@
+---
+name: IPv6 Address Pool
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ipv6addresspools
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the IPv6 Address Pool object.
+    example: my_ipv6_address_pool
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IPv6AddressPool'.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IPv6AddressPool'.
+    value: IPv6AddressPool
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My IPv6 Address Pool object
+  - model_name: ipv6StartAddress
+    tf_name: start_address
+    type: String
+    mandatory: true
+    description: IP range start address with prefix length.
+    example: "2001:db8::1/64"
+  - model_name: numberOfAddresses
+    type: Int64
+    description: Number of addresses in the range.
+    example: 10
+  - model_name: overridable
+    type: Bool
+    description: Whether the object values can be overridden.
+    example: "true"
