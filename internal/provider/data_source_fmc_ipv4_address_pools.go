@@ -87,8 +87,8 @@ func (d *IPv4AddressPoolsDataSource) Schema(ctx context.Context, req datasource.
 							MarkdownDescription: "IP range",
 							Computed:            true,
 						},
-						"mask": schema.StringAttribute{
-							MarkdownDescription: "IP mask for the range",
+						"netmask": schema.StringAttribute{
+							MarkdownDescription: "IP netmask for the range",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

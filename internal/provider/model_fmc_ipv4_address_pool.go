@@ -37,7 +37,7 @@ type IPv4AddressPool struct {
 	Type        types.String `tfsdk:"type"`
 	Description types.String `tfsdk:"description"`
 	Range       types.String `tfsdk:"range"`
-	Mask        types.String `tfsdk:"mask"`
+	Netmask     types.String `tfsdk:"netmask"`
 	Overridable types.Bool   `tfsdk:"overridable"`
 }
 
@@ -73,8 +73,8 @@ func (data IPv4AddressPool) toBody(ctx context.Context, state IPv4AddressPool) s
 		body, _ = sjson.Set(body, "ipAddressRange", data.Range.ValueString())
 	}
 	body, _ = sjson.Set(body, "addressType", "RANGE")
-	if !data.Mask.IsNull() {
-		body, _ = sjson.Set(body, "mask", data.Mask.ValueString())
+	if !data.Netmask.IsNull() {
+		body, _ = sjson.Set(body, "mask", data.Netmask.ValueString())
 	}
 	if !data.Overridable.IsNull() {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
@@ -108,9 +108,9 @@ func (data *IPv4AddressPool) fromBody(ctx context.Context, res gjson.Result) {
 		data.Range = types.StringNull()
 	}
 	if value := res.Get("mask"); value.Exists() {
-		data.Mask = types.StringValue(value.String())
+		data.Netmask = types.StringValue(value.String())
 	} else {
-		data.Mask = types.StringNull()
+		data.Netmask = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() {
 		data.Overridable = types.BoolValue(value.Bool())
@@ -148,10 +148,10 @@ func (data *IPv4AddressPool) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.Range = types.StringNull()
 	}
-	if value := res.Get("mask"); value.Exists() && !data.Mask.IsNull() {
-		data.Mask = types.StringValue(value.String())
+	if value := res.Get("mask"); value.Exists() && !data.Netmask.IsNull() {
+		data.Netmask = types.StringValue(value.String())
 	} else {
-		data.Mask = types.StringNull()
+		data.Netmask = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())

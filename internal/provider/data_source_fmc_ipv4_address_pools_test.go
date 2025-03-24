@@ -34,7 +34,7 @@ func TestAccDataSourceFmcIPv4AddressPools(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.description", "My IPv4 Address Pool object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.range", "10.0.0.10-10.0.0.20"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.mask", "255.255.255.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.netmask", "255.255.255.0"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ipv4_address_pools.test", "items.my_ipv4_address_pools.overridable", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -61,7 +61,7 @@ func testAccDataSourceFmcIPv4AddressPoolsConfig() string {
 	config += `	items = { "my_ipv4_address_pools" = {` + "\n"
 	config += `		description = "My IPv4 Address Pool object"` + "\n"
 	config += `		range = "10.0.0.10-10.0.0.20"` + "\n"
-	config += `		mask = "255.255.255.0"` + "\n"
+	config += `		netmask = "255.255.255.0"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
