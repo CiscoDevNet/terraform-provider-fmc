@@ -63,7 +63,7 @@ func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.Metad
 func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\nConfiguration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\n Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.\n The following actions are not supported:\n - Disabling/Enabling cluster node\n - Changing cluster control node\n - Changing node priorities\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -95,10 +95,6 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 				MarkdownDescription: helpers.NewAttributeDescription("Secret key for the cluster, between 1 nd 63 characters.").String,
 				Required:            true,
 			},
-			"control_node_device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Node device ID.").String,
-				Required:            true,
-			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
 				Required:            true,
@@ -117,6 +113,10 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"control_node_interface_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link interface Type.").String,
+				Required:            true,
+			},
+			"control_node_device_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Node device ID.").String,
 				Required:            true,
 			},
 			"control_node_ccl_ipv4_address": schema.StringAttribute{

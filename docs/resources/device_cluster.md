@@ -5,12 +5,18 @@ subcategory: "Devices"
 description: |-
   This device manages FTD Device Cluster configuration.
   Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
+  The following actions are not supported:
+  Disabling/Enabling cluster nodeChanging cluster control nodeChanging node priorities
 ---
 
 # fmc_device_cluster (Resource)
 
 This device manages FTD Device Cluster configuration.
-Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
+ Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
+ The following actions are not supported:
+ - Disabling/Enabling cluster node
+ - Changing cluster control node
+ - Changing node priorities
 
 ## Example Usage
 
@@ -18,12 +24,12 @@ Configuration of the Cluster is taken from the control node. Nevertheless, pleas
 resource "fmc_device_cluster" "example" {
   name                          = "my_device_cluster"
   cluster_key                   = "cisco123"
-  control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_vni_prefix       = "10.10.3.0/27"
   control_node_ccl_prefix       = "10.10.4.0/27"
   control_node_interface_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_interface_name   = "GigabitEthernet0/0"
   control_node_interface_type   = "PhysicalInterface"
+  control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_ccl_ipv4_address = "10.10.4.1"
   control_node_priority         = 1
   data_devices = [

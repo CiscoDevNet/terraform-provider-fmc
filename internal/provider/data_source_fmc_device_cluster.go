@@ -84,10 +84,6 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Secret key for the cluster, between 1 nd 63 characters.",
 				Computed:            true,
 			},
-			"control_node_device_id": schema.StringAttribute{
-				MarkdownDescription: "Cluster Control Node device ID.",
-				Computed:            true,
-			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: "Cluster Control VXLAN Network Identifier (VNI) Network",
 				Computed:            true,
@@ -106,6 +102,10 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 			},
 			"control_node_interface_type": schema.StringAttribute{
 				MarkdownDescription: "Cluster control link interface Type.",
+				Computed:            true,
+			},
+			"control_node_device_id": schema.StringAttribute{
+				MarkdownDescription: "Cluster Control Node device ID.",
 				Computed:            true,
 			},
 			"control_node_ccl_ipv4_address": schema.StringAttribute{

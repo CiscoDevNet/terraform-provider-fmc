@@ -39,12 +39,12 @@ type DeviceCluster struct {
 	Name                      types.String               `tfsdk:"name"`
 	Type                      types.String               `tfsdk:"type"`
 	ClusterKey                types.String               `tfsdk:"cluster_key"`
-	ControlNodeDeviceId       types.String               `tfsdk:"control_node_device_id"`
 	ControlNodeVniPrefix      types.String               `tfsdk:"control_node_vni_prefix"`
 	ControlNodeCclPrefix      types.String               `tfsdk:"control_node_ccl_prefix"`
 	ControlNodeInterfaceId    types.String               `tfsdk:"control_node_interface_id"`
 	ControlNodeInterfaceName  types.String               `tfsdk:"control_node_interface_name"`
 	ControlNodeInterfaceType  types.String               `tfsdk:"control_node_interface_type"`
+	ControlNodeDeviceId       types.String               `tfsdk:"control_node_device_id"`
 	ControlNodeCclIpv4Address types.String               `tfsdk:"control_node_ccl_ipv4_address"`
 	ControlNodePriority       types.Int64                `tfsdk:"control_node_priority"`
 	DataDevices               []DeviceClusterDataDevices `tfsdk:"data_devices"`
@@ -83,9 +83,6 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 	if !data.ClusterKey.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.clusterKey", data.ClusterKey.ValueString())
 	}
-	if !data.ControlNodeDeviceId.IsNull() {
-		body, _ = sjson.Set(body, "controlDevice.deviceDetails.id", data.ControlNodeDeviceId.ValueString())
-	}
 	if !data.ControlNodeVniPrefix.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.vniNetwork", data.ControlNodeVniPrefix.ValueString())
 	}
@@ -100,6 +97,9 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 	}
 	if !data.ControlNodeInterfaceType.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.cclInterface.type", data.ControlNodeInterfaceType.ValueString())
+	}
+	if !data.ControlNodeDeviceId.IsNull() {
+		body, _ = sjson.Set(body, "controlDevice.deviceDetails.id", data.ControlNodeDeviceId.ValueString())
 	}
 	if !data.ControlNodeCclIpv4Address.IsNull() {
 		body, _ = sjson.Set(body, "controlDevice.clusterNodeBootstrap.cclIp", data.ControlNodeCclIpv4Address.ValueString())
@@ -141,11 +141,6 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() {
-		data.ControlNodeDeviceId = types.StringValue(value.String())
-	} else {
-		data.ControlNodeDeviceId = types.StringNull()
-	}
 	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() {
 		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
@@ -170,6 +165,11 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodeInterfaceType = types.StringValue(value.String())
 	} else {
 		data.ControlNodeInterfaceType = types.StringNull()
+	}
+	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() {
+		data.ControlNodeDeviceId = types.StringValue(value.String())
+	} else {
+		data.ControlNodeDeviceId = types.StringNull()
 	}
 	if value := res.Get("controlDevice.clusterNodeBootstrap.cclIp"); value.Exists() {
 		data.ControlNodeCclIpv4Address = types.StringValue(value.String())
@@ -226,11 +226,6 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() && !data.ControlNodeDeviceId.IsNull() {
-		data.ControlNodeDeviceId = types.StringValue(value.String())
-	} else {
-		data.ControlNodeDeviceId = types.StringNull()
-	}
 	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() && !data.ControlNodeVniPrefix.IsNull() {
 		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
@@ -255,6 +250,11 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 		data.ControlNodeInterfaceType = types.StringValue(value.String())
 	} else {
 		data.ControlNodeInterfaceType = types.StringNull()
+	}
+	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() && !data.ControlNodeDeviceId.IsNull() {
+		data.ControlNodeDeviceId = types.StringValue(value.String())
+	} else {
+		data.ControlNodeDeviceId = types.StringNull()
 	}
 	if value := res.Get("controlDevice.clusterNodeBootstrap.cclIp"); value.Exists() && !data.ControlNodeCclIpv4Address.IsNull() {
 		data.ControlNodeCclIpv4Address = types.StringValue(value.String())
