@@ -11,6 +11,7 @@ attributes:
     description: Id of the parent HA device (fmc_device.example.id).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_ha_id
+    requires_replace: true
   - model_name: type
     type: String
     computed: true
@@ -23,6 +24,7 @@ attributes:
     type: String
     example: "outside"
     data_source_query: true
+    requires_replace: true
   - model_name: monitorForFailures
     tf_name: monitor_interface
     description: Monitor this interface for failures.

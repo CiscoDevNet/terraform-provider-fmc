@@ -160,6 +160,10 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
 				Optional:            true,
 			},
+			"ipv4_address_pool_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned IPv4 address pool.").String,
+				Optional:            true,
+			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
 				Optional:            true,
@@ -240,6 +244,10 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 						},
 					},
 				},
+			},
+			"ipv6_address_pool_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned IPv6 address pool.").String,
+				Optional:            true,
 			},
 			"ipv6_prefixes": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("").String,
@@ -668,7 +676,11 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	// Step 1: Remove all attributes except 'ifname'
 	body := state.toBodyPutDelete(ctx, DevicePhysicalInterface{})
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
+	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Interface not found", state.Id.ValueString()))
+		resp.State.RemoveResource(ctx)
+		return
+	} else if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
 		return
 	}

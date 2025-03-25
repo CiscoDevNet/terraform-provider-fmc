@@ -132,6 +132,10 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
 				Computed:            true,
 			},
+			"ipv4_address_pool_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the assigned IPv4 address pool.",
+				Computed:            true,
+			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
 				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
 				Computed:            true,
@@ -203,6 +207,10 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 						},
 					},
 				},
+			},
+			"ipv6_address_pool_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the assigned IPv6 address pool.",
+				Computed:            true,
 			},
 			"ipv6_prefixes": schema.ListNestedAttribute{
 				MarkdownDescription: "",

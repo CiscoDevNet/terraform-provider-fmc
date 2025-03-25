@@ -31,9 +31,10 @@ attributes:
     type: String
     value: RANGE
   - model_name: mask
+    tf_name: netmask
     type: String
     mandatory: true
-    description: IP mask for the range
+    description: IP netmask for the range
     example: 255.255.255.0
   - model_name: overridable
     type: Bool

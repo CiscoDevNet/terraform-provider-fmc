@@ -114,6 +114,14 @@ attributes:
     type: String
     description: Netmask (width) for ipv4_static_address.
     example: "24"
+  - model_name: id
+    data_path: [ipv4, static, pool]
+    tf_name: ipv4_address_pool_id
+    type: String
+    description: Id of the assigned IPv4 address pool.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+    exclude_example: true
 #IPv4 - DHCP
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
@@ -244,6 +252,14 @@ attributes:
         example: true
         exclude_example: true
         exclude_test: true
+  - model_name: id
+    data_path: [ipv6, pool]
+    tf_name: ipv6_address_pool_id
+    type: String
+    description: Id of the assigned IPv6 address pool.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+    exclude_example: true
 #IPv6 Prefixes
   - model_name: prefixes
     data_path: [ipv6]

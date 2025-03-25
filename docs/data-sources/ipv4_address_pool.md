@@ -30,7 +30,7 @@ data "fmc_ipv4_address_pool" "example" {
 ### Read-Only
 
 - `description` (String) Description of the object.
-- `mask` (String) IP mask for the range
+- `netmask` (String) IP netmask for the range
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `range` (String) IP range
 - `type` (String) Type of the object; this value is always 'IPv4AddressPool'.

@@ -48,6 +48,7 @@ data "fmc_device_physical_interface" "example" {
 - `ip_based_monitoring` (Boolean) Indicates whether to enable IP based Monitoring.
 - `ip_based_monitoring_next_hop` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
+- `ipv4_address_pool_id` (String) Id of the assigned IPv4 address pool.
 - `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
 - `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.
 - `ipv4_pppoe_authentication` (String) PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.
@@ -59,6 +60,7 @@ data "fmc_device_physical_interface" "example" {
 - `ipv4_pppoe_vpdn_group_name` (String) PPPoE Configuration - PPPoE Group Name.
 - `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
 - `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
+- `ipv6_address_pool_id` (String) Id of the assigned IPv6 address pool.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
 - `ipv6_default_route_by_dhcp` (Boolean) Indicates whether to obtain default route from DHCPv6.
