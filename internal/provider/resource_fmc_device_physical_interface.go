@@ -676,7 +676,11 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	// Step 1: Remove all attributes except 'ifname'
 	body := state.toBodyPutDelete(ctx, DevicePhysicalInterface{})
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
+	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Interface not found", state.Id.ValueString()))
+		resp.State.RemoveResource(ctx)
+		return
+	} else if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
 		return
 	}

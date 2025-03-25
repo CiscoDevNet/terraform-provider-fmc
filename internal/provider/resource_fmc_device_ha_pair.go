@@ -379,6 +379,17 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
+	// Deploy devices in HA Pair (pre-requisite for cluster creation)
+	deploy := DeviceDeploy{
+		Id:            types.StringValue(plan.Id.ValueString()),
+		IgnoreWarning: types.BoolValue(true),
+		DeviceIdList:  helpers.GetStringListFromStringSlice([]string{plan.PrimaryDeviceId.ValueString(), plan.SecondaryDeviceId.ValueString()}),
+	}
+	diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
 	// Create object
 	body := plan.toBody(ctx, DeviceHAPair{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -387,11 +398,11 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	// Adding code to poll object
+	// Wait for the ha pair to be created
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
@@ -557,7 +568,7 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", state.Id.ValueString(), taskID))
 
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}

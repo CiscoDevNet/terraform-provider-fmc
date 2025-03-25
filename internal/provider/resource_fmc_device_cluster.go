@@ -184,6 +184,22 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
+	// Deploy configuration to devices in Cluster (pre-requisite for cluster creation)
+	var clusterDeviceIds = []string{plan.ControlNodeDeviceId.ValueString()}
+	for _, v := range plan.DataDevices {
+		clusterDeviceIds = append(clusterDeviceIds, v.DataNodeDeviceId.ValueString())
+	}
+
+	deploy := DeviceDeploy{
+		Id:            types.StringValue(plan.Id.ValueString()),
+		IgnoreWarning: types.BoolValue(true),
+		DeviceIdList:  helpers.GetStringListFromStringSlice(clusterDeviceIds),
+	}
+	diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
 	// Create object
 	body := plan.toBody(ctx, DeviceCluster{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -192,10 +208,11 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 		return
 	}
 
+	// Wait for cluster to be created
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
@@ -344,7 +361,7 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 		taskID := res.Get("metadata.task.id").String()
 		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 			return
 		}
@@ -374,7 +391,7 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 		taskID := res.Get("metadata.task.id").String()
 		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+		diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 			return
 		}
@@ -413,7 +430,7 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 	taskID := res.Get("metadata.task.id").String()
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
 
-	diags = helpers.FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods...)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
