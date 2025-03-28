@@ -59,7 +59,7 @@ func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
 	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) ( isSet . ) }}
 	{{- $clist := .TfName }}
 	{{- range  .Attributes}}
-	{{- if eq .TfName "id" }}
+	{{- if and (eq .TfName "id") (not .WriteOnly) }}
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{$clist}}.0.{{.TfName}}"))
 	{{- end}}
 	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) (not (isSet .)) }}
