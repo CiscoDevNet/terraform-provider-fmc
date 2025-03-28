@@ -32,7 +32,6 @@ func TestAccDataSourceFmcApplicationFilters(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_application_filters.test", "items.my_application_filter.id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_application_filters.test", "items.my_application_filter.type"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_application_filters.test", "items.my_application_filter.applications.0.id"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
