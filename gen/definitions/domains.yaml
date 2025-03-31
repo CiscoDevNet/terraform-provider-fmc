@@ -1,0 +1,25 @@
+---
+name: Domains
+rest_endpoint: /api/fmc_platform/v1/info/domain
+doc_category: System information
+is_bulk: true
+no_resource: true
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Domains. The key of the map is the name of the individual Domain.
+    map_key_example: Global
+    mandatory: true
+    attributes:
+      - model_name: uuid
+        tf_name: id
+        type: String
+        resource_id: true
+        description: Id of the Domain object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'Domain'.
+        computed: true
