@@ -77,10 +77,12 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 				{{- end}}
 			},
+			{{- if isDomainDependent .}}
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:			true,
 			},
+			{{- end}}
 			{{- range .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
@@ -207,9 +209,11 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
+	{{- if isDomainDependent .}}
 	if !config.Domain.IsNull() && config.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(config.Domain.ValueString()))
 	}
+	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
