@@ -1,0 +1,51 @@
+---
+name: IPv4 Address Pools
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ipv4addresspools
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of IPv4 Address Pools. The key of the map is the name of the individual IPv4 Address Pool.
+    map_key_example: my_ipv4_address_pools
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the IPv4 Address Pool object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IPv4AddressPool'.
+        computed: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IPv4AddressPool'.
+        value: IPv4AddressPool
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: My IPv4 Address Pool object
+      - model_name: ipAddressRange
+        tf_name: range
+        type: String
+        mandatory: true
+        description: IP range
+        example: "10.0.0.10-10.0.0.20"
+      - model_name: addressType # Supported strting with FMC 7.4
+        type: String
+        value: RANGE
+      - model_name: mask
+        type: String
+        mandatory: true
+        description: IP mask for the range
+        example: 255.255.255.0
+      - model_name: overridable
+        type: Bool
+        description: Whether the object values can be overridden.
+        example: "true"

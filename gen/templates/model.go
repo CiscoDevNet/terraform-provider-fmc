@@ -653,8 +653,8 @@ func (data *{{camelCase .Name}}) clearItemsIds(ctx context.Context) {
 				{{- $found = true }}
 			{{- end}}
 		{{- end}}
-		{{- if not $found }}
-			{{- errorf "type Map with attributes has a limitation for now: it must always contain attribute with `model_name: id` and `tf_name: id` and `resource_id: true`, because it must always be used to track subresources."}}
+		{{- if and (not $found) (not $.NoResource) }}
+			{{- errorf "type Map with attributes has a limitation for now: it must always contain attribute with `model_name: id` and `tf_name: id` and `resource_id: true`, because it must always be used to track subresources. This limitation is applicable for Resources only."}}
 		{{- end}}
 	{{- end}}
 	{{- range .Attributes}}
