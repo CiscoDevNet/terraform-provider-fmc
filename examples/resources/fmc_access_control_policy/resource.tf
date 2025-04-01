@@ -96,6 +96,13 @@ resource "fmc_access_control_policy" "example" {
           type = "SecurityGroupTag"
         }
       ]
+      endpoint_device_types = [
+        {
+          name = "my_endpoint_device_types"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "EndPointDeviceType"
+        }
+      ]
       source_zones = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"

@@ -441,6 +441,28 @@ attributes:
             example: SecurityGroupTag
             mandatory: true
             # test_value: fmc_security_group_tag.test.type
+      - model_name: endPointDeviceTypes
+        tf_name: endpoint_device_types
+        description: Set of objects representing the source Endpoint Device Types.
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: name
+            type: String
+            description: Name of the object.
+            example: my_endpoint_device_types
+            mandatory: true
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            mandatory: true
+          - model_name: type
+            type: String
+            description: Type of the object.
+            example: EndPointDeviceType
+            mandatory: true
       - model_name: objects
         data_path: [sourceZones]
         tf_name: source_zones

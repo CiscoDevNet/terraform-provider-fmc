@@ -402,6 +402,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewDeviceVTEPPolicyDataSource,
 		NewDomainsDataSource,
 		NewDynamicObjectsDataSource,
+		NewEndpointDeviceTypesDataSource,
 		NewExtendedACLDataSource,
 		NewFileCategoriesDataSource,
 		NewFileCategoryDataSource,

@@ -73,6 +73,7 @@ Read-Only:
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule. (see [below for nested schema](#nestedatt--rules--destination_port_objects))
 - `destination_zones` (Attributes Set) Set of objects representing destination Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false).
+- `endpoint_device_types` (Attributes Set) Set of objects representing the source Endpoint Device Types. (see [below for nested schema](#nestedatt--rules--endpoint_device_types))
 - `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
 - `id` (String) Id of the Access Rule.
 - `intrusion_policy_id` (String) Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
@@ -220,6 +221,16 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Id of the object.
+
+
+<a id="nestedatt--rules--endpoint_device_types"></a>
+### Nested Schema for `rules.endpoint_device_types`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `name` (String) Name of the object.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--source_dynamic_objects"></a>

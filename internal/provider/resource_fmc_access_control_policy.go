@@ -430,6 +430,26 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 								},
 							},
 						},
+						"endpoint_device_types": schema.SetNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the source Endpoint Device Types.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+										Required:            true,
+									},
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
 						"source_zones": schema.SetNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing source Security Zones associated with the access rule.").String,
 							Optional:            true,
