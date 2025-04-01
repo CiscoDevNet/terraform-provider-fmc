@@ -436,7 +436,6 @@ func (r *IPv4AddressPoolsResource) ImportState(ctx context.Context, req resource
 
 // End of section. //template:end import
 
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state, plan IPv4AddressPools, reqMods ...func(*fmc.Req)) (IPv4AddressPools, diag.Diagnostics) {
@@ -452,6 +451,12 @@ func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state
 			tmpObject.Items[k] = v
 
 			body := tmpObject.toBodyNonBulk(ctx, state)
+
+			// If FMC version is lower than 7.4, drop addressType
+			if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+				body, _ = sjson.Delete(body, "addressType")
+			}
+
 			res, err := r.client.Post(state.getPath(), body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -517,8 +522,6 @@ func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state
 
 	return state, nil
 }
-
-// End of section. //template:end createSubresources
 
 // Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
@@ -600,8 +603,6 @@ func (r *IPv4AddressPoolsResource) deleteSubresources(ctx context.Context, state
 
 // End of section. //template:end deleteSubresources
 
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
 func (r *IPv4AddressPoolsResource) updateSubresources(ctx context.Context, state, plan IPv4AddressPools, reqMods ...func(*fmc.Req)) (IPv4AddressPools, diag.Diagnostics) {
 	var tmpObject IPv4AddressPools
@@ -613,6 +614,13 @@ func (r *IPv4AddressPoolsResource) updateSubresources(ctx context.Context, state
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
+
+		// If FMC version is lower than 7.4, drop addressType
+		fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+		if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+			body, _ = sjson.Delete(body, "addressType")
+		}
+
 		urlPath := tmpObject.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
@@ -630,5 +638,3 @@ func (r *IPv4AddressPoolsResource) updateSubresources(ctx context.Context, state
 
 	return state, nil
 }
-
-// End of section. //template:end updateSubresources
