@@ -1,5 +1,6 @@
 ## 2.0.0-beta3 (Unreleased)
 
+- (Fix) Change value of `interface_type` within `fmc_security_zones` item should replace just this object, not entire bulk resource
 - (Enhancement) Add support for `fmc_ipv4_address_pool` and `fmc_ipv4_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_ipv6_address_pool` and `fmc_ipv6_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_domains` data source
