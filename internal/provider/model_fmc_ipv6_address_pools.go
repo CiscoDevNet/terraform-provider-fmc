@@ -279,7 +279,7 @@ func (data *IPv6AddressPools) Clone() IPv6AddressPools {
 func (data IPv6AddressPools) toBodyNonBulk(ctx context.Context, state IPv6AddressPools) string {
 	// This is one-by-one update, so only one element to update is expected
 	if len(data.Items) > 1 {
-		tflog.Error(ctx, "Found more than one element to chage. Only one will be changed.")
+		tflog.Error(ctx, "Found more than one element to change. Only one will be changed.")
 	}
 
 	// Utilize existing toBody function

@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -33,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -118,8 +120,6 @@ func (r *IPv4AddressPoolResource) Configure(_ context.Context, req resource.Conf
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *IPv4AddressPoolResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan IPv4AddressPool
 
@@ -139,6 +139,12 @@ func (r *IPv4AddressPoolResource) Create(ctx context.Context, req resource.Creat
 
 	// Create object
 	body := plan.toBody(ctx, IPv4AddressPool{})
+
+	// If FMC version is lower than 7.4, drop addressType
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+	if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+		body, _ = sjson.Delete(body, "addressType")
+	}
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -154,8 +160,6 @@ func (r *IPv4AddressPoolResource) Create(ctx context.Context, req resource.Creat
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -209,8 +213,6 @@ func (r *IPv4AddressPoolResource) Read(ctx context.Context, req resource.ReadReq
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *IPv4AddressPoolResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state IPv4AddressPool
 
@@ -235,6 +237,13 @@ func (r *IPv4AddressPoolResource) Update(ctx context.Context, req resource.Updat
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+
+	// If FMC version is lower than 7.4, drop addressType
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+	if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+		body, _ = sjson.Delete(body, "addressType")
+	}
+
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
@@ -246,8 +255,6 @@ func (r *IPv4AddressPoolResource) Update(ctx context.Context, req resource.Updat
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 

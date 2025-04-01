@@ -37,7 +37,7 @@ attributes:
         mandatory: true
         description: IP range
         example: "10.0.0.10-10.0.0.20"
-      - model_name: addressType
+      - model_name: addressType # Supported strting with FMC 7.4
         type: String
         value: RANGE
       - model_name: mask
