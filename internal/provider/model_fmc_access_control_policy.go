@@ -85,6 +85,7 @@ type AccessControlPolicyRules struct {
 	DestinationPortLiterals    []AccessControlPolicyRulesDestinationPortLiterals    `tfsdk:"destination_port_literals"`
 	DestinationPortObjects     []AccessControlPolicyRulesDestinationPortObjects     `tfsdk:"destination_port_objects"`
 	SourceSgtObjects           []AccessControlPolicyRulesSourceSgtObjects           `tfsdk:"source_sgt_objects"`
+	DestinationSgtObjects      []AccessControlPolicyRulesDestinationSgtObjects      `tfsdk:"destination_sgt_objects"`
 	SourceZones                []AccessControlPolicyRulesSourceZones                `tfsdk:"source_zones"`
 	DestinationZones           []AccessControlPolicyRulesDestinationZones           `tfsdk:"destination_zones"`
 	UrlLiterals                []AccessControlPolicyRulesUrlLiterals                `tfsdk:"url_literals"`
@@ -156,6 +157,12 @@ type AccessControlPolicyRulesDestinationPortObjects struct {
 	Id types.String `tfsdk:"id"`
 }
 type AccessControlPolicyRulesSourceSgtObjects struct {
+	Name types.String `tfsdk:"name"`
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+}
+type AccessControlPolicyRulesDestinationSgtObjects struct {
+	Name types.String `tfsdk:"name"`
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
@@ -495,6 +502,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				itemBody, _ = sjson.Set(itemBody, "sourceSecurityGroupTags.objects", []interface{}{})
 				for _, childItem := range item.SourceSgtObjects {
 					itemChildBody := ""
+					if !childItem.Name.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
+					}
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
@@ -502,6 +512,22 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "sourceSecurityGroupTags.objects.-1", itemChildBody)
+				}
+			}
+			if len(item.DestinationSgtObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "destinationSecurityGroupTags.objects", []interface{}{})
+				for _, childItem := range item.DestinationSgtObjects {
+					itemChildBody := ""
+					if !childItem.Name.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
+					}
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "destinationSecurityGroupTags.objects.-1", itemChildBody)
 				}
 			}
 			if len(item.SourceZones) > 0 {
@@ -1040,6 +1066,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceSgtObjects{}
+					if value := res.Get("name"); value.Exists() {
+						data.Name = types.StringValue(value.String())
+					} else {
+						data.Name = types.StringNull()
+					}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
@@ -1051,6 +1082,30 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						data.Type = types.StringNull()
 					}
 					(*parent).SourceSgtObjects = append((*parent).SourceSgtObjects, data)
+					return true
+				})
+			}
+			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
+				data.DestinationSgtObjects = make([]AccessControlPolicyRulesDestinationSgtObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessControlPolicyRulesDestinationSgtObjects{}
+					if value := res.Get("name"); value.Exists() {
+						data.Name = types.StringValue(value.String())
+					} else {
+						data.Name = types.StringNull()
+					}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					(*parent).DestinationSgtObjects = append((*parent).DestinationSgtObjects, data)
 					return true
 				})
 			}
@@ -2060,6 +2115,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 
 				continue
 			}
+			if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
 			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
 				data.Id = types.StringValue(value.String())
 			} else {
@@ -2071,6 +2131,59 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				data.Type = types.StringNull()
 			}
 			(*parent).SourceSgtObjects[i] = data
+		}
+		for i := 0; i < len(data.DestinationSgtObjects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.DestinationSgtObjects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).DestinationSgtObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("destinationSecurityGroupTags.objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing DestinationSgtObjects[%d] = %+v",
+					i,
+					(*parent).DestinationSgtObjects[i],
+				))
+				(*parent).DestinationSgtObjects = slices.Delete((*parent).DestinationSgtObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			(*parent).DestinationSgtObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceZones); i++ {
 			keys := [...]string{"id"}
@@ -2861,6 +2974,16 @@ func NewValidAccessControlPolicy(ctx context.Context, tfplan tfsdk.Plan) (Access
 
 		reached = ranks[node]
 		prev = node
+	}
+
+	// Only ISESecurityTagGroups are supported for destination SGT objects
+	for _, rule := range plan.Rules {
+		for _, sgtObject := range rule.DestinationSgtObjects {
+			tflog.Debug(ctx, fmt.Sprintf("sgtObject: %+v", sgtObject))
+			if sgtObject.Type.ValueString() != "ISESecurityGroupTag" {
+				diags.AddError("Invalid Configuration", fmt.Sprintf("Rule: %s, destination_sgt_objects: object type %s is not supported. Only ISESecurityGroupTag is allowed.", rule.Name.ValueString(), sgtObject.Type.ValueString()))
+			}
+		}
 	}
 
 	return plan, diags

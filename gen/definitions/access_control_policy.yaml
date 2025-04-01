@@ -424,10 +424,15 @@ attributes:
       - model_name: objects
         data_path: [sourceSecurityGroupTags]
         tf_name: source_sgt_objects
-        description: Set of objects representing the source Security Group Tags (SGT).
+        description: Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags.
         type: Set
         exclude_test: true
         attributes:
+          - model_name: name
+            type: String
+            description: Name of the object.
+            example: my_source_ise_sgt
+            mandatory: true
           - model_name: id
             type: String
             description: Id of the object.
@@ -438,9 +443,32 @@ attributes:
           - model_name: type
             type: String
             description: Type of the object.
-            example: SecurityGroupTag
+            example: ISESecurityGroupTag
             mandatory: true
             # test_value: fmc_security_group_tag.test.type
+      - model_name: objects
+        data_path: [destinationSecurityGroupTags]
+        tf_name: destination_sgt_objects
+        description: Set of objects representing the destination ISE Security Group Tags (SGT).
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: name
+            type: String
+            description: Name of the object.
+            example: my_destination_ise_sgt
+            mandatory: true
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            mandatory: true
+          - model_name: type
+            type: String
+            description: Type of the object.
+            example: ISESecurityGroupTag
+            mandatory: true
       - model_name: objects
         data_path: [sourceZones]
         tf_name: source_zones

@@ -415,10 +415,34 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"source_sgt_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the source Security Group Tags (SGT).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+										Required:            true,
+									},
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
+						"destination_sgt_objects": schema.SetNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing the destination ISE Security Group Tags (SGT).").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+										Required:            true,
+									},
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,

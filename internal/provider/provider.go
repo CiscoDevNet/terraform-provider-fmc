@@ -422,6 +422,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewIPv4AddressPoolsDataSource,
 		NewIPv6AddressPoolDataSource,
 		NewIPv6AddressPoolsDataSource,
+		NewISESGTsDataSource,
 		NewNetworkDataSource,
 		NewNetworkAnalysisPolicyDataSource,
 		NewNetworkGroupDataSource,
