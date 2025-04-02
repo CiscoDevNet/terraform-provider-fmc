@@ -63,7 +63,7 @@ func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.Metad
 func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\n Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.\n The following actions are not supported:\n - Disabling/Enabling cluster node\n - Changing cluster control node\n - Changing node priorities\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\n Configuration of the Cluster is taken from the control node and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.\n The following actions are not supported:\n - Renaming the cluster, \n - Disabling/Enabling cluster node, \n - Changing cluster control node, \n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -118,6 +118,9 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 			"control_node_device_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Node device ID.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"control_node_ccl_ipv4_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster control link IPv4 address / VTEP IPv4 address.").String,
@@ -326,6 +329,28 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 		}
 	}
 
+	// Check if bootsrap configuration has changed
+	if state.hasBootstrapChanged(ctx, plan) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bootstrap configuration has changed", plan.Id.ValueString()))
+		body := plan.toBody(ctx, DeviceCluster{})
+		body, _ = sjson.Set(body, "action", "UPDATE_BOOTSTRAP")
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+		// Wait for cluster to be updated
+		if res.Get("metadata.task.id").Exists() {
+			taskID := res.Get("metadata.task.id").String()
+			tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+
+			diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+			if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+				return
+			}
+		}
+	}
+
 	// Get list of state data devices
 	stateDevices := make([]string, len(state.DataDevices))
 	for i, v := range state.DataDevices {
@@ -357,7 +382,7 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 			return
 		}
 
-		// Adding code to poll object
+		// Wait for cluster to be updated
 		taskID := res.Get("metadata.task.id").String()
 		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
@@ -383,17 +408,24 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 		body, _ = sjson.Set(body, "action", "ADD_NODES")
 		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-			return
+			// Error saying that device is already in the cluster
+			// This will trigger even if a single device out of multiple is already in the cluster
+			// Second terraform apply will fix the problem (1st run updates state, 2nd add missing ones)
+			if !strings.Contains(res.String(), "is a duplicate device id") {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+				return
+			}
 		}
 
-		// Adding code to poll object
-		taskID := res.Get("metadata.task.id").String()
-		tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+		// Wait for cluster to be updated
+		if res.Get("metadata.task.id").Exists() {
+			taskID := res.Get("metadata.task.id").String()
+			tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-		diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
-		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
-			return
+			diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+			if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+				return
+			}
 		}
 	}
 

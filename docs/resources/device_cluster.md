@@ -4,19 +4,19 @@ page_title: "fmc_device_cluster Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This device manages FTD Device Cluster configuration.
-  Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
+  Configuration of the Cluster is taken from the control node and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
   The following actions are not supported:
-  Disabling/Enabling cluster nodeChanging cluster control nodeChanging node priorities
+  Renaming the cluster,Disabling/Enabling cluster node,Changing cluster control node,
 ---
 
 # fmc_device_cluster (Resource)
 
 This device manages FTD Device Cluster configuration.
- Configuration of the Cluster is taken from the control node. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
+ Configuration of the Cluster is taken from the control node and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.
  The following actions are not supported:
- - Disabling/Enabling cluster node
- - Changing cluster control node
- - Changing node priorities
+ - Renaming the cluster, 
+ - Disabling/Enabling cluster node, 
+ - Changing cluster control node,
 
 ## Example Usage
 

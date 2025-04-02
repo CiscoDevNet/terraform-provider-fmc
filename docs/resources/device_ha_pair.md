@@ -4,13 +4,13 @@ page_title: "fmc_device_ha_pair Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This device manages FTD HA Pair configuration.
-  Configuration of the HA Pair is taken from the primary device. Nevertheless, please make sure that the Terraform configuration of primary and secondary devices is consistent.
+  Configuration of the HA Pair is taken from the primary device and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of both nodes is consistent.
 ---
 
 # fmc_device_ha_pair (Resource)
 
 This device manages FTD HA Pair configuration.
-Configuration of the HA Pair is taken from the primary device. Nevertheless, please make sure that the Terraform configuration of primary and secondary devices is consistent.
+ Configuration of the HA Pair is taken from the primary device and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of both nodes is consistent.
 
 ## Example Usage
 

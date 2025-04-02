@@ -41,6 +41,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -68,7 +69,7 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\nConfiguration of the HA Pair is taken from the primary device. Nevertheless, please make sure that the Terraform configuration of primary and secondary devices is consistent.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration of the HA Pair is taken from the primary device and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of both nodes is consistent.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -518,17 +519,22 @@ func (r *DeviceHAPairResource) Update(ctx context.Context, req resource.UpdateRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	// Update object 'core'
-	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-		return
+	// Update object 'name'. Other attributer are either immutable or updated later
+	if state.Name != plan.Name {
+		body := ""
+		body, _ = sjson.Set(body, "id", plan.Id.ValueString())
+		body, _ = sjson.Set(body, "name", plan.Name.ValueString())
+
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	// Update object 'timers'
-	body = plan.toBodyUpdateTimers(ctx, state)
-	res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBodyUpdateTimers(ctx, state)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return

@@ -357,3 +357,42 @@ func (data DeviceCluster) toBodyPutDelete(ctx context.Context, state DeviceClust
 	body, _ = sjson.Set(body, "action", "BREAK")
 	return body
 }
+
+// Check if the bootstrap configuration has changed
+func (data DeviceCluster) hasBootstrapChanged(ctx context.Context, plan DeviceCluster) bool {
+	if data.ClusterKey != plan.ClusterKey {
+		return true
+	}
+	if data.ControlNodeVniPrefix != plan.ControlNodeVniPrefix {
+		return true
+	}
+	if data.ControlNodeCclPrefix != plan.ControlNodeCclPrefix {
+		return true
+	}
+	if data.ControlNodeInterfaceId != plan.ControlNodeInterfaceId {
+		return true
+	}
+	if data.ControlNodeInterfaceName != plan.ControlNodeInterfaceName {
+		return true
+	}
+	if data.ControlNodeInterfaceType != plan.ControlNodeInterfaceType {
+		return true
+	}
+	if data.ControlNodePriority != plan.ControlNodePriority {
+		return true
+	}
+	for _, dataNode := range data.DataDevices {
+		for _, planNode := range plan.DataDevices {
+			if dataNode.DataNodeDeviceId == planNode.DataNodeDeviceId {
+				if dataNode.DataNodePriority != planNode.DataNodePriority {
+					return true
+				}
+				if dataNode.DataNodeCclIpv4Address != planNode.DataNodeCclIpv4Address {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}
