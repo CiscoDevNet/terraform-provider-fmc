@@ -63,7 +63,7 @@ func (r *DeviceClusterResource) Metadata(ctx context.Context, req resource.Metad
 func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\n Configuration of the Cluster is taken from the control node and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.\n The following actions are not supported:\n - Renaming the cluster, \n - Disabling/Enabling cluster node, \n - Changing cluster control node, \n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD Device Cluster configuration.\n Configuration of the Cluster is replicated from the Cluster Control Node. Nevertheless, please make sure that the configuration of the control and all the data nodes is consistent.\n The following actions are not supported:\n - Renaming the cluster,\n - Disabling/Enabling cluster node,\n - Changing cluster control node,\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -133,8 +133,8 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 					int64validator.Between(1, 255),
 				},
 			},
-			"data_devices": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of data nodes where hardware needs to match the control node hardware.").String,
+			"data_devices": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of cluster data nodes.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -460,7 +460,7 @@ func (r *DeviceClusterResource) Delete(ctx context.Context, req resource.DeleteR
 	}
 
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", state.Id.ValueString(), taskID))
 
 	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {

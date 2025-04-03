@@ -41,14 +41,14 @@ resource "fmc_device" "example" {
 
 - `device_group_id` (String) Id of the device group.
 - `domain` (String) Name of the FMC domain
-- `health_policy_id` (String) Id of the assigned Health policy.
+- `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
-- `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+- `performance_tier` (String) Performance tier for the managed device.
   - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `Legacy`
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
-- `snort_engine` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+- `snort_engine` (String) SNORT engine version to be enabled.
   - Choices: `SNORT2`, `SNORT3`
 
 ### Read-Only

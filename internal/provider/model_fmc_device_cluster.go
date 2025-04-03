@@ -351,9 +351,7 @@ func (data *DeviceCluster) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 // making devices go back into standalone mode
 func (data DeviceCluster) toBodyPutDelete(ctx context.Context, state DeviceCluster) string {
 	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	body, _ = sjson.Set(body, "action", "BREAK")
 	return body
 }

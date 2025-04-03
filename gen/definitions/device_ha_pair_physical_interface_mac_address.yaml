@@ -9,7 +9,7 @@ attributes:
     type: String
     reference: true
     description: Id of the parent HA Pair device.
-    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    example: 76d24097-41c4-4558-a4d0-a8c07ac13928
     test_value: var.device_ha_id
     requires_replace: true
   - model_name: type

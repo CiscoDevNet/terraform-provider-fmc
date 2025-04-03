@@ -132,14 +132,14 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 			},
 			"performance_tier": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.").AddStringEnumDescription("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "Legacy").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Performance tier for the managed device.").AddStringEnumDescription("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "Legacy").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "Legacy"),
 				},
 			},
 			"snort_engine": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.").AddStringEnumDescription("SNORT2", "SNORT3").String,
+				MarkdownDescription: helpers.NewAttributeDescription("SNORT engine version to be enabled.").AddStringEnumDescription("SNORT2", "SNORT3").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SNORT2", "SNORT3"),
@@ -158,7 +158,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.").String,
 				Optional:            true,
 			},
 		},
@@ -487,6 +487,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 			return nil
 		}
 		res, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments/"+url.QueryEscape(statePolicy.ValueString()), reqMods...)
+		// If assignment does not exist, do noting
 		if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 			return nil
 		} else if err != nil {

@@ -31,14 +31,14 @@ data "fmc_device" "example" {
 
 - `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
 - `device_group_id` (String) Id of the device group.
-- `health_policy_id` (String) Id of the assigned Health policy.
+- `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
-- `performance_tier` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+- `performance_tier` (String) Performance tier for the managed device.
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
 - `registration_key` (String) Registration Key identical to the one previously configured on the device (`configure manager`).
-- `snort_engine` (String) Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+- `snort_engine` (String) SNORT engine version to be enabled.
 - `type` (String) Type of the device; this value is always 'Device'.

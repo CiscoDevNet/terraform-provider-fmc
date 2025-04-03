@@ -106,11 +106,11 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"performance_tier": schema.StringAttribute{
-				MarkdownDescription: "Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.",
+				MarkdownDescription: "Performance tier for the managed device.",
 				Computed:            true,
 			},
 			"snort_engine": schema.StringAttribute{
-				MarkdownDescription: "Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.",
+				MarkdownDescription: "SNORT engine version to be enabled.",
 				Computed:            true,
 			},
 			"object_group_search": schema.BoolAttribute{
@@ -126,7 +126,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned Health policy.",
+				MarkdownDescription: "Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.",
 				Computed:            true,
 			},
 		},

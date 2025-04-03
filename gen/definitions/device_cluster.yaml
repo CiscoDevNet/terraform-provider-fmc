@@ -4,11 +4,11 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicec
 doc_category: Devices
 res_description: >-
   This device manages FTD Device Cluster configuration.\n
-  Configuration of the Cluster is taken from the control node and this is the node that should be configured from Terraform level. Nevertheless, please make sure that the Terraform configuration of all control and data nodes is consistent.\n
+  Configuration of the Cluster is replicated from the Cluster Control Node. Nevertheless, please make sure that the configuration of the control and all the data nodes is consistent.\n
   The following actions are not supported:\n
-  - Renaming the cluster, \n
-  - Disabling/Enabling cluster node, \n
-  - Changing cluster control node, \n
+  - Renaming the cluster,\n
+  - Disabling/Enabling cluster node,\n
+  - Changing cluster control node,\n
 test_tags: [TF_VAR_device_id, TF_VAR_device_interface_name]
 attributes:
   - model_name: name
@@ -49,7 +49,7 @@ attributes:
     type: String
     mandatory: true
     description: Cluster control link interface ID.
-    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    example: 76d24097-41c4-4558-a4d0-a8c07ac92837
     test_value: data.fmc_device_physical_interface.test.id
   - model_name: name
     tf_name: control_node_interface_name
@@ -94,8 +94,8 @@ attributes:
     example: 1
     description: Priority of cluster controle node.
   - model_name: dataDevices
-    type: Set
-    description: List of data nodes where hardware needs to match the control node hardware.
+    type: List
+    description: List of cluster data nodes.
     attributes:
       - model_name: id
         tf_name: data_node_device_id

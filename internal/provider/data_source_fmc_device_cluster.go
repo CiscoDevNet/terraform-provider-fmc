@@ -116,8 +116,8 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Priority of cluster controle node.",
 				Computed:            true,
 			},
-			"data_devices": schema.SetNestedAttribute{
-				MarkdownDescription: "List of data nodes where hardware needs to match the control node hardware.",
+			"data_devices": schema.ListNestedAttribute{
+				MarkdownDescription: "List of cluster data nodes.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

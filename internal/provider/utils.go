@@ -101,14 +101,14 @@ Outerloop:
 func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 
-	// List of devices that actually need deployment
+	// List of devices that are going to be deployed (requested by the user and in deployable state)
 	var devicesToBeDeployed []string
 
-	// List of device IDs that should be deployed
+	// List of device IDs that are requested to be deployed
 	var planDevices []string
 	plan.DeviceIdList.ElementsAs(ctx, &planDevices, false)
 
-	// Check if any of the devices is under deployment
+	// Wait for any deployments in progress to finish
 	diags = FMCWaitForDeploymentToFinish(ctx, client, planDevices, reqMods)
 	if diags.HasError() {
 		return diags
@@ -159,12 +159,17 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 			return diags
 		}
 
-		// Wait for deployment to finish
-		diags = FMCWaitForJobToFinish(ctx, client, res.Get("metadata.task.id").String(), reqMods)
-		if diags.HasError() {
-			return diags
+		if res.Get("metadata.task.id").Exists() {
+			taskID := res.Get("metadata.task.id").String()
+			tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+			// Wait for deployment to finish
+			diags = FMCWaitForJobToFinish(ctx, client, taskID, reqMods)
+			if diags.HasError() {
+				return diags
+			}
+		} else {
+			tflog.Debug(ctx, fmt.Sprintf("%s: No task ID returned", plan.Id.ValueString()))
 		}
-
 		tflog.Debug(ctx, fmt.Sprintf("%s: Deploy completed", plan.Id.ValueString()))
 	} else {
 		tflog.Debug(ctx, fmt.Sprintf("%s: No devices in deployable state", plan.Id.ValueString()))
