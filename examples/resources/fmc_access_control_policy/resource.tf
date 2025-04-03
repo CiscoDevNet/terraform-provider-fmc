@@ -97,18 +97,18 @@ resource "fmc_access_control_policy" "example" {
           type = "ISESecurityGroupTag"
         }
       ]
-      destination_sgt_objects = [
-        {
-          name = "my_destination_ise_sgt"
-          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-          type = "ISESecurityGroupTag"
-        }
-      ]
       endpoint_device_types = [
         {
           name = "my_endpoint_device_types"
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
           type = "EndPointDeviceType"
+        }
+      ]
+      destination_sgt_objects = [
+        {
+          name = "my_destination_ise_sgt"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "ISESecurityGroupTag"
         }
       ]
       source_zones = [

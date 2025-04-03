@@ -162,12 +162,12 @@ type AccessControlPolicyRulesSourceSgtObjects struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
-type AccessControlPolicyRulesDestinationSgtObjects struct {
+type AccessControlPolicyRulesEndpointDeviceTypes struct {
 	Name types.String `tfsdk:"name"`
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
-type AccessControlPolicyRulesEndpointDeviceTypes struct {
+type AccessControlPolicyRulesDestinationSgtObjects struct {
 	Name types.String `tfsdk:"name"`
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
@@ -523,6 +523,19 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			if len(item.EndpointDeviceTypes) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "endPointDeviceTypes", []interface{}{})
 				for _, childItem := range item.EndpointDeviceTypes {
+					itemChildBody := ""
+					if !childItem.Name.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
+					}
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "endPointDeviceTypes.-1", itemChildBody)
+				}
+			}
 			if len(item.DestinationSgtObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "destinationSecurityGroupTags.objects", []interface{}{})
 				for _, childItem := range item.DestinationSgtObjects {
@@ -536,7 +549,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "endPointDeviceTypes.-1", itemChildBody)
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationSecurityGroupTags.objects.-1", itemChildBody)
 				}
 			}
@@ -1100,6 +1112,25 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesEndpointDeviceTypes{}
+					if value := res.Get("name"); value.Exists() {
+						data.Name = types.StringValue(value.String())
+					} else {
+						data.Name = types.StringNull()
+					}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					(*parent).EndpointDeviceTypes = append((*parent).EndpointDeviceTypes, data)
+					return true
+				})
+			}
 			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
 				data.DestinationSgtObjects = make([]AccessControlPolicyRulesDestinationSgtObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -1120,7 +1151,6 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 					} else {
 						data.Type = types.StringNull()
 					}
-					(*parent).EndpointDeviceTypes = append((*parent).EndpointDeviceTypes, data)
 					(*parent).DestinationSgtObjects = append((*parent).DestinationSgtObjects, data)
 					return true
 				})
@@ -2158,6 +2188,49 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			var res gjson.Result
 
 			parentRes.Get("endPointDeviceTypes").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing EndpointDeviceTypes[%d] = %+v",
+					i,
+					(*parent).EndpointDeviceTypes[i],
+				))
+				(*parent).EndpointDeviceTypes = slices.Delete((*parent).EndpointDeviceTypes, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			(*parent).EndpointDeviceTypes[i] = data
+		}
 		for i := 0; i < len(data.DestinationSgtObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationSgtObjects[i].Id.ValueString()}
@@ -2185,11 +2258,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing EndpointDeviceTypes[%d] = %+v",
-					i,
-					(*parent).EndpointDeviceTypes[i],
-				))
-				(*parent).EndpointDeviceTypes = slices.Delete((*parent).EndpointDeviceTypes, i, i+1)
 				tflog.Debug(ctx, fmt.Sprintf("removing DestinationSgtObjects[%d] = %+v",
 					i,
 					(*parent).DestinationSgtObjects[i],
@@ -2214,7 +2282,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			} else {
 				data.Type = types.StringNull()
 			}
-			(*parent).EndpointDeviceTypes[i] = data
 			(*parent).DestinationSgtObjects[i] = data
 		}
 		for i := 0; i < len(data.SourceZones); i++ {

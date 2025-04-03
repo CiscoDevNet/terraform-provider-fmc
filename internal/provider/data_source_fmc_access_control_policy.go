@@ -386,8 +386,8 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"destination_sgt_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing the destination ISE Security Group Tags (SGT).",
+						"endpoint_device_types": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the source Endpoint Device Types.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -406,8 +406,8 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
-						"endpoint_device_types": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing the source Endpoint Device Types.",
+						"destination_sgt_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects representing the destination ISE Security Group Tags (SGT).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
