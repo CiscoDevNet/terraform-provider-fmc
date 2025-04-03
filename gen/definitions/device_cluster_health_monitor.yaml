@@ -1,0 +1,126 @@
+---
+name: Device Cluster Health Monitor
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster/%v/clusterhealthmonitorsettings
+put_create: true
+no_delete: true
+doc_category: Devices
+test_tags: [TF_VAR_cluster_id]
+attributes:
+  - tf_name: cluster_id
+    type: String
+    reference: true
+    description: Id of the parent cluster
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.cluster_id
+  - model_name: type
+    type: String
+    description: Type of the resource; This is always `ClusterHealthMonitorSetting`.
+    computed: true
+  - model_name: isHealthCheckEnabled
+    tf_name: health_check
+    type: Bool
+    description: Enable/Disable health check.
+    example: true
+  # Timeouts
+  - model_name: holdTime
+    type: Float64
+    description: Time (in seconds) to wait before declaring unresponsive peer as down.
+    example: "3.0"
+    min_float: 0.3
+    max_float: 45
+  - model_name: debounceTime
+    data_path: [monitorInterface]
+    type: Int64
+    description: Time (in milliseconds) before considering an interface as failed.
+    example: 9000
+    min_int: 300
+    max_int: 9000
+  # Auto Rejon Settings
+  - model_name: attempts
+    data_path: [interfaceAutoRejoin, dataInterface]
+    tf_name: data_interface_auto_rejoin_attempts
+    type: Int64
+    description: Number of rejoin attempts. Use '-1' for unlimited attempts.
+    example: 3
+    min_int: -1
+    max_int: 65535
+  - model_name: interval
+    data_path: [interfaceAutoRejoin, dataInterface]
+    tf_name: data_interface_auto_rejoin_interval
+    type: Int64
+    description: Interval duration (in minutes) between rejoin attempts.
+    example: 5
+    min_int: 2
+    max_int: 60
+  - model_name: nextInterval
+    data_path: [interfaceAutoRejoin, dataInterface]
+    tf_name: data_interface_auto_rejoin_interval_variation
+    type: Int64
+    description: Rejoin interval increase strategy. Possible values are 1 (no change); 2 (2 x the previous duration), or 3 (3 x the previous duration)
+    example: 2
+    min_int: 1
+    max_int: 3
+  - model_name: attempts
+    data_path: [interfaceAutoRejoin, clusterInterface]
+    tf_name: cluster_interface_auto_rejoin_attempts
+    type: Int64
+    description: Number of rejoin attempts. Use '-1' for unlimited attempts.
+    example: -1
+    min_int: -1
+    max_int: 65535
+  - model_name: interval
+    data_path: [interfaceAutoRejoin, clusterInterface]
+    tf_name: cluster_interface_auto_rejoin_interval
+    type: Int64
+    description: Interval duration (in minutes) between rejoin attempts.
+    example: 5
+    min_int: 2
+    max_int: 60
+  - model_name: nextInterval
+    data_path: [interfaceAutoRejoin, clusterInterface]
+    tf_name: cluster_interface_auto_rejoin_interval_variation
+    type: Int64
+    description: Rejoin interval increase strategy. Possible values are 1 (no change); 2 (2 x the previous duration), or 3 (3 x the previous duration)
+    example: 1
+    min_int: 1
+    max_int: 3
+  - model_name: attempts
+    data_path: [systemAutoRejoin]
+    tf_name: system_auto_rejoin_attempts
+    type: Int64
+    description: Number of rejoin attempts. Use '-1' for unlimited attempts.
+    example: 3
+    min_int: -1
+    max_int: 65535
+  - model_name: interval
+    data_path: [systemAutoRejoin]
+    tf_name: system_auto_rejoin_interval
+    type: Int64
+    description: Interval duration (in minutes) between rejoin attempts.
+    example: 5
+    min_int: 2
+    max_int: 60
+  - model_name: nextInterval
+    data_path: [systemAutoRejoin]
+    tf_name: system_auto_rejoin_interval_variation
+    type: Int64
+    description: Rejoin interval increase strategy. Possible values are 1 (no change); 2 (2 x the previous duration), or 3 (3 x the previous duration)
+    example: 2
+    min_int: 1
+    max_int: 3
+  # Monitored interfaces
+  - model_name: unMonitorInterface
+    tf_name: unmonitored_interfaces
+    type: Set
+    element_type: String
+    description: List of interfaces excluded from monitoring.
+    example: GigabitEthernet0/1
+  - model_name: isServiceApplicationEnabled
+    data_path: [monitorInterface]
+    tf_name: service_application_monitoring
+    type: Bool
+    description: Monitoring of the Snort and disk-full processes.
+    example: true
+
+test_prerequisites: |-
+  variable "cluster_id" { default = null } // tests will set $TF_VAR_cluster_id
