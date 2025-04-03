@@ -32,7 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -213,71 +212,7 @@ func (r *DeviceDeployResource) triggerDeployment(ctx context.Context, plan Devic
 		plan.DeviceIdList = origPlanDeviceIdList
 	}()
 
-	// Get list of deployable devices
-	resDeployable, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deployment/deployabledevices?expanded=true", reqMods...)
-	if err != nil {
-		diags.AddError("Client Error", fmt.Sprintf("Failed to obtain list of deployable devices object (GET), got error: %s, %s", err, resDeployable.String()))
-		return diags
-	}
+	diags = FMCDeviceDeploy(ctx, r.client, plan, reqMods)
 
-	// Get version (common across all the devices)
-	// Force Deploy would require different way of obtaining version, as no devices may be in deployable state
-	plan.Version = types.StringValue(resDeployable.Get("items.0.version").String())
-
-	// If force_deploy is not set, make sure that all devices in plan are in deployable state
-	//if !plan.ForceDeploy.ValueBool() {
-
-	// Extract IDs or deployable devices
-	tmpResDeployableIds := resDeployable.Get("items.#.device.id")
-	var deployableDeviceIds []string
-	tmpResDeployableIds.ForEach(func(_, value gjson.Result) bool {
-		deployableDeviceIds = append(deployableDeviceIds, value.String())
-		return true
-	})
-
-	tflog.Debug(ctx, fmt.Sprintf("%s: Deployable devices: %v", plan.Id.ValueString(), deployableDeviceIds))
-
-	// List of devices that actually need deployment
-	var devicesToBeDeployed []string
-	var planDevices []string
-	plan.DeviceIdList.ElementsAs(ctx, &planDevices, false)
-
-	// Clear the list of devices to deploy
-	plan.DeviceIdList = types.ListNull(types.StringType)
-
-	// Check which devices from original list are deployable
-	for _, device := range planDevices {
-		if helpers.Contains(deployableDeviceIds, device) {
-			devicesToBeDeployed = append(devicesToBeDeployed, device)
-		}
-	}
-
-	plan.DeviceIdList = helpers.GetStringListFromStringSlice(devicesToBeDeployed)
-	//}
-
-	var deviceIdsSlice []string
-	plan.DeviceIdList.ElementsAs(ctx, &deviceIdsSlice, false)
-
-	if len(deviceIdsSlice) > 0 {
-		// Trigger deployment if any devices are in deployable state
-		tflog.Debug(ctx, fmt.Sprintf("%s: Deploying devices: %v", plan.Id.ValueString(), deviceIdsSlice))
-		body := plan.toBody(ctx, DeviceDeploy{})
-		res, err := r.client.Post(plan.getPath(), body, reqMods...)
-		if err != nil {
-			diags.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
-			return diags
-		}
-
-		// Wait for deployment to finish
-		diags = helpers.FMCWaitForJobToFinish(ctx, r.client, res.Get("metadata.task.id").String(), reqMods...)
-		if diags.HasError() {
-			return diags
-		}
-
-		tflog.Debug(ctx, fmt.Sprintf("%s: Deploy completed", plan.Id.ValueString()))
-	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: No devices in deployable state", plan.Id.ValueString()))
-	}
-
-	return nil
+	return diags
 }

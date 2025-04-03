@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -53,6 +54,13 @@ type Device struct {
 }
 
 // End of section. //template:end types
+
+type DeviceHAMembership struct {
+	HAType     string // HAPair or Cluster
+	HADeviceId string // ID of HAPair or Cluster
+	Role       string // Role of the node (primary, secondary for HAPair) or (control, data) for Cluster
+	Status     string // Status of device in HAPair (i.a. active, standby, but other possible as well)
+}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
 
@@ -265,8 +273,15 @@ func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 // End of section. //template:end fromBodyUnknowns
 
 // Fill response with policies IDs obtained from different API endpoint
-func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result) gjson.Result {
-	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, data.Id.ValueString())
+func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result, haMembership DeviceHAMembership) gjson.Result {
+	deviceId := data.Id.ValueString()
+
+	// If device is member of HAPair or Cluster, we should use that ID for policy management
+	if haMembership.HADeviceId != "" {
+		deviceId = haMembership.HADeviceId
+	}
+
+	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, deviceId)
 	list := policies.Get(query)
 	tflog.Debug(ctx, fmt.Sprintf("gjson path %s resulted in %d policies for update: %s", query, len(list.Array()), list))
 
@@ -297,4 +312,71 @@ func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, polici
 	}
 
 	return gjson.Parse(ret)
+}
+
+// Check if device is member of either HAPair or Cluster
+func (data *Device) checkHaMembership(ctx context.Context, haPairs, clusters gjson.Result) DeviceHAMembership {
+
+	// Check if device is primary member of haPair
+	query := fmt.Sprintf("items.#(primary.id==%s)", data.Id.ValueString())
+	haPairStatus := haPairs.Get(query)
+	if haPairStatus.Exists() {
+		haPairId := haPairStatus.Get("id")
+		haPairName := haPairStatus.Get("name")
+		status := haPairStatus.Get("metadata.primaryStatus.currentStatus")
+		tflog.Debug(ctx, fmt.Sprintf("Device %s is primary member of HA pair %s (%s) with status %s", data.Id.ValueString(), haPairName.String(), haPairId.String(), status.String()))
+		return DeviceHAMembership{
+			HAType:     "HAPair",
+			HADeviceId: haPairId.String(),
+			Role:       "primary",
+			Status:     strings.ToLower(status.String()),
+		}
+	}
+
+	// Check if device is secondary member of haPair
+	query = fmt.Sprintf("items.#(secondary.id==%s)", data.Id.ValueString())
+	haPairStatus = haPairs.Get(query)
+	if haPairStatus.Exists() {
+		haPairId := haPairStatus.Get("id")
+		haPairName := haPairStatus.Get("name")
+		status := haPairStatus.Get("metadata.secondaryStatus.currentStatus")
+		tflog.Debug(ctx, fmt.Sprintf("Device %s is secondary member of HA pair %s (%s) with status %s", data.Id.ValueString(), haPairName.String(), haPairId.String(), status.String()))
+		return DeviceHAMembership{
+			HAType:     "HAPair",
+			HADeviceId: haPairId.String(),
+			Role:       "secondary",
+			Status:     strings.ToLower(status.String()),
+		}
+	}
+
+	// Check if device is cluster control device
+	query = fmt.Sprintf("items.#(controlDevice.deviceDetails.id==%s)", data.Id.ValueString())
+	clusterStatus := clusters.Get(query)
+	if clusterStatus.Exists() {
+		clusterId := clusterStatus.Get("id")
+		clusterName := clusterStatus.Get("name")
+		tflog.Debug(ctx, fmt.Sprintf("Device %s is control device of cluster  %s (%s)", data.Id.ValueString(), clusterName.String(), clusterId.String()))
+		return DeviceHAMembership{
+			HAType:     "Cluster",
+			HADeviceId: clusterId.String(),
+			Role:       "control",
+		}
+	}
+
+	// Check if device is cluster data device
+	query = fmt.Sprintf("items.#(dataDevices.#(deviceDetails.id==%s))", data.Id.ValueString())
+	clusterStatus = clusters.Get(query)
+	if clusterStatus.Exists() {
+		clusterId := clusterStatus.Get("id")
+		clusterName := clusterStatus.Get("name")
+		tflog.Debug(ctx, fmt.Sprintf("Device %s is data device of cluster %s (%s)", data.Id.ValueString(), clusterName.String(), clusterId.String()))
+		return DeviceHAMembership{
+			HAType:     "Cluster",
+			HADeviceId: clusterId.String(),
+			Role:       "data",
+		}
+	}
+
+	// Device is standalone
+	return DeviceHAMembership{}
 }

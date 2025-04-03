@@ -20,6 +20,8 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"context"
+	"fmt"
+	"net/url"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
@@ -30,15 +32,15 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type IPv4AddressPool struct {
-	Id          types.String `tfsdk:"id"`
-	Domain      types.String `tfsdk:"domain"`
-	Name        types.String `tfsdk:"name"`
-	Type        types.String `tfsdk:"type"`
-	Description types.String `tfsdk:"description"`
-	Range       types.String `tfsdk:"range"`
-	Netmask     types.String `tfsdk:"netmask"`
-	Overridable types.Bool   `tfsdk:"overridable"`
+type DeviceHAPairPhysicalInterfaceMACAddress struct {
+	Id                types.String `tfsdk:"id"`
+	Domain            types.String `tfsdk:"domain"`
+	DeviceId          types.String `tfsdk:"device_id"`
+	Type              types.String `tfsdk:"type"`
+	InterfaceName     types.String `tfsdk:"interface_name"`
+	InterfaceId       types.String `tfsdk:"interface_id"`
+	ActiveMacAddress  types.String `tfsdk:"active_mac_address"`
+	StandbyMacAddress types.String `tfsdk:"standby_mac_address"`
 }
 
 // End of section. //template:end types
@@ -49,35 +51,31 @@ type IPv4AddressPool struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data IPv4AddressPool) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ipv4addresspools"
+func (data DeviceHAPairPhysicalInterfaceMACAddress) getPath() string {
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/failoverinterfacemacaddressconfigs", url.QueryEscape(data.DeviceId.ValueString()))
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data IPv4AddressPool) toBody(ctx context.Context, state IPv4AddressPool) string {
+func (data DeviceHAPairPhysicalInterfaceMACAddress) toBody(ctx context.Context, state DeviceHAPairPhysicalInterfaceMACAddress) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	if !data.InterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "physicalInterface.name", data.InterfaceName.ValueString())
 	}
-	body, _ = sjson.Set(body, "type", "IPv4AddressPool")
-	if !data.Description.IsNull() {
-		body, _ = sjson.Set(body, "description", data.Description.ValueString())
+	if !data.InterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "physicalInterface.id", data.InterfaceId.ValueString())
 	}
-	if !data.Range.IsNull() {
-		body, _ = sjson.Set(body, "ipAddressRange", data.Range.ValueString())
+	body, _ = sjson.Set(body, "physicalInterface.type", "PhysicalInterface")
+	if !data.ActiveMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "failoverActiveMac", data.ActiveMacAddress.ValueString())
 	}
-	body, _ = sjson.Set(body, "addressType", "RANGE")
-	if !data.Netmask.IsNull() {
-		body, _ = sjson.Set(body, "mask", data.Netmask.ValueString())
-	}
-	if !data.Overridable.IsNull() {
-		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
+	if !data.StandbyMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "failoverStandbyMac", data.StandbyMacAddress.ValueString())
 	}
 	return body
 }
@@ -86,36 +84,31 @@ func (data IPv4AddressPool) toBody(ctx context.Context, state IPv4AddressPool) s
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *IPv4AddressPool) fromBody(ctx context.Context, res gjson.Result) {
-	if value := res.Get("name"); value.Exists() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
-	}
+func (data *DeviceHAPairPhysicalInterfaceMACAddress) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("description"); value.Exists() {
-		data.Description = types.StringValue(value.String())
+	if value := res.Get("physicalInterface.name"); value.Exists() {
+		data.InterfaceName = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		data.InterfaceName = types.StringNull()
 	}
-	if value := res.Get("ipAddressRange"); value.Exists() {
-		data.Range = types.StringValue(value.String())
+	if value := res.Get("physicalInterface.id"); value.Exists() {
+		data.InterfaceId = types.StringValue(value.String())
 	} else {
-		data.Range = types.StringNull()
+		data.InterfaceId = types.StringNull()
 	}
-	if value := res.Get("mask"); value.Exists() {
-		data.Netmask = types.StringValue(value.String())
+	if value := res.Get("failoverActiveMac"); value.Exists() {
+		data.ActiveMacAddress = types.StringValue(value.String())
 	} else {
-		data.Netmask = types.StringNull()
+		data.ActiveMacAddress = types.StringNull()
 	}
-	if value := res.Get("overridable"); value.Exists() {
-		data.Overridable = types.BoolValue(value.Bool())
+	if value := res.Get("failoverStandbyMac"); value.Exists() {
+		data.StandbyMacAddress = types.StringValue(value.String())
 	} else {
-		data.Overridable = types.BoolNull()
+		data.StandbyMacAddress = types.StringNull()
 	}
 }
 
@@ -127,36 +120,31 @@ func (data *IPv4AddressPool) fromBody(ctx context.Context, res gjson.Result) {
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *IPv4AddressPool) fromBodyPartial(ctx context.Context, res gjson.Result) {
-	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
-	}
+func (data *DeviceHAPairPhysicalInterfaceMACAddress) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-		data.Description = types.StringValue(value.String())
+	if value := res.Get("physicalInterface.name"); value.Exists() && !data.InterfaceName.IsNull() {
+		data.InterfaceName = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		data.InterfaceName = types.StringNull()
 	}
-	if value := res.Get("ipAddressRange"); value.Exists() && !data.Range.IsNull() {
-		data.Range = types.StringValue(value.String())
+	if value := res.Get("physicalInterface.id"); value.Exists() && !data.InterfaceId.IsNull() {
+		data.InterfaceId = types.StringValue(value.String())
 	} else {
-		data.Range = types.StringNull()
+		data.InterfaceId = types.StringNull()
 	}
-	if value := res.Get("mask"); value.Exists() && !data.Netmask.IsNull() {
-		data.Netmask = types.StringValue(value.String())
+	if value := res.Get("failoverActiveMac"); value.Exists() && !data.ActiveMacAddress.IsNull() {
+		data.ActiveMacAddress = types.StringValue(value.String())
 	} else {
-		data.Netmask = types.StringNull()
+		data.ActiveMacAddress = types.StringNull()
 	}
-	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
-		data.Overridable = types.BoolValue(value.Bool())
+	if value := res.Get("failoverStandbyMac"); value.Exists() && !data.StandbyMacAddress.IsNull() {
+		data.StandbyMacAddress = types.StringValue(value.String())
 	} else {
-		data.Overridable = types.BoolNull()
+		data.StandbyMacAddress = types.StringNull()
 	}
 }
 
@@ -166,7 +154,7 @@ func (data *IPv4AddressPool) fromBodyPartial(ctx context.Context, res gjson.Resu
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *IPv4AddressPool) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *DeviceHAPairPhysicalInterfaceMACAddress) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.Type.IsUnknown() {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())

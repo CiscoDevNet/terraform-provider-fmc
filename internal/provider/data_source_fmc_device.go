@@ -106,11 +106,11 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"performance_tier": schema.StringAttribute{
-				MarkdownDescription: "Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.",
+				MarkdownDescription: "Performance tier for the managed device.",
 				Computed:            true,
 			},
 			"snort_engine": schema.StringAttribute{
-				MarkdownDescription: "Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.",
+				MarkdownDescription: "SNORT engine version to be enabled.",
 				Computed:            true,
 			},
 			"object_group_search": schema.BoolAttribute{
@@ -126,7 +126,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"health_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned Health policy.",
+				MarkdownDescription: "Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.",
 				Computed:            true,
 			},
 		},
@@ -212,7 +212,24 @@ func (d *DeviceDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	res = config.fromBodyPolicy(ctx, res, policies)
+	// Get HA Pairs
+	haPairs, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs?expanded=true", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve HA Pairs (GET), got error: %s, %s", err, haPairs.String()))
+		return
+	}
+
+	// Get Clusters
+	clusters, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster?expanded=true", reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Clusters (GET), got error: %s, %s", err, haPairs.String()))
+		return
+	}
+
+	// Check if device is member of either HAPair or Cluster
+	haMembershipStatus := config.checkHaMembership(ctx, haPairs, clusters)
+
+	res = config.fromBodyPolicy(ctx, res, policies, haMembershipStatus)
 	config.fromBody(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))

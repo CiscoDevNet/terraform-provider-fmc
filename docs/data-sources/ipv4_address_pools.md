@@ -40,7 +40,7 @@ Read-Only:
 
 - `description` (String) Description of the object.
 - `id` (String) Id of the IPv4 Address Pool object.
-- `mask` (String) IP mask for the range
+- `netmask` (String) IP netmask for the range
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `range` (String) IP range
 - `type` (String) Type of the object; this value is always 'IPv4AddressPool'.

@@ -3,12 +3,20 @@
 page_title: "fmc_device_cluster Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
+  This device manages FTD Device Cluster configuration.
+  Configuration of the Cluster is replicated from the Cluster Control Node. Nevertheless, please make sure that the configuration of the control and all the data nodes is consistent.
+  The following actions are not supported:
+  Renaming the cluster,Disabling/Enabling cluster node,Changing cluster control node,
 ---
 
 # fmc_device_cluster (Resource)
 
-This device manages FTD Device Cluster configuration. This is resource may be re-designed in future releases.
+This device manages FTD Device Cluster configuration.
+ Configuration of the Cluster is replicated from the Cluster Control Node. Nevertheless, please make sure that the configuration of the control and all the data nodes is consistent.
+ The following actions are not supported:
+ - Renaming the cluster,
+ - Disabling/Enabling cluster node,
+ - Changing cluster control node,
 
 ## Example Usage
 
@@ -16,12 +24,12 @@ This device manages FTD Device Cluster configuration. This is resource may be re
 resource "fmc_device_cluster" "example" {
   name                          = "my_device_cluster"
   cluster_key                   = "cisco123"
-  control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_vni_prefix       = "10.10.3.0/27"
   control_node_ccl_prefix       = "10.10.4.0/27"
-  control_node_interface_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  control_node_interface_id     = "76d24097-41c4-4558-a4d0-a8c07ac92837"
   control_node_interface_name   = "GigabitEthernet0/0"
   control_node_interface_type   = "PhysicalInterface"
+  control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_ccl_ipv4_address = "10.10.4.1"
   control_node_priority         = 1
   data_devices = [
@@ -48,12 +56,12 @@ resource "fmc_device_cluster" "example" {
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
   - Range: `1`-`255`
+- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `name` (String) Name of the FTD Cluster.
 
 ### Optional
 
-- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
-- `data_devices` (Attributes List) List of data nodes where hardware needs to match the control node hardware. (see [below for nested schema](#nestedatt--data_devices))
+- `data_devices` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_devices))
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

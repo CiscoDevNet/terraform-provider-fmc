@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &IPv4AddressPoolDataSource{}
-	_ datasource.DataSourceWithConfigure = &IPv4AddressPoolDataSource{}
+	_ datasource.DataSource              = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
 )
 
-func NewIPv4AddressPoolDataSource() datasource.DataSource {
-	return &IPv4AddressPoolDataSource{}
+func NewDeviceHAPairPhysicalInterfaceMACAddressDataSource() datasource.DataSource {
+	return &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
 }
 
-type IPv4AddressPoolDataSource struct {
+type DeviceHAPairPhysicalInterfaceMACAddressDataSource struct {
 	client *fmc.Client
 }
 
-func (d *IPv4AddressPoolDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ipv4_address_pool"
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
 }
 
-func (d *IPv4AddressPoolDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the IPv4 Address Pool.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device HA Pair Physical Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -71,44 +71,44 @@ func (d *IPv4AddressPoolDataSource) Schema(ctx context.Context, req datasource.S
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the IPv4 Address Pool object.",
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the parent HA Pair device.",
+				Required:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the resource; This is always `FailoverInterfaceMacAddressConfig`.",
+				Computed:            true,
+			},
+			"interface_name": schema.StringAttribute{
+				MarkdownDescription: "Interface physical name.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'IPv4AddressPool'.",
+			"interface_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the interface.",
 				Computed:            true,
 			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the object.",
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address of the active interface.",
 				Computed:            true,
 			},
-			"range": schema.StringAttribute{
-				MarkdownDescription: "IP range",
-				Computed:            true,
-			},
-			"netmask": schema.StringAttribute{
-				MarkdownDescription: "IP netmask for the range",
-				Computed:            true,
-			},
-			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Whether the object values can be overridden.",
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address of the standby interface.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *IPv4AddressPoolDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
-			path.MatchRoot("name"),
+			path.MatchRoot("interface_name"),
 		),
 	}
 }
 
-func (d *IPv4AddressPoolDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -120,8 +120,8 @@ func (d *IPv4AddressPoolDataSource) Configure(_ context.Context, req datasource.
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *IPv4AddressPoolDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config IPv4AddressPool
+func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceHAPairPhysicalInterfaceMACAddress
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -137,7 +137,7 @@ func (d *IPv4AddressPoolDataSource) Read(ctx context.Context, req datasource.Rea
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
-	if config.Id.IsNull() && !config.Name.IsNull() {
+	if config.Id.IsNull() && !config.InterfaceName.IsNull() {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
@@ -149,9 +149,9 @@ func (d *IPv4AddressPoolDataSource) Read(ctx context.Context, req datasource.Rea
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("name").String() {
+					if config.InterfaceName.ValueString() == v.Get("physicalInterface.name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_name '%v', id: %v", config.Id.String(), config.InterfaceName.ValueString(), config.Id.String()))
 						return false
 					}
 					return true
@@ -164,7 +164,7 @@ func (d *IPv4AddressPoolDataSource) Read(ctx context.Context, req datasource.Rea
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_name: %s", config.InterfaceName.ValueString()))
 			return
 		}
 	}
