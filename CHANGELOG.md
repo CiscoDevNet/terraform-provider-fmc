@@ -6,6 +6,8 @@
 - (Enhancement) Add support for `fmc_ipv4_address_pool` and `fmc_ipv4_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_ipv6_address_pool` and `fmc_ipv6_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_domains` data source
+- (Enhancement) Add support for `fmc_ise_sgts` data source
+- (Enhancement) Add support for `destination_sgt_objects` in Access Control Policy Rules
 
 ## 2.0.0-beta2
 
