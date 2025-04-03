@@ -107,8 +107,16 @@ resource "fmc_access_control_policy" "example" {
       ]
       source_sgt_objects = [
         {
+          name = "my_source_ise_sgt"
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-          type = "SecurityGroupTag"
+          type = "ISESecurityGroupTag"
+        }
+      ]
+      destination_sgt_objects = [
+        {
+          name = "my_destination_ise_sgt"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "ISESecurityGroupTag"
         }
       ]
       endpoint_device_types = [
@@ -273,6 +281,7 @@ Optional:
 - `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule. (see [below for nested schema](#nestedatt--rules--destination_port_objects))
+- `destination_sgt_objects` (Attributes Set) Set of objects representing the destination ISE Security Group Tags (SGT). (see [below for nested schema](#nestedatt--rules--destination_sgt_objects))
 - `destination_zones` (Attributes Set) Set of objects representing destination Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false).
   - Default value: `true`
@@ -297,7 +306,7 @@ Optional:
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--rules--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule. (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT). (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
+- `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags. (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
 - `source_zones` (Attributes Set) Set of objects representing source Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--source_zones))
 - `syslog_config_id` (String) Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
@@ -431,6 +440,16 @@ Optional:
 - `id` (String) Id of the object.
 
 
+<a id="nestedatt--rules--destination_sgt_objects"></a>
+### Nested Schema for `rules.destination_sgt_objects`
+
+Required:
+
+- `id` (String) Id of the object.
+- `name` (String) Name of the object.
+- `type` (String) Type of the object.
+
+
 <a id="nestedatt--rules--destination_zones"></a>
 ### Nested Schema for `rules.destination_zones`
 
@@ -504,6 +523,7 @@ Optional:
 Required:
 
 - `id` (String) Id of the object.
+- `name` (String) Name of the object.
 - `type` (String) Type of the object.
 
 

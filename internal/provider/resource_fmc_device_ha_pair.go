@@ -23,10 +23,10 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -41,6 +41,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -68,7 +69,7 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration. This is resource may be re-designed in future releases.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -353,6 +354,15 @@ func (r *DeviceHAPairResource) Configure(_ context.Context, req resource.Configu
 
 // End of section. //template:end model
 
+func (r DeviceHAPairResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.ExactlyOneOf(
+			path.MatchRoot("failed_interfaces_percent"),
+			path.MatchRoot("failed_interfaces_limit"),
+		),
+	}
+}
+
 func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceHAPair
 
@@ -370,6 +380,17 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
+	// Deploy devices in HA Pair (pre-requisite for cluster creation)
+	deploy := DeviceDeploy{
+		Id:            types.StringValue(plan.Id.ValueString()),
+		IgnoreWarning: types.BoolValue(true),
+		DeviceIdList:  helpers.GetStringListFromStringSlice([]string{plan.PrimaryDeviceId.ValueString(), plan.SecondaryDeviceId.ValueString()}),
+	}
+	diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
 	// Create object
 	body := plan.toBody(ctx, DeviceHAPair{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -378,27 +399,13 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 		return
 	}
 
-	// Adding code to poll object
+	// Wait for the ha pair to be created
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
 
-	const atom time.Duration = 5 * time.Second
-	// We need device's UUID, but it only shows after the task succeeds. Poll the task.
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
-		task, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(taskID), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
-			return
-		}
-		stat := strings.ToUpper(task.Get("status").String())
-		if stat == "FAILED" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("API task for the new HA Pair failed: %s, %s", task.Get("message"), task.Get("description")))
-			return
-		}
-		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" {
-			break
-		}
-		time.Sleep(atom)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
 	}
 
 	check, err := r.client.Get(plan.getPath())
@@ -512,17 +519,22 @@ func (r *DeviceHAPairResource) Update(ctx context.Context, req resource.UpdateRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	// Update object 'core'
-	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-		return
+	// Update object 'name'. Other attributer are either immutable or updated later
+	if state.Name != plan.Name {
+		body := ""
+		body, _ = sjson.Set(body, "id", plan.Id.ValueString())
+		body, _ = sjson.Set(body, "name", plan.Name.ValueString())
+
+		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	// Update object 'timers'
-	body = plan.toBodyUpdateTimers(ctx, state)
-	res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBodyUpdateTimers(ctx, state)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -548,6 +560,7 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
+
 	// Start of HA Break code
 	body := state.toBodyPutDelete(ctx, DeviceHAPair{})
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
@@ -559,26 +572,13 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 
 	// Adding code to poll object
 	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully", taskID))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", state.Id.ValueString(), taskID))
 
-	const atom time.Duration = 5 * time.Second
-	// We need device's UUID, but it only shows after the task succeeds. Poll the task.
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
-		task, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(taskID), reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
-			return
-		}
-		stat := strings.ToUpper(task.Get("status").String())
-		if stat == "FAILED" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("API task for the new device failed: %s, %s", task.Get("message"), task.Get("description")))
-			return
-		}
-		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" {
-			break
-		}
-		time.Sleep(atom)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
 	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 
 	resp.State.RemoveResource(ctx)

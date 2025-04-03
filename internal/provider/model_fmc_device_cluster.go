@@ -22,7 +22,6 @@ import (
 	"context"
 	"fmt"
 	"slices"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -40,12 +39,12 @@ type DeviceCluster struct {
 	Name                      types.String               `tfsdk:"name"`
 	Type                      types.String               `tfsdk:"type"`
 	ClusterKey                types.String               `tfsdk:"cluster_key"`
-	ControlNodeDeviceId       types.String               `tfsdk:"control_node_device_id"`
 	ControlNodeVniPrefix      types.String               `tfsdk:"control_node_vni_prefix"`
 	ControlNodeCclPrefix      types.String               `tfsdk:"control_node_ccl_prefix"`
 	ControlNodeInterfaceId    types.String               `tfsdk:"control_node_interface_id"`
 	ControlNodeInterfaceName  types.String               `tfsdk:"control_node_interface_name"`
 	ControlNodeInterfaceType  types.String               `tfsdk:"control_node_interface_type"`
+	ControlNodeDeviceId       types.String               `tfsdk:"control_node_device_id"`
 	ControlNodeCclIpv4Address types.String               `tfsdk:"control_node_ccl_ipv4_address"`
 	ControlNodePriority       types.Int64                `tfsdk:"control_node_priority"`
 	DataDevices               []DeviceClusterDataDevices `tfsdk:"data_devices"`
@@ -84,9 +83,6 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 	if !data.ClusterKey.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.clusterKey", data.ClusterKey.ValueString())
 	}
-	if !data.ControlNodeDeviceId.IsNull() {
-		body, _ = sjson.Set(body, "controlDevice.deviceDetails.id", data.ControlNodeDeviceId.ValueString())
-	}
 	if !data.ControlNodeVniPrefix.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.vniNetwork", data.ControlNodeVniPrefix.ValueString())
 	}
@@ -101,6 +97,9 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 	}
 	if !data.ControlNodeInterfaceType.IsNull() {
 		body, _ = sjson.Set(body, "commonBootstrap.cclInterface.type", data.ControlNodeInterfaceType.ValueString())
+	}
+	if !data.ControlNodeDeviceId.IsNull() {
+		body, _ = sjson.Set(body, "controlDevice.deviceDetails.id", data.ControlNodeDeviceId.ValueString())
 	}
 	if !data.ControlNodeCclIpv4Address.IsNull() {
 		body, _ = sjson.Set(body, "controlDevice.clusterNodeBootstrap.cclIp", data.ControlNodeCclIpv4Address.ValueString())
@@ -142,11 +141,6 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() {
-		data.ControlNodeDeviceId = types.StringValue(value.String())
-	} else {
-		data.ControlNodeDeviceId = types.StringNull()
-	}
 	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() {
 		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
@@ -171,6 +165,11 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodeInterfaceType = types.StringValue(value.String())
 	} else {
 		data.ControlNodeInterfaceType = types.StringNull()
+	}
+	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() {
+		data.ControlNodeDeviceId = types.StringValue(value.String())
+	} else {
+		data.ControlNodeDeviceId = types.StringNull()
 	}
 	if value := res.Get("controlDevice.clusterNodeBootstrap.cclIp"); value.Exists() {
 		data.ControlNodeCclIpv4Address = types.StringValue(value.String())
@@ -227,11 +226,6 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() && !data.ControlNodeDeviceId.IsNull() {
-		data.ControlNodeDeviceId = types.StringValue(value.String())
-	} else {
-		data.ControlNodeDeviceId = types.StringNull()
-	}
 	if value := res.Get("commonBootstrap.vniNetwork"); value.Exists() && !data.ControlNodeVniPrefix.IsNull() {
 		data.ControlNodeVniPrefix = types.StringValue(value.String())
 	} else {
@@ -257,6 +251,11 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.ControlNodeInterfaceType = types.StringNull()
 	}
+	if value := res.Get("controlDevice.deviceDetails.id"); value.Exists() && !data.ControlNodeDeviceId.IsNull() {
+		data.ControlNodeDeviceId = types.StringValue(value.String())
+	} else {
+		data.ControlNodeDeviceId = types.StringNull()
+	}
 	if value := res.Get("controlDevice.clusterNodeBootstrap.cclIp"); value.Exists() && !data.ControlNodeCclIpv4Address.IsNull() {
 		data.ControlNodeCclIpv4Address = types.StringValue(value.String())
 	} else {
@@ -268,8 +267,8 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 		data.ControlNodePriority = types.Int64Null()
 	}
 	for i := 0; i < len(data.DataDevices); i++ {
-		keys := [...]string{"deviceDetails.id", "clusterNodeBootstrap.cclIp", "clusterNodeBootstrap.priority"}
-		keyValues := [...]string{data.DataDevices[i].DataNodeDeviceId.ValueString(), data.DataDevices[i].DataNodeCclIpv4Address.ValueString(), strconv.FormatInt(data.DataDevices[i].DataNodePriority.ValueInt64(), 10)}
+		keys := [...]string{"deviceDetails.id"}
+		keyValues := [...]string{data.DataDevices[i].DataNodeDeviceId.ValueString()}
 
 		parent := &data
 		data := (*parent).DataDevices[i]
@@ -347,3 +346,51 @@ func (data *DeviceCluster) fromBodyUnknowns(ctx context.Context, res gjson.Resul
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
 
 // End of section. //template:end toBodyNonBulk
+
+// Instead of deleting the cluster (which will de-register the appliances) we break it,
+// making devices go back into standalone mode
+func (data DeviceCluster) toBodyPutDelete(ctx context.Context, state DeviceCluster) string {
+	body := ""
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	body, _ = sjson.Set(body, "action", "BREAK")
+	return body
+}
+
+// Check if the bootstrap configuration has changed
+func (data DeviceCluster) hasBootstrapChanged(ctx context.Context, plan DeviceCluster) bool {
+	if data.ClusterKey != plan.ClusterKey {
+		return true
+	}
+	if data.ControlNodeVniPrefix != plan.ControlNodeVniPrefix {
+		return true
+	}
+	if data.ControlNodeCclPrefix != plan.ControlNodeCclPrefix {
+		return true
+	}
+	if data.ControlNodeInterfaceId != plan.ControlNodeInterfaceId {
+		return true
+	}
+	if data.ControlNodeInterfaceName != plan.ControlNodeInterfaceName {
+		return true
+	}
+	if data.ControlNodeInterfaceType != plan.ControlNodeInterfaceType {
+		return true
+	}
+	if data.ControlNodePriority != plan.ControlNodePriority {
+		return true
+	}
+	for _, dataNode := range data.DataDevices {
+		for _, planNode := range plan.DataDevices {
+			if dataNode.DataNodeDeviceId == planNode.DataNodeDeviceId {
+				if dataNode.DataNodePriority != planNode.DataNodePriority {
+					return true
+				}
+				if dataNode.DataNodeCclIpv4Address != planNode.DataNodeCclIpv4Address {
+					return true
+				}
+			}
+		}
+	}
+
+	return false
+}

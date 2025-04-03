@@ -9,10 +9,15 @@ description: |-
 
 ## 2.0.0-beta3 (Unreleased)
 
+- (Fix) Change value of `interface_type` within `fmc_security_zones` item should replace just this object, not entire bulk resource
+- (Fix) Improved HA Pair and Clustering implementations
+- (Enhancement) Add `fmc_device_ha_pair_physical_interface_mac_address` resource and data source
 - (Enhancement) Add support for `fmc_ipv4_address_pool` and `fmc_ipv4_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_ipv6_address_pool` and `fmc_ipv6_address_pools` resource and data source
 - (Enhancement) Add support for `fmc_domains` data source
 - (Enhancement) Add support for `fmc_endpoint_device_types` data source. It can now be used in Access Control Policy
+- (Enhancement) Add support for `fmc_ise_sgts` data source
+- (Enhancement) Add support for `destination_sgt_objects` in Access Control Policy Rules
 
 ## 2.0.0-beta2
 

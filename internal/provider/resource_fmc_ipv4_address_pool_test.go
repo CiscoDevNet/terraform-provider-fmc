@@ -35,7 +35,7 @@ func TestAccFmcIPv4AddressPool(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv4_address_pool.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_address_pool.test", "description", "My IPv4 Address Pool object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_address_pool.test", "range", "10.0.0.10-10.0.0.20"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_address_pool.test", "mask", "255.255.255.0"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_address_pool.test", "netmask", "255.255.255.0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_address_pool.test", "overridable", "true"))
 
 	var steps []resource.TestStep
@@ -72,7 +72,7 @@ func testAccFmcIPv4AddressPoolConfig_minimum() string {
 	config := `resource "fmc_ipv4_address_pool" "test" {` + "\n"
 	config += `	name = "my_ipv4_address_pool"` + "\n"
 	config += `	range = "10.0.0.10-10.0.0.20"` + "\n"
-	config += `	mask = "255.255.255.0"` + "\n"
+	config += `	netmask = "255.255.255.0"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -86,7 +86,7 @@ func testAccFmcIPv4AddressPoolConfig_all() string {
 	config += `	name = "my_ipv4_address_pool"` + "\n"
 	config += `	description = "My IPv4 Address Pool object"` + "\n"
 	config += `	range = "10.0.0.10-10.0.0.20"` + "\n"
-	config += `	mask = "255.255.255.0"` + "\n"
+	config += `	netmask = "255.255.255.0"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 	return config

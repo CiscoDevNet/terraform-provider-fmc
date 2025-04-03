@@ -83,12 +83,12 @@ attributes:
   - model_name: performanceTier
     type: String
     write_only: true
-    description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+    description: Performance tier for the managed device.
     enum_values: [FTDv5, FTDv10, FTDv20, FTDv30, FTDv50, Legacy]
     example: FTDv5
   - model_name: snortEngine
     type: String
-    description: Performance tier for the managed device, applicable only to vFTD devices >=6.8.0.
+    description: SNORT engine version to be enabled.
     enum_values: [SNORT2, SNORT3]
     example: SNORT3
   - model_name: enableOGS
@@ -117,7 +117,7 @@ attributes:
     data_path: [healthPolicy]
     tf_name: health_policy_id
     type: String
-    description: Id of the assigned Health policy.
+    description: Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
     exclude_example: true
     exclude_test: true
 

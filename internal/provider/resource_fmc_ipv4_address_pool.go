@@ -98,8 +98,8 @@ func (r *IPv4AddressPoolResource) Schema(ctx context.Context, req resource.Schem
 				MarkdownDescription: helpers.NewAttributeDescription("IP range").String,
 				Required:            true,
 			},
-			"mask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP mask for the range").String,
+			"netmask": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IP netmask for the range").String,
 				Required:            true,
 			},
 			"overridable": schema.BoolAttribute{
