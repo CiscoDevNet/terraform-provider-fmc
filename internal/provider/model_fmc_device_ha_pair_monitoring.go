@@ -37,7 +37,7 @@ import (
 type DeviceHAPairMonitoring struct {
 	Id                 types.String                          `tfsdk:"id"`
 	Domain             types.String                          `tfsdk:"domain"`
-	DeviceId           types.String                          `tfsdk:"device_id"`
+	HaPairId           types.String                          `tfsdk:"ha_pair_id"`
 	Type               types.String                          `tfsdk:"type"`
 	LogicalName        types.String                          `tfsdk:"logical_name"`
 	MonitorInterface   types.Bool                            `tfsdk:"monitor_interface"`
@@ -61,7 +61,7 @@ type DeviceHAPairMonitoringIpv6Addresses struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceHAPairMonitoring) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/monitoredinterfaces", url.QueryEscape(data.DeviceId.ValueString()))
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/monitoredinterfaces", url.QueryEscape(data.HaPairId.ValueString()))
 }
 
 // End of section. //template:end getPath

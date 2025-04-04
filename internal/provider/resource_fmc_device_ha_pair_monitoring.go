@@ -78,8 +78,8 @@ func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resourc
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA device (fmc_device.example.id).").String,
+			"ha_pair_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA Pair device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -100,18 +100,18 @@ func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"monitor_interface": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Monitor this interface for failures.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable interface monitoring.").String,
 				Required:            true,
 			},
 			"ipv4_active_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Active IPv4 address from the interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Active IPv4 address as configured on the interface.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"ipv4_standby_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.").String,
 				Optional:            true,
 			},
 			"ipv4_netmask": schema.StringAttribute{
@@ -351,11 +351,11 @@ func (r *DeviceHAPairMonitoringResource) ImportState(ctx context.Context, req re
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: <device_id>,<id>. Got: %q", req.ID),
+			fmt.Sprintf("Expected import identifier with format: <ha_pair_id>,<id>. Got: %q", req.ID),
 		)
 		return
 	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("ha_pair_id"), idParts[0])...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)

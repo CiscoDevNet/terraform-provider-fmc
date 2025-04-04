@@ -77,7 +77,7 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Con
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"device_id": schema.StringAttribute{
+			"ha_pair_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent HA Pair device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
@@ -92,7 +92,7 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Con
 				},
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface physical name.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the physical interface").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -297,11 +297,11 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) ImportState(ctx contex
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
 		resp.Diagnostics.AddError(
 			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: <device_id>,<id>. Got: %q", req.ID),
+			fmt.Sprintf("Expected import identifier with format: <ha_pair_id>,<id>. Got: %q", req.ID),
 		)
 		return
 	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("ha_pair_id"), idParts[0])...)
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
