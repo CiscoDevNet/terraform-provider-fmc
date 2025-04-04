@@ -74,7 +74,7 @@ variable "interface_name" {default = null} // tests will set $TF_VAR_interface_n
 
 func testAccDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressConfig() string {
 	config := `resource "fmc_device_ha_pair_physical_interface_mac_address" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	interface_id = data.fmc_device_physical_interface.test.id` + "\n"
 	config += `	active_mac_address = "c460.15e4.0edd"` + "\n"
@@ -84,7 +84,7 @@ func testAccDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressConfig() string 
 	config += `
 		data "fmc_device_ha_pair_physical_interface_mac_address" "test" {
 			id = fmc_device_ha_pair_physical_interface_mac_address.test.id
-			device_id = var.device_ha_id
+			ha_pair_id = var.device_ha_id
 		}
 	`
 	return config
@@ -92,7 +92,7 @@ func testAccDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressConfig() string 
 
 func testAccNamedDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressConfig() string {
 	config := `resource "fmc_device_ha_pair_physical_interface_mac_address" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	interface_id = data.fmc_device_physical_interface.test.id` + "\n"
 	config += `	active_mac_address = "c460.15e4.0edd"` + "\n"
@@ -101,7 +101,7 @@ func testAccNamedDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressConfig() st
 
 	config += `
 		data "fmc_device_ha_pair_physical_interface_mac_address" "test" {
-			device_id = var.device_ha_id
+			ha_pair_id = var.device_ha_id
 			interface_name = fmc_device_ha_pair_physical_interface_mac_address.test.interface_name
 		}
 	`

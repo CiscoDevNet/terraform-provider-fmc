@@ -76,7 +76,7 @@ variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_i
 
 func testAccFmcDeviceHAPairMonitoringConfig_minimum() string {
 	config := `resource "fmc_device_ha_pair_monitoring" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	logical_name = "outside"` + "\n"
 	config += `	monitor_interface = true` + "\n"
 	config += `}` + "\n"
@@ -89,7 +89,7 @@ func testAccFmcDeviceHAPairMonitoringConfig_minimum() string {
 
 func testAccFmcDeviceHAPairMonitoringConfig_all() string {
 	config := `resource "fmc_device_ha_pair_monitoring" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	logical_name = "outside"` + "\n"
 	config += `	monitor_interface = true` + "\n"
 	config += `	ipv4_standby_address = "10.1.1.2"` + "\n"

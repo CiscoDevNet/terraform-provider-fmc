@@ -71,7 +71,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.C
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"device_id": schema.StringAttribute{
+			"ha_pair_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the parent HA Pair device.",
 				Required:            true,
 			},
@@ -80,7 +80,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.C
 				Computed:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: "Interface physical name.",
+				MarkdownDescription: "Name of the physical interface",
 				Optional:            true,
 				Computed:            true,
 			},

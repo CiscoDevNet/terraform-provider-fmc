@@ -71,8 +71,8 @@ func (d *DeviceHAPairMonitoringDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"device_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent HA device (fmc_device.example.id).",
+			"ha_pair_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the parent HA Pair device.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,15 +85,15 @@ func (d *DeviceHAPairMonitoringDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 			},
 			"monitor_interface": schema.BoolAttribute{
-				MarkdownDescription: "Monitor this interface for failures.",
+				MarkdownDescription: "Enable interface monitoring.",
 				Computed:            true,
 			},
 			"ipv4_active_address": schema.StringAttribute{
-				MarkdownDescription: "Active IPv4 address from the interface.",
+				MarkdownDescription: "Active IPv4 address as configured on the interface.",
 				Computed:            true,
 			},
 			"ipv4_standby_address": schema.StringAttribute{
-				MarkdownDescription: "Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.",
+				MarkdownDescription: "Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.",
 				Computed:            true,
 			},
 			"ipv4_netmask": schema.StringAttribute{

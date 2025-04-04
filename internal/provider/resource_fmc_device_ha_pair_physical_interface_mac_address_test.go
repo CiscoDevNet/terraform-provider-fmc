@@ -75,7 +75,7 @@ variable "interface_name" {default = null} // tests will set $TF_VAR_interface_n
 
 func testAccFmcDeviceHAPairPhysicalInterfaceMACAddressConfig_all() string {
 	config := `resource "fmc_device_ha_pair_physical_interface_mac_address" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	interface_id = data.fmc_device_physical_interface.test.id` + "\n"
 	config += `	active_mac_address = "c460.15e4.0edd"` + "\n"

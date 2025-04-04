@@ -5,7 +5,7 @@ doc_category: Devices
 test_tags: [TF_VAR_device_ha_id, TF_VAR_interface_name]
 skip_minimum_test: true
 attributes:
-  - tf_name: device_id
+  - tf_name: ha_pair_id
     type: String
     reference: true
     description: Id of the parent HA Pair device.
@@ -21,7 +21,7 @@ attributes:
     data_path: ["physicalInterface"]
     tf_name: interface_name
     mandatory: true
-    description: Interface physical name.
+    description: Name of the physical interface
     type: String
     example: "GigabitEthernet0/0"
     data_source_query: true

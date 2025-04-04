@@ -73,7 +73,7 @@ variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_i
 
 func testAccDataSourceFmcDeviceHAPairMonitoringConfig() string {
 	config := `resource "fmc_device_ha_pair_monitoring" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	logical_name = "outside"` + "\n"
 	config += `	monitor_interface = true` + "\n"
 	config += `	ipv4_standby_address = "10.1.1.2"` + "\n"
@@ -86,7 +86,7 @@ func testAccDataSourceFmcDeviceHAPairMonitoringConfig() string {
 	config += `
 		data "fmc_device_ha_pair_monitoring" "test" {
 			id = fmc_device_ha_pair_monitoring.test.id
-			device_id = var.device_ha_id
+			ha_pair_id = var.device_ha_id
 		}
 	`
 	return config
@@ -94,7 +94,7 @@ func testAccDataSourceFmcDeviceHAPairMonitoringConfig() string {
 
 func testAccNamedDataSourceFmcDeviceHAPairMonitoringConfig() string {
 	config := `resource "fmc_device_ha_pair_monitoring" "test" {` + "\n"
-	config += `	device_id = var.device_ha_id` + "\n"
+	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	logical_name = "outside"` + "\n"
 	config += `	monitor_interface = true` + "\n"
 	config += `	ipv4_standby_address = "10.1.1.2"` + "\n"
@@ -106,7 +106,7 @@ func testAccNamedDataSourceFmcDeviceHAPairMonitoringConfig() string {
 
 	config += `
 		data "fmc_device_ha_pair_monitoring" "test" {
-			device_id = var.device_ha_id
+			ha_pair_id = var.device_ha_id
 			logical_name = fmc_device_ha_pair_monitoring.test.logical_name
 		}
 	`
