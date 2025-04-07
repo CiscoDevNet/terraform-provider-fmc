@@ -76,15 +76,15 @@ func (d *DeviceClusterHealthMonitorDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"health_check": schema.BoolAttribute{
-				MarkdownDescription: "Enable/Disable health check.",
+				MarkdownDescription: "Enable health check.",
 				Computed:            true,
 			},
 			"hold_time": schema.Float64Attribute{
-				MarkdownDescription: "Time (in seconds) to wait before declaring unresponsive peer as down.",
+				MarkdownDescription: "Time (in seconds) to wait before declaring an unresponsive peer as down.",
 				Computed:            true,
 			},
 			"debounce_time": schema.Int64Attribute{
-				MarkdownDescription: "Time (in milliseconds) before considering an interface as failed.",
+				MarkdownDescription: "The time (in milliseconds) before the interface is considered to have failed.",
 				Computed:            true,
 			},
 			"data_interface_auto_rejoin_attempts": schema.Int64Attribute{
@@ -129,7 +129,7 @@ func (d *DeviceClusterHealthMonitorDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"service_application_monitoring": schema.BoolAttribute{
-				MarkdownDescription: "Monitoring of the Snort and disk-full processes.",
+				MarkdownDescription: "Enable service application monitoring (Snort and disk-full processes).",
 				Computed:            true,
 			},
 		},

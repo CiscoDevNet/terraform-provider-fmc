@@ -53,13 +53,13 @@ resource "fmc_device_cluster_health_monitor" "example" {
   - Range: `2`-`60`
 - `data_interface_auto_rejoin_interval_variation` (Number) Rejoin interval increase strategy. Possible values are 1 (no change); 2 (2 x the previous duration), or 3 (3 x the previous duration)
   - Range: `1`-`3`
-- `debounce_time` (Number) Time (in milliseconds) before considering an interface as failed.
+- `debounce_time` (Number) The time (in milliseconds) before the interface is considered to have failed.
   - Range: `300`-`9000`
 - `domain` (String) Name of the FMC domain
-- `health_check` (Boolean) Enable/Disable health check.
-- `hold_time` (Number) Time (in seconds) to wait before declaring unresponsive peer as down.
+- `health_check` (Boolean) Enable health check.
+- `hold_time` (Number) Time (in seconds) to wait before declaring an unresponsive peer as down.
   - Range: `0.3`-`45`
-- `service_application_monitoring` (Boolean) Monitoring of the Snort and disk-full processes.
+- `service_application_monitoring` (Boolean) Enable service application monitoring (Snort and disk-full processes).
 - `system_auto_rejoin_attempts` (Number) Number of rejoin attempts. Use '-1' for unlimited attempts.
   - Range: `-1`-`65535`
 - `system_auto_rejoin_interval` (Number) Interval duration (in minutes) between rejoin attempts.

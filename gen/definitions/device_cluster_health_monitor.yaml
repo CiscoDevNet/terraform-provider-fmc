@@ -19,19 +19,19 @@ attributes:
   - model_name: isHealthCheckEnabled
     tf_name: health_check
     type: Bool
-    description: Enable/Disable health check.
+    description: Enable health check.
     example: true
   # Timeouts
   - model_name: holdTime
     type: Float64
-    description: Time (in seconds) to wait before declaring unresponsive peer as down.
+    description: Time (in seconds) to wait before declaring an unresponsive peer as down.
     example: "3.0"
     min_float: 0.3
     max_float: 45
   - model_name: debounceTime
     data_path: [monitorInterface]
     type: Int64
-    description: Time (in milliseconds) before considering an interface as failed.
+    description: The time (in milliseconds) before the interface is considered to have failed.
     example: 9000
     min_int: 300
     max_int: 9000
@@ -119,7 +119,7 @@ attributes:
     data_path: [monitorInterface]
     tf_name: service_application_monitoring
     type: Bool
-    description: Monitoring of the Snort and disk-full processes.
+    description: Enable service application monitoring (Snort and disk-full processes).
     example: true
 
 test_prerequisites: |-

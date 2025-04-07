@@ -95,18 +95,18 @@ func (r *DeviceClusterHealthMonitorResource) Schema(ctx context.Context, req res
 				},
 			},
 			"health_check": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable/Disable health check.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable health check.").String,
 				Optional:            true,
 			},
 			"hold_time": schema.Float64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Time (in seconds) to wait before declaring unresponsive peer as down.").AddFloatRangeDescription(0.3, 45).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Time (in seconds) to wait before declaring an unresponsive peer as down.").AddFloatRangeDescription(0.3, 45).String,
 				Optional:            true,
 				Validators: []validator.Float64{
 					float64validator.Between(0.3, 45),
 				},
 			},
 			"debounce_time": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Time (in milliseconds) before considering an interface as failed.").AddIntegerRangeDescription(300, 9000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The time (in milliseconds) before the interface is considered to have failed.").AddIntegerRangeDescription(300, 9000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(300, 9000),
@@ -181,7 +181,7 @@ func (r *DeviceClusterHealthMonitorResource) Schema(ctx context.Context, req res
 				Optional:            true,
 			},
 			"service_application_monitoring": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Monitoring of the Snort and disk-full processes.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable service application monitoring (Snort and disk-full processes).").String,
 				Optional:            true,
 			},
 		},
