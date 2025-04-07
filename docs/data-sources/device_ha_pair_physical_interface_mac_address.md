@@ -14,8 +14,8 @@ This data source reads the Device HA Pair Physical Interface MAC Address.
 
 ```terraform
 data "fmc_device_ha_pair_physical_interface_mac_address" "example" {
-  id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  device_id = "76d24097-41c4-4558-a4d0-a8c07ac13928"
+  id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  ha_pair_id = "76d24097-41c4-4558-a4d0-a8c07ac13928"
 }
 ```
 
@@ -24,13 +24,13 @@ data "fmc_device_ha_pair_physical_interface_mac_address" "example" {
 
 ### Required
 
-- `device_id` (String) Id of the parent HA Pair device.
+- `ha_pair_id` (String) Id of the parent HA Pair device.
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `interface_name` (String) Interface physical name.
+- `interface_name` (String) Name of the physical interface
 
 ### Read-Only
 

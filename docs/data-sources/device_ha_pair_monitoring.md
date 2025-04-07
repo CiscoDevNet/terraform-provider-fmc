@@ -14,8 +14,8 @@ This data source reads the Device HA Pair Monitoring.
 
 ```terraform
 data "fmc_device_ha_pair_monitoring" "example" {
-  id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  ha_pair_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -24,7 +24,7 @@ data "fmc_device_ha_pair_monitoring" "example" {
 
 ### Required
 
-- `device_id` (String) Id of the parent HA device (fmc_device.example.id).
+- `ha_pair_id` (String) Id of the parent HA Pair device.
 
 ### Optional
 
@@ -34,11 +34,11 @@ data "fmc_device_ha_pair_monitoring" "example" {
 
 ### Read-Only
 
-- `ipv4_active_address` (String) Active IPv4 address from the interface.
+- `ipv4_active_address` (String) Active IPv4 address as configured on the interface.
 - `ipv4_netmask` (String) IPv4 Network Mask assigned on the interface.
-- `ipv4_standby_address` (String) Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.
+- `ipv4_standby_address` (String) Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `monitor_interface` (Boolean) Monitor this interface for failures.
+- `monitor_interface` (Boolean) Enable interface monitoring.
 - `type` (String) Type of the resource.
 
 <a id="nestedatt--ipv6_addresses"></a>

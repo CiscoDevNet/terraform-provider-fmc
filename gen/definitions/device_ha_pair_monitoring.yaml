@@ -5,10 +5,10 @@ put_create: true
 doc_category: Devices
 test_tags: [TF_VAR_device_ha_id]
 attributes:
-  - tf_name: device_id
+  - tf_name: ha_pair_id
     type: String
     reference: true
-    description: Id of the parent HA device (fmc_device.example.id).
+    description: Id of the parent HA Pair device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_ha_id
     requires_replace: true
@@ -27,7 +27,7 @@ attributes:
     requires_replace: true
   - model_name: monitorForFailures
     tf_name: monitor_interface
-    description: Monitor this interface for failures.
+    description: Enable interface monitoring.
     mandatory: true
     type: Bool
     example: true
@@ -35,13 +35,13 @@ attributes:
     tf_name: ipv4_active_address
     data_path: [ipv4Configuration]
     type: String
-    description: Active IPv4 address from the interface.
+    description: Active IPv4 address as configured on the interface.
     computed: true
   - model_name: standbyIPv4Address
     tf_name: ipv4_standby_address
     data_path: [ipv4Configuration]
     type: String
-    description: Standby IPv4 address. It has to be in the same subnet as primaty IP configured on this interface.
+    description: Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.
     example: 10.1.1.2
   - model_name: activeIPv4Mask
     tf_name: ipv4_netmask

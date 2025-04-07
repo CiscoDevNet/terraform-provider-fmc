@@ -35,7 +35,7 @@ import (
 type DeviceHAPairPhysicalInterfaceMACAddress struct {
 	Id                types.String `tfsdk:"id"`
 	Domain            types.String `tfsdk:"domain"`
-	DeviceId          types.String `tfsdk:"device_id"`
+	HaPairId          types.String `tfsdk:"ha_pair_id"`
 	Type              types.String `tfsdk:"type"`
 	InterfaceName     types.String `tfsdk:"interface_name"`
 	InterfaceId       types.String `tfsdk:"interface_id"`
@@ -52,7 +52,7 @@ type DeviceHAPairPhysicalInterfaceMACAddress struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceHAPairPhysicalInterfaceMACAddress) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/failoverinterfacemacaddressconfigs", url.QueryEscape(data.DeviceId.ValueString()))
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/failoverinterfacemacaddressconfigs", url.QueryEscape(data.HaPairId.ValueString()))
 }
 
 // End of section. //template:end getPath

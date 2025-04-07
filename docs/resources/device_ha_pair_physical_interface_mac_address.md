@@ -14,7 +14,7 @@ This resource manages a Device HA Pair Physical Interface MAC Address.
 
 ```terraform
 resource "fmc_device_ha_pair_physical_interface_mac_address" "example" {
-  device_id           = "76d24097-41c4-4558-a4d0-a8c07ac13928"
+  ha_pair_id          = "76d24097-41c4-4558-a4d0-a8c07ac13928"
   interface_name      = "GigabitEthernet0/0"
   interface_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   active_mac_address  = "c460.15e4.0edd"
@@ -28,9 +28,9 @@ resource "fmc_device_ha_pair_physical_interface_mac_address" "example" {
 ### Required
 
 - `active_mac_address` (String) MAC address of the active interface.
-- `device_id` (String) Id of the parent HA Pair device.
+- `ha_pair_id` (String) Id of the parent HA Pair device.
 - `interface_id` (String) Id of the interface.
-- `interface_name` (String) Interface physical name.
+- `interface_name` (String) Name of the physical interface
 - `standby_mac_address` (String) MAC address of the standby interface.
 
 ### Optional
@@ -47,5 +47,5 @@ resource "fmc_device_ha_pair_physical_interface_mac_address" "example" {
 Import is supported using the following syntax:
 
 ```shell
-terraform import fmc_device_ha_pair_physical_interface_mac_address.example "<device_id>,<id>"
+terraform import fmc_device_ha_pair_physical_interface_mac_address.example "<ha_pair_id>,<id>"
 ```
