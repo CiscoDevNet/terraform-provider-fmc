@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-beta3 (Unreleased)
+## 2.0.0-beta3
 
 - (Fix) Change value of `interface_type` within `fmc_security_zones` item should replace just this object, not entire bulk resource
 - (Fix) Improved HA Pair and Clustering implementations
