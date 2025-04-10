@@ -12,7 +12,7 @@ attributes:
   - model_name: code
     type: Int64
     description: >-
-      ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate
+      ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate
       to the given `icmp_type`.
     min_int: 0
     max_int: 255

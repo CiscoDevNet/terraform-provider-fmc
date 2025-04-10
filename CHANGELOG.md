@@ -1,3 +1,7 @@
+## 2.0.0-beta4 (Unreleased)
+
+- (Enhancement) Add support for `fmc_icmpv6_objects`
+
 ## 2.0.0-beta3
 
 - (Fix) Change value of `interface_type` within `fmc_security_zones` item should replace just this object, not entire bulk resource

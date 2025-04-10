@@ -76,7 +76,7 @@ func (d *ICMPv6ObjectDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"code": schema.Int64Attribute{
-				MarkdownDescription: "ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.",
+				MarkdownDescription: "ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
