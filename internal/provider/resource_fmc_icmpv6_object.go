@@ -87,7 +87,7 @@ func (r *ICMPv6ObjectResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"code": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
+				MarkdownDescription: helpers.NewAttributeDescription("ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 255),
