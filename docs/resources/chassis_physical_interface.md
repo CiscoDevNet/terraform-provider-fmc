@@ -28,7 +28,7 @@ resource "fmc_chassis_physical_interface" "example" {
 ### Required
 
 - `chassis_id` (String) Id of the parent chassis.
-- `name` (String) Name of the interface; it must already be present on the device.
+- `name` (String) Name of the interface; it must already be present on the chassis.
 
 ### Optional
 

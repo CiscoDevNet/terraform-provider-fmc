@@ -30,7 +30,7 @@ data "fmc_chassis_physical_interface" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the interface; it must already be present on the device.
+- `name` (String) Name of the interface; it must already be present on the chassis.
 
 ### Read-Only
 
