@@ -39,5 +39,5 @@ data "fmc_chassis_physical_interface" "example" {
 - `duplex` (String) Duplex configuraion.
 - `fec_mode` (String) Forward Error Correction (FEC) mode
 - `port_type` (String) Type of the port
-- `speed` (String) Speed configuraion. If not provided, FMC may set value to lowest supported speed.
+- `speed` (String) Speed configuraion.
 - `type` (String) Type of the resource, This value is always 'PhysicalInterface'.

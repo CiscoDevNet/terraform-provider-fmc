@@ -1,0 +1,105 @@
+---
+name: Chassis EtherChannel Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/etherchannelinterfaces
+doc_category: Devices
+test_tags: [TF_VAR_chassis_id, TF_VAR_chassis_interface_id, FMC_CHASSIS_ETHERCHANNEL_INTERFACE]
+attributes:
+  - tf_name: chassis_id
+    type: String
+    reference: true
+    description: Id of the parent chassis.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.chassis_id
+  - model_name: type
+    type: String
+    value: EtherChannelInterface
+    description: Type of the object, this is always 'EtherChannelInterface'.
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object, this is always 'EtherChannelInterface'.
+  - model_name: name
+    type: String
+    computed: true
+    description: Name of the etherchannel interface in format `Port-channel<ether_channel_id>`.
+    example: Port-channel10
+    data_source_query: true
+  # General
+  - model_name: etherChannelId
+    type: Int64
+    mandatory: true
+    example: 10
+    description: Value of Ether Channel ID
+    min_int: 1
+    max_int: 48
+    requires_replace: true
+  - model_name: portType
+    type: String
+    description: Type of the port
+    enum_values: [DATA, DATA_SHARING]
+    example: DATA
+  - model_name: adminState
+    type: String
+    description: Administrative state of the interface.
+    enum_values: [ENABLED, DISABLED]
+    example: ENABLED
+    default_value: ENABLED
+  - model_name: selectedInterfaces
+    description: Set of objects representing physical interfaces.
+    type: Set
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the object.
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: data.fmc_device_physical_interface.test.id
+      - model_name: name
+        type: String
+        description: Name of the selected interface
+        example: "Ethernet1/1"
+        test_value: data.fmc_device_physical_interface.test.name
+  # Configuration
+  - model_name: autoNegState
+    type: Bool
+    data_path: [hardware]
+    tf_name: auto_negotiation
+    description: Enables auto negotiation of duplex and speed.
+    exclude_example: true
+    exclude_test: true
+  - model_name: duplex
+    type: String
+    data_path: [hardware]
+    description: Duplex configuraion.
+    enum_values: [AUTO, FULL, HALF]
+    exclude_example: true
+    exclude_test: true
+  - model_name: speed
+    type: String
+    data_path: [hardware]
+    description: Speed configuraion.
+    enum_values: [ AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP ]
+    mandatory: true
+    example: AUTO
+    exclude_test: true
+  - model_name: lacpMode
+    type: String
+    description: Link Aggregation Control Protocol (LACP) mode.
+    enum_values: [ ACTIVE, ON, PASSIVE ]
+    example: ACTIVE
+  - model_name: lacpRate
+    type: String
+    description: Link Aggregation Control Protocol (LACP) rate.
+    enum_values: [ DEFAULT, FAST, NORMAL]
+    example: DEFAULT
+
+
+test_prerequisites: |-
+  variable "chassis_id" { default = null } // tests will set $TF_VAR_chassis_id
+  variable "chassis_interface_id" { default = null } // tests will set $TF_VAR_chassis_interface_id
+
+  data "fmc_chassis_physical_interface" "test" {
+    chassis_id = var.chassis_id
+    id = var.chassis_interface_id
+  }
+

@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &ChassisPhysicalInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &ChassisPhysicalInterfaceDataSource{}
+	_ datasource.DataSource              = &ChassisEtherChannelInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &ChassisEtherChannelInterfaceDataSource{}
 )
 
-func NewChassisPhysicalInterfaceDataSource() datasource.DataSource {
-	return &ChassisPhysicalInterfaceDataSource{}
+func NewChassisEtherChannelInterfaceDataSource() datasource.DataSource {
+	return &ChassisEtherChannelInterfaceDataSource{}
 }
 
-type ChassisPhysicalInterfaceDataSource struct {
+type ChassisEtherChannelInterfaceDataSource struct {
 	client *fmc.Client
 }
 
-func (d *ChassisPhysicalInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_chassis_physical_interface"
+func (d *ChassisEtherChannelInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_chassis_etherchannel_interface"
 }
 
-func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ChassisEtherChannelInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Chassis Physical Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Chassis EtherChannel Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -76,12 +76,16 @@ func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req dat
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the resource, This value is always 'PhysicalInterface'.",
+				MarkdownDescription: "Type of the object, this is always 'EtherChannelInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the interface; it must already be present on the chassis.",
+				MarkdownDescription: "Name of the etherchannel interface in format `Port-channel<ether_channel_id>`.",
 				Optional:            true,
+				Computed:            true,
+			},
+			"ether_channel_id": schema.Int64Attribute{
+				MarkdownDescription: "Value of Ether Channel ID",
 				Computed:            true,
 			},
 			"port_type": schema.StringAttribute{
@@ -91,6 +95,22 @@ func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req dat
 			"admin_state": schema.StringAttribute{
 				MarkdownDescription: "Administrative state of the interface.",
 				Computed:            true,
+			},
+			"selected_interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: "Set of objects representing physical interfaces.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Id of the object.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the selected interface",
+							Computed:            true,
+						},
+					},
+				},
 			},
 			"auto_negotiation": schema.BoolAttribute{
 				MarkdownDescription: "Enables auto negotiation of duplex and speed.",
@@ -104,14 +124,18 @@ func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req dat
 				MarkdownDescription: "Speed configuraion.",
 				Computed:            true,
 			},
-			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: "Forward Error Correction (FEC) mode",
+			"lacp_mode": schema.StringAttribute{
+				MarkdownDescription: "Link Aggregation Control Protocol (LACP) mode.",
+				Computed:            true,
+			},
+			"lacp_rate": schema.StringAttribute{
+				MarkdownDescription: "Link Aggregation Control Protocol (LACP) rate.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *ChassisPhysicalInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *ChassisEtherChannelInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -120,7 +144,7 @@ func (d *ChassisPhysicalInterfaceDataSource) ConfigValidators(ctx context.Contex
 	}
 }
 
-func (d *ChassisPhysicalInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *ChassisEtherChannelInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -132,8 +156,8 @@ func (d *ChassisPhysicalInterfaceDataSource) Configure(_ context.Context, req da
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *ChassisPhysicalInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config ChassisPhysicalInterface
+func (d *ChassisEtherChannelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config ChassisEtherChannelInterface
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
