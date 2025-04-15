@@ -26,10 +26,14 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
@@ -39,7 +43,7 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 	for i := time.Duration(0); i < 5*time.Minute; i += atom {
 		task, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(jobId), reqMods...)
 		if err != nil {
-			diags.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, task.String()))
+			diags.AddError("Client Error", fmt.Sprintf("Failed to get task status, got error: %s, %s", err, task.String()))
 			return diags
 		}
 		stat := strings.ToUpper(task.Get("status").String())
@@ -176,4 +180,86 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 	}
 
 	return diags
+}
+
+func FMCupdateDeviceGroup(ctx context.Context, client *fmc.Client, device basetypes.StringValue, plan tfsdk.Plan, state tfsdk.State, reqMods [](func(*fmc.Req))) diag.Diagnostics {
+	deviceId := device.ValueString()
+
+	// Extract IDs of current and planned device group
+	var planDeviceGroup types.String
+	if diags := plan.GetAttribute(ctx, path.Root("device_group_id"), &planDeviceGroup); diags.HasError() {
+		return diags
+	}
+
+	var stateDeviceGroup types.String
+	if diags := state.GetAttribute(ctx, path.Root("device_group_id"), &stateDeviceGroup); diags.HasError() {
+		return diags
+	}
+
+	// When device group changes, we need to remove the device from the current group and add it to the new one
+
+	if !stateDeviceGroup.IsNull() {
+		// Get Device Group to which device currently belongs
+		res, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicegroups/devicegrouprecords/"+url.QueryEscape(stateDeviceGroup.ValueString()), reqMods...)
+		if err != nil {
+			return diag.Diagnostics{diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to get current device group (GET), got error: %s, %s", err, res.String()))}
+		}
+
+		// Remove device from current device group
+		// Device Group endpoint returns 'metadata' twice in the response, which breaks sjson.Delete. Hence we copy needed fields to a new JSON.
+		var request = ""
+		resString := res.String()
+		request, _ = sjson.Set(request, "id", gjson.Get(resString, "id").String())
+		request, _ = sjson.Set(request, "type", gjson.Get(resString, "type").String())
+		request, _ = sjson.Set(request, "name", gjson.Get(resString, "name").String())
+
+		// Get all members
+		members := gjson.Get(resString, "members").Array()
+		filteredMembers := []string{}
+
+		// Filter out the device to be removed
+		for _, member := range members {
+			if member.Get("id").String() != deviceId {
+				filteredMembers = append(filteredMembers, member.Raw)
+			}
+		}
+
+		// Update request
+		request, _ = sjson.SetRaw(request, "members", fmt.Sprintf("[%s]", strings.Join(filteredMembers, ",")))
+
+		// Make the PUT request
+		res, err = client.Put("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicegroups/devicegrouprecords/"+url.QueryEscape(stateDeviceGroup.ValueString()), request, reqMods...)
+		if err != nil {
+			return diag.Diagnostics{diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to remove (PUT) device from current device group, got error: %s, %s", err, res.String()))}
+		}
+	}
+
+	if !planDeviceGroup.IsNull() {
+		// Get Device Group to which device needs to be assigned
+		res, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicegroups/devicegrouprecords/"+url.QueryEscape(planDeviceGroup.ValueString()), reqMods...)
+		if err != nil {
+			return diag.Diagnostics{diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to get destination device group (GET), got error: %s, %s", err, res.String()))}
+		}
+
+		// Put device to new device group
+		// Device Group endpoint returns 'metadata' twice in the response, which breaks sjson.Delete. Hence we copy needed fields to a new JSON.
+		var request = ""
+		resString := res.String()
+		request, _ = sjson.Set(request, "id", gjson.Get(resString, "id").String())
+		request, _ = sjson.Set(request, "type", gjson.Get(resString, "type").String())
+		request, _ = sjson.Set(request, "name", gjson.Get(resString, "name").String())
+		members := gjson.Get(resString, "members")
+		if members.Exists() {
+			request, _ = sjson.SetRaw(request, "members", members.Raw)
+		} else {
+			request, _ = sjson.SetRaw(request, "members", "[]")
+		}
+		request, _ = sjson.SetRaw(request, "members.-1", fmt.Sprintf(`{"id":"%s"}`, deviceId))
+		res, err = client.Put("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicegroups/devicegrouprecords/"+url.QueryEscape(planDeviceGroup.ValueString()), request, reqMods...)
+		if err != nil {
+			return diag.Diagnostics{diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to add (PUT) device to new device group, got error: %s, %s", err, res.String()))}
+		}
+	}
+
+	return nil
 }
