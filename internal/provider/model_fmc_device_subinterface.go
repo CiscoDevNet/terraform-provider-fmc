@@ -54,6 +54,7 @@ type DeviceSubinterface struct {
 	VlanId                                types.Int64                         `tfsdk:"vlan_id"`
 	Ipv4StaticAddress                     types.String                        `tfsdk:"ipv4_static_address"`
 	Ipv4StaticNetmask                     types.String                        `tfsdk:"ipv4_static_netmask"`
+	Ipv4AddressPoolId                     types.String                        `tfsdk:"ipv4_address_pool_id"`
 	Ipv4DhcpObtainRoute                   types.Bool                          `tfsdk:"ipv4_dhcp_obtain_route"`
 	Ipv4DhcpRouteMetric                   types.Int64                         `tfsdk:"ipv4_dhcp_route_metric"`
 	Ipv4PppoeVpdnGroupName                types.String                        `tfsdk:"ipv4_pppoe_vpdn_group_name"`
@@ -68,6 +69,7 @@ type DeviceSubinterface struct {
 	Ipv6LinkLocalAddress                  types.String                        `tfsdk:"ipv6_link_local_address"`
 	Ipv6EnableAutoConfig                  types.Bool                          `tfsdk:"ipv6_enable_auto_config"`
 	Ipv6Addresses                         []DeviceSubinterfaceIpv6Addresses   `tfsdk:"ipv6_addresses"`
+	Ipv6AddressPoolId                     types.String                        `tfsdk:"ipv6_address_pool_id"`
 	Ipv6Prefixes                          []DeviceSubinterfaceIpv6Prefixes    `tfsdk:"ipv6_prefixes"`
 	Ipv6EnableDad                         types.Bool                          `tfsdk:"ipv6_enable_dad"`
 	Ipv6DadAttempts                       types.Int64                         `tfsdk:"ipv6_dad_attempts"`
@@ -176,6 +178,9 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv4StaticNetmask.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
+	if !data.Ipv4AddressPoolId.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.pool.id", data.Ipv4AddressPoolId.ValueString())
+	}
 	if !data.Ipv4DhcpObtainRoute.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainRoute.ValueBool())
 	}
@@ -230,6 +235,9 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			}
 			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
 		}
+	}
+	if !data.Ipv6AddressPoolId.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.pool.id", data.Ipv6AddressPoolId.ValueString())
 	}
 	if len(data.Ipv6Prefixes) > 0 {
 		body, _ = sjson.Set(body, "ipv6.prefixes", []interface{}{})
@@ -421,6 +429,11 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
+	if value := res.Get("ipv4.static.pool.id"); value.Exists() {
+		data.Ipv4AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressPoolId = types.StringNull()
+	}
 	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() {
 		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
 	} else {
@@ -509,6 +522,11 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 			(*parent).Ipv6Addresses = append((*parent).Ipv6Addresses, data)
 			return true
 		})
+	}
+	if value := res.Get("ipv6.pool.id"); value.Exists() {
+		data.Ipv6AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
 		data.Ipv6Prefixes = make([]DeviceSubinterfaceIpv6Prefixes, 0)
@@ -769,6 +787,11 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
+	if value := res.Get("ipv4.static.pool.id"); value.Exists() && !data.Ipv4AddressPoolId.IsNull() {
+		data.Ipv4AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressPoolId = types.StringNull()
+	}
 	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainRoute.IsNull() {
 		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
 	} else {
@@ -886,6 +909,11 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 			data.EnforceEui = types.BoolNull()
 		}
 		(*parent).Ipv6Addresses[i] = data
+	}
+	if value := res.Get("ipv6.pool.id"); value.Exists() && !data.Ipv6AddressPoolId.IsNull() {
+		data.Ipv6AddressPoolId = types.StringValue(value.String())
+	} else {
+		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	for i := 0; i < len(data.Ipv6Prefixes); i++ {
 		keys := [...]string{"address", "default"}
