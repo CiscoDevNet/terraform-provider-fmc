@@ -28,7 +28,7 @@ resource "fmc_chassis_logical_device" "example" {
   firewall_mode         = "ROUTED"
   dns_servers           = "10.123.10.12,10.123.10.14"
   device_password       = "my_password"
-  permit_expert_mode    = ""
+  permit_expert_mode    = "yes"
   resource_profile_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   resource_profile_name = "my_resource_profile"
   assigned_interfaces = [
@@ -48,13 +48,13 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the access policy.
+- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
 - `device_password` (String) Admin password for the logical device.
 - `firewall_mode` (String) Firewall mode of the logical device.
   - Choices: `ROUTED`, `TRANSPARENT`
-- `ftd_version` (String) Version of the logical device, that should be deployed.
+- `ftd_version` (String) Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
 - `name` (String) Name of the logical device.
 - `resource_profile_id` (String) Id of the resource profile.
 - `resource_profile_name` (String) Name of the resource profile.

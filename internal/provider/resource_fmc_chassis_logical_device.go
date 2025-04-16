@@ -99,7 +99,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Required:            true,
 			},
 			"ftd_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Version of the logical device, that should be deployed.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.").String,
 				Required:            true,
 			},
 			"ipv4_address": schema.StringAttribute{
@@ -181,7 +181,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the access policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy to be assigned to the logical device.").String,
 				Required:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
