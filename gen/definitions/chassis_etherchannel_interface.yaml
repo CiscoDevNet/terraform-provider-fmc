@@ -85,7 +85,7 @@ attributes:
   - model_name: lacpMode
     type: String
     description: Link Aggregation Control Protocol (LACP) mode.
-    enum_values: [ ACTIVE, ON, PASSIVE ]
+    enum_values: [ ACTIVE, "ON", PASSIVE ]
     example: ACTIVE
   - model_name: lacpRate
     type: String

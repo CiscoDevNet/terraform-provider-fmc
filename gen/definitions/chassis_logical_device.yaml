@@ -1,0 +1,159 @@
+---
+name: Chassis Logical Device
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/logicaldevices
+doc_category: Devices
+test_tags: [TF_VAR_chassis_id]
+attributes:
+  # General
+  - tf_name: chassis_id
+    type: String
+    reference: true
+    description: Id of the parent chassis.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.chassis_id
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'LogicalDevice'.
+    value: LogicalDevice
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'LogicalDevice'.
+    computed: true
+  # Instance Configuration
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the logical device.
+    data_source_query: true
+    example: my-logical-device
+  - model_name: ftdApplicationVersion
+    tf_name: ftd_version
+    type: String
+    mandatory: true
+    description: Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
+    example: "7.6.0.113"
+  - model_name: ip
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_address
+    type: String
+    description: Management IPv4 address of the logical device.
+    example: 10.10.10.10
+  - model_name: mask
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_netmask
+    type: String
+    description: Netmask of Management IPv4 address.
+    example: 255.255.255.0
+  - model_name: gateway
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_gateway
+    type: String
+    description: Gateway for Management IPv4 address.
+    example: 10.10.10.1
+  - model_name: ip
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_address
+    type: String
+    description: Management IPv6 address of the logical device.
+    example: 2001:db8::10
+  - model_name: prefixLength
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_prefix_length
+    type: Int64
+    description: Prefix length of Management IPv6 address.
+    example: 64
+  - model_name: gateway
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_gateway
+    type: String
+    description: Gateway for Management IPv6 address.
+    example: 2001:db8::1
+  - model_name: searchDomain
+    data_path: [managementBootstrap]
+    type: String
+    description: Search domain for the logical device.
+    example: cisco.com
+  - model_name: fqdn
+    data_path: [managementBootstrap]
+    type: String
+    description: Fully qualified domain name (FQDN) of the logical device.
+    example: my_logical_device.cisco.com
+  - model_name: firewallMode
+    data_path: [managementBootstrap]
+    type: String
+    description: Firewall mode of the logical device.
+    enum_values: [ROUTED, TRANSPARENT]
+    example: ROUTED
+    mandatory: true
+  - model_name: dnsServers
+    data_path: [managementBootstrap]
+    type: String
+    description: DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
+    example: 10.123.10.12,10.123.10.14
+  - model_name: adminPassword
+    data_path: [managementBootstrap]
+    tf_name: device_password
+    type: String
+    description: Admin password for the logical device.
+    example: my_password
+    write_only: true
+    mandatory: true
+  - model_name: permitExpertMode
+    data_path: [managementBootstrap]
+    type: String
+    description: Permit expert mode for the logical device.
+    enum_values: ["yes", "no"]
+    example: "yes"
+  - model_name: id
+    data_path: [resourceProfile]
+    tf_name: resource_profile_id
+    type: String
+    description: Id of the resource profile.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    mandatory: true
+  - model_name: name
+    data_path: [resourceProfile]
+    tf_name: resource_profile_name
+    type: String
+    description: Name of the resource profile.
+    example: my_resource_profile
+    mandatory: true
+  # Interface assignment
+  - model_name: externalPortLink
+    tf_name: assigned_interfaces
+    type: Set
+    description: Interface assignment for the logical device.
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the interface.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  # Device Management
+  - model_name: id
+    data_path: [deviceRegistration, deviceGroup]
+    tf_name: device_group_id
+    type: String
+    description: Id of the device group.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: id
+    data_path: [deviceRegistration, accessPolicy]
+    tf_name: access_policy_id
+    type: String
+    description: Id of the Access Control Policy to be assigned to the logical device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    mandatory: true
+  - model_name: id
+    data_path: [deviceRegistration, platformSettings]
+    tf_name: platform_settings_id
+    type: String
+    description: Id of the platform settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: licenseCaps
+    data_path: [deviceRegistration]
+    tf_name: license_capabilities
+    type: Set
+    element_type: String
+    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT ]
+    description: Array of strings representing the license capabilities on the managed device.
+    example: MALWARE
