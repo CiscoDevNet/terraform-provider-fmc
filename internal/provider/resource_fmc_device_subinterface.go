@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -38,6 +39,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -90,7 +93,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object, this value is always 'SubInterface'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -101,6 +104,13 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Is parent device multi-instance.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"logical_name": schema.StringAttribute{
@@ -439,6 +449,9 @@ func (r *DeviceSubinterfaceResource) Configure(_ context.Context, req resource.C
 
 func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceSubinterface
+	var isMultiInstance bool
+	var res fmc.Res
+	var err error
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -454,18 +467,67 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Create object
-	body := plan.toBody(ctx, DeviceSubinterface{})
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+	// Check if device is multi-instance
+	isMultiInstance, diags = FMCIsDeviceMultiInstance(ctx, r.client, plan.DeviceId.ValueString(), reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
-	plan.Id = types.StringValue(res.Get("id").String())
+
+	if isMultiInstance {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Subinterface parent device is multi-instance", plan.Id.ValueString()))
+		// Multi-instance devices get their subinterfaces created on chassis level, hence creation equals to update of the existing object
+		// Get all subinterfaces
+		res, err = r.client.Get(fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces?expanded=true", url.QueryEscape(plan.DeviceId.ValueString())), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve subinterfaces (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+		// Get all subinterfaces that name matches the one in the plan
+		query_1 := fmt.Sprintf("items.#(name==%s)#", plan.InterfaceName.ValueString())
+		res_1 := gjson.Get(res.String(), query_1).String()
+
+		// Filter above to get one subinterface with the same subIntId
+		// This will find just one occurence of subIntId, as FMC should not allow duplicates
+		query_2 := fmt.Sprintf("#(subIntfId==%d)", plan.SubInterfaceId.ValueInt64())
+		res_2 := gjson.Get(res_1, query_2)
+
+		// Check if any interface was found
+		if res_2.Exists() {
+			plan.Id = types.StringValue(res_2.Get("id").String())
+			tflog.Debug(ctx, fmt.Sprintf("%s: subinterface found", plan.Id.ValueString()))
+
+			// vlan_id is set on chassis level and cannot be modified thorugh device subinterface
+			vlanId := res_2.Get("vlanId").Int()
+			if vlanId != plan.VlanId.ValueInt64() {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("%s: vlan_id in the Terraform resource (%d) does not match with the Vlan ID read from appliance (%d)", plan.Id.ValueString(), plan.VlanId.ValueInt64(), vlanId))
+				return
+			}
+
+			// Update interface
+			body := plan.toBody(ctx, DeviceSubinterface{})
+			res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+				return
+			}
+		}
+	} else {
+		// This is not multi-instance device, hence the object needs to be created
+		// Create object
+		body := plan.toBody(ctx, DeviceSubinterface{})
+		res, err := r.client.Post(plan.getPath(), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+		plan.Id = types.StringValue(res.Get("id").String())
+	}
 	plan.fromBodyUnknowns(ctx, res)
 
 	// Fix 'name`
 	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", plan.Name.ValueString(), plan.SubInterfaceId.ValueInt64()))
+	// Save multi-instance flag
+	plan.IsMultiInstance = types.BoolValue(isMultiInstance)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -483,6 +545,9 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
+	// Save value to be restored later
+	var isMultiInstance = state.IsMultiInstance
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
@@ -517,6 +582,8 @@ func (r *DeviceSubinterfaceResource) Read(ctx context.Context, req resource.Read
 
 	// Fix 'name`
 	state.Name = types.StringValue(fmt.Sprintf("%s.%d", state.Name.ValueString(), state.SubInterfaceId.ValueInt64()))
+	// Restore multi-instance flag
+	state.IsMultiInstance = isMultiInstance
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
@@ -558,14 +625,14 @@ func (r *DeviceSubinterfaceResource) Update(ctx context.Context, req resource.Up
 
 	// Fix 'name`
 	plan.Name = types.StringValue(fmt.Sprintf("%s.%d", strings.Split(plan.Name.ValueString(), ".")[0], plan.SubInterfaceId.ValueInt64()))
+	// Save multi-instance flag from state (the flag doesn't change thorugh the lifecycle of the resource)
+	plan.IsMultiInstance = state.IsMultiInstance
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
 
 func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceSubinterface
@@ -583,18 +650,36 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
+
+	if state.IsMultiInstance.ValueBool() {
+		// If it's multi-instance, we need to put delete, to clear the interface configuration
+		body := state.toBodyPutDelete(ctx, DeviceSubinterface{})
+		res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Step 2: Remove 'ifname' from body and re-run request
+		body, _ = sjson.Delete(body, "ifname")
+		res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+	} else {
+		// If it's not multi-instance, we need to delete the object
+		res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 

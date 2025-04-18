@@ -28,6 +28,7 @@ resource "fmc_chassis_logical_device" "example" {
   firewall_mode         = "ROUTED"
   dns_servers           = "10.123.10.12,10.123.10.14"
   device_password       = "my_password"
+  admin_state           = "ENABLED"
   permit_expert_mode    = "yes"
   resource_profile_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   resource_profile_name = "my_resource_profile"
@@ -61,6 +62,9 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Optional
 
+- `admin_state` (String) Admin state of the logical device.
+  - Choices: `ENABLED`, `DISABLED`
+  - Default value: `ENABLED`
 - `device_group_id` (String) Id of the device group.
 - `dns_servers` (String) DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
 - `domain` (String) Name of the FMC domain

@@ -14,12 +14,17 @@ attributes:
   - model_name: type
     type: String
     computed: true
-    description: Type of the object.
+    description: Type of the object, this value is always 'SubInterface'.
   - model_name: name
     type: String
     computed: true
     description: Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
     data_source_query: true
+  - model_name: dummy_is_multi_instance
+    tf_name: is_multi_instance
+    type: Bool
+    computed: true
+    description: Is parent device multi-instance.
 # General
   - model_name: ifname
     tf_name: logical_name

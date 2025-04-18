@@ -53,6 +53,7 @@ type ChassisLogicalDevice struct {
 	FirewallMode        types.String                             `tfsdk:"firewall_mode"`
 	DnsServers          types.String                             `tfsdk:"dns_servers"`
 	DevicePassword      types.String                             `tfsdk:"device_password"`
+	AdminState          types.String                             `tfsdk:"admin_state"`
 	PermitExpertMode    types.String                             `tfsdk:"permit_expert_mode"`
 	ResourceProfileId   types.String                             `tfsdk:"resource_profile_id"`
 	ResourceProfileName types.String                             `tfsdk:"resource_profile_name"`
@@ -127,6 +128,9 @@ func (data ChassisLogicalDevice) toBody(ctx context.Context, state ChassisLogica
 	}
 	if !data.DevicePassword.IsNull() {
 		body, _ = sjson.Set(body, "managementBootstrap.adminPassword", data.DevicePassword.ValueString())
+	}
+	if !data.AdminState.IsNull() {
+		body, _ = sjson.Set(body, "adminState", data.AdminState.ValueString())
 	}
 	if !data.PermitExpertMode.IsNull() {
 		body, _ = sjson.Set(body, "managementBootstrap.permitExpertMode", data.PermitExpertMode.ValueString())
@@ -233,6 +237,11 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 		data.DnsServers = types.StringValue(value.String())
 	} else {
 		data.DnsServers = types.StringNull()
+	}
+	if value := res.Get("adminState"); value.Exists() {
+		data.AdminState = types.StringValue(value.String())
+	} else {
+		data.AdminState = types.StringValue("ENABLED")
 	}
 	if value := res.Get("managementBootstrap.permitExpertMode"); value.Exists() {
 		data.PermitExpertMode = types.StringValue(value.String())
@@ -358,6 +367,11 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 		data.DnsServers = types.StringValue(value.String())
 	} else {
 		data.DnsServers = types.StringNull()
+	}
+	if value := res.Get("adminState"); value.Exists() && !data.AdminState.IsNull() {
+		data.AdminState = types.StringValue(value.String())
+	} else if data.AdminState.ValueString() != "ENABLED" {
+		data.AdminState = types.StringNull()
 	}
 	if value := res.Get("managementBootstrap.permitExpertMode"); value.Exists() && !data.PermitExpertMode.IsNull() {
 		data.PermitExpertMode = types.StringValue(value.String())

@@ -13,6 +13,7 @@ resource "fmc_chassis_logical_device" "example" {
   firewall_mode         = "ROUTED"
   dns_servers           = "10.123.10.12,10.123.10.14"
   device_password       = "my_password"
+  admin_state           = "ENABLED"
   permit_expert_mode    = "yes"
   resource_profile_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   resource_profile_name = "my_resource_profile"

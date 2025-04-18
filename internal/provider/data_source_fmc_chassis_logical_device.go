@@ -132,6 +132,10 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				MarkdownDescription: "Admin password for the logical device.",
 				Computed:            true,
 			},
+			"admin_state": schema.StringAttribute{
+				MarkdownDescription: "Admin state of the logical device.",
+				Computed:            true,
+			},
 			"permit_expert_mode": schema.StringAttribute{
 				MarkdownDescription: "Permit expert mode for the logical device.",
 				Computed:            true,

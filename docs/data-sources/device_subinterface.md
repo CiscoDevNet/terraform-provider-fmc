@@ -77,6 +77,7 @@ data "fmc_device_subinterface" "example" {
 - `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+- `is_multi_instance` (Boolean) Is parent device multi-instance.
 - `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
@@ -87,7 +88,7 @@ data "fmc_device_subinterface" "example" {
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when logical_name is set.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
-- `type` (String) Type of the object.
+- `type` (String) Type of the object, this value is always 'SubInterface'.
 - `vlan_id` (Number) VLAN identifier, unique per the parent interface.
 
 <a id="nestedatt--arp_table_entries"></a>

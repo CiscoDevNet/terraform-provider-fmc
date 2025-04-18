@@ -113,8 +113,9 @@ resource "fmc_device_subinterface" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
+- `is_multi_instance` (Boolean) Is parent device multi-instance.
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
-- `type` (String) Type of the object.
+- `type` (String) Type of the object, this value is always 'SubInterface'.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`

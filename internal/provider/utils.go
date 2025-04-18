@@ -263,3 +263,19 @@ func FMCupdateDeviceGroup(ctx context.Context, client *fmc.Client, device basety
 
 	return nil
 }
+
+// Check if device of a given ID is multi-instance
+func FMCIsDeviceMultiInstance(ctx context.Context, client *fmc.Client, deviceId string, reqMods [](func(*fmc.Req))) (bool, diag.Diagnostics) {
+	var diags diag.Diagnostics
+
+	res, err := client.Get(fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v", url.QueryEscape(deviceId)), reqMods...)
+	if err != nil {
+		diags.AddError("Client Error", fmt.Sprintf("Failed to retrieve devicerecord (GET), got error: %s, %s", err, res.String()))
+		return false, diags
+	}
+	if res.Get("metadata.isMultiInstance").Exists() && res.Get("metadata.isMultiInstance").Bool() {
+		tflog.Debug(ctx, fmt.Sprintf("Device %s is multi-instance", deviceId))
+		return true, diags
+	}
+	return false, diags
+}

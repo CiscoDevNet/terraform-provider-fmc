@@ -26,58 +26,68 @@ attributes:
     description: Name of the logical device.
     data_source_query: true
     example: my-logical-device
+    requires_replace: true
   - model_name: ftdApplicationVersion
     tf_name: ftd_version
     type: String
     mandatory: true
     description: Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
     example: "7.6.0.113"
+    requires_replace: true
   - model_name: ip
     data_path: [managementBootstrap, ipv4]
     tf_name: ipv4_address
     type: String
     description: Management IPv4 address of the logical device.
     example: 10.10.10.10
+    requires_replace: true
   - model_name: mask
     data_path: [managementBootstrap, ipv4]
     tf_name: ipv4_netmask
     type: String
     description: Netmask of Management IPv4 address.
     example: 255.255.255.0
+    requires_replace: true
   - model_name: gateway
     data_path: [managementBootstrap, ipv4]
     tf_name: ipv4_gateway
     type: String
     description: Gateway for Management IPv4 address.
     example: 10.10.10.1
+    requires_replace: true
   - model_name: ip
     data_path: [managementBootstrap, ipv6]
     tf_name: ipv6_address
     type: String
     description: Management IPv6 address of the logical device.
     example: 2001:db8::10
+    requires_replace: true
   - model_name: prefixLength
     data_path: [managementBootstrap, ipv6]
     tf_name: ipv6_prefix_length
     type: Int64
     description: Prefix length of Management IPv6 address.
     example: 64
+    requires_replace: true
   - model_name: gateway
     data_path: [managementBootstrap, ipv6]
     tf_name: ipv6_gateway
     type: String
     description: Gateway for Management IPv6 address.
     example: 2001:db8::1
+    requires_replace: true
   - model_name: searchDomain
     data_path: [managementBootstrap]
     type: String
     description: Search domain for the logical device.
     example: cisco.com
+    requires_replace: true
   - model_name: fqdn
     data_path: [managementBootstrap]
     type: String
     description: Fully qualified domain name (FQDN) of the logical device.
     example: my_logical_device.cisco.com
+    requires_replace: true
   - model_name: firewallMode
     data_path: [managementBootstrap]
     type: String
@@ -85,11 +95,13 @@ attributes:
     enum_values: [ROUTED, TRANSPARENT]
     example: ROUTED
     mandatory: true
+    requires_replace: true
   - model_name: dnsServers
     data_path: [managementBootstrap]
     type: String
     description: DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
     example: 10.123.10.12,10.123.10.14
+    requires_replace: true
   - model_name: adminPassword
     data_path: [managementBootstrap]
     tf_name: device_password
@@ -98,6 +110,13 @@ attributes:
     example: my_password
     write_only: true
     mandatory: true
+    requires_replace: true
+  - model_name: adminState
+    type: String
+    description: Admin state of the logical device.
+    example: ENABLED
+    enum_values: [ENABLED, DISABLED]
+    default_value: ENABLED
   - model_name: permitExpertMode
     data_path: [managementBootstrap]
     type: String
@@ -154,6 +173,6 @@ attributes:
     tf_name: license_capabilities
     type: Set
     element_type: String
-    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT ]
+    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT]
     description: Array of strings representing the license capabilities on the managed device.
     example: MALWARE

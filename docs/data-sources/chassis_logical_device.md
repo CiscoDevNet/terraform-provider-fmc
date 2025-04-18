@@ -35,6 +35,7 @@ data "fmc_chassis_logical_device" "example" {
 ### Read-Only
 
 - `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device.
+- `admin_state` (String) Admin state of the logical device.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `device_group_id` (String) Id of the device group.
 - `device_password` (String) Admin password for the logical device.

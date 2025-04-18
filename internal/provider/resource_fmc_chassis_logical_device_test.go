@@ -47,6 +47,7 @@ func TestAccFmcChassisLogicalDevice(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "fqdn", "my_logical_device.cisco.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "firewall_mode", "ROUTED"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "dns_servers", "10.123.10.12,10.123.10.14"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "admin_state", "ENABLED"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "permit_expert_mode", "yes"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "resource_profile_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "resource_profile_name", "my_resource_profile"))
@@ -117,6 +118,7 @@ func testAccFmcChassisLogicalDeviceConfig_all() string {
 	config += `	firewall_mode = "ROUTED"` + "\n"
 	config += `	dns_servers = "10.123.10.12,10.123.10.14"` + "\n"
 	config += `	device_password = "my_password"` + "\n"
+	config += `	admin_state = "ENABLED"` + "\n"
 	config += `	permit_expert_mode = "yes"` + "\n"
 	config += `	resource_profile_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	resource_profile_name = "my_resource_profile"` + "\n"

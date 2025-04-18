@@ -41,6 +41,7 @@ type DeviceSubinterface struct {
 	DeviceId                              types.String                        `tfsdk:"device_id"`
 	Type                                  types.String                        `tfsdk:"type"`
 	Name                                  types.String                        `tfsdk:"name"`
+	IsMultiInstance                       types.Bool                          `tfsdk:"is_multi_instance"`
 	LogicalName                           types.String                        `tfsdk:"logical_name"`
 	Enabled                               types.Bool                          `tfsdk:"enabled"`
 	ManagementOnly                        types.Bool                          `tfsdk:"management_only"`
@@ -355,6 +356,11 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("dummy_is_multi_instance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
 	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
@@ -703,6 +709,11 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("dummy_is_multi_instance"); value.Exists() && !data.IsMultiInstance.IsNull() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
 	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())
@@ -1141,6 +1152,34 @@ func (data *DeviceSubinterface) fromBodyUnknowns(ctx context.Context, res gjson.
 			data.Name = types.StringNull()
 		}
 	}
+	if data.IsMultiInstance.IsUnknown() {
+		if value := res.Get("dummy_is_multi_instance"); value.Exists() {
+			data.IsMultiInstance = types.BoolValue(value.Bool())
+		} else {
+			data.IsMultiInstance = types.BoolNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
+
+// toBodyPutDelete generates minimal required body to reset the resource to its default state.
+func (data DeviceSubinterface) toBodyPutDelete(ctx context.Context, state DeviceSubinterface) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.InterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "name", data.InterfaceName.ValueString())
+	}
+	if !data.LogicalName.IsNull() {
+		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
+	}
+	if !data.SubInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "subIntfId", data.SubInterfaceId.ValueInt64())
+	}
+	if !data.VlanId.IsNull() {
+		body, _ = sjson.Set(body, "vlanId", data.VlanId.ValueInt64())
+	}
+	return body
+}

@@ -30,7 +30,9 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -97,42 +99,72 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 			"name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the logical device.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ftd_version": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv4_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Management IPv4 address of the logical device.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv4_netmask": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask of Management IPv4 address.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv4_gateway": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Gateway for Management IPv4 address.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv6_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Management IPv6 address of the logical device.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv6_prefix_length": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Prefix length of Management IPv6 address.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
 			},
 			"ipv6_gateway": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Gateway for Management IPv6 address.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"search_domain": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Search domain for the logical device.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"fqdn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Fully qualified domain name (FQDN) of the logical device.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"firewall_mode": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Firewall mode of the logical device.").AddStringEnumDescription("ROUTED", "TRANSPARENT").String,
@@ -140,14 +172,32 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Validators: []validator.String{
 					stringvalidator.OneOf("ROUTED", "TRANSPARENT"),
 				},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"dns_servers": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"device_password": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Admin password for the logical device.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"admin_state": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Admin state of the logical device.").AddStringEnumDescription("ENABLED", "DISABLED").AddDefaultValueDescription("ENABLED").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("ENABLED", "DISABLED"),
+				},
+				Default: stringdefault.StaticString("ENABLED"),
 			},
 			"permit_expert_mode": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Permit expert mode for the logical device.").AddStringEnumDescription("yes", "no").String,

@@ -77,12 +77,16 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object.",
+				MarkdownDescription: "Type of the object, this value is always 'SubInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).",
 				Optional:            true,
+				Computed:            true,
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: "Is parent device multi-instance.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
