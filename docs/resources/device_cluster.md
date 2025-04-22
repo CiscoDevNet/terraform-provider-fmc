@@ -56,11 +56,11 @@ resource "fmc_device_cluster" "example" {
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
   - Range: `1`-`255`
-- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `name` (String) Name of the FTD Cluster.
 
 ### Optional
 
+- `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
 - `data_devices` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_devices))
 - `domain` (String) Name of the FMC domain
 
