@@ -79,6 +79,10 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: "Is parent device multi-instance.",
+				Computed:            true,
+			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
 				Computed:            true,

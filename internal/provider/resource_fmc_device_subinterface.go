@@ -523,7 +523,7 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 		// This is not multi-instance device, hence the object needs to be created
 		// Create object
 		body := plan.toBody(ctx, DeviceSubinterface{})
-		res, err := r.client.Post(plan.getPath(), body, reqMods...)
+		res, err = r.client.Post(plan.getPath(), body, reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 			return
@@ -668,12 +668,14 @@ func (r *DeviceSubinterfaceResource) Delete(ctx context.Context, req resource.De
 			return
 		}
 
-		// Step 2: Remove 'ifname' from body and re-run request
-		body, _ = sjson.Delete(body, "ifname")
-		res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
-			return
+		// Step 2: Remove 'ifname' (if still configured) from body and re-run request
+		if !state.LogicalName.IsNull() {
+			body, _ = sjson.Delete(body, "ifname")
+			res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
+				return
+			}
 		}
 	} else {
 		// If it's not multi-instance, we need to delete the object

@@ -1194,20 +1194,15 @@ func (data *DeviceSubinterface) fromBodyUnknowns(ctx context.Context, res gjson.
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
 func (data DeviceSubinterface) toBodyPutDelete(ctx context.Context, state DeviceSubinterface) string {
 	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	if !data.InterfaceName.IsNull() {
 		body, _ = sjson.Set(body, "name", data.InterfaceName.ValueString())
 	}
 	if !data.LogicalName.IsNull() {
 		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
 	}
-	if !data.SubInterfaceId.IsNull() {
-		body, _ = sjson.Set(body, "subIntfId", data.SubInterfaceId.ValueInt64())
-	}
-	if !data.VlanId.IsNull() {
-		body, _ = sjson.Set(body, "vlanId", data.VlanId.ValueInt64())
-	}
+	body, _ = sjson.Set(body, "subIntfId", data.SubInterfaceId.ValueInt64())
+	body, _ = sjson.Set(body, "vlanId", data.VlanId.ValueInt64())
+
 	return body
 }

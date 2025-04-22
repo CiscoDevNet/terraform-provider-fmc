@@ -31,12 +31,14 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/boolplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
 
@@ -94,6 +96,13 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Is parent device multi-instance.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.Bool{
+					boolplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"logical_name": schema.StringAttribute{
@@ -518,10 +527,11 @@ func (r *DeviceEtherChannelInterfaceResource) Configure(_ context.Context, req r
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceEtherChannelInterface
+	var isMultiInstance bool
+	var res fmc.Res
+	var err error
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -537,15 +547,57 @@ func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req re
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Create object
-	body := plan.toBody(ctx, DeviceEtherChannelInterface{})
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+	// Check if device is multi-instance
+	isMultiInstance, diags = FMCIsDeviceMultiInstance(ctx, r.client, plan.DeviceId.ValueString(), reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
-	plan.Id = types.StringValue(res.Get("id").String())
+
+	if isMultiInstance {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Etherchannel parent device is multi-instance", plan.Id.ValueString()))
+		// Multi-instance devices get their etherchannels created on chassis level, hence creation equals to update of the existing object
+		// Get all etherchannels
+		res, err = r.client.Get(fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/etherchannelinterfaces?expanded=true", url.QueryEscape(plan.DeviceId.ValueString())), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve etherchannel interfaces (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+		// Get all subinterfaces that name matches the one in the plan
+		query_1 := fmt.Sprintf("items.#(name==Port-channel%s)", plan.EtherChannelId.ValueString())
+		res_1 := gjson.Get(res.String(), query_1)
+
+		// Check if any interface was found
+		if res_1.Exists() {
+			plan.Id = types.StringValue(res_1.Get("id").String())
+			tflog.Debug(ctx, fmt.Sprintf("%s: etherchannel found", plan.Id.ValueString()))
+
+			// Update interface
+			body := plan.toBody(ctx, DeviceEtherChannelInterface{})
+
+			// Name field is computed, but it's required for the PUT request
+			body, _ = sjson.Set(body, "name", fmt.Sprintf("Port-channel%s", plan.EtherChannelId.ValueString()))
+
+			res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+				return
+			}
+		}
+	} else {
+		// This is not multi-instance device, hence the object needs to be created
+		// Create object
+		body := plan.toBody(ctx, DeviceEtherChannelInterface{})
+		res, err = r.client.Post(plan.getPath(), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+		plan.Id = types.StringValue(res.Get("id").String())
+	}
 	plan.fromBodyUnknowns(ctx, res)
+
+	// Save multi-instance flag
+	plan.IsMultiInstance = types.BoolValue(isMultiInstance)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -555,10 +607,6 @@ func (r *DeviceEtherChannelInterfaceResource) Create(ctx context.Context, req re
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// End of section. //template:end create
-
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (r *DeviceEtherChannelInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DeviceEtherChannelInterface
 
@@ -567,6 +615,9 @@ func (r *DeviceEtherChannelInterfaceResource) Read(ctx context.Context, req reso
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
+	// Save value to be restored later
+	var isMultiInstance = state.IsMultiInstance
 
 	// Set request domain if provided
 	reqMods := [](func(*fmc.Req)){}
@@ -599,6 +650,9 @@ func (r *DeviceEtherChannelInterfaceResource) Read(ctx context.Context, req reso
 		state.fromBodyPartial(ctx, res)
 	}
 
+	// Restore multi-instance flag
+	state.IsMultiInstance = isMultiInstance
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -606,8 +660,6 @@ func (r *DeviceEtherChannelInterfaceResource) Read(ctx context.Context, req reso
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
 
 func (r *DeviceEtherChannelInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceEtherChannelInterface
@@ -643,6 +695,9 @@ func (r *DeviceEtherChannelInterfaceResource) Update(ctx context.Context, req re
 		return
 	}
 
+	// Save multi-instance flag from state (the flag doesn't change thorugh the lifecycle of the resource)
+	plan.IsMultiInstance = state.IsMultiInstance
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
@@ -667,10 +722,31 @@ func (r *DeviceEtherChannelInterfaceResource) Delete(ctx context.Context, req re
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
+
+	if state.IsMultiInstance.ValueBool() {
+		// If it's multi-instance, we need to put delete, to clear the interface configuration
+		body := state.toBodyPutDelete(ctx, DeviceEtherChannelInterface{})
+		res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Step 2: Remove 'ifname' (if still configured) from body and re-run request
+		if !state.LogicalName.IsNull() {
+			body, _ = sjson.Delete(body, "ifname")
+			res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
+				return
+			}
+		}
+	} else {
+		res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
