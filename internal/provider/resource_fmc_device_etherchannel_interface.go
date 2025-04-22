@@ -704,8 +704,6 @@ func (r *DeviceEtherChannelInterfaceResource) Update(ctx context.Context, req re
 	resp.Diagnostics.Append(diags...)
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
-
 func (r *DeviceEtherChannelInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state DeviceEtherChannelInterface
 
@@ -753,8 +751,6 @@ func (r *DeviceEtherChannelInterfaceResource) Delete(ctx context.Context, req re
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
