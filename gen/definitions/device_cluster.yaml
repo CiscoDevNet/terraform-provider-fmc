@@ -35,7 +35,6 @@ attributes:
     type: String
     description: Cluster Control VXLAN Network Identifier (VNI) Network
     example: 10.10.3.0/27
-    mandatory: true
   - model_name: cclNetwork
     tf_name: control_node_ccl_prefix
     data_path: [commonBootstrap]
