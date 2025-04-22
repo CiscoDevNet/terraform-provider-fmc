@@ -30,7 +30,7 @@ resource "fmc_icmpv6_object" "example" {
 
 ### Optional
 
-- `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
+- `code` (Number) ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
   - Range: `0`-`255`
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
