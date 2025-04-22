@@ -97,7 +97,7 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
-				Required:            true,
+				Optional:            true,
 			},
 			"control_node_ccl_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network").String,
