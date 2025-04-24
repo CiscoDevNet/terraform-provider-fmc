@@ -2,6 +2,10 @@
 name: Chassis Logical Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/logicaldevices
 doc_category: Devices
+res_description:  >-
+  This resource manages a Chassis Logical Device.
+  This resource will trigger deployment on chassis level to get the logical device created.
+  Destruction of the resource will de-register deployed device if it is registered to FMC.
 test_tags: [TF_VAR_chassis_id]
 attributes:
   # General
@@ -18,6 +22,18 @@ attributes:
   - model_name: type
     type: String
     description: Type of the device; this value is always 'LogicalDevice'.
+    computed: true
+  - model_name: id
+    data_path: [metadata, deviceRecordDetails]
+    tf_name: device_id
+    type: String
+    description: Id of the device that is deployed.
+    computed: true
+  - model_name: type
+    data_path: [metadata, deviceRecordDetails]
+    tf_name: device_type
+    type: String
+    description: Type of the device that is deployed; this value is always 'Device'.
     computed: true
   # Instance Configuration
   - model_name: name
@@ -159,9 +175,10 @@ attributes:
     data_path: [deviceRegistration, accessPolicy]
     tf_name: access_policy_id
     type: String
-    description: Id of the Access Control Policy to be assigned to the logical device.
+    description: Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     mandatory: true
+    write_only: true
   - model_name: id
     data_path: [deviceRegistration, platformSettings]
     tf_name: platform_settings_id
@@ -174,5 +191,5 @@ attributes:
     type: Set
     element_type: String
     enum_values: [MALWARE, URLFilter, CARRIER, PROTECT]
-    description: Array of strings representing the license capabilities on the managed device.
+    description: Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
     example: MALWARE

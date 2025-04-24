@@ -472,7 +472,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 		devId = haStatus.HADeviceId
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s id %s policy planned  %s, state %s", policyPath, devId, planPolicy, statePolicy))
+	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s id %s policy planned %s, state %s", policyPath, devId, planPolicy, statePolicy))
 
 	if statePolicy.Equal(planPolicy) {
 		return nil

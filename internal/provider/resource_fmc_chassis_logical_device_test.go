@@ -35,6 +35,8 @@ func TestAccFmcChassisLogicalDevice(t *testing.T) {
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "device_id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis_logical_device.test", "device_type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "name", "my-logical-device"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ftd_version", "7.6.0.113"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv4_address", "10.10.10.10"))
@@ -53,7 +55,6 @@ func TestAccFmcChassisLogicalDevice(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "resource_profile_name", "my_resource_profile"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "assigned_interfaces.0.id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "device_group_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "access_policy_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "platform_settings_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 
 	var steps []resource.TestStep

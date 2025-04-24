@@ -122,15 +122,15 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the parent interface (fmc_device_physical_interface.example.name).",
+				MarkdownDescription: "Name of the parent interface. It has to already exist on the device.",
 				Computed:            true,
 			},
 			"sub_interface_id": schema.Int64Attribute{
-				MarkdownDescription: "The numerical id of this subinterface, unique on the parent interface.",
+				MarkdownDescription: "The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.",
 				Computed:            true,
 			},
 			"vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "VLAN identifier, unique per the parent interface.",
+				MarkdownDescription: "VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{

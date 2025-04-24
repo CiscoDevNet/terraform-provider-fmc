@@ -3,12 +3,12 @@
 page_title: "fmc_chassis_logical_device Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages a Chassis Logical Device.
+  This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.
 ---
 
 # fmc_chassis_logical_device (Resource)
 
-This resource manages a Chassis Logical Device.
+This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.
 
 ## Example Usage
 
@@ -49,7 +49,7 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device.
+- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
 - `device_password` (String) Admin password for the logical device.
@@ -75,7 +75,7 @@ resource "fmc_chassis_logical_device" "example" {
 - `ipv6_address` (String) Management IPv6 address of the logical device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix_length` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device.
+- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
   - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`
 - `permit_expert_mode` (String) Permit expert mode for the logical device.
   - Choices: `yes`, `no`
@@ -84,6 +84,8 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Read-Only
 
+- `device_id` (String) Id of the device that is deployed.
+- `device_type` (String) Type of the device that is deployed; this value is always 'Device'.
 - `id` (String) Id of the object
 - `type` (String) Type of the device; this value is always 'LogicalDevice'.
 

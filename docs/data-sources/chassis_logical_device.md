@@ -34,11 +34,13 @@ data "fmc_chassis_logical_device" "example" {
 
 ### Read-Only
 
-- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device.
+- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
 - `admin_state` (String) Admin state of the logical device.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `device_group_id` (String) Id of the device group.
+- `device_id` (String) Id of the device that is deployed.
 - `device_password` (String) Admin password for the logical device.
+- `device_type` (String) Type of the device that is deployed; this value is always 'Device'.
 - `dns_servers` (String) DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
 - `firewall_mode` (String) Firewall mode of the logical device.
 - `fqdn` (String) Fully qualified domain name (FQDN) of the logical device.
@@ -49,7 +51,7 @@ data "fmc_chassis_logical_device" "example" {
 - `ipv6_address` (String) Management IPv6 address of the logical device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix_length` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device.
+- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
 - `permit_expert_mode` (String) Permit expert mode for the logical device.
 - `platform_settings_id` (String) Id of the platform settings.
 - `resource_profile_id` (String) Id of the resource profile.

@@ -91,13 +91,13 @@ attributes:
     type: String
     mandatory: true
     requires_replace: true
-    description: Name of the parent interface (fmc_device_physical_interface.example.name).
+    description: Name of the parent interface. It has to already exist on the device.
     example: GigabitEthernet0/1
     test_value: data.fmc_device_physical_interface.test.name
   - model_name: subIntfId
     tf_name: sub_interface_id
     type: Int64
-    description: The numerical id of this subinterface, unique on the parent interface.
+    description: The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
     mandatory: true
     requires_replace: true
     example: 7
@@ -105,7 +105,7 @@ attributes:
     max_int: 4294967295
   - model_name: vlanId
     type: Int64
-    description: VLAN identifier, unique per the parent interface.
+    description: VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
     mandatory: true
     example: 4094
     min_int: 1

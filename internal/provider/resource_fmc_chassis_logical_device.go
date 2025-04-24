@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
@@ -65,7 +66,7 @@ func (r *ChassisLogicalDeviceResource) Metadata(ctx context.Context, req resourc
 func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -91,6 +92,20 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the device; this value is always 'LogicalDevice'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the device that is deployed.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"device_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the device that is deployed; this value is always 'Device'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -231,7 +246,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy to be assigned to the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.").String,
 				Required:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
@@ -239,7 +254,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Array of strings representing the license capabilities on the managed device.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 				Validators: []validator.Set{
@@ -262,10 +277,10 @@ func (r *ChassisLogicalDeviceResource) Configure(_ context.Context, req resource
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *ChassisLogicalDeviceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan ChassisLogicalDevice
+	var res2 fmc.Res
+	const atom time.Duration = 60 * time.Second
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -281,7 +296,7 @@ func (r *ChassisLogicalDeviceResource) Create(ctx context.Context, req resource.
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Create object
+	// Create logical device configuration
 	body := plan.toBody(ctx, ChassisLogicalDevice{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
@@ -289,7 +304,57 @@ func (r *ChassisLogicalDeviceResource) Create(ctx context.Context, req resource.
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
+
+	// Trigger chassis deployment, to actually create the device
+	deploy := DeviceDeploy{
+		Id:            plan.Id,
+		IgnoreWarning: types.BoolValue(true),
+		DeviceIdList:  helpers.GetStringListFromStringSlice([]string{plan.ChassisId.ValueString()}),
+	}
+	diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		// Something went wrong with deployment, we need to delete the logical device
+		res, err := r.client.Delete(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete logical device after failed deployment (DELETE), got error: %s, %s", err, res.String()))
+		}
+		return
+	}
+
+	// Deployment will trigger the creation of the logical device, but it will take some time. Wait for this to finish to get the device ID.
+	for i := time.Duration(0); i < 45*time.Minute; i += atom {
+		// FMCBUG: plan.getPath() endpoint also returns the device ID once deployed, but for whatever reason it does not show up if Get request is looped
+		//         for that reason the devicerecords endpoint is used
+		// filter needs to be exact device name, so search for `ftd` won't find `ftd-1`
+		res2, err = r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords?filter=name:"+url.QueryEscape(plan.Name.ValueString()), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to get device status, got error: %s, %s", err, res2.String()))
+			return
+		}
+
+		// Once device is found, break the loop
+		if res2.Get("items.0.id").Exists() {
+			break
+		}
+		time.Sleep(atom)
+	}
+
+	// Check if the device was created
+	if !res2.Get("items.0.id").Exists() {
+		// Something went wrong with deployment, we need to delete the logical device
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("%s: Failed to get deployed device Id", plan.Id.ValueString()))
+		res, err := r.client.Delete(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete logical device after failed deployment (DELETE), got error: %s, %s", err, res.String()))
+		}
+		return
+	}
+
 	plan.fromBodyUnknowns(ctx, res)
+
+	// Get deployed device details
+	plan.DeviceId = types.StringValue(res2.Get("items.0.id").String())
+	plan.DeviceType = types.StringValue(res2.Get("items.0.type").String())
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -298,8 +363,6 @@ func (r *ChassisLogicalDeviceResource) Create(ctx context.Context, req resource.
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -393,8 +456,6 @@ func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.
 
 // End of section. //template:end update
 
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
-
 func (r *ChassisLogicalDeviceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state ChassisLogicalDevice
 
@@ -411,9 +472,46 @@ func (r *ChassisLogicalDeviceResource) Delete(ctx context.Context, req resource.
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
+
+	// Try to unregister the device first
+	if state.DeviceId.ValueString() != "" {
+		for range 5 {
+			_, err := r.client.Delete("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.DeviceId.ValueString()), reqMods...)
+			if err != nil {
+				if strings.Contains(strings.ToLower(err.Error()), "error retrieving device from database") {
+					// Device is not registered, break the loop
+					break
+				}
+				if strings.Contains(strings.ToLower(err.Error()), "deployment is in progress") {
+					// Deployment is in progress, wait and try again
+					tflog.Debug(ctx, fmt.Sprintf("%s: Device is still being deployed, waiting...", state.Id.ValueString()))
+					diags := FMCWaitForDeploymentToFinish(ctx, r.client, []string{state.DeviceId.ValueString()}, reqMods)
+					if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+						return
+					}
+					continue
+				}
+			}
+			// No error returned, break the loop
+			break
+		}
+	}
+
+	// Delete logical device configuration
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+		return
+	}
+
+	// Trigger chassis deployment, to actually delete the device
+	deploy := DeviceDeploy{
+		Id:            state.Id,
+		IgnoreWarning: types.BoolValue(true),
+		DeviceIdList:  helpers.GetStringListFromStringSlice([]string{state.ChassisId.ValueString()}),
+	}
+	diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
@@ -421,8 +519,6 @@ func (r *ChassisLogicalDeviceResource) Delete(ctx context.Context, req resource.
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 

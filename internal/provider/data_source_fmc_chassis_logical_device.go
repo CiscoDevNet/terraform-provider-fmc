@@ -79,6 +79,14 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				MarkdownDescription: "Type of the device; this value is always 'LogicalDevice'.",
 				Computed:            true,
 			},
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the device that is deployed.",
+				Computed:            true,
+			},
+			"device_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the device that is deployed; this value is always 'Device'.",
+				Computed:            true,
+			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Name of the logical device.",
 				Optional:            true,
@@ -165,7 +173,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Access Control Policy to be assigned to the logical device.",
+				MarkdownDescription: "Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.",
 				Computed:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
@@ -173,7 +181,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: "Array of strings representing the license capabilities on the managed device.",
+				MarkdownDescription: "Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

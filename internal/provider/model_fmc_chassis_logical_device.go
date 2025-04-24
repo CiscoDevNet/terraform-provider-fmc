@@ -40,6 +40,8 @@ type ChassisLogicalDevice struct {
 	Domain              types.String                             `tfsdk:"domain"`
 	ChassisId           types.String                             `tfsdk:"chassis_id"`
 	Type                types.String                             `tfsdk:"type"`
+	DeviceId            types.String                             `tfsdk:"device_id"`
+	DeviceType          types.String                             `tfsdk:"device_type"`
 	Name                types.String                             `tfsdk:"name"`
 	FtdVersion          types.String                             `tfsdk:"ftd_version"`
 	Ipv4Address         types.String                             `tfsdk:"ipv4_address"`
@@ -178,6 +180,16 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 	} else {
 		data.Type = types.StringNull()
 	}
+	if value := res.Get("metadata.deviceRecordDetails.id"); value.Exists() {
+		data.DeviceId = types.StringValue(value.String())
+	} else {
+		data.DeviceId = types.StringNull()
+	}
+	if value := res.Get("metadata.deviceRecordDetails.type"); value.Exists() {
+		data.DeviceType = types.StringValue(value.String())
+	} else {
+		data.DeviceType = types.StringNull()
+	}
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -277,11 +289,6 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 	} else {
 		data.DeviceGroupId = types.StringNull()
 	}
-	if value := res.Get("deviceRegistration.accessPolicy.id"); value.Exists() {
-		data.AccessPolicyId = types.StringValue(value.String())
-	} else {
-		data.AccessPolicyId = types.StringNull()
-	}
 	if value := res.Get("deviceRegistration.platformSettings.id"); value.Exists() {
 		data.PlatformSettingsId = types.StringValue(value.String())
 	} else {
@@ -307,6 +314,16 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("metadata.deviceRecordDetails.id"); value.Exists() && !data.DeviceId.IsNull() {
+		data.DeviceId = types.StringValue(value.String())
+	} else {
+		data.DeviceId = types.StringNull()
+	}
+	if value := res.Get("metadata.deviceRecordDetails.type"); value.Exists() && !data.DeviceType.IsNull() {
+		data.DeviceType = types.StringValue(value.String())
+	} else {
+		data.DeviceType = types.StringNull()
 	}
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
@@ -436,11 +453,6 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 	} else {
 		data.DeviceGroupId = types.StringNull()
 	}
-	if value := res.Get("deviceRegistration.accessPolicy.id"); value.Exists() && !data.AccessPolicyId.IsNull() {
-		data.AccessPolicyId = types.StringValue(value.String())
-	} else {
-		data.AccessPolicyId = types.StringNull()
-	}
 	if value := res.Get("deviceRegistration.platformSettings.id"); value.Exists() && !data.PlatformSettingsId.IsNull() {
 		data.PlatformSettingsId = types.StringValue(value.String())
 	} else {
@@ -465,6 +477,20 @@ func (data *ChassisLogicalDevice) fromBodyUnknowns(ctx context.Context, res gjso
 			data.Type = types.StringValue(value.String())
 		} else {
 			data.Type = types.StringNull()
+		}
+	}
+	if data.DeviceId.IsUnknown() {
+		if value := res.Get("metadata.deviceRecordDetails.id"); value.Exists() {
+			data.DeviceId = types.StringValue(value.String())
+		} else {
+			data.DeviceId = types.StringNull()
+		}
+	}
+	if data.DeviceType.IsUnknown() {
+		if value := res.Get("metadata.deviceRecordDetails.type"); value.Exists() {
+			data.DeviceType = types.StringValue(value.String())
+		} else {
+			data.DeviceType = types.StringNull()
 		}
 	}
 }

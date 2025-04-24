@@ -41,7 +41,7 @@ data "fmc_device_subinterface" "example" {
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
 - `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
 - `enabled` (Boolean) Indicates whether to enable the interface.
-- `interface_name` (String) Name of the parent interface (fmc_device_physical_interface.example.name).
+- `interface_name` (String) Name of the parent interface. It has to already exist on the device.
 - `ip_based_monitoring` (Boolean) Indicates whether to enable IP based Monitoring.
 - `ip_based_monitoring_next_hop` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
@@ -89,9 +89,9 @@ data "fmc_device_subinterface" "example" {
 - `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when logical_name is set.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
-- `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
+- `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
 - `type` (String) Type of the object, this value is always 'SubInterface'.
-- `vlan_id` (Number) VLAN identifier, unique per the parent interface.
+- `vlan_id` (Number) VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`

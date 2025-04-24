@@ -154,14 +154,14 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface (fmc_device_physical_interface.example.name).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface. It has to already exist on the device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"sub_interface_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The numerical id of this subinterface, unique on the parent interface.").AddIntegerRangeDescription(0, 4294967295).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.").AddIntegerRangeDescription(0, 4294967295).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 4294967295),
@@ -171,7 +171,7 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique per the parent interface.").AddIntegerRangeDescription(1, 4094).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.").AddIntegerRangeDescription(1, 4094).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4094),
@@ -518,6 +518,9 @@ func (r *DeviceSubinterfaceResource) Create(ctx context.Context, req resource.Cr
 				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 				return
 			}
+		} else {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Subinterface not found (interface name: %s, sub_interface_id: %d, vlan_id: %d)", plan.InterfaceName.ValueString(), plan.SubInterfaceId.ValueInt64(), plan.VlanId.ValueInt64()))
+			return
 		}
 	} else {
 		// This is not multi-instance device, hence the object needs to be created

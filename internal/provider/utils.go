@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -36,6 +37,9 @@ import (
 	"github.com/tidwall/sjson"
 )
 
+// Mutex to protect deployments
+var deploymentMu sync.Mutex
+
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 	const atom time.Duration = 5 * time.Second
@@ -48,7 +52,7 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 		}
 		stat := strings.ToUpper(task.Get("status").String())
 		if stat == "FAILED" {
-			diags.AddError("Client Error", fmt.Sprintf("API task for the new device failed: %s, %s", task.Get("message"), task.Get("description")))
+			diags.AddError("Client Error", fmt.Sprintf("Task failed with: %s, %s", task.Get("message"), task.Get("description")))
 			return diags
 		}
 		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" && stat != "DEPLOYING" && stat != "UNKNOWN" {
@@ -102,7 +106,29 @@ Outerloop:
 	return nil
 }
 
+// FMCDeviceDeploy is a wrapper function that retries the deployment if requested by API response
 func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy, reqMods [](func(*fmc.Req))) diag.Diagnostics {
+	var diags diag.Diagnostics
+
+	// Retry the deployment up to 5 times on error
+	for i := range 5 {
+		diags = fmcDeviceDeploy(ctx, client, plan, reqMods)
+		if !diags.HasError() {
+			break
+		}
+		for _, diag := range diags.Errors() {
+			//	if strings.Contains(strings.ToLower(diag.Detail()), "retry deployment") || strings.Contains(strings.ToLower(diag.Detail()), "retrying") {
+			tflog.Debug(ctx, fmt.Sprintf("%s: retrying deployment (attempt %d): %s", plan.Id.ValueString(), i, diag.Detail()))
+			//	}
+		}
+		time.Sleep(5 * time.Second)
+	}
+
+	return diags
+}
+
+// fmcDeviceDeploy is a function that deploys the device configuration to the FMC
+func fmcDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 
 	// List of devices that are going to be deployed (requested by the user and in deployable state)
@@ -118,10 +144,14 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 		return diags
 	}
 
+	// Lock the deployment mutex to prevent race conditions, where multiple requests are trying to deploy that same device at the same time
+	deploymentMu.Lock()
+
 	// Get list of deployable devices
 	resDeployable, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deployment/deployabledevices?expanded=true", reqMods...)
 	if err != nil {
 		diags.AddError("Client Error", fmt.Sprintf("Failed to obtain list of deployable devices object (GET), got error: %s, %s", err, resDeployable.String()))
+		deploymentMu.Unlock()
 		return diags
 	}
 
@@ -160,8 +190,13 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 		res, err := client.Post(plan.getPath(), body, reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+			deploymentMu.Unlock()
 			return diags
 		}
+
+		// Give time for the deployment to settle in and unlock the mutex
+		time.Sleep(15 * time.Second)
+		deploymentMu.Unlock()
 
 		if res.Get("metadata.task.id").Exists() {
 			taskID := res.Get("metadata.task.id").String()
@@ -176,6 +211,7 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 		}
 		tflog.Debug(ctx, fmt.Sprintf("%s: Deploy completed", plan.Id.ValueString()))
 	} else {
+		deploymentMu.Unlock()
 		tflog.Debug(ctx, fmt.Sprintf("%s: No devices in deployable state", plan.Id.ValueString()))
 	}
 
