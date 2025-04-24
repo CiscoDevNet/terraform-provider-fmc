@@ -35,6 +35,7 @@ func TestAccFmcDeviceEtherChannelInterface(t *testing.T) {
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "is_multi_instance"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "description", "my description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "NONE"))

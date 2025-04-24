@@ -14,6 +14,11 @@ attributes:
     type: String
     computed: true
     description: Type of the object.
+  - model_name: dummy_is_multi_instance
+    tf_name: is_multi_instance
+    type: Bool
+    computed: true
+    description: Is parent device multi-instance.
 # General
   - model_name: ifname
     tf_name: logical_name
