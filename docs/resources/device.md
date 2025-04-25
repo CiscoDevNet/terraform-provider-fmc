@@ -53,6 +53,11 @@ resource "fmc_device" "example" {
 
 ### Read-Only
 
+- `container_id` (String) Id of the container, the device is member of. Empty if device is standalone.
+- `container_name` (String) Name of the container, the device is member of. Empty if device is standalone.
+- `container_role` (String) Role of the node (primary, secondary) for HAPair or (control, data) for Cluster. Empty if device is standalone.
+- `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
+- `container_type` (String) Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.
 - `id` (String) Id of the object
 - `type` (String) Type of the device; this value is always 'Device'.
 

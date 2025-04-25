@@ -129,6 +129,26 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.",
 				Computed:            true,
 			},
+			"container_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the container, the device is member of. Empty if device is standalone.",
+				Computed:            true,
+			},
+			"container_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.",
+				Computed:            true,
+			},
+			"container_name": schema.StringAttribute{
+				MarkdownDescription: "Name of the container, the device is member of. Empty if device is standalone.",
+				Computed:            true,
+			},
+			"container_role": schema.StringAttribute{
+				MarkdownDescription: "Role of the node (primary, secondary) for HAPair or (control, data) for Cluster. Empty if device is standalone.",
+				Computed:            true,
+			},
+			"container_status": schema.StringAttribute{
+				MarkdownDescription: "Status of the device in DeviceHAPair (Active, Standby, but other possible as well).",
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -206,30 +226,14 @@ func (d *DeviceDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
+	// FMCBUG: Access Control Policy returned by /devices endpoint does not match with what is actuall policy ID
 	policies, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments?expanded=true", reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
 
-	// Get HA Pairs
-	haPairs, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve HA Pairs (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Get Clusters
-	clusters, err := d.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Clusters (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Check if device is member of either HAPair or Cluster
-	haMembershipStatus := config.checkHaMembership(ctx, haPairs, clusters)
-
-	res = config.fromBodyPolicy(ctx, res, policies, haMembershipStatus)
+	res = config.fromBodyPolicy(ctx, res, policies)
 	config.fromBody(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
