@@ -174,7 +174,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Computed:            true,
 			},
 			"container_role": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Role of the node (primary, secondary) for HAPair or (control, data) for Cluster. Empty if device is standalone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.").String,
 				Computed:            true,
 			},
 			"container_status": schema.StringAttribute{

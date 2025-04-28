@@ -32,7 +32,7 @@ data "fmc_device" "example" {
 - `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
 - `container_id` (String) Id of the container, the device is member of. Empty if device is standalone.
 - `container_name` (String) Name of the container, the device is member of. Empty if device is standalone.
-- `container_role` (String) Role of the node (primary, secondary) for HAPair or (control, data) for Cluster. Empty if device is standalone.
+- `container_role` (String) Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.
 - `device_group_id` (String) Id of the device group.
