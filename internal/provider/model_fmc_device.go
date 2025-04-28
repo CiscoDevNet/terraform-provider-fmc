@@ -55,6 +55,8 @@ type Device struct {
 	ContainerName          types.String `tfsdk:"container_name"`
 	ContainerRole          types.String `tfsdk:"container_role"`
 	ContainerStatus        types.String `tfsdk:"container_status"`
+	IsPartOfContainer      types.Bool   `tfsdk:"is_part_of_container"`
+	IsMultiInstance        types.Bool   `tfsdk:"is_multi_instance"`
 }
 
 // End of section. //template:end types
@@ -208,6 +210,16 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.ContainerStatus = types.StringNull()
 	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -299,6 +311,16 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.ContainerStatus = types.StringNull()
 	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() && !data.IsPartOfContainer.IsNull() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() && !data.IsMultiInstance.IsNull() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -339,6 +361,16 @@ func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 		data.ContainerStatus = types.StringValue(value.String())
 	} else {
 		data.ContainerStatus = types.StringNull()
+	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
 	}
 }
 
@@ -384,4 +416,15 @@ func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, polici
 	}
 
 	return gjson.Parse(ret)
+}
+
+// Rewrite Computed values from state to plan
+func (data *Device) copyComputed(ctx context.Context, state Device) {
+	data.ContainerId = state.ContainerId
+	data.ContainerType = state.ContainerType
+	data.ContainerName = state.ContainerName
+	data.ContainerRole = state.ContainerRole
+	data.ContainerStatus = state.ContainerStatus
+	data.IsPartOfContainer = state.IsPartOfContainer
+	data.IsMultiInstance = state.IsMultiInstance
 }

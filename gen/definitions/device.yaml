@@ -146,7 +146,7 @@ attributes:
     data_path: [metadata, containerDetails]
     tf_name: container_role
     type: String
-    description: Role of the node (primary, secondary) for HAPair or (control, data) for Cluster. Empty if device is standalone.
+    description: Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.
     computed: true
     computed_refresh_value: true
   - model_name: status
@@ -154,6 +154,18 @@ attributes:
     tf_name: container_status
     type: String
     description: Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
+    computed: true
+    computed_refresh_value: true
+  - model_name: isPartOfContainer
+    data_path: [metadata]
+    type: Bool
+    description: True if the device is part of a container (DeviceHAPair or DeviceCluster).
+    computed: true
+    computed_refresh_value: true
+  - model_name: isMultiInstance
+    data_path: [metadata]
+    type: Bool
+    description: True if the device is part of a multi-instance container.
     computed: true
     computed_refresh_value: true
 

@@ -59,6 +59,8 @@ resource "fmc_device" "example" {
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.
 - `id` (String) Id of the object
+- `is_multi_instance` (Boolean) True if the device is part of a multi-instance container.
+- `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
 - `type` (String) Type of the device; this value is always 'Device'.
 
 ## Import

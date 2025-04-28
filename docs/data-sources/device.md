@@ -38,6 +38,8 @@ data "fmc_device" "example" {
 - `device_group_id` (String) Id of the device group.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
+- `is_multi_instance` (Boolean) True if the device is part of a multi-instance container.
+- `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.

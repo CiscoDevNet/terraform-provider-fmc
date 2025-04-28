@@ -149,6 +149,14 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Status of the device in DeviceHAPair (Active, Standby, but other possible as well).",
 				Computed:            true,
 			},
+			"is_part_of_container": schema.BoolAttribute{
+				MarkdownDescription: "True if the device is part of a container (DeviceHAPair or DeviceCluster).",
+				Computed:            true,
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: "True if the device is part of a multi-instance container.",
+				Computed:            true,
+			},
 		},
 	}
 }

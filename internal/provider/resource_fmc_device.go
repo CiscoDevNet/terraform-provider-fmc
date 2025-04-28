@@ -181,6 +181,14 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Status of the device in DeviceHAPair (Active, Standby, but other possible as well).").String,
 				Computed:            true,
 			},
+			"is_part_of_container": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a container (DeviceHAPair or DeviceCluster).").String,
+				Computed:            true,
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a multi-instance container.").String,
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -253,7 +261,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	tflog.Debug(ctx, fmt.Sprintf("%s: Configuring the non-access policy assignments", plan.Id.ValueString()))
 
 	if !plan.NatPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -261,7 +269,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	if !plan.HealthPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -374,15 +382,17 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "active" {
+	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "Active" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), state.ContainerStatus.ValueString()))
+		plan.copyComputed(ctx, state)
 		diags = resp.State.Set(ctx, &plan)
 		resp.Diagnostics.Append(diags...)
 		return
 	}
 
-	if state.ContainerType.ValueString() == "Cluster" && state.ContainerRole.ValueString() == "data" {
+	if state.ContainerType.ValueString() == "DeviceCluster" && state.ContainerRole.ValueString() == "Data" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in cluster as data node, hence cannot be updated. Configuration will be replicated from control node.", state.Id.ValueString(), state.Name.ValueString()))
+		plan.copyComputed(ctx, state)
 		diags = resp.State.Set(ctx, &plan)
 		resp.Diagnostics.Append(diags...)
 		return
@@ -399,16 +409,18 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 
-	var deviceId string
+	var deviceId, deviceType string
 	if state.ContainerId.ValueString() != "" {
 		deviceId = state.ContainerId.ValueString()
+		deviceType = state.ContainerType.ValueString()
 	} else {
 		deviceId = plan.Id.ValueString()
+		deviceType = "Device"
 	}
 
 	// Update policy assignments
 	if plan.AccessPolicyId != state.AccessPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, path.Root("access_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -416,7 +428,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.NatPolicyId != state.NatPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -424,7 +436,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.HealthPolicyId != state.HealthPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -449,7 +461,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 // updatePolicy updates policy-to-device assignment of one specific device (UUID) and of one specific policy type
 // (policyPath points to a different attribute for Access Policy, NAT Policy, Platform Settings Policy, etc.).
-func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State, reqMods ...func(*fmc.Req)) diag.Diagnostics {
+func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, deviceType string, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State, reqMods ...func(*fmc.Req)) diag.Diagnostics {
 	var planPolicy, statePolicy types.String
 
 	if diags := plan.GetAttribute(ctx, policyPath, &planPolicy); diags.HasError() {
@@ -460,7 +472,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, poli
 		return diags
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s id %s policy planned %s, state %s", policyPath, deviceId, planPolicy, statePolicy))
+	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s, id %s, policy planned %s, state %s", policyPath, deviceId, planPolicy, statePolicy))
 
 	if statePolicy.Equal(planPolicy) {
 		return nil
@@ -513,7 +525,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, poli
 		stub, _ = sjson.Set(stub, "policy.type", "HealthPolicy")
 		stub, _ = sjson.Set(stub, "targets", []any{})
 		stubdev, _ := sjson.Set("{}", "id", deviceId)
-		stubdev, _ = sjson.Set(stubdev, "type", "Device")
+		stubdev, _ = sjson.Set(stubdev, "type", deviceType)
 		stub, _ = sjson.SetRaw(stub, "targets.-1", stubdev)
 		res, err := r.client.Post("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments", stub, reqMods...)
 		if err != nil {
@@ -545,7 +557,7 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, poli
 
 	polBody, err := sjson.Set(res.String(), `targets.-1`, map[string]any{
 		"id":   deviceId,
-		"type": "Device",
+		"type": deviceType,
 	})
 	if err != nil {
 		return diag.Diagnostics{diag.NewAttributeErrorDiagnostic(
@@ -667,10 +679,21 @@ func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	defer policyMu.Unlock()
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
+	for range 3 {
+		_, err := r.client.Delete("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+		if err != nil {
+			if strings.Contains(err.Error(), "StatusCode 400") {
+				// Check if device is under deployment
+				tflog.Debug(ctx, fmt.Sprintf("%s: Checking if device is under deployment...", state.Id.ValueString()))
+				diags := FMCWaitForDeploymentToFinish(ctx, r.client, []string{state.Id.ValueString()}, reqMods)
+				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+					return
+				}
+			}
+		} else {
+			// No error returned, break the loop
+			break
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
