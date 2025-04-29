@@ -1,0 +1,45 @@
+---
+name: IKEv2 IPsec Proposals
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ikev2ipsecproposals
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of IKEv2 IPsec Proposals. The key of the map is the name of the individual IKEv2 IPSec Proposal.
+    map_key_example: my_ikev2_ipsec_proposals
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the IKEv2 IPSec Proposal object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "IKEv2 IPsec Proposal 1"
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IKEv2IPsecProposal'.
+        computed: true
+      - model_name: encryptionAlgorithms
+        tf_name: esp_encryptions
+        type: Set
+        element_type: String
+        description: IKEv2 Encryption algorithms.
+        example: AES-256
+        mandatory: true
+        enum_values: [DES, 3DES, AES, AES-192, AES-256, AES-GCM, AES-GCM-192, AES-GCM-256, AES-GMAC, AES-GMAC-192, AES-GMAC-256, "NULL"]
+      - model_name: integrityAlgorithms
+        tf_name: esp_hashes
+        type: Set
+        element_type: String
+        description: IKEv2 Hash algorithms.
+        example: SHA-256
+        mandatory: true
+        enum_values: [MD5, "NULL", SHA-1, SHA-256, SHA-384, SHA-512]

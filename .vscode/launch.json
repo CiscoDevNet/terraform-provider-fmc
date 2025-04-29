@@ -23,7 +23,6 @@
             "args": [
                 "-debug",
             ],
-            "envFile": "${workspaceFolder}/.vscode/private.env"
         }
     ]
 }
