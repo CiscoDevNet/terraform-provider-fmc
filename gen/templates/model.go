@@ -470,13 +470,17 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- range .Attributes}}
 	{{- if or (and .ResourceId (not .Reference)) .Computed}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
+	{{- if not .ComputedRefreshValue }}
 	if data.{{toGoName .TfName}}.IsUnknown() {
+	{{- end}}
 		if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
 			data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
 		} else {
 			data.{{toGoName .TfName}} = types.{{.Type}}Null()
 		}
+	{{- if not .ComputedRefreshValue }}
 	}
+	{{- end}}
 	{{- else}}
 	{{- errorf "resource_id is not yet implemented for type %v" .Type}}
 	{{- end}}
