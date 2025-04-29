@@ -1,0 +1,69 @@
+---
+name: IKEv1 Policies
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ikev1policies
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of IKEv1 Policies. The key of the map is the name of the individual IKEv1 Policy.
+    map_key_example: my_ikev1_policies
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the IKEv1 Policy object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "IKEv1 Policy 1"
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IKEv1Policy'.
+        computed: true
+      - model_name: priority
+        type: Int64
+        description: Priority of the IKEv1 Policy.
+        example: 10
+        mandatory: true
+        min_int: 1
+        max_int: 65535
+      - model_name: encryption
+        type: String
+        description: IKEv1 Encryption algorithm.
+        enum_values: [DES, 3DES, AES-128, AES-192, AES-256]
+        example: AES-192
+        mandatory: true
+      - model_name: hash
+        type: String
+        description: IKEv1 Hash algorithm.
+        enum_values: [SHA, MD5]
+        example: SHA
+        mandatory: true
+      - model_name: diffieHellmanGroup
+        type: String
+        tf_name: dh_group
+        description: Diffie-Hellman group.
+        enum_values: ["1", "2", "5", "14"]
+        example: 14
+        mandatory: true
+      - model_name: lifetimeInSeconds
+        tf_name: lifetime
+        type: Int64
+        description: Lifetime in seconds.
+        example: 86400
+        mandatory: true
+        min_int: 120
+        max_int: 2147483647
+      - model_name: authenticationMethod
+        type: String
+        description: Authentication method.
+        enum_values: [Certificate, Preshared Key]
+        example: Preshared Key
+        mandatory: true
