@@ -82,7 +82,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the loopback interface (Loopgack<loopback_id>)",
+				MarkdownDescription: "Name of the loopback interface (Loopback<loopback_id>)",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -95,11 +95,11 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"loopback_id": schema.Int64Attribute{
-				MarkdownDescription: "The numerical id of this loopback interface, unique on the parent interface.",
+				MarkdownDescription: "Id of the loopback interface.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Object description.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -107,7 +107,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask for ipv4_static_address.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{

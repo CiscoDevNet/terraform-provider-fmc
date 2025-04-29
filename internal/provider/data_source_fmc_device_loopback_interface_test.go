@@ -37,10 +37,13 @@ func TestAccDataSourceFmcDeviceLoopbackInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_loopback_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_loopback_interface.test", "name"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "logical_name", "my_loopback_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "loopback_id", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "description", "my description"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "description", "my VTI interface"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "ipv4_static_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "ipv6_addresses.0.address", "2004::10"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_loopback_interface.test", "ipv6_addresses.0.prefix", "64"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -76,9 +79,13 @@ func testAccDataSourceFmcDeviceLoopbackInterfaceConfig() string {
 	config += `	logical_name = "my_loopback_1"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	loopback_id = 1` + "\n"
-	config += `	description = "my description"` + "\n"
+	config += `	description = "my VTI interface"` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::10"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -96,9 +103,13 @@ func testAccNamedDataSourceFmcDeviceLoopbackInterfaceConfig() string {
 	config += `	logical_name = "my_loopback_1"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	loopback_id = 1` + "\n"
-	config += `	description = "my description"` + "\n"
+	config += `	description = "my VTI interface"` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::10"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 
 	config += `

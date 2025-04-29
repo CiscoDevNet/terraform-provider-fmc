@@ -21,10 +21,17 @@ The following restrictions apply:
 resource "fmc_device_loopback_interface" "example" {
   device_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   logical_name        = "my_loopback_1"
+  enabled             = true
   loopback_id         = 1
-  description         = "my description"
+  description         = "my VTI interface"
   ipv4_static_address = "10.1.1.1"
   ipv4_static_netmask = "24"
+  ipv6_addresses = [
+    {
+      address = "2004::10"
+      prefix  = "64"
+    }
+  ]
 }
 ```
 
@@ -34,24 +41,24 @@ resource "fmc_device_loopback_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `logical_name` (String) Logical name of the loopback interface
-- `loopback_id` (Number) The numerical id of this loopback interface, unique on the parent interface.
+- `loopback_id` (Number) Id of the loopback interface.
   - Range: `1`-`1024`
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Object description.
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Indicates whether to enable the interface.
   - Default value: `true`
 - `ipv4_static_address` (String) Static IPv4 address.
-- `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
+- `ipv4_static_netmask` (String) Netmask for ipv4_static_address.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `logical_name` (String) Logical name of the loopback interface
 
 ### Read-Only
 
 - `id` (String) Id of the object
-- `name` (String) Name of the loopback interface (Loopgack<loopback_id>)
+- `name` (String) Name of the loopback interface (Loopback<loopback_id>)
 - `type` (String) Type of the object; this is always `LoopbackInterface`.
 
 <a id="nestedatt--ipv6_addresses"></a>

@@ -20,25 +20,22 @@ attributes:
     type: String
     computed: true
     computed_body_param: true
-    description: Name of the loopback interface (Loopgack<loopback_id>)
+    description: Name of the loopback interface (Loopback<loopback_id>)
     data_source_query: true
 # General
   - model_name: ifname
     tf_name: logical_name
     type: String
-    mandatory: true
     description: Logical name of the loopback interface
-    requires_replace: true
     example: my_loopback_1
   - model_name: enabled
     type: Bool
     description: Indicates whether to enable the interface.
     default_value: true
-    test_value: "true"
-    exclude_example: true
+    example: "true"
   - model_name: loopbackId
     type: Int64
-    description: The numerical id of this loopback interface, unique on the parent interface.
+    description: Id of the loopback interface.
     mandatory: true
     requires_replace: true
     example: 1
@@ -46,8 +43,8 @@ attributes:
     max_int: 1024
   - model_name: description
     type: String
-    description: Optional user-created description.
-    example: my description
+    description: Object description.
+    example: my VTI interface
 # IPv4
   - model_name: address
     data_path: [ipv4, static]
@@ -59,14 +56,12 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask for ipv4_static_address.
     example: "24"
 # IPv6
   - model_name: addresses
     data_path: [ipv6]
     tf_name: ipv6_addresses
-    exclude_example: true
-    exclude_test: true
     type: List
     attributes:
       - model_name: address

@@ -97,7 +97,7 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the loopback interface (Loopgack<loopback_id>)").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the loopback interface (Loopback<loopback_id>)").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -105,10 +105,7 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the loopback interface").String,
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
+				Optional:            true,
 			},
 			"enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the interface.").AddDefaultValueDescription("true").String,
@@ -117,7 +114,7 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 				Default:             booldefault.StaticBool(true),
 			},
 			"loopback_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The numerical id of this loopback interface, unique on the parent interface.").AddIntegerRangeDescription(1, 1024).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the loopback interface.").AddIntegerRangeDescription(1, 1024).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 1024),
@@ -127,7 +124,7 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Object description.").String,
 				Optional:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -135,7 +132,7 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask for ipv4_static_address.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{

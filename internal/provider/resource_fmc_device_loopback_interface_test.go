@@ -37,10 +37,13 @@ func TestAccFmcDeviceLoopbackInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_loopback_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_loopback_interface.test", "name"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "logical_name", "my_loopback_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "loopback_id", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "description", "my description"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "description", "my VTI interface"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "ipv4_static_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "ipv6_addresses.0.address", "2004::10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_loopback_interface.test", "ipv6_addresses.0.prefix", "64"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -76,7 +79,6 @@ variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 func testAccFmcDeviceLoopbackInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_loopback_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
-	config += `	logical_name = "my_loopback_1"` + "\n"
 	config += `	loopback_id = 1` + "\n"
 	config += `}` + "\n"
 	return config
@@ -92,9 +94,13 @@ func testAccFmcDeviceLoopbackInterfaceConfig_all() string {
 	config += `	logical_name = "my_loopback_1"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	loopback_id = 1` + "\n"
-	config += `	description = "my description"` + "\n"
+	config += `	description = "my VTI interface"` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::10"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }
