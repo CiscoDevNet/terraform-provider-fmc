@@ -30,15 +30,15 @@ data "fmc_device" "example" {
 ### Read-Only
 
 - `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
-- `container_id` (String) Id of the container, the device is member of. Empty if device is standalone.
-- `container_name` (String) Name of the container, the device is member of. Empty if device is standalone.
-- `container_role` (String) Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.
+- `container_id` (String) Id of the parent container. Empty if device is Standalone.
+- `container_name` (String) Name of the parent container. Empty if device is Standalone.
+- `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
-- `container_type` (String) Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.
+- `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
 - `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
-- `is_multi_instance` (Boolean) True if the device is part of a multi-instance container.
+- `is_multi_instance` (Boolean) True if the device is part of a multi-instance.
 - `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.

@@ -162,19 +162,19 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 			},
 			"container_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the container, the device is member of. Empty if device is standalone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent container. Empty if device is Standalone.").String,
 				Computed:            true,
 			},
 			"container_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.").String,
 				Computed:            true,
 			},
 			"container_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the container, the device is member of. Empty if device is standalone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent container. Empty if device is Standalone.").String,
 				Computed:            true,
 			},
 			"container_role": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.").String,
 				Computed:            true,
 			},
 			"container_status": schema.StringAttribute{
@@ -186,7 +186,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Computed:            true,
 			},
 			"is_multi_instance": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a multi-instance container.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a multi-instance.").String,
 				Computed:            true,
 			},
 		},

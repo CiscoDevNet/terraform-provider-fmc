@@ -125,28 +125,28 @@ attributes:
     data_path: [metadata, containerDetails]
     tf_name: container_id
     type: String
-    description: Id of the container, the device is member of. Empty if device is standalone.
+    description: Id of the parent container. Empty if device is Standalone.
     computed: true
     computed_refresh_value: true
   - model_name: type
     data_path: [metadata, containerDetails]
     tf_name: container_type
     type: String
-    description: Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.
+    description: Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
     computed: true
     computed_refresh_value: true
   - model_name: name
     data_path: [metadata, containerDetails]
     tf_name: container_name
     type: String
-    description: Name of the container, the device is member of. Empty if device is standalone.
+    description: Name of the parent container. Empty if device is Standalone.
     computed: true
     computed_refresh_value: true
   - model_name: role
     data_path: [metadata, containerDetails]
     tf_name: container_role
     type: String
-    description: Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.
+    description: Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
     computed: true
     computed_refresh_value: true
   - model_name: status
@@ -165,7 +165,7 @@ attributes:
   - model_name: isMultiInstance
     data_path: [metadata]
     type: Bool
-    description: True if the device is part of a multi-instance container.
+    description: True if the device is part of a multi-instance.
     computed: true
     computed_refresh_value: true
 

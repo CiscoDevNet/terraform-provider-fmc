@@ -130,19 +130,19 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"container_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the container, the device is member of. Empty if device is standalone.",
+				MarkdownDescription: "Id of the parent container. Empty if device is Standalone.",
 				Computed:            true,
 			},
 			"container_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the container (DeviceHAPair or DeviceCluster). Empty if device is standalone.",
+				MarkdownDescription: "Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.",
 				Computed:            true,
 			},
 			"container_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the container, the device is member of. Empty if device is standalone.",
+				MarkdownDescription: "Name of the parent container. Empty if device is Standalone.",
 				Computed:            true,
 			},
 			"container_role": schema.StringAttribute{
-				MarkdownDescription: "Role of the node (primary, secondary) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is standalone.",
+				MarkdownDescription: "Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.",
 				Computed:            true,
 			},
 			"container_status": schema.StringAttribute{
@@ -154,7 +154,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"is_multi_instance": schema.BoolAttribute{
-				MarkdownDescription: "True if the device is part of a multi-instance container.",
+				MarkdownDescription: "True if the device is part of a multi-instance.",
 				Computed:            true,
 			},
 		},
