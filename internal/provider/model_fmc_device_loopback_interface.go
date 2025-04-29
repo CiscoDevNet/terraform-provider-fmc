@@ -77,6 +77,9 @@ func (data DeviceLoopbackInterface) toBody(ctx context.Context, state DeviceLoop
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
+	if !data.Name.IsNull() && !data.Name.IsUnknown() {
+		body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	}
 	if !data.LogicalName.IsNull() {
 		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
 	}

@@ -19,6 +19,7 @@ attributes:
   - model_name: name
     type: String
     computed: true
+    computed_body_param: true
     description: Name of the loopback interface (Loopgack<loopback_id>)
     data_source_query: true
 # General

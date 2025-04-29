@@ -152,6 +152,7 @@ type YamlConfigAttribute struct {
 	StringMaxLength      int64                 `yaml:"string_max_length"`
 	Computed             bool                  `yaml:"computed"`
 	ComputedRefreshValue bool                  `yaml:"computed_refresh_value"`
+	ComputedBodyParam    bool                  `yaml:"computed_body_param"`
 	DefaultValue         string                `yaml:"default_value"`
 	Value                string                `yaml:"value"`
 	TestValue            string                `yaml:"test_value"`
@@ -499,6 +500,10 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 
 	if attr.ComputedRefreshValue && !attr.Computed {
 		return fmt.Errorf("%q: `computed_refresh_value: true` can only be used with `computed: true`", attr.TfName)
+	}
+
+	if attr.ComputedBodyParam && !attr.Computed {
+		return fmt.Errorf("%q: `computed_body_param: true` can only be used with `computed: true`", attr.TfName)
 	}
 
 	// Recurse
