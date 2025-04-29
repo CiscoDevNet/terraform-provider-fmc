@@ -1,0 +1,83 @@
+---
+name: Device Loopback Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/loopbackinterfaces
+doc_category: Devices
+test_tags: [TF_VAR_device_id]
+minimum_version: "7.4"
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object; this is always `LoopbackInterface`.
+  - model_name: name
+    type: String
+    computed: true
+    description: Name of the loopback interface (Loopgack<loopback_id>)
+    data_source_query: true
+# General
+  - model_name: ifname
+    tf_name: logical_name
+    type: String
+    mandatory: true
+    description: Logical name of the loopback interface
+    requires_replace: true
+    example: my_loopback_1
+  - model_name: enabled
+    type: Bool
+    description: Indicates whether to enable the interface.
+    default_value: true
+    test_value: "true"
+    exclude_example: true
+  - model_name: loopbackId
+    type: Int64
+    description: The numerical id of this loopback interface, unique on the parent interface.
+    mandatory: true
+    requires_replace: true
+    example: 1
+    min_int: 1
+    max_int: 1024
+  - model_name: description
+    type: String
+    description: Optional user-created description.
+    example: my description
+# IPv4
+  - model_name: address
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_address
+    type: String
+    description: Static IPv4 address.
+    example: "10.1.1.1"
+  - model_name: netmask
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_netmask
+    type: String
+    description: Netmask (width) for ipv4_static_address.
+    example: "24"
+# IPv6
+  - model_name: addresses
+    data_path: [ipv6]
+    tf_name: ipv6_addresses
+    exclude_example: true
+    exclude_test: true
+    type: List
+    attributes:
+      - model_name: address
+        type: String
+        description: IPv6 address without a slash and prefix.
+        id: true
+        example: "2004::10"
+      - model_name: prefix
+        type: String
+        description: Prefix width for the IPv6 address.
+        id: true
+        example: "64"
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
