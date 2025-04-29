@@ -42,11 +42,11 @@ type IKEv2IPsecProposals struct {
 }
 
 type IKEv2IPsecProposalsItems struct {
-	Id            types.String `tfsdk:"id"`
-	Description   types.String `tfsdk:"description"`
-	Type          types.String `tfsdk:"type"`
-	EspEncryption types.Set    `tfsdk:"esp_encryption"`
-	EspHash       types.Set    `tfsdk:"esp_hash"`
+	Id             types.String `tfsdk:"id"`
+	Description    types.String `tfsdk:"description"`
+	Type           types.String `tfsdk:"type"`
+	EspEncryptions types.Set    `tfsdk:"esp_encryptions"`
+	EspHashes      types.Set    `tfsdk:"esp_hashes"`
 }
 
 // End of section. //template:end types
@@ -82,14 +82,14 @@ func (data IKEv2IPsecProposals) toBody(ctx context.Context, state IKEv2IPsecProp
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
-			if !item.EspEncryption.IsNull() {
+			if !item.EspEncryptions.IsNull() {
 				var values []string
-				item.EspEncryption.ElementsAs(ctx, &values, false)
+				item.EspEncryptions.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "encryptionAlgorithms", values)
 			}
-			if !item.EspHash.IsNull() {
+			if !item.EspHashes.IsNull() {
 				var values []string
-				item.EspHash.ElementsAs(ctx, &values, false)
+				item.EspHashes.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "integrityAlgorithms", values)
 			}
 			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
@@ -139,14 +139,14 @@ func (data *IKEv2IPsecProposals) fromBody(ctx context.Context, res gjson.Result)
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("encryptionAlgorithms"); value.Exists() {
-			data.EspEncryption = helpers.GetStringSet(value.Array())
+			data.EspEncryptions = helpers.GetStringSet(value.Array())
 		} else {
-			data.EspEncryption = types.SetNull(types.StringType)
+			data.EspEncryptions = types.SetNull(types.StringType)
 		}
 		if value := res.Get("integrityAlgorithms"); value.Exists() {
-			data.EspHash = helpers.GetStringSet(value.Array())
+			data.EspHashes = helpers.GetStringSet(value.Array())
 		} else {
-			data.EspHash = types.SetNull(types.StringType)
+			data.EspHashes = types.SetNull(types.StringType)
 		}
 		(*parent).Items[k] = data
 	}
@@ -191,15 +191,15 @@ func (data *IKEv2IPsecProposals) fromBodyPartial(ctx context.Context, res gjson.
 		} else {
 			data.Type = types.StringNull()
 		}
-		if value := res.Get("encryptionAlgorithms"); value.Exists() && !data.EspEncryption.IsNull() {
-			data.EspEncryption = helpers.GetStringSet(value.Array())
+		if value := res.Get("encryptionAlgorithms"); value.Exists() && !data.EspEncryptions.IsNull() {
+			data.EspEncryptions = helpers.GetStringSet(value.Array())
 		} else {
-			data.EspEncryption = types.SetNull(types.StringType)
+			data.EspEncryptions = types.SetNull(types.StringType)
 		}
-		if value := res.Get("integrityAlgorithms"); value.Exists() && !data.EspHash.IsNull() {
-			data.EspHash = helpers.GetStringSet(value.Array())
+		if value := res.Get("integrityAlgorithms"); value.Exists() && !data.EspHashes.IsNull() {
+			data.EspHashes = helpers.GetStringSet(value.Array())
 		} else {
-			data.EspHash = types.SetNull(types.StringType)
+			data.EspHashes = types.SetNull(types.StringType)
 		}
 		(*parent).Items[i] = data
 	}

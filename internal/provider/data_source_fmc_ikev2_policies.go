@@ -93,22 +93,22 @@ func (d *IKEv2PoliciesDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:            true,
 						},
 						"integrity_algorithms": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Integrity algorithms.",
+							MarkdownDescription: "IKEv2 Integrity algorithms.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
 						"encryption_algorithms": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Encryption algorithms.",
+							MarkdownDescription: "IKEv2 Encryption algorithms.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
 						"prf_algorithms": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Pseudo-Random Function (PRF) algorithms.",
+							MarkdownDescription: "IKEv2 Pseudo-Random Function (PRF) algorithms.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
 						"dh_groups": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Diffie-Hellman groups.",
+							MarkdownDescription: "IKEv2 Diffie-Hellman groups.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},

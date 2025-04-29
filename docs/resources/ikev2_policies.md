@@ -55,15 +55,15 @@ resource "fmc_ikev2_policies" "example" {
 
 Required:
 
-- `dh_groups` (Set of String) Set of IKEv2 Diffie-Hellman groups.
+- `dh_groups` (Set of String) IKEv2 Diffie-Hellman groups.
   - Choices: `1`, `2`, `5`, `14`, `15`, `16`, `19`, `20`, `21`, `24`, `31`
-- `encryption_algorithms` (Set of String) Set of IKEv2 Encryption algorithms.
-  - Choices: `3DES`, `AES`, `AES-192`, `AES-256`, `AES-GCM`, `AES-GCM-192`, `AES-GCM-256`, `DES`, `NULL`
-- `integrity_algorithms` (Set of String) Set of IKEv2 Integrity algorithms.
+- `encryption_algorithms` (Set of String) IKEv2 Encryption algorithms.
+  - Choices: `DES`, `3DES`, `AES`, `AES-192`, `AES-256`, `AES-GCM`, `AES-GCM-192`, `AES-GCM-256`, `NULL`
+- `integrity_algorithms` (Set of String) IKEv2 Integrity algorithms.
   - Choices: `SHA`, `SHA-256`, `SHA-384`, `SHA-512`, `MD5`, `NULL`
 - `lifetime` (Number) Lifetime in seconds.
   - Range: `120`-`2147483647`
-- `prf_algorithms` (Set of String) Set of IKEv2 Pseudo-Random Function (PRF) algorithms.
+- `prf_algorithms` (Set of String) IKEv2 Pseudo-Random Function (PRF) algorithms.
   - Choices: `SHA`, `SHA-256`, `SHA-384`, `SHA-512`, `MD5`
 - `priority` (Number) Priority of the IKEv1 Policy.
   - Range: `1`-`65535`

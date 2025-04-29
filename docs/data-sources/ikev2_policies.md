@@ -39,11 +39,11 @@ data "fmc_ikev2_policies" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `dh_groups` (Set of String) Set of IKEv2 Diffie-Hellman groups.
-- `encryption_algorithms` (Set of String) Set of IKEv2 Encryption algorithms.
+- `dh_groups` (Set of String) IKEv2 Diffie-Hellman groups.
+- `encryption_algorithms` (Set of String) IKEv2 Encryption algorithms.
 - `id` (String) Id of the IKEv2 Policy object.
-- `integrity_algorithms` (Set of String) Set of IKEv2 Integrity algorithms.
+- `integrity_algorithms` (Set of String) IKEv2 Integrity algorithms.
 - `lifetime` (Number) Lifetime in seconds.
-- `prf_algorithms` (Set of String) Set of IKEv2 Pseudo-Random Function (PRF) algorithms.
+- `prf_algorithms` (Set of String) IKEv2 Pseudo-Random Function (PRF) algorithms.
 - `priority` (Number) Priority of the IKEv1 Policy.
 - `type` (String) Type of the object; this value is always 'IKEv2Policy'.

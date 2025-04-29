@@ -49,22 +49,22 @@ attributes:
       - model_name: integrityAlgorithms
         type: Set
         element_type: String
-        description: Set of IKEv2 Integrity algorithms.
+        description: IKEv2 Integrity algorithms.
         example: SHA-256
         mandatory: true
         enum_values: [SHA, SHA-256, SHA-384, SHA-512, MD5, "NULL"]
       - model_name: encryptionAlgorithms
         type: Set
         element_type: String
-        description: Set of IKEv2 Encryption algorithms.
+        description: IKEv2 Encryption algorithms.
         example: AES-256
         mandatory: true
-        enum_values: [3DES, AES, AES-192, AES-256, AES-GCM, AES-GCM-192, AES-GCM-256, DES, "NULL"]
+        enum_values: [DES, 3DES, AES, AES-192, AES-256, AES-GCM, AES-GCM-192, AES-GCM-256, "NULL"]
       - model_name: prfIntegrityAlgorithms
         tf_name: prf_algorithms
         type: Set
         element_type: String
-        description: Set of IKEv2 Pseudo-Random Function (PRF) algorithms.
+        description: IKEv2 Pseudo-Random Function (PRF) algorithms.
         example: SHA-256
         mandatory: true
         enum_values: [SHA, SHA-256, SHA-384, SHA-512, MD5]
@@ -72,7 +72,7 @@ attributes:
         tf_name: dh_groups
         type: Set
         element_type: String
-        description: Set of IKEv2 Diffie-Hellman groups.
+        description: IKEv2 Diffie-Hellman groups.
         example: "14"
         mandatory: true
         enum_values: ["1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31"]

@@ -125,7 +125,7 @@ func (r *IKEv2PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"integrity_algorithms": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Integrity algorithms.").AddStringEnumDescription("SHA", "SHA-256", "SHA-384", "SHA-512", "MD5", "NULL").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Integrity algorithms.").AddStringEnumDescription("SHA", "SHA-256", "SHA-384", "SHA-512", "MD5", "NULL").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{
@@ -135,17 +135,17 @@ func (r *IKEv2PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"encryption_algorithms": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Encryption algorithms.").AddStringEnumDescription("3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "DES", "NULL").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Encryption algorithms.").AddStringEnumDescription("DES", "3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "NULL").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{
 								setvalidator.ValueStringsAre(
-									stringvalidator.OneOf("3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "DES", "NULL"),
+									stringvalidator.OneOf("DES", "3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "NULL"),
 								),
 							},
 						},
 						"prf_algorithms": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Pseudo-Random Function (PRF) algorithms.").AddStringEnumDescription("SHA", "SHA-256", "SHA-384", "SHA-512", "MD5").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Pseudo-Random Function (PRF) algorithms.").AddStringEnumDescription("SHA", "SHA-256", "SHA-384", "SHA-512", "MD5").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{
@@ -155,7 +155,7 @@ func (r *IKEv2PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"dh_groups": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Diffie-Hellman groups.").AddStringEnumDescription("1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Diffie-Hellman groups.").AddStringEnumDescription("1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{

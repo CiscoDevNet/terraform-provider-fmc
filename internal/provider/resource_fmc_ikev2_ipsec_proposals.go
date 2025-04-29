@@ -109,18 +109,18 @@ func (r *IKEv2IPsecProposalsResource) Schema(ctx context.Context, req resource.S
 								stringplanmodifier.UseStateForUnknown(),
 							},
 						},
-						"esp_encryption": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Encryption algorithms.").AddStringEnumDescription("3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "AES-GMAC", "AES-GMAC-192", "AES-GMAC-256", "DES", "NULL").String,
+						"esp_encryptions": schema.SetAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Encryption algorithms.").AddStringEnumDescription("DES", "3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "AES-GMAC", "AES-GMAC-192", "AES-GMAC-256", "NULL").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{
 								setvalidator.ValueStringsAre(
-									stringvalidator.OneOf("3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "AES-GMAC", "AES-GMAC-192", "AES-GMAC-256", "DES", "NULL"),
+									stringvalidator.OneOf("DES", "3DES", "AES", "AES-192", "AES-256", "AES-GCM", "AES-GCM-192", "AES-GCM-256", "AES-GMAC", "AES-GMAC-192", "AES-GMAC-256", "NULL"),
 								),
 							},
 						},
-						"esp_hash": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of IKEv2 Hash algorithms.").AddStringEnumDescription("MD5", "NULL", "SHA-1", "SHA-256", "SHA-384", "SHA-512").String,
+						"esp_hashes": schema.SetAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("IKEv2 Hash algorithms.").AddStringEnumDescription("MD5", "NULL", "SHA-1", "SHA-256", "SHA-384", "SHA-512").String,
 							ElementType:         types.StringType,
 							Required:            true,
 							Validators: []validator.Set{

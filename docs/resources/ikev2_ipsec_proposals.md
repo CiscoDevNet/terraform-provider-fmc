@@ -23,9 +23,9 @@ The following restrictions apply:
 resource "fmc_ikev2_ipsec_proposals" "example" {
   items = {
     my_ikev2_ipsec_proposals = {
-      description    = "IKEv2 IPsec Proposal 1"
-      esp_encryption = ["AES-256"]
-      esp_hash       = ["SHA-256"]
+      description     = "IKEv2 IPsec Proposal 1"
+      esp_encryptions = ["AES-256"]
+      esp_hashes      = ["SHA-256"]
     }
   }
 }
@@ -51,9 +51,9 @@ resource "fmc_ikev2_ipsec_proposals" "example" {
 
 Required:
 
-- `esp_encryption` (Set of String) Set of IKEv2 Encryption algorithms.
-  - Choices: `3DES`, `AES`, `AES-192`, `AES-256`, `AES-GCM`, `AES-GCM-192`, `AES-GCM-256`, `AES-GMAC`, `AES-GMAC-192`, `AES-GMAC-256`, `DES`, `NULL`
-- `esp_hash` (Set of String) Set of IKEv2 Hash algorithms.
+- `esp_encryptions` (Set of String) IKEv2 Encryption algorithms.
+  - Choices: `DES`, `3DES`, `AES`, `AES-192`, `AES-256`, `AES-GCM`, `AES-GCM-192`, `AES-GCM-256`, `AES-GMAC`, `AES-GMAC-192`, `AES-GMAC-256`, `NULL`
+- `esp_hashes` (Set of String) IKEv2 Hash algorithms.
   - Choices: `MD5`, `NULL`, `SHA-1`, `SHA-256`, `SHA-384`, `SHA-512`
 
 Optional:

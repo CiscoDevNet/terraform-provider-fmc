@@ -84,13 +84,13 @@ func (d *IKEv2IPsecProposalsDataSource) Schema(ctx context.Context, req datasour
 							MarkdownDescription: "Type of the object; this value is always 'IKEv2IPsecProposal'.",
 							Computed:            true,
 						},
-						"esp_encryption": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Encryption algorithms.",
+						"esp_encryptions": schema.SetAttribute{
+							MarkdownDescription: "IKEv2 Encryption algorithms.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
-						"esp_hash": schema.SetAttribute{
-							MarkdownDescription: "Set of IKEv2 Hash algorithms.",
+						"esp_hashes": schema.SetAttribute{
+							MarkdownDescription: "IKEv2 Hash algorithms.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},

@@ -57,8 +57,8 @@ func testAccDataSourceFmcIKEv2IPsecProposalsConfig() string {
 	config := `resource "fmc_ikev2_ipsec_proposals" "test" {` + "\n"
 	config += `	items = { "my_ikev2_ipsec_proposals" = {` + "\n"
 	config += `		description = "IKEv2 IPsec Proposal 1"` + "\n"
-	config += `		esp_encryption = ["AES-256"]` + "\n"
-	config += `		esp_hash = ["SHA-256"]` + "\n"
+	config += `		esp_encryptions = ["AES-256"]` + "\n"
+	config += `		esp_hashes = ["SHA-256"]` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 

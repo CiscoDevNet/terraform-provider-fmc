@@ -39,7 +39,7 @@ data "fmc_ikev2_ipsec_proposals" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `esp_encryption` (Set of String) Set of IKEv2 Encryption algorithms.
-- `esp_hash` (Set of String) Set of IKEv2 Hash algorithms.
+- `esp_encryptions` (Set of String) IKEv2 Encryption algorithms.
+- `esp_hashes` (Set of String) IKEv2 Hash algorithms.
 - `id` (String) Id of the IKEv2 IPSec Proposal object.
 - `type` (String) Type of the object; this value is always 'IKEv2IPsecProposal'.
