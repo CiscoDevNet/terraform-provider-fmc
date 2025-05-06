@@ -371,6 +371,11 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewVLANTagGroupResource,
 		NewVLANTagGroupsResource,
 		NewVLANTagsResource,
+		NewVPNS2SResource,
+		NewVPNS2SAdvancedSettingsResource,
+		NewVPNS2SEndpointsResource,
+		NewVPNS2SIKESettingsResource,
+		NewVPNS2SIPSECSettingsResource,
 	}
 }
 
@@ -476,6 +481,11 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewVLANTagGroupDataSource,
 		NewVLANTagGroupsDataSource,
 		NewVLANTagsDataSource,
+		NewVPNS2SDataSource,
+		NewVPNS2SAdvancedSettingsDataSource,
+		NewVPNS2SEndpointsDataSource,
+		NewVPNS2SIKESettingsDataSource,
+		NewVPNS2SIPSECSettingsDataSource,
 	}
 }
 
