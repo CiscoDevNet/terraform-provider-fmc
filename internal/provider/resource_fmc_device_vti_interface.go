@@ -65,7 +65,7 @@ func (r *DeviceVTIInterfaceResource) Metadata(ctx context.Context, req resource.
 func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_from_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -97,14 +97,14 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the VTI interface (Tunnel<tunnel_id> for Static or Virtual-Template<tunnel_id> for Dynamic).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"tunnel_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the tunnel interface.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the VTI interface.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("STATIC", "DYNAMIC"),
@@ -114,11 +114,11 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the VTI interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the VTI interface.").String,
 				Required:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the interface.").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable the interface.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
@@ -132,10 +132,10 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority.").AddIntegerRangeDescription(10, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Priority to load balance the traffic across multiple VTIs.").AddIntegerRangeDescription(0, 65535).String,
 				Optional:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(10, 65535),
+					int64validator.Between(0, 65535),
 				},
 			},
 			"tunnel_id": schema.Int64Attribute{
@@ -149,60 +149,60 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"tunnel_source_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface to be used as the tunnel source.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface that is used as the tunnel source.").String,
 				Required:            true,
 			},
 			"tunnel_source_interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the interface to be used as the tunnel source.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the interface that is used as the tunnel source.").String,
 				Required:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address of the tunnel source interface. This address needs to be configured on tunnel_soruce_interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.").String,
 				Optional:            true,
 			},
-			"ipsec_tunnel_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPsec mode of the tunnel interface.").AddStringEnumDescription("ipv4", "ipv6").String,
+			"tunnel_mode": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("VTI interface IPSec mode").AddStringEnumDescription("ipv4", "ipv6").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ipv4", "ipv6"),
 				},
 			},
 			"ipv4_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
 			"ipv4_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
 			"ipv6_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
 			"ipv6_prefix": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Prefix length for ipv6_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Prefix length for IPv6 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
-			"borrow_ip_from_interface_id": schema.StringAttribute{
+			"borrow_ip_interface_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface to borrow IP address from (IP Unnumbered).").String,
 				Optional:            true,
 			},
-			"borrow_ip_from_interface_name": schema.StringAttribute{
+			"borrow_ip_interface_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the interface to borrow IP address from (IP Unnumbered).").String,
 				Optional:            true,
 			},
 			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IP based Monitoring.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IP based Monitoring.").String,
 				Optional:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Monitoring type.").AddStringEnumDescription("PEER_IPV4", "PEER_IPV6").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set monitoring to be based on IPv4 or IPv6.").AddStringEnumDescription("PEER_IPV4", "PEER_IPV6").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("PEER_IPV4", "PEER_IPV6"),
 				},
 			},
-			"ip_based_monitoring_next_hop": schema.StringAttribute{
+			"ip_based_monitoring_peer_ip": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IP address to monitor.").String,
 				Optional:            true,
 			},
