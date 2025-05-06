@@ -224,8 +224,6 @@ func (r *DeviceVTIInterfaceResource) Configure(_ context.Context, req resource.C
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan DeviceVTIInterface
 
@@ -250,8 +248,22 @@ func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.Cr
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-	plan.Id = types.StringValue(res.Get("id").String())
+
+	// We need to get 'name' from the response body
 	plan.fromBodyUnknowns(ctx, res)
+
+	// FMCBUG: CSCwp02259 - POST response body may contain incorrect object id
+	res, err = r.client.Get(plan.getPath(), reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+		return
+	}
+	newId := res.Get(fmt.Sprintf("items.#(name==%s).id", plan.Name.ValueString()))
+	if !newId.Exists() {
+		resp.Diagnostics.AddError("Client Error", "Failed to retrieve object ID")
+		return
+	}
+	plan.Id = types.StringValue(newId.String())
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -260,8 +272,6 @@ func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.Cr
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
