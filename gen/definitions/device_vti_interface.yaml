@@ -5,8 +5,8 @@ doc_category: Devices
 res_description: >-
   This device manages Device Virtual Tunnel Interface (VTI) configuration.\n
   The following applies:\n
-  - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
-  - Either IPv4 or IPv6 or borrow_ip_from_interface is required, which needs to match with ipsec_tunnel_mode.\n
+  - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
+  - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
 test_tags: [TF_VAR_device_id]
 attributes:
   - tf_name: device_id
@@ -22,28 +22,28 @@ attributes:
     computed: true
   - model_name: name
     type: String
-    description: Name of the VTI interface (Tunnel<tunnel_id> for Static or Virtual-Template<tunnel_id> for Dynamic).
+    description: Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).
     computed: true
     computed_body_param: true
     data_source_query: true
   # General
   - model_name: tunnelType
     type: String
-    description: Type of the tunnel interface.
+    description: Type of the VTI interface.
     enum_values: [STATIC, DYNAMIC]
     example: STATIC
     mandatory: true
     requires_replace: true
-    write_only: true # FMCVERSION <= 7.2
+    write_only: true # for FMCVERSION <= 7.2
   - model_name: ifname
     tf_name: logical_name
     type: String
-    description: Name of the VTI interface.
+    description: Logical name of the VTI interface.
     example: my_vti_interface
     mandatory: true
   - model_name: enabled
     type: Bool
-    description: Indicates whether to enable the interface.
+    description: Enable the interface.
     default_value: "true"
     example: "true"
   - model_name: description
@@ -63,9 +63,9 @@ attributes:
     value: SecurityZone
   - model_name: priority
     type: Int64
-    description: Priority.
+    description: Priority to load balance the traffic across multiple VTIs.
     example: 100
-    min_int: 10
+    min_int: 0
     max_int: 65535
   # Tunnel interface details
   - model_name: tunnelId
@@ -80,7 +80,7 @@ attributes:
     data_path: [tunnelSource]
     tf_name: tunnel_source_interface_id
     type: String
-    description: Id of the interface to be used as the tunnel source.
+    description: Id of the interface that is used as the tunnel source.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.id
     mandatory: true
@@ -88,62 +88,62 @@ attributes:
     data_path: [tunnelSource]
     tf_name: tunnel_source_interface_name
     type: String
-    description: Name of the interface to be used as the tunnel source.
+    description: Name of the interface that is used as the tunnel source.
     example: "GigabitEthernet0/1"
     test_value: fmc_device_physical_interface.test.name
     mandatory: true
   - model_name: tunnelSrcIPv6IntfAddr
     tf_name: tunnel_source_interface_ipv6_address
     type: String
-    description: IPv6 address of the tunnel source interface. This address needs to be configured on tunnel_soruce_interface.
+    description: Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
     exclude_example: true
     exclude_test: true
   # Tunnel details
   - model_name: ipsecMode
-    tf_name: ipsec_tunnel_mode
+    tf_name: tunnel_mode
     type: String
     enum_values: [ipv4, ipv6]
-    description: IPsec mode of the tunnel interface.
+    description: VTI interface IPSec mode
     example: ipv4
     mandatory: true
   - model_name: address
     data_path: [ipv4, static]
     tf_name: ipv4_address
     type: String
-    description: Static IPv4 address.
+    description: IPv4 address for local VTI tunnel end.
     example: "10.10.10.10"
     minimum_test_value: '"10.10.10.10"'
   - model_name: netmask
     data_path: [ipv4, static]
     tf_name: ipv4_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask (width) for IPv4 address for local VTI tunnel end.
     example: "24"
     minimum_test_value: '"24"'
   - model_name: address
     data_path: [ipv6, addresses.0]
     tf_name: ipv6_address
     type: String
-    description: IPv6 address.
+    description: IPv6 address for local VTI tunnel end.
     exclude_example: true
     exclude_test: true
   - model_name: prefix
     data_path: [ipv6, addresses.0]
     tf_name: ipv6_prefix
     type: String
-    description: Prefix length for ipv6_address.
+    description: Prefix length for IPv6 address for local VTI tunnel end.
     exclude_example: true
     exclude_test: true
   - model_name: id
     data_path: [borrowIPfrom]
-    tf_name: borrow_ip_from_interface_id
+    tf_name: borrow_ip_interface_id
     type: String
     description: Id of the interface to borrow IP address from (IP Unnumbered).
     exclude_example: true
     exclude_test: true
   - model_name: name
     data_path: [borrowIPfrom]
-    tf_name: borrow_ip_from_interface_name
+    tf_name: borrow_ip_interface_name
     type: String
     description: Name of the interface to borrow IP address from (IP Unnumbered).
     exclude_example: true
@@ -152,19 +152,19 @@ attributes:
   - model_name: enable
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring
-    description: Indicates whether to enable IP based Monitoring.
+    description: Enable IP based Monitoring.
     type: Bool
     example: "true"
   - model_name: type
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring_type
     type: String
-    description: Monitoring type.
+    description: Peer IP address version.
     enum_values: [ PEER_IPV4, PEER_IPV6 ]
     example: PEER_IPV4
   - model_name: monitoredIp
     data_path: [pathMonitoring]
-    tf_name: ip_based_monitoring_next_hop
+    tf_name: ip_based_monitoring_peer_ip
     type: String
     description: IP address to monitor.
     example: "10.10.10.100"

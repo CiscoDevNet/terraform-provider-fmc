@@ -48,16 +48,16 @@ type DeviceVTIInterface struct {
 	TunnelSourceInterfaceId          types.String `tfsdk:"tunnel_source_interface_id"`
 	TunnelSourceInterfaceName        types.String `tfsdk:"tunnel_source_interface_name"`
 	TunnelSourceInterfaceIpv6Address types.String `tfsdk:"tunnel_source_interface_ipv6_address"`
-	IpsecTunnelMode                  types.String `tfsdk:"ipsec_tunnel_mode"`
+	TunnelMode                       types.String `tfsdk:"tunnel_mode"`
 	Ipv4Address                      types.String `tfsdk:"ipv4_address"`
 	Ipv4Netmask                      types.String `tfsdk:"ipv4_netmask"`
 	Ipv6Address                      types.String `tfsdk:"ipv6_address"`
 	Ipv6Prefix                       types.String `tfsdk:"ipv6_prefix"`
-	BorrowIpFromInterfaceId          types.String `tfsdk:"borrow_ip_from_interface_id"`
-	BorrowIpFromInterfaceName        types.String `tfsdk:"borrow_ip_from_interface_name"`
+	BorrowIpInterfaceId              types.String `tfsdk:"borrow_ip_interface_id"`
+	BorrowIpInterfaceName            types.String `tfsdk:"borrow_ip_interface_name"`
 	IpBasedMonitoring                types.Bool   `tfsdk:"ip_based_monitoring"`
 	IpBasedMonitoringType            types.String `tfsdk:"ip_based_monitoring_type"`
-	IpBasedMonitoringNextHop         types.String `tfsdk:"ip_based_monitoring_next_hop"`
+	IpBasedMonitoringPeerIp          types.String `tfsdk:"ip_based_monitoring_peer_ip"`
 	HttpBasedApplicationMonitoring   types.Bool   `tfsdk:"http_based_application_monitoring"`
 }
 
@@ -116,8 +116,8 @@ func (data DeviceVTIInterface) toBody(ctx context.Context, state DeviceVTIInterf
 	if !data.TunnelSourceInterfaceIpv6Address.IsNull() {
 		body, _ = sjson.Set(body, "tunnelSrcIPv6IntfAddr", data.TunnelSourceInterfaceIpv6Address.ValueString())
 	}
-	if !data.IpsecTunnelMode.IsNull() {
-		body, _ = sjson.Set(body, "ipsecMode", data.IpsecTunnelMode.ValueString())
+	if !data.TunnelMode.IsNull() {
+		body, _ = sjson.Set(body, "ipsecMode", data.TunnelMode.ValueString())
 	}
 	if !data.Ipv4Address.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4Address.ValueString())
@@ -131,11 +131,11 @@ func (data DeviceVTIInterface) toBody(ctx context.Context, state DeviceVTIInterf
 	if !data.Ipv6Prefix.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.addresses.0.prefix", data.Ipv6Prefix.ValueString())
 	}
-	if !data.BorrowIpFromInterfaceId.IsNull() {
-		body, _ = sjson.Set(body, "borrowIPfrom.id", data.BorrowIpFromInterfaceId.ValueString())
+	if !data.BorrowIpInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "borrowIPfrom.id", data.BorrowIpInterfaceId.ValueString())
 	}
-	if !data.BorrowIpFromInterfaceName.IsNull() {
-		body, _ = sjson.Set(body, "borrowIPfrom.name", data.BorrowIpFromInterfaceName.ValueString())
+	if !data.BorrowIpInterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "borrowIPfrom.name", data.BorrowIpInterfaceName.ValueString())
 	}
 	if !data.IpBasedMonitoring.IsNull() {
 		body, _ = sjson.Set(body, "pathMonitoring.enable", data.IpBasedMonitoring.ValueBool())
@@ -143,8 +143,8 @@ func (data DeviceVTIInterface) toBody(ctx context.Context, state DeviceVTIInterf
 	if !data.IpBasedMonitoringType.IsNull() {
 		body, _ = sjson.Set(body, "pathMonitoring.type", data.IpBasedMonitoringType.ValueString())
 	}
-	if !data.IpBasedMonitoringNextHop.IsNull() {
-		body, _ = sjson.Set(body, "pathMonitoring.monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
+	if !data.IpBasedMonitoringPeerIp.IsNull() {
+		body, _ = sjson.Set(body, "pathMonitoring.monitoredIp", data.IpBasedMonitoringPeerIp.ValueString())
 	}
 	if !data.HttpBasedApplicationMonitoring.IsNull() {
 		body, _ = sjson.Set(body, "applicationMonitoring.enable", data.HttpBasedApplicationMonitoring.ValueBool())
@@ -213,9 +213,9 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.TunnelSourceInterfaceIpv6Address = types.StringNull()
 	}
 	if value := res.Get("ipsecMode"); value.Exists() {
-		data.IpsecTunnelMode = types.StringValue(value.String())
+		data.TunnelMode = types.StringValue(value.String())
 	} else {
-		data.IpsecTunnelMode = types.StringNull()
+		data.TunnelMode = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() {
 		data.Ipv4Address = types.StringValue(value.String())
@@ -238,14 +238,14 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6Prefix = types.StringNull()
 	}
 	if value := res.Get("borrowIPfrom.id"); value.Exists() {
-		data.BorrowIpFromInterfaceId = types.StringValue(value.String())
+		data.BorrowIpInterfaceId = types.StringValue(value.String())
 	} else {
-		data.BorrowIpFromInterfaceId = types.StringNull()
+		data.BorrowIpInterfaceId = types.StringNull()
 	}
 	if value := res.Get("borrowIPfrom.name"); value.Exists() {
-		data.BorrowIpFromInterfaceName = types.StringValue(value.String())
+		data.BorrowIpInterfaceName = types.StringValue(value.String())
 	} else {
-		data.BorrowIpFromInterfaceName = types.StringNull()
+		data.BorrowIpInterfaceName = types.StringNull()
 	}
 	if value := res.Get("pathMonitoring.enable"); value.Exists() {
 		data.IpBasedMonitoring = types.BoolValue(value.Bool())
@@ -258,9 +258,9 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.IpBasedMonitoringType = types.StringNull()
 	}
 	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() {
-		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
+		data.IpBasedMonitoringPeerIp = types.StringValue(value.String())
 	} else {
-		data.IpBasedMonitoringNextHop = types.StringNull()
+		data.IpBasedMonitoringPeerIp = types.StringNull()
 	}
 	if value := res.Get("applicationMonitoring.enable"); value.Exists() {
 		data.HttpBasedApplicationMonitoring = types.BoolValue(value.Bool())
@@ -333,10 +333,10 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.TunnelSourceInterfaceIpv6Address = types.StringNull()
 	}
-	if value := res.Get("ipsecMode"); value.Exists() && !data.IpsecTunnelMode.IsNull() {
-		data.IpsecTunnelMode = types.StringValue(value.String())
+	if value := res.Get("ipsecMode"); value.Exists() && !data.TunnelMode.IsNull() {
+		data.TunnelMode = types.StringValue(value.String())
 	} else {
-		data.IpsecTunnelMode = types.StringNull()
+		data.TunnelMode = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4Address.IsNull() {
 		data.Ipv4Address = types.StringValue(value.String())
@@ -358,15 +358,15 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6Prefix = types.StringNull()
 	}
-	if value := res.Get("borrowIPfrom.id"); value.Exists() && !data.BorrowIpFromInterfaceId.IsNull() {
-		data.BorrowIpFromInterfaceId = types.StringValue(value.String())
+	if value := res.Get("borrowIPfrom.id"); value.Exists() && !data.BorrowIpInterfaceId.IsNull() {
+		data.BorrowIpInterfaceId = types.StringValue(value.String())
 	} else {
-		data.BorrowIpFromInterfaceId = types.StringNull()
+		data.BorrowIpInterfaceId = types.StringNull()
 	}
-	if value := res.Get("borrowIPfrom.name"); value.Exists() && !data.BorrowIpFromInterfaceName.IsNull() {
-		data.BorrowIpFromInterfaceName = types.StringValue(value.String())
+	if value := res.Get("borrowIPfrom.name"); value.Exists() && !data.BorrowIpInterfaceName.IsNull() {
+		data.BorrowIpInterfaceName = types.StringValue(value.String())
 	} else {
-		data.BorrowIpFromInterfaceName = types.StringNull()
+		data.BorrowIpInterfaceName = types.StringNull()
 	}
 	if value := res.Get("pathMonitoring.enable"); value.Exists() && !data.IpBasedMonitoring.IsNull() {
 		data.IpBasedMonitoring = types.BoolValue(value.Bool())
@@ -378,10 +378,10 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.IpBasedMonitoringType = types.StringNull()
 	}
-	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
-		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
+	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() && !data.IpBasedMonitoringPeerIp.IsNull() {
+		data.IpBasedMonitoringPeerIp = types.StringValue(value.String())
 	} else {
-		data.IpBasedMonitoringNextHop = types.StringNull()
+		data.IpBasedMonitoringPeerIp = types.StringNull()
 	}
 	if value := res.Get("applicationMonitoring.enable"); value.Exists() && !data.HttpBasedApplicationMonitoring.IsNull() {
 		data.HttpBasedApplicationMonitoring = types.BoolValue(value.Bool())

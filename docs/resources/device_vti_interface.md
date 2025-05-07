@@ -5,15 +5,15 @@ subcategory: "Devices"
 description: |-
   This device manages Device Virtual Tunnel Interface (VTI) configuration.
   The following applies:
-  Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.Either IPv4 or IPv6 or borrow_ip_from_interface is required, which needs to match with ipsec_tunnel_mode.
+  Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.
 ---
 
 # fmc_device_vti_interface (Resource)
 
 This device manages Device Virtual Tunnel Interface (VTI) configuration.
  The following applies:
- - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.
- - Either IPv4 or IPv6 or borrow_ip_from_interface is required, which needs to match with ipsec_tunnel_mode.
+ - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.
+ - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.
 
 ## Example Usage
 
@@ -29,12 +29,12 @@ resource "fmc_device_vti_interface" "example" {
   tunnel_id                         = 100
   tunnel_source_interface_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   tunnel_source_interface_name      = "GigabitEthernet0/1"
-  ipsec_tunnel_mode                 = "ipv4"
+  tunnel_mode                       = "ipv4"
   ipv4_address                      = "10.10.10.10"
   ipv4_netmask                      = "24"
   ip_based_monitoring               = true
   ip_based_monitoring_type          = "PEER_IPV4"
-  ip_based_monitoring_next_hop      = "10.10.10.100"
+  ip_based_monitoring_peer_ip       = "10.10.10.100"
   http_based_application_monitoring = true
 }
 ```
@@ -45,42 +45,42 @@ resource "fmc_device_vti_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `ipsec_tunnel_mode` (String) IPsec mode of the tunnel interface.
-  - Choices: `ipv4`, `ipv6`
-- `logical_name` (String) Name of the VTI interface.
+- `logical_name` (String) Logical name of the VTI interface.
 - `tunnel_id` (Number) Tunnel ID (for Static) or Template ID (for Dynamic).
   - Range: `0`-`10413`
-- `tunnel_source_interface_id` (String) Id of the interface to be used as the tunnel source.
-- `tunnel_source_interface_name` (String) Name of the interface to be used as the tunnel source.
-- `tunnel_type` (String) Type of the tunnel interface.
+- `tunnel_mode` (String) VTI interface IPSec mode
+  - Choices: `ipv4`, `ipv6`
+- `tunnel_source_interface_id` (String) Id of the interface that is used as the tunnel source.
+- `tunnel_source_interface_name` (String) Name of the interface that is used as the tunnel source.
+- `tunnel_type` (String) Type of the VTI interface.
   - Choices: `STATIC`, `DYNAMIC`
 
 ### Optional
 
-- `borrow_ip_from_interface_id` (String) Id of the interface to borrow IP address from (IP Unnumbered).
-- `borrow_ip_from_interface_name` (String) Name of the interface to borrow IP address from (IP Unnumbered).
+- `borrow_ip_interface_id` (String) Id of the interface to borrow IP address from (IP Unnumbered).
+- `borrow_ip_interface_name` (String) Name of the interface to borrow IP address from (IP Unnumbered).
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enabled` (Boolean) Enable the interface.
   - Default value: `true`
 - `http_based_application_monitoring` (Boolean) Enable HTTP based Application Monitoring.
-- `ip_based_monitoring` (Boolean) Indicates whether to enable IP based Monitoring.
-- `ip_based_monitoring_next_hop` (String) IP address to monitor.
-- `ip_based_monitoring_type` (String) Monitoring type.
+- `ip_based_monitoring` (Boolean) Enable IP based Monitoring.
+- `ip_based_monitoring_peer_ip` (String) IP address to monitor.
+- `ip_based_monitoring_type` (String) Peer IP address version.
   - Choices: `PEER_IPV4`, `PEER_IPV6`
-- `ipv4_address` (String) Static IPv4 address.
-- `ipv4_netmask` (String) Netmask (width) for ipv4_static_address.
-- `ipv6_address` (String) IPv6 address.
-- `ipv6_prefix` (String) Prefix length for ipv6_address.
-- `priority` (Number) Priority.
-  - Range: `10`-`65535`
+- `ipv4_address` (String) IPv4 address for local VTI tunnel end.
+- `ipv4_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
+- `ipv6_address` (String) IPv6 address for local VTI tunnel end.
+- `ipv6_prefix` (String) Prefix length for IPv6 address for local VTI tunnel end.
+- `priority` (Number) Priority to load balance the traffic across multiple VTIs.
+  - Range: `0`-`65535`
 - `security_zone_id` (String) Id of the assigned security zone.
-- `tunnel_source_interface_ipv6_address` (String) IPv6 address of the tunnel source interface. This address needs to be configured on tunnel_soruce_interface.
+- `tunnel_source_interface_ipv6_address` (String) Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
 
 ### Read-Only
 
 - `id` (String) Id of the object
-- `name` (String) Name of the VTI interface (Tunnel<tunnel_id> for Static or Virtual-Template<tunnel_id> for Dynamic).
+- `name` (String) Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).
 - `type` (String) Type of the object; this value is always 'VTIInterface'.
 
 ## Import

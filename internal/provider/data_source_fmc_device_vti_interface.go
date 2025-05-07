@@ -80,20 +80,20 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the VTI interface (Tunnel<tunnel_id> for Static or Virtual-Template<tunnel_id> for Dynamic).",
+				MarkdownDescription: "Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).",
 				Optional:            true,
 				Computed:            true,
 			},
 			"tunnel_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the tunnel interface.",
+				MarkdownDescription: "Type of the VTI interface.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the VTI interface.",
+				MarkdownDescription: "Logical name of the VTI interface.",
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -105,7 +105,7 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: "Priority.",
+				MarkdownDescription: "Priority to load balance the traffic across multiple VTIs.",
 				Computed:            true,
 			},
 			"tunnel_id": schema.Int64Attribute{
@@ -113,54 +113,54 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"tunnel_source_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the interface to be used as the tunnel source.",
+				MarkdownDescription: "Id of the interface that is used as the tunnel source.",
 				Computed:            true,
 			},
 			"tunnel_source_interface_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the interface to be used as the tunnel source.",
+				MarkdownDescription: "Name of the interface that is used as the tunnel source.",
 				Computed:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "IPv6 address of the tunnel source interface. This address needs to be configured on tunnel_soruce_interface.",
+				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.",
 				Computed:            true,
 			},
-			"ipsec_tunnel_mode": schema.StringAttribute{
-				MarkdownDescription: "IPsec mode of the tunnel interface.",
+			"tunnel_mode": schema.StringAttribute{
+				MarkdownDescription: "VTI interface IPSec mode",
 				Computed:            true,
 			},
 			"ipv4_address": schema.StringAttribute{
-				MarkdownDescription: "Static IPv4 address.",
+				MarkdownDescription: "IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},
 			"ipv4_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask (width) for IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},
 			"ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "IPv6 address.",
+				MarkdownDescription: "IPv6 address for local VTI tunnel end.",
 				Computed:            true,
 			},
 			"ipv6_prefix": schema.StringAttribute{
-				MarkdownDescription: "Prefix length for ipv6_address.",
+				MarkdownDescription: "Prefix length for IPv6 address for local VTI tunnel end.",
 				Computed:            true,
 			},
-			"borrow_ip_from_interface_id": schema.StringAttribute{
+			"borrow_ip_interface_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the interface to borrow IP address from (IP Unnumbered).",
 				Computed:            true,
 			},
-			"borrow_ip_from_interface_name": schema.StringAttribute{
+			"borrow_ip_interface_name": schema.StringAttribute{
 				MarkdownDescription: "Name of the interface to borrow IP address from (IP Unnumbered).",
 				Computed:            true,
 			},
 			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IP based Monitoring.",
+				MarkdownDescription: "Enable IP based Monitoring.",
 				Computed:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: "Monitoring type.",
+				MarkdownDescription: "Peer IP address version.",
 				Computed:            true,
 			},
-			"ip_based_monitoring_next_hop": schema.StringAttribute{
+			"ip_based_monitoring_peer_ip": schema.StringAttribute{
 				MarkdownDescription: "IP address to monitor.",
 				Computed:            true,
 			},
