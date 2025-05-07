@@ -3,7 +3,8 @@ name: VPN S2S IPSEC Settings
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/ipsecsettings
 res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IPSEC settings.
 put_create: true
-no_delete: true
+put_retrieve_id: true
+put_delete: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_s2s_id
@@ -11,7 +12,7 @@ attributes:
     reference: true
     description: Id of the parent VPN S2S Topology.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: TBD
+    test_value: fmc_vpn_s2s.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'IPSecSetting'.
@@ -19,31 +20,30 @@ attributes:
   # General
   - model_name: cryptoMapType
     type: String
-    description: The type of the crypto map.
+    description: Type of the crypto map.
     enum_values: [STATIC, DYNAMIC]
     example: STATIC
   - model_name: ikeV2Mode
     tf_name: ikev2_mode
     type: String
-    description: The IKEv2 mode for the IPSEC settings.
+    description: IKEv2 mode.
     enum_values: [TUNNEL, TRANSPORT_PREFERRED, TRANSPORT_REQUIRE]
     example: TUNNEL
   - model_name: ikeV1IpsecProposal
     tf_name: ikev1_ipsec_proposals
     type: Set
     description: Set of IKEv1 IPSEC proposals.
+    exclude_example: true
+    exclude_test: true
     attributes:
       - model_name: id
         type: String
         description: Id of the IKEv1 IPSEC proposal
         id: true
-        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: TBD
         mandatory: true
       - model_name: name
         type: String
         description: Name of the IKEv1 IPSEC proposal
-        example: my_ikev1_ipsec_proposal
         mandatory: true
   - model_name: ikeV2IpsecProposal
     tf_name: ikev2_ipsec_proposals
@@ -55,47 +55,48 @@ attributes:
         description: Id of the IKEv2 IPSEC proposal
         id: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: TBD
+        test_value: 'fmc_ikev2_ipsec_proposals.test.items["my_s2s_vpn_ipsec_settings"].id'
         mandatory: true
       - model_name: name
         type: String
         description: Name of the IKEv2 IPSEC proposal
         example: my_ikev2_ipsec_proposal
         mandatory: true
+        test_value: '"my_s2s_vpn_ipsec_settings"'
   - model_name: enableSaStrengthEnforcement
-    tf_name: enable_sa_strength_enforcement
+    tf_name: security_association_strength_enforcement
     type: Bool
-    description: Indicates whether Security Association (SA) strength enforcement is enabled.
+    description: Enable Security Association (SA) strength enforcement.
     example: "false"
   - model_name: enableRRI
-    tf_name: enable_reverse_route_injection
+    tf_name: reverse_route_injection
     type: Bool
-    description: Indicates whether Route Redundancy Interface (RRI) is enabled.
-    example: "false"
+    description: Enable Reverse Route Injection (RRI).
+    example: "true"
   - model_name: enabled
     data_path: [perfectForwardSecrecy]
-    tf_name: enable_perfect_forward_secrecy
+    tf_name: perfect_forward_secrecy
     type: Bool
-    description: Indicates whether IPSEC Perfect Forward Secrecy (PFS) is enabled.
+    description: Enable IPSEC Perfect Forward Secrecy (PFS).
     example: "true"
   - model_name: modulusGroup
     data_path: [perfectForwardSecrecy]
     tf_name: perfect_forward_secrecy_modulus_group
     type: String
     enum_values: ["1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31"]
-    description: The modulus group for IPSEC Perfect Forward Secrecy (PFS).
-    example: "2"
+    description: Modulus group for IPSEC Perfect Forward Secrecy (PFS).
+    example: "14"
   - model_name: lifetimeSeconds
     tf_name: lifetime_duration
     type: Int64
-    description: The lifetime duration for the IPSEC settings in seconds.
+    description: Number of seconds a security association exists before expiring.
     min_int: 120
     max_int: 2147483647
     example: 28800
   - model_name: lifetimeKilobytes
     tf_name: lifetime_size
     type: Int64
-    description: The lifetime size for the IPSEC settings in kilobytes.
+    description: Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.
     min_int: 10
     max_int: 2147483647
     example: 4608000
@@ -103,42 +104,59 @@ attributes:
   - model_name: validateIncomingIcmpErrorMessage
     tf_name: validate_incoming_icmp_error_messages
     type: Bool
-    description: Indicates whether to validate incoming ICMP error messages.
+    description: Enable incoming ICMP error messages validation.
     example: "false"
   - model_name: doNotFragmentPolicy
     type: String
-    description: The policy for handling Do Not Fragment (DNF) packets.
+    description: Policy for handling Do Not Fragment (DNF) packets.
     enum_values: [SET, COPY, CLEAR, NONE]
-    default_value: NONE
     example: NONE
   - model_name: enabled
     data_path: [tfcPackets]
-    tf_name: enable_tfc_packets
+    tf_name: tfc
     type: Bool
-    description: Indicates whether Traffic Flow Confidentiality (TFC) packets are enabled.
-    example: "false"
+    description: Enable Traffic Flow Confidentiality (TFC) packets.
+    example: "true"
   - model_name: burstBytes
     data_path: [tfcPackets]
     tf_name: tfc_burst_bytes
     type: Int64
-    description: The burst size in bytes for TFC packets. Set 0 for `auto`
+    description: Burst size in bytes for TFC packets. Set 0 for `auto` or value in range 1-16.
     min_int: 0
     max_int: 16
-    exclude_example: true
+    example: 0
   - model_name: payloadBytes
     data_path: [tfcPackets]
     tf_name: tfc_payload_bytes
     type: Int64
-    description: The payload size in bytes for TFC packets. Set 0 for `auto`, or set to 64-1024.
+    description: Payload size in bytes for TFC packets. Set 0 for `auto` or value in range 64-1024.
     min_int: 0
     max_int: 1024
-    exclude_example: true
+    example: 0
   - model_name: timeoutSeconds
     data_path: [tfcPackets]
     tf_name: tfc_timeout
     type: Int64
-    description: The timeout duration in seconds for TFC packets. Set 0 for `auto`, or set to 10-60.
-    min_int: 1
+    description: Timeout duration in seconds for TFC packets. Set 0 for `auto` or value in range 10-60.
+    min_int: 0
     max_int: 60
-    exclude_example: true
-    
+    example: 0
+
+test_prerequisites: |-
+  resource "fmc_vpn_s2s" "test" {
+    name             = "my_s2s_vpn_ipsec_settings"
+    route_based      = false
+    network_topology = "POINT_TO_POINT"
+    ikev1            = true
+    ikev2            = true
+  }
+
+  resource "fmc_ikev2_ipsec_proposals" "test" {
+    items = {
+      my_s2s_vpn_ipsec_settings = {
+        description     = "IKEv2 IPsec Proposal 1"
+        esp_encryptions = ["AES-256"]
+        esp_hashes      = ["SHA-256"]
+      }
+    }
+  }

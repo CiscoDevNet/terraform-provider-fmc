@@ -35,26 +35,26 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type VPNS2SIPSECSettings struct {
-	Id                                types.String                             `tfsdk:"id"`
-	Domain                            types.String                             `tfsdk:"domain"`
-	VpnS2sId                          types.String                             `tfsdk:"vpn_s2s_id"`
-	Type                              types.String                             `tfsdk:"type"`
-	CryptoMapType                     types.String                             `tfsdk:"crypto_map_type"`
-	Ikev2Mode                         types.String                             `tfsdk:"ikev2_mode"`
-	Ikev1IpsecProposals               []VPNS2SIPSECSettingsIkev1IpsecProposals `tfsdk:"ikev1_ipsec_proposals"`
-	Ikev2IpsecProposals               []VPNS2SIPSECSettingsIkev2IpsecProposals `tfsdk:"ikev2_ipsec_proposals"`
-	EnableSaStrengthEnforcement       types.Bool                               `tfsdk:"enable_sa_strength_enforcement"`
-	EnableReverseRouteInjection       types.Bool                               `tfsdk:"enable_reverse_route_injection"`
-	EnablePerfectForwardSecrecy       types.Bool                               `tfsdk:"enable_perfect_forward_secrecy"`
-	PerfectForwardSecrecyModulusGroup types.String                             `tfsdk:"perfect_forward_secrecy_modulus_group"`
-	LifetimeDuration                  types.Int64                              `tfsdk:"lifetime_duration"`
-	LifetimeSize                      types.Int64                              `tfsdk:"lifetime_size"`
-	ValidateIncomingIcmpErrorMessages types.Bool                               `tfsdk:"validate_incoming_icmp_error_messages"`
-	DoNotFragmentPolicy               types.String                             `tfsdk:"do_not_fragment_policy"`
-	EnableTfcPackets                  types.Bool                               `tfsdk:"enable_tfc_packets"`
-	TfcBurstBytes                     types.Int64                              `tfsdk:"tfc_burst_bytes"`
-	TfcPayloadBytes                   types.Int64                              `tfsdk:"tfc_payload_bytes"`
-	TfcTimeout                        types.Int64                              `tfsdk:"tfc_timeout"`
+	Id                                     types.String                             `tfsdk:"id"`
+	Domain                                 types.String                             `tfsdk:"domain"`
+	VpnS2sId                               types.String                             `tfsdk:"vpn_s2s_id"`
+	Type                                   types.String                             `tfsdk:"type"`
+	CryptoMapType                          types.String                             `tfsdk:"crypto_map_type"`
+	Ikev2Mode                              types.String                             `tfsdk:"ikev2_mode"`
+	Ikev1IpsecProposals                    []VPNS2SIPSECSettingsIkev1IpsecProposals `tfsdk:"ikev1_ipsec_proposals"`
+	Ikev2IpsecProposals                    []VPNS2SIPSECSettingsIkev2IpsecProposals `tfsdk:"ikev2_ipsec_proposals"`
+	SecurityAssociationStrengthEnforcement types.Bool                               `tfsdk:"security_association_strength_enforcement"`
+	ReverseRouteInjection                  types.Bool                               `tfsdk:"reverse_route_injection"`
+	PerfectForwardSecrecy                  types.Bool                               `tfsdk:"perfect_forward_secrecy"`
+	PerfectForwardSecrecyModulusGroup      types.String                             `tfsdk:"perfect_forward_secrecy_modulus_group"`
+	LifetimeDuration                       types.Int64                              `tfsdk:"lifetime_duration"`
+	LifetimeSize                           types.Int64                              `tfsdk:"lifetime_size"`
+	ValidateIncomingIcmpErrorMessages      types.Bool                               `tfsdk:"validate_incoming_icmp_error_messages"`
+	DoNotFragmentPolicy                    types.String                             `tfsdk:"do_not_fragment_policy"`
+	Tfc                                    types.Bool                               `tfsdk:"tfc"`
+	TfcBurstBytes                          types.Int64                              `tfsdk:"tfc_burst_bytes"`
+	TfcPayloadBytes                        types.Int64                              `tfsdk:"tfc_payload_bytes"`
+	TfcTimeout                             types.Int64                              `tfsdk:"tfc_timeout"`
 }
 
 type VPNS2SIPSECSettingsIkev1IpsecProposals struct {
@@ -120,14 +120,14 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 			body, _ = sjson.SetRaw(body, "ikeV2IpsecProposal.-1", itemBody)
 		}
 	}
-	if !data.EnableSaStrengthEnforcement.IsNull() {
-		body, _ = sjson.Set(body, "enableSaStrengthEnforcement", data.EnableSaStrengthEnforcement.ValueBool())
+	if !data.SecurityAssociationStrengthEnforcement.IsNull() {
+		body, _ = sjson.Set(body, "enableSaStrengthEnforcement", data.SecurityAssociationStrengthEnforcement.ValueBool())
 	}
-	if !data.EnableReverseRouteInjection.IsNull() {
-		body, _ = sjson.Set(body, "enableRRI", data.EnableReverseRouteInjection.ValueBool())
+	if !data.ReverseRouteInjection.IsNull() {
+		body, _ = sjson.Set(body, "enableRRI", data.ReverseRouteInjection.ValueBool())
 	}
-	if !data.EnablePerfectForwardSecrecy.IsNull() {
-		body, _ = sjson.Set(body, "perfectForwardSecrecy.enabled", data.EnablePerfectForwardSecrecy.ValueBool())
+	if !data.PerfectForwardSecrecy.IsNull() {
+		body, _ = sjson.Set(body, "perfectForwardSecrecy.enabled", data.PerfectForwardSecrecy.ValueBool())
 	}
 	if !data.PerfectForwardSecrecyModulusGroup.IsNull() {
 		body, _ = sjson.Set(body, "perfectForwardSecrecy.modulusGroup", data.PerfectForwardSecrecyModulusGroup.ValueString())
@@ -144,8 +144,8 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 	if !data.DoNotFragmentPolicy.IsNull() {
 		body, _ = sjson.Set(body, "doNotFragmentPolicy", data.DoNotFragmentPolicy.ValueString())
 	}
-	if !data.EnableTfcPackets.IsNull() {
-		body, _ = sjson.Set(body, "tfcPackets.enabled", data.EnableTfcPackets.ValueBool())
+	if !data.Tfc.IsNull() {
+		body, _ = sjson.Set(body, "tfcPackets.enabled", data.Tfc.ValueBool())
 	}
 	if !data.TfcBurstBytes.IsNull() {
 		body, _ = sjson.Set(body, "tfcPackets.burstBytes", data.TfcBurstBytes.ValueInt64())
@@ -218,19 +218,19 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	if value := res.Get("enableSaStrengthEnforcement"); value.Exists() {
-		data.EnableSaStrengthEnforcement = types.BoolValue(value.Bool())
+		data.SecurityAssociationStrengthEnforcement = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSaStrengthEnforcement = types.BoolNull()
+		data.SecurityAssociationStrengthEnforcement = types.BoolNull()
 	}
 	if value := res.Get("enableRRI"); value.Exists() {
-		data.EnableReverseRouteInjection = types.BoolValue(value.Bool())
+		data.ReverseRouteInjection = types.BoolValue(value.Bool())
 	} else {
-		data.EnableReverseRouteInjection = types.BoolNull()
+		data.ReverseRouteInjection = types.BoolNull()
 	}
 	if value := res.Get("perfectForwardSecrecy.enabled"); value.Exists() {
-		data.EnablePerfectForwardSecrecy = types.BoolValue(value.Bool())
+		data.PerfectForwardSecrecy = types.BoolValue(value.Bool())
 	} else {
-		data.EnablePerfectForwardSecrecy = types.BoolNull()
+		data.PerfectForwardSecrecy = types.BoolNull()
 	}
 	if value := res.Get("perfectForwardSecrecy.modulusGroup"); value.Exists() {
 		data.PerfectForwardSecrecyModulusGroup = types.StringValue(value.String())
@@ -255,12 +255,12 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 	if value := res.Get("doNotFragmentPolicy"); value.Exists() {
 		data.DoNotFragmentPolicy = types.StringValue(value.String())
 	} else {
-		data.DoNotFragmentPolicy = types.StringValue("NONE")
+		data.DoNotFragmentPolicy = types.StringNull()
 	}
 	if value := res.Get("tfcPackets.enabled"); value.Exists() {
-		data.EnableTfcPackets = types.BoolValue(value.Bool())
+		data.Tfc = types.BoolValue(value.Bool())
 	} else {
-		data.EnableTfcPackets = types.BoolNull()
+		data.Tfc = types.BoolNull()
 	}
 	if value := res.Get("tfcPackets.burstBytes"); value.Exists() {
 		data.TfcBurstBytes = types.Int64Value(value.Int())
@@ -399,20 +399,20 @@ func (data *VPNS2SIPSECSettings) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		(*parent).Ikev2IpsecProposals[i] = data
 	}
-	if value := res.Get("enableSaStrengthEnforcement"); value.Exists() && !data.EnableSaStrengthEnforcement.IsNull() {
-		data.EnableSaStrengthEnforcement = types.BoolValue(value.Bool())
+	if value := res.Get("enableSaStrengthEnforcement"); value.Exists() && !data.SecurityAssociationStrengthEnforcement.IsNull() {
+		data.SecurityAssociationStrengthEnforcement = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSaStrengthEnforcement = types.BoolNull()
+		data.SecurityAssociationStrengthEnforcement = types.BoolNull()
 	}
-	if value := res.Get("enableRRI"); value.Exists() && !data.EnableReverseRouteInjection.IsNull() {
-		data.EnableReverseRouteInjection = types.BoolValue(value.Bool())
+	if value := res.Get("enableRRI"); value.Exists() && !data.ReverseRouteInjection.IsNull() {
+		data.ReverseRouteInjection = types.BoolValue(value.Bool())
 	} else {
-		data.EnableReverseRouteInjection = types.BoolNull()
+		data.ReverseRouteInjection = types.BoolNull()
 	}
-	if value := res.Get("perfectForwardSecrecy.enabled"); value.Exists() && !data.EnablePerfectForwardSecrecy.IsNull() {
-		data.EnablePerfectForwardSecrecy = types.BoolValue(value.Bool())
+	if value := res.Get("perfectForwardSecrecy.enabled"); value.Exists() && !data.PerfectForwardSecrecy.IsNull() {
+		data.PerfectForwardSecrecy = types.BoolValue(value.Bool())
 	} else {
-		data.EnablePerfectForwardSecrecy = types.BoolNull()
+		data.PerfectForwardSecrecy = types.BoolNull()
 	}
 	if value := res.Get("perfectForwardSecrecy.modulusGroup"); value.Exists() && !data.PerfectForwardSecrecyModulusGroup.IsNull() {
 		data.PerfectForwardSecrecyModulusGroup = types.StringValue(value.String())
@@ -436,13 +436,13 @@ func (data *VPNS2SIPSECSettings) fromBodyPartial(ctx context.Context, res gjson.
 	}
 	if value := res.Get("doNotFragmentPolicy"); value.Exists() && !data.DoNotFragmentPolicy.IsNull() {
 		data.DoNotFragmentPolicy = types.StringValue(value.String())
-	} else if data.DoNotFragmentPolicy.ValueString() != "NONE" {
+	} else {
 		data.DoNotFragmentPolicy = types.StringNull()
 	}
-	if value := res.Get("tfcPackets.enabled"); value.Exists() && !data.EnableTfcPackets.IsNull() {
-		data.EnableTfcPackets = types.BoolValue(value.Bool())
+	if value := res.Get("tfcPackets.enabled"); value.Exists() && !data.Tfc.IsNull() {
+		data.Tfc = types.BoolValue(value.Bool())
 	} else {
-		data.EnableTfcPackets = types.BoolNull()
+		data.Tfc = types.BoolNull()
 	}
 	if value := res.Get("tfcPackets.burstBytes"); value.Exists() && !data.TfcBurstBytes.IsNull() {
 		data.TfcBurstBytes = types.Int64Value(value.Int())
@@ -494,3 +494,16 @@ func (data *VPNS2SIPSECSettings) fromBodyUnknowns(ctx context.Context, res gjson
 // Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
 
 // End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
+func (data VPNS2SIPSECSettings) toBodyPutDelete(ctx context.Context, state VPNS2SIPSECSettings) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	return body
+}
+
+// End of section. //template:end toBodyPutDelete

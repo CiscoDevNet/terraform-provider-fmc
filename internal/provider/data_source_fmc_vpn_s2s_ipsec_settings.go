@@ -75,11 +75,11 @@ func (d *VPNS2SIPSECSettingsDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"crypto_map_type": schema.StringAttribute{
-				MarkdownDescription: "The type of the crypto map.",
+				MarkdownDescription: "Type of the crypto map.",
 				Computed:            true,
 			},
 			"ikev2_mode": schema.StringAttribute{
-				MarkdownDescription: "The IKEv2 mode for the IPSEC settings.",
+				MarkdownDescription: "IKEv2 mode.",
 				Computed:            true,
 			},
 			"ikev1_ipsec_proposals": schema.SetNestedAttribute{
@@ -114,52 +114,52 @@ func (d *VPNS2SIPSECSettingsDataSource) Schema(ctx context.Context, req datasour
 					},
 				},
 			},
-			"enable_sa_strength_enforcement": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether Security Association (SA) strength enforcement is enabled.",
+			"security_association_strength_enforcement": schema.BoolAttribute{
+				MarkdownDescription: "Enable Security Association (SA) strength enforcement.",
 				Computed:            true,
 			},
-			"enable_reverse_route_injection": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether Route Redundancy Interface (RRI) is enabled.",
+			"reverse_route_injection": schema.BoolAttribute{
+				MarkdownDescription: "Enable Reverse Route Injection (RRI).",
 				Computed:            true,
 			},
-			"enable_perfect_forward_secrecy": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether IPSEC Perfect Forward Secrecy (PFS) is enabled.",
+			"perfect_forward_secrecy": schema.BoolAttribute{
+				MarkdownDescription: "Enable IPSEC Perfect Forward Secrecy (PFS).",
 				Computed:            true,
 			},
 			"perfect_forward_secrecy_modulus_group": schema.StringAttribute{
-				MarkdownDescription: "The modulus group for IPSEC Perfect Forward Secrecy (PFS).",
+				MarkdownDescription: "Modulus group for IPSEC Perfect Forward Secrecy (PFS).",
 				Computed:            true,
 			},
 			"lifetime_duration": schema.Int64Attribute{
-				MarkdownDescription: "The lifetime duration for the IPSEC settings in seconds.",
+				MarkdownDescription: "Number of seconds a security association exists before expiring.",
 				Computed:            true,
 			},
 			"lifetime_size": schema.Int64Attribute{
-				MarkdownDescription: "The lifetime size for the IPSEC settings in kilobytes.",
+				MarkdownDescription: "Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.",
 				Computed:            true,
 			},
 			"validate_incoming_icmp_error_messages": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to validate incoming ICMP error messages.",
+				MarkdownDescription: "Enable incoming ICMP error messages validation.",
 				Computed:            true,
 			},
 			"do_not_fragment_policy": schema.StringAttribute{
-				MarkdownDescription: "The policy for handling Do Not Fragment (DNF) packets.",
+				MarkdownDescription: "Policy for handling Do Not Fragment (DNF) packets.",
 				Computed:            true,
 			},
-			"enable_tfc_packets": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether Traffic Flow Confidentiality (TFC) packets are enabled.",
+			"tfc": schema.BoolAttribute{
+				MarkdownDescription: "Enable Traffic Flow Confidentiality (TFC) packets.",
 				Computed:            true,
 			},
 			"tfc_burst_bytes": schema.Int64Attribute{
-				MarkdownDescription: "The burst size in bytes for TFC packets. Set 0 for `auto`",
+				MarkdownDescription: "Burst size in bytes for TFC packets. Set 0 for `auto` or value in range 1-16.",
 				Computed:            true,
 			},
 			"tfc_payload_bytes": schema.Int64Attribute{
-				MarkdownDescription: "The payload size in bytes for TFC packets. Set 0 for `auto`, or set to 64-1024.",
+				MarkdownDescription: "Payload size in bytes for TFC packets. Set 0 for `auto` or value in range 64-1024.",
 				Computed:            true,
 			},
 			"tfc_timeout": schema.Int64Attribute{
-				MarkdownDescription: "The timeout duration in seconds for TFC packets. Set 0 for `auto`, or set to 10-60.",
+				MarkdownDescription: "Timeout duration in seconds for TFC packets. Set 0 for `auto` or value in range 10-60.",
 				Computed:            true,
 			},
 		},

@@ -539,6 +539,31 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	{{- if and .PutCreate (not .IsBulk)}}
 
+	{{- if .PutRetrieveId}}
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+		return
+	}
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
+		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
+	} else {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
+	}
+
+	{{- else}}
 	{{- $dataSourceAttribute := getAttributeByTfName .Attributes "name"}}
 	{{- if hasDataSourceQuery .Attributes}}
 	{{- $dataSourceAttribute = getDataSourceQueryAttribute . }}
@@ -576,6 +601,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 			return
 		}
 	}
+	{{- end}}
 	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
@@ -917,12 +943,20 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 
 	{{- if not .NoDelete}}
 	{{- if not .IsBulk}}
+	{{- if .PutDelete}}
+	body := state.toBodyPutDelete(ctx, {{camelCase .Name}}{})
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+	{{- else}}
 	res, err := r.client.Delete(state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
-
+	{{- end}}
 	{{- end}}
 	{{- if .IsBulk}}
 

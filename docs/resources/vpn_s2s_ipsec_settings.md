@@ -17,27 +17,24 @@ resource "fmc_vpn_s2s_ipsec_settings" "example" {
   vpn_s2s_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   crypto_map_type = "STATIC"
   ikev2_mode      = "TUNNEL"
-  ikev1_ipsec_proposals = [
-    {
-      id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      name = "my_ikev1_ipsec_proposal"
-    }
-  ]
   ikev2_ipsec_proposals = [
     {
       id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       name = "my_ikev2_ipsec_proposal"
     }
   ]
-  enable_sa_strength_enforcement        = false
-  enable_reverse_route_injection        = false
-  enable_perfect_forward_secrecy        = true
-  perfect_forward_secrecy_modulus_group = "2"
-  lifetime_duration                     = 28800
-  lifetime_size                         = 4608000
-  validate_incoming_icmp_error_messages = false
-  do_not_fragment_policy                = "NONE"
-  enable_tfc_packets                    = false
+  security_association_strength_enforcement = false
+  reverse_route_injection                   = true
+  perfect_forward_secrecy                   = true
+  perfect_forward_secrecy_modulus_group     = "14"
+  lifetime_duration                         = 28800
+  lifetime_size                             = 4608000
+  validate_incoming_icmp_error_messages     = false
+  do_not_fragment_policy                    = "NONE"
+  tfc                                       = true
+  tfc_burst_bytes                           = 0
+  tfc_payload_bytes                         = 0
+  tfc_timeout                               = 0
 }
 ```
 
@@ -50,33 +47,32 @@ resource "fmc_vpn_s2s_ipsec_settings" "example" {
 
 ### Optional
 
-- `crypto_map_type` (String) The type of the crypto map.
+- `crypto_map_type` (String) Type of the crypto map.
   - Choices: `STATIC`, `DYNAMIC`
-- `do_not_fragment_policy` (String) The policy for handling Do Not Fragment (DNF) packets.
+- `do_not_fragment_policy` (String) Policy for handling Do Not Fragment (DNF) packets.
   - Choices: `SET`, `COPY`, `CLEAR`, `NONE`
-  - Default value: `NONE`
 - `domain` (String) Name of the FMC domain
-- `enable_perfect_forward_secrecy` (Boolean) Indicates whether IPSEC Perfect Forward Secrecy (PFS) is enabled.
-- `enable_reverse_route_injection` (Boolean) Indicates whether Route Redundancy Interface (RRI) is enabled.
-- `enable_sa_strength_enforcement` (Boolean) Indicates whether Security Association (SA) strength enforcement is enabled.
-- `enable_tfc_packets` (Boolean) Indicates whether Traffic Flow Confidentiality (TFC) packets are enabled.
 - `ikev1_ipsec_proposals` (Attributes Set) Set of IKEv1 IPSEC proposals. (see [below for nested schema](#nestedatt--ikev1_ipsec_proposals))
 - `ikev2_ipsec_proposals` (Attributes Set) Set of IKEv2 IPSEC proposals. (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
-- `ikev2_mode` (String) The IKEv2 mode for the IPSEC settings.
+- `ikev2_mode` (String) IKEv2 mode.
   - Choices: `TUNNEL`, `TRANSPORT_PREFERRED`, `TRANSPORT_REQUIRE`
-- `lifetime_duration` (Number) The lifetime duration for the IPSEC settings in seconds.
+- `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
   - Range: `120`-`2147483647`
-- `lifetime_size` (Number) The lifetime size for the IPSEC settings in kilobytes.
+- `lifetime_size` (Number) Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.
   - Range: `10`-`2147483647`
-- `perfect_forward_secrecy_modulus_group` (String) The modulus group for IPSEC Perfect Forward Secrecy (PFS).
+- `perfect_forward_secrecy` (Boolean) Enable IPSEC Perfect Forward Secrecy (PFS).
+- `perfect_forward_secrecy_modulus_group` (String) Modulus group for IPSEC Perfect Forward Secrecy (PFS).
   - Choices: `1`, `2`, `5`, `14`, `15`, `16`, `19`, `20`, `21`, `24`, `31`
-- `tfc_burst_bytes` (Number) The burst size in bytes for TFC packets. Set 0 for `auto`
+- `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
+- `security_association_strength_enforcement` (Boolean) Enable Security Association (SA) strength enforcement.
+- `tfc` (Boolean) Enable Traffic Flow Confidentiality (TFC) packets.
+- `tfc_burst_bytes` (Number) Burst size in bytes for TFC packets. Set 0 for `auto` or value in range 1-16.
   - Range: `0`-`16`
-- `tfc_payload_bytes` (Number) The payload size in bytes for TFC packets. Set 0 for `auto`, or set to 64-1024.
+- `tfc_payload_bytes` (Number) Payload size in bytes for TFC packets. Set 0 for `auto` or value in range 64-1024.
   - Range: `0`-`1024`
-- `tfc_timeout` (Number) The timeout duration in seconds for TFC packets. Set 0 for `auto`, or set to 10-60.
-  - Range: `1`-`60`
-- `validate_incoming_icmp_error_messages` (Boolean) Indicates whether to validate incoming ICMP error messages.
+- `tfc_timeout` (Number) Timeout duration in seconds for TFC packets. Set 0 for `auto` or value in range 10-60.
+  - Range: `0`-`60`
+- `validate_incoming_icmp_error_messages` (Boolean) Enable incoming ICMP error messages validation.
 
 ### Read-Only
 

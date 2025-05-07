@@ -31,7 +31,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -96,14 +95,14 @@ func (r *VPNS2SIPSECSettingsResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"crypto_map_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The type of the crypto map.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the crypto map.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("STATIC", "DYNAMIC"),
 				},
 			},
 			"ikev2_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The IKEv2 mode for the IPSEC settings.").AddStringEnumDescription("TUNNEL", "TRANSPORT_PREFERRED", "TRANSPORT_REQUIRE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IKEv2 mode.").AddStringEnumDescription("TUNNEL", "TRANSPORT_PREFERRED", "TRANSPORT_REQUIRE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("TUNNEL", "TRANSPORT_PREFERRED", "TRANSPORT_REQUIRE"),
@@ -141,75 +140,73 @@ func (r *VPNS2SIPSECSettingsResource) Schema(ctx context.Context, req resource.S
 					},
 				},
 			},
-			"enable_sa_strength_enforcement": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether Security Association (SA) strength enforcement is enabled.").String,
+			"security_association_strength_enforcement": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Security Association (SA) strength enforcement.").String,
 				Optional:            true,
 			},
-			"enable_reverse_route_injection": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether Route Redundancy Interface (RRI) is enabled.").String,
+			"reverse_route_injection": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Reverse Route Injection (RRI).").String,
 				Optional:            true,
 			},
-			"enable_perfect_forward_secrecy": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether IPSEC Perfect Forward Secrecy (PFS) is enabled.").String,
+			"perfect_forward_secrecy": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPSEC Perfect Forward Secrecy (PFS).").String,
 				Optional:            true,
 			},
 			"perfect_forward_secrecy_modulus_group": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The modulus group for IPSEC Perfect Forward Secrecy (PFS).").AddStringEnumDescription("1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Modulus group for IPSEC Perfect Forward Secrecy (PFS).").AddStringEnumDescription("1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31"),
 				},
 			},
 			"lifetime_duration": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The lifetime duration for the IPSEC settings in seconds.").AddIntegerRangeDescription(120, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Number of seconds a security association exists before expiring.").AddIntegerRangeDescription(120, 2147483647).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(120, 2147483647),
 				},
 			},
 			"lifetime_size": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The lifetime size for the IPSEC settings in kilobytes.").AddIntegerRangeDescription(10, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.").AddIntegerRangeDescription(10, 2147483647).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(10, 2147483647),
 				},
 			},
 			"validate_incoming_icmp_error_messages": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to validate incoming ICMP error messages.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable incoming ICMP error messages validation.").String,
 				Optional:            true,
 			},
 			"do_not_fragment_policy": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The policy for handling Do Not Fragment (DNF) packets.").AddStringEnumDescription("SET", "COPY", "CLEAR", "NONE").AddDefaultValueDescription("NONE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Policy for handling Do Not Fragment (DNF) packets.").AddStringEnumDescription("SET", "COPY", "CLEAR", "NONE").String,
 				Optional:            true,
-				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SET", "COPY", "CLEAR", "NONE"),
 				},
-				Default: stringdefault.StaticString("NONE"),
 			},
-			"enable_tfc_packets": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether Traffic Flow Confidentiality (TFC) packets are enabled.").String,
+			"tfc": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Traffic Flow Confidentiality (TFC) packets.").String,
 				Optional:            true,
 			},
 			"tfc_burst_bytes": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The burst size in bytes for TFC packets. Set 0 for `auto`").AddIntegerRangeDescription(0, 16).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Burst size in bytes for TFC packets. Set 0 for `auto` or value in range 1-16.").AddIntegerRangeDescription(0, 16).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 16),
 				},
 			},
 			"tfc_payload_bytes": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The payload size in bytes for TFC packets. Set 0 for `auto`, or set to 64-1024.").AddIntegerRangeDescription(0, 1024).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Payload size in bytes for TFC packets. Set 0 for `auto` or value in range 64-1024.").AddIntegerRangeDescription(0, 1024).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 1024),
 				},
 			},
 			"tfc_timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The timeout duration in seconds for TFC packets. Set 0 for `auto`, or set to 10-60.").AddIntegerRangeDescription(1, 60).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout duration in seconds for TFC packets. Set 0 for `auto` or value in range 10-60.").AddIntegerRangeDescription(0, 60).String,
 				Optional:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(1, 60),
+					int64validator.Between(0, 60),
 				},
 			},
 		},
@@ -226,6 +223,8 @@ func (r *VPNS2SIPSECSettingsResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *VPNS2SIPSECSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan VPNS2SIPSECSettings
 
@@ -240,25 +239,34 @@ func (r *VPNS2SIPSECSettingsResource) Create(ctx context.Context, req resource.C
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-
-	// Get ID
-	res, err := r.client.Get(plan.getPath(), reqMods...)
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve ike settings, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
-	if val := res.Get("items.0.id"); val.Exists() {
-		plan.Id = types.StringValue(val.String())
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
 		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
 	} else {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to extract ike settings from payload: %s", res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
 	body := plan.toBody(ctx, VPNS2SIPSECSettings{})
-	res, err = r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -273,6 +281,8 @@ func (r *VPNS2SIPSECSettingsResource) Create(ctx context.Context, req resource.C
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
+
+// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -384,6 +394,12 @@ func (r *VPNS2SIPSECSettingsResource) Delete(ctx context.Context, req resource.D
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
+	body := state.toBodyPutDelete(ctx, VPNS2SIPSECSettings{})
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 

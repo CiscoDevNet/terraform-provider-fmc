@@ -34,29 +34,27 @@ func TestAccFmcVPNS2SIPSECSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_s2s_ipsec_settings.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "crypto_map_type", "STATIC"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "ikev2_mode", "TUNNEL"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "ikev1_ipsec_proposals.0.name", "my_ikev1_ipsec_proposal"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "ikev2_ipsec_proposals.0.name", "my_ikev2_ipsec_proposal"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "enable_sa_strength_enforcement", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "enable_reverse_route_injection", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "enable_perfect_forward_secrecy", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "perfect_forward_secrecy_modulus_group", "2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "security_association_strength_enforcement", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "reverse_route_injection", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "perfect_forward_secrecy", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "perfect_forward_secrecy_modulus_group", "14"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "lifetime_duration", "28800"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "lifetime_size", "4608000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "validate_incoming_icmp_error_messages", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "do_not_fragment_policy", "NONE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "enable_tfc_packets", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_burst_bytes", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_payload_bytes", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_timeout", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_burst_bytes", "0"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_payload_bytes", "0"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_ipsec_settings.test", "tfc_timeout", "0"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcVPNS2SIPSECSettingsConfig_minimum(),
+			Config: testAccFmcVPNS2SIPSECSettingsPrerequisitesConfig + testAccFmcVPNS2SIPSECSettingsConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcVPNS2SIPSECSettingsConfig_all(),
+		Config: testAccFmcVPNS2SIPSECSettingsPrerequisitesConfig + testAccFmcVPNS2SIPSECSettingsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -71,13 +69,34 @@ func TestAccFmcVPNS2SIPSECSettings(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcVPNS2SIPSECSettingsPrerequisitesConfig = `
+resource "fmc_vpn_s2s" "test" {
+  name             = "my_s2s_vpn_ipsec_settings"
+  route_based      = false
+  network_topology = "POINT_TO_POINT"
+  ikev1            = true
+  ikev2            = true
+}
+
+resource "fmc_ikev2_ipsec_proposals" "test" {
+  items = {
+    my_s2s_vpn_ipsec_settings = {
+      description     = "IKEv2 IPsec Proposal 1"
+      esp_encryptions = ["AES-256"]
+      esp_hashes      = ["SHA-256"]
+    }
+  }
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
 func testAccFmcVPNS2SIPSECSettingsConfig_minimum() string {
 	config := `resource "fmc_vpn_s2s_ipsec_settings" "test" {` + "\n"
-	config += `	vpn_s2s_id = TBD` + "\n"
+	config += `	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -88,29 +107,25 @@ func testAccFmcVPNS2SIPSECSettingsConfig_minimum() string {
 
 func testAccFmcVPNS2SIPSECSettingsConfig_all() string {
 	config := `resource "fmc_vpn_s2s_ipsec_settings" "test" {` + "\n"
-	config += `	vpn_s2s_id = TBD` + "\n"
+	config += `	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n"
 	config += `	crypto_map_type = "STATIC"` + "\n"
 	config += `	ikev2_mode = "TUNNEL"` + "\n"
-	config += `	ikev1_ipsec_proposals = [{` + "\n"
-	config += `		id = TBD` + "\n"
-	config += `		name = "my_ikev1_ipsec_proposal"` + "\n"
-	config += `	}]` + "\n"
 	config += `	ikev2_ipsec_proposals = [{` + "\n"
-	config += `		id = TBD` + "\n"
-	config += `		name = "my_ikev2_ipsec_proposal"` + "\n"
+	config += `		id = fmc_ikev2_ipsec_proposals.test.items["my_s2s_vpn_ipsec_settings"].id` + "\n"
+	config += `		name = "my_s2s_vpn_ipsec_settings"` + "\n"
 	config += `	}]` + "\n"
-	config += `	enable_sa_strength_enforcement = false` + "\n"
-	config += `	enable_reverse_route_injection = false` + "\n"
-	config += `	enable_perfect_forward_secrecy = true` + "\n"
-	config += `	perfect_forward_secrecy_modulus_group = "2"` + "\n"
+	config += `	security_association_strength_enforcement = false` + "\n"
+	config += `	reverse_route_injection = true` + "\n"
+	config += `	perfect_forward_secrecy = true` + "\n"
+	config += `	perfect_forward_secrecy_modulus_group = "14"` + "\n"
 	config += `	lifetime_duration = 28800` + "\n"
 	config += `	lifetime_size = 4608000` + "\n"
 	config += `	validate_incoming_icmp_error_messages = false` + "\n"
 	config += `	do_not_fragment_policy = "NONE"` + "\n"
-	config += `	enable_tfc_packets = false` + "\n"
-	config += `	tfc_burst_bytes = ` + "\n"
-	config += `	tfc_payload_bytes = ` + "\n"
-	config += `	tfc_timeout = ` + "\n"
+	config += `	tfc = true` + "\n"
+	config += `	tfc_burst_bytes = 0` + "\n"
+	config += `	tfc_payload_bytes = 0` + "\n"
+	config += `	tfc_timeout = 0` + "\n"
 	config += `}` + "\n"
 	return config
 }
