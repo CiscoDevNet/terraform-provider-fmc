@@ -5,14 +5,14 @@ subcategory: "Devices"
 description: |-
   This device manages Device Virtual Tunnel Interface (VTI) configuration.
   The following applies:
-  Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.
+  Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.
 ---
 
 # fmc_device_vti_interface (Resource)
 
 This device manages Device Virtual Tunnel Interface (VTI) configuration.
  The following applies:
- - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.
+ - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.
  - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.
 
 ## Example Usage
@@ -66,7 +66,7 @@ resource "fmc_device_vti_interface" "example" {
 - `http_based_application_monitoring` (Boolean) Enable HTTP based Application Monitoring.
 - `ip_based_monitoring` (Boolean) Enable IP based Monitoring.
 - `ip_based_monitoring_peer_ip` (String) IP address to monitor.
-- `ip_based_monitoring_type` (String) Set monitoring to be based on IPv4 or IPv6.
+- `ip_based_monitoring_type` (String) Peer IP address version.
   - Choices: `PEER_IPV4`, `PEER_IPV6`
 - `ipv4_address` (String) IPv4 address for local VTI tunnel end.
 - `ipv4_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
@@ -75,7 +75,7 @@ resource "fmc_device_vti_interface" "example" {
 - `priority` (Number) Priority to load balance the traffic across multiple VTIs.
   - Range: `0`-`65535`
 - `security_zone_id` (String) Id of the assigned security zone.
-- `tunnel_source_interface_ipv6_address` (String) IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.
+- `tunnel_source_interface_ipv6_address` (String) Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
 
 ### Read-Only
 

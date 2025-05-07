@@ -121,7 +121,7 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.",
+				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.",
 				Computed:            true,
 			},
 			"tunnel_mode": schema.StringAttribute{
@@ -157,7 +157,7 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: "Set monitoring to be based on IPv4 or IPv6.",
+				MarkdownDescription: "Peer IP address version.",
 				Computed:            true,
 			},
 			"ip_based_monitoring_peer_ip": schema.StringAttribute{

@@ -65,7 +65,7 @@ func (r *DeviceVTIInterfaceResource) Metadata(ctx context.Context, req resource.
 func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -157,7 +157,7 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Required:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.").String,
 				Optional:            true,
 			},
 			"tunnel_mode": schema.StringAttribute{
@@ -196,7 +196,7 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set monitoring to be based on IPv4 or IPv6.").AddStringEnumDescription("PEER_IPV4", "PEER_IPV6").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Peer IP address version.").AddStringEnumDescription("PEER_IPV4", "PEER_IPV6").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("PEER_IPV4", "PEER_IPV6"),

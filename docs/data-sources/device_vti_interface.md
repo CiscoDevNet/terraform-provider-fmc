@@ -41,7 +41,7 @@ data "fmc_device_vti_interface" "example" {
 - `http_based_application_monitoring` (Boolean) Enable HTTP based Application Monitoring.
 - `ip_based_monitoring` (Boolean) Enable IP based Monitoring.
 - `ip_based_monitoring_peer_ip` (String) IP address to monitor.
-- `ip_based_monitoring_type` (String) Set monitoring to be based on IPv4 or IPv6.
+- `ip_based_monitoring_type` (String) Peer IP address version.
 - `ipv4_address` (String) IPv4 address for local VTI tunnel end.
 - `ipv4_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
 - `ipv6_address` (String) IPv6 address for local VTI tunnel end.
@@ -52,7 +52,7 @@ data "fmc_device_vti_interface" "example" {
 - `tunnel_id` (Number) Tunnel ID (for Static) or Template ID (for Dynamic).
 - `tunnel_mode` (String) VTI interface IPSec mode
 - `tunnel_source_interface_id` (String) Id of the interface that is used as the tunnel source.
-- `tunnel_source_interface_ipv6_address` (String) IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.
+- `tunnel_source_interface_ipv6_address` (String) Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
 - `tunnel_source_interface_name` (String) Name of the interface that is used as the tunnel source.
 - `tunnel_type` (String) Type of the VTI interface.
 - `type` (String) Type of the object; this value is always 'VTIInterface'.

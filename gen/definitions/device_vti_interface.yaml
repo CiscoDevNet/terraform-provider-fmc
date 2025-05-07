@@ -5,7 +5,7 @@ doc_category: Devices
 res_description: >-
   This device manages Device Virtual Tunnel Interface (VTI) configuration.\n
   The following applies:\n
-  - Ipv4 address of tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
+  - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
   - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
 test_tags: [TF_VAR_device_id]
 attributes:
@@ -34,7 +34,7 @@ attributes:
     example: STATIC
     mandatory: true
     requires_replace: true
-    write_only: true # FMCVERSION <= 7.2
+    write_only: true # for FMCVERSION <= 7.2
   - model_name: ifname
     tf_name: logical_name
     type: String
@@ -95,7 +95,7 @@ attributes:
   - model_name: tunnelSrcIPv6IntfAddr
     tf_name: tunnel_source_interface_ipv6_address
     type: String
-    description: IPv6 address of the tunnel source interface. This address needs to be configured already on tunnel_soruce_interface.
+    description: Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
     exclude_example: true
     exclude_test: true
   # Tunnel details
@@ -159,7 +159,7 @@ attributes:
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring_type
     type: String
-    description: Set monitoring to be based on IPv4 or IPv6.
+    description: Peer IP address version.
     enum_values: [ PEER_IPV4, PEER_IPV6 ]
     example: PEER_IPV4
   - model_name: monitoredIp
