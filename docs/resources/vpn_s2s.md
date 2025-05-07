@@ -14,11 +14,11 @@ This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs).
 
 ```terraform
 resource "fmc_vpn_s2s" "example" {
-  name          = "my_ftd_s2s_vpn"
-  route_based   = true
-  topology_type = "POINT_TO_POINT"
-  ikev1_enable  = false
-  ikev2_enable  = true
+  name             = "my_ftd_s2s_vpn"
+  route_based      = true
+  network_topology = "POINT_TO_POINT"
+  ikev1            = false
+  ikev2            = true
 }
 ```
 
@@ -27,25 +27,25 @@ resource "fmc_vpn_s2s" "example" {
 
 ### Required
 
-- `name` (String) Name of the VPN Site-to-Site (S2S) Topology
-- `route_based` (Boolean) Indicates whether the VPN is Route Based (true) or Policy Based (false).
-- `topology_type` (String) The topology type of the VPN.
+- `name` (String) Name of the VPN Site-to-Site (S2S) Topology.
+- `network_topology` (String) Type of the VPN network topology.
   - Choices: `POINT_TO_POINT`, `HUB_AND_SPOKE`, `FULL_MESH`
+- `route_based` (Boolean) Indicates whether the VPN is Route Based (true) or Policy Based (false).
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ikev1_enable` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
+- `ikev1` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
   - Default value: `false`
-- `ikev2_enable` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
+- `ikev2` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
   - Default value: `false`
 
 ### Read-Only
 
-- `advanced_settings_policy_id` (String) The ID of the advanced settings policy associated with the VPN.
+- `advanced_settings_policy_id` (String) The Id of the associated advanced settings policy.
 - `id` (String) Id of the object
-- `ike_policy_id` (String) The ID of the IKE settings policy associated with the VPN.
-- `ipsec_policy_id` (String) The ID of the IPsec settings policy associated with the VPN.
+- `ike_policy_id` (String) The Id of the associated IKE settings policy.
+- `ipsec_policy_id` (String) The Id of the associated IPsec settings policy.
 - `type` (String) Type of the object; this value is always 'FTDS2SVpn'.
 
 ## Import

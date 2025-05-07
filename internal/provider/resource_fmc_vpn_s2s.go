@@ -23,7 +23,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -83,7 +82,7 @@ func (r *VPNS2SResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the VPN Site-to-Site (S2S) Topology").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the VPN Site-to-Site (S2S) Topology.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -100,8 +99,8 @@ func (r *VPNS2SResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					boolplanmodifier.RequiresReplace(),
 				},
 			},
-			"topology_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The topology type of the VPN.").AddStringEnumDescription("POINT_TO_POINT", "HUB_AND_SPOKE", "FULL_MESH").String,
+			"network_topology": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the VPN network topology.").AddStringEnumDescription("POINT_TO_POINT", "HUB_AND_SPOKE", "FULL_MESH").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("POINT_TO_POINT", "HUB_AND_SPOKE", "FULL_MESH"),
@@ -110,34 +109,34 @@ func (r *VPNS2SResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"ikev1_enable": schema.BoolAttribute{
+			"ikev1": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether IKEv1 is enabled for the VPN.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
-			"ikev2_enable": schema.BoolAttribute{
+			"ikev2": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether IKEv2 is enabled for the VPN.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
 			"ipsec_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ID of the IPsec settings policy associated with the VPN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The Id of the associated IPsec settings policy.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"ike_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ID of the IKE settings policy associated with the VPN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The Id of the associated IKE settings policy.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"advanced_settings_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ID of the advanced settings policy associated with the VPN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The Id of the associated advanced settings policy.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -288,6 +287,8 @@ func (r *VPNS2SResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 // End of section. //template:end update
 
+// Section below is generated&owned by "gen/generator.go". //template:begin delete
+
 func (r *VPNS2SResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state VPNS2S
 
@@ -303,11 +304,6 @@ func (r *VPNS2SResource) Delete(ctx context.Context, req resource.DeleteRequest,
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
 
-	defer func() {
-		// Apparently, the bulk DELETE has a race. Stabilize:
-		time.Sleep(2 * time.Second)
-	}()
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
@@ -319,6 +315,8 @@ func (r *VPNS2SResource) Delete(ctx context.Context, req resource.DeleteRequest,
 
 	resp.State.RemoveResource(ctx)
 }
+
+// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 

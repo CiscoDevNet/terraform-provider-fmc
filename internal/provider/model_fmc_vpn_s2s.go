@@ -36,9 +36,9 @@ type VPNS2S struct {
 	Name                     types.String `tfsdk:"name"`
 	Type                     types.String `tfsdk:"type"`
 	RouteBased               types.Bool   `tfsdk:"route_based"`
-	TopologyType             types.String `tfsdk:"topology_type"`
-	Ikev1Enable              types.Bool   `tfsdk:"ikev1_enable"`
-	Ikev2Enable              types.Bool   `tfsdk:"ikev2_enable"`
+	NetworkTopology          types.String `tfsdk:"network_topology"`
+	Ikev1                    types.Bool   `tfsdk:"ikev1"`
+	Ikev2                    types.Bool   `tfsdk:"ikev2"`
 	IpsecPolicyId            types.String `tfsdk:"ipsec_policy_id"`
 	IkePolicyId              types.String `tfsdk:"ike_policy_id"`
 	AdvancedSettingsPolicyId types.String `tfsdk:"advanced_settings_policy_id"`
@@ -71,14 +71,14 @@ func (data VPNS2S) toBody(ctx context.Context, state VPNS2S) string {
 	if !data.RouteBased.IsNull() {
 		body, _ = sjson.Set(body, "routeBased", data.RouteBased.ValueBool())
 	}
-	if !data.TopologyType.IsNull() {
-		body, _ = sjson.Set(body, "topologyType", data.TopologyType.ValueString())
+	if !data.NetworkTopology.IsNull() {
+		body, _ = sjson.Set(body, "topologyType", data.NetworkTopology.ValueString())
 	}
-	if !data.Ikev1Enable.IsNull() {
-		body, _ = sjson.Set(body, "ikeV1Enabled", data.Ikev1Enable.ValueBool())
+	if !data.Ikev1.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Enabled", data.Ikev1.ValueBool())
 	}
-	if !data.Ikev2Enable.IsNull() {
-		body, _ = sjson.Set(body, "ikeV2Enabled", data.Ikev2Enable.ValueBool())
+	if !data.Ikev2.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Enabled", data.Ikev2.ValueBool())
 	}
 	return body
 }
@@ -104,19 +104,19 @@ func (data *VPNS2S) fromBody(ctx context.Context, res gjson.Result) {
 		data.RouteBased = types.BoolNull()
 	}
 	if value := res.Get("topologyType"); value.Exists() {
-		data.TopologyType = types.StringValue(value.String())
+		data.NetworkTopology = types.StringValue(value.String())
 	} else {
-		data.TopologyType = types.StringNull()
+		data.NetworkTopology = types.StringNull()
 	}
 	if value := res.Get("ikeV1Enabled"); value.Exists() {
-		data.Ikev1Enable = types.BoolValue(value.Bool())
+		data.Ikev1 = types.BoolValue(value.Bool())
 	} else {
-		data.Ikev1Enable = types.BoolValue(false)
+		data.Ikev1 = types.BoolValue(false)
 	}
 	if value := res.Get("ikeV2Enabled"); value.Exists() {
-		data.Ikev2Enable = types.BoolValue(value.Bool())
+		data.Ikev2 = types.BoolValue(value.Bool())
 	} else {
-		data.Ikev2Enable = types.BoolValue(false)
+		data.Ikev2 = types.BoolValue(false)
 	}
 	if value := res.Get("ipsecSettings.id"); value.Exists() {
 		data.IpsecPolicyId = types.StringValue(value.String())
@@ -159,20 +159,20 @@ func (data *VPNS2S) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.RouteBased = types.BoolNull()
 	}
-	if value := res.Get("topologyType"); value.Exists() && !data.TopologyType.IsNull() {
-		data.TopologyType = types.StringValue(value.String())
+	if value := res.Get("topologyType"); value.Exists() && !data.NetworkTopology.IsNull() {
+		data.NetworkTopology = types.StringValue(value.String())
 	} else {
-		data.TopologyType = types.StringNull()
+		data.NetworkTopology = types.StringNull()
 	}
-	if value := res.Get("ikeV1Enabled"); value.Exists() && !data.Ikev1Enable.IsNull() {
-		data.Ikev1Enable = types.BoolValue(value.Bool())
-	} else if data.Ikev1Enable.ValueBool() != false {
-		data.Ikev1Enable = types.BoolNull()
+	if value := res.Get("ikeV1Enabled"); value.Exists() && !data.Ikev1.IsNull() {
+		data.Ikev1 = types.BoolValue(value.Bool())
+	} else if data.Ikev1.ValueBool() != false {
+		data.Ikev1 = types.BoolNull()
 	}
-	if value := res.Get("ikeV2Enabled"); value.Exists() && !data.Ikev2Enable.IsNull() {
-		data.Ikev2Enable = types.BoolValue(value.Bool())
-	} else if data.Ikev2Enable.ValueBool() != false {
-		data.Ikev2Enable = types.BoolNull()
+	if value := res.Get("ikeV2Enabled"); value.Exists() && !data.Ikev2.IsNull() {
+		data.Ikev2 = types.BoolValue(value.Bool())
+	} else if data.Ikev2.ValueBool() != false {
+		data.Ikev2 = types.BoolNull()
 	}
 	if value := res.Get("ipsecSettings.id"); value.Exists() && !data.IpsecPolicyId.IsNull() {
 		data.IpsecPolicyId = types.StringValue(value.String())

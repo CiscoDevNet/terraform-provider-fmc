@@ -72,7 +72,7 @@ func (d *VPNS2SDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the VPN Site-to-Site (S2S) Topology",
+				MarkdownDescription: "Name of the VPN Site-to-Site (S2S) Topology.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -84,28 +84,28 @@ func (d *VPNS2SDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Indicates whether the VPN is Route Based (true) or Policy Based (false).",
 				Computed:            true,
 			},
-			"topology_type": schema.StringAttribute{
-				MarkdownDescription: "The topology type of the VPN.",
+			"network_topology": schema.StringAttribute{
+				MarkdownDescription: "Type of the VPN network topology.",
 				Computed:            true,
 			},
-			"ikev1_enable": schema.BoolAttribute{
+			"ikev1": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether IKEv1 is enabled for the VPN.",
 				Computed:            true,
 			},
-			"ikev2_enable": schema.BoolAttribute{
+			"ikev2": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether IKEv2 is enabled for the VPN.",
 				Computed:            true,
 			},
 			"ipsec_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The ID of the IPsec settings policy associated with the VPN.",
+				MarkdownDescription: "The Id of the associated IPsec settings policy.",
 				Computed:            true,
 			},
 			"ike_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The ID of the IKE settings policy associated with the VPN.",
+				MarkdownDescription: "The Id of the associated IKE settings policy.",
 				Computed:            true,
 			},
 			"advanced_settings_policy_id": schema.StringAttribute{
-				MarkdownDescription: "The ID of the advanced settings policy associated with the VPN.",
+				MarkdownDescription: "The Id of the associated advanced settings policy.",
 				Computed:            true,
 			},
 		},

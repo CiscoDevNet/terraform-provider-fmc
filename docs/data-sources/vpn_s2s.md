@@ -25,15 +25,15 @@ data "fmc_vpn_s2s" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the VPN Site-to-Site (S2S) Topology
+- `name` (String) Name of the VPN Site-to-Site (S2S) Topology.
 
 ### Read-Only
 
-- `advanced_settings_policy_id` (String) The ID of the advanced settings policy associated with the VPN.
-- `ike_policy_id` (String) The ID of the IKE settings policy associated with the VPN.
-- `ikev1_enable` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
-- `ikev2_enable` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
-- `ipsec_policy_id` (String) The ID of the IPsec settings policy associated with the VPN.
+- `advanced_settings_policy_id` (String) The Id of the associated advanced settings policy.
+- `ike_policy_id` (String) The Id of the associated IKE settings policy.
+- `ikev1` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
+- `ikev2` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
+- `ipsec_policy_id` (String) The Id of the associated IPsec settings policy.
+- `network_topology` (String) Type of the VPN network topology.
 - `route_based` (Boolean) Indicates whether the VPN is Route Based (true) or Policy Based (false).
-- `topology_type` (String) The topology type of the VPN.
 - `type` (String) Type of the object; this value is always 'FTDS2SVpn'.

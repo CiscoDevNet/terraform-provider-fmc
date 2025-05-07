@@ -33,9 +33,9 @@ func TestAccDataSourceFmcVPNS2S(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "name", "my_ftd_s2s_vpn"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_s2s.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "route_based", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "topology_type", "POINT_TO_POINT"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "ikev1_enable", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "ikev2_enable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "network_topology", "POINT_TO_POINT"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "ikev1", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s.test", "ikev2", "true"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_s2s.test", "ipsec_policy_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_s2s.test", "ike_policy_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_s2s.test", "advanced_settings_policy_id"))
@@ -67,9 +67,9 @@ func testAccDataSourceFmcVPNS2SConfig() string {
 	config := `resource "fmc_vpn_s2s" "test" {` + "\n"
 	config += `	name = "my_ftd_s2s_vpn"` + "\n"
 	config += `	route_based = true` + "\n"
-	config += `	topology_type = "POINT_TO_POINT"` + "\n"
-	config += `	ikev1_enable = false` + "\n"
-	config += `	ikev2_enable = true` + "\n"
+	config += `	network_topology = "POINT_TO_POINT"` + "\n"
+	config += `	ikev1 = false` + "\n"
+	config += `	ikev2 = true` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -84,9 +84,9 @@ func testAccNamedDataSourceFmcVPNS2SConfig() string {
 	config := `resource "fmc_vpn_s2s" "test" {` + "\n"
 	config += `	name = "my_ftd_s2s_vpn"` + "\n"
 	config += `	route_based = true` + "\n"
-	config += `	topology_type = "POINT_TO_POINT"` + "\n"
-	config += `	ikev1_enable = false` + "\n"
-	config += `	ikev2_enable = true` + "\n"
+	config += `	network_topology = "POINT_TO_POINT"` + "\n"
+	config += `	ikev1 = false` + "\n"
+	config += `	ikev2 = true` + "\n"
 	config += `}` + "\n"
 
 	config += `
