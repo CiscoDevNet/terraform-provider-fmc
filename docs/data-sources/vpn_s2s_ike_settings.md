@@ -33,14 +33,14 @@ data "fmc_vpn_s2s_ike_settings" "example" {
 
 ### Read-Only
 
-- `ikev1_authentication_type` (String) The authentication type for IKEv1.
-- `ikev1_automatic_pre_shared_key_length` (Number) The length of the automatically generated pre-shared key for IKEv1.
-- `ikev1_manual_pre_shared_key` (String) The manually configured pre-shared key for IKEv1.
-- `ikev1_policies` (Attributes Set) Set of policies for IKEv1 settings. (see [below for nested schema](#nestedatt--ikev1_policies))
-- `ikev2_authentication_type` (String) The authentication type for IKEv2.
-- `ikev2_automatic_pre_shared_key_length` (Number) The length of the automatically generated pre-shared key for IKEv2.
-- `ikev2_enforce_hex_based_pre_shared_key_only` (Boolean) Indicates whether to enforce the use of a hex-based pre-shared key for IKEv2.
-- `ikev2_manual_pre_shared_key` (String) The manually configured pre-shared key for IKEv2.
+- `ikev1_authentication_type` (String) Authentication method for IKEv1.
+- `ikev1_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv1.
+- `ikev1_manual_pre_shared_key` (String) Manually configured pre-shared key for IKEv1.
+- `ikev1_policies` (Attributes Set) Set of policies for IKEv1. (see [below for nested schema](#nestedatt--ikev1_policies))
+- `ikev2_authentication_type` (String) Authentication method for IKEv2.
+- `ikev2_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv2.
+- `ikev2_enforce_hex_based_pre_shared_key` (Boolean) Enforce use of a hex-based pre-shared key for IKEv2.
+- `ikev2_manual_pre_shared_key` (String) Manually configured pre-shared key for IKEv2.
 - `ikev2_policies` (Attributes Set) Set of policies for IKEv2 settings. (see [below for nested schema](#nestedatt--ikev2_policies))
 - `type` (String) Type of the object; this value is always 'IkeSetting'.
 

@@ -32,19 +32,15 @@ func TestAccDataSourceFmcVPNS2SIKESettings(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_s2s_ike_settings.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev1_authentication_type", "MANUAL_PRE_SHARED_KEY"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev1_automatic_pre_shared_key_length", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev1_policies.0.name", "my_ikev1_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev2_authentication_type", "MANUAL_PRE_SHARED_KEY"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev2_automatic_pre_shared_key_length", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev2_enforce_hex_based_pre_shared_key_only", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev2_policies.0.name", "my_ikev2_policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_ike_settings.test", "ikev2_enforce_hex_based_pre_shared_key", "false"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcVPNS2SIKESettingsConfig(),
+				Config: testAccDataSourceFmcVPNS2SIKESettingsPrerequisitesConfig + testAccDataSourceFmcVPNS2SIKESettingsConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -54,34 +50,53 @@ func TestAccDataSourceFmcVPNS2SIKESettings(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccDataSourceFmcVPNS2SIKESettingsPrerequisitesConfig = `
+resource "fmc_vpn_s2s" "test" {
+  name             = "my_s2s_vpn_ike_settings"
+  route_based      = false
+  network_topology = "POINT_TO_POINT"
+  ikev1            = true
+  ikev2            = true
+}
+
+resource "fmc_ikev2_policies" "test" {
+  items = {
+    my_s2s_vpn_ike_settings = {
+      description           = "IKEv2 Policy"
+      priority              = 10
+      lifetime              = 86400
+      integrity_algorithms  = ["SHA-256"]
+      encryption_algorithms = ["AES-256"]
+      prf_algorithms        = ["SHA-256"]
+      dh_groups             = ["14"]
+    }
+  }
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
 func testAccDataSourceFmcVPNS2SIKESettingsConfig() string {
 	config := `resource "fmc_vpn_s2s_ike_settings" "test" {` + "\n"
-	config += `	vpn_s2s_id = TBD` + "\n"
+	config += `	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n"
 	config += `	ikev1_authentication_type = "MANUAL_PRE_SHARED_KEY"` + "\n"
-	config += `	ikev1_automatic_pre_shared_key_length = ` + "\n"
 	config += `	ikev1_manual_pre_shared_key = "my_pre_shared_key123"` + "\n"
-	config += `	ikev1_policies = [{` + "\n"
-	config += `		id = TBD` + "\n"
-	config += `		name = "my_ikev1_policy"` + "\n"
-	config += `	}]` + "\n"
 	config += `	ikev2_authentication_type = "MANUAL_PRE_SHARED_KEY"` + "\n"
-	config += `	ikev2_automatic_pre_shared_key_length = ` + "\n"
 	config += `	ikev2_manual_pre_shared_key = "my_pre_shared_key123"` + "\n"
-	config += `	ikev2_enforce_hex_based_pre_shared_key_only = false` + "\n"
+	config += `	ikev2_enforce_hex_based_pre_shared_key = false` + "\n"
 	config += `	ikev2_policies = [{` + "\n"
-	config += `		id = TBD` + "\n"
-	config += `		name = "my_ikev2_policy"` + "\n"
+	config += `		id = fmc_ikev2_policies.test.items["my_s2s_vpn_ike_settings"].id` + "\n"
+	config += `		name = "my_s2s_vpn_ike_settings"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
 	config += `
 		data "fmc_vpn_s2s_ike_settings" "test" {
 			id = fmc_vpn_s2s_ike_settings.test.id
-			vpn_s2s_id = TBD
+			vpn_s2s_id = fmc_vpn_s2s.test.id
 		}
 	`
 	return config

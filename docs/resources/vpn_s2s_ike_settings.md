@@ -4,11 +4,15 @@ page_title: "fmc_vpn_s2s_ike_settings Resource - terraform-provider-fmc"
 subcategory: "VPN"
 description: |-
   This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IKEv1 and IKEv2 settings.
+  Either/both IKEv1/IKEv2 must be configured.
+  Object deletion will not remove whole configuration, not to violate any dependencies that still may exist.
 ---
 
 # fmc_vpn_s2s_ike_settings (Resource)
 
 This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IKEv1 and IKEv2 settings.
+ Either/both IKEv1/IKEv2 must be configured.
+ Object deletion will not remove whole configuration, not to violate any dependencies that still may exist.
 
 ## Example Usage
 
@@ -23,9 +27,9 @@ resource "fmc_vpn_s2s_ike_settings" "example" {
       name = "my_ikev1_policy"
     }
   ]
-  ikev2_authentication_type                   = "MANUAL_PRE_SHARED_KEY"
-  ikev2_manual_pre_shared_key                 = "my_pre_shared_key123"
-  ikev2_enforce_hex_based_pre_shared_key_only = false
+  ikev2_authentication_type              = "MANUAL_PRE_SHARED_KEY"
+  ikev2_manual_pre_shared_key            = "my_pre_shared_key123"
+  ikev2_enforce_hex_based_pre_shared_key = false
   ikev2_policies = [
     {
       id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -45,18 +49,18 @@ resource "fmc_vpn_s2s_ike_settings" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ikev1_authentication_type` (String) The authentication type for IKEv1.
+- `ikev1_authentication_type` (String) Authentication method for IKEv1.
   - Choices: `MANUAL_PRE_SHARED_KEY`, `AUTOMATIC_PRE_SHARED_KEY`, `CERTIFICATE`
-- `ikev1_automatic_pre_shared_key_length` (Number) The length of the automatically generated pre-shared key for IKEv1.
+- `ikev1_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv1.
   - Range: `1`-`127`
-- `ikev1_manual_pre_shared_key` (String) The manually configured pre-shared key for IKEv1.
-- `ikev1_policies` (Attributes Set) Set of policies for IKEv1 settings. (see [below for nested schema](#nestedatt--ikev1_policies))
-- `ikev2_authentication_type` (String) The authentication type for IKEv2.
+- `ikev1_manual_pre_shared_key` (String) Manually configured pre-shared key for IKEv1.
+- `ikev1_policies` (Attributes Set) Set of policies for IKEv1. (see [below for nested schema](#nestedatt--ikev1_policies))
+- `ikev2_authentication_type` (String) Authentication method for IKEv2.
   - Choices: `MANUAL_PRE_SHARED_KEY`, `AUTOMATIC_PRE_SHARED_KEY`, `CERTIFICATE`
-- `ikev2_automatic_pre_shared_key_length` (Number) The length of the automatically generated pre-shared key for IKEv2.
+- `ikev2_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv2.
   - Range: `1`-`127`
-- `ikev2_enforce_hex_based_pre_shared_key_only` (Boolean) Indicates whether to enforce the use of a hex-based pre-shared key for IKEv2.
-- `ikev2_manual_pre_shared_key` (String) The manually configured pre-shared key for IKEv2.
+- `ikev2_enforce_hex_based_pre_shared_key` (Boolean) Enforce use of a hex-based pre-shared key for IKEv2.
+- `ikev2_manual_pre_shared_key` (String) Manually configured pre-shared key for IKEv2.
 - `ikev2_policies` (Attributes Set) Set of policies for IKEv2 settings. (see [below for nested schema](#nestedatt--ikev2_policies))
 
 ### Read-Only

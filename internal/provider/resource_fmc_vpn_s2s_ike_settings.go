@@ -63,7 +63,7 @@ func (r *VPNS2SIKESettingsResource) Metadata(ctx context.Context, req resource.M
 func (r *VPNS2SIKESettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IKEv1 and IKEv2 settings.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IKEv1 and IKEv2 settings.\n Either/both IKEv1/IKEv2 must be configured.\n Object deletion will not remove whole configuration, not to violate any dependencies that still may exist.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -95,25 +95,25 @@ func (r *VPNS2SIKESettingsResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"ikev1_authentication_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The authentication type for IKEv1.").AddStringEnumDescription("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Authentication method for IKEv1.").AddStringEnumDescription("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE"),
 				},
 			},
 			"ikev1_automatic_pre_shared_key_length": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The length of the automatically generated pre-shared key for IKEv1.").AddIntegerRangeDescription(1, 127).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Length of the automatically generated pre-shared key for IKEv1.").AddIntegerRangeDescription(1, 127).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 127),
 				},
 			},
 			"ikev1_manual_pre_shared_key": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The manually configured pre-shared key for IKEv1.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Manually configured pre-shared key for IKEv1.").String,
 				Optional:            true,
 			},
 			"ikev1_policies": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of policies for IKEv1 settings.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set of policies for IKEv1.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -129,25 +129,25 @@ func (r *VPNS2SIKESettingsResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"ikev2_authentication_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The authentication type for IKEv2.").AddStringEnumDescription("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Authentication method for IKEv2.").AddStringEnumDescription("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("MANUAL_PRE_SHARED_KEY", "AUTOMATIC_PRE_SHARED_KEY", "CERTIFICATE"),
 				},
 			},
 			"ikev2_automatic_pre_shared_key_length": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The length of the automatically generated pre-shared key for IKEv2.").AddIntegerRangeDescription(1, 127).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Length of the automatically generated pre-shared key for IKEv2.").AddIntegerRangeDescription(1, 127).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 127),
 				},
 			},
 			"ikev2_manual_pre_shared_key": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The manually configured pre-shared key for IKEv2.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Manually configured pre-shared key for IKEv2.").String,
 				Optional:            true,
 			},
-			"ikev2_enforce_hex_based_pre_shared_key_only": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce the use of a hex-based pre-shared key for IKEv2.").String,
+			"ikev2_enforce_hex_based_pre_shared_key": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enforce use of a hex-based pre-shared key for IKEv2.").String,
 				Optional:            true,
 			},
 			"ikev2_policies": schema.SetNestedAttribute{
@@ -180,6 +180,8 @@ func (r *VPNS2SIKESettingsResource) Configure(_ context.Context, req resource.Co
 
 // End of section. //template:end model
 
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *VPNS2SIKESettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan VPNS2SIKESettings
 
@@ -194,25 +196,34 @@ func (r *VPNS2SIKESettingsResource) Create(ctx context.Context, req resource.Cre
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-
-	// Get ID
-	res, err := r.client.Get(plan.getPath(), reqMods...)
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve ike settings, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
-	if val := res.Get("items.0.id"); val.Exists() {
-		plan.Id = types.StringValue(val.String())
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
 		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
 	} else {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to extract ike settings from payload: %s", res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
 	body := plan.toBody(ctx, VPNS2SIKESettings{})
-	res, err = r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -227,6 +238,8 @@ func (r *VPNS2SIKESettingsResource) Create(ctx context.Context, req resource.Cre
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
+
+// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -338,6 +351,12 @@ func (r *VPNS2SIKESettingsResource) Delete(ctx context.Context, req resource.Del
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
+	body := state.toBodyPutDelete(ctx, VPNS2SIKESettings{})
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 

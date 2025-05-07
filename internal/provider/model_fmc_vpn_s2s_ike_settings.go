@@ -35,19 +35,19 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type VPNS2SIKESettings struct {
-	Id                                   types.String                     `tfsdk:"id"`
-	Domain                               types.String                     `tfsdk:"domain"`
-	VpnS2sId                             types.String                     `tfsdk:"vpn_s2s_id"`
-	Type                                 types.String                     `tfsdk:"type"`
-	Ikev1AuthenticationType              types.String                     `tfsdk:"ikev1_authentication_type"`
-	Ikev1AutomaticPreSharedKeyLength     types.Int64                      `tfsdk:"ikev1_automatic_pre_shared_key_length"`
-	Ikev1ManualPreSharedKey              types.String                     `tfsdk:"ikev1_manual_pre_shared_key"`
-	Ikev1Policies                        []VPNS2SIKESettingsIkev1Policies `tfsdk:"ikev1_policies"`
-	Ikev2AuthenticationType              types.String                     `tfsdk:"ikev2_authentication_type"`
-	Ikev2AutomaticPreSharedKeyLength     types.Int64                      `tfsdk:"ikev2_automatic_pre_shared_key_length"`
-	Ikev2ManualPreSharedKey              types.String                     `tfsdk:"ikev2_manual_pre_shared_key"`
-	Ikev2EnforceHexBasedPreSharedKeyOnly types.Bool                       `tfsdk:"ikev2_enforce_hex_based_pre_shared_key_only"`
-	Ikev2Policies                        []VPNS2SIKESettingsIkev2Policies `tfsdk:"ikev2_policies"`
+	Id                               types.String                     `tfsdk:"id"`
+	Domain                           types.String                     `tfsdk:"domain"`
+	VpnS2sId                         types.String                     `tfsdk:"vpn_s2s_id"`
+	Type                             types.String                     `tfsdk:"type"`
+	Ikev1AuthenticationType          types.String                     `tfsdk:"ikev1_authentication_type"`
+	Ikev1AutomaticPreSharedKeyLength types.Int64                      `tfsdk:"ikev1_automatic_pre_shared_key_length"`
+	Ikev1ManualPreSharedKey          types.String                     `tfsdk:"ikev1_manual_pre_shared_key"`
+	Ikev1Policies                    []VPNS2SIKESettingsIkev1Policies `tfsdk:"ikev1_policies"`
+	Ikev2AuthenticationType          types.String                     `tfsdk:"ikev2_authentication_type"`
+	Ikev2AutomaticPreSharedKeyLength types.Int64                      `tfsdk:"ikev2_automatic_pre_shared_key_length"`
+	Ikev2ManualPreSharedKey          types.String                     `tfsdk:"ikev2_manual_pre_shared_key"`
+	Ikev2EnforceHexBasedPreSharedKey types.Bool                       `tfsdk:"ikev2_enforce_hex_based_pre_shared_key"`
+	Ikev2Policies                    []VPNS2SIKESettingsIkev2Policies `tfsdk:"ikev2_policies"`
 }
 
 type VPNS2SIKESettingsIkev1Policies struct {
@@ -112,8 +112,8 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 	if !data.Ikev2ManualPreSharedKey.IsNull() {
 		body, _ = sjson.Set(body, "ikeV2Settings.manualPreSharedKey", data.Ikev2ManualPreSharedKey.ValueString())
 	}
-	if !data.Ikev2EnforceHexBasedPreSharedKeyOnly.IsNull() {
-		body, _ = sjson.Set(body, "ikeV2Settings.enforceHexBasedPreSharedKeyOnly", data.Ikev2EnforceHexBasedPreSharedKeyOnly.ValueBool())
+	if !data.Ikev2EnforceHexBasedPreSharedKey.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.enforceHexBasedPreSharedKeyOnly", data.Ikev2EnforceHexBasedPreSharedKey.ValueBool())
 	}
 	if len(data.Ikev2Policies) > 0 {
 		body, _ = sjson.Set(body, "ikeV2Settings.policies", []interface{}{})
@@ -181,9 +181,9 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev2AutomaticPreSharedKeyLength = types.Int64Null()
 	}
 	if value := res.Get("ikeV2Settings.enforceHexBasedPreSharedKeyOnly"); value.Exists() {
-		data.Ikev2EnforceHexBasedPreSharedKeyOnly = types.BoolValue(value.Bool())
+		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolValue(value.Bool())
 	} else {
-		data.Ikev2EnforceHexBasedPreSharedKeyOnly = types.BoolNull()
+		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolNull()
 	}
 	if value := res.Get("ikeV2Settings.policies"); value.Exists() {
 		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0)
@@ -288,10 +288,10 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Ikev2AutomaticPreSharedKeyLength = types.Int64Null()
 	}
-	if value := res.Get("ikeV2Settings.enforceHexBasedPreSharedKeyOnly"); value.Exists() && !data.Ikev2EnforceHexBasedPreSharedKeyOnly.IsNull() {
-		data.Ikev2EnforceHexBasedPreSharedKeyOnly = types.BoolValue(value.Bool())
+	if value := res.Get("ikeV2Settings.enforceHexBasedPreSharedKeyOnly"); value.Exists() && !data.Ikev2EnforceHexBasedPreSharedKey.IsNull() {
+		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolValue(value.Bool())
 	} else {
-		data.Ikev2EnforceHexBasedPreSharedKeyOnly = types.BoolNull()
+		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
@@ -376,3 +376,31 @@ func (data *VPNS2SIKESettings) fromBodyUnknowns(ctx context.Context, res gjson.R
 // Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
 
 // End of section. //template:end clearItemIds
+
+// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
+func (data VPNS2SIKESettings) toBodyPutDelete(ctx context.Context, state VPNS2SIKESettings) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.Ikev1AuthenticationType.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Settings.authenticationType", data.Ikev1AuthenticationType.ValueString())
+	}
+	if !data.Ikev1AutomaticPreSharedKeyLength.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Settings.automaticPreSharedKeyLength", data.Ikev1AutomaticPreSharedKeyLength.ValueInt64())
+	}
+	if !data.Ikev1ManualPreSharedKey.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Settings.manualPreSharedKey", data.Ikev1ManualPreSharedKey.ValueString())
+	}
+	if !data.Ikev2AuthenticationType.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.authenticationType", data.Ikev2AuthenticationType.ValueString())
+	}
+	if !data.Ikev2AutomaticPreSharedKeyLength.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.automaticPreSharedKeyLength", data.Ikev2AutomaticPreSharedKeyLength.ValueInt64())
+	}
+	if !data.Ikev2ManualPreSharedKey.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.manualPreSharedKey", data.Ikev2ManualPreSharedKey.ValueString())
+	}
+
+	return body
+}

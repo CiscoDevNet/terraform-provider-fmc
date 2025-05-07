@@ -75,19 +75,19 @@ func (d *VPNS2SIKESettingsDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 			},
 			"ikev1_authentication_type": schema.StringAttribute{
-				MarkdownDescription: "The authentication type for IKEv1.",
+				MarkdownDescription: "Authentication method for IKEv1.",
 				Computed:            true,
 			},
 			"ikev1_automatic_pre_shared_key_length": schema.Int64Attribute{
-				MarkdownDescription: "The length of the automatically generated pre-shared key for IKEv1.",
+				MarkdownDescription: "Length of the automatically generated pre-shared key for IKEv1.",
 				Computed:            true,
 			},
 			"ikev1_manual_pre_shared_key": schema.StringAttribute{
-				MarkdownDescription: "The manually configured pre-shared key for IKEv1.",
+				MarkdownDescription: "Manually configured pre-shared key for IKEv1.",
 				Computed:            true,
 			},
 			"ikev1_policies": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of policies for IKEv1 settings.",
+				MarkdownDescription: "Set of policies for IKEv1.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -103,19 +103,19 @@ func (d *VPNS2SIKESettingsDataSource) Schema(ctx context.Context, req datasource
 				},
 			},
 			"ikev2_authentication_type": schema.StringAttribute{
-				MarkdownDescription: "The authentication type for IKEv2.",
+				MarkdownDescription: "Authentication method for IKEv2.",
 				Computed:            true,
 			},
 			"ikev2_automatic_pre_shared_key_length": schema.Int64Attribute{
-				MarkdownDescription: "The length of the automatically generated pre-shared key for IKEv2.",
+				MarkdownDescription: "Length of the automatically generated pre-shared key for IKEv2.",
 				Computed:            true,
 			},
 			"ikev2_manual_pre_shared_key": schema.StringAttribute{
-				MarkdownDescription: "The manually configured pre-shared key for IKEv2.",
+				MarkdownDescription: "Manually configured pre-shared key for IKEv2.",
 				Computed:            true,
 			},
-			"ikev2_enforce_hex_based_pre_shared_key_only": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enforce the use of a hex-based pre-shared key for IKEv2.",
+			"ikev2_enforce_hex_based_pre_shared_key": schema.BoolAttribute{
+				MarkdownDescription: "Enforce use of a hex-based pre-shared key for IKEv2.",
 				Computed:            true,
 			},
 			"ikev2_policies": schema.SetNestedAttribute{
