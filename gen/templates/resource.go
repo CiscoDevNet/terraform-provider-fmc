@@ -1261,6 +1261,9 @@ func (r *{{camelCase .Name}}Resource) updateSubresources(ctx context.Context, st
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
+		{{- if .AdjustBody}}
+		body = tmpObject.adjustBody(ctx, body)
+		{{- end}}
 		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
