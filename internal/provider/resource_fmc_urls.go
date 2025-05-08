@@ -461,7 +461,7 @@ func (r *URLsResource) createSubresources(ctx context.Context, state, plan URLs,
 			body := bulk.toBody(ctx, URLs{})
 
 			// Execute request
-			urlPath := plan.getPath() + "?bulk=true"
+			urlPath := state.getPath() + "?bulk=true"
 			res, err := r.client.Post(urlPath, body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -578,7 +578,7 @@ func (r *URLsResource) updateSubresources(ctx context.Context, state, plan URLs,
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{

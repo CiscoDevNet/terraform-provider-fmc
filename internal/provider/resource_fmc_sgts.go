@@ -501,7 +501,7 @@ func (r *SGTsResource) createSubresources(ctx context.Context, state, plan SGTs,
 				body := bulk.toBody(ctx, SGTs{})
 
 				// Execute request
-				urlPath := plan.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -619,7 +619,7 @@ func (r *SGTsResource) updateSubresources(ctx context.Context, state, plan SGTs,
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{

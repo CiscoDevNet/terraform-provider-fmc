@@ -512,7 +512,7 @@ func (r *IKEv2IPsecProposalsResource) createSubresources(ctx context.Context, st
 				body := bulk.toBody(ctx, IKEv2IPsecProposals{})
 
 				// Execute request
-				urlPath := plan.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -630,7 +630,7 @@ func (r *IKEv2IPsecProposalsResource) updateSubresources(ctx context.Context, st
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{
