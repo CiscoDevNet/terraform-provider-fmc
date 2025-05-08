@@ -534,7 +534,7 @@ func (r *IKEv1PoliciesResource) createSubresources(ctx context.Context, state, p
 				body := bulk.toBody(ctx, IKEv1Policies{})
 
 				// Execute request
-				urlPath := plan.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -652,7 +652,7 @@ func (r *IKEv1PoliciesResource) updateSubresources(ctx context.Context, state, p
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{

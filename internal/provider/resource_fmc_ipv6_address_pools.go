@@ -501,7 +501,7 @@ func (r *IPv6AddressPoolsResource) createSubresources(ctx context.Context, state
 				body := bulk.toBody(ctx, IPv6AddressPools{})
 
 				// Execute request
-				urlPath := plan.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -619,7 +619,7 @@ func (r *IPv6AddressPoolsResource) updateSubresources(ctx context.Context, state
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{

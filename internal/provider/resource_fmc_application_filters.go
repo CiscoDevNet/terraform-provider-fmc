@@ -569,7 +569,7 @@ func (r *ApplicationFiltersResource) createSubresources(ctx context.Context, sta
 				body := bulk.toBody(ctx, ApplicationFilters{})
 
 				// Execute request
-				urlPath := plan.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -687,7 +687,7 @@ func (r *ApplicationFiltersResource) updateSubresources(ctx context.Context, sta
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{
