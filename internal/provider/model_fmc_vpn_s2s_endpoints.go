@@ -46,27 +46,26 @@ type VPNS2SEndpoints struct {
 type VPNS2SEndpointsItems struct {
 	Id                             types.String                            `tfsdk:"id"`
 	PeerType                       types.String                            `tfsdk:"peer_type"`
-	IsExtranet                     types.Bool                              `tfsdk:"is_extranet"`
+	ExtranetDevice                 types.Bool                              `tfsdk:"extranet_device"`
 	ExtranetIpAddress              types.String                            `tfsdk:"extranet_ip_address"`
-	ExtranetIsDynamicIp            types.Bool                              `tfsdk:"extranet_is_dynamic_ip"`
+	ExtranetDynamicIp              types.Bool                              `tfsdk:"extranet_dynamic_ip"`
 	DeviceId                       types.String                            `tfsdk:"device_id"`
 	InterfaceId                    types.String                            `tfsdk:"interface_id"`
 	InterfaceIpv6Address           types.String                            `tfsdk:"interface_ipv6_address"`
 	InterfacePublicIpAddress       types.String                            `tfsdk:"interface_public_ip_address"`
 	ConnectionType                 types.String                            `tfsdk:"connection_type"`
 	AllowIncomingIkev2Routes       types.Bool                              `tfsdk:"allow_incoming_ikev2_routes"`
-	SendTunnelInterfaceIpToPeer    types.Bool                              `tfsdk:"send_tunnel_interface_ip_to_peer"`
+	SendVtiIpToPeer                types.Bool                              `tfsdk:"send_vti_ip_to_peer"`
 	ProtectedNetworks              []VPNS2SEndpointsItemsProtectedNetworks `tfsdk:"protected_networks"`
-	AclId                          types.String                            `tfsdk:"acl_id"`
-	EnableNatTraversal             types.Bool                              `tfsdk:"enable_nat_traversal"`
-	EnableNatExemption             types.Bool                              `tfsdk:"enable_nat_exemption"`
-	InsideInterfaceId              types.String                            `tfsdk:"inside_interface_id"`
-	EnableReverseRouteInjection    types.Bool                              `tfsdk:"enable_reverse_route_injection"`
+	ProtectedNetworksAclId         types.String                            `tfsdk:"protected_networks_acl_id"`
+	NatTraversal                   types.Bool                              `tfsdk:"nat_traversal"`
+	NatExemption                   types.Bool                              `tfsdk:"nat_exemption"`
+	NatExemptionInsideInterfaceId  types.String                            `tfsdk:"nat_exemption_inside_interface_id"`
+	ReverseRouteInjection          types.Bool                              `tfsdk:"reverse_route_injection"`
 	LocalIdentityType              types.String                            `tfsdk:"local_identity_type"`
 	LocalIdentityString            types.String                            `tfsdk:"local_identity_string"`
 	VpnFilterAclId                 types.String                            `tfsdk:"vpn_filter_acl_id"`
-	OverrideRemoteVpnFilter        types.Bool                              `tfsdk:"override_remote_vpn_filter"`
-	RemoteVpnFilterAclId           types.String                            `tfsdk:"remote_vpn_filter_acl_id"`
+	OverrideRemoteVpnFilterAclId   types.String                            `tfsdk:"override_remote_vpn_filter_acl_id"`
 	BackupInterfaceId              types.String                            `tfsdk:"backup_interface_id"`
 	BackupInterfacePublicIpAddress types.String                            `tfsdk:"backup_interface_public_ip_address"`
 	BackupLocalIdentityType        types.String                            `tfsdk:"backup_local_identity_type"`
@@ -109,14 +108,14 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 			if !item.PeerType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "peerType", item.PeerType.ValueString())
 			}
-			if !item.IsExtranet.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "extranet", item.IsExtranet.ValueBool())
+			if !item.ExtranetDevice.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "extranet", item.ExtranetDevice.ValueBool())
 			}
 			if !item.ExtranetIpAddress.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "extranetInfo.ipAddress", item.ExtranetIpAddress.ValueString())
 			}
-			if !item.ExtranetIsDynamicIp.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "extranetInfo.isDynamicIP", item.ExtranetIsDynamicIp.ValueBool())
+			if !item.ExtranetDynamicIp.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "extranetInfo.isDynamicIP", item.ExtranetDynamicIp.ValueBool())
 			}
 			if !item.DeviceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "device.id", item.DeviceId.ValueString())
@@ -136,8 +135,8 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 			if !item.AllowIncomingIkev2Routes.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "allowIncomingIKEv2Routes", item.AllowIncomingIkev2Routes.ValueBool())
 			}
-			if !item.SendTunnelInterfaceIpToPeer.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "sendTunnelInterfaceIpToPeer", item.SendTunnelInterfaceIpToPeer.ValueBool())
+			if !item.SendVtiIpToPeer.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "sendTunnelInterfaceIpToPeer", item.SendVtiIpToPeer.ValueBool())
 			}
 			if len(item.ProtectedNetworks) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.networks", []interface{}{})
@@ -149,20 +148,20 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 					itemBody, _ = sjson.SetRaw(itemBody, "protectedNetworks.networks.-1", itemChildBody)
 				}
 			}
-			if !item.AclId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.acl.id", item.AclId.ValueString())
+			if !item.ProtectedNetworksAclId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.acl.id", item.ProtectedNetworksAclId.ValueString())
 			}
-			if !item.EnableNatTraversal.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enableNatTraversal", item.EnableNatTraversal.ValueBool())
+			if !item.NatTraversal.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableNatTraversal", item.NatTraversal.ValueBool())
 			}
-			if !item.EnableNatExemption.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enableNATExempt", item.EnableNatExemption.ValueBool())
+			if !item.NatExemption.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableNATExempt", item.NatExemption.ValueBool())
 			}
-			if !item.InsideInterfaceId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "insideInterface.0.id", item.InsideInterfaceId.ValueString())
+			if !item.NatExemptionInsideInterfaceId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "insideInterface.0.id", item.NatExemptionInsideInterfaceId.ValueString())
 			}
-			if !item.EnableReverseRouteInjection.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "dynamicRRIEnabled", item.EnableReverseRouteInjection.ValueBool())
+			if !item.ReverseRouteInjection.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "dynamicRRIEnabled", item.ReverseRouteInjection.ValueBool())
 			}
 			if !item.LocalIdentityType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "localIdentityType", item.LocalIdentityType.ValueString())
@@ -173,11 +172,8 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 			if !item.VpnFilterAclId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "vpnFilterAcl.id", item.VpnFilterAclId.ValueString())
 			}
-			if !item.OverrideRemoteVpnFilter.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "overrideRemoteVpnFilter", item.OverrideRemoteVpnFilter.ValueBool())
-			}
-			if !item.RemoteVpnFilterAclId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "remoteVpnFilterAclObject.id", item.RemoteVpnFilterAclId.ValueString())
+			if !item.OverrideRemoteVpnFilterAclId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "remoteVpnFilterAclObject.id", item.OverrideRemoteVpnFilterAclId.ValueString())
 			}
 			if !item.BackupInterfaceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "backupInterfaces.0.interface.id", item.BackupInterfaceId.ValueString())
@@ -233,9 +229,9 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.PeerType = types.StringNull()
 		}
 		if value := res.Get("extranet"); value.Exists() {
-			data.IsExtranet = types.BoolValue(value.Bool())
+			data.ExtranetDevice = types.BoolValue(value.Bool())
 		} else {
-			data.IsExtranet = types.BoolNull()
+			data.ExtranetDevice = types.BoolNull()
 		}
 		if value := res.Get("extranetInfo.ipAddress"); value.Exists() {
 			data.ExtranetIpAddress = types.StringValue(value.String())
@@ -243,9 +239,9 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.ExtranetIpAddress = types.StringNull()
 		}
 		if value := res.Get("extranetInfo.isDynamicIP"); value.Exists() {
-			data.ExtranetIsDynamicIp = types.BoolValue(value.Bool())
+			data.ExtranetDynamicIp = types.BoolValue(value.Bool())
 		} else {
-			data.ExtranetIsDynamicIp = types.BoolNull()
+			data.ExtranetDynamicIp = types.BoolNull()
 		}
 		if value := res.Get("device.id"); value.Exists() {
 			data.DeviceId = types.StringValue(value.String())
@@ -278,9 +274,9 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.AllowIncomingIkev2Routes = types.BoolNull()
 		}
 		if value := res.Get("sendTunnelInterfaceIpToPeer"); value.Exists() {
-			data.SendTunnelInterfaceIpToPeer = types.BoolValue(value.Bool())
+			data.SendVtiIpToPeer = types.BoolValue(value.Bool())
 		} else {
-			data.SendTunnelInterfaceIpToPeer = types.BoolNull()
+			data.SendVtiIpToPeer = types.BoolNull()
 		}
 		if value := res.Get("protectedNetworks.networks"); value.Exists() {
 			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0)
@@ -297,24 +293,24 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("protectedNetworks.acl.id"); value.Exists() {
-			data.AclId = types.StringValue(value.String())
+			data.ProtectedNetworksAclId = types.StringValue(value.String())
 		} else {
-			data.AclId = types.StringNull()
+			data.ProtectedNetworksAclId = types.StringNull()
 		}
 		if value := res.Get("enableNatTraversal"); value.Exists() {
-			data.EnableNatTraversal = types.BoolValue(value.Bool())
+			data.NatTraversal = types.BoolValue(value.Bool())
 		} else {
-			data.EnableNatTraversal = types.BoolNull()
+			data.NatTraversal = types.BoolNull()
 		}
 		if value := res.Get("insideInterface.0.id"); value.Exists() {
-			data.InsideInterfaceId = types.StringValue(value.String())
+			data.NatExemptionInsideInterfaceId = types.StringValue(value.String())
 		} else {
-			data.InsideInterfaceId = types.StringNull()
+			data.NatExemptionInsideInterfaceId = types.StringNull()
 		}
 		if value := res.Get("dynamicRRIEnabled"); value.Exists() {
-			data.EnableReverseRouteInjection = types.BoolValue(value.Bool())
+			data.ReverseRouteInjection = types.BoolValue(value.Bool())
 		} else {
-			data.EnableReverseRouteInjection = types.BoolNull()
+			data.ReverseRouteInjection = types.BoolNull()
 		}
 		if value := res.Get("localIdentityType"); value.Exists() {
 			data.LocalIdentityType = types.StringValue(value.String())
@@ -331,15 +327,10 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 		} else {
 			data.VpnFilterAclId = types.StringNull()
 		}
-		if value := res.Get("overrideRemoteVpnFilter"); value.Exists() {
-			data.OverrideRemoteVpnFilter = types.BoolValue(value.Bool())
-		} else {
-			data.OverrideRemoteVpnFilter = types.BoolNull()
-		}
 		if value := res.Get("remoteVpnFilterAclObject.id"); value.Exists() {
-			data.RemoteVpnFilterAclId = types.StringValue(value.String())
+			data.OverrideRemoteVpnFilterAclId = types.StringValue(value.String())
 		} else {
-			data.RemoteVpnFilterAclId = types.StringNull()
+			data.OverrideRemoteVpnFilterAclId = types.StringNull()
 		}
 		if value := res.Get("backupInterfaces.0.interface.id"); value.Exists() {
 			data.BackupInterfaceId = types.StringValue(value.String())
@@ -399,20 +390,20 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.PeerType = types.StringNull()
 		}
-		if value := res.Get("extranet"); value.Exists() && !data.IsExtranet.IsNull() {
-			data.IsExtranet = types.BoolValue(value.Bool())
+		if value := res.Get("extranet"); value.Exists() && !data.ExtranetDevice.IsNull() {
+			data.ExtranetDevice = types.BoolValue(value.Bool())
 		} else {
-			data.IsExtranet = types.BoolNull()
+			data.ExtranetDevice = types.BoolNull()
 		}
 		if value := res.Get("extranetInfo.ipAddress"); value.Exists() && !data.ExtranetIpAddress.IsNull() {
 			data.ExtranetIpAddress = types.StringValue(value.String())
 		} else {
 			data.ExtranetIpAddress = types.StringNull()
 		}
-		if value := res.Get("extranetInfo.isDynamicIP"); value.Exists() && !data.ExtranetIsDynamicIp.IsNull() {
-			data.ExtranetIsDynamicIp = types.BoolValue(value.Bool())
+		if value := res.Get("extranetInfo.isDynamicIP"); value.Exists() && !data.ExtranetDynamicIp.IsNull() {
+			data.ExtranetDynamicIp = types.BoolValue(value.Bool())
 		} else {
-			data.ExtranetIsDynamicIp = types.BoolNull()
+			data.ExtranetDynamicIp = types.BoolNull()
 		}
 		if value := res.Get("device.id"); value.Exists() && !data.DeviceId.IsNull() {
 			data.DeviceId = types.StringValue(value.String())
@@ -444,10 +435,10 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.AllowIncomingIkev2Routes = types.BoolNull()
 		}
-		if value := res.Get("sendTunnelInterfaceIpToPeer"); value.Exists() && !data.SendTunnelInterfaceIpToPeer.IsNull() {
-			data.SendTunnelInterfaceIpToPeer = types.BoolValue(value.Bool())
+		if value := res.Get("sendTunnelInterfaceIpToPeer"); value.Exists() && !data.SendVtiIpToPeer.IsNull() {
+			data.SendVtiIpToPeer = types.BoolValue(value.Bool())
 		} else {
-			data.SendTunnelInterfaceIpToPeer = types.BoolNull()
+			data.SendVtiIpToPeer = types.BoolNull()
 		}
 		for i := 0; i < len(data.ProtectedNetworks); i++ {
 			keys := [...]string{"id"}
@@ -492,25 +483,25 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).ProtectedNetworks[i] = data
 		}
-		if value := res.Get("protectedNetworks.acl.id"); value.Exists() && !data.AclId.IsNull() {
-			data.AclId = types.StringValue(value.String())
+		if value := res.Get("protectedNetworks.acl.id"); value.Exists() && !data.ProtectedNetworksAclId.IsNull() {
+			data.ProtectedNetworksAclId = types.StringValue(value.String())
 		} else {
-			data.AclId = types.StringNull()
+			data.ProtectedNetworksAclId = types.StringNull()
 		}
-		if value := res.Get("enableNatTraversal"); value.Exists() && !data.EnableNatTraversal.IsNull() {
-			data.EnableNatTraversal = types.BoolValue(value.Bool())
+		if value := res.Get("enableNatTraversal"); value.Exists() && !data.NatTraversal.IsNull() {
+			data.NatTraversal = types.BoolValue(value.Bool())
 		} else {
-			data.EnableNatTraversal = types.BoolNull()
+			data.NatTraversal = types.BoolNull()
 		}
-		if value := res.Get("insideInterface.0.id"); value.Exists() && !data.InsideInterfaceId.IsNull() {
-			data.InsideInterfaceId = types.StringValue(value.String())
+		if value := res.Get("insideInterface.0.id"); value.Exists() && !data.NatExemptionInsideInterfaceId.IsNull() {
+			data.NatExemptionInsideInterfaceId = types.StringValue(value.String())
 		} else {
-			data.InsideInterfaceId = types.StringNull()
+			data.NatExemptionInsideInterfaceId = types.StringNull()
 		}
-		if value := res.Get("dynamicRRIEnabled"); value.Exists() && !data.EnableReverseRouteInjection.IsNull() {
-			data.EnableReverseRouteInjection = types.BoolValue(value.Bool())
+		if value := res.Get("dynamicRRIEnabled"); value.Exists() && !data.ReverseRouteInjection.IsNull() {
+			data.ReverseRouteInjection = types.BoolValue(value.Bool())
 		} else {
-			data.EnableReverseRouteInjection = types.BoolNull()
+			data.ReverseRouteInjection = types.BoolNull()
 		}
 		if value := res.Get("localIdentityType"); value.Exists() && !data.LocalIdentityType.IsNull() {
 			data.LocalIdentityType = types.StringValue(value.String())
@@ -527,15 +518,10 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.VpnFilterAclId = types.StringNull()
 		}
-		if value := res.Get("overrideRemoteVpnFilter"); value.Exists() && !data.OverrideRemoteVpnFilter.IsNull() {
-			data.OverrideRemoteVpnFilter = types.BoolValue(value.Bool())
+		if value := res.Get("remoteVpnFilterAclObject.id"); value.Exists() && !data.OverrideRemoteVpnFilterAclId.IsNull() {
+			data.OverrideRemoteVpnFilterAclId = types.StringValue(value.String())
 		} else {
-			data.OverrideRemoteVpnFilter = types.BoolNull()
-		}
-		if value := res.Get("remoteVpnFilterAclObject.id"); value.Exists() && !data.RemoteVpnFilterAclId.IsNull() {
-			data.RemoteVpnFilterAclId = types.StringValue(value.String())
-		} else {
-			data.RemoteVpnFilterAclId = types.StringNull()
+			data.OverrideRemoteVpnFilterAclId = types.StringNull()
 		}
 		if value := res.Get("backupInterfaces.0.interface.id"); value.Exists() && !data.BackupInterfaceId.IsNull() {
 			data.BackupInterfaceId = types.StringValue(value.String())
@@ -637,9 +623,16 @@ func (data VPNS2SEndpoints) toBodyNonBulk(ctx context.Context, state VPNS2SEndpo
 
 // End of section. //template:end clearItemIds
 
-// VPN S2S Endpoints do have some fileds that are set based on other fields.
-// This function is used to fix those fields before sending the request to the API.
-func (data VPNS2SEndpoints) fixFields(ctx context.Context, req string) string {
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// End of section. //template:end toBodyPutDelete
+
+func (data VPNS2SEndpoints) adjustBody(ctx context.Context, req string) string {
+	fixed := data.adjustBodyBulk(ctx, fmt.Sprintf("[%s]", req))
+	return gjson.Get(fixed, "0").String()
+}
+
+func (data VPNS2SEndpoints) adjustBodyBulk(ctx context.Context, req string) string {
 	reqJson := gjson.Parse(req)
 	itemsJson := reqJson.Array()
 
@@ -648,7 +641,7 @@ func (data VPNS2SEndpoints) fixFields(ctx context.Context, req string) string {
 			if val.Get("name").String() == k {
 				var header = fmt.Sprintf("%d.", idx)
 
-				if v.IsExtranet.ValueBool() {
+				if v.ExtranetDevice.ValueBool() {
 					req, _ = sjson.Set(req, header+"extranetInfo.name", k)
 				} else {
 					req, _ = sjson.Set(req, header+"device.name", k)
@@ -661,14 +654,13 @@ func (data VPNS2SEndpoints) fixFields(ctx context.Context, req string) string {
 				if v.BackupLocalIdentityType.ValueString() != "" {
 					req, _ = sjson.Set(req, header+"backupInterfaces.0.isLocalTunnelIdEnabled", true)
 				}
+
+				if v.OverrideRemoteVpnFilterAclId.ValueString() != "" {
+					req, _ = sjson.Set(req, header+"overrideRemoteVpnFilter", true)
+				}
 			}
 		}
 	}
 
 	return req
-}
-
-func (data VPNS2SEndpoints) fixFieldsNonBulk(ctx context.Context, req string) string {
-	fixed := data.fixFields(ctx, fmt.Sprintf("[%s]", req))
-	return gjson.Get(fixed, "0").String()
 }

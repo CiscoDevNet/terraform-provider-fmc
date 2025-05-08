@@ -664,6 +664,26 @@ func (data {{camelCase .Name}}) toBodyPutDelete(ctx context.Context, state {{cam
 
 // End of section. //template:end toBodyPutDelete
 
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+{{if .AdjustBody}}
+func (data {{camelCase .Name}}) adjustBody(ctx context.Context, req string) string {
+	return req
+}
+{{- end}}
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+{{if and .AdjustBody .IsBulk}}
+func (data {{camelCase .Name}}) adjustBodyBulk(ctx context.Context, req string) string {
+	return req
+}
+{{- end}}
+
+// End of section. //template:end adjustBody
+
 {{- range .Attributes}}
 	{{- if isNestedMap .}}
 		{{- $found := false }}

@@ -23,31 +23,30 @@ resource "fmc_vpn_s2s_endpoints" "example" {
   vpn_s2s_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   items = {
     my_ftd_01 = {
-      peer_type                        = "PEER"
-      is_extranet                      = false
-      device_id                        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      interface_id                     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      interface_ipv6_address           = "2001:db8::1"
-      connection_type                  = "BIDIRECTIONAL"
-      allow_incoming_ikev2_routes      = false
-      send_tunnel_interface_ip_to_peer = false
+      peer_type                   = "PEER"
+      extranet_device             = false
+      device_id                   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      interface_id                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      interface_ipv6_address      = "2001:db8::1"
+      connection_type             = "BIDIRECTIONAL"
+      allow_incoming_ikev2_routes = false
+      send_vti_ip_to_peer         = false
       protected_networks = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      enable_nat_traversal           = false
-      enable_nat_exemption           = false
-      inside_interface_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      enable_reverse_route_injection = false
-      local_identity_type            = "EMAIL"
-      local_identity_string          = "me@cisco.com"
-      vpn_filter_acl_id              = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      override_remote_vpn_filter     = false
-      remote_vpn_filter_acl_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      backup_interface_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      backup_local_identity_type     = "EMAIL"
-      backup_local_identity_string   = "me@cisco.com"
+      nat_traversal                     = false
+      nat_exemption                     = false
+      nat_exemption_inside_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      reverse_route_injection           = false
+      local_identity_type               = "EMAIL"
+      local_identity_string             = "me@cisco.com"
+      vpn_filter_acl_id                 = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      override_remote_vpn_filter_acl_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      backup_interface_id               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      backup_local_identity_type        = "EMAIL"
+      backup_local_identity_string      = "me@cisco.com"
     }
   }
 }
@@ -74,38 +73,37 @@ resource "fmc_vpn_s2s_endpoints" "example" {
 
 Required:
 
-- `is_extranet` (Boolean) Is the device managed by FMC.
-- `peer_type` (String) Type of the peer.
+- `extranet_device` (Boolean) Is the device managed by local FMC.
+- `peer_type` (String) Role of the device in the topology.
   - Choices: `PEER`, `HUB`, `SPOKE`
 
 Optional:
 
-- `acl_id` (String) Id of the extended ACL.
 - `allow_incoming_ikev2_routes` (Boolean) Allow incoming IKEv2 routes.
-- `backup_interface_id` (String) Id of the backup interface.
-- `backup_interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
-- `backup_local_identity_string` (String) String of the local identity (applicable only for key-id and email-id)
-- `backup_local_identity_type` (String) Type of the local identity.
+- `backup_interface_id` (String) Id of the backup VTI interface.
+- `backup_interface_public_ip_address` (String) Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
+- `backup_local_identity_string` (String) String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
+- `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
   - Choices: `ADDRESS`, `AUTO`, `EMAILID`, `HOSTNAME`, `KEYID`
-- `connection_type` (String) Connection type
+- `connection_type` (String) Connection type.
   - Choices: `ORIGINATE_ONLY`, `ANSWER_ONLY`, `BIDIRECTIONAL`
-- `device_id` (String) Id of the device.
-- `enable_nat_exemption` (Boolean) Enable NAT exemption.
-- `enable_nat_traversal` (Boolean) Enable NAT traversal.
-- `enable_reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
-- `extranet_ip_address` (String) IP address of extranet device, optionally coma separated Backup IP Addresses.
-- `extranet_is_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
-- `inside_interface_id` (String) Id of the inside Security Zone.
-- `interface_id` (String) Id of the interface.
+- `device_id` (String) Id of the device managed by local FMC.
+- `extranet_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
+- `extranet_ip_address` (String) IP address of extranet device (optionally coma separated Backup IP Addresses).
+- `interface_id` (String) Id of the primary VTI interface.
 - `interface_ipv6_address` (String) IPv6 address of the interface. If not set, IPv4 address will be used.
 - `interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
-- `local_identity_string` (String) String of the local identity (applicable only for key-id and email-id)
+- `local_identity_string` (String) String of the local identity (applicable only for types KEYID and EMAILID)
 - `local_identity_type` (String) Type of the local identity.
   - Choices: `ADDRESS`, `AUTO`, `EMAILID`, `HOSTNAME`, `KEYID`
-- `override_remote_vpn_filter` (Boolean) Override remote VPN filter.
+- `nat_exemption` (Boolean) Enable NAT exemption.
+- `nat_exemption_inside_interface_id` (String) Id of the inside Security Zone for NAT Exemption identification.
+- `nat_traversal` (Boolean) Enable NAT traversal.
+- `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
 - `protected_networks` (Attributes Set) Set of protected networks. (see [below for nested schema](#nestedatt--items--protected_networks))
-- `remote_vpn_filter_acl_id` (String) Id of the remote VPN filter ACL.
-- `send_tunnel_interface_ip_to_peer` (Boolean) Send tunnel interface IP to peer.
+- `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
+- `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
+- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers
 - `vpn_filter_acl_id` (String) Id of the VPN filter ACL.
 
 Read-Only:

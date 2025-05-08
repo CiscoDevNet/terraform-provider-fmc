@@ -43,32 +43,31 @@ data "fmc_vpn_s2s_endpoints" "example" {
 
 Read-Only:
 
-- `acl_id` (String) Id of the extended ACL.
 - `allow_incoming_ikev2_routes` (Boolean) Allow incoming IKEv2 routes.
-- `backup_interface_id` (String) Id of the backup interface.
-- `backup_interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
-- `backup_local_identity_string` (String) String of the local identity (applicable only for key-id and email-id)
-- `backup_local_identity_type` (String) Type of the local identity.
-- `connection_type` (String) Connection type
-- `device_id` (String) Id of the device.
-- `enable_nat_exemption` (Boolean) Enable NAT exemption.
-- `enable_nat_traversal` (Boolean) Enable NAT traversal.
-- `enable_reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
-- `extranet_ip_address` (String) IP address of extranet device, optionally coma separated Backup IP Addresses.
-- `extranet_is_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
+- `backup_interface_id` (String) Id of the backup VTI interface.
+- `backup_interface_public_ip_address` (String) Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
+- `backup_local_identity_string` (String) String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
+- `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
+- `connection_type` (String) Connection type.
+- `device_id` (String) Id of the device managed by local FMC.
+- `extranet_device` (Boolean) Is the device managed by local FMC.
+- `extranet_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
+- `extranet_ip_address` (String) IP address of extranet device (optionally coma separated Backup IP Addresses).
 - `id` (String) Id of the Endpoint object.
-- `inside_interface_id` (String) Id of the inside Security Zone.
-- `interface_id` (String) Id of the interface.
+- `interface_id` (String) Id of the primary VTI interface.
 - `interface_ipv6_address` (String) IPv6 address of the interface. If not set, IPv4 address will be used.
 - `interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
-- `is_extranet` (Boolean) Is the device managed by FMC.
-- `local_identity_string` (String) String of the local identity (applicable only for key-id and email-id)
+- `local_identity_string` (String) String of the local identity (applicable only for types KEYID and EMAILID)
 - `local_identity_type` (String) Type of the local identity.
-- `override_remote_vpn_filter` (Boolean) Override remote VPN filter.
-- `peer_type` (String) Type of the peer.
+- `nat_exemption` (Boolean) Enable NAT exemption.
+- `nat_exemption_inside_interface_id` (String) Id of the inside Security Zone for NAT Exemption identification.
+- `nat_traversal` (Boolean) Enable NAT traversal.
+- `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
+- `peer_type` (String) Role of the device in the topology.
 - `protected_networks` (Attributes Set) Set of protected networks. (see [below for nested schema](#nestedatt--items--protected_networks))
-- `remote_vpn_filter_acl_id` (String) Id of the remote VPN filter ACL.
-- `send_tunnel_interface_ip_to_peer` (Boolean) Send tunnel interface IP to peer.
+- `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
+- `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
+- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers
 - `vpn_filter_acl_id` (String) Id of the VPN filter ACL.
 
 <a id="nestedatt--items--protected_networks"></a>

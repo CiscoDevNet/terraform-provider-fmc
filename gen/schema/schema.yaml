@@ -24,6 +24,7 @@ test_prerequisites: str(required=False) # HCL code that is included in the accep
 is_bulk: bool(required=False) # Treat this as a bulk resource
 import_name_query: bool(required=False) # Set to true if import should be done using object name
 bulk_size_create: int(required=False) # Number of resources to create in a single bulk create operation (overrides default 1000)
+adjust_body: bool(required=False) # Includes adjustBody funtion before Create/Update operations. This function gets defined in model.go template, however its body needs to be defined manually.
 ---
 attribute:
   model_name: str(required=False) # Name of the attribute in the model (payload)

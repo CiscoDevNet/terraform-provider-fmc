@@ -80,27 +80,27 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"peer_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the peer.",
+							MarkdownDescription: "Role of the device in the topology.",
 							Computed:            true,
 						},
-						"is_extranet": schema.BoolAttribute{
-							MarkdownDescription: "Is the device managed by FMC.",
+						"extranet_device": schema.BoolAttribute{
+							MarkdownDescription: "Is the device managed by local FMC.",
 							Computed:            true,
 						},
 						"extranet_ip_address": schema.StringAttribute{
-							MarkdownDescription: "IP address of extranet device, optionally coma separated Backup IP Addresses.",
+							MarkdownDescription: "IP address of extranet device (optionally coma separated Backup IP Addresses).",
 							Computed:            true,
 						},
-						"extranet_is_dynamic_ip": schema.BoolAttribute{
+						"extranet_dynamic_ip": schema.BoolAttribute{
 							MarkdownDescription: "Is the IP address of the extranet device dynamic.",
 							Computed:            true,
 						},
 						"device_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the device.",
+							MarkdownDescription: "Id of the device managed by local FMC.",
 							Computed:            true,
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the interface.",
+							MarkdownDescription: "Id of the primary VTI interface.",
 							Computed:            true,
 						},
 						"interface_ipv6_address": schema.StringAttribute{
@@ -112,15 +112,15 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"connection_type": schema.StringAttribute{
-							MarkdownDescription: "Connection type",
+							MarkdownDescription: "Connection type.",
 							Computed:            true,
 						},
 						"allow_incoming_ikev2_routes": schema.BoolAttribute{
 							MarkdownDescription: "Allow incoming IKEv2 routes.",
 							Computed:            true,
 						},
-						"send_tunnel_interface_ip_to_peer": schema.BoolAttribute{
-							MarkdownDescription: "Send tunnel interface IP to peer.",
+						"send_vti_ip_to_peer": schema.BoolAttribute{
+							MarkdownDescription: "Send Virtual Tunnel Interface IP to the peers",
 							Computed:            true,
 						},
 						"protected_networks": schema.SetNestedAttribute{
@@ -135,23 +135,23 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 								},
 							},
 						},
-						"acl_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the extended ACL.",
+						"protected_networks_acl_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the ACL that defines protected networks.",
 							Computed:            true,
 						},
-						"enable_nat_traversal": schema.BoolAttribute{
+						"nat_traversal": schema.BoolAttribute{
 							MarkdownDescription: "Enable NAT traversal.",
 							Computed:            true,
 						},
-						"enable_nat_exemption": schema.BoolAttribute{
+						"nat_exemption": schema.BoolAttribute{
 							MarkdownDescription: "Enable NAT exemption.",
 							Computed:            true,
 						},
-						"inside_interface_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the inside Security Zone.",
+						"nat_exemption_inside_interface_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the inside Security Zone for NAT Exemption identification.",
 							Computed:            true,
 						},
-						"enable_reverse_route_injection": schema.BoolAttribute{
+						"reverse_route_injection": schema.BoolAttribute{
 							MarkdownDescription: "Enable Reverse Route Injection (RRI).",
 							Computed:            true,
 						},
@@ -160,35 +160,31 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"local_identity_string": schema.StringAttribute{
-							MarkdownDescription: "String of the local identity (applicable only for key-id and email-id)",
+							MarkdownDescription: "String of the local identity (applicable only for types KEYID and EMAILID)",
 							Computed:            true,
 						},
 						"vpn_filter_acl_id": schema.StringAttribute{
 							MarkdownDescription: "Id of the VPN filter ACL.",
 							Computed:            true,
 						},
-						"override_remote_vpn_filter": schema.BoolAttribute{
-							MarkdownDescription: "Override remote VPN filter.",
-							Computed:            true,
-						},
-						"remote_vpn_filter_acl_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the remote VPN filter ACL.",
+						"override_remote_vpn_filter_acl_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the ACL to override VPN filter on the Hub.",
 							Computed:            true,
 						},
 						"backup_interface_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the backup interface.",
+							MarkdownDescription: "Id of the backup VTI interface.",
 							Computed:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{
-							MarkdownDescription: "Public address of the interface, in case the one configured on the interface is private.",
+							MarkdownDescription: "Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)",
 							Computed:            true,
 						},
 						"backup_local_identity_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the local identity.",
+							MarkdownDescription: "Type of the local identity for the backup tunnel.",
 							Computed:            true,
 						},
 						"backup_local_identity_string": schema.StringAttribute{
-							MarkdownDescription: "String of the local identity (applicable only for key-id and email-id)",
+							MarkdownDescription: "String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)",
 							Computed:            true,
 						},
 					},

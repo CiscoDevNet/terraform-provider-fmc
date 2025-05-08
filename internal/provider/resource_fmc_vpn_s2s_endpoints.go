@@ -103,30 +103,30 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"peer_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the peer.").AddStringEnumDescription("PEER", "HUB", "SPOKE").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Role of the device in the topology.").AddStringEnumDescription("PEER", "HUB", "SPOKE").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PEER", "HUB", "SPOKE"),
 							},
 						},
-						"is_extranet": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Is the device managed by FMC.").String,
+						"extranet_device": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Is the device managed by local FMC.").String,
 							Required:            true,
 						},
 						"extranet_ip_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("IP address of extranet device, optionally coma separated Backup IP Addresses.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IP address of extranet device (optionally coma separated Backup IP Addresses).").String,
 							Optional:            true,
 						},
-						"extranet_is_dynamic_ip": schema.BoolAttribute{
+						"extranet_dynamic_ip": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Is the IP address of the extranet device dynamic.").String,
 							Optional:            true,
 						},
 						"device_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the device.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the device managed by local FMC.").String,
 							Optional:            true,
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary VTI interface.").String,
 							Optional:            true,
 						},
 						"interface_ipv6_address": schema.StringAttribute{
@@ -138,7 +138,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"connection_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Connection type").AddStringEnumDescription("ORIGINATE_ONLY", "ANSWER_ONLY", "BIDIRECTIONAL").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Connection type.").AddStringEnumDescription("ORIGINATE_ONLY", "ANSWER_ONLY", "BIDIRECTIONAL").String,
 							Optional:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("ORIGINATE_ONLY", "ANSWER_ONLY", "BIDIRECTIONAL"),
@@ -148,8 +148,8 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							MarkdownDescription: helpers.NewAttributeDescription("Allow incoming IKEv2 routes.").String,
 							Optional:            true,
 						},
-						"send_tunnel_interface_ip_to_peer": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Send tunnel interface IP to peer.").String,
+						"send_vti_ip_to_peer": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Send Virtual Tunnel Interface IP to the peers").String,
 							Optional:            true,
 						},
 						"protected_networks": schema.SetNestedAttribute{
@@ -164,23 +164,23 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 								},
 							},
 						},
-						"acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the extended ACL.").String,
+						"protected_networks_acl_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the ACL that defines protected networks.").String,
 							Optional:            true,
 						},
-						"enable_nat_traversal": schema.BoolAttribute{
+						"nat_traversal": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable NAT traversal.").String,
 							Optional:            true,
 						},
-						"enable_nat_exemption": schema.BoolAttribute{
+						"nat_exemption": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable NAT exemption.").String,
 							Optional:            true,
 						},
-						"inside_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the inside Security Zone.").String,
+						"nat_exemption_inside_interface_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the inside Security Zone for NAT Exemption identification.").String,
 							Optional:            true,
 						},
-						"enable_reverse_route_injection": schema.BoolAttribute{
+						"reverse_route_injection": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable Reverse Route Injection (RRI).").String,
 							Optional:            true,
 						},
@@ -192,38 +192,34 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"local_identity_string": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity (applicable only for key-id and email-id)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity (applicable only for types KEYID and EMAILID)").String,
 							Optional:            true,
 						},
 						"vpn_filter_acl_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the VPN filter ACL.").String,
 							Optional:            true,
 						},
-						"override_remote_vpn_filter": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Override remote VPN filter.").String,
-							Optional:            true,
-						},
-						"remote_vpn_filter_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the remote VPN filter ACL.").String,
+						"override_remote_vpn_filter_acl_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the ACL to override VPN filter on the Hub.").String,
 							Optional:            true,
 						},
 						"backup_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the backup interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the backup VTI interface.").String,
 							Optional:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Public address of the interface, in case the one configured on the interface is private.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)").String,
 							Optional:            true,
 						},
 						"backup_local_identity_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the local identity.").AddStringEnumDescription("ADDRESS", "AUTO", "EMAILID", "HOSTNAME", "KEYID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the local identity for the backup tunnel.").AddStringEnumDescription("ADDRESS", "AUTO", "EMAILID", "HOSTNAME", "KEYID").String,
 							Optional:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("ADDRESS", "AUTO", "EMAILID", "HOSTNAME", "KEYID"),
 							},
 						},
 						"backup_local_identity_string": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity (applicable only for key-id and email-id)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)").String,
 							Optional:            true,
 						},
 					},
@@ -550,6 +546,7 @@ func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.
 
 // End of section. //template:end import
 
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *VPNS2SEndpointsResource) createSubresources(ctx context.Context, state, plan VPNS2SEndpoints, reqMods ...func(*fmc.Req)) (VPNS2SEndpoints, diag.Diagnostics) {
@@ -572,12 +569,10 @@ func (r *VPNS2SEndpointsResource) createSubresources(ctx context.Context, state,
 
 			// Parse body of the request to string
 			body := bulk.toBody(ctx, VPNS2SEndpoints{})
-
-			// Set some hardcoded values
-			body = bulk.fixFields(ctx, body)
+			body = bulk.adjustBodyBulk(ctx, body)
 
 			// Execute request
-			urlPath := plan.getPath() + "?bulk=true"
+			urlPath := state.getPath() + "?bulk=true"
 			res, err := r.client.Post(urlPath, body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -598,6 +593,8 @@ func (r *VPNS2SEndpointsResource) createSubresources(ctx context.Context, state,
 
 	return state, nil
 }
+
+// End of section. //template:end createSubresources
 
 // Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
@@ -679,6 +676,8 @@ func (r *VPNS2SEndpointsResource) deleteSubresources(ctx context.Context, state,
 
 // End of section. //template:end deleteSubresources
 
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
 func (r *VPNS2SEndpointsResource) updateSubresources(ctx context.Context, state, plan VPNS2SEndpoints, reqMods ...func(*fmc.Req)) (VPNS2SEndpoints, diag.Diagnostics) {
 	var tmpObject VPNS2SEndpoints
@@ -690,10 +689,7 @@ func (r *VPNS2SEndpointsResource) updateSubresources(ctx context.Context, state,
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-
-		// Set some hardcoded values
-		body = tmpObject.fixFieldsNonBulk(ctx, body)
-
+		body = tmpObject.adjustBody(ctx, body)
 		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
@@ -711,3 +707,5 @@ func (r *VPNS2SEndpointsResource) updateSubresources(ctx context.Context, state,
 
 	return state, nil
 }
+
+// End of section. //template:end updateSubresources

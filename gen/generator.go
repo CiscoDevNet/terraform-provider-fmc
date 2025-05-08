@@ -121,6 +121,7 @@ type YamlConfig struct {
 	IsBulk                   bool                  `yaml:"is_bulk"`
 	BulkSizeCreate           int                   `yaml:"bulk_size_create"`
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
+	AdjustBody               bool                  `yaml:"adjust_body"`
 }
 
 type YamlConfigAttribute struct {

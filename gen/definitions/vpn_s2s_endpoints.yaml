@@ -5,6 +5,7 @@ res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Ne
 is_bulk: true
 doc_category: VPN
 minimum_version_bulk_delete: "999"
+adjust_body: true
 attributes:
   - tf_name: vpn_s2s_id
     type: String
@@ -27,26 +28,26 @@ attributes:
         exclude_test: true
       - model_name: peerType
         type: String
-        description: Type of the peer.
+        description: Role of the device in the topology.
         enum_values: [PEER, HUB, SPOKE]
         example: PEER
         mandatory: true
       # Device
       - model_name: extranet
-        tf_name: is_extranet
+        tf_name: extranet_device
         type: Bool
-        description: Is the device managed by FMC.
+        description: Is the device managed by local FMC.
         example: "false"
         mandatory: true
       - model_name: ipAddress
         data_path: [extranetInfo]
         tf_name: extranet_ip_address
         type: String
-        description: IP address of extranet device, optionally coma separated Backup IP Addresses.
+        description: IP address of extranet device (optionally coma separated Backup IP Addresses).
         exclude_example: true
       - model_name: isDynamicIP
         data_path: [extranetInfo]
-        tf_name: extranet_is_dynamic_ip
+        tf_name: extranet_dynamic_ip
         type: Bool
         description: Is the IP address of the extranet device dynamic.
         exclude_example: true
@@ -54,14 +55,14 @@ attributes:
         data_path: [device]
         tf_name: device_id
         type: String
-        description: Id of the device.
+        description: Id of the device managed by local FMC.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: TBD
       - model_name: id
         data_path: [interface]
         tf_name: interface_id
         type: String
-        description: Id of the interface.
+        description: Id of the primary VTI interface.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: TBD
       - model_name: ipv6InterfaceAddress
@@ -77,7 +78,7 @@ attributes:
         exclude_example: true
       - model_name: connectionType
         type: String
-        description: Connection type
+        description: Connection type.
         enum_values: [ORIGINATE_ONLY, ANSWER_ONLY, BIDIRECTIONAL]
         example: BIDIRECTIONAL
       - model_name: allowIncomingIKEv2Routes
@@ -86,11 +87,10 @@ attributes:
         description: Allow incoming IKEv2 routes.
         example: "false"
       - model_name: sendTunnelInterfaceIpToPeer
-        tf_name: send_tunnel_interface_ip_to_peer
+        tf_name: send_vti_ip_to_peer
         type: Bool
-        description: Send tunnel interface IP to peer.
+        description: Send Virtual Tunnel Interface IP to the peers
         example: "false"
-        # certificate map
       # Protected Networks
       - model_name: networks
         data_path: [protectedNetworks]
@@ -107,29 +107,29 @@ attributes:
             mandatory: true
       - model_name: id
         data_path: [protectedNetworks, acl]
-        tf_name: acl_id
+        tf_name: protected_networks_acl_id
         type: String
-        description: Id of the extended ACL.
+        description: Id of the ACL that defines protected networks.
         exclude_example: true
       - model_name: enableNatTraversal
-        tf_name: enable_nat_traversal
+        tf_name: nat_traversal
         type: Bool
         description: Enable NAT traversal.
         example: "false"
       - model_name: enableNATExempt
-        tf_name: enable_nat_exemption
+        tf_name: nat_exemption
         type: Bool
         description: Enable NAT exemption.
         example: "false"
         write_only: true # FMCBUG: Despite changing the value, it is not reflected in the response.
       - model_name: id
         data_path: [insideInterface.0]
-        tf_name: inside_interface_id
+        tf_name: nat_exemption_inside_interface_id
         type: String
-        description: Id of the inside Security Zone.
+        description: Id of the inside Security Zone for NAT Exemption identification.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       - model_name: dynamicRRIEnabled
-        tf_name: enable_reverse_route_injection
+        tf_name: reverse_route_injection
         type: Bool
         description: Enable Reverse Route Injection (RRI).
         example: "false"
@@ -147,7 +147,7 @@ attributes:
       - model_name: localIdentityString
         tf_name: local_identity_string
         type: String
-        description: String of the local identity (applicable only for key-id and email-id)
+        description: String of the local identity (applicable only for types KEYID and EMAILID)
         example: me@cisco.com
       - model_name: id
         data_path: [vpnFilterAcl]
@@ -155,29 +155,29 @@ attributes:
         type: String
         description: Id of the VPN filter ACL.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-      - model_name: overrideRemoteVpnFilter
-        tf_name: override_remote_vpn_filter
-        type: Bool
-        description: Override remote VPN filter.
-        example: "false"
+      #- model_name: overrideRemoteVpnFilter  #### MOVE TO IMPLICIT CONFIGURATION !!!!!!
+      #  tf_name: override_remote_vpn_filter
+      #  type: Bool
+      #  description: Override remote VPN filter.
+      #  example: "false"
       - model_name: id
         data_path: [remoteVpnFilterAclObject]
-        tf_name: remote_vpn_filter_acl_id
+        tf_name: override_remote_vpn_filter_acl_id
         type: String
-        description: Id of the remote VPN filter ACL.
+        description: Id of the ACL to override VPN filter on the Hub.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       # Backup Interface
       - model_name: id
         data_path: [backupInterfaces.0, interface]
         tf_name: backup_interface_id
         type: String
-        description: Id of the backup interface.
+        description: Id of the backup VTI interface.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       - model_name: publicIpAddress
         data_path: [backupInterfaces.0]
         tf_name: backup_interface_public_ip_address
         type: String
-        description: Public address of the interface, in case the one configured on the interface is private.
+        description: Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
         exclude_example: true
       #- model_name: isLocalTunnelIdEnabled
       #  data_path: [backupInterfaces.0]
@@ -189,12 +189,12 @@ attributes:
         data_path: [backupInterfaces.0]
         tf_name: backup_local_identity_type
         type: String
-        description: Type of the local identity.
+        description: Type of the local identity for the backup tunnel.
         enum_values: [ADDRESS, AUTO, EMAILID, HOSTNAME, KEYID]
         example: EMAIL
       - model_name: localIdentityString
         data_path: [backupInterfaces.0]
         tf_name: backup_local_identity_string
         type: String
-        description: String of the local identity (applicable only for key-id and email-id)
+        description: String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
         example: me@cisco.com

@@ -1081,6 +1081,9 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 			tmpObject.Items[k] = v
 
 			body := tmpObject.toBodyNonBulk(ctx, state)
+			{{- if .AdjustBody}}
+			body = tmpObject.adjustBody(ctx, body)
+			{{- end}}
 			res, err := r.client.Post(state.getPath(), body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -1122,6 +1125,10 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 
 				// Parse body of the request to string
 				body := bulk.toBody(ctx, {{camelCase .Name}}{})
+
+				{{- if .AdjustBody}}
+				body = bulk.adjustBodyBulk(ctx, body)
+				{{- end}}
 
 				// Execute request
 				urlPath := plan.getPath() + "?bulk=true"
@@ -1254,6 +1261,9 @@ func (r *{{camelCase .Name}}Resource) updateSubresources(ctx context.Context, st
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
+		{{- if .AdjustBody}}
+		body = tmpObject.adjustBody(ctx, body)
+		{{- end}}
 		urlPath := plan.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
