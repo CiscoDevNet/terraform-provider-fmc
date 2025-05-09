@@ -42,21 +42,23 @@ type VPNS2SAdvancedSettings struct {
 	IkeKeepaliveRetryInterval                          types.Int64  `tfsdk:"ike_keepalive_retry_interval"`
 	IkeIdentitySentToPeers                             types.String `tfsdk:"ike_identity_sent_to_peers"`
 	IkePeerIdentityValidation                          types.String `tfsdk:"ike_peer_identity_validation"`
-	IkeEnableAggressiveMode                            types.Bool   `tfsdk:"ike_enable_aggressive_mode"`
-	IkeEnableNotificationOnTunnelDisconnect            types.Bool   `tfsdk:"ike_enable_notification_on_tunnel_disconnect"`
+	IkeAggressiveMode                                  types.Bool   `tfsdk:"ike_aggressive_mode"`
+	IkeNotificationOnTunnelDisconnect                  types.Bool   `tfsdk:"ike_notification_on_tunnel_disconnect"`
 	Ikev2CookieChallenge                               types.String `tfsdk:"ikev2_cookie_challenge"`
 	Ikev2ThresholdToChallengeIncomingCookies           types.Int64  `tfsdk:"ikev2_threshold_to_challenge_incoming_cookies"`
-	Ikev2PercentageOfSasAllowedInNegotiation           types.Int64  `tfsdk:"ikev2_percentage_of_sas_allowed_in_negotiation"`
-	Ikev2MaximumNumberOfSasAllowedInNegotiation        types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed_in_negotiation"`
-	IpsecEnableFragmentationBeforeEncryption           types.Bool   `tfsdk:"ipsec_enable_fragmentation_before_encryption"`
+	Ikev2NumberOfSasAllowedInNegotiation               types.Int64  `tfsdk:"ikev2_number_of_sas_allowed_in_negotiation"`
+	Ikev2MaximumNumberOfSasAllowed                     types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed"`
+	IpsecFragmentationBeforeEncryption                 types.Bool   `tfsdk:"ipsec_fragmentation_before_encryption"`
 	IpsecPathMaximumTransmissionUnitAgingResetInterval types.Int64  `tfsdk:"ipsec_path_maximum_transmission_unit_aging_reset_interval"`
+	NatKeepaliveMessageTraversal                       types.Bool   `tfsdk:"nat_keepalive_message_traversal"`
 	NatKeepaliveMessageTraversalInterval               types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
-	VpnIdleTimeout                                     types.Int64  `tfsdk:"vpn_idle_timeout"`
+	VpnIdleTimeout                                     types.Bool   `tfsdk:"vpn_idle_timeout"`
+	VpnIdleTimeoutValue                                types.Int64  `tfsdk:"vpn_idle_timeout_value"`
 	BypassAccessControlTrafficForDecryptedTraffic      types.Bool   `tfsdk:"bypass_access_control_traffic_for_decrypted_traffic"`
-	UseCertMapConfiguredInEndpointToDetermineTunnel    types.Bool   `tfsdk:"use_cert_map_configured_in_endpoint_to_determine_tunnel"`
-	UseCertificateOuToDetermineTunnel                  types.Bool   `tfsdk:"use_certificate_ou_to_determine_tunnel"`
-	UseIkeIdentityOuToDetermineTunnel                  types.Bool   `tfsdk:"use_ike_identity_ou_to_determine_tunnel"`
-	UsePeerIpAddressToDetermineTunnel                  types.Bool   `tfsdk:"use_peer_ip_address_to_determine_tunnel"`
+	CertUseMapConfiguredInEndpointToDetermineTunnel    types.Bool   `tfsdk:"cert_use_map_configured_in_endpoint_to_determine_tunnel"`
+	CertUseOuToDetermineTunnel                         types.Bool   `tfsdk:"cert_use_ou_to_determine_tunnel"`
+	CertUseIkeIdentityToDetermineTunnel                types.Bool   `tfsdk:"cert_use_ike_identity_to_determine_tunnel"`
+	CertUsePeerIpAddressToDetermineTunnel              types.Bool   `tfsdk:"cert_use_peer_ip_address_to_determine_tunnel"`
 }
 
 // End of section. //template:end types
@@ -95,11 +97,11 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	if !data.IkePeerIdentityValidation.IsNull() {
 		body, _ = sjson.Set(body, "advancedIkeSetting.peerIdentityValidation", data.IkePeerIdentityValidation.ValueString())
 	}
-	if !data.IkeEnableAggressiveMode.IsNull() {
-		body, _ = sjson.Set(body, "advancedIkeSetting.enableAggressiveMode", data.IkeEnableAggressiveMode.ValueBool())
+	if !data.IkeAggressiveMode.IsNull() {
+		body, _ = sjson.Set(body, "advancedIkeSetting.enableAggressiveMode", data.IkeAggressiveMode.ValueBool())
 	}
-	if !data.IkeEnableNotificationOnTunnelDisconnect.IsNull() {
-		body, _ = sjson.Set(body, "advancedIkeSetting.enableNotificationOnTunnelDisconnect", data.IkeEnableNotificationOnTunnelDisconnect.ValueBool())
+	if !data.IkeNotificationOnTunnelDisconnect.IsNull() {
+		body, _ = sjson.Set(body, "advancedIkeSetting.enableNotificationOnTunnelDisconnect", data.IkeNotificationOnTunnelDisconnect.ValueBool())
 	}
 	if !data.Ikev2CookieChallenge.IsNull() {
 		body, _ = sjson.Set(body, "advancedIkeSetting.cookieChallenge", data.Ikev2CookieChallenge.ValueString())
@@ -107,38 +109,44 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	if !data.Ikev2ThresholdToChallengeIncomingCookies.IsNull() {
 		body, _ = sjson.Set(body, "advancedIkeSetting.thresholdToChallengeIncomingCookies", data.Ikev2ThresholdToChallengeIncomingCookies.ValueInt64())
 	}
-	if !data.Ikev2PercentageOfSasAllowedInNegotiation.IsNull() {
-		body, _ = sjson.Set(body, "advancedIkeSetting.percentageOfSAsAllowedInNegotiation", data.Ikev2PercentageOfSasAllowedInNegotiation.ValueInt64())
+	if !data.Ikev2NumberOfSasAllowedInNegotiation.IsNull() {
+		body, _ = sjson.Set(body, "advancedIkeSetting.percentageOfSAsAllowedInNegotiation", data.Ikev2NumberOfSasAllowedInNegotiation.ValueInt64())
 	}
-	if !data.Ikev2MaximumNumberOfSasAllowedInNegotiation.IsNull() {
-		body, _ = sjson.Set(body, "advancedIkeSetting.maximumNumberOfSAsAllowed", data.Ikev2MaximumNumberOfSasAllowedInNegotiation.ValueInt64())
+	if !data.Ikev2MaximumNumberOfSasAllowed.IsNull() {
+		body, _ = sjson.Set(body, "advancedIkeSetting.maximumNumberOfSAsAllowed", data.Ikev2MaximumNumberOfSasAllowed.ValueInt64())
 	}
-	if !data.IpsecEnableFragmentationBeforeEncryption.IsNull() {
-		body, _ = sjson.Set(body, "advancedIpsecSetting.enableFragmentationBeforeEncryption", data.IpsecEnableFragmentationBeforeEncryption.ValueBool())
+	if !data.IpsecFragmentationBeforeEncryption.IsNull() {
+		body, _ = sjson.Set(body, "advancedIpsecSetting.enableFragmentationBeforeEncryption", data.IpsecFragmentationBeforeEncryption.ValueBool())
 	}
 	if !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		body, _ = sjson.Set(body, "advancedIpsecSetting.maximumTransmissionUnitAging.resetIntervalMinutes", data.IpsecPathMaximumTransmissionUnitAgingResetInterval.ValueInt64())
+	}
+	if !data.NatKeepaliveMessageTraversal.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.natKeepaliveMessageTraversal.enabled", data.NatKeepaliveMessageTraversal.ValueBool())
 	}
 	if !data.NatKeepaliveMessageTraversalInterval.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.natKeepaliveMessageTraversal.intervalSeconds", data.NatKeepaliveMessageTraversalInterval.ValueInt64())
 	}
 	if !data.VpnIdleTimeout.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes", data.VpnIdleTimeout.ValueInt64())
+		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.enabled", data.VpnIdleTimeout.ValueBool())
+	}
+	if !data.VpnIdleTimeoutValue.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes", data.VpnIdleTimeoutValue.ValueInt64())
 	}
 	if !data.BypassAccessControlTrafficForDecryptedTraffic.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic", data.BypassAccessControlTrafficForDecryptedTraffic.ValueBool())
 	}
-	if !data.UseCertMapConfiguredInEndpointToDetermineTunnel.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel", data.UseCertMapConfiguredInEndpointToDetermineTunnel.ValueBool())
+	if !data.CertUseMapConfiguredInEndpointToDetermineTunnel.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel", data.CertUseMapConfiguredInEndpointToDetermineTunnel.ValueBool())
 	}
-	if !data.UseCertificateOuToDetermineTunnel.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel", data.UseCertificateOuToDetermineTunnel.ValueBool())
+	if !data.CertUseOuToDetermineTunnel.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel", data.CertUseOuToDetermineTunnel.ValueBool())
 	}
-	if !data.UseIkeIdentityOuToDetermineTunnel.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useIkeIdentityOuToDetermineTunnel", data.UseIkeIdentityOuToDetermineTunnel.ValueBool())
+	if !data.CertUseIkeIdentityToDetermineTunnel.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useIkeIdentityOuToDetermineTunnel", data.CertUseIkeIdentityToDetermineTunnel.ValueBool())
 	}
-	if !data.UsePeerIpAddressToDetermineTunnel.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.usePeerIpAddressToDetermineTunnel", data.UsePeerIpAddressToDetermineTunnel.ValueBool())
+	if !data.CertUsePeerIpAddressToDetermineTunnel.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.usePeerIpAddressToDetermineTunnel", data.CertUsePeerIpAddressToDetermineTunnel.ValueBool())
 	}
 	return body
 }
@@ -179,14 +187,14 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.IkePeerIdentityValidation = types.StringNull()
 	}
 	if value := res.Get("advancedIkeSetting.enableAggressiveMode"); value.Exists() {
-		data.IkeEnableAggressiveMode = types.BoolValue(value.Bool())
+		data.IkeAggressiveMode = types.BoolValue(value.Bool())
 	} else {
-		data.IkeEnableAggressiveMode = types.BoolNull()
+		data.IkeAggressiveMode = types.BoolNull()
 	}
 	if value := res.Get("advancedIkeSetting.enableNotificationOnTunnelDisconnect"); value.Exists() {
-		data.IkeEnableNotificationOnTunnelDisconnect = types.BoolValue(value.Bool())
+		data.IkeNotificationOnTunnelDisconnect = types.BoolValue(value.Bool())
 	} else {
-		data.IkeEnableNotificationOnTunnelDisconnect = types.BoolNull()
+		data.IkeNotificationOnTunnelDisconnect = types.BoolNull()
 	}
 	if value := res.Get("advancedIkeSetting.cookieChallenge"); value.Exists() {
 		data.Ikev2CookieChallenge = types.StringValue(value.String())
@@ -199,34 +207,44 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.Ikev2ThresholdToChallengeIncomingCookies = types.Int64Null()
 	}
 	if value := res.Get("advancedIkeSetting.percentageOfSAsAllowedInNegotiation"); value.Exists() {
-		data.Ikev2PercentageOfSasAllowedInNegotiation = types.Int64Value(value.Int())
+		data.Ikev2NumberOfSasAllowedInNegotiation = types.Int64Value(value.Int())
 	} else {
-		data.Ikev2PercentageOfSasAllowedInNegotiation = types.Int64Null()
+		data.Ikev2NumberOfSasAllowedInNegotiation = types.Int64Null()
 	}
 	if value := res.Get("advancedIkeSetting.maximumNumberOfSAsAllowed"); value.Exists() {
-		data.Ikev2MaximumNumberOfSasAllowedInNegotiation = types.Int64Value(value.Int())
+		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Value(value.Int())
 	} else {
-		data.Ikev2MaximumNumberOfSasAllowedInNegotiation = types.Int64Null()
+		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Null()
 	}
 	if value := res.Get("advancedIpsecSetting.enableFragmentationBeforeEncryption"); value.Exists() {
-		data.IpsecEnableFragmentationBeforeEncryption = types.BoolValue(value.Bool())
+		data.IpsecFragmentationBeforeEncryption = types.BoolValue(value.Bool())
 	} else {
-		data.IpsecEnableFragmentationBeforeEncryption = types.BoolNull()
+		data.IpsecFragmentationBeforeEncryption = types.BoolNull()
 	}
 	if value := res.Get("advancedIpsecSetting.maximumTransmissionUnitAging.resetIntervalMinutes"); value.Exists() {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Value(value.Int())
 	} else {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Null()
 	}
+	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.enabled"); value.Exists() {
+		data.NatKeepaliveMessageTraversal = types.BoolValue(value.Bool())
+	} else {
+		data.NatKeepaliveMessageTraversal = types.BoolNull()
+	}
 	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.intervalSeconds"); value.Exists() {
 		data.NatKeepaliveMessageTraversalInterval = types.Int64Value(value.Int())
 	} else {
 		data.NatKeepaliveMessageTraversalInterval = types.Int64Null()
 	}
-	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes"); value.Exists() {
-		data.VpnIdleTimeout = types.Int64Value(value.Int())
+	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.enabled"); value.Exists() {
+		data.VpnIdleTimeout = types.BoolValue(value.Bool())
 	} else {
-		data.VpnIdleTimeout = types.Int64Null()
+		data.VpnIdleTimeout = types.BoolNull()
+	}
+	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes"); value.Exists() {
+		data.VpnIdleTimeoutValue = types.Int64Value(value.Int())
+	} else {
+		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() {
 		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolValue(value.Bool())
@@ -234,24 +252,24 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() {
-		data.UseCertMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
+		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseCertMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
+		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel"); value.Exists() {
-		data.UseCertificateOuToDetermineTunnel = types.BoolValue(value.Bool())
+		data.CertUseOuToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseCertificateOuToDetermineTunnel = types.BoolNull()
+		data.CertUseOuToDetermineTunnel = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useIkeIdentityOuToDetermineTunnel"); value.Exists() {
-		data.UseIkeIdentityOuToDetermineTunnel = types.BoolValue(value.Bool())
+		data.CertUseIkeIdentityToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseIkeIdentityOuToDetermineTunnel = types.BoolNull()
+		data.CertUseIkeIdentityToDetermineTunnel = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.usePeerIpAddressToDetermineTunnel"); value.Exists() {
-		data.UsePeerIpAddressToDetermineTunnel = types.BoolValue(value.Bool())
+		data.CertUsePeerIpAddressToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UsePeerIpAddressToDetermineTunnel = types.BoolNull()
+		data.CertUsePeerIpAddressToDetermineTunnel = types.BoolNull()
 	}
 }
 
@@ -294,15 +312,15 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.IkePeerIdentityValidation = types.StringNull()
 	}
-	if value := res.Get("advancedIkeSetting.enableAggressiveMode"); value.Exists() && !data.IkeEnableAggressiveMode.IsNull() {
-		data.IkeEnableAggressiveMode = types.BoolValue(value.Bool())
+	if value := res.Get("advancedIkeSetting.enableAggressiveMode"); value.Exists() && !data.IkeAggressiveMode.IsNull() {
+		data.IkeAggressiveMode = types.BoolValue(value.Bool())
 	} else {
-		data.IkeEnableAggressiveMode = types.BoolNull()
+		data.IkeAggressiveMode = types.BoolNull()
 	}
-	if value := res.Get("advancedIkeSetting.enableNotificationOnTunnelDisconnect"); value.Exists() && !data.IkeEnableNotificationOnTunnelDisconnect.IsNull() {
-		data.IkeEnableNotificationOnTunnelDisconnect = types.BoolValue(value.Bool())
+	if value := res.Get("advancedIkeSetting.enableNotificationOnTunnelDisconnect"); value.Exists() && !data.IkeNotificationOnTunnelDisconnect.IsNull() {
+		data.IkeNotificationOnTunnelDisconnect = types.BoolValue(value.Bool())
 	} else {
-		data.IkeEnableNotificationOnTunnelDisconnect = types.BoolNull()
+		data.IkeNotificationOnTunnelDisconnect = types.BoolNull()
 	}
 	if value := res.Get("advancedIkeSetting.cookieChallenge"); value.Exists() && !data.Ikev2CookieChallenge.IsNull() {
 		data.Ikev2CookieChallenge = types.StringValue(value.String())
@@ -314,60 +332,70 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Ikev2ThresholdToChallengeIncomingCookies = types.Int64Null()
 	}
-	if value := res.Get("advancedIkeSetting.percentageOfSAsAllowedInNegotiation"); value.Exists() && !data.Ikev2PercentageOfSasAllowedInNegotiation.IsNull() {
-		data.Ikev2PercentageOfSasAllowedInNegotiation = types.Int64Value(value.Int())
+	if value := res.Get("advancedIkeSetting.percentageOfSAsAllowedInNegotiation"); value.Exists() && !data.Ikev2NumberOfSasAllowedInNegotiation.IsNull() {
+		data.Ikev2NumberOfSasAllowedInNegotiation = types.Int64Value(value.Int())
 	} else {
-		data.Ikev2PercentageOfSasAllowedInNegotiation = types.Int64Null()
+		data.Ikev2NumberOfSasAllowedInNegotiation = types.Int64Null()
 	}
-	if value := res.Get("advancedIkeSetting.maximumNumberOfSAsAllowed"); value.Exists() && !data.Ikev2MaximumNumberOfSasAllowedInNegotiation.IsNull() {
-		data.Ikev2MaximumNumberOfSasAllowedInNegotiation = types.Int64Value(value.Int())
+	if value := res.Get("advancedIkeSetting.maximumNumberOfSAsAllowed"); value.Exists() && !data.Ikev2MaximumNumberOfSasAllowed.IsNull() {
+		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Value(value.Int())
 	} else {
-		data.Ikev2MaximumNumberOfSasAllowedInNegotiation = types.Int64Null()
+		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Null()
 	}
-	if value := res.Get("advancedIpsecSetting.enableFragmentationBeforeEncryption"); value.Exists() && !data.IpsecEnableFragmentationBeforeEncryption.IsNull() {
-		data.IpsecEnableFragmentationBeforeEncryption = types.BoolValue(value.Bool())
+	if value := res.Get("advancedIpsecSetting.enableFragmentationBeforeEncryption"); value.Exists() && !data.IpsecFragmentationBeforeEncryption.IsNull() {
+		data.IpsecFragmentationBeforeEncryption = types.BoolValue(value.Bool())
 	} else {
-		data.IpsecEnableFragmentationBeforeEncryption = types.BoolNull()
+		data.IpsecFragmentationBeforeEncryption = types.BoolNull()
 	}
 	if value := res.Get("advancedIpsecSetting.maximumTransmissionUnitAging.resetIntervalMinutes"); value.Exists() && !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Value(value.Int())
 	} else {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Null()
 	}
+	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.enabled"); value.Exists() && !data.NatKeepaliveMessageTraversal.IsNull() {
+		data.NatKeepaliveMessageTraversal = types.BoolValue(value.Bool())
+	} else {
+		data.NatKeepaliveMessageTraversal = types.BoolNull()
+	}
 	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.intervalSeconds"); value.Exists() && !data.NatKeepaliveMessageTraversalInterval.IsNull() {
 		data.NatKeepaliveMessageTraversalInterval = types.Int64Value(value.Int())
 	} else {
 		data.NatKeepaliveMessageTraversalInterval = types.Int64Null()
 	}
-	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes"); value.Exists() && !data.VpnIdleTimeout.IsNull() {
-		data.VpnIdleTimeout = types.Int64Value(value.Int())
+	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.enabled"); value.Exists() && !data.VpnIdleTimeout.IsNull() {
+		data.VpnIdleTimeout = types.BoolValue(value.Bool())
 	} else {
-		data.VpnIdleTimeout = types.Int64Null()
+		data.VpnIdleTimeout = types.BoolNull()
+	}
+	if value := res.Get("advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes"); value.Exists() && !data.VpnIdleTimeoutValue.IsNull() {
+		data.VpnIdleTimeoutValue = types.Int64Value(value.Int())
+	} else {
+		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() && !data.BypassAccessControlTrafficForDecryptedTraffic.IsNull() {
 		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolValue(value.Bool())
 	} else {
 		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolNull()
 	}
-	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() && !data.UseCertMapConfiguredInEndpointToDetermineTunnel.IsNull() {
-		data.UseCertMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() && !data.CertUseMapConfiguredInEndpointToDetermineTunnel.IsNull() {
+		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseCertMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
+		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
 	}
-	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel"); value.Exists() && !data.UseCertificateOuToDetermineTunnel.IsNull() {
-		data.UseCertificateOuToDetermineTunnel = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel"); value.Exists() && !data.CertUseOuToDetermineTunnel.IsNull() {
+		data.CertUseOuToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseCertificateOuToDetermineTunnel = types.BoolNull()
+		data.CertUseOuToDetermineTunnel = types.BoolNull()
 	}
-	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useIkeIdentityOuToDetermineTunnel"); value.Exists() && !data.UseIkeIdentityOuToDetermineTunnel.IsNull() {
-		data.UseIkeIdentityOuToDetermineTunnel = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useIkeIdentityOuToDetermineTunnel"); value.Exists() && !data.CertUseIkeIdentityToDetermineTunnel.IsNull() {
+		data.CertUseIkeIdentityToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UseIkeIdentityOuToDetermineTunnel = types.BoolNull()
+		data.CertUseIkeIdentityToDetermineTunnel = types.BoolNull()
 	}
-	if value := res.Get("advancedTunnelSetting.certificateMapSettings.usePeerIpAddressToDetermineTunnel"); value.Exists() && !data.UsePeerIpAddressToDetermineTunnel.IsNull() {
-		data.UsePeerIpAddressToDetermineTunnel = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.certificateMapSettings.usePeerIpAddressToDetermineTunnel"); value.Exists() && !data.CertUsePeerIpAddressToDetermineTunnel.IsNull() {
+		data.CertUsePeerIpAddressToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.UsePeerIpAddressToDetermineTunnel = types.BoolNull()
+		data.CertUsePeerIpAddressToDetermineTunnel = types.BoolNull()
 	}
 }
 
@@ -405,24 +433,22 @@ func (data *VPNS2SAdvancedSettings) fromBodyUnknowns(ctx context.Context, res gj
 
 // End of section. //template:end clearItemIds
 
-func (data VPNS2SAdvancedSettings) fixFields(ctx context.Context, req string) string {
-	if data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
-		req, _ = sjson.Set(req, "advancedIpsecSetting.maximumTransmissionUnitAging.enabled", false)
-	} else {
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
+func (data VPNS2SAdvancedSettings) toBodyPutDelete(ctx context.Context, state VPNS2SAdvancedSettings) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	return body
+}
+
+// End of section. //template:end toBodyPutDelete
+
+func (data VPNS2SAdvancedSettings) adjustBody(ctx context.Context, req string) string {
+	if !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		req, _ = sjson.Set(req, "advancedIpsecSetting.maximumTransmissionUnitAging.enabled", true)
 	}
-
-	if data.NatKeepaliveMessageTraversalInterval.IsNull() {
-		req, _ = sjson.Set(req, "advancedTunnelSetting.natKeepaliveMessageTraversal.enabled", false)
-	} else {
-		req, _ = sjson.Set(req, "advancedTunnelSetting.natKeepaliveMessageTraversal.enabled", true)
-	}
-
-	if data.VpnIdleTimeout.IsNull() {
-		req, _ = sjson.Set(req, "advancedTunnelSetting.vpnIdleTimeout.enabled", false)
-	} else {
-		req, _ = sjson.Set(req, "advancedTunnelSetting.vpnIdleTimeout.enabled", true)
-	}
-
 	return req
 }

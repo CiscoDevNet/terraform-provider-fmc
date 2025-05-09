@@ -674,7 +674,7 @@ func (data {{camelCase .Name}}) adjustBody(ctx context.Context, req string) stri
 
 // End of section. //template:end adjustBody
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
 
 {{if and .AdjustBody .IsBulk}}
 func (data {{camelCase .Name}}) adjustBodyBulk(ctx context.Context, req string) string {
@@ -682,7 +682,7 @@ func (data {{camelCase .Name}}) adjustBodyBulk(ctx context.Context, req string) 
 }
 {{- end}}
 
-// End of section. //template:end adjustBody
+// End of section. //template:end adjustBodyBulk
 
 {{- range .Attributes}}
 	{{- if isNestedMap .}}

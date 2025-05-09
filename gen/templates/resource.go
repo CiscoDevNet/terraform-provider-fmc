@@ -631,6 +631,9 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := plan.toBody(ctx, {{camelCase .Name}}{})
+	{{- if .AdjustBody}}
+	body = plan.adjustBody(ctx, body)
+	{{- end}}
 
 	{{- if .PutCreate}}
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
@@ -765,6 +768,9 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	{{- if not .IsBulk}}
 
 	body := plan.toBody(ctx, state)
+	{{- if .AdjustBody}}
+	body = plan.adjustBody(ctx, body)
+	{{- end}}
 	res, err := r.client.Put(plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))

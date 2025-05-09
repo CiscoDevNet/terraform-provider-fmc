@@ -75,11 +75,11 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 			},
 			"ike_keepalive": schema.StringAttribute{
-				MarkdownDescription: "IKE keepalive mode.",
+				MarkdownDescription: "Enable IKE keepalives.",
 				Computed:            true,
 			},
 			"ike_keepalive_threshold": schema.Int64Attribute{
-				MarkdownDescription: "IKE keepalive threshold in seconds.",
+				MarkdownDescription: "IKE keepalive threshold in seconds. This interval is the number of seconds allowing a peer to idle before beginning keepalive monitoring.",
 				Computed:            true,
 			},
 			"ike_keepalive_retry_interval": schema.Int64Attribute{
@@ -87,70 +87,78 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 			},
 			"ike_identity_sent_to_peers": schema.StringAttribute{
-				MarkdownDescription: "Identity sent to peer.",
+				MarkdownDescription: "identity that the peers will use to identify themselves during IKE negotiations.",
 				Computed:            true,
 			},
 			"ike_peer_identity_validation": schema.StringAttribute{
 				MarkdownDescription: "Peer identity validation.",
 				Computed:            true,
 			},
-			"ike_enable_aggressive_mode": schema.BoolAttribute{
-				MarkdownDescription: "Enable aggressive mode.",
+			"ike_aggressive_mode": schema.BoolAttribute{
+				MarkdownDescription: "Enable IKEv1 aggressive mode.",
 				Computed:            true,
 			},
-			"ike_enable_notification_on_tunnel_disconnect": schema.BoolAttribute{
+			"ike_notification_on_tunnel_disconnect": schema.BoolAttribute{
 				MarkdownDescription: "Enable notification on tunnel disconnect.",
 				Computed:            true,
 			},
 			"ikev2_cookie_challenge": schema.StringAttribute{
-				MarkdownDescription: "Cookie challenge.",
+				MarkdownDescription: "Send cookie challenges to peer devices in response to SA initiate packets.",
 				Computed:            true,
 			},
 			"ikev2_threshold_to_challenge_incoming_cookies": schema.Int64Attribute{
-				MarkdownDescription: "Threshold to challenge incoming cookies in percent.",
+				MarkdownDescription: "The percentage of the total allowed SAs that are in-negotiation.",
 				Computed:            true,
 			},
-			"ikev2_percentage_of_sas_allowed_in_negotiation": schema.Int64Attribute{
-				MarkdownDescription: "Percentage of SAs allowed in negotiation.",
+			"ikev2_number_of_sas_allowed_in_negotiation": schema.Int64Attribute{
+				MarkdownDescription: "Limits the maximum number of SAs that can be in negotiation at any time.",
 				Computed:            true,
 			},
-			"ikev2_maximum_number_of_sas_allowed_in_negotiation": schema.Int64Attribute{
-				MarkdownDescription: "Maximum number of SAs allowed in negotiation.",
+			"ikev2_maximum_number_of_sas_allowed": schema.Int64Attribute{
+				MarkdownDescription: "Limits the number of allowed IKEv2 connections.",
 				Computed:            true,
 			},
-			"ipsec_enable_fragmentation_before_encryption": schema.BoolAttribute{
+			"ipsec_fragmentation_before_encryption": schema.BoolAttribute{
 				MarkdownDescription: "Enable fragmentation before encryption.",
 				Computed:            true,
 			},
 			"ipsec_path_maximum_transmission_unit_aging_reset_interval": schema.Int64Attribute{
-				MarkdownDescription: "Reset interval in minutes.",
+				MarkdownDescription: "Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.",
+				Computed:            true,
+			},
+			"nat_keepalive_message_traversal": schema.BoolAttribute{
+				MarkdownDescription: "Enable NAT keepalive message traversal.",
 				Computed:            true,
 			},
 			"nat_keepalive_message_traversal_interval": schema.Int64Attribute{
 				MarkdownDescription: "NAT keepalive message traversal interval in seconds.",
 				Computed:            true,
 			},
-			"vpn_idle_timeout": schema.Int64Attribute{
+			"vpn_idle_timeout": schema.BoolAttribute{
+				MarkdownDescription: "Enable VPN idle timeout monitoring.",
+				Computed:            true,
+			},
+			"vpn_idle_timeout_value": schema.Int64Attribute{
 				MarkdownDescription: "VPN idle timeout in minutes.",
 				Computed:            true,
 			},
 			"bypass_access_control_traffic_for_decrypted_traffic": schema.BoolAttribute{
-				MarkdownDescription: "Bypass access control traffic for decrypted traffic (sysopt permit-vpn).",
+				MarkdownDescription: "Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).",
 				Computed:            true,
 			},
-			"use_cert_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: "Use certificate map configured in endpoint to determine tunnel.",
 				Computed:            true,
 			},
-			"use_certificate_ou_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_ou_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: "Use certificate OU to determine tunnel.",
 				Computed:            true,
 			},
-			"use_ike_identity_ou_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_ike_identity_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: "Use IKE identity OU to determine tunnel.",
 				Computed:            true,
 			},
-			"use_peer_ip_address_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_peer_ip_address_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: "Use peer IP address to determine tunnel.",
 				Computed:            true,
 			},

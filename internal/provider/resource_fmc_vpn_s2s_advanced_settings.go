@@ -95,14 +95,14 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"ike_keepalive": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IKE keepalive mode.").AddStringEnumDescription("DISABLED", "ENABLED", "ENABLED_INFINITE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IKE keepalives.").AddStringEnumDescription("DISABLED", "ENABLED", "ENABLED_INFINITE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DISABLED", "ENABLED", "ENABLED_INFINITE"),
 				},
 			},
 			"ike_keepalive_threshold": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IKE keepalive threshold in seconds.").AddIntegerRangeDescription(10, 3600).String,
+				MarkdownDescription: helpers.NewAttributeDescription("IKE keepalive threshold in seconds. This interval is the number of seconds allowing a peer to idle before beginning keepalive monitoring.").AddIntegerRangeDescription(10, 3600).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(10, 3600),
@@ -116,7 +116,7 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"ike_identity_sent_to_peers": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Identity sent to peer.").AddStringEnumDescription("IP_ADDRESS", "HOST_NAME", "AUTO_OR_DN").String,
+				MarkdownDescription: helpers.NewAttributeDescription("identity that the peers will use to identify themselves during IKE negotiations.").AddStringEnumDescription("IP_ADDRESS", "HOST_NAME", "AUTO_OR_DN").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("IP_ADDRESS", "HOST_NAME", "AUTO_OR_DN"),
@@ -129,49 +129,53 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 					stringvalidator.OneOf("DO_NOT_CHECK", "REQUIRED", "IF_SUPPORTED_BY_CERT"),
 				},
 			},
-			"ike_enable_aggressive_mode": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable aggressive mode.").String,
+			"ike_aggressive_mode": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IKEv1 aggressive mode.").String,
 				Optional:            true,
 			},
-			"ike_enable_notification_on_tunnel_disconnect": schema.BoolAttribute{
+			"ike_notification_on_tunnel_disconnect": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable notification on tunnel disconnect.").String,
 				Optional:            true,
 			},
 			"ikev2_cookie_challenge": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Cookie challenge.").AddStringEnumDescription("CUSTOM", "ALWAYS", "NEVER").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Send cookie challenges to peer devices in response to SA initiate packets.").AddStringEnumDescription("CUSTOM", "ALWAYS", "NEVER").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("CUSTOM", "ALWAYS", "NEVER"),
 				},
 			},
 			"ikev2_threshold_to_challenge_incoming_cookies": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Threshold to challenge incoming cookies in percent.").AddIntegerRangeDescription(1, 100).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The percentage of the total allowed SAs that are in-negotiation.").AddIntegerRangeDescription(1, 100).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 100),
 				},
 			},
-			"ikev2_percentage_of_sas_allowed_in_negotiation": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Percentage of SAs allowed in negotiation.").AddIntegerRangeDescription(1, 100).String,
+			"ikev2_number_of_sas_allowed_in_negotiation": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Limits the maximum number of SAs that can be in negotiation at any time.").AddIntegerRangeDescription(1, 100).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 100),
 				},
 			},
-			"ikev2_maximum_number_of_sas_allowed_in_negotiation": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of SAs allowed in negotiation.").String,
+			"ikev2_maximum_number_of_sas_allowed": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Limits the number of allowed IKEv2 connections.").String,
 				Optional:            true,
 			},
-			"ipsec_enable_fragmentation_before_encryption": schema.BoolAttribute{
+			"ipsec_fragmentation_before_encryption": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable fragmentation before encryption.").String,
 				Optional:            true,
 			},
 			"ipsec_path_maximum_transmission_unit_aging_reset_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Reset interval in minutes.").AddIntegerRangeDescription(10, 30).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.").AddIntegerRangeDescription(10, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(10, 30),
 				},
+			},
+			"nat_keepalive_message_traversal": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable NAT keepalive message traversal.").String,
+				Optional:            true,
 			},
 			"nat_keepalive_message_traversal_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("NAT keepalive message traversal interval in seconds.").AddIntegerRangeDescription(10, 3600).String,
@@ -180,7 +184,11 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 					int64validator.Between(10, 3600),
 				},
 			},
-			"vpn_idle_timeout": schema.Int64Attribute{
+			"vpn_idle_timeout": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable VPN idle timeout monitoring.").String,
+				Optional:            true,
+			},
+			"vpn_idle_timeout_value": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("VPN idle timeout in minutes.").AddIntegerRangeDescription(1, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
@@ -188,22 +196,22 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"bypass_access_control_traffic_for_decrypted_traffic": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Bypass access control traffic for decrypted traffic (sysopt permit-vpn).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).").String,
 				Optional:            true,
 			},
-			"use_cert_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use certificate map configured in endpoint to determine tunnel.").String,
 				Optional:            true,
 			},
-			"use_certificate_ou_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_ou_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use certificate OU to determine tunnel.").String,
 				Optional:            true,
 			},
-			"use_ike_identity_ou_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_ike_identity_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use IKE identity OU to determine tunnel.").String,
 				Optional:            true,
 			},
-			"use_peer_ip_address_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_peer_ip_address_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use peer IP address to determine tunnel.").String,
 				Optional:            true,
 			},
@@ -221,6 +229,8 @@ func (r *VPNS2SAdvancedSettingsResource) Configure(_ context.Context, req resour
 
 // End of section. //template:end model
 
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
 func (r *VPNS2SAdvancedSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan VPNS2SAdvancedSettings
 
@@ -235,26 +245,35 @@ func (r *VPNS2SAdvancedSettingsResource) Create(ctx context.Context, req resourc
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-
-	// Get ID
-	res, err := r.client.Get(plan.getPath(), reqMods...)
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve advanced settings, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
-	if val := res.Get("items.0.id"); val.Exists() {
-		plan.Id = types.StringValue(val.String())
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
 		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
 	} else {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to extract advanced settings from payload: %s", res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
 	body := plan.toBody(ctx, VPNS2SAdvancedSettings{})
-	body = plan.fixFields(ctx, body)
-	res, err = r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	body = plan.adjustBody(ctx, body)
+	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -269,6 +288,8 @@ func (r *VPNS2SAdvancedSettingsResource) Create(ctx context.Context, req resourc
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
+
+// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -322,6 +343,8 @@ func (r *VPNS2SAdvancedSettingsResource) Read(ctx context.Context, req resource.
 
 // End of section. //template:end read
 
+// Section below is generated&owned by "gen/generator.go". //template:begin update
+
 func (r *VPNS2SAdvancedSettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state VPNS2SAdvancedSettings
 
@@ -346,7 +369,7 @@ func (r *VPNS2SAdvancedSettingsResource) Update(ctx context.Context, req resourc
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	body = plan.fixFields(ctx, body)
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
@@ -358,6 +381,8 @@ func (r *VPNS2SAdvancedSettingsResource) Update(ctx context.Context, req resourc
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
+
+// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
@@ -377,6 +402,12 @@ func (r *VPNS2SAdvancedSettingsResource) Delete(ctx context.Context, req resourc
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
+	body := state.toBodyPutDelete(ctx, VPNS2SAdvancedSettings{})
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 
