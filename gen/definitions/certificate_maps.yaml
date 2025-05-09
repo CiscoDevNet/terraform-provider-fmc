@@ -1,0 +1,74 @@
+---
+name: Certificate Maps
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/certificatemaps
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Certificate Maps. The key of the map is the name of the individual Certificate Map.
+    map_key_example: my_certificate_maps
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Certificate Map.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CertificateMap'.
+        computed: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CertificateMap'.
+        value: CertificateMap
+      - model_name: rules
+        type: List
+        description: List of rules in the certificate map.
+        attributes:
+          - model_name: field
+            type: String
+            enum_values: [SUBJECT, ALTERNATIVE_SUBJECT, ISSUER, EXTENDED_KEY_USAGE]
+            description: Certificate field to match the rule.
+            example: SUBJECT
+          - model_name: component
+            type: String
+            enum_values: 
+              [
+                WHOLE_FIELD,
+                COUNTRY,
+                COMMON_NAME,
+                DN_QUALIFIER,
+                EMAIL_ADDRESS,
+                GENERATIONAL_QUALIFIER,
+                GIVEN_NAME,
+                INITIALS,
+                LOCALITY,
+                NAME,
+                ORGANISATION,
+                ORGANISATIONAL_UNIT,
+                SERIAL_NUMBER,
+                SURNAME,
+                STATE_PROVINCE,
+                TITLE,
+                USER_ID,
+                UNSTRUCTURED_NAME,
+                IP_ADDRESS,
+                DOMAIN_COMPONENT
+              ]
+            description: Component of the certificate field to match the rule.
+            example: COMMON_NAME
+          - model_name: operator
+            type: String
+            enum_values: [EQUALS, CONTAINS, DOES_NOT_EQUAL, DOES_NOT_CONTAIN]
+            example: EQUALS
+            description: Operator to use for matching the rule.
+          - model_name: value
+            type: String
+            description: Value to match in the rule.
+            example: cisco.com
