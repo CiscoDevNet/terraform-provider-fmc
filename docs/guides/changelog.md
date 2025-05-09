@@ -14,6 +14,7 @@ description: |-
 - (Enhancement) Add support for `fmc_device_loopback_interface`
 - (Enhancement) Add support for `fmc_device_vti_interface`
 - (Enhancement) Add support for IKEv1 & IKEv2 IPSec Proposals & Policies
+- (Enhancement) Add support for `fmc_certificate_map` and `fmc_certificate_maps`
 - (Enhancement) Honor proxy settings (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` environment variables)
 
 ## 2.0.0-beta3
