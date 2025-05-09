@@ -1,0 +1,63 @@
+---
+name: VPN S2S
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns
+res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs).
+doc_category: VPN
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the VPN Site-to-Site (S2S) Topology.
+    example: my_ftd_s2s_vpn
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'FTDS2SVpn'.
+    computed: true
+  # General
+  - model_name: routeBased
+    type: Bool
+    description: Indicates whether the VPN is Route Based (true) or Policy Based (false).
+    example: true
+    requires_replace: true
+    mandatory: true
+  - model_name: topologyType
+    type: String
+    tf_name: network_topology
+    description: Type of the VPN network topology.
+    enum_values: [POINT_TO_POINT, HUB_AND_SPOKE, FULL_MESH]
+    example: POINT_TO_POINT
+    requires_replace: true
+    mandatory: true
+  - model_name: ikeV1Enabled
+    tf_name: ikev1
+    type: Bool
+    description: Indicates whether IKEv1 is enabled for the VPN.
+    example: "false"
+    default_value: "false"
+  - model_name: ikeV2Enabled
+    tf_name: ikev2
+    type: Bool
+    description: Indicates whether IKEv2 is enabled for the VPN.
+    example: "true"
+    minimum_test_value: '"true"'
+    default_value: "false"
+  # Associated policies
+  - model_name: id
+    data_path: [ipsecSettings]
+    tf_name: ipsec_policy_id
+    type: String
+    description: The Id of the associated IPsec settings policy.
+    computed: true
+  - model_name: id
+    data_path: [ikeSettings]
+    tf_name: ike_policy_id
+    type: String
+    description: The Id of the associated IKE settings policy.
+    computed: true
+  - model_name: id
+    data_path: [advancedSettings]
+    tf_name: advanced_settings_policy_id
+    type: String
+    description: The Id of the associated advanced settings policy.
+    computed: true

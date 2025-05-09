@@ -189,7 +189,7 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 	{{- if isNestedListSet .}}
 	config += `	{{.TfName}} = [{` + "\n"
 	{{- else if isNestedMap .}}
-	config += `	{{.TfName}} = { "{{.MapKeyExample}}" = {` + "\n"
+	config += `	{{.TfName}} = { {{if .TestValue}}{{.TestValue}}{{else}}"{{.MapKeyExample}}"{{end}} = {` + "\n"
 	{{- end}}
 		{{- range  .Attributes}}
 		{{- if .Computed}}{{- continue }}{{- end}}
@@ -279,8 +279,11 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 			{{- else if isNestedMap .}}
 			{{- $map := .TfName}}
 			{{- $mapkey := .MapKeyExample}}
+			{{- if .TestValue}}
+			{{- $mapkey := .TestValue}}
+			{{- end}}
 			{{.TfName}} = {
-				"{{.MapKeyExample}}" = {
+				{{if .TestValue}}{{.TestValue}}{{else}}"{{.MapKeyExample}}"{{end}} = {
 					{{- range  .Attributes}}
 					{{- if and .ResourceId (not $.IsBulk)}}
 					{{.TfName}} = fmc_{{snakeCase $name}}.test.{{$map}}["{{$mapkey}}"].{{.TfName}}
