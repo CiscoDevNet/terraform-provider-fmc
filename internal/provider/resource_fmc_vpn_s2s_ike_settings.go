@@ -113,6 +113,10 @@ func (r *VPNS2SIKESettingsResource) Schema(ctx context.Context, req resource.Sch
 				Optional:            true,
 				Sensitive:           true,
 			},
+			"ikev1_certificate_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the certificate for certificate-based authentication for IKEv1.").String,
+				Optional:            true,
+			},
 			"ikev1_policies": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Set of policies for IKEv1.").String,
 				Optional:            true,
@@ -150,6 +154,10 @@ func (r *VPNS2SIKESettingsResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"ikev2_enforce_hex_based_pre_shared_key": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enforce use of a hex-based pre-shared key for IKEv2.").String,
+				Optional:            true,
+			},
+			"ikev2_certificate_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the certificate for certificate-based authentication for IKEv2.").String,
 				Optional:            true,
 			},
 			"ikev2_policies": schema.SetNestedAttribute{

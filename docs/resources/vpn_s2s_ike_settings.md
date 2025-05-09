@@ -53,12 +53,14 @@ resource "fmc_vpn_s2s_ike_settings" "example" {
   - Choices: `MANUAL_PRE_SHARED_KEY`, `AUTOMATIC_PRE_SHARED_KEY`, `CERTIFICATE`
 - `ikev1_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv1.
   - Range: `1`-`127`
+- `ikev1_certificate_id` (String) Id of the certificate for certificate-based authentication for IKEv1.
 - `ikev1_manual_pre_shared_key` (String, Sensitive) Manually configured pre-shared key for IKEv1.
 - `ikev1_policies` (Attributes Set) Set of policies for IKEv1. (see [below for nested schema](#nestedatt--ikev1_policies))
 - `ikev2_authentication_type` (String) Authentication method for IKEv2.
   - Choices: `MANUAL_PRE_SHARED_KEY`, `AUTOMATIC_PRE_SHARED_KEY`, `CERTIFICATE`
 - `ikev2_automatic_pre_shared_key_length` (Number) Length of the automatically generated pre-shared key for IKEv2.
   - Range: `1`-`127`
+- `ikev2_certificate_id` (String) Id of the certificate for certificate-based authentication for IKEv2.
 - `ikev2_enforce_hex_based_pre_shared_key` (Boolean) Enforce use of a hex-based pre-shared key for IKEv2.
 - `ikev2_manual_pre_shared_key` (String, Sensitive) Manually configured pre-shared key for IKEv2.
 - `ikev2_policies` (Attributes Set) Set of policies for IKEv2 settings. (see [below for nested schema](#nestedatt--ikev2_policies))

@@ -42,11 +42,13 @@ type VPNS2SIKESettings struct {
 	Ikev1AuthenticationType          types.String                     `tfsdk:"ikev1_authentication_type"`
 	Ikev1AutomaticPreSharedKeyLength types.Int64                      `tfsdk:"ikev1_automatic_pre_shared_key_length"`
 	Ikev1ManualPreSharedKey          types.String                     `tfsdk:"ikev1_manual_pre_shared_key"`
+	Ikev1CertificateId               types.String                     `tfsdk:"ikev1_certificate_id"`
 	Ikev1Policies                    []VPNS2SIKESettingsIkev1Policies `tfsdk:"ikev1_policies"`
 	Ikev2AuthenticationType          types.String                     `tfsdk:"ikev2_authentication_type"`
 	Ikev2AutomaticPreSharedKeyLength types.Int64                      `tfsdk:"ikev2_automatic_pre_shared_key_length"`
 	Ikev2ManualPreSharedKey          types.String                     `tfsdk:"ikev2_manual_pre_shared_key"`
 	Ikev2EnforceHexBasedPreSharedKey types.Bool                       `tfsdk:"ikev2_enforce_hex_based_pre_shared_key"`
+	Ikev2CertificateId               types.String                     `tfsdk:"ikev2_certificate_id"`
 	Ikev2Policies                    []VPNS2SIKESettingsIkev2Policies `tfsdk:"ikev2_policies"`
 }
 
@@ -90,6 +92,9 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 	if !data.Ikev1ManualPreSharedKey.IsNull() {
 		body, _ = sjson.Set(body, "ikeV1Settings.manualPreSharedKey", data.Ikev1ManualPreSharedKey.ValueString())
 	}
+	if !data.Ikev1CertificateId.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Settings.certificateAuth.id", data.Ikev1CertificateId.ValueString())
+	}
 	if len(data.Ikev1Policies) > 0 {
 		body, _ = sjson.Set(body, "ikeV1Settings.policies", []interface{}{})
 		for _, item := range data.Ikev1Policies {
@@ -114,6 +119,9 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 	}
 	if !data.Ikev2EnforceHexBasedPreSharedKey.IsNull() {
 		body, _ = sjson.Set(body, "ikeV2Settings.enforceHexBasedPreSharedKeyOnly", data.Ikev2EnforceHexBasedPreSharedKey.ValueBool())
+	}
+	if !data.Ikev2CertificateId.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.certificateAuth.id", data.Ikev2CertificateId.ValueString())
 	}
 	if len(data.Ikev2Policies) > 0 {
 		body, _ = sjson.Set(body, "ikeV2Settings.policies", []interface{}{})
@@ -151,6 +159,11 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Ikev1AutomaticPreSharedKeyLength = types.Int64Null()
 	}
+	if value := res.Get("ikeV1Settings.certificateAuth.id"); value.Exists() {
+		data.Ikev1CertificateId = types.StringValue(value.String())
+	} else {
+		data.Ikev1CertificateId = types.StringNull()
+	}
 	if value := res.Get("ikeV1Settings.policies"); value.Exists() {
 		data.Ikev1Policies = make([]VPNS2SIKESettingsIkev1Policies, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
@@ -184,6 +197,11 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolValue(value.Bool())
 	} else {
 		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolNull()
+	}
+	if value := res.Get("ikeV2Settings.certificateAuth.id"); value.Exists() {
+		data.Ikev2CertificateId = types.StringValue(value.String())
+	} else {
+		data.Ikev2CertificateId = types.StringNull()
 	}
 	if value := res.Get("ikeV2Settings.policies"); value.Exists() {
 		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0)
@@ -229,6 +247,11 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 		data.Ikev1AutomaticPreSharedKeyLength = types.Int64Value(value.Int())
 	} else {
 		data.Ikev1AutomaticPreSharedKeyLength = types.Int64Null()
+	}
+	if value := res.Get("ikeV1Settings.certificateAuth.id"); value.Exists() && !data.Ikev1CertificateId.IsNull() {
+		data.Ikev1CertificateId = types.StringValue(value.String())
+	} else {
+		data.Ikev1CertificateId = types.StringNull()
 	}
 	for i := 0; i < len(data.Ikev1Policies); i++ {
 		keys := [...]string{"id"}
@@ -292,6 +315,11 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolValue(value.Bool())
 	} else {
 		data.Ikev2EnforceHexBasedPreSharedKey = types.BoolNull()
+	}
+	if value := res.Get("ikeV2Settings.certificateAuth.id"); value.Exists() && !data.Ikev2CertificateId.IsNull() {
+		data.Ikev2CertificateId = types.StringValue(value.String())
+	} else {
+		data.Ikev2CertificateId = types.StringNull()
 	}
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
@@ -392,6 +420,9 @@ func (data VPNS2SIKESettings) toBodyPutDelete(ctx context.Context) string {
 	if !data.Ikev1ManualPreSharedKey.IsNull() {
 		body, _ = sjson.Set(body, "ikeV1Settings.manualPreSharedKey", data.Ikev1ManualPreSharedKey.ValueString())
 	}
+	if !data.Ikev1CertificateId.IsNull() {
+		body, _ = sjson.Set(body, "ikeV1Settings.certificateAuth.id", data.Ikev1CertificateId.ValueString())
+	}
 	if !data.Ikev2AuthenticationType.IsNull() {
 		body, _ = sjson.Set(body, "ikeV2Settings.authenticationType", data.Ikev2AuthenticationType.ValueString())
 	}
@@ -400,6 +431,9 @@ func (data VPNS2SIKESettings) toBodyPutDelete(ctx context.Context) string {
 	}
 	if !data.Ikev2ManualPreSharedKey.IsNull() {
 		body, _ = sjson.Set(body, "ikeV2Settings.manualPreSharedKey", data.Ikev2ManualPreSharedKey.ValueString())
+	}
+	if !data.Ikev2CertificateId.IsNull() {
+		body, _ = sjson.Set(body, "ikeV2Settings.certificateAuth.id", data.Ikev2CertificateId.ValueString())
 	}
 
 	return body

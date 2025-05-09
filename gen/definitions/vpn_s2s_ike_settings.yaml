@@ -47,6 +47,13 @@ attributes:
     minimum_test_value: '"my_pre_shared_key123"'
     write_only: true
     sensitive: true
+  - model_name: id
+    data_path: [ikeV1Settings, certificateAuth]
+    tf_name: ikev1_certificate_id
+    type: String
+    description: Id of the certificate for certificate-based authentication for IKEv1.
+    exclude_example: true
+    exclude_test: true
   - model_name: policies
     data_path: [ikeV1Settings]
     tf_name: ikev1_policies
@@ -99,6 +106,13 @@ attributes:
     type: Bool
     description: Enforce use of a hex-based pre-shared key for IKEv2.
     example: "false"
+  - model_name: id
+    data_path: [ikeV2Settings, certificateAuth]
+    tf_name: ikev2_certificate_id
+    type: String
+    description: Id of the certificate for certificate-based authentication for IKEv2.
+    exclude_example: true
+    exclude_test: true
   - model_name: policies
     data_path: [ikeV2Settings]
     tf_name: ikev2_policies
