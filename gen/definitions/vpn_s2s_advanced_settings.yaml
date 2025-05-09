@@ -31,7 +31,9 @@ attributes:
     data_path: [advancedIkeSetting, ikeKeepaliveSettings]
     tf_name: ike_keepalive_threshold
     type: Int64
-    description: IKE keepalive threshold in seconds. This interval is the number of seconds allowing a peer to idle before beginning keepalive monitoring.
+    description: >-
+     IKE keepalive threshold in seconds.
+     This interval is the number of seconds allowing a peer to idle before beginning keepalive monitoring.
     min_int: 10
     max_int: 3600
     example: 15
@@ -109,7 +111,7 @@ attributes:
     type: Bool
     description: Enable fragmentation before encryption.
     example: "true"
-  #- model_name: enabled
+  # - model_name: enabled
   #  data_path: [advancedIpsecSetting, maximumTransmissionUnitAging]
   #  tf_name: ipsec_enable_path_maximum_transmission_unit_aging
   #  type: Bool
@@ -119,7 +121,9 @@ attributes:
     data_path: [advancedIpsecSetting, maximumTransmissionUnitAging]
     tf_name: ipsec_path_maximum_transmission_unit_aging_reset_interval
     type: Int64
-    description: Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.
+    description: >-
+     Enter the number of minutes at which the Path Maximum Transission Unit (PMTU)
+     value of an SA is reset to its original value.
     min_int: 10
     max_int: 30
     example: 30
@@ -191,7 +195,7 @@ attributes:
     type: Bool
     description: Use peer IP address to determine tunnel.
     example: "false"
-  
+
 test_prerequisites: |-
   resource "fmc_vpn_s2s" "test" {
     name             = "my_s2s_vpn_ike_settings"

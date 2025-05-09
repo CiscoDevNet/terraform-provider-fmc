@@ -131,7 +131,7 @@ attributes:
         description: Enable NAT exemption.
         exclude_example: true
         exclude_test: true
-        write_only: true # FMCBUG: Despite changing the value, it is not reflected in the response.
+        write_only: true  # FMCBUG: Despite changing the value, it is not reflected in the response.
       - model_name: id
         data_path: [insideInterface.0]
         tf_name: nat_exemption_inside_interface_id
@@ -145,7 +145,7 @@ attributes:
         description: Enable Reverse Route Injection (RRI).
         exclude_example: true
         exclude_test: true
-      #- model_name: isLocalTunnelIdEnabled
+      # - model_name: isLocalTunnelIdEnabled
       #  tf_name: enable_local_tunnel_id
       #  type: Bool
       #  description: Enable local tunnel ID.
@@ -168,7 +168,7 @@ attributes:
         description: Id of the VPN filter ACL.
         exclude_example: true
         exclude_test: true
-      #- model_name: overrideRemoteVpnFilter
+      # - model_name: overrideRemoteVpnFilter
       #  tf_name: override_remote_vpn_filter
       #  type: Bool
       #  description: Override remote VPN filter.
@@ -192,10 +192,12 @@ attributes:
         data_path: [backupInterfaces.0]
         tf_name: backup_interface_public_ip_address
         type: String
-        description: Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
+        description: >-
+         Public address of the backup VIT interface,
+         in case the one configured on the interface is private. (NAT Address)
         exclude_example: true
         exclude_test: true
-      #- model_name: isLocalTunnelIdEnabled
+      # - model_name: isLocalTunnelIdEnabled
       #  data_path: [backupInterfaces.0]
       #  tf_name: backup_enable_local_tunnel_id
       #  type: Bool
