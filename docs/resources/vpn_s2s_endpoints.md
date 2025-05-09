@@ -28,6 +28,7 @@ resource "fmc_vpn_s2s_endpoints" "example" {
       device_id                   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       interface_id                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       interface_ipv6_address      = "2001:db8::1"
+      interface_public_ip_address = "10.1.1.1"
       connection_type             = "BIDIRECTIONAL"
       allow_incoming_ikev2_routes = false
       send_vti_ip_to_peer         = false
@@ -36,17 +37,11 @@ resource "fmc_vpn_s2s_endpoints" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      nat_traversal                     = false
-      nat_exemption                     = false
-      nat_exemption_inside_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      reverse_route_injection           = false
-      local_identity_type               = "EMAIL"
-      local_identity_string             = "me@cisco.com"
-      vpn_filter_acl_id                 = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      override_remote_vpn_filter_acl_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      backup_interface_id               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      backup_local_identity_type        = "EMAIL"
-      backup_local_identity_string      = "me@cisco.com"
+      local_identity_type          = "EMAILID"
+      local_identity_string        = "me@cisco.com"
+      backup_interface_id          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      backup_local_identity_type   = "EMAILID"
+      backup_local_identity_string = "me@cisco.com"
     }
   }
 }
@@ -80,7 +75,7 @@ Required:
 Optional:
 
 - `allow_incoming_ikev2_routes` (Boolean) Allow incoming IKEv2 routes.
-- `backup_interface_id` (String) Id of the backup VTI interface.
+- `backup_interface_id` (String) Id of the backup interface to source the VPN connection.
 - `backup_interface_public_ip_address` (String) Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
 - `backup_local_identity_string` (String) String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
 - `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
@@ -90,7 +85,7 @@ Optional:
 - `device_id` (String) Id of the device managed by local FMC.
 - `extranet_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
 - `extranet_ip_address` (String) IP address of extranet device (optionally coma separated Backup IP Addresses).
-- `interface_id` (String) Id of the primary VTI interface.
+- `interface_id` (String) Id of the primary interface to source the VPN connection.
 - `interface_ipv6_address` (String) IPv6 address of the interface. If not set, IPv4 address will be used.
 - `interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
 - `local_identity_string` (String) String of the local identity (applicable only for types KEYID and EMAILID)

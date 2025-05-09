@@ -30,37 +30,14 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcVPNS2SEndpoints(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	}
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.peer_type", "PEER"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.extranet_device", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.extranet_ip_address", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.extranet_dynamic_ip", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.interface_public_ip_address", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.connection_type", "BIDIRECTIONAL"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.allow_incoming_ikev2_routes", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.send_vti_ip_to_peer", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.protected_networks_acl_id", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.nat_traversal", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.nat_exemption_inside_interface_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.reverse_route_injection", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.local_identity_type", "EMAIL"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.local_identity_string", "me@cisco.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.vpn_filter_acl_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.override_remote_vpn_filter_acl_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.backup_interface_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.backup_interface_public_ip_address", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.backup_local_identity_type", "EMAIL"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_s2s_endpoints.test", "items.my_ftd_01.backup_local_identity_string", "me@cisco.com"))
 
 	var steps []resource.TestStep
-	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
-		steps = append(steps, resource.TestStep{
-			Config: testAccFmcVPNS2SEndpointsConfig_minimum(),
-		})
-	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcVPNS2SEndpointsConfig_all(),
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + testAccFmcVPNS2SEndpointsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -75,59 +52,180 @@ func TestAccFmcVPNS2SEndpoints(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcVPNS2SEndpointsPrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+data "fmc_device" "test" {
+  id = var.device_id
+}
+
+data "fmc_network" "test" {
+  name = "any-ipv4"
+}
+
+resource "fmc_device_physical_interface" "test" {
+  device_id = data.fmc_device.test.id
+  name      = "GigabitEthernet0/1"
+  mode      = "NONE"
+  logical_name = "my_phy_s2s_vpn_endpoints"
+  ipv4_static_address = "10.198.21.1"
+  ipv4_static_netmask = "24"
+}
+
+resource "fmc_vpn_s2s" "test" {
+  name             = "my_s2s_vpn_endpoints"
+  route_based      = false
+  network_topology = "POINT_TO_POINT"
+  ikev1            = false
+  ikev2            = true
+}
+
+resource "fmc_vpn_s2s_ike_settings" "test" {
+  vpn_s2s_id                  = fmc_vpn_s2s.test.id
+  ikev2_authentication_type   = "MANUAL_PRE_SHARED_KEY"
+  ikev2_manual_pre_shared_key = "my_pre_shared_key123"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
-
-func testAccFmcVPNS2SEndpointsConfig_minimum() string {
-	config := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n"
-	config += `	vpn_s2s_id = TBD` + "\n"
-	config += `	items = { "my_ftd_01" = {` + "\n"
-	config += `		peer_type = "PEER"` + "\n"
-	config += `		extranet_device = false` + "\n"
-	config += `	}}` + "\n"
-	config += `}` + "\n"
-	return config
-}
-
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
 func testAccFmcVPNS2SEndpointsConfig_all() string {
 	config := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n"
-	config += `	vpn_s2s_id = TBD` + "\n"
-	config += `	items = { "my_ftd_01" = {` + "\n"
+	config += `	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n"
+	config += `	items = { (data.fmc_device.test.name) = {` + "\n"
 	config += `		peer_type = "PEER"` + "\n"
 	config += `		extranet_device = false` + "\n"
-	config += `		extranet_ip_address = ""` + "\n"
-	config += `		extranet_dynamic_ip = ` + "\n"
-	config += `		device_id = TBD` + "\n"
-	config += `		interface_id = TBD` + "\n"
-	config += `		interface_ipv6_address = TBD` + "\n"
-	config += `		interface_public_ip_address = ""` + "\n"
+	config += `		device_id = data.fmc_device.test.id` + "\n"
+	config += `		interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `		interface_public_ip_address = "10.1.1.1"` + "\n"
 	config += `		connection_type = "BIDIRECTIONAL"` + "\n"
-	config += `		allow_incoming_ikev2_routes = false` + "\n"
-	config += `		send_vti_ip_to_peer = false` + "\n"
 	config += `		protected_networks = [{` + "\n"
-	config += `			id = TBD` + "\n"
+	config += `			id = data.fmc_network.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		protected_networks_acl_id = ""` + "\n"
-	config += `		nat_traversal = false` + "\n"
-	config += `		nat_exemption = false` + "\n"
-	config += `		nat_exemption_inside_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `		reverse_route_injection = false` + "\n"
-	config += `		local_identity_type = "EMAIL"` + "\n"
+	config += `		local_identity_type = "EMAILID"` + "\n"
 	config += `		local_identity_string = "me@cisco.com"` + "\n"
-	config += `		vpn_filter_acl_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `		override_remote_vpn_filter_acl_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `		backup_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `		backup_interface_public_ip_address = ""` + "\n"
-	config += `		backup_local_identity_type = "EMAIL"` + "\n"
-	config += `		backup_local_identity_string = "me@cisco.com"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }
 
 // End of section. //template:end testAccConfigAll
+
+func TestAccFmcVPNS2SEndpoints_Sequential(t *testing.T) {
+
+	step_01 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
+		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
+		`	items = {` + "\n" +
+		`	  "ext-dev" = {` + "\n" +
+		`		extranet_device     = true` + "\n" +
+		`		peer_type           = "PEER"` + "\n" +
+		`		extranet_ip_address = "1.1.1.1"` + "\n" +
+		`	  }` + "\n" +
+		`	}` + "\n" +
+		`	depends_on = [fmc_vpn_s2s_ike_settings.test]` + "\n" +
+		`}` + "\n"
+
+	step_02 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
+		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
+		`	items = {` + "\n" +
+		`	  "ext-dev" = {` + "\n" +
+		`		extranet_device     = true` + "\n" +
+		`		peer_type           = "PEER"` + "\n" +
+		`		extranet_ip_address = "1.1.1.1"` + "\n" +
+		`	  }` + "\n" +
+		`	  (data.fmc_device.test.name) = {` + "\n" +
+		`	  	peer_type = "PEER"` + "\n" +
+		`		extranet_device = false` + "\n" +
+		`		device_id = data.fmc_device.test.id` + "\n" +
+		`		interface_id = fmc_device_physical_interface.test.id` + "\n" +
+		`		connection_type = "BIDIRECTIONAL"` + "\n" +
+		`		protected_networks = [{` + "\n" +
+		`			id = data.fmc_network.test.id` + "\n" +
+		`		}]` + "\n" +
+		`	  }` + "\n" +
+		`   }` + "\n" +
+		`	depends_on = [fmc_vpn_s2s_ike_settings.test]` + "\n" +
+		`}` + "\n"
+
+	step_03 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
+		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
+		`	items = {` + "\n" +
+		`	  "ext-dev" = {` + "\n" +
+		`		extranet_device     = true` + "\n" +
+		`		peer_type           = "PEER"` + "\n" +
+		`		extranet_ip_address = "1.1.1.1"` + "\n" +
+		`	  }` + "\n" +
+		`	  (data.fmc_device.test.name) = {` + "\n" +
+		`	  	peer_type = "PEER"` + "\n" +
+		`		extranet_device = false` + "\n" +
+		`		device_id = data.fmc_device.test.id` + "\n" +
+		`		interface_id = fmc_device_physical_interface.test.id` + "\n" +
+		`		connection_type = "BIDIRECTIONAL"` + "\n" +
+		`		protected_networks = [{` + "\n" +
+		`			id = data.fmc_network.test.id` + "\n" +
+		`		}]` + "\n" +
+		`		local_identity_type = "EMAILID"` + "\n" +
+		`		local_identity_string = "me@cisco.com"` + "\n" +
+		`	  }` + "\n" +
+		`   }` + "\n" +
+		`	depends_on = [fmc_vpn_s2s_ike_settings.test]` + "\n" +
+		`}` + "\n"
+
+	step_04 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
+		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
+		`	items = {` + "\n" +
+		`	  "ext-dev" = {` + "\n" +
+		`		extranet_device     = true` + "\n" +
+		`		peer_type           = "PEER"` + "\n" +
+		`		extranet_ip_address = "1.1.1.1"` + "\n" +
+		`	  }` + "\n" +
+		`	  (data.fmc_device.test.name) = {` + "\n" +
+		`	  	peer_type = "PEER"` + "\n" +
+		`		extranet_device = false` + "\n" +
+		`		device_id = data.fmc_device.test.id` + "\n" +
+		`		interface_id = fmc_device_physical_interface.test.id` + "\n" +
+		`		connection_type = "BIDIRECTIONAL"` + "\n" +
+		`		protected_networks = [{` + "\n" +
+		`			id = data.fmc_network.test.id` + "\n" +
+		`		}]` + "\n" +
+		`	  }` + "\n" +
+		`   }` + "\n" +
+		`	depends_on = [fmc_vpn_s2s_ike_settings.test]` + "\n" +
+		`}` + "\n"
+
+	step_05 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
+		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
+		`	items = {` + "\n" +
+		`	  "ext-dev" = {` + "\n" +
+		`		extranet_device     = true` + "\n" +
+		`		peer_type           = "PEER"` + "\n" +
+		`		extranet_ip_address = "1.1.1.1"` + "\n" +
+		`	  }` + "\n" +
+		`	}` + "\n" +
+		`	depends_on = [fmc_vpn_s2s_ike_settings.test]` + "\n" +
+		`}` + "\n"
+
+	steps := []resource.TestStep{{
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + step_01,
+	}, {
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + step_02,
+	}, {
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + step_03,
+	}, {
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + step_04,
+	}, {
+		Config: testAccFmcVPNS2SEndpointsPrerequisitesConfig + step_05,
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}

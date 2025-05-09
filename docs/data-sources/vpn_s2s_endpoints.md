@@ -44,7 +44,7 @@ data "fmc_vpn_s2s_endpoints" "example" {
 Read-Only:
 
 - `allow_incoming_ikev2_routes` (Boolean) Allow incoming IKEv2 routes.
-- `backup_interface_id` (String) Id of the backup VTI interface.
+- `backup_interface_id` (String) Id of the backup interface to source the VPN connection.
 - `backup_interface_public_ip_address` (String) Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
 - `backup_local_identity_string` (String) String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
 - `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
@@ -54,7 +54,7 @@ Read-Only:
 - `extranet_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
 - `extranet_ip_address` (String) IP address of extranet device (optionally coma separated Backup IP Addresses).
 - `id` (String) Id of the Endpoint object.
-- `interface_id` (String) Id of the primary VTI interface.
+- `interface_id` (String) Id of the primary interface to source the VPN connection.
 - `interface_ipv6_address` (String) IPv6 address of the interface. If not set, IPv4 address will be used.
 - `interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
 - `local_identity_string` (String) String of the local identity (applicable only for types KEYID and EMAILID)

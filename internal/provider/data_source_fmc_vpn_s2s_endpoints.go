@@ -100,7 +100,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the primary VTI interface.",
+							MarkdownDescription: "Id of the primary interface to source the VPN connection.",
 							Computed:            true,
 						},
 						"interface_ipv6_address": schema.StringAttribute{
@@ -172,7 +172,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"backup_interface_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the backup VTI interface.",
+							MarkdownDescription: "Id of the backup interface to source the VPN connection.",
 							Computed:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{

@@ -126,7 +126,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary VTI interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary interface to source the VPN connection.").String,
 							Optional:            true,
 						},
 						"interface_ipv6_address": schema.StringAttribute{
@@ -204,7 +204,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"backup_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the backup VTI interface.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the backup interface to source the VPN connection.").String,
 							Optional:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{
