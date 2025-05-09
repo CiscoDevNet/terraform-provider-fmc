@@ -378,7 +378,7 @@ func (data *VPNS2SIKESettings) fromBodyUnknowns(ctx context.Context, res gjson.R
 // End of section. //template:end clearItemIds
 
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
-func (data VPNS2SIKESettings) toBodyPutDelete(ctx context.Context, state VPNS2SIKESettings) string {
+func (data VPNS2SIKESettings) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())

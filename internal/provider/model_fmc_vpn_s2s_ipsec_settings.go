@@ -498,7 +498,7 @@ func (data *VPNS2SIPSECSettings) fromBodyUnknowns(ctx context.Context, res gjson
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
 
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
-func (data VPNS2SIPSECSettings) toBodyPutDelete(ctx context.Context, state VPNS2SIPSECSettings) string {
+func (data VPNS2SIPSECSettings) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())

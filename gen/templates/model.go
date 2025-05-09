@@ -653,7 +653,7 @@ func (data *{{camelCase .Name}}) clearItemsIds(ctx context.Context) {
 
 {{if .PutDelete}}
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
-func (data {{camelCase .Name}}) toBodyPutDelete(ctx context.Context, state {{camelCase .Name}}) string {
+func (data {{camelCase .Name}}) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())

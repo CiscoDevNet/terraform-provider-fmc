@@ -962,7 +962,7 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 	{{- if not .NoDelete}}
 	{{- if not .IsBulk}}
 	{{- if .PutDelete}}
-	body := state.toBodyPutDelete(ctx, {{camelCase .Name}}{})
+	body := state.toBodyPutDelete(ctx)
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
