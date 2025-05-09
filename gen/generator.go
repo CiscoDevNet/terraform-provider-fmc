@@ -162,6 +162,7 @@ type YamlConfigAttribute struct {
 	MinimumTestValue     string                `yaml:"minimum_test_value"`
 	TestTags             []string              `yaml:"test_tags"`
 	DataSourceQuery      bool                  `yaml:"data_source_query"`
+	Sensitive            bool                  `yaml:"sensitive"`
 	Attributes           []YamlConfigAttribute `yaml:"attributes"`
 	GoTypeName           string
 }

@@ -143,6 +143,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- if or (len .DefaultValue) .ResourceId .Computed}}
 				Computed:            true,
 				{{- end}}
+				{{- if .Sensitive}}
+				Sensitive:           true,
+				{{- end}}
 				{{- if len .EnumValues}}
 				{{- if isSet .}}
 				Validators: []validator.Set{
@@ -224,6 +227,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- end}}
 							{{- if or (len .DefaultValue) .ResourceId .Computed}}
 							Computed:            true,
+							{{- end}}
+							{{- if .Sensitive}}
+							Sensitive:           true,
 							{{- end}}
 							{{- if len .EnumValues}}
 							{{- if isSet .}}
@@ -363,6 +369,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 											{{end}}
 										},
 										{{- end}}
+										{{- if .Sensitive}}
+										Sensitive:           true,
+										{{- end}}
 										{{- if isNestedListMapSet .}}
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
@@ -393,6 +402,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													{{- end}}
 													{{- if or (len .DefaultValue) .ResourceId .Computed}}
 													Computed:            true,
+													{{- end}}
+													{{- if .Sensitive}}
+													Sensitive:           true,
 													{{- end}}
 													{{- if len .EnumValues}}
 													{{- if isSet .}}

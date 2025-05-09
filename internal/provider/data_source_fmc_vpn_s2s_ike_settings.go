@@ -85,6 +85,7 @@ func (d *VPNS2SIKESettingsDataSource) Schema(ctx context.Context, req datasource
 			"ikev1_manual_pre_shared_key": schema.StringAttribute{
 				MarkdownDescription: "Manually configured pre-shared key for IKEv1.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"ikev1_policies": schema.SetNestedAttribute{
 				MarkdownDescription: "Set of policies for IKEv1.",
@@ -113,6 +114,7 @@ func (d *VPNS2SIKESettingsDataSource) Schema(ctx context.Context, req datasource
 			"ikev2_manual_pre_shared_key": schema.StringAttribute{
 				MarkdownDescription: "Manually configured pre-shared key for IKEv2.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"ikev2_enforce_hex_based_pre_shared_key": schema.BoolAttribute{
 				MarkdownDescription: "Enforce use of a hex-based pre-shared key for IKEv2.",

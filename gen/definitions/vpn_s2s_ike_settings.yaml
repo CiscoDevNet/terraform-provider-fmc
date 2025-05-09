@@ -46,6 +46,7 @@ attributes:
     example: my_pre_shared_key123
     minimum_test_value: '"my_pre_shared_key123"'
     write_only: true
+    sensitive: true
   - model_name: policies
     data_path: [ikeV1Settings]
     tf_name: ikev1_policies
@@ -91,6 +92,7 @@ attributes:
     example: my_pre_shared_key123
     minimum_test_value: '"my_pre_shared_key123"'
     write_only: true
+    sensitive: true
   - model_name: enforceHexBasedPreSharedKeyOnly
     data_path: [ikeV2Settings]
     tf_name: ikev2_enforce_hex_based_pre_shared_key
