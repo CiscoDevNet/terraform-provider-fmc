@@ -45,8 +45,6 @@ func TestAccDataSourceFmcVPNS2SAdvancedSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "ipsec_path_maximum_transmission_unit_aging_reset_interval", "30"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "nat_keepalive_message_traversal", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "nat_keepalive_message_traversal_interval", "20"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "vpn_idle_timeout", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "vpn_idle_timeout_value", "25"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "bypass_access_control_traffic_for_decrypted_traffic", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "cert_use_map_configured_in_endpoint_to_determine_tunnel", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "cert_use_ou_to_determine_tunnel", "false"))
@@ -101,8 +99,6 @@ func testAccDataSourceFmcVPNS2SAdvancedSettingsConfig() string {
 	config += `	ipsec_path_maximum_transmission_unit_aging_reset_interval = 30` + "\n"
 	config += `	nat_keepalive_message_traversal = true` + "\n"
 	config += `	nat_keepalive_message_traversal_interval = 20` + "\n"
-	config += `	vpn_idle_timeout = true` + "\n"
-	config += `	vpn_idle_timeout_value = 25` + "\n"
 	config += `	bypass_access_control_traffic_for_decrypted_traffic = false` + "\n"
 	config += `	cert_use_map_configured_in_endpoint_to_determine_tunnel = false` + "\n"
 	config += `	cert_use_ou_to_determine_tunnel = false` + "\n"
