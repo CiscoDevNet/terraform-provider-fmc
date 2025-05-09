@@ -3,7 +3,7 @@ name: VPN S2S Advanced Settings
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/advancedsettings
 res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) Advanced settings.
 put_create: true
-put_retrieve_id: true
+retrieve_id: true
 put_delete: true
 doc_category: VPN
 adjust_body: true
@@ -102,7 +102,7 @@ attributes:
     type: Int64
     description: Limits the number of allowed IKEv2 connections.
     exclude_example: true
-    test_value: 50
+    test_value: "50"
 
   # IPSec Settings
   - model_name: enableFragmentationBeforeEncryption

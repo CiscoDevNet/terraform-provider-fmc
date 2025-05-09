@@ -6,7 +6,7 @@ res_description: >-
   Either/both IKEv1/IKEv2 must be configured.\n
   Object deletion will not remove whole configuration, not to violate any dependencies that still may exist.\n
 put_create: true
-put_retrieve_id: true
+retrieve_id: true
 put_delete: true
 doc_category: VPN
 attributes:

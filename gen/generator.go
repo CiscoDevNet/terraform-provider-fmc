@@ -101,7 +101,7 @@ type YamlConfig struct {
 	TfName                   string                `yaml:"tf_name"`
 	RestEndpoint             string                `yaml:"rest_endpoint"`
 	PutCreate                bool                  `yaml:"put_create"`
-	PutRetrieveId            bool                  `yaml:"put_retrieve_id"`
+	RetrieveId               bool                  `yaml:"retrieve_id"`
 	PutDelete                bool                  `yaml:"put_delete"`
 	NoUpdate                 bool                  `yaml:"no_update"`
 	NoDelete                 bool                  `yaml:"no_delete"`

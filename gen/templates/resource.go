@@ -551,7 +551,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	{{- if and .PutCreate (not .IsBulk)}}
 
-	{{- if .PutRetrieveId}}
+	{{- if .RetrieveId}}
 	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
 	// Get objects from FMC
 	resId, err := r.client.Get(plan.getPath(), reqMods...)
