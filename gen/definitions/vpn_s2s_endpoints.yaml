@@ -1,0 +1,255 @@
+---
+# FMCBUG - CSCwp08491	Endpoint /policy/ftds2svpns/{id}/endpoint does not allow to configure certificate map
+name: VPN S2S Endpoints
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/endpoints
+res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) Endpints
+is_bulk: true
+doc_category: VPN
+minimum_version_bulk_delete: "999"
+adjust_body: true
+skip_minimum_test: true
+test_tags: [TF_VAR_device_id]
+attributes:
+  - tf_name: vpn_s2s_id
+    type: String
+    reference: true
+    description: Id of the parent VPN S2S Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_s2s.test.id
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Endpoints. The key of the map is the name of the Endpoint.
+    map_key_example: my_ftd_01
+    test_value: (data.fmc_device.test.name)
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the Endpoint object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: peerType
+        type: String
+        description: Role of the device in the topology.
+        enum_values: [PEER, HUB, SPOKE]
+        example: PEER
+        mandatory: true
+      # Device
+      - model_name: extranet
+        tf_name: extranet_device
+        type: Bool
+        description: Is the device managed by local FMC.
+        example: "false"
+        mandatory: true
+      - model_name: ipAddress
+        data_path: [extranetInfo]
+        tf_name: extranet_ip_address
+        type: String
+        description: IP address of extranet device (optionally coma separated Backup IP Addresses).
+        exclude_example: true
+        exclude_test: true
+      - model_name: isDynamicIP
+        data_path: [extranetInfo]
+        tf_name: extranet_dynamic_ip
+        type: Bool
+        description: Is the IP address of the extranet device dynamic.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: [device]
+        tf_name: device_id
+        type: String
+        description: Id of the device managed by local FMC.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: data.fmc_device.test.id
+      - model_name: id
+        data_path: [interface]
+        tf_name: interface_id
+        type: String
+        description: Id of the primary interface to source the VPN connection.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: ipv6InterfaceAddress
+        tf_name: interface_ipv6_address
+        type: String
+        description: IPv6 address of the interface. If not set, IPv4 address will be used.
+        example: 2001:db8::1
+        exclude_test: true
+      - model_name: nattedInterfaceAddress
+        tf_name: interface_public_ip_address
+        type: String
+        description: Public address of the interface, in case the one configured on the interface is private.
+        example: "10.1.1.1"
+      - model_name: connectionType
+        type: String
+        description: Connection type.
+        enum_values: [ORIGINATE_ONLY, ANSWER_ONLY, BIDIRECTIONAL]
+        example: BIDIRECTIONAL
+      - model_name: allowIncomingIKEv2Routes
+        tf_name: allow_incoming_ikev2_routes
+        type: Bool
+        description: Allow incoming IKEv2 routes.
+        example: "false"
+        exclude_test: true
+      - model_name: sendTunnelInterfaceIpToPeer
+        tf_name: send_vti_ip_to_peer
+        type: Bool
+        description: Send Virtual Tunnel Interface IP to the peers.
+        example: "false"
+        exclude_test: true
+      # Protected Networks
+      - model_name: networks
+        data_path: [protectedNetworks]
+        tf_name: protected_networks
+        type: Set
+        description: Set of protected networks.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the protected network.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: data.fmc_network.test.id
+            mandatory: true
+      - model_name: id
+        data_path: [protectedNetworks, acl]
+        tf_name: protected_networks_acl_id
+        type: String
+        description: Id of the ACL that defines protected networks.
+        exclude_example: true
+        exclude_test: true
+      - model_name: enableNatTraversal
+        tf_name: nat_traversal
+        type: Bool
+        description: Enable NAT traversal.
+        exclude_example: true
+        exclude_test: true
+      - model_name: enableNATExempt
+        tf_name: nat_exemption
+        type: Bool
+        description: Enable NAT exemption.
+        exclude_example: true
+        exclude_test: true
+        write_only: true  # FMCBUG: Despite changing the value, it is not reflected in the response.
+      - model_name: id
+        data_path: [insideInterface.0]
+        tf_name: nat_exemption_inside_interface_id
+        type: String
+        description: Id of the inside Security Zone for NAT Exemption identification.
+        exclude_example: true
+        exclude_test: true
+      - model_name: dynamicRRIEnabled
+        tf_name: reverse_route_injection
+        type: Bool
+        description: Enable Reverse Route Injection (RRI).
+        exclude_example: true
+        exclude_test: true
+      # - model_name: isLocalTunnelIdEnabled
+      #  tf_name: enable_local_tunnel_id
+      #  type: Bool
+      #  description: Enable local tunnel ID.
+      #  example: "true"
+      - model_name: localIdentityType
+        tf_name: local_identity_type
+        type: String
+        description: Type of the local identity.
+        enum_values: [ADDRESS, AUTO, EMAILID, HOSTNAME, KEYID]
+        example: EMAILID
+      - model_name: localIdentityString
+        tf_name: local_identity_string
+        type: String
+        description: Value of the local identity (applicable only for types KEYID and EMAILID).
+        example: me@cisco.com
+      - model_name: id
+        data_path: [vpnFilterAcl]
+        tf_name: vpn_filter_acl_id
+        type: String
+        description: Id of the VPN filter ACL.
+        exclude_example: true
+        exclude_test: true
+      # - model_name: overrideRemoteVpnFilter
+      #  tf_name: override_remote_vpn_filter
+      #  type: Bool
+      #  description: Override remote VPN filter.
+      #  example: "false"
+      - model_name: id
+        data_path: [remoteVpnFilterAclObject]
+        tf_name: override_remote_vpn_filter_acl_id
+        type: String
+        description: Id of the ACL to override VPN filter on the Hub.
+        exclude_example: true
+        exclude_test: true
+      # Backup Interface
+      - model_name: id
+        data_path: [backupInterfaces.0, interface]
+        tf_name: backup_interface_id
+        type: String
+        description: Id of the backup interface to source the VPN connection.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        exclude_test: true
+      - model_name: publicIpAddress
+        data_path: [backupInterfaces.0]
+        tf_name: backup_interface_public_ip_address
+        type: String
+        description: >-
+         Public address of the backup interface,
+         in case the one configured on the backup interface is private (NAT Address).
+        exclude_example: true
+        exclude_test: true
+      # - model_name: isLocalTunnelIdEnabled
+      #  data_path: [backupInterfaces.0]
+      #  tf_name: backup_enable_local_tunnel_id
+      #  type: Bool
+      #  description: Enable local tunnel ID for backup interface.
+      #  example: "false"
+      - model_name: localIdentityType
+        data_path: [backupInterfaces.0]
+        tf_name: backup_local_identity_type
+        type: String
+        description: Type of the local identity for the backup tunnel.
+        enum_values: [ADDRESS, AUTO, EMAILID, HOSTNAME, KEYID]
+        example: EMAILID
+        exclude_test: true
+      - model_name: localIdentityString
+        data_path: [backupInterfaces.0]
+        tf_name: backup_local_identity_string
+        type: String
+        description: Value of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID).
+        example: me@cisco.com
+        exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  data "fmc_device" "test" {
+    id = var.device_id
+  }
+
+  data "fmc_network" "test" {
+    name = "any-ipv4"
+  }
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id = data.fmc_device.test.id
+    name      = "GigabitEthernet0/1"
+    mode      = "NONE"
+    logical_name = "my_phy_s2s_vpn_endpoints"
+    ipv4_static_address = "10.198.21.1"
+    ipv4_static_netmask = "24"
+  }
+
+  resource "fmc_vpn_s2s" "test" {
+    name             = "my_s2s_vpn_endpoints"
+    route_based      = false
+    network_topology = "POINT_TO_POINT"
+    ikev1            = false
+    ikev2            = true
+  }
+
+  resource "fmc_vpn_s2s_ike_settings" "test" {
+    vpn_s2s_id                  = fmc_vpn_s2s.test.id
+    ikev2_authentication_type   = "MANUAL_PRE_SHARED_KEY"
+    ikev2_manual_pre_shared_key = "my_pre_shared_key123"
+  }

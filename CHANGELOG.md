@@ -7,6 +7,7 @@
 - (Enhancement) Add support for IKEv1 & IKEv2 IPSec Proposals & Policies
 - (Enhancement) Add support for `fmc_certificate_map` and `fmc_certificate_maps`
 - (Enhancement) Honor proxy settings (`HTTP_PROXY`, `HTTPS_PROXY`, `NO_PROXY` environment variables)
+- (Enhancement) Add support for Site-to-Site VPNs (`fmc_vpn_s2s`, `fmc_vpn_s2s_ipsec_settings`, `fmc_vpn_s2s_ike_settings`, `fmc_vpn_s2s_advanced_settings`, `fmc_vpn_s2s_endpoints`)
 
 ## 2.0.0-beta3
 

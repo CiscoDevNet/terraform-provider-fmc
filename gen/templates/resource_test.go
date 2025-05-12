@@ -188,7 +188,7 @@ func testAccFmc{{camelCase .Name}}Config_minimum() string {
 	{{- if isNestedListSet .}}
 	config += `	{{.TfName}} = [{` + "\n"
 	{{- else if isNestedMap .}}
-	config += `	{{.TfName}} = { "{{.MapKeyExample}}" = {` + "\n"
+	config += `	{{.TfName}} = { {{if .TestValue}}{{.TestValue}}{{else}}"{{.MapKeyExample}}"{{end}} = {` + "\n"
 	{{- end}}
 		{{- range  .Attributes}}
 		{{- if .Computed}}{{- continue }}{{- end}}
@@ -287,7 +287,7 @@ func testAccFmc{{camelCase .Name}}Config_all() string {
 	{{- if isNestedListSet .}}
 	config += `	{{.TfName}} = [{` + "\n"
 	{{- else if isNestedMap .}}
-	config += `	{{.TfName}} = { "{{.MapKeyExample}}" = {` + "\n"
+	config += `	{{.TfName}} = { {{if .TestValue}}{{.TestValue}}{{else}}"{{.MapKeyExample}}"{{end}} = {` + "\n"
 	{{- end}}
 		{{- range  .Attributes}}
 		{{- if .Computed}}{{- continue }}{{- end}}

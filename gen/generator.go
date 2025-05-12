@@ -101,6 +101,8 @@ type YamlConfig struct {
 	TfName                   string                `yaml:"tf_name"`
 	RestEndpoint             string                `yaml:"rest_endpoint"`
 	PutCreate                bool                  `yaml:"put_create"`
+	RetrieveId               bool                  `yaml:"retrieve_id"`
+	PutDelete                bool                  `yaml:"put_delete"`
 	NoUpdate                 bool                  `yaml:"no_update"`
 	NoDelete                 bool                  `yaml:"no_delete"`
 	MinimumVersion           string                `yaml:"minimum_version"`
@@ -119,6 +121,7 @@ type YamlConfig struct {
 	IsBulk                   bool                  `yaml:"is_bulk"`
 	BulkSizeCreate           int                   `yaml:"bulk_size_create"`
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
+	AdjustBody               bool                  `yaml:"adjust_body"`
 }
 
 type YamlConfigAttribute struct {
@@ -159,6 +162,7 @@ type YamlConfigAttribute struct {
 	MinimumTestValue     string                `yaml:"minimum_test_value"`
 	TestTags             []string              `yaml:"test_tags"`
 	DataSourceQuery      bool                  `yaml:"data_source_query"`
+	Sensitive            bool                  `yaml:"sensitive"`
 	Attributes           []YamlConfigAttribute `yaml:"attributes"`
 	GoTypeName           string
 }

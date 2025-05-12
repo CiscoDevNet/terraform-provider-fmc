@@ -1,0 +1,157 @@
+---
+name: VPN S2S IKE Settings
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/ikesettings
+res_description: >-
+  This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) IKEv1 and IKEv2 settings.\n
+  Either/both IKEv1/IKEv2 must be configured.\n
+  Object deletion will not remove whole configuration, not to violate any dependencies that still may exist.\n
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_s2s_id
+    type: String
+    reference: true
+    description: Id of the parent VPN S2S Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_s2s.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IkeSetting'.
+    computed: true
+  # IKEv1 settings
+  - model_name: authenticationType
+    data_path: [ikeV1Settings]
+    tf_name: ikev1_authentication_type
+    type: String
+    description: Authentication method for IKEv1.
+    enum_values: [MANUAL_PRE_SHARED_KEY, AUTOMATIC_PRE_SHARED_KEY, CERTIFICATE]
+    example: MANUAL_PRE_SHARED_KEY
+    minimum_test_value: '"MANUAL_PRE_SHARED_KEY"'
+  - model_name: automaticPreSharedKeyLength
+    data_path: [ikeV1Settings]
+    tf_name: ikev1_automatic_pre_shared_key_length
+    type: Int64
+    description: Length of the automatically generated pre-shared key for IKEv1.
+    min_int: 1
+    max_int: 127
+    exclude_example: true
+    exclude_test: true
+  - model_name: manualPreSharedKey
+    data_path: [ikeV1Settings]
+    tf_name: ikev1_manual_pre_shared_key
+    type: String
+    description: Manually configured pre-shared key for IKEv1.
+    example: my_pre_shared_key123
+    minimum_test_value: '"my_pre_shared_key123"'
+    write_only: true
+    sensitive: true
+  - model_name: id
+    data_path: [ikeV1Settings, certificateAuth]
+    tf_name: ikev1_certificate_id
+    type: String
+    description: Id of the certificate for certificate-based authentication for IKEv1.
+    exclude_example: true
+    exclude_test: true
+  - model_name: policies
+    data_path: [ikeV1Settings]
+    tf_name: ikev1_policies
+    type: Set
+    description: Set of policies for IKEv1.
+    exclude_test: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the IKEv1 policy
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: TBD
+        mandatory: true
+      - model_name: name
+        type: String
+        description: Name of the IKEv1 policy
+        example: my_ikev1_policy
+        mandatory: true
+  # IKEv2 settings
+  - model_name: authenticationType
+    data_path: [ikeV2Settings]
+    tf_name: ikev2_authentication_type
+    type: String
+    description: Authentication method for IKEv2.
+    enum_values: [MANUAL_PRE_SHARED_KEY, AUTOMATIC_PRE_SHARED_KEY, CERTIFICATE]
+    example: MANUAL_PRE_SHARED_KEY
+    minimum_test_value: '"MANUAL_PRE_SHARED_KEY"'
+  - model_name: automaticPreSharedKeyLength
+    data_path: [ikeV2Settings]
+    tf_name: ikev2_automatic_pre_shared_key_length
+    type: Int64
+    description: Length of the automatically generated pre-shared key for IKEv2.
+    min_int: 1
+    max_int: 127
+    exclude_example: true
+    exclude_test: true
+  - model_name: manualPreSharedKey
+    data_path: [ikeV2Settings]
+    tf_name: ikev2_manual_pre_shared_key
+    type: String
+    description: Manually configured pre-shared key for IKEv2.
+    example: my_pre_shared_key123
+    minimum_test_value: '"my_pre_shared_key123"'
+    write_only: true
+    sensitive: true
+  - model_name: enforceHexBasedPreSharedKeyOnly
+    data_path: [ikeV2Settings]
+    tf_name: ikev2_enforce_hex_based_pre_shared_key
+    type: Bool
+    description: Enforce use of a hex-based pre-shared key for IKEv2.
+    example: "false"
+  - model_name: id
+    data_path: [ikeV2Settings, certificateAuth]
+    tf_name: ikev2_certificate_id
+    type: String
+    description: Id of the certificate for certificate-based authentication for IKEv2.
+    exclude_example: true
+    exclude_test: true
+  - model_name: policies
+    data_path: [ikeV2Settings]
+    tf_name: ikev2_policies
+    type: Set
+    description: Set of policies for IKEv2 settings.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the IKEv2 policy
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
+        test_value: 'fmc_ikev2_policies.test.items["my_s2s_vpn_ike_settings"].id'
+      - model_name: name
+        type: String
+        description: Name of the IKEv2 policy
+        example: my_ikev2_policy
+        mandatory: true
+        test_value: '"my_s2s_vpn_ike_settings"'
+
+test_prerequisites: |-
+  resource "fmc_vpn_s2s" "test" {
+    name             = "my_s2s_vpn_ike_settings"
+    route_based      = false
+    network_topology = "POINT_TO_POINT"
+    ikev1            = true
+    ikev2            = true
+  }
+
+  resource "fmc_ikev2_policies" "test" {
+    items = {
+      my_s2s_vpn_ike_settings = {
+        description           = "IKEv2 Policy"
+        priority              = 10
+        lifetime              = 86400
+        integrity_algorithms  = ["SHA-256"]
+        encryption_algorithms = ["AES-256"]
+        prf_algorithms        = ["SHA-256"]
+        dh_groups             = ["14"]
+      }
+    }
+  }
