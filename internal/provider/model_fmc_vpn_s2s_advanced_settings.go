@@ -33,32 +33,32 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type VPNS2SAdvancedSettings struct {
-	Id                                                 types.String `tfsdk:"id"`
-	Domain                                             types.String `tfsdk:"domain"`
-	VpnS2sId                                           types.String `tfsdk:"vpn_s2s_id"`
-	Type                                               types.String `tfsdk:"type"`
-	IkeKeepalive                                       types.String `tfsdk:"ike_keepalive"`
-	IkeKeepaliveThreshold                              types.Int64  `tfsdk:"ike_keepalive_threshold"`
-	IkeKeepaliveRetryInterval                          types.Int64  `tfsdk:"ike_keepalive_retry_interval"`
-	IkeIdentitySentToPeers                             types.String `tfsdk:"ike_identity_sent_to_peers"`
-	IkePeerIdentityValidation                          types.String `tfsdk:"ike_peer_identity_validation"`
-	IkeAggressiveMode                                  types.Bool   `tfsdk:"ike_aggressive_mode"`
-	IkeNotificationOnTunnelDisconnect                  types.Bool   `tfsdk:"ike_notification_on_tunnel_disconnect"`
-	Ikev2CookieChallenge                               types.String `tfsdk:"ikev2_cookie_challenge"`
-	Ikev2ThresholdToChallengeIncomingCookies           types.Int64  `tfsdk:"ikev2_threshold_to_challenge_incoming_cookies"`
-	Ikev2NumberOfSasAllowedInNegotiation               types.Int64  `tfsdk:"ikev2_number_of_sas_allowed_in_negotiation"`
-	Ikev2MaximumNumberOfSasAllowed                     types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed"`
-	IpsecFragmentationBeforeEncryption                 types.Bool   `tfsdk:"ipsec_fragmentation_before_encryption"`
-	IpsecPathMaximumTransmissionUnitAgingResetInterval types.Int64  `tfsdk:"ipsec_path_maximum_transmission_unit_aging_reset_interval"`
-	NatKeepaliveMessageTraversal                       types.Bool   `tfsdk:"nat_keepalive_message_traversal"`
-	NatKeepaliveMessageTraversalInterval               types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
-	VpnIdleTimeout                                     types.Bool   `tfsdk:"vpn_idle_timeout"`
-	VpnIdleTimeoutValue                                types.Int64  `tfsdk:"vpn_idle_timeout_value"`
-	BypassAccessControlTrafficForDecryptedTraffic      types.Bool   `tfsdk:"bypass_access_control_traffic_for_decrypted_traffic"`
-	CertUseMapConfiguredInEndpointToDetermineTunnel    types.Bool   `tfsdk:"cert_use_map_configured_in_endpoint_to_determine_tunnel"`
-	CertUseOuToDetermineTunnel                         types.Bool   `tfsdk:"cert_use_ou_to_determine_tunnel"`
-	CertUseIkeIdentityToDetermineTunnel                types.Bool   `tfsdk:"cert_use_ike_identity_to_determine_tunnel"`
-	CertUsePeerIpAddressToDetermineTunnel              types.Bool   `tfsdk:"cert_use_peer_ip_address_to_determine_tunnel"`
+	Id                                                         types.String `tfsdk:"id"`
+	Domain                                                     types.String `tfsdk:"domain"`
+	VpnS2sId                                                   types.String `tfsdk:"vpn_s2s_id"`
+	Type                                                       types.String `tfsdk:"type"`
+	IkeKeepalive                                               types.String `tfsdk:"ike_keepalive"`
+	IkeKeepaliveThreshold                                      types.Int64  `tfsdk:"ike_keepalive_threshold"`
+	IkeKeepaliveRetryInterval                                  types.Int64  `tfsdk:"ike_keepalive_retry_interval"`
+	IkeIdentitySentToPeers                                     types.String `tfsdk:"ike_identity_sent_to_peers"`
+	IkePeerIdentityValidation                                  types.String `tfsdk:"ike_peer_identity_validation"`
+	IkeAggressiveMode                                          types.Bool   `tfsdk:"ike_aggressive_mode"`
+	IkeNotificationOnTunnelDisconnect                          types.Bool   `tfsdk:"ike_notification_on_tunnel_disconnect"`
+	Ikev2CookieChallenge                                       types.String `tfsdk:"ikev2_cookie_challenge"`
+	Ikev2ThresholdToChallengeIncomingCookies                   types.Int64  `tfsdk:"ikev2_threshold_to_challenge_incoming_cookies"`
+	Ikev2NumberOfSasAllowedInNegotiation                       types.Int64  `tfsdk:"ikev2_number_of_sas_allowed_in_negotiation"`
+	Ikev2MaximumNumberOfSasAllowed                             types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed"`
+	IpsecFragmentationBeforeEncryption                         types.Bool   `tfsdk:"ipsec_fragmentation_before_encryption"`
+	IpsecPathMaximumTransmissionUnitAgingResetInterval         types.Int64  `tfsdk:"ipsec_path_maximum_transmission_unit_aging_reset_interval"`
+	NatKeepaliveMessageTraversal                               types.Bool   `tfsdk:"nat_keepalive_message_traversal"`
+	NatKeepaliveMessageTraversalInterval                       types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
+	VpnIdleTimeout                                             types.Bool   `tfsdk:"vpn_idle_timeout"`
+	VpnIdleTimeoutValue                                        types.Int64  `tfsdk:"vpn_idle_timeout_value"`
+	BypassAccessControlPolicyForDecryptedTraffic               types.Bool   `tfsdk:"bypass_access_control_policy_for_decrypted_traffic"`
+	CertUseCertificateMapConfiguredInEndpointToDetermineTunnel types.Bool   `tfsdk:"cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel"`
+	CertUseOuToDetermineTunnel                                 types.Bool   `tfsdk:"cert_use_ou_to_determine_tunnel"`
+	CertUseIkeIdentityToDetermineTunnel                        types.Bool   `tfsdk:"cert_use_ike_identity_to_determine_tunnel"`
+	CertUsePeerIpAddressToDetermineTunnel                      types.Bool   `tfsdk:"cert_use_peer_ip_address_to_determine_tunnel"`
 }
 
 // End of section. //template:end types
@@ -133,11 +133,11 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	if !data.VpnIdleTimeoutValue.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes", data.VpnIdleTimeoutValue.ValueInt64())
 	}
-	if !data.BypassAccessControlTrafficForDecryptedTraffic.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic", data.BypassAccessControlTrafficForDecryptedTraffic.ValueBool())
+	if !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
 	}
-	if !data.CertUseMapConfiguredInEndpointToDetermineTunnel.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel", data.CertUseMapConfiguredInEndpointToDetermineTunnel.ValueBool())
+	if !data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel", data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel.ValueBool())
 	}
 	if !data.CertUseOuToDetermineTunnel.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel", data.CertUseOuToDetermineTunnel.ValueBool())
@@ -247,14 +247,14 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() {
-		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolValue(value.Bool())
+		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
 	} else {
-		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolNull()
+		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() {
-		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
+		data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
+		data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel"); value.Exists() {
 		data.CertUseOuToDetermineTunnel = types.BoolValue(value.Bool())
@@ -372,15 +372,15 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
-	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() && !data.BypassAccessControlTrafficForDecryptedTraffic.IsNull() {
-		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() && !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
+		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
 	} else {
-		data.BypassAccessControlTrafficForDecryptedTraffic = types.BoolNull()
+		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolNull()
 	}
-	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() && !data.CertUseMapConfiguredInEndpointToDetermineTunnel.IsNull() {
-		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertMapConfiguredInEndpointToDetermineTunnel"); value.Exists() && !data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel.IsNull() {
+		data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel = types.BoolValue(value.Bool())
 	} else {
-		data.CertUseMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
+		data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.certificateMapSettings.useCertificateOuToDetermineTunnel"); value.Exists() && !data.CertUseOuToDetermineTunnel.IsNull() {
 		data.CertUseOuToDetermineTunnel = types.BoolValue(value.Bool())

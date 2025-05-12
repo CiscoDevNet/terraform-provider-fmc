@@ -195,11 +195,11 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 					int64validator.Between(1, 35791394),
 				},
 			},
-			"bypass_access_control_traffic_for_decrypted_traffic": schema.BoolAttribute{
+			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).").String,
 				Optional:            true,
 			},
-			"cert_use_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use certificate map configured in endpoint to determine tunnel.").String,
 				Optional:            true,
 			},
@@ -228,6 +228,39 @@ func (r *VPNS2SAdvancedSettingsResource) Configure(_ context.Context, req resour
 }
 
 // End of section. //template:end model
+
+var _ resource.ResourceWithValidateConfig = &VPNS2SAdvancedSettingsResource{}
+
+func (p *VPNS2SAdvancedSettingsResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data VPNS2SAdvancedSettings
+
+	diags := req.Config.Get(ctx, &data)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Either all cert_ parameters need to be set or none
+	certSetCount := 0
+	if !data.CertUseIkeIdentityToDetermineTunnel.IsNull() {
+		certSetCount++
+	}
+	if !data.CertUseCertificateMapConfiguredInEndpointToDetermineTunnel.IsNull() {
+		certSetCount++
+	}
+	if !data.CertUseOuToDetermineTunnel.IsNull() {
+		certSetCount++
+	}
+	if !data.CertUsePeerIpAddressToDetermineTunnel.IsNull() {
+		certSetCount++
+	}
+	if certSetCount > 0 && certSetCount != 4 {
+		resp.Diagnostics.AddAttributeError(
+			path.Root(""),
+			"Invalid Attribute Configuration",
+			"Please configure all cert_* parameters or do not configure any of them",
+		)
+	}
+}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 

@@ -120,7 +120,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"send_vti_ip_to_peer": schema.BoolAttribute{
-							MarkdownDescription: "Send Virtual Tunnel Interface IP to the peers",
+							MarkdownDescription: "Send Virtual Tunnel Interface IP to the peers.",
 							Computed:            true,
 						},
 						"protected_networks": schema.SetNestedAttribute{
@@ -160,7 +160,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"local_identity_string": schema.StringAttribute{
-							MarkdownDescription: "String of the local identity (applicable only for types KEYID and EMAILID)",
+							MarkdownDescription: "Value of the local identity (applicable only for types KEYID and EMAILID).",
 							Computed:            true,
 						},
 						"vpn_filter_acl_id": schema.StringAttribute{
@@ -176,7 +176,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{
-							MarkdownDescription: "Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)",
+							MarkdownDescription: "Public address of the backup interface, in case the one configured on the backup interface is private (NAT Address).",
 							Computed:            true,
 						},
 						"backup_local_identity_type": schema.StringAttribute{
@@ -184,7 +184,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"backup_local_identity_string": schema.StringAttribute{
-							MarkdownDescription: "String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)",
+							MarkdownDescription: "Value of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID).",
 							Computed:            true,
 						},
 					},

@@ -142,11 +142,11 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "VPN idle timeout in minutes.",
 				Computed:            true,
 			},
-			"bypass_access_control_traffic_for_decrypted_traffic": schema.BoolAttribute{
+			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
 				MarkdownDescription: "Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).",
 				Computed:            true,
 			},
-			"cert_use_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
+			"cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel": schema.BoolAttribute{
 				MarkdownDescription: "Use certificate map configured in endpoint to determine tunnel.",
 				Computed:            true,
 			},

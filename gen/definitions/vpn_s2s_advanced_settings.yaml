@@ -165,7 +165,7 @@ attributes:
   # Tunnel - Access Control for VPN Traffic
   - model_name: bypassAccessControlTrafficForDecryptedTraffic
     data_path: [advancedTunnelSetting]
-    tf_name: bypass_access_control_traffic_for_decrypted_traffic
+    tf_name: bypass_access_control_policy_for_decrypted_traffic
     type: Bool
     description: Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).
     example: "false"
@@ -173,7 +173,7 @@ attributes:
   # Tunnel - Certificate Map Settings
   - model_name: useCertMapConfiguredInEndpointToDetermineTunnel
     data_path: [advancedTunnelSetting, certificateMapSettings]
-    tf_name: cert_use_map_configured_in_endpoint_to_determine_tunnel
+    tf_name: cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel
     type: Bool
     description: Use certificate map configured in endpoint to determine tunnel.
     example: "false"

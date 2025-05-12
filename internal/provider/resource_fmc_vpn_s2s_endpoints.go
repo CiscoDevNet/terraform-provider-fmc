@@ -149,7 +149,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"send_vti_ip_to_peer": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Send Virtual Tunnel Interface IP to the peers").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Send Virtual Tunnel Interface IP to the peers.").String,
 							Optional:            true,
 						},
 						"protected_networks": schema.SetNestedAttribute{
@@ -192,7 +192,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"local_identity_string": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity (applicable only for types KEYID and EMAILID)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Value of the local identity (applicable only for types KEYID and EMAILID).").String,
 							Optional:            true,
 						},
 						"vpn_filter_acl_id": schema.StringAttribute{
@@ -208,7 +208,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"backup_interface_public_ip_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Public address of the backup interface, in case the one configured on the backup interface is private (NAT Address).").String,
 							Optional:            true,
 						},
 						"backup_local_identity_type": schema.StringAttribute{
@@ -219,7 +219,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"backup_local_identity_string": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Value of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID).").String,
 							Optional:            true,
 						},
 					},

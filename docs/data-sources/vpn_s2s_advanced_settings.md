@@ -33,9 +33,9 @@ data "fmc_vpn_s2s_advanced_settings" "example" {
 
 ### Read-Only
 
-- `bypass_access_control_traffic_for_decrypted_traffic` (Boolean) Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).
+- `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).
+- `cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel` (Boolean) Use certificate map configured in endpoint to determine tunnel.
 - `cert_use_ike_identity_to_determine_tunnel` (Boolean) Use IKE identity OU to determine tunnel.
-- `cert_use_map_configured_in_endpoint_to_determine_tunnel` (Boolean) Use certificate map configured in endpoint to determine tunnel.
 - `cert_use_ou_to_determine_tunnel` (Boolean) Use certificate OU to determine tunnel.
 - `cert_use_peer_ip_address_to_determine_tunnel` (Boolean) Use peer IP address to determine tunnel.
 - `ike_aggressive_mode` (Boolean) Enable IKEv1 aggressive mode.

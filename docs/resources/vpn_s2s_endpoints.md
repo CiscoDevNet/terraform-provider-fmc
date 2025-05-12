@@ -76,8 +76,8 @@ Optional:
 
 - `allow_incoming_ikev2_routes` (Boolean) Allow incoming IKEv2 routes.
 - `backup_interface_id` (String) Id of the backup interface to source the VPN connection.
-- `backup_interface_public_ip_address` (String) Public address of the backup VIT interface, in case the one configured on the interface is private. (NAT Address)
-- `backup_local_identity_string` (String) String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
+- `backup_interface_public_ip_address` (String) Public address of the backup interface, in case the one configured on the backup interface is private (NAT Address).
+- `backup_local_identity_string` (String) Value of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID).
 - `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
   - Choices: `ADDRESS`, `AUTO`, `EMAILID`, `HOSTNAME`, `KEYID`
 - `connection_type` (String) Connection type.
@@ -88,7 +88,7 @@ Optional:
 - `interface_id` (String) Id of the primary interface to source the VPN connection.
 - `interface_ipv6_address` (String) IPv6 address of the interface. If not set, IPv4 address will be used.
 - `interface_public_ip_address` (String) Public address of the interface, in case the one configured on the interface is private.
-- `local_identity_string` (String) String of the local identity (applicable only for types KEYID and EMAILID)
+- `local_identity_string` (String) Value of the local identity (applicable only for types KEYID and EMAILID).
 - `local_identity_type` (String) Type of the local identity.
   - Choices: `ADDRESS`, `AUTO`, `EMAILID`, `HOSTNAME`, `KEYID`
 - `nat_exemption` (Boolean) Enable NAT exemption.
@@ -98,7 +98,7 @@ Optional:
 - `protected_networks` (Attributes Set) Set of protected networks. (see [below for nested schema](#nestedatt--items--protected_networks))
 - `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
 - `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
-- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers
+- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
 - `vpn_filter_acl_id` (String) Id of the VPN filter ACL.
 
 Read-Only:

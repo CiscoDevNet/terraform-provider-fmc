@@ -1,4 +1,5 @@
 ---
+# FMCBUG - CSCwp08491	Endpoint /policy/ftds2svpns/{id}/endpoint does not allow to configure certificate map
 name: VPN S2S Endpoints
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/endpoints
 res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) Endpints
@@ -95,7 +96,7 @@ attributes:
       - model_name: sendTunnelInterfaceIpToPeer
         tf_name: send_vti_ip_to_peer
         type: Bool
-        description: Send Virtual Tunnel Interface IP to the peers
+        description: Send Virtual Tunnel Interface IP to the peers.
         example: "false"
         exclude_test: true
       # Protected Networks
@@ -159,7 +160,7 @@ attributes:
       - model_name: localIdentityString
         tf_name: local_identity_string
         type: String
-        description: String of the local identity (applicable only for types KEYID and EMAILID)
+        description: Value of the local identity (applicable only for types KEYID and EMAILID).
         example: me@cisco.com
       - model_name: id
         data_path: [vpnFilterAcl]
@@ -193,8 +194,8 @@ attributes:
         tf_name: backup_interface_public_ip_address
         type: String
         description: >-
-         Public address of the backup VIT interface,
-         in case the one configured on the interface is private. (NAT Address)
+         Public address of the backup interface,
+         in case the one configured on the backup interface is private (NAT Address).
         exclude_example: true
         exclude_test: true
       # - model_name: isLocalTunnelIdEnabled
@@ -215,7 +216,7 @@ attributes:
         data_path: [backupInterfaces.0]
         tf_name: backup_local_identity_string
         type: String
-        description: String of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID)
+        description: Value of the local identity for the backup tunnel (applicable only for types KEYID and EMAILID).
         example: me@cisco.com
         exclude_test: true
 
