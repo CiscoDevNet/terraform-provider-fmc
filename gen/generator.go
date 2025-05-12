@@ -101,6 +101,8 @@ type YamlConfig struct {
 	TfName                   string                `yaml:"tf_name"`
 	RestEndpoint             string                `yaml:"rest_endpoint"`
 	PutCreate                bool                  `yaml:"put_create"`
+	RetrieveId               bool                  `yaml:"retrieve_id"`
+	PutDelete                bool                  `yaml:"put_delete"`
 	NoUpdate                 bool                  `yaml:"no_update"`
 	NoDelete                 bool                  `yaml:"no_delete"`
 	MinimumVersion           string                `yaml:"minimum_version"`
@@ -119,6 +121,7 @@ type YamlConfig struct {
 	IsBulk                   bool                  `yaml:"is_bulk"`
 	BulkSizeCreate           int                   `yaml:"bulk_size_create"`
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
+	AdjustBody               bool                  `yaml:"adjust_body"`
 }
 
 type YamlConfigAttribute struct {
@@ -152,12 +155,14 @@ type YamlConfigAttribute struct {
 	StringMaxLength      int64                 `yaml:"string_max_length"`
 	Computed             bool                  `yaml:"computed"`
 	ComputedRefreshValue bool                  `yaml:"computed_refresh_value"`
+	ComputedBodyParam    bool                  `yaml:"computed_body_param"`
 	DefaultValue         string                `yaml:"default_value"`
 	Value                string                `yaml:"value"`
 	TestValue            string                `yaml:"test_value"`
 	MinimumTestValue     string                `yaml:"minimum_test_value"`
 	TestTags             []string              `yaml:"test_tags"`
 	DataSourceQuery      bool                  `yaml:"data_source_query"`
+	Sensitive            bool                  `yaml:"sensitive"`
 	Attributes           []YamlConfigAttribute `yaml:"attributes"`
 	GoTypeName           string
 }
@@ -499,6 +504,10 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 
 	if attr.ComputedRefreshValue && !attr.Computed {
 		return fmt.Errorf("%q: `computed_refresh_value: true` can only be used with `computed: true`", attr.TfName)
+	}
+
+	if attr.ComputedBodyParam && !attr.Computed {
+		return fmt.Errorf("%q: `computed_body_param: true` can only be used with `computed: true`", attr.TfName)
 	}
 
 	// Recurse

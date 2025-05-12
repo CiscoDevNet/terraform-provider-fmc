@@ -1,0 +1,206 @@
+---
+name: VPN S2S Advanced Settings
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/advancedsettings
+res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) Advanced settings.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+adjust_body: true
+attributes:
+  - tf_name: vpn_s2s_id
+    type: String
+    reference: true
+    description: Id of the parent VPN S2S Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_s2s.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AdvancedSetting'.
+    computed: true
+
+  # IKE - ISAKMP settings
+  - model_name: ikeKeepalive
+    data_path: [advancedIkeSetting, ikeKeepaliveSettings]
+    tf_name: ike_keepalive
+    type: String
+    description: Enable IKE keepalives.
+    enum_values: [DISABLED, ENABLED, ENABLED_INFINITE]
+    example: ENABLED
+  - model_name: threshold
+    data_path: [advancedIkeSetting, ikeKeepaliveSettings]
+    tf_name: ike_keepalive_threshold
+    type: Int64
+    description: >-
+     IKE keepalive threshold in seconds.
+     This interval is the number of seconds allowing a peer to idle before beginning keepalive monitoring.
+    min_int: 10
+    max_int: 3600
+    example: 15
+  - model_name: retryInterval
+    data_path: [advancedIkeSetting, ikeKeepaliveSettings]
+    tf_name: ike_keepalive_retry_interval
+    type: Int64
+    description: IKE keepalive retry interval in seconds.
+    min_int: 2
+    max_int: 10
+    example: 5
+  - model_name: identitySentToPeer
+    data_path: [advancedIkeSetting]
+    tf_name: ike_identity_sent_to_peers
+    type: String
+    description: identity that the peers will use to identify themselves during IKE negotiations.
+    enum_values: [IP_ADDRESS, HOST_NAME, AUTO_OR_DN]
+    example: AUTO_OR_DN
+  - model_name: peerIdentityValidation
+    data_path: [advancedIkeSetting]
+    tf_name: ike_peer_identity_validation
+    type: String
+    description: Peer identity validation.
+    enum_values: [DO_NOT_CHECK, REQUIRED, IF_SUPPORTED_BY_CERT]
+    example: DO_NOT_CHECK
+  - model_name: enableAggressiveMode
+    data_path: [advancedIkeSetting]
+    tf_name: ike_aggressive_mode
+    type: Bool
+    description: Enable IKEv1 aggressive mode.
+    example: "false"
+  - model_name: enableNotificationOnTunnelDisconnect
+    data_path: [advancedIkeSetting]
+    tf_name: ike_notification_on_tunnel_disconnect
+    type: Bool
+    description: Enable notification on tunnel disconnect.
+    example: "true"
+
+  # IKE - IKEv2 Security Association (SA) settings
+  - model_name: cookieChallenge
+    data_path: [advancedIkeSetting]
+    tf_name: ikev2_cookie_challenge
+    type: String
+    description: Send cookie challenges to peer devices in response to SA initiate packets.
+    enum_values: [CUSTOM, ALWAYS, NEVER]
+    example: CUSTOM
+  - model_name: thresholdToChallengeIncomingCookies
+    data_path: [advancedIkeSetting]
+    tf_name: ikev2_threshold_to_challenge_incoming_cookies
+    type: Int64
+    description: The percentage of the total allowed SAs that are in-negotiation.
+    min_int: 1
+    max_int: 100
+    example: 55
+  - model_name: percentageOfSAsAllowedInNegotiation
+    data_path: [advancedIkeSetting]
+    tf_name: ikev2_number_of_sas_allowed_in_negotiation
+    type: Int64
+    description: Limits the maximum number of SAs that can be in negotiation at any time.
+    min_int: 1
+    max_int: 100
+    example: 90
+  - model_name: maximumNumberOfSAsAllowed
+    data_path: [advancedIkeSetting]
+    tf_name: ikev2_maximum_number_of_sas_allowed
+    type: Int64
+    description: Limits the number of allowed IKEv2 connections.
+    exclude_example: true
+    test_value: "50"
+
+  # IPSec Settings
+  - model_name: enableFragmentationBeforeEncryption
+    data_path: [advancedIpsecSetting]
+    tf_name: ipsec_fragmentation_before_encryption
+    type: Bool
+    description: Enable fragmentation before encryption.
+    example: "true"
+  # - model_name: enabled
+  #  data_path: [advancedIpsecSetting, maximumTransmissionUnitAging]
+  #  tf_name: ipsec_enable_path_maximum_transmission_unit_aging
+  #  type: Bool
+  #  description: Enable path maximum transmission unit aging.
+  #  example: "false"
+  - model_name: resetIntervalMinutes
+    data_path: [advancedIpsecSetting, maximumTransmissionUnitAging]
+    tf_name: ipsec_path_maximum_transmission_unit_aging_reset_interval
+    type: Int64
+    description: >-
+     Enter the number of minutes at which the Path Maximum Transission Unit (PMTU)
+     value of an SA is reset to its original value.
+    min_int: 10
+    max_int: 30
+    example: 30
+
+  # Tunnel - NAT Settings
+  - model_name: enabled
+    data_path: [advancedTunnelSetting, natKeepaliveMessageTraversal]
+    tf_name: nat_keepalive_message_traversal
+    type: Bool
+    description: Enable NAT keepalive message traversal.
+    example: "true"
+  - model_name: intervalSeconds
+    data_path: [advancedTunnelSetting, natKeepaliveMessageTraversal]
+    tf_name: nat_keepalive_message_traversal_interval
+    type: Int64
+    description: NAT keepalive message traversal interval in seconds.
+    min_int: 10
+    max_int: 3600
+    example: 20
+
+  # Tunnel - Session Settings
+  - model_name: enabled
+    data_path: [advancedTunnelSetting, vpnIdleTimeout]
+    tf_name: vpn_idle_timeout
+    type: Bool
+    description: Enable VPN idle timeout monitoring.
+    example: "true"
+    exclude_test: true
+  - model_name: timeoutMinutes
+    data_path: [advancedTunnelSetting, vpnIdleTimeout]
+    tf_name: vpn_idle_timeout_value
+    type: Int64
+    description: VPN idle timeout in minutes.
+    min_int: 1
+    max_int: 35791394
+    example: 25
+    exclude_test: true
+
+  # Tunnel - Access Control for VPN Traffic
+  - model_name: bypassAccessControlTrafficForDecryptedTraffic
+    data_path: [advancedTunnelSetting]
+    tf_name: bypass_access_control_policy_for_decrypted_traffic
+    type: Bool
+    description: Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).
+    example: "false"
+
+  # Tunnel - Certificate Map Settings
+  - model_name: useCertMapConfiguredInEndpointToDetermineTunnel
+    data_path: [advancedTunnelSetting, certificateMapSettings]
+    tf_name: cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel
+    type: Bool
+    description: Use certificate map configured in endpoint to determine tunnel.
+    example: "false"
+  - model_name: useCertificateOuToDetermineTunnel
+    data_path: [advancedTunnelSetting, certificateMapSettings]
+    tf_name: cert_use_ou_to_determine_tunnel
+    type: Bool
+    description: Use certificate OU to determine tunnel.
+    example: "false"
+  - model_name: useIkeIdentityOuToDetermineTunnel
+    data_path: [advancedTunnelSetting, certificateMapSettings]
+    tf_name: cert_use_ike_identity_to_determine_tunnel
+    type: Bool
+    description: Use IKE identity OU to determine tunnel.
+    example: "false"
+  - model_name: usePeerIpAddressToDetermineTunnel
+    data_path: [advancedTunnelSetting, certificateMapSettings]
+    tf_name: cert_use_peer_ip_address_to_determine_tunnel
+    type: Bool
+    description: Use peer IP address to determine tunnel.
+    example: "false"
+
+test_prerequisites: |-
+  resource "fmc_vpn_s2s" "test" {
+    name             = "my_s2s_vpn_ike_settings"
+    route_based      = false
+    network_topology = "POINT_TO_POINT"
+    ikev1            = true
+    ikev2            = true
+  }

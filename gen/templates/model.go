@@ -168,7 +168,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	{{- range .Attributes}}
-	{{- if .Computed}}{{- continue}}{{- end}}
+	{{- if and .Computed (not .ComputedBodyParam)}}{{- continue}}{{- end}}
 	{{- if .Value}}
 	body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 	{{- else if .ResourceId}}
@@ -177,7 +177,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 	}
 	{{- else if not .Reference}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
-	if !data.{{toGoName .TfName}}.IsNull() {{if .WriteChangesOnly}}&& data.{{toGoName .TfName}} != state.{{toGoName .TfName}}{{end}} {
+	if !data.{{toGoName .TfName}}.IsNull() {{if .WriteChangesOnly}}&& data.{{toGoName .TfName}} != state.{{toGoName .TfName}}{{end}} {{if .ComputedBodyParam}} && !data.{{toGoName .TfName}}.IsUnknown(){{end}} {
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", data.{{toGoName .TfName}}.Value{{.Type}}())
 	}
 	{{- else if isListSet .}}
@@ -197,12 +197,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 			itemBody := ""
 		{{- end}}
 			{{- range .Attributes}}
-			{{- if .Computed}}{{- continue}}{{- end}}
+			{{- if and .Computed (not .ComputedBodyParam)}}{{- continue}}{{- end}}
 			{{- if .Value}}
 			itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 			{{- else if not .Reference}}
 			{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
-			if !item.{{toGoName .TfName}}.IsNull() {{ if .ResourceId -}} && !item.{{toGoName .TfName}}.IsUnknown() {{- end}} {
+			if !item.{{toGoName .TfName}}.IsNull() {{ if .ResourceId -}} && !item.{{toGoName .TfName}}.IsUnknown() {{- end}} {{if .ComputedBodyParam}} && !data.{{toGoName .TfName}}.IsUnknown(){{end}} {
 				itemBody, _ = sjson.Set(itemBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", item.{{toGoName .TfName}}.Value{{.Type}}())
 			}
 			{{- else if isListSet .}}
@@ -217,12 +217,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 				for _, childItem := range item.{{toGoName .TfName}} {
 					itemChildBody := ""
 					{{- range .Attributes}}
-					{{- if .Computed}}{{- continue}}{{- end}}
+					{{- if and .Computed (not .ComputedBodyParam)}}{{- continue}}{{- end}}
 					{{- if .Value}}
 					itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 					{{- else if not .Reference}}
 					{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
-					if !childItem.{{toGoName .TfName}}.IsNull() {
+					if !childItem.{{toGoName .TfName}}.IsNull() {{if .ComputedBodyParam}} && !data.{{toGoName .TfName}}.IsUnknown(){{end}} {
 						itemChildBody, _ = sjson.Set(itemChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", childItem.{{toGoName .TfName}}.Value{{.Type}}())
 					}
 					{{- else if isListSet .}}
@@ -237,12 +237,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 						for _, childChildItem := range childItem.{{toGoName .TfName}} {
 							itemChildChildBody := ""
 							{{- range .Attributes}}
-							{{- if .Computed}}{{- continue}}{{- end}}
+							{{- if and .Computed (not .ComputedBodyParam)}}{{- continue}}{{- end}}
 							{{- if .Value}}
 							itemChildChildBody, _ = sjson.Set(itemChildChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 							{{- else if not .Reference}}
 							{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
-							if !childChildItem.{{toGoName .TfName}}.IsNull() {
+							if !childChildItem.{{toGoName .TfName}}.IsNull() {{if .ComputedBodyParam}} && !data.{{toGoName .TfName}}.IsUnknown(){{end}} {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", childChildItem.{{toGoName .TfName}}.Value{{.Type}}())
 							}
 							{{- else if isListSet .}}
@@ -470,13 +470,17 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- range .Attributes}}
 	{{- if or (and .ResourceId (not .Reference)) .Computed}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
+	{{- if not .ComputedRefreshValue }}
 	if data.{{toGoName .TfName}}.IsUnknown() {
+	{{- end}}
 		if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
 			data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
 		} else {
 			data.{{toGoName .TfName}} = types.{{.Type}}Null()
 		}
+	{{- if not .ComputedRefreshValue }}
 	}
+	{{- end}}
 	{{- else}}
 	{{- errorf "resource_id is not yet implemented for type %v" .Type}}
 	{{- end}}
@@ -644,6 +648,41 @@ func (data *{{camelCase .Name}}) clearItemsIds(ctx context.Context) {
 {{- end}}
 
 // End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+{{if .PutDelete}}
+// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
+func (data {{camelCase .Name}}) toBodyPutDelete(ctx context.Context) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	return body
+}
+{{- end}}
+
+// End of section. //template:end toBodyPutDelete
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+{{if .AdjustBody}}
+func (data {{camelCase .Name}}) adjustBody(ctx context.Context, req string) string {
+	return req
+}
+{{- end}}
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
+
+{{if and .AdjustBody .IsBulk}}
+func (data {{camelCase .Name}}) adjustBodyBulk(ctx context.Context, req string) string {
+	return req
+}
+{{- end}}
+
+// End of section. //template:end adjustBodyBulk
 
 {{- range .Attributes}}
 	{{- if isNestedMap .}}

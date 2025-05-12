@@ -21,7 +21,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -51,16 +50,16 @@ type Device struct {
 	AccessPolicyId         types.String `tfsdk:"access_policy_id"`
 	NatPolicyId            types.String `tfsdk:"nat_policy_id"`
 	HealthPolicyId         types.String `tfsdk:"health_policy_id"`
+	ContainerId            types.String `tfsdk:"container_id"`
+	ContainerType          types.String `tfsdk:"container_type"`
+	ContainerName          types.String `tfsdk:"container_name"`
+	ContainerRole          types.String `tfsdk:"container_role"`
+	ContainerStatus        types.String `tfsdk:"container_status"`
+	IsPartOfContainer      types.Bool   `tfsdk:"is_part_of_container"`
+	IsMultiInstance        types.Bool   `tfsdk:"is_multi_instance"`
 }
 
 // End of section. //template:end types
-
-type DeviceHAMembership struct {
-	HAType     string // HAPair or Cluster
-	HADeviceId string // ID of HAPair or Cluster
-	Role       string // Role of the node (primary, secondary for HAPair) or (control, data) for Cluster
-	Status     string // Status of device in HAPair (i.a. active, standby, but other possible as well)
-}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
 
@@ -186,6 +185,41 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.HealthPolicyId = types.StringNull()
 	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
+	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -252,6 +286,41 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.HealthPolicyId = types.StringNull()
 	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() && !data.ContainerId.IsNull() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() && !data.ContainerType.IsNull() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() && !data.ContainerName.IsNull() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() && !data.ContainerRole.IsNull() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() && !data.ContainerStatus.IsNull() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
+	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() && !data.IsPartOfContainer.IsNull() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() && !data.IsMultiInstance.IsNull() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -268,17 +337,52 @@ func (data *Device) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
+	}
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() {
+		data.IsPartOfContainer = types.BoolValue(value.Bool())
+	} else {
+		data.IsPartOfContainer = types.BoolNull()
+	}
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
 
 // Fill response with policies IDs obtained from different API endpoint
-func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result, haMembership DeviceHAMembership) gjson.Result {
+func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, policies gjson.Result) gjson.Result {
 	deviceId := data.Id.ValueString()
 
 	// If device is member of HAPair or Cluster, we should use that ID for policy management
-	if haMembership.HADeviceId != "" {
-		deviceId = haMembership.HADeviceId
+	if res.Get("metadata.containerDetails.id").Exists() {
+		deviceId = res.Get("metadata.containerDetails.id").String()
 	}
 
 	query := fmt.Sprintf(`items.#(targets.#(id=="%s"))#.policy`, deviceId)
@@ -314,69 +418,13 @@ func (data *Device) fromBodyPolicy(ctx context.Context, res gjson.Result, polici
 	return gjson.Parse(ret)
 }
 
-// Check if device is member of either HAPair or Cluster
-func (data *Device) checkHaMembership(ctx context.Context, haPairs, clusters gjson.Result) DeviceHAMembership {
-
-	// Check if device is primary member of haPair
-	query := fmt.Sprintf("items.#(primary.id==%s)", data.Id.ValueString())
-	haPairStatus := haPairs.Get(query)
-	if haPairStatus.Exists() {
-		haPairId := haPairStatus.Get("id")
-		haPairName := haPairStatus.Get("name")
-		status := haPairStatus.Get("metadata.primaryStatus.currentStatus")
-		tflog.Debug(ctx, fmt.Sprintf("Device %s is primary member of HA pair %s (%s) with status %s", data.Id.ValueString(), haPairName.String(), haPairId.String(), status.String()))
-		return DeviceHAMembership{
-			HAType:     "HAPair",
-			HADeviceId: haPairId.String(),
-			Role:       "primary",
-			Status:     strings.ToLower(status.String()),
-		}
-	}
-
-	// Check if device is secondary member of haPair
-	query = fmt.Sprintf("items.#(secondary.id==%s)", data.Id.ValueString())
-	haPairStatus = haPairs.Get(query)
-	if haPairStatus.Exists() {
-		haPairId := haPairStatus.Get("id")
-		haPairName := haPairStatus.Get("name")
-		status := haPairStatus.Get("metadata.secondaryStatus.currentStatus")
-		tflog.Debug(ctx, fmt.Sprintf("Device %s is secondary member of HA pair %s (%s) with status %s", data.Id.ValueString(), haPairName.String(), haPairId.String(), status.String()))
-		return DeviceHAMembership{
-			HAType:     "HAPair",
-			HADeviceId: haPairId.String(),
-			Role:       "secondary",
-			Status:     strings.ToLower(status.String()),
-		}
-	}
-
-	// Check if device is cluster control device
-	query = fmt.Sprintf("items.#(controlDevice.deviceDetails.id==%s)", data.Id.ValueString())
-	clusterStatus := clusters.Get(query)
-	if clusterStatus.Exists() {
-		clusterId := clusterStatus.Get("id")
-		clusterName := clusterStatus.Get("name")
-		tflog.Debug(ctx, fmt.Sprintf("Device %s is control device of cluster  %s (%s)", data.Id.ValueString(), clusterName.String(), clusterId.String()))
-		return DeviceHAMembership{
-			HAType:     "Cluster",
-			HADeviceId: clusterId.String(),
-			Role:       "control",
-		}
-	}
-
-	// Check if device is cluster data device
-	query = fmt.Sprintf("items.#(dataDevices.#(deviceDetails.id==%s))", data.Id.ValueString())
-	clusterStatus = clusters.Get(query)
-	if clusterStatus.Exists() {
-		clusterId := clusterStatus.Get("id")
-		clusterName := clusterStatus.Get("name")
-		tflog.Debug(ctx, fmt.Sprintf("Device %s is data device of cluster %s (%s)", data.Id.ValueString(), clusterName.String(), clusterId.String()))
-		return DeviceHAMembership{
-			HAType:     "Cluster",
-			HADeviceId: clusterId.String(),
-			Role:       "data",
-		}
-	}
-
-	// Device is standalone
-	return DeviceHAMembership{}
+// Rewrite Computed values from state to plan
+func (data *Device) copyComputed(ctx context.Context, state Device) {
+	data.ContainerId = state.ContainerId
+	data.ContainerType = state.ContainerType
+	data.ContainerName = state.ContainerName
+	data.ContainerRole = state.ContainerRole
+	data.ContainerStatus = state.ContainerStatus
+	data.IsPartOfContainer = state.IsPartOfContainer
+	data.IsMultiInstance = state.IsMultiInstance
 }

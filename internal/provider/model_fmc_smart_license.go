@@ -110,12 +110,10 @@ func (data *SmartLicense) fromBodyPartial(ctx context.Context, res gjson.Result)
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *SmartLicense) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
-	if data.RegistrationStatus.IsUnknown() {
-		if value := res.Get("regStatus"); value.Exists() {
-			data.RegistrationStatus = types.StringValue(value.String())
-		} else {
-			data.RegistrationStatus = types.StringNull()
-		}
+	if value := res.Get("regStatus"); value.Exists() {
+		data.RegistrationStatus = types.StringValue(value.String())
+	} else {
+		data.RegistrationStatus = types.StringNull()
 	}
 }
 

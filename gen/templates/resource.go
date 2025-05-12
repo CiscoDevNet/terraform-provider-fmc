@@ -143,6 +143,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				{{- if or (len .DefaultValue) .ResourceId .Computed}}
 				Computed:            true,
 				{{- end}}
+				{{- if .Sensitive}}
+				Sensitive:           true,
+				{{- end}}
 				{{- if len .EnumValues}}
 				{{- if isSet .}}
 				Validators: []validator.Set{
@@ -224,6 +227,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 							{{- end}}
 							{{- if or (len .DefaultValue) .ResourceId .Computed}}
 							Computed:            true,
+							{{- end}}
+							{{- if .Sensitive}}
+							Sensitive:           true,
 							{{- end}}
 							{{- if len .EnumValues}}
 							{{- if isSet .}}
@@ -363,6 +369,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 											{{end}}
 										},
 										{{- end}}
+										{{- if .Sensitive}}
+										Sensitive:           true,
+										{{- end}}
 										{{- if isNestedListMapSet .}}
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
@@ -393,6 +402,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 													{{- end}}
 													{{- if or (len .DefaultValue) .ResourceId .Computed}}
 													Computed:            true,
+													{{- end}}
+													{{- if .Sensitive}}
+													Sensitive:           true,
 													{{- end}}
 													{{- if len .EnumValues}}
 													{{- if isSet .}}
@@ -539,6 +551,31 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 	{{- if and .PutCreate (not .IsBulk)}}
 
+	{{- if .RetrieveId}}
+	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
+	// Get objects from FMC
+	resId, err := r.client.Get(plan.getPath(), reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+		return
+	}
+
+	// Check if exactly one object is returned
+	val := resId.Get("items").Array()
+	if len(val) != 1 {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+		return
+	}
+
+	// Extract ID from the object
+	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
+		plan.Id = types.StringValue(retrievedId.String())
+		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
+	} else {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
+	}
+
+	{{- else}}
 	{{- $dataSourceAttribute := getAttributeByTfName .Attributes "name"}}
 	{{- if hasDataSourceQuery .Attributes}}
 	{{- $dataSourceAttribute = getDataSourceQueryAttribute . }}
@@ -577,30 +614,38 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		}
 	}
 	{{- end}}
+	{{- end}}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	{{- if .IsBulk}}
 	
-	// Prepare state to track creation process
-	// Create request is split to multiple requests, where just subset of them may be successful
-	state := {{camelCase .Name}}{}
-	state.Items = make(map[string]{{camelCase .Name}}Items, len(plan.Items))
-	state.Id = types.StringValue(uuid.New().String())
-	{{- if isDomainDependent .}}
-	state.Domain = plan.Domain
-	{{- end}}
-
-	// Create object
-	// Creation process is put in a separate function, as that same proces will be needed with `Update`
-	plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
-	resp.Diagnostics.Append(diags...)
+	//// Prepare state to track creation process. Create request is split to multiple requests, where just subset of them may be successful
+    // Copy fields, as those may contain domain information or other references
+    state := plan
+    // Create random ID to track bulk resource. This does not relate to FMC in any way
+    state.Id = types.StringValue(uuid.New().String())
+	// Erase all Items, those will be filled in after creation
+    state.Items = make(map[string]{{camelCase .Name}}Items, len(plan.Items))
+    // Creation process is put in a separate function, as that same proces will be needed with `Update`
+    plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
+    resp.Diagnostics.Append(diags...)
+    if resp.Diagnostics.HasError() {
+        // Save state for whatever was already created
+        diags = resp.State.Set(ctx, &plan)
+		tflog.Debug(ctx, fmt.Sprintf("%s: Create failed, some items might have been created", plan.Id.ValueString()))
+        resp.Diagnostics.Append(diags...)
+        return
+    }
 	{{- end}}
 
 	{{- if not .IsBulk}}
 
 	// Create object
 	body := plan.toBody(ctx, {{camelCase .Name}}{})
+	{{- if .AdjustBody}}
+	body = plan.adjustBody(ctx, body)
+	{{- end}}
 
 	{{- if .PutCreate}}
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
@@ -735,6 +780,9 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	{{- if not .IsBulk}}
 
 	body := plan.toBody(ctx, state)
+	{{- if .AdjustBody}}
+	body = plan.adjustBody(ctx, body)
+	{{- end}}
 	res, err := r.client.Put(plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
@@ -913,12 +961,20 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 
 	{{- if not .NoDelete}}
 	{{- if not .IsBulk}}
+	{{- if .PutDelete}}
+	body := state.toBodyPutDelete(ctx)
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+	{{- else}}
 	res, err := r.client.Delete(state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
-
+	{{- end}}
 	{{- end}}
 	{{- if .IsBulk}}
 
@@ -1043,6 +1099,9 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 			tmpObject.Items[k] = v
 
 			body := tmpObject.toBodyNonBulk(ctx, state)
+			{{- if .AdjustBody}}
+			body = tmpObject.adjustBody(ctx, body)
+			{{- end}}
 			res, err := r.client.Post(state.getPath(), body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -1085,8 +1144,12 @@ func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, st
 				// Parse body of the request to string
 				body := bulk.toBody(ctx, {{camelCase .Name}}{})
 
+				{{- if .AdjustBody}}
+				body = bulk.adjustBodyBulk(ctx, body)
+				{{- end}}
+
 				// Execute request
-				urlPath := bulk.getPath() + "?bulk=true"
+				urlPath := state.getPath() + "?bulk=true"
 				res, err := r.client.Post(urlPath, body, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
@@ -1216,7 +1279,10 @@ func (r *{{camelCase .Name}}Resource) updateSubresources(ctx context.Context, st
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := tmpObject.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		{{- if .AdjustBody}}
+		body = tmpObject.adjustBody(ctx, body)
+		{{- end}}
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{

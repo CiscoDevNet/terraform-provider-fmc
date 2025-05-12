@@ -5,6 +5,8 @@ no_resource: bool(required=False) # Set to true if no resource should be created
 no_import: bool(required=False) # Set to true if the resource does not support `terraform import` command
 rest_endpoint: str(required=False) # REST endpoint path
 put_create: bool(required=False) # Set to true if the PUT request is used for create
+retrieve_id: bool(required=False) # Set to true if there is just one ID (object) possible under the API endpoint, so that this ID can be retrieved for subsequent requests
+put_delete: bool(required=False) # Set to true if the PUT request is used to delete
 no_update: bool(required=False) # Set to true if the PUT request is not supported
 no_delete: bool(required=False) # Set to true if the DELETE request is not supported
 minimum_version: str(required=False) # Define a minimum supported version
@@ -22,6 +24,7 @@ test_prerequisites: str(required=False) # HCL code that is included in the accep
 is_bulk: bool(required=False) # Treat this as a bulk resource
 import_name_query: bool(required=False) # Set to true if import should be done using object name
 bulk_size_create: int(required=False) # Number of resources to create in a single bulk create operation (overrides default 1000)
+adjust_body: bool(required=False) # Includes adjustBody funtion before Create/Update operations. This function gets defined in model.go template, however its body needs to be defined manually.
 ---
 attribute:
   model_name: str(required=False) # Name of the attribute in the model (payload)
@@ -54,11 +57,12 @@ attribute:
   string_max_length: int(required=False) # Maximum length of a string, only relevant if type is "String"
   computed: bool(required=False) # Defines field as read-only (computed) with value derived from the API
   computed_refresh_value: bool(required=False) # Set to true if the computed value should be refreshed on every update (no UseStateForUnknown). Needs to be used in conjunction with `computed`
+  computed_body_param: bool(required=False) # Set to true if the computed value should be included in the PUT payload
   default_value: any(str(), int(), bool(), required=False) # Default value for the attribute
   value: any(str(), int(), bool(), required=False) # Hardcoded value for the attribute
   test_value: str(required=False) # Value used for acceptance test
   minimum_test_value: str(required=False) # Value used for "minimum" resource acceptance test
   test_tags: list(str(), required=False) # List of test tags, attribute is only included in acceptance tests if an environment variable with one of these tags is configured
   data_source_query: bool(required=False) # Set to true if the attribute can be used in the data source query. This is supported only for top-level attributes.
+  sensitive: bool(required=False) # Set to true if the attribute is sensitive
   attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"
-  

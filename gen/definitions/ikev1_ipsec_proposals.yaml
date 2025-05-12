@@ -1,0 +1,41 @@
+---
+name: IKEv1 IPsec Proposals
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ikev1ipsecproposals
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of IKEv1 IPsec Proposals. The key of the map is the name of the individual IKEv1 IPSec Proposal.
+    map_key_example: my_ikev1_ipsec_proposals
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the IKEv1 IPSec Proposal object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "IKEv1 IPsec Proposal 1"
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IKEv1IPsecProposal'.
+        computed: true
+      - model_name: espEncryption
+        type: String
+        description: ESP Encryption algorithm.
+        enum_values: [DES, 3DES, ESP_NULL, AES-128, AES-192, AES-256]
+        example: AES-192
+        mandatory: true
+      - model_name: espHash
+        type: String
+        description: ESP Hash algorithm.
+        enum_values: [SHA, NONE, MD5]
+        example: SHA
+        mandatory: true

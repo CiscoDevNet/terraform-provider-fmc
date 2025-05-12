@@ -38,7 +38,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
 	"github.com/tidwall/gjson"
@@ -161,6 +160,34 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.").String,
 				Optional:            true,
 			},
+			"container_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent container. Empty if device is Standalone.").String,
+				Computed:            true,
+			},
+			"container_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.").String,
+				Computed:            true,
+			},
+			"container_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent container. Empty if device is Standalone.").String,
+				Computed:            true,
+			},
+			"container_role": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.").String,
+				Computed:            true,
+			},
+			"container_status": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Status of the device in DeviceHAPair (Active, Standby, but other possible as well).").String,
+				Computed:            true,
+			},
+			"is_part_of_container": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a container (DeviceHAPair or DeviceCluster).").String,
+				Computed:            true,
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("True if the device is part of a multi-instance.").String,
+				Computed:            true,
+			},
 		},
 	}
 }
@@ -234,7 +261,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	tflog.Debug(ctx, fmt.Sprintf("%s: Configuring the non-access policy assignments", plan.Id.ValueString()))
 
 	if !plan.NatPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id, DeviceHAMembership{}, path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("nat_policy_id"), req.Plan, resp.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -242,7 +269,7 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 	}
 
 	if !plan.HealthPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id, DeviceHAMembership{}, path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -306,30 +333,13 @@ func (r *DeviceResource) Read(ctx context.Context, req resource.ReadRequest, res
 		return
 	}
 
-	// Get HA Pairs
-	haPairs, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve HA Pairs (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Get Clusters
-	clusters, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Clusters (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Check if device is member of either HAPair or Cluster
-	haMembershipStatus := state.checkHaMembership(ctx, haPairs, clusters)
-
 	imp, diags := helpers.IsFlagImporting(ctx, req)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
 
 	// Update body with policy assignments
-	res = state.fromBodyPolicy(ctx, res, policies, haMembershipStatus)
+	res = state.fromBodyPolicy(ctx, res, policies)
 
 	// After `terraform import` we switch to a full read.
 	if imp {
@@ -337,6 +347,9 @@ func (r *DeviceResource) Read(ctx context.Context, req resource.ReadRequest, res
 	} else {
 		state.fromBodyPartial(ctx, res)
 	}
+
+	// Read Unkonwns (that may change, as device may get added/removed from hapair/cluster)
+	state.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
@@ -369,32 +382,17 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	// Get HA Pairs
-	haPairs, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve HA Pairs (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Get Clusters
-	clusters, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicecluster?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve Clusters (GET), got error: %s, %s", err, haPairs.String()))
-		return
-	}
-
-	// Check if device is member of HAPair or Cluster
-	haMembershipStatus := state.checkHaMembership(ctx, haPairs, clusters)
-
-	if haMembershipStatus.HAType == "HAPair" && haMembershipStatus.Status != "active" {
-		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), haMembershipStatus.Status))
+	if state.ContainerType.ValueString() == "DeviceHAPair" && state.ContainerStatus.ValueString() != "Active" {
+		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in HA Pair, with current status: %s, hence cannot be updated. Configuration will be replicated from active node.", state.Id.ValueString(), state.Name.ValueString(), state.ContainerStatus.ValueString()))
+		plan.copyComputed(ctx, state)
 		diags = resp.State.Set(ctx, &plan)
 		resp.Diagnostics.Append(diags...)
 		return
 	}
 
-	if haMembershipStatus.HAType == "Cluster" && haMembershipStatus.Role == "data" {
+	if state.ContainerType.ValueString() == "DeviceCluster" && state.ContainerRole.ValueString() == "Data" {
 		tflog.Info(ctx, fmt.Sprintf("%s: Device %s is in cluster as data node, hence cannot be updated. Configuration will be replicated from control node.", state.Id.ValueString(), state.Name.ValueString()))
+		plan.copyComputed(ctx, state)
 		diags = resp.State.Set(ctx, &plan)
 		resp.Diagnostics.Append(diags...)
 		return
@@ -411,9 +409,18 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 		return
 	}
 
+	var deviceId, deviceType string
+	if state.ContainerId.ValueString() != "" {
+		deviceId = state.ContainerId.ValueString()
+		deviceType = state.ContainerType.ValueString()
+	} else {
+		deviceId = plan.Id.ValueString()
+		deviceType = "Device"
+	}
+
 	// Update policy assignments
 	if plan.AccessPolicyId != state.AccessPolicyId {
-		diags = r.updatePolicy(ctx, plan.Id, haMembershipStatus, path.Root("access_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -421,7 +428,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.NatPolicyId != state.NatPolicyId {
-		diags = r.updatePolicy(ctx, plan.Id, haMembershipStatus, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("nat_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -429,7 +436,7 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	if plan.HealthPolicyId != state.HealthPolicyId {
-		diags = r.updatePolicy(ctx, plan.Id, haMembershipStatus, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("health_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -454,25 +461,18 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 
 // updatePolicy updates policy-to-device assignment of one specific device (UUID) and of one specific policy type
 // (policyPath points to a different attribute for Access Policy, NAT Policy, Platform Settings Policy, etc.).
-func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.StringValue, haStatus DeviceHAMembership, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State, reqMods ...func(*fmc.Req)) diag.Diagnostics {
-	devId := device.ValueString()
+func (r *DeviceResource) updatePolicy(ctx context.Context, deviceId string, deviceType string, policyPath path.Path, plan tfsdk.Plan, state tfsdk.State, reqMods ...func(*fmc.Req)) diag.Diagnostics {
+	var planPolicy, statePolicy types.String
 
-	var planPolicy types.String
 	if diags := plan.GetAttribute(ctx, policyPath, &planPolicy); diags.HasError() {
 		return diags
 	}
 
-	var statePolicy types.String
 	if diags := state.GetAttribute(ctx, policyPath, &statePolicy); diags.HasError() {
 		return diags
 	}
 
-	// If device is member of HAPair or Cluster, we use Id of that device to update the policy
-	if planPolicy.ValueString() == "" && haStatus.HADeviceId != "" {
-		devId = haStatus.HADeviceId
-	}
-
-	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s id %s policy planned %s, state %s", policyPath, devId, planPolicy, statePolicy))
+	tflog.Debug(ctx, fmt.Sprintf("policy assignment %s, id %s, policy planned %s, state %s", policyPath, deviceId, planPolicy, statePolicy))
 
 	if statePolicy.Equal(planPolicy) {
 		return nil
@@ -497,9 +497,9 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 				fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()),
 			)}
 		}
-		targets := res.Get(fmt.Sprintf(`targets.#(id != "%s")#`, devId))
+		targets := res.Get(fmt.Sprintf(`targets.#(id != "%s")#`, deviceId))
 		body, err := sjson.SetRaw(res.String(), "targets", targets.Raw)
-		tflog.Debug(ctx, fmt.Sprintf("policy assignment with device %s removed: %s", devId, res))
+		tflog.Debug(ctx, fmt.Sprintf("policy assignment with device %s removed: %s", deviceId, res))
 		if err != nil {
 			return diag.Diagnostics{diag.NewAttributeErrorDiagnostic(
 				path.Root("id"),
@@ -524,8 +524,8 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 		stub, _ = sjson.Set(stub, "policy.id", planPolicy.ValueString())
 		stub, _ = sjson.Set(stub, "policy.type", "HealthPolicy")
 		stub, _ = sjson.Set(stub, "targets", []any{})
-		stubdev, _ := sjson.Set("{}", "id", devId)
-		stubdev, _ = sjson.Set(stubdev, "type", "Device")
+		stubdev, _ := sjson.Set("{}", "id", deviceId)
+		stubdev, _ = sjson.Set(stubdev, "type", deviceType)
 		stub, _ = sjson.SetRaw(stub, "targets.-1", stubdev)
 		res, err := r.client.Post("/api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments", stub, reqMods...)
 		if err != nil {
@@ -550,14 +550,14 @@ func (r *DeviceResource) updatePolicy(ctx context.Context, device basetypes.Stri
 		)}
 	}
 
-	if res.Get(fmt.Sprintf(`targets.#(id=="%s")`, devId)).Exists() {
-		tflog.Debug(ctx, fmt.Sprintf("target %s already assigned to policy %s", devId, planPolicy))
+	if res.Get(fmt.Sprintf(`targets.#(id=="%s")`, deviceId)).Exists() {
+		tflog.Debug(ctx, fmt.Sprintf("target %s already assigned to policy %s", deviceId, planPolicy))
 		return nil
 	}
 
 	polBody, err := sjson.Set(res.String(), `targets.-1`, map[string]any{
-		"id":   devId,
-		"type": "Device",
+		"id":   deviceId,
+		"type": deviceType,
 	})
 	if err != nil {
 		return diag.Diagnostics{diag.NewAttributeErrorDiagnostic(
@@ -599,10 +599,21 @@ func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	defer policyMu.Unlock()
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
+	for range 3 {
+		_, err := r.client.Delete("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+		if err != nil {
+			if strings.Contains(err.Error(), "StatusCode 400") {
+				// Check if device is under deployment
+				tflog.Debug(ctx, fmt.Sprintf("%s: Checking if device is under deployment...", state.Id.ValueString()))
+				diags := FMCWaitForDeploymentToFinish(ctx, r.client, []string{state.Id.ValueString()}, reqMods)
+				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+					return
+				}
+			}
+		} else {
+			// No error returned, break the loop
+			break
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))

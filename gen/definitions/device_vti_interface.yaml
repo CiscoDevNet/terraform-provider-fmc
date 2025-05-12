@@ -1,0 +1,194 @@
+---
+name: Device VTI Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/virtualtunnelinterfaces
+doc_category: Devices
+res_description: >-
+  This device manages Device Virtual Tunnel Interface (VTI) configuration.\n
+  The following applies:\n
+  - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
+  - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
+test_tags: [TF_VAR_device_id]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_device_physical_interface.test.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'VTIInterface'.
+    computed: true
+  - model_name: name
+    type: String
+    description: Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).
+    computed: true
+    computed_body_param: true
+    data_source_query: true
+  # General
+  - model_name: tunnelType
+    type: String
+    description: Type of the VTI interface.
+    enum_values: [STATIC, DYNAMIC]
+    example: STATIC
+    mandatory: true
+    requires_replace: true
+    write_only: true # for FMCVERSION <= 7.2
+  - model_name: ifname
+    tf_name: logical_name
+    type: String
+    description: Logical name of the VTI interface.
+    example: my_vti_interface
+    mandatory: true
+  - model_name: enabled
+    type: Bool
+    description: Enable the interface.
+    default_value: "true"
+    example: "true"
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My VTI"
+  - model_name: id
+    data_path: [securityZone]
+    tf_name: security_zone_id
+    type: String
+    description: Id of the assigned security zone.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_security_zone.test.id
+  - model_name: type
+    data_path: [securityZone]
+    type: String
+    value: SecurityZone
+  - model_name: priority
+    type: Int64
+    description: Priority to load balance the traffic across multiple VTIs.
+    example: 100
+    min_int: 0
+    max_int: 65535
+  # Tunnel interface details
+  - model_name: tunnelId
+    type: Int64
+    description: Tunnel ID (for Static) or Template ID (for Dynamic).
+    example: 100
+    mandatory: true
+    min_int: 0
+    max_int: 10413
+    requires_replace: true
+  - model_name: id
+    data_path: [tunnelSource]
+    tf_name: tunnel_source_interface_id
+    type: String
+    description: Id of the interface that is used as the tunnel source.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_device_physical_interface.test.id
+    mandatory: true
+  - model_name: name
+    data_path: [tunnelSource]
+    tf_name: tunnel_source_interface_name
+    type: String
+    description: Name of the interface that is used as the tunnel source.
+    example: "GigabitEthernet0/1"
+    test_value: fmc_device_physical_interface.test.name
+    mandatory: true
+  - model_name: tunnelSrcIPv6IntfAddr
+    tf_name: tunnel_source_interface_ipv6_address
+    type: String
+    description: Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
+    exclude_example: true
+    exclude_test: true
+  # Tunnel details
+  - model_name: ipsecMode
+    tf_name: tunnel_mode
+    type: String
+    enum_values: [ipv4, ipv6]
+    description: VTI interface IPSec mode
+    example: ipv4
+    mandatory: true
+  - model_name: address
+    data_path: [ipv4, static]
+    tf_name: ipv4_address
+    type: String
+    description: IPv4 address for local VTI tunnel end.
+    example: "10.10.10.10"
+    minimum_test_value: '"10.10.10.10"'
+  - model_name: netmask
+    data_path: [ipv4, static]
+    tf_name: ipv4_netmask
+    type: String
+    description: Netmask (width) for IPv4 address for local VTI tunnel end.
+    example: "24"
+    minimum_test_value: '"24"'
+  - model_name: address
+    data_path: [ipv6, addresses.0]
+    tf_name: ipv6_address
+    type: String
+    description: IPv6 address for local VTI tunnel end.
+    exclude_example: true
+    exclude_test: true
+  - model_name: prefix
+    data_path: [ipv6, addresses.0]
+    tf_name: ipv6_prefix
+    type: String
+    description: Prefix length for IPv6 address for local VTI tunnel end.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: [borrowIPfrom]
+    tf_name: borrow_ip_interface_id
+    type: String
+    description: Id of the interface to borrow IP address from (IP Unnumbered).
+    exclude_example: true
+    exclude_test: true
+  - model_name: name
+    data_path: [borrowIPfrom]
+    tf_name: borrow_ip_interface_name
+    type: String
+    description: Name of the interface to borrow IP address from (IP Unnumbered).
+    exclude_example: true
+    exclude_test: true
+  # Path monitoring
+  - model_name: enable
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring
+    description: Enable IP based Monitoring.
+    type: Bool
+    example: "true"
+  - model_name: type
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring_type
+    type: String
+    description: Peer IP address version.
+    enum_values: [ PEER_IPV4, PEER_IPV6 ]
+    example: PEER_IPV4
+  - model_name: monitoredIp
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring_peer_ip
+    type: String
+    description: IP address to monitor.
+    example: "10.10.10.100"
+  - model_name: enable
+    data_path: [applicationMonitoring]
+    tf_name: http_based_application_monitoring
+    type: Bool
+    description: Enable HTTP based Application Monitoring.
+    example: "true"
+    exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_device_physical_interface" "test" {
+    device_id           = var.device_id
+    name                = "GigabitEthernet0/1"
+    mode                = "NONE"
+    logical_name        = "myinterface-0-1"
+    ipv4_static_address = "10.12.1.1"
+    ipv4_static_netmask = "255.255.255.240"
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "my_sec_zone_vti"
+    interface_type = "ROUTED"
+  }
+
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

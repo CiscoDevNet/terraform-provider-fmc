@@ -168,17 +168,23 @@ func (r *URLGroupsResource) Create(ctx context.Context, req resource.CreateReque
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Prepare state to track creation process
-	// Create request is split to multiple requests, where just subset of them may be successful
-	state := URLGroups{}
-	state.Items = make(map[string]URLGroupsItems, len(plan.Items))
+	//// Prepare state to track creation process. Create request is split to multiple requests, where just subset of them may be successful
+	// Copy fields, as those may contain domain information or other references
+	state := plan
+	// Create random ID to track bulk resource. This does not relate to FMC in any way
 	state.Id = types.StringValue(uuid.New().String())
-	state.Domain = plan.Domain
-
-	// Create object
+	// Erase all Items, those will be filled in after creation
+	state.Items = make(map[string]URLGroupsItems, len(plan.Items))
 	// Creation process is put in a separate function, as that same proces will be needed with `Update`
 	plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
 	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		// Save state for whatever was already created
+		diags = resp.State.Set(ctx, &plan)
+		tflog.Debug(ctx, fmt.Sprintf("%s: Create failed, some items might have been created", plan.Id.ValueString()))
+		resp.Diagnostics.Append(diags...)
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
@@ -475,7 +481,7 @@ func (r *URLGroupsResource) createSubresources(ctx context.Context, state, plan 
 			body := bulk.toBody(ctx, URLGroups{})
 
 			// Execute request
-			urlPath := bulk.getPath() + "?bulk=true"
+			urlPath := state.getPath() + "?bulk=true"
 			res, err := r.client.Post(urlPath, body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -592,7 +598,7 @@ func (r *URLGroupsResource) updateSubresources(ctx context.Context, state, plan 
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		urlPath := tmpObject.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {
 			return state, diag.Diagnostics{
