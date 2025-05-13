@@ -83,6 +83,7 @@ data "fmc_device_etherchannel_interface" "example" {
 - `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+- `is_multi_instance` (Boolean) Is parent device multi-instance.
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
 - `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.

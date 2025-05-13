@@ -36,6 +36,7 @@ func TestAccFmcDeviceSubinterface(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_subinterface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_subinterface.test", "name"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_subinterface.test", "is_multi_instance"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "description", "my description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_subinterface.test", "mtu", "9000"))
