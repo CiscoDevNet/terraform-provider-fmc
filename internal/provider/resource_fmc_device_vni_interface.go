@@ -89,6 +89,13 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
 			"vni_id": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("User-created VNI number for the interface, not exposed over the wire.").AddIntegerRangeDescription(1, 10000).String,
 				Required:            true,
@@ -253,6 +260,7 @@ func (r *DeviceVNIInterfaceResource) Create(ctx context.Context, req resource.Cr
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 

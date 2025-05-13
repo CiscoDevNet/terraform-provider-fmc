@@ -34,6 +34,7 @@ func TestAccFmcDeviceVNIInterface(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vni_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "vni_id", "42"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "multicast_group_address", "224.0.0.24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vni_interface.test", "segment_id", "501"))

@@ -1,3 +1,7 @@
+## 2.0.0-beta5 (Unreleased)
+
+- (Fix) Add `type` to attribute to `Device VNI Interface` and `Device VTEP Policy`.
+
 ## 2.0.0-beta4
 
 - (Enhancement) Add support for ipv4 and ipv6 address pools under subinterface and etherchannel

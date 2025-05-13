@@ -70,6 +70,10 @@ func (d *DeviceVTEPPolicyDataSource) Schema(ctx context.Context, req datasource.
 				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object",
+				Computed:            true,
+			},
 			"nve_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.",
 				Computed:            true,

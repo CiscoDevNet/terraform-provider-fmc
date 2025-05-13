@@ -54,6 +54,7 @@ data "fmc_device_vni_interface" "example" {
 - `priority` (Number) Priority 0-65535.
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
 - `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+- `type` (String) Type of the object
 - `vni_id` (Number) User-created VNI number for the interface, not exposed over the wire.
 
 <a id="nestedatt--ipv6_addresses"></a>

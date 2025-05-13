@@ -34,6 +34,7 @@ func TestAccDataSourceFmcDeviceVTEPPolicy(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_vtep_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vtep_policy.test", "vteps.0.nve_number", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vtep_policy.test", "vteps.0.neighbor_discovery", "STATIC_PEER_IP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vtep_policy.test", "vteps.0.neighbor_address_literal", "192.168.0.1"))

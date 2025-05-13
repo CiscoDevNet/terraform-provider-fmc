@@ -38,6 +38,7 @@ type DeviceVNIInterface struct {
 	Id                       types.String                      `tfsdk:"id"`
 	Domain                   types.String                      `tfsdk:"domain"`
 	DeviceId                 types.String                      `tfsdk:"device_id"`
+	Type                     types.String                      `tfsdk:"type"`
 	VniId                    types.Int64                       `tfsdk:"vni_id"`
 	MulticastGroupAddress    types.String                      `tfsdk:"multicast_group_address"`
 	SegmentId                types.Int64                       `tfsdk:"segment_id"`
@@ -177,6 +178,11 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("vniId"); value.Exists() {
 		data.VniId = types.Int64Value(value.Int())
 	} else {
@@ -317,6 +323,11 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("vniId"); value.Exists() && !data.VniId.IsNull() {
 		data.VniId = types.Int64Value(value.Int())
 	} else {
@@ -484,6 +495,13 @@ func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *DeviceVNIInterface) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
