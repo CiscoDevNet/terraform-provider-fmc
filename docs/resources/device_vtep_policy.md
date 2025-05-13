@@ -43,6 +43,7 @@ resource "fmc_device_vtep_policy" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
+- `type` (String) Type of the object
 
 <a id="nestedatt--vteps"></a>
 ### Nested Schema for `vteps`

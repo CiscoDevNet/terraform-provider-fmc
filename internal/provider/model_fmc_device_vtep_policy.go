@@ -38,6 +38,7 @@ type DeviceVTEPPolicy struct {
 	Id         types.String            `tfsdk:"id"`
 	Domain     types.String            `tfsdk:"domain"`
 	DeviceId   types.String            `tfsdk:"device_id"`
+	Type       types.String            `tfsdk:"type"`
 	NveEnabled types.Bool              `tfsdk:"nve_enabled"`
 	Vteps      []DeviceVTEPPolicyVteps `tfsdk:"vteps"`
 }
@@ -112,6 +113,11 @@ func (data DeviceVTEPPolicy) toBody(ctx context.Context, state DeviceVTEPPolicy)
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("nveEnable"); value.Exists() {
 		data.NveEnabled = types.BoolValue(value.Bool())
 	} else {
@@ -172,6 +178,11 @@ func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("nveEnable"); value.Exists() && !data.NveEnabled.IsNull() {
 		data.NveEnabled = types.BoolValue(value.Bool())
 	} else if data.NveEnabled.ValueBool() != true {
@@ -259,6 +270,13 @@ func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Res
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *DeviceVTEPPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
 }
 
 // End of section. //template:end fromBodyUnknowns
