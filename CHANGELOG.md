@@ -1,6 +1,9 @@
-## 2.0.0-beta4
+## 2.0.0-beta5 (Unreleased)
 
 - (Enhancement) Add support for multi-instance (/chassis API endpoints)
+
+## 2.0.0-beta4
+
 - (Enhancement) Add support for ipv4 and ipv6 address pools under subinterface and etherchannel
 - (Enhancement) Add support for `fmc_icmpv6_objects`
 - (Enhancement) Add support for `fmc_device_loopback_interface`
