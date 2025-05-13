@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-beta4 (Unreleased)
+## 2.0.0-beta4
 
 - (Enhancement) Add support for ipv4 and ipv6 address pools under subinterface and etherchannel
 - (Enhancement) Add support for `fmc_icmpv6_objects`
