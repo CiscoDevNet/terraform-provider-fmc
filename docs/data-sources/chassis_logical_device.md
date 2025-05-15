@@ -39,7 +39,7 @@ data "fmc_chassis_logical_device" "example" {
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `device_group_id` (String) Id of the device group.
 - `device_id` (String) Id of the device that is deployed.
-- `device_password` (String) Admin password for the logical device.
+- `device_password` (String, Sensitive) Admin password for the logical device.
 - `device_type` (String) Type of the device that is deployed; this value is always 'Device'.
 - `dns_servers` (String) DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
 - `firewall_mode` (String) Firewall mode of the logical device.

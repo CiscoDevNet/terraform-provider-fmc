@@ -674,7 +674,7 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	// This is physical interface, so delete is done by PUT with minimal body
 	// This needs to be done in two steps due to some dependencies in the FMC
 	// Step 1: Remove all attributes except 'ifname'
-	body := state.toBodyPutDelete(ctx, DevicePhysicalInterface{})
+	body := state.toBodyPutDelete(ctx)
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Interface not found", state.Id.ValueString()))

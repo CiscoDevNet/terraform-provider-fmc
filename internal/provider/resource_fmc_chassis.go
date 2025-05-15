@@ -231,7 +231,7 @@ func (r *ChassisResource) Read(ctx context.Context, req resource.ReadRequest, re
 		state.fromBodyPartial(ctx, res)
 	}
 
-	// Chassis API endpoint does not return device group membership. We need to get that information from somewhere else.
+	// FMCBUG: CSCwo80068 - Chassis API endpoint does not return device group membership. We need to get that information from somewhere else.
 	devicerecord, err := r.client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))

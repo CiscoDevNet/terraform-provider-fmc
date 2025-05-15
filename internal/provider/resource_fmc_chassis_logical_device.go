@@ -39,6 +39,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -66,7 +67,7 @@ func (r *ChassisLogicalDeviceResource) Metadata(ctx context.Context, req resourc
 func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.\n This resource will trigger deployment on chassis level to get the logical device created.\n Destruction of the resource will de-register deployed device if it is registered to FMC.\n Adding or removing interfaces from logical device will trigger deployment to the chassis.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -201,6 +202,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 			"device_password": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Admin password for the logical device.").String,
 				Required:            true,
+				Sensitive:           true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
@@ -416,8 +418,6 @@ func (r *ChassisLogicalDeviceResource) Read(ctx context.Context, req resource.Re
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state ChassisLogicalDevice
 
@@ -448,13 +448,50 @@ func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.
 		return
 	}
 
+	// If interfaces are updated, trigger chassis deployment
+	changed, diags := helpers.IsConfigUpdatingAt(ctx, req.Plan, req.State, path.Root("assigned_interfaces"))
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+	if changed {
+		// Trigger chassis deployment
+		deploy := DeviceDeploy{
+			Id:            plan.Id,
+			IgnoreWarning: types.BoolValue(true),
+			DeviceIdList:  helpers.GetStringListFromStringSlice([]string{plan.ChassisId.ValueString()}),
+		}
+		diags = FMCDeviceDeploy(ctx, r.client, deploy, reqMods)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+
+		// Sync device to get the interfaces available
+		interfaceEventsPath := "/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/" + url.QueryEscape(plan.DeviceId.ValueString()) + "/interfaceevents"
+		tflog.Debug(ctx, fmt.Sprintf("%s: Syncing device", plan.Id.ValueString()))
+		body, _ := sjson.Set("", "action", "SYNC_WITH_DEVICE")
+		res, err := r.client.Post(interfaceEventsPath, body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to sync device (POST), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Save changes to the device
+		if res.Get("hasPendingChanges").Exists() && res.Get("hasPendingChanges").Bool() {
+			tflog.Debug(ctx, fmt.Sprintf("%s: Saving changes to device", plan.Id.ValueString()))
+			body, _ = sjson.Set("", "action", "ACCEPT_CHANGES")
+			res, err := r.client.Post(interfaceEventsPath, body, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to save the device configuration (POST), got error: %s, %s", err, res.String()))
+				return
+			}
+		}
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 func (r *ChassisLogicalDeviceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state ChassisLogicalDevice

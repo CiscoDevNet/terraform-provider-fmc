@@ -1192,7 +1192,7 @@ func (data *DeviceSubinterface) fromBodyUnknowns(ctx context.Context, res gjson.
 // End of section. //template:end fromBodyUnknowns
 
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
-func (data DeviceSubinterface) toBodyPutDelete(ctx context.Context, state DeviceSubinterface) string {
+func (data DeviceSubinterface) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	if !data.InterfaceName.IsNull() {

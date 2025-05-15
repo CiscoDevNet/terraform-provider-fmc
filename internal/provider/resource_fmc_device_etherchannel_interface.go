@@ -723,7 +723,7 @@ func (r *DeviceEtherChannelInterfaceResource) Delete(ctx context.Context, req re
 
 	if state.IsMultiInstance.ValueBool() {
 		// If it's multi-instance, we need to put delete, to clear the interface configuration
-		body := state.toBodyPutDelete(ctx, DeviceEtherChannelInterface{})
+		body := state.toBodyPutDelete(ctx)
 		res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 1 (PUT), got error: %s, %s", err, res.String()))

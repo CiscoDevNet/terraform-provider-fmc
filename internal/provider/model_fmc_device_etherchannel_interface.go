@@ -1498,10 +1498,12 @@ func (data *DeviceEtherChannelInterface) fromBodyUnknowns(ctx context.Context, r
 // End of section. //template:end toBodyNonBulk
 
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
-func (data DeviceEtherChannelInterface) toBodyPutDelete(ctx context.Context, state DeviceEtherChannelInterface) string {
+func (data DeviceEtherChannelInterface) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
+	if data.LogicalName.ValueString() != "" {
+		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
+	}
 	body, _ = sjson.Set(body, "mode", "NONE")
 	body, _ = sjson.Set(body, "etherChannelId", data.EtherChannelId.ValueString())
 	body, _ = sjson.Set(body, "name", data.Name.ValueString())

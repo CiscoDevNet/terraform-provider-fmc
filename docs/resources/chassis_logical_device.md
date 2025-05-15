@@ -3,12 +3,18 @@
 page_title: "fmc_chassis_logical_device Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.
+  This resource manages a Chassis Logical Device.
+  This resource will trigger deployment on chassis level to get the logical device created.
+  Destruction of the resource will de-register deployed device if it is registered to FMC.
+  Adding or removing interfaces from logical device will trigger deployment to the chassis.
 ---
 
 # fmc_chassis_logical_device (Resource)
 
-This resource manages a Chassis Logical Device. This resource will trigger deployment on chassis level to get the logical device created. Destruction of the resource will de-register deployed device if it is registered to FMC.
+This resource manages a Chassis Logical Device.
+ This resource will trigger deployment on chassis level to get the logical device created.
+ Destruction of the resource will de-register deployed device if it is registered to FMC.
+ Adding or removing interfaces from logical device will trigger deployment to the chassis.
 
 ## Example Usage
 
@@ -52,7 +58,7 @@ resource "fmc_chassis_logical_device" "example" {
 - `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
-- `device_password` (String) Admin password for the logical device.
+- `device_password` (String, Sensitive) Admin password for the logical device.
 - `firewall_mode` (String) Firewall mode of the logical device.
   - Choices: `ROUTED`, `TRANSPARENT`
 - `ftd_version` (String) Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
