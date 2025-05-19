@@ -16,6 +16,10 @@ attributes:
       Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
+  - model_name: type
+    type: String
+    description: Type of the object
+    computed: true
   - model_name: nveEnable
     tf_name: nve_enabled
     description: Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.

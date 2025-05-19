@@ -70,6 +70,10 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object",
+				Computed:            true,
+			},
 			"vni_id": schema.Int64Attribute{
 				MarkdownDescription: "User-created VNI number for the interface, not exposed over the wire.",
 				Computed:            true,

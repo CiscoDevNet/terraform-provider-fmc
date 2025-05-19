@@ -161,7 +161,7 @@ func (data {{camelCase .Name}}) getPath() string {
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
-
+{{if not .NoResource}}
 func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .Name}}) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -278,7 +278,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 	return body
 	{{- end}}
 }
-
+{{end}}
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
@@ -356,12 +356,6 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 // End of section. //template:end fromBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
-
-// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
-// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
-// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
-// "managed" elements, instead of all elements.
-func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.Result) {
 {{- define "fromBodyPartialTemplate"}}
 	{{- range .Attributes}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
@@ -457,13 +451,20 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 	{{- end}}
 	{{- end}}
 {{- end}}
+
+{{if not .NoResource}}
+// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
+// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
+// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
+// "managed" elements, instead of all elements.
+func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.Result) {
 {{- template "fromBodyPartialTemplate" .}}
 }
-
+{{end}}
 // End of section. //template:end fromBodyPartial
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
-
+{{if not .NoResource}}
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
@@ -556,12 +557,12 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 	{{- end}}
 	{{- end}}
 }
-
+{{end}}
 // End of section. //template:end fromBodyUnknowns
 
 // Section below is generated&owned by "gen/generator.go". //template:begin Clone
 
-{{if .IsBulk}}
+{{if and .IsBulk (not .NoResource)}}
 func (data *{{camelCase .Name}}) Clone() {{camelCase .Name}} {
 	ret := *data
 	ret.Items = maps.Clone(data.Items)
@@ -574,7 +575,7 @@ func (data *{{camelCase .Name}}) Clone() {{camelCase .Name}} {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
 
-{{if .IsBulk}}
+{{if and .IsBulk (not .NoResource) }}
 // Updates done one-by-one require different API body
 func (data {{camelCase .Name}}) toBodyNonBulk(ctx context.Context, state {{camelCase .Name}}) string {
 	// This is one-by-one update, so only one element to update is expected
@@ -637,7 +638,7 @@ func (data {{camelCase .Name}}) findObjectsToBeReplaced(ctx context.Context, sta
 
 // Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
 
-{{if and .IsBulk (hasRequiresReplace .Attributes) }}
+{{if and .IsBulk (hasRequiresReplace .Attributes) (not .NoResource) }}
 func (data *{{camelCase .Name}}) clearItemsIds(ctx context.Context) {
 	for key, value := range data.Items {
 		tmp := value

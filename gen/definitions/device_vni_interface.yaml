@@ -11,6 +11,10 @@ attributes:
     description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
+  - model_name: type
+    type: String
+    description: Type of the object
+    computed: true
   - model_name: vniId
     type: Int64
     description: User-created VNI number for the interface, not exposed over the wire.

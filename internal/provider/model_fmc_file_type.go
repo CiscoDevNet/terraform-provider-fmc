@@ -24,7 +24,6 @@ import (
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -55,17 +54,6 @@ func (data FileType) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data FileType) toBody(ctx context.Context, state FileType) string {
-	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
-	return body
-}
-
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
@@ -87,38 +75,9 @@ func (data *FileType) fromBody(ctx context.Context, res gjson.Result) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
 
-// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
-// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
-// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
-// "managed" elements, instead of all elements.
-func (data *FileType) fromBodyPartial(ctx context.Context, res gjson.Result) {
-	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
-		data.Name = types.StringValue(value.String())
-	} else {
-		data.Name = types.StringNull()
-	}
-	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-		data.Type = types.StringValue(value.String())
-	} else {
-		data.Type = types.StringNull()
-	}
-}
-
 // End of section. //template:end fromBodyPartial
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
-
-// fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
-// Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *FileType) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
-	if data.Type.IsUnknown() {
-		if value := res.Get("type"); value.Exists() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
-		}
-	}
-}
 
 // End of section. //template:end fromBodyUnknowns
 
