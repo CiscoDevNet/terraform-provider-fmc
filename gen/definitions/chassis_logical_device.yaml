@@ -7,6 +7,7 @@ res_description: >-
   This resource will trigger deployment on chassis level to get the logical device created.\n
   Destruction of the resource will de-register deployed device if it is registered to FMC.\n
   Adding or removing interfaces from logical device will trigger deployment to the chassis.\n
+  Changing resource profile will not trigger automatic deployment to apply the settings.
 test_tags: [TF_VAR_chassis_id]
 attributes:
   # General
@@ -145,14 +146,14 @@ attributes:
     data_path: [resourceProfile]
     tf_name: resource_profile_id
     type: String
-    description: Id of the resource profile.
+    description: Id of the resource profile. Changing resource profile will trigger instance restart on deployment.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     mandatory: true
   - model_name: name
     data_path: [resourceProfile]
     tf_name: resource_profile_name
     type: String
-    description: Name of the resource profile.
+    description: Name of the resource profile. Changing resource profile will trigger instance restart on deployment.
     example: my_resource_profile
     mandatory: true
   # Interface assignment

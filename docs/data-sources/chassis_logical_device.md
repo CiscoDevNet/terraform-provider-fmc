@@ -54,8 +54,8 @@ data "fmc_chassis_logical_device" "example" {
 - `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
 - `permit_expert_mode` (String) Permit expert mode for the logical device.
 - `platform_settings_id` (String) Id of the platform settings.
-- `resource_profile_id` (String) Id of the resource profile.
-- `resource_profile_name` (String) Name of the resource profile.
+- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment.
+- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment.
 - `search_domain` (String) Search domain for the logical device.
 - `type` (String) Type of the device; this value is always 'LogicalDevice'.
 

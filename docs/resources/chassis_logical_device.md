@@ -7,6 +7,7 @@ description: |-
   This resource will trigger deployment on chassis level to get the logical device created.
   Destruction of the resource will de-register deployed device if it is registered to FMC.
   Adding or removing interfaces from logical device will trigger deployment to the chassis.
+  Changing resource profile will not trigger automatic deployment to apply the settings.
 ---
 
 # fmc_chassis_logical_device (Resource)
@@ -15,6 +16,7 @@ This resource manages a Chassis Logical Device.
  This resource will trigger deployment on chassis level to get the logical device created.
  Destruction of the resource will de-register deployed device if it is registered to FMC.
  Adding or removing interfaces from logical device will trigger deployment to the chassis.
+ Changing resource profile will not trigger automatic deployment to apply the settings.
 
 ## Example Usage
 
@@ -63,8 +65,8 @@ resource "fmc_chassis_logical_device" "example" {
   - Choices: `ROUTED`, `TRANSPARENT`
 - `ftd_version` (String) Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
 - `name` (String) Name of the logical device.
-- `resource_profile_id` (String) Id of the resource profile.
-- `resource_profile_name` (String) Name of the resource profile.
+- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment.
+- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment.
 
 ### Optional
 

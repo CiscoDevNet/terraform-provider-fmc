@@ -150,11 +150,11 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"resource_profile_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the resource profile.",
+				MarkdownDescription: "Id of the resource profile. Changing resource profile will trigger instance restart on deployment.",
 				Computed:            true,
 			},
 			"resource_profile_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the resource profile.",
+				MarkdownDescription: "Name of the resource profile. Changing resource profile will trigger instance restart on deployment.",
 				Computed:            true,
 			},
 			"assigned_interfaces": schema.SetNestedAttribute{

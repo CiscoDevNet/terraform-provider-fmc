@@ -67,7 +67,7 @@ func (r *ChassisLogicalDeviceResource) Metadata(ctx context.Context, req resourc
 func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.\n This resource will trigger deployment on chassis level to get the logical device created.\n Destruction of the resource will de-register deployed device if it is registered to FMC.\n Adding or removing interfaces from logical device will trigger deployment to the chassis.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.\n This resource will trigger deployment on chassis level to get the logical device created.\n Destruction of the resource will de-register deployed device if it is registered to FMC.\n Adding or removing interfaces from logical device will trigger deployment to the chassis.\n Changing resource profile will not trigger automatic deployment to apply the settings.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -224,11 +224,11 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"resource_profile_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the resource profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the resource profile. Changing resource profile will trigger instance restart on deployment.").String,
 				Required:            true,
 			},
 			"resource_profile_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the resource profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the resource profile. Changing resource profile will trigger instance restart on deployment.").String,
 				Required:            true,
 			},
 			"assigned_interfaces": schema.SetNestedAttribute{
