@@ -152,7 +152,16 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		cdfmcToken = config.CdfmcToken.ValueString()
 	}
 
-	// Fail if the user did not provide `password` nor `cdfmc_token`
+	// Fail if the user didn't provider any credentials
+	if password == "" && cdfmcToken == "" {
+		resp.Diagnostics.AddError(
+			"Unable to create client",
+			"Please provide credentials for FMC (username and password) or cdFMC (cdfmc_token)",
+		)
+		return
+	}
+
+	// Fail if the user provided credentials for both FMC and cfFMC
 	if password != "" && cdfmcToken != "" {
 		resp.Diagnostics.AddError(
 			"Unable to create client",
@@ -165,7 +174,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	if password != "" && username == "" {
 		resp.Diagnostics.AddError(
 			"Unable to create client",
-			"Username and password need to be provided for self-managed FMC",
+			"Username and password need to be provided for FMC",
 		)
 		return
 	}
