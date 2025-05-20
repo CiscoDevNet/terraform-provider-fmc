@@ -34,6 +34,7 @@ data "fmc_device_vtep_policy" "example" {
 ### Read-Only
 
 - `nve_enabled` (Boolean) Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.
+- `type` (String) Type of the object
 - `vteps` (Attributes List) List that can either be empty or contain one VTEP object. (see [below for nested schema](#nestedatt--vteps))
 
 <a id="nestedatt--vteps"></a>

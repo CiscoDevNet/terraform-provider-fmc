@@ -1,6 +1,10 @@
-## 2.0.0-beta5 (Unreleased)
+## 2.0.0-beta6 (Unreleased)
 
 - (Enhancement) Add support for multi-instance (/chassis API endpoints)
+
+## 2.0.0-beta5
+
+- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`.
 
 ## 2.0.0-beta4
 

@@ -90,6 +90,13 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
 			"nve_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.").AddDefaultValueDescription("true").String,
 				Optional:            true,
@@ -205,6 +212,7 @@ func (r *DeviceVTEPPolicyResource) Create(ctx context.Context, req resource.Crea
 		return
 	}
 	plan.Id = types.StringValue(res.Get("id").String())
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 

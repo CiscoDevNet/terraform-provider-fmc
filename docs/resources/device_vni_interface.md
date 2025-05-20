@@ -71,6 +71,7 @@ resource "fmc_device_vni_interface" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
+- `type` (String) Type of the object
 
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`
