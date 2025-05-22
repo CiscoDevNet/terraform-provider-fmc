@@ -38,12 +38,23 @@ func testAccPreCheck(t *testing.T) {
 	// You can add code here to run prior to any test case execution, for example assertions
 	// about the appropriate environment variables being set are common to see in a pre-check
 	// function.
-	if v := os.Getenv("FMC_USERNAME"); v == "" {
-		t.Fatal("FMC_USERNAME env variable must be set for acceptance tests")
+
+	username := os.Getenv("FMC_USERNAME")
+	password := os.Getenv("FMC_PASSWORD")
+	cdfmcToken := os.Getenv("FMC_CDFMCTOKEN")
+
+	if password == "" && cdfmcToken == "" {
+		t.Fatal("For acceptance tests FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_CDFMCTOKEN) env variables must be set")
 	}
-	if v := os.Getenv("FMC_PASSWORD"); v == "" {
-		t.Fatal("FMC_PASSWORD env variable must be set for acceptance tests")
+
+	if password != "" && cdfmcToken != "" {
+		t.Fatal("For acceptance tests only one of FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_CDFMCTOKEN) credentials must be set")
 	}
+
+	if password != "" && username == "" {
+		t.Fatal("For acceptance tests FMC_USERNAME env variable must be set")
+	}
+
 	if v := os.Getenv("FMC_URL"); v == "" {
 		t.Fatal("FMC_URL env variable must be set for acceptance tests")
 	}

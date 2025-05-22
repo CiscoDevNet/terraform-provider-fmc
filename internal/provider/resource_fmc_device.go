@@ -204,6 +204,11 @@ func (r *DeviceResource) Configure(_ context.Context, req resource.ConfigureRequ
 // End of section. //template:end model
 
 func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	if r.client.IsCDFMC {
+		resp.Diagnostics.AddError("Client Error", "UnsupportedVersion: Device resource is not supported in cdFMC. Please use Security Cloud Control API instead.")
+		return
+	}
+
 	var plan Device
 	// time to wait for time-based loops
 	const atom time.Duration = 5 * time.Second
