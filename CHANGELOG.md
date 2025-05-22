@@ -1,6 +1,10 @@
+## 2.0.0-beta6 (Unreleased)
+
+- (Enhancement) Add cdFMC (Cloud-Delivered FMC) support
+
 ## 2.0.0-beta5
 
-- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`.
+- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`
 
 ## 2.0.0-beta4
 
