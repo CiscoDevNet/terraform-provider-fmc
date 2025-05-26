@@ -79,6 +79,7 @@ resource "fmc_device_bgp" "example" {
 
 - `as_number` (String) Autonomus System (AS) number
 - `id` (String) Id of the object
+- `ipv4_address_family_id` (String) IPv4 Address Family Id
 - `ipv4_address_family_type` (String) IPv4 Address Family Type
 - `name` (String) Name of the object; this is always 'bgp'
 - `type` (String) Type of the object; this is always 'bgp'
