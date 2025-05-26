@@ -9,7 +9,7 @@ description: |-
 
 ## 2.0.0-beta6 (Unreleased)
 
-- (Enhancement) Add cdFMC (Cloud-Delivered FMC) support
+- (Enhancement) Add cdFMC (Cloud-Delivered FMC) and FMC 7.7 support
 
 ## 2.0.0-beta5
 

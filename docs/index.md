@@ -18,6 +18,7 @@ Resources and data sources have been tested with the following releases.
 | FMC      | 7.2     |
 | FMC      | 7.4     |
 | FMC      | 7.6     |
+| FMC      | 7.7     |
 | cdFMC    |         |
 
 Please note that resources and data sources support depends on FMC version.
