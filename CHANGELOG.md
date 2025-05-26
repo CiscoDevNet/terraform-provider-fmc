@@ -1,3 +1,7 @@
+## 2.0.0-beta6 (Unreleased)
+
+- (Enhancement) Add Bridge Group Interface support (`fmc_device_bridge_group_interface`)
+
 ## 2.0.0-beta5
 
 - (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`.
