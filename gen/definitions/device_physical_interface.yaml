@@ -79,7 +79,7 @@ attributes:
     description: Maximum transmission unit. Can only be used when logical_name is set.
     min_int: 64
     max_int: 9000
-    example: 9000
+    example: 1400
   - model_name: priority
     type: Int64
     description: Priority 0-65535. Can only be set for routed interfaces.
