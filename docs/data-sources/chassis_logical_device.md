@@ -37,6 +37,11 @@ data "fmc_chassis_logical_device" "example" {
 - `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
 - `admin_state` (String) Admin state of the logical device.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
+- `container_id` (String) Id of the parent container. Empty if device is Standalone.
+- `container_name` (String) Name of the parent container. Empty if device is Standalone.
+- `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
+- `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
+- `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
 - `device_id` (String) Id of the device that is deployed.
 - `device_password` (String, Sensitive) Admin password for the logical device.

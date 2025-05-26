@@ -64,6 +64,11 @@ type ChassisLogicalDevice struct {
 	AccessPolicyId      types.String                             `tfsdk:"access_policy_id"`
 	PlatformSettingsId  types.String                             `tfsdk:"platform_settings_id"`
 	LicenseCapabilities types.Set                                `tfsdk:"license_capabilities"`
+	ContainerId         types.String                             `tfsdk:"container_id"`
+	ContainerType       types.String                             `tfsdk:"container_type"`
+	ContainerName       types.String                             `tfsdk:"container_name"`
+	ContainerRole       types.String                             `tfsdk:"container_role"`
+	ContainerStatus     types.String                             `tfsdk:"container_status"`
 }
 
 type ChassisLogicalDeviceAssignedInterfaces struct {
@@ -299,6 +304,31 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 	} else {
 		data.LicenseCapabilities = types.SetNull(types.StringType)
 	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -463,6 +493,31 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 	} else {
 		data.LicenseCapabilities = types.SetNull(types.StringType)
 	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -492,6 +547,31 @@ func (data *ChassisLogicalDevice) fromBodyUnknowns(ctx context.Context, res gjso
 		} else {
 			data.DeviceType = types.StringNull()
 		}
+	}
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
+		data.ContainerId = types.StringValue(value.String())
+	} else {
+		data.ContainerId = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
+		data.ContainerType = types.StringValue(value.String())
+	} else {
+		data.ContainerType = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
+		data.ContainerName = types.StringValue(value.String())
+	} else {
+		data.ContainerName = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
+		data.ContainerRole = types.StringValue(value.String())
+	} else {
+		data.ContainerRole = types.StringNull()
+	}
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
+		data.ContainerStatus = types.StringValue(value.String())
+	} else {
+		data.ContainerStatus = types.StringNull()
 	}
 }
 

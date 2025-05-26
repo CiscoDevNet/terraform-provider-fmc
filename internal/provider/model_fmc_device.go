@@ -286,37 +286,37 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.HealthPolicyId = types.StringNull()
 	}
-	if value := res.Get("metadata.containerDetails.id"); value.Exists() && !data.ContainerId.IsNull() {
+	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
 		data.ContainerId = types.StringValue(value.String())
 	} else {
 		data.ContainerId = types.StringNull()
 	}
-	if value := res.Get("metadata.containerDetails.type"); value.Exists() && !data.ContainerType.IsNull() {
+	if value := res.Get("metadata.containerDetails.type"); value.Exists() {
 		data.ContainerType = types.StringValue(value.String())
 	} else {
 		data.ContainerType = types.StringNull()
 	}
-	if value := res.Get("metadata.containerDetails.name"); value.Exists() && !data.ContainerName.IsNull() {
+	if value := res.Get("metadata.containerDetails.name"); value.Exists() {
 		data.ContainerName = types.StringValue(value.String())
 	} else {
 		data.ContainerName = types.StringNull()
 	}
-	if value := res.Get("metadata.containerDetails.role"); value.Exists() && !data.ContainerRole.IsNull() {
+	if value := res.Get("metadata.containerDetails.role"); value.Exists() {
 		data.ContainerRole = types.StringValue(value.String())
 	} else {
 		data.ContainerRole = types.StringNull()
 	}
-	if value := res.Get("metadata.containerDetails.status"); value.Exists() && !data.ContainerStatus.IsNull() {
+	if value := res.Get("metadata.containerDetails.status"); value.Exists() {
 		data.ContainerStatus = types.StringValue(value.String())
 	} else {
 		data.ContainerStatus = types.StringNull()
 	}
-	if value := res.Get("metadata.isPartOfContainer"); value.Exists() && !data.IsPartOfContainer.IsNull() {
+	if value := res.Get("metadata.isPartOfContainer"); value.Exists() {
 		data.IsPartOfContainer = types.BoolValue(value.Bool())
 	} else {
 		data.IsPartOfContainer = types.BoolNull()
 	}
-	if value := res.Get("metadata.isMultiInstance"); value.Exists() && !data.IsMultiInstance.IsNull() {
+	if value := res.Get("metadata.isMultiInstance"); value.Exists() {
 		data.IsMultiInstance = types.BoolValue(value.Bool())
 	} else {
 		data.IsMultiInstance = types.BoolNull()

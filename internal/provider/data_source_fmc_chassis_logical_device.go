@@ -186,6 +186,26 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
+			"container_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the parent container. Empty if device is Standalone.",
+				Computed:            true,
+			},
+			"container_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.",
+				Computed:            true,
+			},
+			"container_name": schema.StringAttribute{
+				MarkdownDescription: "Name of the parent container. Empty if device is Standalone.",
+				Computed:            true,
+			},
+			"container_role": schema.StringAttribute{
+				MarkdownDescription: "Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.",
+				Computed:            true,
+			},
+			"container_status": schema.StringAttribute{
+				MarkdownDescription: "Status of the device in DeviceHAPair (Active, Standby, but other possible as well).",
+				Computed:            true,
+			},
 		},
 	}
 }

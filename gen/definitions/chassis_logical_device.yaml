@@ -196,3 +196,39 @@ attributes:
     enum_values: [MALWARE, URLFilter, CARRIER, PROTECT]
     description: Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
     example: MALWARE
+  # Container Details
+  - model_name: id
+    data_path: [metadata, containerDetails]
+    tf_name: container_id
+    type: String
+    description: Id of the parent container. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: type
+    data_path: [metadata, containerDetails]
+    tf_name: container_type
+    type: String
+    description: Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: name
+    data_path: [metadata, containerDetails]
+    tf_name: container_name
+    type: String
+    description: Name of the parent container. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: role
+    data_path: [metadata, containerDetails]
+    tf_name: container_role
+    type: String
+    description: Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: status
+    data_path: [metadata, containerDetails]
+    tf_name: container_status
+    type: String
+    description: Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
+    computed: true
+    computed_refresh_value: true
