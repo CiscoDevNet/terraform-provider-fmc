@@ -1,0 +1,94 @@
+---
+### TODO IPv4 Prefix Lists
+####      IPv6 Prefix Lists
+name: Route Map
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/routemaps
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the route map object.
+    example: my_route_map
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RouteMap'.
+    computed: true
+  - model_name: overridable
+    type: Bool
+    description: Whether the object values can be overridden.
+    example: "true"
+  - model_name: entries
+    type: List
+    description: List of route map entries.
+    mandatory: true
+    attributes:
+      - model_name: sequence
+        tf_name: sequence_number
+        type: Int64
+        mandatory: true
+        description: Sequence number of the route map entry.
+        example: 10
+      - model_name: action
+        type: String
+        mandatory: true
+        description: Action to take for the route map entry.
+        enum_values: [PERMIT, DENY]
+      # Match clauses - Security Zones
+      - model_name: interfaces
+        tf_name: security_zones
+        type: List
+        description: List of interfaces or security zones to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            description: ID of the security zone.
+            example: 0050568A-4E02-1ed3-0000-004294969198
+      # Match clauses - IPv4 Addresses
+      - model_name: ipv4AccessListAddresses
+        type: List
+        description: List of IPv4 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+      - model_name: ipv4AccessListNextHops
+        type: List
+        description: List of IPv4 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+      - model_name: ipv4AccessListRouteSources
+        type: List
+        description: List of IPv4 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv4 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199

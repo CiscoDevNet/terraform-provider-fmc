@@ -1,0 +1,135 @@
+// Copyright © 2023 Cisco Systems, Inc. and its affiliates.
+// All rights reserved.
+//
+// Licensed under the Mozilla Public License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://mozilla.org/MPL/2.0/
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: MPL-2.0
+
+package provider
+
+// Section below is generated&owned by "gen/generator.go". //template:begin imports
+import (
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+)
+
+// End of section. //template:end imports
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
+
+func TestAccDataSourceFmcRouteMap(t *testing.T) {
+	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "name", "my_route_map"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_route_map.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.sequence_number", "10"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.action", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.security_zones.0.id", "0050568A-4E02-1ed3-0000-004294969198"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_addresses.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_addresses.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_next_hops.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_next_hops.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataSourceFmcRouteMapConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
+			{
+				Config: testAccNamedDataSourceFmcRouteMapConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
+		},
+	})
+}
+
+// End of section. //template:end testAccDataSource
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+// End of section. //template:end testPrerequisites
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
+
+func testAccDataSourceFmcRouteMapConfig() string {
+	config := `resource "fmc_route_map" "test" {` + "\n"
+	config += `	name = "my_route_map"` + "\n"
+	config += `	overridable = true` + "\n"
+	config += `	entries = [{` + "\n"
+	config += `		sequence_number = 10` + "\n"
+	config += `		action = ""` + "\n"
+	config += `		security_zones = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969198"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_addresses = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_next_hops = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_route_sources = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_route_map" "test" {
+			id = fmc_route_map.test.id
+		}
+	`
+	return config
+}
+
+func testAccNamedDataSourceFmcRouteMapConfig() string {
+	config := `resource "fmc_route_map" "test" {` + "\n"
+	config += `	name = "my_route_map"` + "\n"
+	config += `	overridable = true` + "\n"
+	config += `	entries = [{` + "\n"
+	config += `		sequence_number = 10` + "\n"
+	config += `		action = ""` + "\n"
+	config += `		security_zones = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969198"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_addresses = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_next_hops = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv4_access_list_route_sources = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_route_map" "test" {
+			name = fmc_route_map.test.name
+		}
+	`
+	return config
+}
+
+// End of section. //template:end testAccDataSourceConfig
