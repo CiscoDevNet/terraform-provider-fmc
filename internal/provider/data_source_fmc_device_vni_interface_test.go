@@ -67,7 +67,6 @@ resource "fmc_device_physical_interface" "test" {
   name         = "GigabitEthernet0/1"
   mode         = "NONE"
   logical_name = "myinterface-0-1"
-  mtu          = 9000
 }
 
 resource "fmc_device_vtep_policy" "test" {
