@@ -443,6 +443,13 @@ func (d *DeviceSubinterfaceDataSource) Read(ctx context.Context, req datasource.
 
 	config.fromBody(ctx, res)
 
+	is_multi_instance, diags := FMCIsDeviceMultiInstance(ctx, d.client, config.DeviceId.ValueString(), reqMods)
+	if diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	config.IsMultiInstance = types.BoolValue(is_multi_instance)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &config)

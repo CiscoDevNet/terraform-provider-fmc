@@ -450,8 +450,6 @@ func (d *DeviceEtherChannelInterfaceDataSource) Configure(_ context.Context, req
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *DeviceEtherChannelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config DeviceEtherChannelInterface
 
@@ -509,10 +507,15 @@ func (d *DeviceEtherChannelInterfaceDataSource) Read(ctx context.Context, req da
 
 	config.fromBody(ctx, res)
 
+	is_multi_instance, diags := FMCIsDeviceMultiInstance(ctx, d.client, config.DeviceId.ValueString(), reqMods)
+	if diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	config.IsMultiInstance = types.BoolValue(is_multi_instance)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read
