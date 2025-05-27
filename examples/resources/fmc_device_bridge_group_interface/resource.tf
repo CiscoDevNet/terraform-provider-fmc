@@ -11,6 +11,16 @@ resource "fmc_device_bridge_group_interface" "example" {
   ]
   ipv4_static_address = "10.1.1.1"
   ipv4_static_netmask = "24"
+  ipv6_addresses = [
+    {
+      address = "2004::1"
+      prefix  = "64"
+    }
+  ]
+  ipv6_enable_dad     = true
+  ipv6_dad_attempts   = 1
+  ipv6_ns_interval    = 1000
+  ipv6_reachable_time = 0
   arp_table_entries = [
     {
       mac_address  = "0123.4567.89ab"

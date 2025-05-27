@@ -398,8 +398,8 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 		data.Ipv4DhcpObtainRoute = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
-		keys := [...]string{"address", "prefix"}
-		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
+		keys := [...]string{"address"}
+		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]

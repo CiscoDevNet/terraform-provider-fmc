@@ -3,7 +3,7 @@ name: Device Bridge Group Interface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/bridgegroupinterfaces
 doc_category: Devices
 res_description: >-
-  This device manages Device Bridge Virtual Interface (BVI) is a virtual interface that represents a bridge group.
+  This resource manages Device Bridge Group Interface, known as BVI interfaces.
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 adjust_body: true
 attributes:
@@ -20,7 +20,7 @@ attributes:
     computed: true
   - model_name: name
     type: String
-    description: Name of the Bridge Group interface, BVI<bridge_group_id>.
+    description: Name of the Bridge Group interface in format BVI<bridge_group_id>.
     computed: true
     computed_body_param: true
     data_source_query: true
@@ -45,7 +45,7 @@ attributes:
     requires_replace: true
   - model_name: selectedInterfaces
     type: List
-    description: List of physical interfaces that are part of the bridge group.
+    description: List of interfaces that are part of the bridge group.
     attributes:
       - model_name: id
         type: String
@@ -64,13 +64,13 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
     type: String
-    description: Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
+    description: Static IPv4 address.
     example: "10.1.1.1"
   - model_name: netmask
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask for ipv4_static_address.
     example: "24"
   #IPv4 - DHCP
   - model_name: enableDefaultRouteDHCP
@@ -78,10 +78,8 @@ attributes:
     tf_name: ipv4_dhcp_obtain_route
     type: Bool
     description: >-
-      Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
-      from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1.
-      Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be
-      non-null.
+      Value `false` indicates to enable DHCPv4 without obtaining default route.
+      Value `true` indicates to enable DHCPv4 and obtain the default route.
       The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
     exclude_example: true
     exclude_test: true
@@ -89,28 +87,27 @@ attributes:
   - model_name: addresses
     data_path: [ipv6]
     tf_name: ipv6_addresses
-    exclude_example: true
-    exclude_test: true
     type: List
     attributes:
       - model_name: address
         type: String
         description: IPv6 address without a slash and prefix.
         id: true
-        example: "2004::"
+        example: "2004::1"
+        mandatory: true
       - model_name: prefix
         type: String
         description: Prefix width for the IPv6 address.
-        id: true
-        example: "124"
+        example: "64"
+        mandatory: true
   #IPv6 Settings:
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_enable_dad
     description: Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
     type: Bool
-    exclude_example: true
-    exclude_test: true
+    example: true
+    exclude_test: true # for FMCVERSION <= 7.2
   - model_name: dadAttempts
     data_path: [ipv6]
     tf_name: ipv6_dad_attempts
@@ -118,26 +115,26 @@ attributes:
     description: Number of Duplicate Address Detection (DAD) attempts.
     min_int: 0
     max_int: 600
-    exclude_example: true
-    exclude_test: true
+    example: 1
+    exclude_test: true # for FMCVERSION <= 7.2
   - model_name: nsInterval
     data_path: [ipv6]
     tf_name: ipv6_ns_interval
     type: Int64
-    description: Neighbor Solicitation (NS) interval.
+    description: Neighbor Solicitation (NS) interval in Milliseconds.
     min_int: 1000
     max_int: 3600000
-    exclude_example: true
-    exclude_test: true
+    example: 1000
+    exclude_test: true # for FMCVERSION <= 7.2
   - model_name: reachableTime
     data_path: [ipv6]
     tf_name: ipv6_reachable_time
     type: Int64
-    description: The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+    description: The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
     min_int: 0
     max_int: 3600000
-    exclude_example: true
-    exclude_test: true
+    example: 0
+    exclude_test: true # for FMCVERSION <= 7.2
   # ARP
   - model_name: arpConfig
     tf_name: arp_table_entries

@@ -3,12 +3,12 @@
 page_title: "fmc_device_bridge_group_interface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This device manages Device Bridge Virtual Interface (BVI) is a virtual interface that represents a bridge group.
+  This resource manages Device Bridge Group Interface, known as BVI interfaces.
 ---
 
 # fmc_device_bridge_group_interface (Resource)
 
-This device manages Device Bridge Virtual Interface (BVI) is a virtual interface that represents a bridge group.
+This resource manages Device Bridge Group Interface, known as BVI interfaces.
 
 ## Example Usage
 
@@ -26,6 +26,16 @@ resource "fmc_device_bridge_group_interface" "example" {
   ]
   ipv4_static_address = "10.1.1.1"
   ipv4_static_netmask = "24"
+  ipv6_addresses = [
+    {
+      address = "2004::1"
+      prefix  = "64"
+    }
+  ]
+  ipv6_enable_dad     = true
+  ipv6_dad_attempts   = 1
+  ipv6_ns_interval    = 1000
+  ipv6_reachable_time = 0
   arp_table_entries = [
     {
       mac_address  = "0123.4567.89ab"
@@ -51,23 +61,23 @@ resource "fmc_device_bridge_group_interface" "example" {
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
-- `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
-- `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
+- `ipv4_dhcp_obtain_route` (Boolean) Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+- `ipv4_static_address` (String) Static IPv4 address.
+- `ipv4_static_netmask` (String) Netmask for ipv4_static_address.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
   - Range: `0`-`600`
 - `ipv6_enable_dad` (Boolean) Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
-- `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval.
+- `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval in Milliseconds.
   - Range: `1000`-`3600000`
-- `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+- `ipv6_reachable_time` (Number) The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
   - Range: `0`-`3600000`
-- `selected_interfaces` (Attributes List) List of physical interfaces that are part of the bridge group. (see [below for nested schema](#nestedatt--selected_interfaces))
+- `selected_interfaces` (Attributes List) List of interfaces that are part of the bridge group. (see [below for nested schema](#nestedatt--selected_interfaces))
 
 ### Read-Only
 
 - `id` (String) Id of the object
-- `name` (String) Name of the Bridge Group interface, BVI<bridge_group_id>.
+- `name` (String) Name of the Bridge Group interface in format BVI<bridge_group_id>.
 - `type` (String) Type of the object; this value is always 'BridgeGroupInterface'.
 
 <a id="nestedatt--arp_table_entries"></a>
@@ -83,7 +93,7 @@ Optional:
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`
 
-Optional:
+Required:
 
 - `address` (String) IPv6 address without a slash and prefix.
 - `prefix` (String) Prefix width for the IPv6 address.

@@ -63,7 +63,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Metadata(ctx context.Context, req r
 func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Bridge Virtual Interface (BVI) is a virtual interface that represents a bridge group.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Device Bridge Group Interface, known as BVI interfaces.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -95,7 +95,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Bridge Group interface, BVI<bridge_group_id>.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Bridge Group interface in format BVI<bridge_group_id>.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -120,7 +120,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"selected_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of physical interfaces that are part of the bridge group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of interfaces that are part of the bridge group.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -136,15 +136,15 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"ipv4_static_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address.").String,
 				Optional:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask for ipv4_static_address.").String,
 				Optional:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -154,11 +154,11 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"prefix": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -175,14 +175,14 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"ipv6_ns_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Neighbor Solicitation (NS) interval.").AddIntegerRangeDescription(1000, 3600000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Neighbor Solicitation (NS) interval in Milliseconds.").AddIntegerRangeDescription(1000, 3600000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1000, 3600000),
 				},
 			},
 			"ipv6_reachable_time": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred").AddIntegerRangeDescription(0, 3600000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.").AddIntegerRangeDescription(0, 3600000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 3600000),

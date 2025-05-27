@@ -80,7 +80,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Bridge Group interface, BVI<bridge_group_id>.",
+				MarkdownDescription: "Name of the Bridge Group interface in format BVI<bridge_group_id>.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -97,7 +97,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"selected_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: "List of physical interfaces that are part of the bridge group.",
+				MarkdownDescription: "List of interfaces that are part of the bridge group.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -113,15 +113,15 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				},
 			},
 			"ipv4_static_address": schema.StringAttribute{
-				MarkdownDescription: "Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.",
+				MarkdownDescription: "Static IPv4 address.",
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask for ipv4_static_address.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
+				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -149,11 +149,11 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"ipv6_ns_interval": schema.Int64Attribute{
-				MarkdownDescription: "Neighbor Solicitation (NS) interval.",
+				MarkdownDescription: "Neighbor Solicitation (NS) interval in Milliseconds.",
 				Computed:            true,
 			},
 			"ipv6_reachable_time": schema.Int64Attribute{
-				MarkdownDescription: "The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred",
+				MarkdownDescription: "The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.",
 				Computed:            true,
 			},
 			"arp_table_entries": schema.ListNestedAttribute{

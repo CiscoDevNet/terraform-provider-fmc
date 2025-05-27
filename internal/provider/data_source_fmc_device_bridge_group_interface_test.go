@@ -41,6 +41,8 @@ func TestAccDataSourceFmcDeviceBridgeGroupInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "bridge_group_id", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv4_static_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv6_addresses.0.address", "2004::1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv6_addresses.0.prefix", "64"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.mac_address", "0123.4567.89ab"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.ip_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.enable_alias", "true"))
@@ -91,6 +93,10 @@ func testAccDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
 	config += `	}]` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::1"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
 	config += `	arp_table_entries = [{` + "\n"
 	config += `		mac_address = "0123.4567.89ab"` + "\n"
 	config += `		ip_address = "10.1.1.1"` + "\n"
@@ -119,6 +125,10 @@ func testAccNamedDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
 	config += `	}]` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::1"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
 	config += `	arp_table_entries = [{` + "\n"
 	config += `		mac_address = "0123.4567.89ab"` + "\n"
 	config += `		ip_address = "10.1.1.1"` + "\n"
