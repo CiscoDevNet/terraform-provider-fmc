@@ -61,7 +61,6 @@ resource "fmc_device_physical_interface" "test" {
   name         = "GigabitEthernet0/1"
   mode         = "NONE"
   logical_name = "myinterface-0-1"
-  mtu          = 9000
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
