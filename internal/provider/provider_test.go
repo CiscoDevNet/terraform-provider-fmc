@@ -41,14 +41,14 @@ func testAccPreCheck(t *testing.T) {
 
 	username := os.Getenv("FMC_USERNAME")
 	password := os.Getenv("FMC_PASSWORD")
-	cdfmcToken := os.Getenv("FMC_CDFMCTOKEN")
+	token := os.Getenv("FMC_TOKEN")
 
-	if password == "" && cdfmcToken == "" {
-		t.Fatal("For acceptance tests FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_CDFMCTOKEN) env variables must be set")
+	if password == "" && token == "" {
+		t.Fatal("For acceptance tests FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_TOKEN) env variables must be set")
 	}
 
-	if password != "" && cdfmcToken != "" {
-		t.Fatal("For acceptance tests only one of FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_CDFMCTOKEN) credentials must be set")
+	if password != "" && token != "" {
+		t.Fatal("For acceptance tests only one of FMC (FMC_USERNAME and FMC_PASSWORD) or cdFMC (FMC_TOKEN) credentials must be set")
 	}
 
 	if password != "" && username == "" {

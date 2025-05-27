@@ -48,7 +48,7 @@ type FmcProvider struct {
 type FmcProviderModel struct {
 	Username   types.String `tfsdk:"username"`
 	Password   types.String `tfsdk:"password"`
-	CdfmcToken types.String `tfsdk:"cdfmc_token"`
+	Token      types.String `tfsdk:"token"`
 	URL        types.String `tfsdk:"url"`
 	Insecure   types.Bool   `tfsdk:"insecure"`
 	ReqTimeout types.String `tfsdk:"req_timeout"`
@@ -89,8 +89,8 @@ func (p *FmcProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 				Optional:            true,
 				Sensitive:           true,
 			},
-			"cdfmc_token": schema.StringAttribute{
-				MarkdownDescription: "API token for cdFMC instance. This can also be set as the FMC_CDFMCTOKEN environment variable.",
+			"token": schema.StringAttribute{
+				MarkdownDescription: "API token for cdFMC instance. This can also be set as the FMC_TOKEN environment variable.",
 				Optional:            true,
 				Sensitive:           true,
 			},
@@ -126,7 +126,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
-	//// User must provide (username and password) or (cdfmc_token) to the provider
+	//// User must provide (username and password) or (token) to the provider
 	// Get username
 	var username string
 	if config.Username.IsNull() {
@@ -143,28 +143,28 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		password = config.Password.ValueString()
 	}
 
-	// Get cdfmc_token
-	var cdfmcToken string
-	if config.CdfmcToken.IsNull() {
-		cdfmcToken = os.Getenv("FMC_CDFMCTOKEN")
+	// Get token
+	var token string
+	if config.Token.IsNull() {
+		token = os.Getenv("FMC_TOKEN")
 	} else {
-		cdfmcToken = config.CdfmcToken.ValueString()
+		token = config.Token.ValueString()
 	}
 
 	// Fail if the user didn't provider any credentials
-	if password == "" && cdfmcToken == "" {
+	if password == "" && token == "" {
 		resp.Diagnostics.AddError(
 			"Unable to create client",
-			"Please provide credentials for FMC (username and password) or cdFMC (cdfmc_token)",
+			"Please provide credentials for FMC (username and password) or cdFMC (token)",
 		)
 		return
 	}
 
-	// Fail if the user provided credentials for both FMC and cfFMC
-	if password != "" && cdfmcToken != "" {
+	// Fail if the user provided credentials for both FMC and cdFMC
+	if password != "" && token != "" {
 		resp.Diagnostics.AddError(
 			"Unable to create client",
-			"Cannot use both password and cdfmc_token at the same time",
+			"Cannot use both password and token at the same time",
 		)
 		return
 	}
@@ -285,8 +285,8 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	var c fmc.Client
 	if password != "" {
 		c, err = fmc.NewClient(url, username, password, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
-	} else if cdfmcToken != "" {
-		c, err = fmc.NewClientCDFMC(url, cdfmcToken, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
+	} else if token != "" {
+		c, err = fmc.NewClientCDFMC(url, token, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
 	} else {
 		resp.Diagnostics.AddError(
 			"Unable to create client",
