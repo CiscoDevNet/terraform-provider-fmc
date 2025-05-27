@@ -1,6 +1,7 @@
 ## 2.0.0-beta6 (Unreleased)
 
 - (Enhancement) Add Bridge Group Interface (BVI) support (`fmc_device_bridge_group_interface`)
+- (Fix) Add `ipv4_address_family_id` attribute to `fmc_device_bgp`
 
 ## 2.0.0-beta5
 

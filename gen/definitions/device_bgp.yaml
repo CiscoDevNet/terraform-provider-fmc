@@ -26,6 +26,13 @@ attributes:
     computed: true
     data_source_query: true
 # BGP - IPv4 - General
+  - model_name: id
+    tf_name: ipv4_address_family_id
+    data_path: [addressFamilyIPv4]
+    type: String
+    computed: true
+    computed_body_param: true
+    description: IPv4 Address Family Id
   - model_name: type
     tf_name: ipv4_address_family_type
     data_path: [addressFamilyIPv4]

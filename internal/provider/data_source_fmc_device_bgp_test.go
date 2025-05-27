@@ -37,6 +37,7 @@ func TestAccDataSourceFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "name"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "as_number"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "ipv4_address_family_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "ipv4_address_family_type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_default_information_orginate", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_auto_aummary", "false"))
