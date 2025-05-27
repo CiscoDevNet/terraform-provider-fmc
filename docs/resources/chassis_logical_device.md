@@ -4,19 +4,23 @@ page_title: "fmc_chassis_logical_device Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This resource manages a Chassis Logical Device.
-  This resource will trigger deployment on chassis level to get the logical device created.
+  Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.
+  Newly created device will be auto-registered with FMC.
   Destruction of the resource will de-register deployed device if it is registered to FMC.
-  Adding or removing interfaces from logical device will trigger deployment to the chassis.
+  Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.
   Changing resource profile will not trigger automatic deployment to apply the settings.
+  Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.
 ---
 
 # fmc_chassis_logical_device (Resource)
 
 This resource manages a Chassis Logical Device.
- This resource will trigger deployment on chassis level to get the logical device created.
+ Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.
+ Newly created device will be auto-registered with FMC.
  Destruction of the resource will de-register deployed device if it is registered to FMC.
- Adding or removing interfaces from logical device will trigger deployment to the chassis.
+ Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.
  Changing resource profile will not trigger automatic deployment to apply the settings.
+ Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.
 
 ## Example Usage
 
@@ -29,7 +33,7 @@ resource "fmc_chassis_logical_device" "example" {
   ipv4_netmask          = "255.255.255.0"
   ipv4_gateway          = "10.10.10.1"
   ipv6_address          = "2001:db8::10"
-  ipv6_prefix_length    = 64
+  ipv6_prefix           = 64
   ipv6_gateway          = "2001:db8::1"
   search_domain         = "cisco.com"
   fqdn                  = "my_logical_device.cisco.com"
@@ -57,38 +61,38 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
-- `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
+- `access_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+- `assigned_interfaces` (Attributes Set) Interface assignment for the device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
-- `device_password` (String, Sensitive) Admin password for the logical device.
-- `firewall_mode` (String) Firewall mode of the logical device.
+- `device_password` (String, Sensitive) Admin password for the device.
+- `firewall_mode` (String) Firewall mode of the device.
   - Choices: `ROUTED`, `TRANSPARENT`
-- `ftd_version` (String) Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
-- `name` (String) Name of the logical device.
-- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment.
-- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment.
+- `ftd_version` (String) Version of the device, that should be deployed. Image should be pre-deployed to the chassis.
+- `name` (String) Name of the logical device. This is also a name of the device that will be deployed on the chassis.
+- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
+- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
 
 ### Optional
 
-- `admin_state` (String) Admin state of the logical device.
+- `admin_state` (String) Admin state of the device.
   - Choices: `ENABLED`, `DISABLED`
   - Default value: `ENABLED`
 - `device_group_id` (String) Id of the device group.
-- `dns_servers` (String) DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
+- `dns_servers` (String) DNS servers for the device. Up to three, comma-separated DNS servers can be specified.
 - `domain` (String) Name of the FMC domain
-- `fqdn` (String) Fully qualified domain name (FQDN) of the logical device.
-- `ipv4_address` (String) Management IPv4 address of the logical device.
+- `fqdn` (String) Fully qualified domain name (FQDN) of the device.
+- `ipv4_address` (String) Management IPv4 address of the device.
 - `ipv4_gateway` (String) Gateway for Management IPv4 address.
 - `ipv4_netmask` (String) Netmask of Management IPv4 address.
-- `ipv6_address` (String) Management IPv6 address of the logical device.
+- `ipv6_address` (String) Management IPv6 address of the device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
-- `ipv6_prefix_length` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
+- `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
+- `license_capabilities` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
   - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`
-- `permit_expert_mode` (String) Permit expert mode for the logical device.
+- `permit_expert_mode` (String) Permit expert mode for the device.
   - Choices: `yes`, `no`
 - `platform_settings_id` (String) Id of the platform settings.
-- `search_domain` (String) Search domain for the logical device.
+- `search_domain` (String) Search domain for the device.
 
 ### Read-Only
 
@@ -97,8 +101,8 @@ resource "fmc_chassis_logical_device" "example" {
 - `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
-- `device_id` (String) Id of the device that is deployed.
-- `device_type` (String) Type of the device that is deployed; this value is always 'Device'.
+- `device_id` (String) Id of the device that is deployed as result of this configuration.
+- `device_type` (String) Type of the device that is deployed as result of this configuration; this value is always 'Device'.
 - `id` (String) Id of the object
 - `type` (String) Type of the device; this value is always 'LogicalDevice'.
 

@@ -85,11 +85,11 @@ func (d *ChassisEtherChannelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"ether_channel_id": schema.Int64Attribute{
-				MarkdownDescription: "Value of Ether Channel ID",
+				MarkdownDescription: "Ether Channel ID",
 				Computed:            true,
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the port",
+				MarkdownDescription: "Type of the port.",
 				Computed:            true,
 			},
 			"admin_state": schema.StringAttribute{
@@ -117,11 +117,11 @@ func (d *ChassisEtherChannelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: "Duplex configuraion.",
+				MarkdownDescription: "Interface duplex mode.",
 				Computed:            true,
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: "Speed configuraion.",
+				MarkdownDescription: "Interface speed.",
 				Computed:            true,
 			},
 			"lacp_mode": schema.StringAttribute{

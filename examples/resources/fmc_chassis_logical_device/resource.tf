@@ -6,7 +6,7 @@ resource "fmc_chassis_logical_device" "example" {
   ipv4_netmask          = "255.255.255.0"
   ipv4_gateway          = "10.10.10.1"
   ipv6_address          = "2001:db8::10"
-  ipv6_prefix_length    = 64
+  ipv6_prefix           = 64
   ipv6_gateway          = "2001:db8::1"
   search_domain         = "cisco.com"
   fqdn                  = "my_logical_device.cisco.com"

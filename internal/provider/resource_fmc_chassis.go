@@ -79,7 +79,7 @@ func (r *ChassisResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Chassis name").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Chassis name to be used in FMC.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -100,7 +100,7 @@ func (r *ChassisResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"registration_key": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Registration Key identical to the one previously configured on the device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Registration Key identical to the one previously configured on the chassis.").String,
 				Required:            true,
 			},
 			"device_group_id": schema.StringAttribute{

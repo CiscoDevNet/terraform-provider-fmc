@@ -14,12 +14,12 @@ This resource manages a Chassis Subinterface.
 
 ```terraform
 resource "fmc_chassis_subinterface" "example" {
-  chassis_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  parent_interface_name = "Ethernet1/1"
-  parent_interface_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  sub_interface_id      = 7
-  vlan_id               = 4094
-  port_type             = "DATA"
+  chassis_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  interface_name   = "Ethernet1/1"
+  interface_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  sub_interface_id = 7
+  vlan_id          = 4094
+  port_type        = "DATA"
 }
 ```
 
@@ -29,8 +29,8 @@ resource "fmc_chassis_subinterface" "example" {
 ### Required
 
 - `chassis_id` (String) Id of the parent chassis.
-- `parent_interface_id` (String) Id of the parent interface.
-- `parent_interface_name` (String) Name of the parent interface.
+- `interface_id` (String) Id of the parent interface.
+- `interface_name` (String) Name of the parent interface.
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
   - Range: `0`-`4294967295`
 - `vlan_id` (Number) VLAN identifier, unique per the parent interface.
@@ -39,14 +39,14 @@ resource "fmc_chassis_subinterface" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `port_type` (String) Type of the port
+- `port_type` (String) Type of the port.
   - Choices: `DATA`, `DATA_SHARING`
 
 ### Read-Only
 
 - `id` (String) Id of the object
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id`.
-- `type` (String) Type of the object, this is always 'SubInterface'.
+- `type` (String) Type of the object; this value is always 'SubInterface'.
 
 ## Import
 

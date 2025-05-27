@@ -48,7 +48,7 @@ type ChassisLogicalDevice struct {
 	Ipv4Netmask         types.String                             `tfsdk:"ipv4_netmask"`
 	Ipv4Gateway         types.String                             `tfsdk:"ipv4_gateway"`
 	Ipv6Address         types.String                             `tfsdk:"ipv6_address"`
-	Ipv6PrefixLength    types.Int64                              `tfsdk:"ipv6_prefix_length"`
+	Ipv6Prefix          types.Int64                              `tfsdk:"ipv6_prefix"`
 	Ipv6Gateway         types.String                             `tfsdk:"ipv6_gateway"`
 	SearchDomain        types.String                             `tfsdk:"search_domain"`
 	Fqdn                types.String                             `tfsdk:"fqdn"`
@@ -115,8 +115,8 @@ func (data ChassisLogicalDevice) toBody(ctx context.Context, state ChassisLogica
 	if !data.Ipv6Address.IsNull() {
 		body, _ = sjson.Set(body, "managementBootstrap.ipv6.ip", data.Ipv6Address.ValueString())
 	}
-	if !data.Ipv6PrefixLength.IsNull() {
-		body, _ = sjson.Set(body, "managementBootstrap.ipv6.prefixLength", data.Ipv6PrefixLength.ValueInt64())
+	if !data.Ipv6Prefix.IsNull() {
+		body, _ = sjson.Set(body, "managementBootstrap.ipv6.prefixLength", data.Ipv6Prefix.ValueInt64())
 	}
 	if !data.Ipv6Gateway.IsNull() {
 		body, _ = sjson.Set(body, "managementBootstrap.ipv6.gateway", data.Ipv6Gateway.ValueString())
@@ -226,9 +226,9 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 		data.Ipv6Address = types.StringNull()
 	}
 	if value := res.Get("managementBootstrap.ipv6.prefixLength"); value.Exists() {
-		data.Ipv6PrefixLength = types.Int64Value(value.Int())
+		data.Ipv6Prefix = types.Int64Value(value.Int())
 	} else {
-		data.Ipv6PrefixLength = types.Int64Null()
+		data.Ipv6Prefix = types.Int64Null()
 	}
 	if value := res.Get("managementBootstrap.ipv6.gateway"); value.Exists() {
 		data.Ipv6Gateway = types.StringValue(value.String())
@@ -385,10 +385,10 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 	} else {
 		data.Ipv6Address = types.StringNull()
 	}
-	if value := res.Get("managementBootstrap.ipv6.prefixLength"); value.Exists() && !data.Ipv6PrefixLength.IsNull() {
-		data.Ipv6PrefixLength = types.Int64Value(value.Int())
+	if value := res.Get("managementBootstrap.ipv6.prefixLength"); value.Exists() && !data.Ipv6Prefix.IsNull() {
+		data.Ipv6Prefix = types.Int64Value(value.Int())
 	} else {
-		data.Ipv6PrefixLength = types.Int64Null()
+		data.Ipv6Prefix = types.Int64Null()
 	}
 	if value := res.Get("managementBootstrap.ipv6.gateway"); value.Exists() && !data.Ipv6Gateway.IsNull() {
 		data.Ipv6Gateway = types.StringValue(value.String())

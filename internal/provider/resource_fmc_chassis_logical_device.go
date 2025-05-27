@@ -67,7 +67,7 @@ func (r *ChassisLogicalDeviceResource) Metadata(ctx context.Context, req resourc
 func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.\n This resource will trigger deployment on chassis level to get the logical device created.\n Destruction of the resource will de-register deployed device if it is registered to FMC.\n Adding or removing interfaces from logical device will trigger deployment to the chassis.\n Changing resource profile will not trigger automatic deployment to apply the settings.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Logical Device.\n Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.\n Newly created device will be auto-registered with FMC.\n Destruction of the resource will de-register deployed device if it is registered to FMC.\n Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.\n Changing resource profile will not trigger automatic deployment to apply the settings.\n Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -99,35 +99,35 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the device that is deployed.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the device that is deployed as result of this configuration.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"device_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the device that is deployed; this value is always 'Device'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the device that is deployed as result of this configuration; this value is always 'Device'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the logical device. This is also a name of the device that will be deployed on the chassis.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ftd_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Version of the device, that should be deployed. Image should be pre-deployed to the chassis.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ipv4_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Management IPv4 address of the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Management IPv4 address of the device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -148,13 +148,13 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"ipv6_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Management IPv6 address of the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Management IPv6 address of the device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"ipv6_prefix_length": schema.Int64Attribute{
+			"ipv6_prefix": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Prefix length of Management IPv6 address.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.Int64{
@@ -169,21 +169,21 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"search_domain": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Search domain for the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Search domain for the device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"fqdn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Fully qualified domain name (FQDN) of the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Fully qualified domain name (FQDN) of the device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"firewall_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Firewall mode of the logical device.").AddStringEnumDescription("ROUTED", "TRANSPARENT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Firewall mode of the device.").AddStringEnumDescription("ROUTED", "TRANSPARENT").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ROUTED", "TRANSPARENT"),
@@ -193,14 +193,14 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"dns_servers": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("DNS servers for the device. Up to three, comma-separated DNS servers can be specified.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"device_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Admin password for the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Admin password for the device.").String,
 				Required:            true,
 				Sensitive:           true,
 				PlanModifiers: []planmodifier.String{
@@ -208,7 +208,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				},
 			},
 			"admin_state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Admin state of the logical device.").AddStringEnumDescription("ENABLED", "DISABLED").AddDefaultValueDescription("ENABLED").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Admin state of the device.").AddStringEnumDescription("ENABLED", "DISABLED").AddDefaultValueDescription("ENABLED").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -217,22 +217,22 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Default: stringdefault.StaticString("ENABLED"),
 			},
 			"permit_expert_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Permit expert mode for the logical device.").AddStringEnumDescription("yes", "no").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Permit expert mode for the device.").AddStringEnumDescription("yes", "no").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("yes", "no"),
 				},
 			},
 			"resource_profile_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the resource profile. Changing resource profile will trigger instance restart on deployment.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.").String,
 				Required:            true,
 			},
 			"resource_profile_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the resource profile. Changing resource profile will trigger instance restart on deployment.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.").String,
 				Required:            true,
 			},
 			"assigned_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface assignment for the logical device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface assignment for the device.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -248,7 +248,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.").String,
 				Required:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
@@ -256,7 +256,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 				Validators: []validator.Set{

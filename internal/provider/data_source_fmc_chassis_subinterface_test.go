@@ -71,8 +71,8 @@ variable "chassis_id" { default = null } // tests will set $TF_VAR_chassis_id
 func testAccDataSourceFmcChassisSubinterfaceConfig() string {
 	config := `resource "fmc_chassis_subinterface" "test" {` + "\n"
 	config += `	chassis_id = var.chassis_id` + "\n"
-	config += `	parent_interface_name = data.fmc_device_physical_interface.test.name` + "\n"
-	config += `	parent_interface_id = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_id = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	sub_interface_id = 7` + "\n"
 	config += `	vlan_id = 4094` + "\n"
 	config += `	port_type = "DATA"` + "\n"
@@ -90,8 +90,8 @@ func testAccDataSourceFmcChassisSubinterfaceConfig() string {
 func testAccNamedDataSourceFmcChassisSubinterfaceConfig() string {
 	config := `resource "fmc_chassis_subinterface" "test" {` + "\n"
 	config += `	chassis_id = var.chassis_id` + "\n"
-	config += `	parent_interface_name = data.fmc_device_physical_interface.test.name` + "\n"
-	config += `	parent_interface_id = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_id = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	sub_interface_id = 7` + "\n"
 	config += `	vlan_id = 4094` + "\n"
 	config += `	port_type = "DATA"` + "\n"

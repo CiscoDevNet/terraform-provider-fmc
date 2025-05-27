@@ -25,12 +25,12 @@ data "fmc_chassis" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Chassis name
+- `name` (String) Chassis name to be used in FMC.
 
 ### Read-Only
 
 - `device_group_id` (String) Id of the device group the chassis should belong to.
 - `host_name` (String) Hostname or IP address of the chassis.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
-- `registration_key` (String) Registration Key identical to the one previously configured on the device.
+- `registration_key` (String) Registration Key identical to the one previously configured on the chassis.
 - `type` (String) Type of the device; this value is always 'FMCManagedChassis'.

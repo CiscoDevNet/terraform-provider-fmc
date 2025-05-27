@@ -85,7 +85,7 @@ func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req dat
 				Computed:            true,
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the port",
+				MarkdownDescription: "Type of the port.",
 				Computed:            true,
 			},
 			"admin_state": schema.StringAttribute{
@@ -97,15 +97,15 @@ func (d *ChassisPhysicalInterfaceDataSource) Schema(ctx context.Context, req dat
 				Computed:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: "Duplex configuraion.",
+				MarkdownDescription: "Interface duplex mode.",
 				Computed:            true,
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: "Speed configuraion.",
+				MarkdownDescription: "Interface speed.",
 				Computed:            true,
 			},
 			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: "Forward Error Correction (FEC) mode",
+				MarkdownDescription: "Forward Error Correction (FEC) mode.",
 				Computed:            true,
 			},
 		},

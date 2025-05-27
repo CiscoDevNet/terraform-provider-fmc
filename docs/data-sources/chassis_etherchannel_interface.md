@@ -36,13 +36,13 @@ data "fmc_chassis_etherchannel_interface" "example" {
 
 - `admin_state` (String) Administrative state of the interface.
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
-- `duplex` (String) Duplex configuraion.
-- `ether_channel_id` (Number) Value of Ether Channel ID
+- `duplex` (String) Interface duplex mode.
+- `ether_channel_id` (Number) Ether Channel ID
 - `lacp_mode` (String) Link Aggregation Control Protocol (LACP) mode.
 - `lacp_rate` (String) Link Aggregation Control Protocol (LACP) rate.
-- `port_type` (String) Type of the port
+- `port_type` (String) Type of the port.
 - `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
-- `speed` (String) Speed configuraion.
+- `speed` (String) Interface speed.
 - `type` (String) Type of the object, this is always 'EtherChannelInterface'.
 
 <a id="nestedatt--selected_interfaces"></a>

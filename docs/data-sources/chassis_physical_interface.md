@@ -36,8 +36,8 @@ data "fmc_chassis_physical_interface" "example" {
 
 - `admin_state` (String) Administrative state of the interface.
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
-- `duplex` (String) Duplex configuraion.
-- `fec_mode` (String) Forward Error Correction (FEC) mode
-- `port_type` (String) Type of the port
-- `speed` (String) Speed configuraion.
+- `duplex` (String) Interface duplex mode.
+- `fec_mode` (String) Forward Error Correction (FEC) mode.
+- `port_type` (String) Type of the port.
+- `speed` (String) Interface speed.
 - `type` (String) Type of the resource, This value is always 'PhysicalInterface'.

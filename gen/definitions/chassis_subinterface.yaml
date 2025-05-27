@@ -14,11 +14,11 @@ attributes:
   - model_name: type
     type: String
     value: SubInterface
-    description: Type of the object, this is always 'SubInterface'.
+    description: Type of the object; this value is always 'SubInterface'.
   - model_name: type
     type: String
     computed: true
-    description: Type of the object, this is always 'SubInterface'.
+    description: Type of the object; this value is always 'SubInterface'.
   - model_name: name
     type: String
     computed: true
@@ -27,7 +27,7 @@ attributes:
     data_source_query: true
   - model_name: name
     data_path: [parentInterface]
-    tf_name: parent_interface_name
+    tf_name: interface_name
     type: String
     mandatory: true
     requires_replace: true
@@ -36,7 +36,7 @@ attributes:
     test_value: data.fmc_device_physical_interface.test.name
   - model_name: id
     data_path: [parentInterface]
-    tf_name: parent_interface_id
+    tf_name: interface_id
     type: String
     mandatory: true
     requires_replace: true
@@ -61,7 +61,7 @@ attributes:
     max_int: 4094
   - model_name: portType
     type: String
-    description: Type of the port
+    description: Type of the port.
     enum_values: [DATA, DATA_SHARING]
     example: DATA
 

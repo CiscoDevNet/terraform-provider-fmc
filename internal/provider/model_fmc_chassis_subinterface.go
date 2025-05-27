@@ -33,16 +33,16 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type ChassisSubinterface struct {
-	Id                  types.String `tfsdk:"id"`
-	Domain              types.String `tfsdk:"domain"`
-	ChassisId           types.String `tfsdk:"chassis_id"`
-	Type                types.String `tfsdk:"type"`
-	Name                types.String `tfsdk:"name"`
-	ParentInterfaceName types.String `tfsdk:"parent_interface_name"`
-	ParentInterfaceId   types.String `tfsdk:"parent_interface_id"`
-	SubInterfaceId      types.Int64  `tfsdk:"sub_interface_id"`
-	VlanId              types.Int64  `tfsdk:"vlan_id"`
-	PortType            types.String `tfsdk:"port_type"`
+	Id             types.String `tfsdk:"id"`
+	Domain         types.String `tfsdk:"domain"`
+	ChassisId      types.String `tfsdk:"chassis_id"`
+	Type           types.String `tfsdk:"type"`
+	Name           types.String `tfsdk:"name"`
+	InterfaceName  types.String `tfsdk:"interface_name"`
+	InterfaceId    types.String `tfsdk:"interface_id"`
+	SubInterfaceId types.Int64  `tfsdk:"sub_interface_id"`
+	VlanId         types.Int64  `tfsdk:"vlan_id"`
+	PortType       types.String `tfsdk:"port_type"`
 }
 
 // End of section. //template:end types
@@ -67,11 +67,11 @@ func (data ChassisSubinterface) toBody(ctx context.Context, state ChassisSubinte
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	body, _ = sjson.Set(body, "type", "SubInterface")
-	if !data.ParentInterfaceName.IsNull() {
-		body, _ = sjson.Set(body, "parentInterface.name", data.ParentInterfaceName.ValueString())
+	if !data.InterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "parentInterface.name", data.InterfaceName.ValueString())
 	}
-	if !data.ParentInterfaceId.IsNull() {
-		body, _ = sjson.Set(body, "parentInterface.id", data.ParentInterfaceId.ValueString())
+	if !data.InterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "parentInterface.id", data.InterfaceId.ValueString())
 	}
 	if !data.SubInterfaceId.IsNull() {
 		body, _ = sjson.Set(body, "subIntfId", data.SubInterfaceId.ValueInt64())
@@ -101,14 +101,14 @@ func (data *ChassisSubinterface) fromBody(ctx context.Context, res gjson.Result)
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("parentInterface.name"); value.Exists() {
-		data.ParentInterfaceName = types.StringValue(value.String())
+		data.InterfaceName = types.StringValue(value.String())
 	} else {
-		data.ParentInterfaceName = types.StringNull()
+		data.InterfaceName = types.StringNull()
 	}
 	if value := res.Get("parentInterface.id"); value.Exists() {
-		data.ParentInterfaceId = types.StringValue(value.String())
+		data.InterfaceId = types.StringValue(value.String())
 	} else {
-		data.ParentInterfaceId = types.StringNull()
+		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("subIntfId"); value.Exists() {
 		data.SubInterfaceId = types.Int64Value(value.Int())
@@ -146,15 +146,15 @@ func (data *ChassisSubinterface) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("parentInterface.name"); value.Exists() && !data.ParentInterfaceName.IsNull() {
-		data.ParentInterfaceName = types.StringValue(value.String())
+	if value := res.Get("parentInterface.name"); value.Exists() && !data.InterfaceName.IsNull() {
+		data.InterfaceName = types.StringValue(value.String())
 	} else {
-		data.ParentInterfaceName = types.StringNull()
+		data.InterfaceName = types.StringNull()
 	}
-	if value := res.Get("parentInterface.id"); value.Exists() && !data.ParentInterfaceId.IsNull() {
-		data.ParentInterfaceId = types.StringValue(value.String())
+	if value := res.Get("parentInterface.id"); value.Exists() && !data.InterfaceId.IsNull() {
+		data.InterfaceId = types.StringValue(value.String())
 	} else {
-		data.ParentInterfaceId = types.StringNull()
+		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("subIntfId"); value.Exists() && !data.SubInterfaceId.IsNull() {
 		data.SubInterfaceId = types.Int64Value(value.Int())

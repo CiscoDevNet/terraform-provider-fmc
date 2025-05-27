@@ -100,7 +100,7 @@ func (r *ChassisPhysicalInterfaceResource) Schema(ctx context.Context, req resou
 				Required:            true,
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the port").AddStringEnumDescription("DATA", "DATA_SHARING").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DATA", "DATA_SHARING"),
@@ -120,21 +120,21 @@ func (r *ChassisPhysicalInterfaceResource) Schema(ctx context.Context, req resou
 				Optional:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Duplex configuraion.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface duplex mode.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "FULL", "HALF"),
 				},
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Speed configuraion.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface speed.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP"),
 				},
 			},
 			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Forward Error Correction (FEC) mode").AddStringEnumDescription("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Forward Error Correction (FEC) mode.").AddStringEnumDescription("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE"),

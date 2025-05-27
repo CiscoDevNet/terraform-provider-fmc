@@ -9,7 +9,7 @@ attributes:
     tf_name: name
     type: String
     mandatory: true
-    description: Chassis name
+    description: Chassis name to be used in FMC.
     data_source_query: true
     example: my_chassis
     requires_replace: true
@@ -34,7 +34,7 @@ attributes:
     tf_name: registration_key
     type: String
     mandatory: true
-    description: Registration Key identical to the one previously configured on the device.
+    description: Registration Key identical to the one previously configured on the chassis.
     example: key1
     write_only: true
     test_value: var.chassis_registration_key

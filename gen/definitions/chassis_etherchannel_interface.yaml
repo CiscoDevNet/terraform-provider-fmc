@@ -29,13 +29,13 @@ attributes:
     type: Int64
     mandatory: true
     example: 10
-    description: Value of Ether Channel ID
+    description: Ether Channel ID
     min_int: 1
     max_int: 48
     requires_replace: true
   - model_name: portType
     type: String
-    description: Type of the port
+    description: Type of the port.
     enum_values: [DATA, DATA_SHARING]
     example: DATA
   - model_name: adminState
@@ -70,14 +70,14 @@ attributes:
   - model_name: duplex
     type: String
     data_path: [hardware]
-    description: Duplex configuraion.
+    description: Interface duplex mode.
     enum_values: [AUTO, FULL, HALF]
     exclude_example: true
     exclude_test: true
   - model_name: speed
     type: String
     data_path: [hardware]
-    description: Speed configuraion.
+    description: Interface speed.
     enum_values: [ AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP ]
     mandatory: true
     example: AUTO

@@ -43,7 +43,7 @@ func TestAccFmcChassisLogicalDevice(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv4_netmask", "255.255.255.0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv4_gateway", "10.10.10.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv6_address", "2001:db8::10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv6_prefix_length", "64"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv6_prefix", "64"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "ipv6_gateway", "2001:db8::1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "search_domain", "cisco.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis_logical_device.test", "fqdn", "my_logical_device.cisco.com"))
@@ -117,7 +117,7 @@ func testAccFmcChassisLogicalDeviceConfig_all() string {
 	config += `	ipv4_netmask = "255.255.255.0"` + "\n"
 	config += `	ipv4_gateway = "10.10.10.1"` + "\n"
 	config += `	ipv6_address = "2001:db8::10"` + "\n"
-	config += `	ipv6_prefix_length = 64` + "\n"
+	config += `	ipv6_prefix = 64` + "\n"
 	config += `	ipv6_gateway = "2001:db8::1"` + "\n"
 	config += `	search_domain = "cisco.com"` + "\n"
 	config += `	fqdn = "my_logical_device.cisco.com"` + "\n"

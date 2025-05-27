@@ -34,9 +34,9 @@ data "fmc_chassis_subinterface" "example" {
 
 ### Read-Only
 
-- `parent_interface_id` (String) Id of the parent interface.
-- `parent_interface_name` (String) Name of the parent interface.
-- `port_type` (String) Type of the port
+- `interface_id` (String) Id of the parent interface.
+- `interface_name` (String) Name of the parent interface.
+- `port_type` (String) Type of the port.
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
-- `type` (String) Type of the object, this is always 'SubInterface'.
+- `type` (String) Type of the object; this value is always 'SubInterface'.
 - `vlan_id` (Number) VLAN identifier, unique per the parent interface.

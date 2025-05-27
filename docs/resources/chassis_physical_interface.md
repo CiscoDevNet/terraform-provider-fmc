@@ -29,7 +29,7 @@ resource "fmc_chassis_physical_interface" "example" {
 
 - `chassis_id` (String) Id of the parent chassis.
 - `name` (String) Name of the interface; it must already be present on the chassis.
-- `speed` (String) Speed configuraion.
+- `speed` (String) Interface speed.
   - Choices: `AUTO`, `TEN_MBPS`, `HUNDRED_MBPS`, `ONE_GBPS`, `TEN_GBPS`, `TWENTY_FIVE_GBPS`, `FORTY_GBPS`, `HUNDRED_GBPS`, `TWO_HUNDRED_GBPS`, `FOUR_HUNDRED_GBPS`, `DETECT_SFP`
 
 ### Optional
@@ -39,11 +39,11 @@ resource "fmc_chassis_physical_interface" "example" {
   - Default value: `ENABLED`
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `domain` (String) Name of the FMC domain
-- `duplex` (String) Duplex configuraion.
+- `duplex` (String) Interface duplex mode.
   - Choices: `AUTO`, `FULL`, `HALF`
-- `fec_mode` (String) Forward Error Correction (FEC) mode
+- `fec_mode` (String) Forward Error Correction (FEC) mode.
   - Choices: `AUTO`, `CL108RS`, `CL74FC`, `CL91RS`, `DISABLE`
-- `port_type` (String) Type of the port
+- `port_type` (String) Type of the port.
   - Choices: `DATA`, `DATA_SHARING`
 
 ### Read-Only

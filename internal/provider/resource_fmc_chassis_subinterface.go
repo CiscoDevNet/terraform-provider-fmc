@@ -89,7 +89,7 @@ func (r *ChassisSubinterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object, this is always 'SubInterface'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SubInterface'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -102,14 +102,14 @@ func (r *ChassisSubinterfaceResource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"parent_interface_name": schema.StringAttribute{
+			"interface_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"parent_interface_id": schema.StringAttribute{
+			"interface_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
@@ -134,7 +134,7 @@ func (r *ChassisSubinterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the port").AddStringEnumDescription("DATA", "DATA_SHARING").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DATA", "DATA_SHARING"),

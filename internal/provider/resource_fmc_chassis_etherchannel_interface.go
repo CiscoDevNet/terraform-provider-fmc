@@ -104,7 +104,7 @@ func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req r
 				},
 			},
 			"ether_channel_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value of Ether Channel ID").AddIntegerRangeDescription(1, 48).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Ether Channel ID").AddIntegerRangeDescription(1, 48).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 48),
@@ -114,7 +114,7 @@ func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req r
 				},
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the port").AddStringEnumDescription("DATA", "DATA_SHARING").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DATA", "DATA_SHARING"),
@@ -150,14 +150,14 @@ func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req r
 				Optional:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Duplex configuraion.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface duplex mode.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "FULL", "HALF"),
 				},
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Speed configuraion.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface speed.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP"),

@@ -36,9 +36,9 @@ resource "fmc_chassis_etherchannel_interface" "example" {
 ### Required
 
 - `chassis_id` (String) Id of the parent chassis.
-- `ether_channel_id` (Number) Value of Ether Channel ID
+- `ether_channel_id` (Number) Ether Channel ID
   - Range: `1`-`48`
-- `speed` (String) Speed configuraion.
+- `speed` (String) Interface speed.
   - Choices: `AUTO`, `TEN_MBPS`, `HUNDRED_MBPS`, `ONE_GBPS`, `TEN_GBPS`, `TWENTY_FIVE_GBPS`, `FORTY_GBPS`, `HUNDRED_GBPS`, `TWO_HUNDRED_GBPS`, `FOUR_HUNDRED_GBPS`, `DETECT_SFP`
 
 ### Optional
@@ -48,13 +48,13 @@ resource "fmc_chassis_etherchannel_interface" "example" {
   - Default value: `ENABLED`
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `domain` (String) Name of the FMC domain
-- `duplex` (String) Duplex configuraion.
+- `duplex` (String) Interface duplex mode.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `lacp_mode` (String) Link Aggregation Control Protocol (LACP) mode.
   - Choices: `ACTIVE`, `ON`, `PASSIVE`
 - `lacp_rate` (String) Link Aggregation Control Protocol (LACP) rate.
   - Choices: `DEFAULT`, `FAST`, `NORMAL`
-- `port_type` (String) Type of the port
+- `port_type` (String) Type of the port.
   - Choices: `DATA`, `DATA_SHARING`
 - `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
 

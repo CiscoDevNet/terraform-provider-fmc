@@ -26,8 +26,8 @@ resource "fmc_chassis" "example" {
 ### Required
 
 - `host_name` (String) Hostname or IP address of the chassis.
-- `name` (String) Chassis name
-- `registration_key` (String) Registration Key identical to the one previously configured on the device.
+- `name` (String) Chassis name to be used in FMC.
+- `registration_key` (String) Registration Key identical to the one previously configured on the chassis.
 
 ### Optional
 

@@ -76,7 +76,7 @@ func (d *ChassisSubinterfaceDataSource) Schema(ctx context.Context, req datasour
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object, this is always 'SubInterface'.",
+				MarkdownDescription: "Type of the object; this value is always 'SubInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -84,11 +84,11 @@ func (d *ChassisSubinterfaceDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 				Computed:            true,
 			},
-			"parent_interface_name": schema.StringAttribute{
+			"interface_name": schema.StringAttribute{
 				MarkdownDescription: "Name of the parent interface.",
 				Computed:            true,
 			},
-			"parent_interface_id": schema.StringAttribute{
+			"interface_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the parent interface.",
 				Computed:            true,
 			},
@@ -101,7 +101,7 @@ func (d *ChassisSubinterfaceDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"port_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the port",
+				MarkdownDescription: "Type of the port.",
 				Computed:            true,
 			},
 		},

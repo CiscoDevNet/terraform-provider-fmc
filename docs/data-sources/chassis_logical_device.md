@@ -30,38 +30,38 @@ data "fmc_chassis_logical_device" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the logical device.
+- `name` (String) Name of the logical device. This is also a name of the device that will be deployed on the chassis.
 
 ### Read-Only
 
-- `access_policy_id` (String) Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.
-- `admin_state` (String) Admin state of the logical device.
-- `assigned_interfaces` (Attributes Set) Interface assignment for the logical device. (see [below for nested schema](#nestedatt--assigned_interfaces))
+- `access_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+- `admin_state` (String) Admin state of the device.
+- `assigned_interfaces` (Attributes Set) Interface assignment for the device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `container_id` (String) Id of the parent container. Empty if device is Standalone.
 - `container_name` (String) Name of the parent container. Empty if device is Standalone.
 - `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
 - `container_status` (String) Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
-- `device_id` (String) Id of the device that is deployed.
-- `device_password` (String, Sensitive) Admin password for the logical device.
-- `device_type` (String) Type of the device that is deployed; this value is always 'Device'.
-- `dns_servers` (String) DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.
-- `firewall_mode` (String) Firewall mode of the logical device.
-- `fqdn` (String) Fully qualified domain name (FQDN) of the logical device.
-- `ftd_version` (String) Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.
-- `ipv4_address` (String) Management IPv4 address of the logical device.
+- `device_id` (String) Id of the device that is deployed as result of this configuration.
+- `device_password` (String, Sensitive) Admin password for the device.
+- `device_type` (String) Type of the device that is deployed as result of this configuration; this value is always 'Device'.
+- `dns_servers` (String) DNS servers for the device. Up to three, comma-separated DNS servers can be specified.
+- `firewall_mode` (String) Firewall mode of the device.
+- `fqdn` (String) Fully qualified domain name (FQDN) of the device.
+- `ftd_version` (String) Version of the device, that should be deployed. Image should be pre-deployed to the chassis.
+- `ipv4_address` (String) Management IPv4 address of the device.
 - `ipv4_gateway` (String) Gateway for Management IPv4 address.
 - `ipv4_netmask` (String) Netmask of Management IPv4 address.
-- `ipv6_address` (String) Management IPv6 address of the logical device.
+- `ipv6_address` (String) Management IPv6 address of the device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
-- `ipv6_prefix_length` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.
-- `permit_expert_mode` (String) Permit expert mode for the logical device.
+- `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
+- `license_capabilities` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+- `permit_expert_mode` (String) Permit expert mode for the device.
 - `platform_settings_id` (String) Id of the platform settings.
-- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment.
-- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment.
-- `search_domain` (String) Search domain for the logical device.
+- `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
+- `resource_profile_name` (String) Name of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
+- `search_domain` (String) Search domain for the device.
 - `type` (String) Type of the device; this value is always 'LogicalDevice'.
 
 <a id="nestedatt--assigned_interfaces"></a>

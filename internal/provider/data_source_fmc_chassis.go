@@ -72,7 +72,7 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Chassis name",
+				MarkdownDescription: "Chassis name to be used in FMC.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -85,7 +85,7 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed:            true,
 			},
 			"registration_key": schema.StringAttribute{
-				MarkdownDescription: "Registration Key identical to the one previously configured on the device.",
+				MarkdownDescription: "Registration Key identical to the one previously configured on the chassis.",
 				Computed:            true,
 			},
 			"device_group_id": schema.StringAttribute{

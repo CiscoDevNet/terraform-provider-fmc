@@ -80,24 +80,24 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"device_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the device that is deployed.",
+				MarkdownDescription: "Id of the device that is deployed as result of this configuration.",
 				Computed:            true,
 			},
 			"device_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the device that is deployed; this value is always 'Device'.",
+				MarkdownDescription: "Type of the device that is deployed as result of this configuration; this value is always 'Device'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the logical device.",
+				MarkdownDescription: "Name of the logical device. This is also a name of the device that will be deployed on the chassis.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"ftd_version": schema.StringAttribute{
-				MarkdownDescription: "Version of the logical device, that should be deployed. Image should be pre-deployed to the chassis.",
+				MarkdownDescription: "Version of the device, that should be deployed. Image should be pre-deployed to the chassis.",
 				Computed:            true,
 			},
 			"ipv4_address": schema.StringAttribute{
-				MarkdownDescription: "Management IPv4 address of the logical device.",
+				MarkdownDescription: "Management IPv4 address of the device.",
 				Computed:            true,
 			},
 			"ipv4_netmask": schema.StringAttribute{
@@ -109,10 +109,10 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "Management IPv6 address of the logical device.",
+				MarkdownDescription: "Management IPv6 address of the device.",
 				Computed:            true,
 			},
-			"ipv6_prefix_length": schema.Int64Attribute{
+			"ipv6_prefix": schema.Int64Attribute{
 				MarkdownDescription: "Prefix length of Management IPv6 address.",
 				Computed:            true,
 			},
@@ -121,44 +121,44 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"search_domain": schema.StringAttribute{
-				MarkdownDescription: "Search domain for the logical device.",
+				MarkdownDescription: "Search domain for the device.",
 				Computed:            true,
 			},
 			"fqdn": schema.StringAttribute{
-				MarkdownDescription: "Fully qualified domain name (FQDN) of the logical device.",
+				MarkdownDescription: "Fully qualified domain name (FQDN) of the device.",
 				Computed:            true,
 			},
 			"firewall_mode": schema.StringAttribute{
-				MarkdownDescription: "Firewall mode of the logical device.",
+				MarkdownDescription: "Firewall mode of the device.",
 				Computed:            true,
 			},
 			"dns_servers": schema.StringAttribute{
-				MarkdownDescription: "DNS servers for the logical device. Up to three, comma-separated DNS servers can be specified.",
+				MarkdownDescription: "DNS servers for the device. Up to three, comma-separated DNS servers can be specified.",
 				Computed:            true,
 			},
 			"device_password": schema.StringAttribute{
-				MarkdownDescription: "Admin password for the logical device.",
+				MarkdownDescription: "Admin password for the device.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"admin_state": schema.StringAttribute{
-				MarkdownDescription: "Admin state of the logical device.",
+				MarkdownDescription: "Admin state of the device.",
 				Computed:            true,
 			},
 			"permit_expert_mode": schema.StringAttribute{
-				MarkdownDescription: "Permit expert mode for the logical device.",
+				MarkdownDescription: "Permit expert mode for the device.",
 				Computed:            true,
 			},
 			"resource_profile_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the resource profile. Changing resource profile will trigger instance restart on deployment.",
+				MarkdownDescription: "Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.",
 				Computed:            true,
 			},
 			"resource_profile_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the resource profile. Changing resource profile will trigger instance restart on deployment.",
+				MarkdownDescription: "Name of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.",
 				Computed:            true,
 			},
 			"assigned_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: "Interface assignment for the logical device.",
+				MarkdownDescription: "Interface assignment for the device.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -174,7 +174,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Access Control Policy to be assigned to the logical device. This is used only as bootstrap configuration.",
+				MarkdownDescription: "Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.",
 				Computed:            true,
 			},
 			"platform_settings_id": schema.StringAttribute{
@@ -182,7 +182,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				Computed:            true,
 			},
 			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: "Array of strings representing the license capabilities on the managed device. This is used only as bootstrap configuration.",
+				MarkdownDescription: "License capabilities to be assigned to the device. This is used only as bootstrap configuration.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
