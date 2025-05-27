@@ -34,6 +34,7 @@ data "fmc_device_bgp" "example" {
 
 ### Read-Only
 
+- `ipv4_address_family_id` (String) IPv4 Address Family Id
 - `ipv4_address_family_type` (String) IPv4 Address Family Type
 - `ipv4_aggregate_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
 - `ipv4_auto_aummary` (Boolean) Summarize subnet routes into network level routes

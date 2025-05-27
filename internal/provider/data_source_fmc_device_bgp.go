@@ -88,6 +88,10 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 				Computed:            true,
 			},
+			"ipv4_address_family_id": schema.StringAttribute{
+				MarkdownDescription: "IPv4 Address Family Id",
+				Computed:            true,
+			},
 			"ipv4_address_family_type": schema.StringAttribute{
 				MarkdownDescription: "IPv4 Address Family Type",
 				Computed:            true,

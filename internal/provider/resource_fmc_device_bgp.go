@@ -111,6 +111,13 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"ipv4_address_family_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Address Family Id").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
 			"ipv4_address_family_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Address Family Type").String,
 				Computed:            true,
