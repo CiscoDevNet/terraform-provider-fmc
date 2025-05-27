@@ -73,7 +73,7 @@ func (r *DeviceResource) Metadata(ctx context.Context, req resource.MetadataRequ
 func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device. This resource is not supported in cdFMC - to register the device in cdFMC, please use Security Cloud Control API instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -204,6 +204,11 @@ func (r *DeviceResource) Configure(_ context.Context, req resource.ConfigureRequ
 // End of section. //template:end model
 
 func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	if r.client.IsCDFMC {
+		resp.Diagnostics.AddError("Client Error", "UnsupportedVersion: Device resource is not supported in cdFMC. To register the device, please use Security Cloud Control API instead.")
+		return
+	}
+
 	var plan Device
 	// time to wait for time-based loops
 	const atom time.Duration = 5 * time.Second

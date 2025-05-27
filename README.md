@@ -2,7 +2,7 @@
 
 # Terraform Provider FMC
 
-The FMC provider provides resources to interact with a Cisco Secure FMC (Firewall Management Center) instance. It communicates with FMC via the REST API.
+The FMC provider provides resources to interact with a Cisco Secure Firewall Management Center (FMC) and Cloud-Delivered FMC (cdFMC) instances. It communicates with FMC via the REST API.
 
 Resources and data sources have been tested with the following releases.
 
@@ -11,6 +11,8 @@ Resources and data sources have been tested with the following releases.
 | FMC      | 7.2     |
 | FMC      | 7.4     |
 | FMC      | 7.6     |
+| FMC      | 7.7     |
+| cdFMC    |         |
 
 Please note that resources and data sources support depends on FMC version.
 
@@ -49,7 +51,7 @@ Then commit the changes to `go.mod` and `go.sum`.
 
 This Terraform Provider is available to install automatically via `terraform init`. If you're building the provider, follow the instructions to
 [install it as a plugin.](https://www.terraform.io/docs/plugins/basics.html#installing-a-plugin)
-After placing it into your plugins directory,  run `terraform init` to initialize it.
+After placing it into your plugins directory, run `terraform init` to initialize it.
 
 Additional documentation, including available resources and their arguments/attributes can be found on the [Terraform documentation website](https://registry.terraform.io/providers/CiscoDevNet/fmc/latest/docs).
 

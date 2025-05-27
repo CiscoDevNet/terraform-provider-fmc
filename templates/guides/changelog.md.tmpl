@@ -9,12 +9,13 @@ description: |-
 
 ## 2.0.0-beta6 (Unreleased)
 
+- (Enhancement) Add cdFMC (Cloud-Delivered FMC) and FMC 7.7 support
 - (Enhancement) Add Bridge Group Interface (BVI) support (`fmc_device_bridge_group_interface`)
 - (Fix) Add `ipv4_address_family_id` attribute to `fmc_device_bgp`
 
 ## 2.0.0-beta5
 
-- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`.
+- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`
 
 ## 2.0.0-beta4
 

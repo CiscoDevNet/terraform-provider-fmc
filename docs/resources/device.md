@@ -3,12 +3,12 @@
 page_title: "fmc_device Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages a Device.
+  This resource manages a Device. This resource is not supported in cdFMC - to register the device in cdFMC, please use Security Cloud Control API instead.
 ---
 
 # fmc_device (Resource)
 
-This resource manages a Device.
+This resource manages a Device. This resource is not supported in cdFMC - to register the device in cdFMC, please use Security Cloud Control API instead.
 
 ## Example Usage
 
