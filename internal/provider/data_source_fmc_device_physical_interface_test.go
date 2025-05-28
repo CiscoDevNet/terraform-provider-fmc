@@ -39,7 +39,7 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "description", "my description"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mode", "NONE"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mtu", "9000"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "mtu", "1400"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
 	resource.Test(t, resource.TestCase{
@@ -80,7 +80,7 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
-	config += `	mtu = 9000` + "\n"
+	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"
@@ -104,7 +104,7 @@ func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
 	config += `	name = "GigabitEthernet0/1"` + "\n"
-	config += `	mtu = 9000` + "\n"
+	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ipv6_enable_ra = false` + "\n"

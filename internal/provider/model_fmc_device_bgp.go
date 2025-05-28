@@ -41,6 +41,7 @@ type DeviceBGP struct {
 	Name                                types.String                      `tfsdk:"name"`
 	Type                                types.String                      `tfsdk:"type"`
 	AsNumber                            types.String                      `tfsdk:"as_number"`
+	Ipv4AddressFamilyId                 types.String                      `tfsdk:"ipv4_address_family_id"`
 	Ipv4AddressFamilyType               types.String                      `tfsdk:"ipv4_address_family_type"`
 	Ipv4LearnedRouteMapId               types.String                      `tfsdk:"ipv4_learned_route_map_id"`
 	Ipv4DefaultInformationOrginate      types.Bool                        `tfsdk:"ipv4_default_information_orginate"`
@@ -176,6 +177,9 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.Ipv4AddressFamilyId.IsNull() && !data.Ipv4AddressFamilyId.IsUnknown() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.id", data.Ipv4AddressFamilyId.ValueString())
 	}
 	if !data.Ipv4LearnedRouteMapId.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.aftableMap.id", data.Ipv4LearnedRouteMapId.ValueString())
@@ -494,6 +498,11 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.AsNumber = types.StringValue(value.String())
 	} else {
 		data.AsNumber = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.id"); value.Exists() {
+		data.Ipv4AddressFamilyId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressFamilyId = types.StringNull()
 	}
 	if value := res.Get("addressFamilyIPv4.type"); value.Exists() {
 		data.Ipv4AddressFamilyType = types.StringValue(value.String())
@@ -990,6 +999,11 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.AsNumber = types.StringValue(value.String())
 	} else {
 		data.AsNumber = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.id"); value.Exists() && !data.Ipv4AddressFamilyId.IsNull() {
+		data.Ipv4AddressFamilyId = types.StringValue(value.String())
+	} else {
+		data.Ipv4AddressFamilyId = types.StringNull()
 	}
 	if value := res.Get("addressFamilyIPv4.type"); value.Exists() && !data.Ipv4AddressFamilyType.IsNull() {
 		data.Ipv4AddressFamilyType = types.StringValue(value.String())
@@ -1779,6 +1793,13 @@ func (data *DeviceBGP) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 			data.AsNumber = types.StringValue(value.String())
 		} else {
 			data.AsNumber = types.StringNull()
+		}
+	}
+	if data.Ipv4AddressFamilyId.IsUnknown() {
+		if value := res.Get("addressFamilyIPv4.id"); value.Exists() {
+			data.Ipv4AddressFamilyId = types.StringValue(value.String())
+		} else {
+			data.Ipv4AddressFamilyId = types.StringNull()
 		}
 	}
 	if data.Ipv4AddressFamilyType.IsUnknown() {

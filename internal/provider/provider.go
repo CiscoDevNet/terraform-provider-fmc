@@ -48,6 +48,7 @@ type FmcProvider struct {
 type FmcProviderModel struct {
 	Username   types.String `tfsdk:"username"`
 	Password   types.String `tfsdk:"password"`
+	Token      types.String `tfsdk:"token"`
 	URL        types.String `tfsdk:"url"`
 	Insecure   types.Bool   `tfsdk:"insecure"`
 	ReqTimeout types.String `tfsdk:"req_timeout"`
@@ -88,8 +89,13 @@ func (p *FmcProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 				Optional:            true,
 				Sensitive:           true,
 			},
+			"token": schema.StringAttribute{
+				MarkdownDescription: "API token for cdFMC instance. This can also be set as the FMC_TOKEN environment variable.",
+				Optional:            true,
+				Sensitive:           true,
+			},
 			"url": schema.StringAttribute{
-				MarkdownDescription: "URL of the Cisco FMC instance. This can also be set as the FMC_URL environment variable.",
+				MarkdownDescription: "URL of the Cisco FMC or cdFMC instance. This can also be set as the FMC_URL environment variable.",
 				Optional:            true,
 			},
 			"insecure": schema.BoolAttribute{
@@ -120,54 +126,54 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
-	// User must provide a username to the provider
+	//// User must provide (username and password) or (token) to the provider
+	// Get username
 	var username string
-	if config.Username.IsUnknown() {
-		// Cannot connect to client with an unknown value
-		resp.Diagnostics.AddWarning(
-			"Unable to create client",
-			"Cannot use unknown value as username",
-		)
-		return
-	}
-
 	if config.Username.IsNull() {
 		username = os.Getenv("FMC_USERNAME")
 	} else {
 		username = config.Username.ValueString()
 	}
 
-	if username == "" {
-		// Error vs warning - empty value must stop execution
-		resp.Diagnostics.AddError(
-			"Unable to find username",
-			"Username cannot be an empty string",
-		)
-		return
-	}
-
-	// User must provide a password to the provider
+	// Get password
 	var password string
-	if config.Password.IsUnknown() {
-		// Cannot connect to client with an unknown value
-		resp.Diagnostics.AddWarning(
-			"Unable to create client",
-			"Cannot use unknown value as password",
-		)
-		return
-	}
-
 	if config.Password.IsNull() {
 		password = os.Getenv("FMC_PASSWORD")
 	} else {
 		password = config.Password.ValueString()
 	}
 
-	if password == "" {
-		// Error vs warning - empty value must stop execution
+	// Get token
+	var token string
+	if config.Token.IsNull() {
+		token = os.Getenv("FMC_TOKEN")
+	} else {
+		token = config.Token.ValueString()
+	}
+
+	// Fail if the user didn't provider any credentials
+	if password == "" && token == "" {
 		resp.Diagnostics.AddError(
-			"Unable to find password",
-			"Password cannot be an empty string",
+			"Unable to create client",
+			"Please provide credentials for FMC (username and password) or cdFMC (token)",
+		)
+		return
+	}
+
+	// Fail if the user provided credentials for both FMC and cdFMC
+	if password != "" && token != "" {
+		resp.Diagnostics.AddError(
+			"Unable to create client",
+			"Cannot use both password and token at the same time",
+		)
+		return
+	}
+
+	// Fail if the user provided `password` but not `username`
+	if password != "" && username == "" {
+		resp.Diagnostics.AddError(
+			"Unable to create client",
+			"Username and password need to be provided for FMC",
 		)
 		return
 	}
@@ -275,8 +281,19 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		"  retries=", retries,
 	))
 
-	// Create a new FMC client and set it to the provider client
-	c, err := fmc.NewClient(url, username, password, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
+	// Create a new FMC or cdFMC client and set it to the provider client
+	var c fmc.Client
+	if password != "" {
+		c, err = fmc.NewClient(url, username, password, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
+	} else if token != "" {
+		c, err = fmc.NewClientCDFMC(url, token, fmc.Insecure(insecure), fmc.MaxRetries(int(retries)), fmc.RequestTimeout(reqTimeout))
+	} else {
+		resp.Diagnostics.AddError(
+			"Unable to create client",
+			"Failed to determine target device type (FMC/cdFMC)",
+		)
+		return
+	}
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to create client",

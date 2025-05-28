@@ -3,10 +3,12 @@
 - (Enhancement) Add support for Resource Profile (`fmc_resource_profiles`) resource and data source
 - (Enhancement) Add support for multi-instance (`fmc_chassis_*`) resources and data sources. Tune `fmc_device_subinterface` and `fmc_device_etherchannel_interface` to support multi-instance logical devices.
 - (Enhancement) Add support for Bridge Group Interface (BVI)  (`fmc_device_bridge_group_interface`)
+- (Enhancement) Add cdFMC (Cloud-Delivered FMC) and FMC 7.7 support
+- (Fix) Add `ipv4_address_family_id` attribute to `fmc_device_bgp`
 
 ## 2.0.0-beta5
 
-- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`.
+- (Fix) Add `type` attribute to `Device VNI Interface` and `Device VTEP Policy`
 
 ## 2.0.0-beta4
 
