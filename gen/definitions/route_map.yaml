@@ -1,6 +1,9 @@
 ---
 ### TODO IPv4 Prefix Lists
 ####      IPv6 Prefix Lists
+#### BGP AS PATH
+#### BGP Community List
+#### BGP Policy List
 name: Route Map
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/routemaps
 doc_category: Objects
@@ -92,3 +95,82 @@ attributes:
             mandatory: true
             description: ID of the IPv4 ACL.
             example: 0050568A-4E02-1ed3-0000-004294969199
+      # Match clauses - IPv6 Addresses
+      - model_name: ipv6AccessListAddresses
+        type: List
+        description: List of IPv6 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+      - model_name: ipv6AccessListNextHops
+        type: List
+        description: List of IPv6 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+      - model_name: ipv6AccessListRouteSources
+        type: List
+        description: List of IPv6 Access Control Lists (ACL) to match.
+        attributes:
+          - model_name: id
+            type: String
+            mandatory: true
+            id: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+          - model_name: type
+            type: String
+            mandatory: true
+            description: ID of the IPv6 ACL.
+            example: 0050568A-4E02-1ed3-0000-004294969199
+      # Match clauses - Other
+      - model_name: metricRouteValues
+        type: List
+        element_type: Int64
+        description: List of metric values to match.
+      - model_name: tagValues
+        type: List
+        element_type: Int64
+        description: Tag values.
+      - model_name: routeTypeExternal1
+        type: Bool
+        description: Match external type 1 routes.
+        example: "true"
+      - model_name: routeTypeExternal2
+        type: Bool
+        description: Match external type 2 routes.
+        example: "true"
+      - model_name: routeTypeInternal
+        type: Bool
+        description: Match internal routes.
+        example: "true"
+      - model_name: routeTypeLocal
+        type: Bool
+        description: Match local routes.
+        example: "true"
+      - model_name: routeTypeNSSAExternal1
+        type: Bool
+        description: Match NSSA external type 1 routes.
+        example: "true"
+      - model_name: routeTypeNSSAExternal2
+        type: Bool
+        description: Match NSSA external type 2 routes.
+        example: "true"

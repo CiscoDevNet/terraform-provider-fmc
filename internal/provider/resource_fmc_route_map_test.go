@@ -43,6 +43,20 @@ func TestAccFmcRouteMap(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_next_hops.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_addresses.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_addresses.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_next_hops.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_next_hops.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_route_sources.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_route_sources.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.metric_route_values.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.tag_values.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_external1", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_external2", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_internal", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_local", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_n_s_s_a_external1", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_n_s_s_a_external2", "true"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -111,6 +125,26 @@ func testAccFmcRouteMapConfig_all() string {
 	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
 	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
 	config += `		}]` + "\n"
+	config += `		ipv6_access_list_addresses = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv6_access_list_next_hops = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		ipv6_access_list_route_sources = [{` + "\n"
+	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		}]` + "\n"
+	config += `		metric_route_values = []` + "\n"
+	config += `		tag_values = []` + "\n"
+	config += `		route_type_external1 = true` + "\n"
+	config += `		route_type_external2 = true` + "\n"
+	config += `		route_type_internal = true` + "\n"
+	config += `		route_type_local = true` + "\n"
+	config += `		route_type_n_s_s_a_external1 = true` + "\n"
+	config += `		route_type_n_s_s_a_external2 = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

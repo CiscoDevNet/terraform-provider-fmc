@@ -24,6 +24,7 @@ import (
 	"slices"
 	"strconv"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -50,6 +51,17 @@ type RouteMapEntries struct {
 	Ipv4AccessListAddresses    []RouteMapEntriesIpv4AccessListAddresses    `tfsdk:"ipv4_access_list_addresses"`
 	Ipv4AccessListNextHops     []RouteMapEntriesIpv4AccessListNextHops     `tfsdk:"ipv4_access_list_next_hops"`
 	Ipv4AccessListRouteSources []RouteMapEntriesIpv4AccessListRouteSources `tfsdk:"ipv4_access_list_route_sources"`
+	Ipv6AccessListAddresses    []RouteMapEntriesIpv6AccessListAddresses    `tfsdk:"ipv6_access_list_addresses"`
+	Ipv6AccessListNextHops     []RouteMapEntriesIpv6AccessListNextHops     `tfsdk:"ipv6_access_list_next_hops"`
+	Ipv6AccessListRouteSources []RouteMapEntriesIpv6AccessListRouteSources `tfsdk:"ipv6_access_list_route_sources"`
+	MetricRouteValues          types.List                                  `tfsdk:"metric_route_values"`
+	TagValues                  types.List                                  `tfsdk:"tag_values"`
+	RouteTypeExternal1         types.Bool                                  `tfsdk:"route_type_external1"`
+	RouteTypeExternal2         types.Bool                                  `tfsdk:"route_type_external2"`
+	RouteTypeInternal          types.Bool                                  `tfsdk:"route_type_internal"`
+	RouteTypeLocal             types.Bool                                  `tfsdk:"route_type_local"`
+	RouteTypeNSSAExternal1     types.Bool                                  `tfsdk:"route_type_n_s_s_a_external1"`
+	RouteTypeNSSAExternal2     types.Bool                                  `tfsdk:"route_type_n_s_s_a_external2"`
 }
 
 type RouteMapEntriesSecurityZones struct {
@@ -64,6 +76,18 @@ type RouteMapEntriesIpv4AccessListNextHops struct {
 	Type types.String `tfsdk:"type"`
 }
 type RouteMapEntriesIpv4AccessListRouteSources struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+}
+type RouteMapEntriesIpv6AccessListAddresses struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+}
+type RouteMapEntriesIpv6AccessListNextHops struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
+}
+type RouteMapEntriesIpv6AccessListRouteSources struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
@@ -153,6 +177,73 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "ipv4AccessListRouteSources.-1", itemChildBody)
 				}
+			}
+			if len(item.Ipv6AccessListAddresses) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "ipv6AccessListAddresses", []interface{}{})
+				for _, childItem := range item.Ipv6AccessListAddresses {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "ipv6AccessListAddresses.-1", itemChildBody)
+				}
+			}
+			if len(item.Ipv6AccessListNextHops) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "ipv6AccessListNextHops", []interface{}{})
+				for _, childItem := range item.Ipv6AccessListNextHops {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "ipv6AccessListNextHops.-1", itemChildBody)
+				}
+			}
+			if len(item.Ipv6AccessListRouteSources) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "ipv6AccessListRouteSources", []interface{}{})
+				for _, childItem := range item.Ipv6AccessListRouteSources {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "ipv6AccessListRouteSources.-1", itemChildBody)
+				}
+			}
+			if !item.MetricRouteValues.IsNull() {
+				var values []int64
+				item.MetricRouteValues.ElementsAs(ctx, &values, false)
+				itemBody, _ = sjson.Set(itemBody, "metricRouteValues", values)
+			}
+			if !item.TagValues.IsNull() {
+				var values []int64
+				item.TagValues.ElementsAs(ctx, &values, false)
+				itemBody, _ = sjson.Set(itemBody, "tagValues", values)
+			}
+			if !item.RouteTypeExternal1.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeExternal1", item.RouteTypeExternal1.ValueBool())
+			}
+			if !item.RouteTypeExternal2.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeExternal2", item.RouteTypeExternal2.ValueBool())
+			}
+			if !item.RouteTypeInternal.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeInternal", item.RouteTypeInternal.ValueBool())
+			}
+			if !item.RouteTypeLocal.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeLocal", item.RouteTypeLocal.ValueBool())
+			}
+			if !item.RouteTypeNSSAExternal1.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeNSSAExternal1", item.RouteTypeNSSAExternal1.ValueBool())
+			}
+			if !item.RouteTypeNSSAExternal2.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeTypeNSSAExternal2", item.RouteTypeNSSAExternal2.ValueBool())
 			}
 			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
 		}
@@ -266,6 +357,103 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 					return true
 				})
 			}
+			if value := res.Get("ipv6AccessListAddresses"); value.Exists() {
+				data.Ipv6AccessListAddresses = make([]RouteMapEntriesIpv6AccessListAddresses, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := RouteMapEntriesIpv6AccessListAddresses{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					(*parent).Ipv6AccessListAddresses = append((*parent).Ipv6AccessListAddresses, data)
+					return true
+				})
+			}
+			if value := res.Get("ipv6AccessListNextHops"); value.Exists() {
+				data.Ipv6AccessListNextHops = make([]RouteMapEntriesIpv6AccessListNextHops, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := RouteMapEntriesIpv6AccessListNextHops{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					(*parent).Ipv6AccessListNextHops = append((*parent).Ipv6AccessListNextHops, data)
+					return true
+				})
+			}
+			if value := res.Get("ipv6AccessListRouteSources"); value.Exists() {
+				data.Ipv6AccessListRouteSources = make([]RouteMapEntriesIpv6AccessListRouteSources, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := RouteMapEntriesIpv6AccessListRouteSources{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					(*parent).Ipv6AccessListRouteSources = append((*parent).Ipv6AccessListRouteSources, data)
+					return true
+				})
+			}
+			if value := res.Get("metricRouteValues"); value.Exists() {
+				data.MetricRouteValues = helpers.GetInt64List(value.Array())
+			} else {
+				data.MetricRouteValues = types.ListNull(types.Int64Type)
+			}
+			if value := res.Get("tagValues"); value.Exists() {
+				data.TagValues = helpers.GetInt64List(value.Array())
+			} else {
+				data.TagValues = types.ListNull(types.Int64Type)
+			}
+			if value := res.Get("routeTypeExternal1"); value.Exists() {
+				data.RouteTypeExternal1 = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeExternal1 = types.BoolNull()
+			}
+			if value := res.Get("routeTypeExternal2"); value.Exists() {
+				data.RouteTypeExternal2 = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeExternal2 = types.BoolNull()
+			}
+			if value := res.Get("routeTypeInternal"); value.Exists() {
+				data.RouteTypeInternal = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeInternal = types.BoolNull()
+			}
+			if value := res.Get("routeTypeLocal"); value.Exists() {
+				data.RouteTypeLocal = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeLocal = types.BoolNull()
+			}
+			if value := res.Get("routeTypeNSSAExternal1"); value.Exists() {
+				data.RouteTypeNSSAExternal1 = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeNSSAExternal1 = types.BoolNull()
+			}
+			if value := res.Get("routeTypeNSSAExternal2"); value.Exists() {
+				data.RouteTypeNSSAExternal2 = types.BoolValue(value.Bool())
+			} else {
+				data.RouteTypeNSSAExternal2 = types.BoolNull()
+			}
 			(*parent).Entries = append((*parent).Entries, data)
 			return true
 		})
@@ -297,8 +485,8 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	for i := 0; i < len(data.Entries); i++ {
-		keys := [...]string{"sequence", "action"}
-		keyValues := [...]string{strconv.FormatInt(data.Entries[i].SequenceNumber.ValueInt64(), 10), data.Entries[i].Action.ValueString()}
+		keys := [...]string{"sequence", "action", "routeTypeExternal1", "routeTypeExternal2", "routeTypeInternal", "routeTypeLocal", "routeTypeNSSAExternal1", "routeTypeNSSAExternal2"}
+		keyValues := [...]string{strconv.FormatInt(data.Entries[i].SequenceNumber.ValueInt64(), 10), data.Entries[i].Action.ValueString(), strconv.FormatBool(data.Entries[i].RouteTypeExternal1.ValueBool()), strconv.FormatBool(data.Entries[i].RouteTypeExternal2.ValueBool()), strconv.FormatBool(data.Entries[i].RouteTypeInternal.ValueBool()), strconv.FormatBool(data.Entries[i].RouteTypeLocal.ValueBool()), strconv.FormatBool(data.Entries[i].RouteTypeNSSAExternal1.ValueBool()), strconv.FormatBool(data.Entries[i].RouteTypeNSSAExternal2.ValueBool())}
 
 		parent := &data
 		data := (*parent).Entries[i]
@@ -528,6 +716,190 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				data.Type = types.StringNull()
 			}
 			(*parent).Ipv4AccessListRouteSources[i] = data
+		}
+		for i := 0; i < len(data.Ipv6AccessListAddresses); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Ipv6AccessListAddresses[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Ipv6AccessListAddresses[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("ipv6AccessListAddresses").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Ipv6AccessListAddresses[%d] = %+v",
+					i,
+					(*parent).Ipv6AccessListAddresses[i],
+				))
+				(*parent).Ipv6AccessListAddresses = slices.Delete((*parent).Ipv6AccessListAddresses, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			(*parent).Ipv6AccessListAddresses[i] = data
+		}
+		for i := 0; i < len(data.Ipv6AccessListNextHops); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Ipv6AccessListNextHops[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Ipv6AccessListNextHops[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("ipv6AccessListNextHops").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Ipv6AccessListNextHops[%d] = %+v",
+					i,
+					(*parent).Ipv6AccessListNextHops[i],
+				))
+				(*parent).Ipv6AccessListNextHops = slices.Delete((*parent).Ipv6AccessListNextHops, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			(*parent).Ipv6AccessListNextHops[i] = data
+		}
+		for i := 0; i < len(data.Ipv6AccessListRouteSources); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Ipv6AccessListRouteSources[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Ipv6AccessListRouteSources[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("ipv6AccessListRouteSources").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Ipv6AccessListRouteSources[%d] = %+v",
+					i,
+					(*parent).Ipv6AccessListRouteSources[i],
+				))
+				(*parent).Ipv6AccessListRouteSources = slices.Delete((*parent).Ipv6AccessListRouteSources, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			(*parent).Ipv6AccessListRouteSources[i] = data
+		}
+		if value := res.Get("metricRouteValues"); value.Exists() && !data.MetricRouteValues.IsNull() {
+			data.MetricRouteValues = helpers.GetInt64List(value.Array())
+		} else {
+			data.MetricRouteValues = types.ListNull(types.Int64Type)
+		}
+		if value := res.Get("tagValues"); value.Exists() && !data.TagValues.IsNull() {
+			data.TagValues = helpers.GetInt64List(value.Array())
+		} else {
+			data.TagValues = types.ListNull(types.Int64Type)
+		}
+		if value := res.Get("routeTypeExternal1"); value.Exists() && !data.RouteTypeExternal1.IsNull() {
+			data.RouteTypeExternal1 = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeExternal1 = types.BoolNull()
+		}
+		if value := res.Get("routeTypeExternal2"); value.Exists() && !data.RouteTypeExternal2.IsNull() {
+			data.RouteTypeExternal2 = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeExternal2 = types.BoolNull()
+		}
+		if value := res.Get("routeTypeInternal"); value.Exists() && !data.RouteTypeInternal.IsNull() {
+			data.RouteTypeInternal = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeInternal = types.BoolNull()
+		}
+		if value := res.Get("routeTypeLocal"); value.Exists() && !data.RouteTypeLocal.IsNull() {
+			data.RouteTypeLocal = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeLocal = types.BoolNull()
+		}
+		if value := res.Get("routeTypeNSSAExternal1"); value.Exists() && !data.RouteTypeNSSAExternal1.IsNull() {
+			data.RouteTypeNSSAExternal1 = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeNSSAExternal1 = types.BoolNull()
+		}
+		if value := res.Get("routeTypeNSSAExternal2"); value.Exists() && !data.RouteTypeNSSAExternal2.IsNull() {
+			data.RouteTypeNSSAExternal2 = types.BoolValue(value.Bool())
+		} else {
+			data.RouteTypeNSSAExternal2 = types.BoolNull()
 		}
 		(*parent).Entries[i] = data
 	}

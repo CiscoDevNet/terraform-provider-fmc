@@ -170,6 +170,88 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								},
 							},
 						},
+						"ipv6_access_list_addresses": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
+						"ipv6_access_list_next_hops": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
+						"ipv6_access_list_route_sources": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
+						"metric_route_values": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of metric values to match.").String,
+							ElementType:         types.Int64Type,
+							Optional:            true,
+						},
+						"tag_values": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Tag values.").String,
+							ElementType:         types.Int64Type,
+							Optional:            true,
+						},
+						"route_type_external1": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match external type 1 routes.").String,
+							Optional:            true,
+						},
+						"route_type_external2": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match external type 2 routes.").String,
+							Optional:            true,
+						},
+						"route_type_internal": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match internal routes.").String,
+							Optional:            true,
+						},
+						"route_type_local": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match local routes.").String,
+							Optional:            true,
+						},
+						"route_type_n_s_s_a_external1": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match NSSA external type 1 routes.").String,
+							Optional:            true,
+						},
+						"route_type_n_s_s_a_external2": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match NSSA external type 2 routes.").String,
+							Optional:            true,
+						},
 					},
 				},
 			},

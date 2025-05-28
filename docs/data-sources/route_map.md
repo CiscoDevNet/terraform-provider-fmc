@@ -42,8 +42,19 @@ Read-Only:
 - `ipv4_access_list_addresses` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_addresses))
 - `ipv4_access_list_next_hops` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_next_hops))
 - `ipv4_access_list_route_sources` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_route_sources))
+- `ipv6_access_list_addresses` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_addresses))
+- `ipv6_access_list_next_hops` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_next_hops))
+- `ipv6_access_list_route_sources` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_route_sources))
+- `metric_route_values` (List of Number) List of metric values to match.
+- `route_type_external1` (Boolean) Match external type 1 routes.
+- `route_type_external2` (Boolean) Match external type 2 routes.
+- `route_type_internal` (Boolean) Match internal routes.
+- `route_type_local` (Boolean) Match local routes.
+- `route_type_n_s_s_a_external1` (Boolean) Match NSSA external type 1 routes.
+- `route_type_n_s_s_a_external2` (Boolean) Match NSSA external type 2 routes.
 - `security_zones` (Attributes List) List of interfaces or security zones to match. (see [below for nested schema](#nestedatt--entries--security_zones))
 - `sequence_number` (Number) Sequence number of the route map entry.
+- `tag_values` (List of Number) Tag values.
 
 <a id="nestedatt--entries--ipv4_access_list_addresses"></a>
 ### Nested Schema for `entries.ipv4_access_list_addresses`
@@ -70,6 +81,33 @@ Read-Only:
 
 - `id` (String) ID of the IPv4 ACL.
 - `type` (String) ID of the IPv4 ACL.
+
+
+<a id="nestedatt--entries--ipv6_access_list_addresses"></a>
+### Nested Schema for `entries.ipv6_access_list_addresses`
+
+Read-Only:
+
+- `id` (String) ID of the IPv6 ACL.
+- `type` (String) ID of the IPv6 ACL.
+
+
+<a id="nestedatt--entries--ipv6_access_list_next_hops"></a>
+### Nested Schema for `entries.ipv6_access_list_next_hops`
+
+Read-Only:
+
+- `id` (String) ID of the IPv6 ACL.
+- `type` (String) ID of the IPv6 ACL.
+
+
+<a id="nestedatt--entries--ipv6_access_list_route_sources"></a>
+### Nested Schema for `entries.ipv6_access_list_route_sources`
+
+Read-Only:
+
+- `id` (String) ID of the IPv6 ACL.
+- `type` (String) ID of the IPv6 ACL.
 
 
 <a id="nestedatt--entries--security_zones"></a>

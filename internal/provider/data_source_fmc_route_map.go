@@ -157,6 +157,88 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 						},
+						"ipv6_access_list_addresses": schema.ListNestedAttribute{
+							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"ipv6_access_list_next_hops": schema.ListNestedAttribute{
+							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"ipv6_access_list_route_sources": schema.ListNestedAttribute{
+							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "ID of the IPv6 ACL.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"metric_route_values": schema.ListAttribute{
+							MarkdownDescription: "List of metric values to match.",
+							ElementType:         types.Int64Type,
+							Computed:            true,
+						},
+						"tag_values": schema.ListAttribute{
+							MarkdownDescription: "Tag values.",
+							ElementType:         types.Int64Type,
+							Computed:            true,
+						},
+						"route_type_external1": schema.BoolAttribute{
+							MarkdownDescription: "Match external type 1 routes.",
+							Computed:            true,
+						},
+						"route_type_external2": schema.BoolAttribute{
+							MarkdownDescription: "Match external type 2 routes.",
+							Computed:            true,
+						},
+						"route_type_internal": schema.BoolAttribute{
+							MarkdownDescription: "Match internal routes.",
+							Computed:            true,
+						},
+						"route_type_local": schema.BoolAttribute{
+							MarkdownDescription: "Match local routes.",
+							Computed:            true,
+						},
+						"route_type_n_s_s_a_external1": schema.BoolAttribute{
+							MarkdownDescription: "Match NSSA external type 1 routes.",
+							Computed:            true,
+						},
+						"route_type_n_s_s_a_external2": schema.BoolAttribute{
+							MarkdownDescription: "Match NSSA external type 2 routes.",
+							Computed:            true,
+						},
 					},
 				},
 			},
