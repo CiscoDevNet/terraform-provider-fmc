@@ -1,0 +1,55 @@
+---
+name: Chassis
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis
+doc_category: Devices
+test_tags: [TF_VAR_chassis_registration_key]
+attributes:
+  # General
+  - model_name: chassisName
+    tf_name: name
+    type: String
+    mandatory: true
+    description: Chassis name to be used in FMC.
+    data_source_query: true
+    example: my_chassis
+    requires_replace: true
+  # type is set twice on purpose - to make sure this is part of POST request and to make it computed field
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'FMCManagedChassis'.
+    value: Device
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'FMCManagedChassis'.
+    computed: true
+  - model_name: chassisHostName
+    type: String
+    tf_name: host_name
+    description: Hostname or IP address of the chassis.
+    mandatory: true
+    example: 10.0.0.1
+    test_value: var.chassis_addr
+    requires_replace: true
+  - model_name: regKey
+    tf_name: registration_key
+    type: String
+    mandatory: true
+    description: Registration Key identical to the one previously configured on the chassis.
+    example: key1
+    write_only: true
+    test_value: var.chassis_registration_key
+  - model_name: id
+    tf_name: device_group_id
+    data_path: [deviceGroup]
+    type: String
+    description: Id of the device group the chassis should belong to.
+    exclude_example: true
+    exclude_test: true
+  - model_name: natID
+    tf_name: nat_id
+    type: String
+    description: (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
+    write_only: true
+    exclude_example: true
+    exclude_test: true
+    requires_replace: true

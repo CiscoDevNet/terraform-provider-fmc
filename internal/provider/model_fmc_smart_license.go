@@ -96,7 +96,7 @@ func (data *SmartLicense) fromBody(ctx context.Context, res gjson.Result) {
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *SmartLicense) fromBodyPartial(ctx context.Context, res gjson.Result) {
-	if value := res.Get("regStatus"); value.Exists() && !data.RegistrationStatus.IsNull() {
+	if value := res.Get("regStatus"); value.Exists() {
 		data.RegistrationStatus = types.StringValue(value.String())
 	} else {
 		data.RegistrationStatus = types.StringNull()

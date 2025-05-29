@@ -134,6 +134,7 @@ resource "fmc_device_etherchannel_interface" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
+- `is_multi_instance` (Boolean) Is parent device multi-instance.
 - `name` (String) Name of the interface; it must already be present on the device.
 - `type` (String) Type of the object.
 

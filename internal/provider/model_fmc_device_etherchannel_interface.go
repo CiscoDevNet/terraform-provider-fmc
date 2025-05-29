@@ -40,6 +40,7 @@ type DeviceEtherChannelInterface struct {
 	Domain                                types.String                                                `tfsdk:"domain"`
 	DeviceId                              types.String                                                `tfsdk:"device_id"`
 	Type                                  types.String                                                `tfsdk:"type"`
+	IsMultiInstance                       types.Bool                                                  `tfsdk:"is_multi_instance"`
 	LogicalName                           types.String                                                `tfsdk:"logical_name"`
 	Enabled                               types.Bool                                                  `tfsdk:"enabled"`
 	ManagementOnly                        types.Bool                                                  `tfsdk:"management_only"`
@@ -432,6 +433,11 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("dummy_is_multi_instance"); value.Exists() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
 	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
@@ -873,6 +879,11 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("dummy_is_multi_instance"); value.Exists() && !data.IsMultiInstance.IsNull() {
+		data.IsMultiInstance = types.BoolValue(value.Bool())
+	} else {
+		data.IsMultiInstance = types.BoolNull()
 	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())
@@ -1460,6 +1471,13 @@ func (data *DeviceEtherChannelInterface) fromBodyUnknowns(ctx context.Context, r
 			data.Type = types.StringNull()
 		}
 	}
+	if data.IsMultiInstance.IsUnknown() {
+		if value := res.Get("dummy_is_multi_instance"); value.Exists() {
+			data.IsMultiInstance = types.BoolValue(value.Bool())
+		} else {
+			data.IsMultiInstance = types.BoolNull()
+		}
+	}
 	if data.Name.IsUnknown() {
 		if value := res.Get("name"); value.Exists() {
 			data.Name = types.StringValue(value.String())
@@ -1478,3 +1496,16 @@ func (data *DeviceEtherChannelInterface) fromBodyUnknowns(ctx context.Context, r
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
 
 // End of section. //template:end toBodyNonBulk
+
+// toBodyPutDelete generates minimal required body to reset the resource to its default state.
+func (data DeviceEtherChannelInterface) toBodyPutDelete(ctx context.Context) string {
+	body := ""
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	if data.LogicalName.ValueString() != "" {
+		body, _ = sjson.Set(body, "ifname", data.LogicalName.ValueString())
+	}
+	body, _ = sjson.Set(body, "mode", "NONE")
+	body, _ = sjson.Set(body, "etherChannelId", data.EtherChannelId.ValueString())
+	body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	return body
+}

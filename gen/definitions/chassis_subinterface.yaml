@@ -1,0 +1,69 @@
+---
+name: Chassis Subinterface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/subinterfaces
+doc_category: Devices
+test_tags: [TF_VAR_chassis_id, TF_VAR_chassis_interface_name]
+attributes:
+  - tf_name: chassis_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent chassis.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.chassis_id
+  - model_name: type
+    type: String
+    value: SubInterface
+    description: Type of the object; this value is always 'SubInterface'.
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object; this value is always 'SubInterface'.
+  - model_name: name
+    type: String
+    computed: true
+    description: Name of the subinterface in format `interface_name.subinterface_id`.
+    example: Ethernet1/1.7
+    data_source_query: true
+  - model_name: name
+    data_path: [parentInterface]
+    tf_name: interface_name
+    type: String
+    mandatory: true
+    requires_replace: true
+    description: Name of the parent interface.
+    example: Ethernet1/1
+    test_value: data.fmc_device_physical_interface.test.name
+  - model_name: id
+    data_path: [parentInterface]
+    tf_name: interface_id
+    type: String
+    mandatory: true
+    requires_replace: true
+    description: Id of the parent interface.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: data.fmc_device_physical_interface.test.name
+  - model_name: subIntfId
+    tf_name: sub_interface_id
+    type: Int64
+    description: The numerical id of this subinterface, unique on the parent interface.
+    mandatory: true
+    requires_replace: true
+    example: 7
+    min_int: 0
+    max_int: 4294967295
+  - model_name: vlanId
+    type: Int64
+    description: VLAN identifier, unique per the parent interface.
+    mandatory: true
+    example: 4094
+    min_int: 1
+    max_int: 4094
+  - model_name: portType
+    type: String
+    description: Type of the port.
+    enum_values: [DATA, DATA_SHARING]
+    example: DATA
+
+test_prerequisites: |-
+  variable "chassis_id" { default = null } // tests will set $TF_VAR_chassis_id

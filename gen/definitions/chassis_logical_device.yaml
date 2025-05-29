@@ -1,0 +1,236 @@
+---
+name: Chassis Logical Device
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/logicaldevices
+doc_category: Devices
+res_description: >-
+  This resource manages a Chassis Logical Device.\n
+  Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.\n
+  Newly created device will be auto-registered with FMC.\n
+  Destruction of the resource will de-register deployed device if it is registered to FMC and remove it from chassis.\n
+  Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.\n
+  Changing resource profile will not trigger automatic deployment to apply the settings.\n
+  Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.
+test_tags: [TF_VAR_chassis_id]
+attributes:
+  # General
+  - tf_name: chassis_id
+    type: String
+    reference: true
+    description: Id of the parent chassis.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.chassis_id
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'LogicalDevice'.
+    value: LogicalDevice
+  - model_name: type
+    type: String
+    description: Type of the device; this value is always 'LogicalDevice'.
+    computed: true
+  - model_name: id
+    data_path: [metadata, deviceRecordDetails]
+    tf_name: device_id
+    type: String
+    description: Id of the device that is deployed as result of this configuration.
+    computed: true
+  - model_name: type
+    data_path: [metadata, deviceRecordDetails]
+    tf_name: device_type
+    type: String
+    description: Type of the device that is deployed as result of this configuration; this value is always 'Device'.
+    computed: true
+  # Instance Configuration
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the logical device. This is also a name of the device that will be deployed on the chassis.
+    data_source_query: true
+    example: my-logical-device
+    requires_replace: true
+  - model_name: ftdApplicationVersion
+    tf_name: ftd_version
+    type: String
+    mandatory: true
+    description: Version of the device, that should be deployed. Image should be pre-deployed to the chassis.
+    example: "7.6.0.113"
+    requires_replace: true
+  - model_name: ip
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_address
+    type: String
+    description: Management IPv4 address of the device.
+    example: 10.10.10.10
+    requires_replace: true
+  - model_name: mask
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_netmask
+    type: String
+    description: Netmask of Management IPv4 address.
+    example: 255.255.255.0
+    requires_replace: true
+  - model_name: gateway
+    data_path: [managementBootstrap, ipv4]
+    tf_name: ipv4_gateway
+    type: String
+    description: Gateway for Management IPv4 address.
+    example: 10.10.10.1
+    requires_replace: true
+  - model_name: ip
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_address
+    type: String
+    description: Management IPv6 address of the device.
+    example: 2001:db8::10
+    requires_replace: true
+  - model_name: prefixLength
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_prefix
+    type: Int64
+    description: Prefix length of Management IPv6 address.
+    example: 64
+    requires_replace: true
+  - model_name: gateway
+    data_path: [managementBootstrap, ipv6]
+    tf_name: ipv6_gateway
+    type: String
+    description: Gateway for Management IPv6 address.
+    example: 2001:db8::1
+    requires_replace: true
+  - model_name: searchDomain
+    data_path: [managementBootstrap]
+    type: String
+    description: Search domain for the device.
+    example: cisco.com
+    requires_replace: true
+  - model_name: fqdn
+    data_path: [managementBootstrap]
+    type: String
+    description: Fully qualified domain name (FQDN) of the device.
+    example: my_logical_device.cisco.com
+    requires_replace: true
+  - model_name: firewallMode
+    data_path: [managementBootstrap]
+    type: String
+    description: Firewall mode of the device.
+    enum_values: [ROUTED, TRANSPARENT]
+    example: ROUTED
+    mandatory: true
+    requires_replace: true
+  - model_name: dnsServers
+    data_path: [managementBootstrap]
+    type: String
+    description: DNS servers for the device. Up to three, comma-separated DNS servers can be specified.
+    example: 10.123.10.12,10.123.10.14
+    requires_replace: true
+  - model_name: adminPassword
+    data_path: [managementBootstrap]
+    tf_name: device_password
+    type: String
+    description: Admin password for the device.
+    example: my_password
+    write_only: true
+    mandatory: true
+    requires_replace: true
+    sensitive: true
+  - model_name: adminState
+    type: String
+    description: Admin state of the device.
+    example: ENABLED
+    enum_values: [ENABLED, DISABLED]
+    default_value: ENABLED
+  - model_name: permitExpertMode
+    data_path: [managementBootstrap]
+    type: String
+    description: Permit expert mode for the device.
+    enum_values: ["yes", "no"]
+    example: "yes"
+  - model_name: id
+    data_path: [resourceProfile]
+    tf_name: resource_profile_id
+    type: String
+    description: Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    mandatory: true
+  - model_name: name
+    data_path: [resourceProfile]
+    tf_name: resource_profile_name
+    type: String
+    description: Name of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.
+    example: my_resource_profile
+    mandatory: true
+  # Interface assignment
+  - model_name: externalPortLink
+    tf_name: assigned_interfaces
+    type: Set
+    description: Interface assignment for the device.
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the interface.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  # Device Management
+  - model_name: id
+    data_path: [deviceRegistration, deviceGroup]
+    tf_name: device_group_id
+    type: String
+    description: Id of the device group.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: id
+    data_path: [deviceRegistration, accessPolicy]
+    tf_name: access_policy_id
+    type: String
+    description: Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    mandatory: true
+    write_only: true
+  - model_name: id
+    data_path: [deviceRegistration, platformSettings]
+    tf_name: platform_settings_id
+    type: String
+    description: Id of the platform settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: licenseCaps
+    data_path: [deviceRegistration]
+    tf_name: license_capabilities
+    type: Set
+    element_type: String
+    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT]
+    description: License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+    example: MALWARE
+  # Container Details
+  - model_name: id
+    data_path: [metadata, containerDetails]
+    tf_name: container_id
+    type: String
+    description: Id of the parent container. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: type
+    data_path: [metadata, containerDetails]
+    tf_name: container_type
+    type: String
+    description: Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: name
+    data_path: [metadata, containerDetails]
+    tf_name: container_name
+    type: String
+    description: Name of the parent container. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: role
+    data_path: [metadata, containerDetails]
+    tf_name: container_role
+    type: String
+    description: Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
+    computed: true
+    computed_refresh_value: true
+  - model_name: status
+    data_path: [metadata, containerDetails]
+    tf_name: container_status
+    type: String
+    description: Status of the device in DeviceHAPair (Active, Standby, but other possible as well).
+    computed: true
+    computed_refresh_value: true

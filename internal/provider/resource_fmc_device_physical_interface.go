@@ -674,7 +674,7 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 	// This is physical interface, so delete is done by PUT with minimal body
 	// This needs to be done in two steps due to some dependencies in the FMC
 	// Step 1: Remove all attributes except 'ifname'
-	body := state.toBodyPutDelete(ctx, DevicePhysicalInterface{})
+	body := state.toBodyPutDelete(ctx)
 	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 		tflog.Debug(ctx, fmt.Sprintf("%s: Interface not found", state.Id.ValueString()))
@@ -685,12 +685,14 @@ func (r *DevicePhysicalInterfaceResource) Delete(ctx context.Context, req resour
 		return
 	}
 
-	// Step 2: Remove 'ifname' from body and re-run request
-	body, _ = sjson.Delete(body, "ifname")
-	res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
-		return
+	// Step 2: Remove 'ifname' (if still configured) from body and re-run request
+	if !state.LogicalName.IsNull() {
+		body, _ = sjson.Delete(body, "ifname")
+		res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to remove object configuration phase 2 (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))

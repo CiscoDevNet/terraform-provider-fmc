@@ -79,6 +79,10 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: "Is parent device multi-instance.",
+				Computed:            true,
+			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
 				Computed:            true,
@@ -446,8 +450,6 @@ func (d *DeviceEtherChannelInterfaceDataSource) Configure(_ context.Context, req
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *DeviceEtherChannelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config DeviceEtherChannelInterface
 
@@ -505,10 +507,15 @@ func (d *DeviceEtherChannelInterfaceDataSource) Read(ctx context.Context, req da
 
 	config.fromBody(ctx, res)
 
+	is_multi_instance, diags := FMCIsDeviceMultiInstance(ctx, d.client, config.DeviceId.ValueString(), reqMods)
+	if diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	config.IsMultiInstance = types.BoolValue(is_multi_instance)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read
