@@ -183,7 +183,7 @@ func (r *DeviceHAPairMonitoringResource) Create(ctx context.Context, req resourc
 				value.ForEach(func(k, v gjson.Result) bool {
 					if plan.LogicalName.ValueString() == v.Get("name").String() {
 						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%s', id: %s", plan.Id, plan.LogicalName.ValueString(), plan.Id))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %s", plan.Id.ValueString(), plan.LogicalName.ValueString(), plan.Id.ValueString()))
 						return false
 					}
 					return true
@@ -196,7 +196,7 @@ func (r *DeviceHAPairMonitoringResource) Create(ctx context.Context, req resourc
 		}
 
 		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %s", plan.LogicalName.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", plan.LogicalName.ValueString()))
 			return
 		}
 	}
