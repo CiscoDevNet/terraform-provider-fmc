@@ -1,3 +1,7 @@
+## 2.0.0-beta7 (Unreleased)
+
+- (Enhancement) Add support for `fmc_as_path`
+
 ## 2.0.0-beta6 (Unreleased)
 
 - (Enhancement) Add support for Resource Profile (`fmc_resource_profiles`) resource and data source
