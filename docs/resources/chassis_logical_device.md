@@ -6,7 +6,7 @@ description: |-
   This resource manages a Chassis Logical Device.
   Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.
   Newly created device will be auto-registered with FMC.
-  Destruction of the resource will de-register deployed device if it is registered to FMC.
+  Destruction of the resource will de-register deployed device if it is registered to FMC and remove it from chassis.
   Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.
   Changing resource profile will not trigger automatic deployment to apply the settings.
   Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.
@@ -17,7 +17,7 @@ description: |-
 This resource manages a Chassis Logical Device.
  Creating this resource will initiate a chassis-level deployment, triggering the device creation process based on the logical device configuration defined within this resource.
  Newly created device will be auto-registered with FMC.
- Destruction of the resource will de-register deployed device if it is registered to FMC.
+ Destruction of the resource will de-register deployed device if it is registered to FMC and remove it from chassis.
  Adding or removing interfaces from logical device will trigger deployment to the chassis and logical device sync.
  Changing resource profile will not trigger automatic deployment to apply the settings.
  Currently, policies assignment is not supported at logical device level. Please use policy assignemnt resource.
