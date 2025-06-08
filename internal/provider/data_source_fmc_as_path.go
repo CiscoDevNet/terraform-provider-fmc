@@ -153,9 +153,9 @@ func (d *ASPathDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("name").String() {
+					if config.Name.ValueInt64() == v.Get("name").Int() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueInt64(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -168,7 +168,7 @@ func (d *ASPathDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueInt64()))
 			return
 		}
 	}
