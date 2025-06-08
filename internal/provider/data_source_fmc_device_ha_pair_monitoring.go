@@ -171,7 +171,7 @@ func (d *DeviceHAPairMonitoringDataSource) Read(ctx context.Context, req datasou
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.LogicalName.ValueString() == v.Get("name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.String(), config.LogicalName.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -184,7 +184,7 @@ func (d *DeviceHAPairMonitoringDataSource) Read(ctx context.Context, req datasou
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %s", config.LogicalName.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
 			return
 		}
 	}

@@ -147,7 +147,7 @@ func (d *HostDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.Name.ValueString() == v.Get("name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -160,7 +160,7 @@ func (d *HostDataSource) Read(ctx context.Context, req datasource.ReadRequest, r
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
 			return
 		}
 	}

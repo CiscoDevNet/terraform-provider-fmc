@@ -522,7 +522,7 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 				value.ForEach(func(k, v gjson.Result) bool {
 					if plan.Name.ValueString() == v.Get("name").String() {
 						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%s', id: %s", plan.Id, plan.Name.ValueString(), plan.Id))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %s", plan.Id.ValueString(), plan.Name.ValueString(), plan.Id.ValueString()))
 						return false
 					}
 					return true
@@ -535,7 +535,7 @@ func (r *DevicePhysicalInterfaceResource) Create(ctx context.Context, req resour
 		}
 
 		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", plan.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", plan.Name.ValueString()))
 			return
 		}
 	}

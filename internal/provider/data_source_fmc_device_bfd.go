@@ -173,7 +173,7 @@ func (d *DeviceBFDDataSource) Read(ctx context.Context, req datasource.ReadReque
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.InterfaceLogicalName.ValueString() == v.Get("interface.ifname").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_logical_name '%v', id: %v", config.Id.String(), config.InterfaceLogicalName.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_logical_name '%v', id: %v", config.Id.ValueString(), config.InterfaceLogicalName.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -186,7 +186,7 @@ func (d *DeviceBFDDataSource) Read(ctx context.Context, req datasource.ReadReque
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_logical_name: %s", config.InterfaceLogicalName.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_logical_name: %v", config.InterfaceLogicalName.ValueString()))
 			return
 		}
 	}

@@ -242,9 +242,13 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.{{toGoName $dataSourceAttribute.TfName}}.ValueString() == v.Get("{{range $dataSourceAttribute.DataPath}}{{.}}.{{end}}{{$dataSourceAttribute.ModelName}}").String() {
+					if config.{{toGoName $dataSourceAttribute.TfName}}.
+						{{- if eq $dataSourceAttribute.Type "Int64" -}}ValueInt64()
+						{{- else -}}ValueString(){{- end -}} == v.Get("{{range $dataSourceAttribute.DataPath}}{{.}}.{{end}}{{$dataSourceAttribute.ModelName}}").
+						{{- if eq $dataSourceAttribute.Type "Int64" -}}Int()
+						{{- else -}}String(){{- end -}} {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$dataSourceAttribute.TfName}} '%v', id: %v", config.Id.String(), config.{{toGoName $dataSourceAttribute.TfName}}.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$dataSourceAttribute.TfName}} '%v', id: %v", config.Id.ValueString(), config.{{toGoName $dataSourceAttribute.TfName}}.{{if eq $dataSourceAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}, config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -257,7 +261,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$dataSourceAttribute.TfName}}: %s", config.{{toGoName $dataSourceAttribute.TfName}}.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$dataSourceAttribute.TfName}}: %v", config.{{toGoName $dataSourceAttribute.TfName}}.{{if eq $dataSourceAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}))
 			return
 		}
 	}
