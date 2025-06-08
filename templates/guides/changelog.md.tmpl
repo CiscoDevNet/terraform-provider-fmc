@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-beta6 (Unreleased)
+## 2.0.0-rc0
 
 - (Enhancement) Add support for Resource Profile (`fmc_resource_profiles`) resource and data source
 - (Enhancement) Add support for multi-instance (`fmc_chassis_*`) resources and data sources. Tune `fmc_device_subinterface` and `fmc_device_etherchannel_interface` to support multi-instance logical devices.
