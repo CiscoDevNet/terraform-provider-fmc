@@ -227,7 +227,7 @@ func (d *DeviceBGPGeneralSettingsDataSource) Read(ctx context.Context, req datas
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.AsNumber.ValueString() == v.Get("asNumber").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with as_number '%v', id: %v", config.Id.String(), config.AsNumber.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with as_number '%v', id: %v", config.Id.ValueString(), config.AsNumber.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -240,7 +240,7 @@ func (d *DeviceBGPGeneralSettingsDataSource) Read(ctx context.Context, req datas
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with as_number: %s", config.AsNumber.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with as_number: %v", config.AsNumber.ValueString()))
 			return
 		}
 	}
