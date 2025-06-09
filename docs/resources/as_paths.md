@@ -63,7 +63,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed SGT.
+- `id` (String) Id of the managed AS Path.
 - `type` (String) Type of the object; this value is always 'ASPathList'.
 
 <a id="nestedatt--items--entries"></a>
@@ -71,9 +71,9 @@ Read-Only:
 
 Required:
 
-- `action` (String) Action to take for the AS Path entry.
+- `action` (String) Action to take.
   - Choices: `PERMIT`, `DENY`
-- `regular_expression` (String) Regular expression for the AS Path entry.
+- `regular_expression` (String) Regular expression.
 
 ## Import
 

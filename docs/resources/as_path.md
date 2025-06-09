@@ -49,9 +49,9 @@ resource "fmc_as_path" "example" {
 
 Required:
 
-- `action` (String) Action to take for the AS Path entry.
+- `action` (String) Action to take.
   - Choices: `PERMIT`, `DENY`
-- `regular_expression` (String) Regular expression for the AS Path entry.
+- `regular_expression` (String) Regular expression.
 
 ## Import
 

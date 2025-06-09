@@ -90,11 +90,11 @@ func (d *ASPathDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Action to take for the AS Path entry.",
+							MarkdownDescription: "Action to take.",
 							Computed:            true,
 						},
 						"regular_expression": schema.StringAttribute{
-							MarkdownDescription: "Regular expression for the AS Path entry.",
+							MarkdownDescription: "Regular expression.",
 							Computed:            true,
 						},
 					},

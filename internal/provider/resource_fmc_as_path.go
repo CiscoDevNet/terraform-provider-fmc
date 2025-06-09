@@ -104,14 +104,14 @@ func (r *ASPathResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Action to take for the AS Path entry.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Action to take.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
 						},
 						"regular_expression": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Regular expression for the AS Path entry.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Regular expression.").String,
 							Required:            true,
 						},
 					},

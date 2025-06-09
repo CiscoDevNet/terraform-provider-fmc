@@ -17,7 +17,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed SGT.
+        description: Id of the managed AS Path.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -36,12 +36,12 @@ attributes:
         attributes:
           - model_name: action
             type: String
-            description: Action to take for the AS Path entry.
+            description: Action to take.
             enum_values: [PERMIT, DENY]
             example: PERMIT
             mandatory: true
           - model_name: regularExpression
             type: String
-            description: Regular expression for the AS Path entry.
+            description: Regular expression.
             example: "^(100|200)$"
             mandatory: true
