@@ -1,6 +1,6 @@
 resource "fmc_as_paths" "example" {
   items = {
-    my_as_paths = {
+    240 = {
       overridable = false
       entries = [
         {

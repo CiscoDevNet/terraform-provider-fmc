@@ -30,11 +30,11 @@ import (
 
 func TestAccDataSourceFmcASPaths(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_as_paths.test", "items.my_as_paths.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_as_paths.test", "items.my_as_paths.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_as_paths.test", "items.my_as_paths.overridable", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.my_as_paths.entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.my_as_paths.entries.0.regular_expression", "^(100|200)$"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_as_paths.test", "items.240.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_as_paths.test", "items.240.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_as_paths.test", "items.240.overridable", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.240.entries.0.action", "PERMIT"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.240.entries.0.regular_expression", "^(100|200)$"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -57,7 +57,7 @@ func TestAccDataSourceFmcASPaths(t *testing.T) {
 
 func testAccDataSourceFmcASPathsConfig() string {
 	config := `resource "fmc_as_paths" "test" {` + "\n"
-	config += `	items = { "my_as_paths" = {` + "\n"
+	config += `	items = { "240" = {` + "\n"
 	config += `		overridable = false` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
@@ -70,7 +70,7 @@ func testAccDataSourceFmcASPathsConfig() string {
 		data "fmc_as_paths" "test" {
 			depends_on = [fmc_as_paths.test]
 			items = {
-				"my_as_paths" = {
+				"240" = {
 				}
 			}
 		}

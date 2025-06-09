@@ -31,11 +31,11 @@ import (
 
 func TestAccFmcASPaths(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_as_paths.test", "items.my_as_paths.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_as_paths.test", "items.my_as_paths.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.my_as_paths.overridable", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.my_as_paths.entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.my_as_paths.entries.0.regular_expression", "^(100|200)$"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_as_paths.test", "items.240.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_as_paths.test", "items.240.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.240.overridable", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.240.entries.0.action", "PERMIT"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_as_paths.test", "items.240.entries.0.regular_expression", "^(100|200)$"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -65,7 +65,7 @@ func TestAccFmcASPaths(t *testing.T) {
 
 func testAccFmcASPathsConfig_minimum() string {
 	config := `resource "fmc_as_paths" "test" {` + "\n"
-	config += `	items = { "my_as_paths" = {` + "\n"
+	config += `	items = { "240" = {` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
 	config += `			regular_expression = "^(100|200)$"` + "\n"
@@ -81,7 +81,7 @@ func testAccFmcASPathsConfig_minimum() string {
 
 func testAccFmcASPathsConfig_all() string {
 	config := `resource "fmc_as_paths" "test" {` + "\n"
-	config += `	items = { "my_as_paths" = {` + "\n"
+	config += `	items = { "240" = {` + "\n"
 	config += `		overridable = false` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"

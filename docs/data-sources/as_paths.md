@@ -15,7 +15,7 @@ This data source reads the AS Paths.
 ```terraform
 data "fmc_as_paths" "example" {
   items = {
-    "my_as_paths" = {
+    "240" = {
     }
   }
 }

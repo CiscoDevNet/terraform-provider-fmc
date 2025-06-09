@@ -11,7 +11,7 @@ attributes:
     type: Map
     description: >-
       Map of AS Paths. The key of the map is the name of the individual AS Path.
-    map_key_example: my_as_paths
+    map_key_example: 240
     mandatory: true
     attributes:
       - model_name: id
