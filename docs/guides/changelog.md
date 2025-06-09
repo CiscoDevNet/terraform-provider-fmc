@@ -9,7 +9,7 @@ description: |-
 
 ## 2.0.0-rc1 (Unreleased)
 
-- (Enhancement) Add support for `fmc_as_path`
+- (Enhancement) Add support for `fmc_as_path` and `fmc_as_paths`
 
 ## 2.0.0-rc0
 

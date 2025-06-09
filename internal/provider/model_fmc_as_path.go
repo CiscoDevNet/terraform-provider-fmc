@@ -224,10 +224,8 @@ func (data *ASPath) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 func (data ASPath) adjustBody(ctx context.Context, req string) string {
 
 	// Add sequence numbers to the entities
-	if len(data.Entries) > 0 {
-		for i := range len(data.Entries) {
-			req, _ = sjson.Set(req, fmt.Sprintf("entries.%d.sequence", i), i+1)
-		}
+	for i := range len(data.Entries) {
+		req, _ = sjson.Set(req, fmt.Sprintf("entries.%d.sequence", i), i+1)
 	}
 
 	return req
