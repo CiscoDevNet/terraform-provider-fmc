@@ -34,11 +34,11 @@ attributes:
       - model_name: minPrefixLenth
         tf_name: min_prefix_length
         type: Int64
-        int_min: 1
-        int_max: 32
+        min_int: 1
+        max_int: 32
         example: 25
       - model_name: maxPrefixLength
         type: Int64
-        int_min: 1
-        int_max: 32
+        min_int: 1
+        max_int: 32
         example: 30

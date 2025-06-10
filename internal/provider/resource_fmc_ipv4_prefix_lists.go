@@ -28,6 +28,7 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -121,12 +122,18 @@ func (r *IPv4PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 										Required:            true,
 									},
 									"min_prefix_length": schema.Int64Attribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("").AddIntegerRangeDescription(1, 32).String,
 										Optional:            true,
+										Validators: []validator.Int64{
+											int64validator.Between(1, 32),
+										},
 									},
 									"max_prefix_length": schema.Int64Attribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("").AddIntegerRangeDescription(1, 32).String,
 										Optional:            true,
+										Validators: []validator.Int64{
+											int64validator.Between(1, 32),
+										},
 									},
 								},
 							},

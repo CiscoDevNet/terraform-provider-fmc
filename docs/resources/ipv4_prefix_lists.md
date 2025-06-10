@@ -74,8 +74,8 @@ Required:
 
 Optional:
 
-- `max_prefix_length` (Number)
-- `min_prefix_length` (Number)
+- `max_prefix_length` (Number) - Range: `1`-`32`
+- `min_prefix_length` (Number) - Range: `1`-`32`
 
 ## Import
 
