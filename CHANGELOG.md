@@ -1,3 +1,7 @@
+## 2.0.0-rc1 (Unreleased)
+
+- (Enhancement) Add support for `fmc_expanded_community_list` and `fmc_expanded_community_lists` resources and data sources
+
 ## 2.0.0-rc0
 
 - (Enhancement) Add support for Resource Profile (`fmc_resource_profiles`) resource and data source
