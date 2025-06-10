@@ -52,5 +52,3 @@ attributes:
             int_min: 1
             int_max: 32
             example: 30
-
-    
