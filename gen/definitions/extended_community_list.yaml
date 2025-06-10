@@ -1,0 +1,43 @@
+---
+name: Extended Community List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/extendedcommunitylists
+doc_category: Objects
+adjust_body: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Extended Community List object.
+    example: my_extended_community_list
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExtendedCommunityList'.
+    computed: true
+  - model_name: subType
+    type: String
+    requires_replace: true
+    enum_values: [Expanded, Standard]
+    description: Subtype of the Extended Community List object.
+    mandatory: true
+  - model_name: entries
+    type: List
+    mandatory: true
+    ordered_list: true
+    description: List of entries
+    attributes:      
+      - model_name: action
+        type: String
+        mandatory: true
+        description: Action to take.
+        enum_values: [PERMIT, DENY]
+        example: PERMIT
+      - model_name: routeTarget
+        type: String
+        description: Route target (for Standard subType)
+        example: "123 456 789"
+      - model_name: regularExpression
+        tf_name: expression
+        type: String
+        description: Regular expression (for Expanded subType)
+        example: "^(123|456|789)$"
