@@ -86,11 +86,7 @@ func (d *IPv4PrefixListDataSource) Schema(ctx context.Context, req datasource.Sc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Action to take for the prefix.",
-							Computed:            true,
-						},
-						"sequence_number": schema.Int64Attribute{
-							MarkdownDescription: "Sequence number for the entry.",
+							MarkdownDescription: "Action to take.",
 							Computed:            true,
 						},
 						"ip_address": schema.StringAttribute{

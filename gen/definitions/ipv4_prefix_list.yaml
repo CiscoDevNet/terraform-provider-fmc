@@ -2,6 +2,7 @@
 name: IPv4 Prefix List
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ipv4prefixlists
 doc_category: Objects
+adjust_body: true
 attributes:
   - model_name: name
     type: String
@@ -16,22 +17,15 @@ attributes:
   - model_name: entries
     type: List
     mandatory: true
+    ordered_list: true
     description: List of entries
     attributes:
       - model_name: action
         type: String
         mandatory: true
-        description: Action to take for the prefix.
+        description: Action to take.
         enum_values: [PERMIT, DENY]
         example: PERMIT
-      - model_name: sequence
-        tf_name: sequence_number
-        type: Int64
-        int_min: 1
-        int_max: 4294967295
-        mandatory: true
-        description: Sequence number for the entry.
-        example: 10
       - model_name: ipAddress
         type: String
         mandatory: true

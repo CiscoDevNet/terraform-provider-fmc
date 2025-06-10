@@ -21,8 +21,6 @@ package provider
 import (
 	"context"
 	"fmt"
-	"slices"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -44,7 +42,6 @@ type IPv4PrefixList struct {
 
 type IPv4PrefixListEntries struct {
 	Action          types.String `tfsdk:"action"`
-	SequenceNumber  types.Int64  `tfsdk:"sequence_number"`
 	IpAddress       types.String `tfsdk:"ip_address"`
 	MinPrefixLength types.Int64  `tfsdk:"min_prefix_length"`
 	MaxPrefixLength types.Int64  `tfsdk:"max_prefix_length"`
@@ -80,9 +77,6 @@ func (data IPv4PrefixList) toBody(ctx context.Context, state IPv4PrefixList) str
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
-			}
-			if !item.SequenceNumber.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "sequence", item.SequenceNumber.ValueInt64())
 			}
 			if !item.IpAddress.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipAddress", item.IpAddress.ValueString())
@@ -124,11 +118,6 @@ func (data *IPv4PrefixList) fromBody(ctx context.Context, res gjson.Result) {
 			} else {
 				data.Action = types.StringNull()
 			}
-			if value := res.Get("sequence"); value.Exists() {
-				data.SequenceNumber = types.Int64Value(value.Int())
-			} else {
-				data.SequenceNumber = types.Int64Null()
-			}
 			if value := res.Get("ipAddress"); value.Exists() {
 				data.IpAddress = types.StringValue(value.String())
 			} else {
@@ -169,51 +158,25 @@ func (data *IPv4PrefixList) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Type = types.StringNull()
 	}
-	for i := 0; i < len(data.Entries); i++ {
-		keys := [...]string{"action", "sequence", "ipAddress", "minPrefixLenth", "maxPrefixLength"}
-		keyValues := [...]string{data.Entries[i].Action.ValueString(), strconv.FormatInt(data.Entries[i].SequenceNumber.ValueInt64(), 10), data.Entries[i].IpAddress.ValueString(), strconv.FormatInt(data.Entries[i].MinPrefixLength.ValueInt64(), 10), strconv.FormatInt(data.Entries[i].MaxPrefixLength.ValueInt64(), 10)}
-
+	{
+		l := len(res.Get("entries").Array())
+		tflog.Debug(ctx, fmt.Sprintf("entries array resizing from %d to %d", len(data.Entries), l))
+		for i := len(data.Entries); i < l; i++ {
+			data.Entries = append(data.Entries, IPv4PrefixListEntries{})
+		}
+		if len(data.Entries) > l {
+			data.Entries = data.Entries[:l]
+		}
+	}
+	for i := range data.Entries {
 		parent := &data
 		data := (*parent).Entries[i]
 		parentRes := &res
-		var res gjson.Result
-
-		parentRes.Get("entries").ForEach(
-			func(_, v gjson.Result) bool {
-				found := false
-				for ik := range keys {
-					if v.Get(keys[ik]).String() != keyValues[ik] {
-						found = false
-						break
-					}
-					found = true
-				}
-				if found {
-					res = v
-					return false
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing Entries[%d] = %+v",
-				i,
-				(*parent).Entries[i],
-			))
-			(*parent).Entries = slices.Delete((*parent).Entries, i, i+1)
-			i--
-
-			continue
-		}
+		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {
 			data.Action = types.StringNull()
-		}
-		if value := res.Get("sequence"); value.Exists() && !data.SequenceNumber.IsNull() {
-			data.SequenceNumber = types.Int64Value(value.Int())
-		} else {
-			data.SequenceNumber = types.Int64Null()
 		}
 		if value := res.Get("ipAddress"); value.Exists() && !data.IpAddress.IsNull() {
 			data.IpAddress = types.StringValue(value.String())
@@ -272,9 +235,15 @@ func (data *IPv4PrefixList) fromBodyUnknowns(ctx context.Context, res gjson.Resu
 
 // End of section. //template:end toBodyPutDelete
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+func (data IPv4PrefixList) adjustBody(ctx context.Context, req string) string {
 
-// End of section. //template:end adjustBody
+	// Add sequence numbers to the entities
+	for i := range len(data.Entries) {
+		req, _ = sjson.Set(req, fmt.Sprintf("entries.%d.sequence", i), i+1)
+	}
+
+	return req
+}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
 

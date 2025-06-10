@@ -29,28 +29,24 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcIPv4PrefixList(t *testing.T) {
+func TestAccFmcIPv4PrefixLists(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_list.test", "name", "my_ipv4_prefix_list"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv4_prefix_list.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_list.test", "entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_list.test", "entries.0.ip_address", "10.10.10.0/24"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_list.test", "entries.0.min_prefix_length", "25"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_list.test", "entries.0.max_prefix_length", "30"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.entries.0.action", "PERMIT"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.entries.0.ip_address", "10.10.10.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.entries.0.min_prefix_length", "25"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv4_prefix_lists.test", "items.my_ipv4_prefix_lists.entries.0.max_prefix_length", "30"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcIPv4PrefixListConfig_minimum(),
+			Config: testAccFmcIPv4PrefixListsConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcIPv4PrefixListConfig_all(),
+		Config: testAccFmcIPv4PrefixListsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
-	})
-	steps = append(steps, resource.TestStep{
-		ResourceName: "fmc_ipv4_prefix_list.test",
-		ImportState:  true,
 	})
 
 	resource.Test(t, resource.TestCase{
@@ -68,13 +64,14 @@ func TestAccFmcIPv4PrefixList(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcIPv4PrefixListConfig_minimum() string {
-	config := `resource "fmc_ipv4_prefix_list" "test" {` + "\n"
-	config += `	name = "my_ipv4_prefix_list"` + "\n"
-	config += `	entries = [{` + "\n"
-	config += `		action = "PERMIT"` + "\n"
-	config += `		ip_address = "10.10.10.0/24"` + "\n"
-	config += `	}]` + "\n"
+func testAccFmcIPv4PrefixListsConfig_minimum() string {
+	config := `resource "fmc_ipv4_prefix_lists" "test" {` + "\n"
+	config += `	items = { "my_ipv4_prefix_lists" = {` + "\n"
+	config += `		entries = [{` + "\n"
+	config += `			action = "PERMIT"` + "\n"
+	config += `			ip_address = "10.10.10.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -83,15 +80,16 @@ func testAccFmcIPv4PrefixListConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcIPv4PrefixListConfig_all() string {
-	config := `resource "fmc_ipv4_prefix_list" "test" {` + "\n"
-	config += `	name = "my_ipv4_prefix_list"` + "\n"
-	config += `	entries = [{` + "\n"
-	config += `		action = "PERMIT"` + "\n"
-	config += `		ip_address = "10.10.10.0/24"` + "\n"
-	config += `		min_prefix_length = 25` + "\n"
-	config += `		max_prefix_length = 30` + "\n"
-	config += `	}]` + "\n"
+func testAccFmcIPv4PrefixListsConfig_all() string {
+	config := `resource "fmc_ipv4_prefix_lists" "test" {` + "\n"
+	config += `	items = { "my_ipv4_prefix_lists" = {` + "\n"
+	config += `		entries = [{` + "\n"
+	config += `			action = "PERMIT"` + "\n"
+	config += `			ip_address = "10.10.10.0/24"` + "\n"
+	config += `			min_prefix_length = 25` + "\n"
+	config += `			max_prefix_length = 30` + "\n"
+	config += `		}]` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }

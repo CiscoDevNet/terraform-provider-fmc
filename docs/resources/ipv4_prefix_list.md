@@ -18,7 +18,6 @@ resource "fmc_ipv4_prefix_list" "example" {
   entries = [
     {
       action            = "PERMIT"
-      sequence_number   = 10
       ip_address        = "10.10.10.0/24"
       min_prefix_length = 25
       max_prefix_length = 30
@@ -49,10 +48,9 @@ resource "fmc_ipv4_prefix_list" "example" {
 
 Required:
 
-- `action` (String) Action to take for the prefix.
+- `action` (String) Action to take.
   - Choices: `PERMIT`, `DENY`
 - `ip_address` (String) IPv4 address with prefix length.
-- `sequence_number` (Number) Sequence number for the entry.
 
 Optional:
 

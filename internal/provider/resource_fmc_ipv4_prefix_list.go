@@ -96,15 +96,11 @@ func (r *IPv4PrefixListResource) Schema(ctx context.Context, req resource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Action to take for the prefix.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Action to take.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
-						},
-						"sequence_number": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Sequence number for the entry.").String,
-							Required:            true,
 						},
 						"ip_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IPv4 address with prefix length.").String,
@@ -156,6 +152,7 @@ func (r *IPv4PrefixListResource) Create(ctx context.Context, req resource.Create
 
 	// Create object
 	body := plan.toBody(ctx, IPv4PrefixList{})
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -252,6 +249,7 @@ func (r *IPv4PrefixListResource) Update(ctx context.Context, req resource.Update
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
