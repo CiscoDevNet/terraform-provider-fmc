@@ -94,11 +94,11 @@ func (d *IPv6PrefixListDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed:            true,
 						},
 						"min_prefix_length": schema.Int64Attribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Minimum prefix length.",
 							Computed:            true,
 						},
 						"max_prefix_length": schema.Int64Attribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Maximum prefix length.",
 							Computed:            true,
 						},
 					},

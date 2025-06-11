@@ -347,10 +347,7 @@ func (data IPv6PrefixLists) adjustBody(ctx context.Context, req string) string {
 	return req
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
 func (data IPv6PrefixLists) adjustBodyBulk(ctx context.Context, req string) string {
+	// To be updated once FMC supports bulk operations for IPv6PrefixLists
 	return req
 }
-
-// End of section. //template:end adjustBodyBulk

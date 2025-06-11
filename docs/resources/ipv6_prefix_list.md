@@ -54,8 +54,10 @@ Required:
 
 Optional:
 
-- `max_prefix_length` (Number) - Range: `1`-`128`
-- `min_prefix_length` (Number) - Range: `1`-`128`
+- `max_prefix_length` (Number) Maximum prefix length.
+  - Range: `1`-`128`
+- `min_prefix_length` (Number) Minimum prefix length.
+  - Range: `1`-`128`
 
 ## Import
 
