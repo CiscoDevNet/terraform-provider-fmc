@@ -1,5 +1,6 @@
 ## 2.0.0-rc1 (Unreleased)
 
+- (Enhancement) Add support for `fmc_standard_community_list` and `fmc_standard_community_lists` resources and data sources
 - (Enhancement) Add support for `fmc_ipv6_preflix_list` and `fmc_ipv6_preflix_lists` resources and data sources
 - (Enhancement) Add support for `fmc_ipv4_preflix_list` and `fmc_ipv4_preflix_lists` resources and data sources
 - (Enhancement) Add support for `fmc_as_path` and `fmc_as_paths` resources and data sources
