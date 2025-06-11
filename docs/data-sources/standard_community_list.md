@@ -37,8 +37,8 @@ data "fmc_standard_community_list" "example" {
 
 Read-Only:
 
-- `action` (String) Action to take.
-- `communities` (String) List of communities. Separate multiple values by space.
-- `internet` (Boolean) Internet well-known community.
-- `no_advertise` (Boolean) No-advertise well-known community
-- `no_export` (Boolean) No-export well-known community
+- `action` (String) Indicate redistribution access.
+- `communities` (String) List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535
+- `internet` (Boolean) Specify Internet well-known community.
+- `no_advertise` (Boolean) Specify No-advertise well-known community.
+- `no_export` (Boolean) Specify No-export well-known community.

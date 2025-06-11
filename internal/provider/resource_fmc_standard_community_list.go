@@ -96,26 +96,26 @@ func (r *StandardCommunityListResource) Schema(ctx context.Context, req resource
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Action to take.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Indicate redistribution access.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
 						},
 						"communities": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of communities. Separate multiple values by space.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535").String,
 							Required:            true,
 						},
 						"internet": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Internet well-known community.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Specify Internet well-known community.").String,
 							Optional:            true,
 						},
 						"no_advertise": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("No-advertise well-known community").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Specify No-advertise well-known community.").String,
 							Optional:            true,
 						},
 						"no_export": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("No-export well-known community").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Specify No-export well-known community.").String,
 							Optional:            true,
 						},
 					},

@@ -49,15 +49,15 @@ resource "fmc_standard_community_list" "example" {
 
 Required:
 
-- `action` (String) Action to take.
+- `action` (String) Indicate redistribution access.
   - Choices: `PERMIT`, `DENY`
-- `communities` (String) List of communities. Separate multiple values by space.
+- `communities` (String) List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535
 
 Optional:
 
-- `internet` (Boolean) Internet well-known community.
-- `no_advertise` (Boolean) No-advertise well-known community
-- `no_export` (Boolean) No-export well-known community
+- `internet` (Boolean) Specify Internet well-known community.
+- `no_advertise` (Boolean) Specify No-advertise well-known community.
+- `no_export` (Boolean) Specify No-export well-known community.
 
 ## Import
 

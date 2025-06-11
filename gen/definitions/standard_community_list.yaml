@@ -27,24 +27,24 @@ attributes:
       - model_name: action
         type: String
         mandatory: true
-        description: Action to take.
+        description: Indicate redistribution access.
         enum_values: [PERMIT, DENY]
         example: PERMIT
       - model_name: communities
         type: String
         mandatory: true
-        description: List of communities. Separate multiple values by space.
+        description: List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535
         example: "123 456 789"
       - model_name: internet
         tf_name: internet
         type: Bool
-        description: Internet well-known community.
+        description: Specify Internet well-known community.
         example: true
       - model_name: noAdvertise
         type: Bool
-        description: No-advertise well-known community
+        description: Specify No-advertise well-known community.
         example: true
       - model_name: noExport
         type: Bool
-        description: No-export well-known community
+        description: Specify No-export well-known community.
         example: true

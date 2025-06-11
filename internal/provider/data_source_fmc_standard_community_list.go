@@ -86,23 +86,23 @@ func (d *StandardCommunityListDataSource) Schema(ctx context.Context, req dataso
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Action to take.",
+							MarkdownDescription: "Indicate redistribution access.",
 							Computed:            true,
 						},
 						"communities": schema.StringAttribute{
-							MarkdownDescription: "List of communities. Separate multiple values by space.",
+							MarkdownDescription: "List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535",
 							Computed:            true,
 						},
 						"internet": schema.BoolAttribute{
-							MarkdownDescription: "Internet well-known community.",
+							MarkdownDescription: "Specify Internet well-known community.",
 							Computed:            true,
 						},
 						"no_advertise": schema.BoolAttribute{
-							MarkdownDescription: "No-advertise well-known community",
+							MarkdownDescription: "Specify No-advertise well-known community.",
 							Computed:            true,
 						},
 						"no_export": schema.BoolAttribute{
-							MarkdownDescription: "No-export well-known community",
+							MarkdownDescription: "Specify No-export well-known community.",
 							Computed:            true,
 						},
 					},
