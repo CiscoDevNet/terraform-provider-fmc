@@ -19,7 +19,6 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -33,17 +32,11 @@ func TestAccFmcExtendedCommunityList(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "name", "my_extended_community_list"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_extended_community_list.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "sub_type", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "sub_type", "Standard"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "entries.0.route_target", "123 456 789"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "entries.0.expression", "^(123|456|789)$"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_list.test", "entries.0.route_target", "64512:1010"))
 
 	var steps []resource.TestStep
-	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
-		steps = append(steps, resource.TestStep{
-			Config: testAccFmcExtendedCommunityListConfig_minimum(),
-		})
-	}
 	steps = append(steps, resource.TestStep{
 		Config: testAccFmcExtendedCommunityListConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
@@ -67,18 +60,6 @@ func TestAccFmcExtendedCommunityList(t *testing.T) {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
-
-func testAccFmcExtendedCommunityListConfig_minimum() string {
-	config := `resource "fmc_extended_community_list" "test" {` + "\n"
-	config += `	name = "my_extended_community_list"` + "\n"
-	config += `	sub_type = ""` + "\n"
-	config += `	entries = [{` + "\n"
-	config += `		action = "PERMIT"` + "\n"
-	config += `	}]` + "\n"
-	config += `}` + "\n"
-	return config
-}
-
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
@@ -86,11 +67,10 @@ func testAccFmcExtendedCommunityListConfig_minimum() string {
 func testAccFmcExtendedCommunityListConfig_all() string {
 	config := `resource "fmc_extended_community_list" "test" {` + "\n"
 	config += `	name = "my_extended_community_list"` + "\n"
-	config += `	sub_type = ""` + "\n"
+	config += `	sub_type = "Standard"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "PERMIT"` + "\n"
-	config += `		route_target = "123 456 789"` + "\n"
-	config += `		expression = "^(123|456|789)$"` + "\n"
+	config += `		route_target = "64512:1010"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

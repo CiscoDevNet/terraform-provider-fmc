@@ -42,9 +42,9 @@ type ExtendedCommunityList struct {
 }
 
 type ExtendedCommunityListEntries struct {
-	Action      types.String `tfsdk:"action"`
-	RouteTarget types.String `tfsdk:"route_target"`
-	Expression  types.String `tfsdk:"expression"`
+	Action            types.String `tfsdk:"action"`
+	RouteTarget       types.String `tfsdk:"route_target"`
+	RegularExpression types.String `tfsdk:"regular_expression"`
 }
 
 // End of section. //template:end types
@@ -84,8 +84,8 @@ func (data ExtendedCommunityList) toBody(ctx context.Context, state ExtendedComm
 			if !item.RouteTarget.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "routeTarget", item.RouteTarget.ValueString())
 			}
-			if !item.Expression.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "regularExpression", item.Expression.ValueString())
+			if !item.RegularExpression.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "regularExpression", item.RegularExpression.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
 		}
@@ -129,9 +129,9 @@ func (data *ExtendedCommunityList) fromBody(ctx context.Context, res gjson.Resul
 				data.RouteTarget = types.StringNull()
 			}
 			if value := res.Get("regularExpression"); value.Exists() {
-				data.Expression = types.StringValue(value.String())
+				data.RegularExpression = types.StringValue(value.String())
 			} else {
-				data.Expression = types.StringNull()
+				data.RegularExpression = types.StringNull()
 			}
 			(*parent).Entries = append((*parent).Entries, data)
 			return true
@@ -188,10 +188,10 @@ func (data *ExtendedCommunityList) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.RouteTarget = types.StringNull()
 		}
-		if value := res.Get("regularExpression"); value.Exists() && !data.Expression.IsNull() {
-			data.Expression = types.StringValue(value.String())
+		if value := res.Get("regularExpression"); value.Exists() && !data.RegularExpression.IsNull() {
+			data.RegularExpression = types.StringValue(value.String())
 		} else {
-			data.Expression = types.StringNull()
+			data.RegularExpression = types.StringNull()
 		}
 		(*parent).Entries[i] = data
 	}

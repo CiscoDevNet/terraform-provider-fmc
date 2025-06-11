@@ -32,10 +32,9 @@ func TestAccDataSourceFmcExtendedCommunityList(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "name", "my_extended_community_list"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_extended_community_list.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "sub_type", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "sub_type", "Standard"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "entries.0.route_target", "123 456 789"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "entries.0.expression", "^(123|456|789)$"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_list.test", "entries.0.route_target", "64512:1010"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -63,11 +62,10 @@ func TestAccDataSourceFmcExtendedCommunityList(t *testing.T) {
 func testAccDataSourceFmcExtendedCommunityListConfig() string {
 	config := `resource "fmc_extended_community_list" "test" {` + "\n"
 	config += `	name = "my_extended_community_list"` + "\n"
-	config += `	sub_type = ""` + "\n"
+	config += `	sub_type = "Standard"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "PERMIT"` + "\n"
-	config += `		route_target = "123 456 789"` + "\n"
-	config += `		expression = "^(123|456|789)$"` + "\n"
+	config += `		route_target = "64512:1010"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
@@ -82,11 +80,10 @@ func testAccDataSourceFmcExtendedCommunityListConfig() string {
 func testAccNamedDataSourceFmcExtendedCommunityListConfig() string {
 	config := `resource "fmc_extended_community_list" "test" {` + "\n"
 	config += `	name = "my_extended_community_list"` + "\n"
-	config += `	sub_type = ""` + "\n"
+	config += `	sub_type = "Standard"` + "\n"
 	config += `	entries = [{` + "\n"
 	config += `		action = "PERMIT"` + "\n"
-	config += `		route_target = "123 456 789"` + "\n"
-	config += `		expression = "^(123|456|789)$"` + "\n"
+	config += `		route_target = "64512:1010"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

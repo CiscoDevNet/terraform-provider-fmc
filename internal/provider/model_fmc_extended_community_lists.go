@@ -380,10 +380,7 @@ func (data ExtendedCommunityLists) adjustBody(ctx context.Context, req string) s
 	return req
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
 func (data ExtendedCommunityLists) adjustBodyBulk(ctx context.Context, req string) string {
+	// To be updated once FMC supports bulk operations for Extended Community Lists
 	return req
 }
-
-// End of section. //template:end adjustBodyBulk

@@ -32,10 +32,9 @@ func TestAccDataSourceFmcExtendedCommunityLists(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_extended_community_lists.test", "items.my_extended_community_lists.id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_extended_community_lists.test", "items.my_extended_community_lists.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_lists.test", "items.my_extended_community_lists.sub_type", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_extended_community_lists.test", "items.my_extended_community_lists.sub_type", "Standard"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_lists.test", "items.my_extended_community_lists.entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_lists.test", "items.my_extended_community_lists.entries.0.route_target", "123 456 789"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_lists.test", "items.my_extended_community_lists.entries.0.expression", "^(123|456|789)$"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_extended_community_lists.test", "items.my_extended_community_lists.entries.0.route_target", "64512:1010"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -59,11 +58,10 @@ func TestAccDataSourceFmcExtendedCommunityLists(t *testing.T) {
 func testAccDataSourceFmcExtendedCommunityListsConfig() string {
 	config := `resource "fmc_extended_community_lists" "test" {` + "\n"
 	config += `	items = { "my_extended_community_lists" = {` + "\n"
-	config += `		sub_type = ""` + "\n"
+	config += `		sub_type = "Standard"` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
-	config += `			route_target = "123 456 789"` + "\n"
-	config += `			expression = "^(123|456|789)$"` + "\n"
+	config += `			route_target = "64512:1010"` + "\n"
 	config += `		}]` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"

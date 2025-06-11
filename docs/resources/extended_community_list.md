@@ -15,12 +15,11 @@ This resource manages an Extended Community List.
 ```terraform
 resource "fmc_extended_community_list" "example" {
   name     = "my_extended_community_list"
-  sub_type = ""
+  sub_type = "Standard"
   entries = [
     {
       action       = "PERMIT"
-      route_target = "123 456 789"
-      expression   = "^(123|456|789)$"
+      route_target = "64512:1010"
     }
   ]
 }
@@ -50,13 +49,13 @@ resource "fmc_extended_community_list" "example" {
 
 Required:
 
-- `action` (String) Action to take.
+- `action` (String) Indicate redistribution access.
   - Choices: `PERMIT`, `DENY`
 
 Optional:
 
-- `expression` (String) Regular expression (for Expanded subType)
-- `route_target` (String) Route target (for Standard subType)
+- `regular_expression` (String) Regular expression (required if sub_type is Expanded)
+- `route_target` (String) Route target (required if sub_type is Standard)
 
 ## Import
 

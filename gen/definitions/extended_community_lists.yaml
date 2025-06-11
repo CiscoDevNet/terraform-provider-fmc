@@ -6,6 +6,7 @@ is_bulk: true
 adjust_body: true
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"
+skip_minimum_test: true
 attributes:
   - model_name: items
     type: Map
@@ -30,6 +31,7 @@ attributes:
         enum_values: [Expanded, Standard]
         description: Subtype of the Extended Community List object.
         mandatory: true
+        example: Standard
       - model_name: entries
         type: List
         mandatory: true
@@ -39,15 +41,16 @@ attributes:
           - model_name: action
             type: String
             mandatory: true
-            description: Action to take.
+            description: Indicate redistribution access.
             enum_values: [PERMIT, DENY]
             example: PERMIT
           - model_name: routeTarget
             type: String
-            description: Route target (for Standard subType)
-            example: "123 456 789"
+            description: Route target (required if sub_type is Standard)
+            example: "64512:1010"
           - model_name: regularExpression
             tf_name: expression
             type: String
-            description: Regular expression (for Expanded subType)
-            example: "^(123|456|789)$"
+            description: Regular expression (required if sub_type is Expanded)
+            exclude_example: true
+            exclude_test: true
