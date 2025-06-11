@@ -41,8 +41,8 @@ type ExpandedCommunityList struct {
 }
 
 type ExpandedCommunityListEntries struct {
-	Action     types.String `tfsdk:"action"`
-	Expression types.String `tfsdk:"expression"`
+	Action            types.String `tfsdk:"action"`
+	RegularExpression types.String `tfsdk:"regular_expression"`
 }
 
 // End of section. //template:end types
@@ -77,8 +77,8 @@ func (data ExpandedCommunityList) toBody(ctx context.Context, state ExpandedComm
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
-			if !item.Expression.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "regularExpression", item.Expression.ValueString())
+			if !item.RegularExpression.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "regularExpression", item.RegularExpression.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
 		}
@@ -112,9 +112,9 @@ func (data *ExpandedCommunityList) fromBody(ctx context.Context, res gjson.Resul
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("regularExpression"); value.Exists() {
-				data.Expression = types.StringValue(value.String())
+				data.RegularExpression = types.StringValue(value.String())
 			} else {
-				data.Expression = types.StringNull()
+				data.RegularExpression = types.StringNull()
 			}
 			(*parent).Entries = append((*parent).Entries, data)
 			return true
@@ -161,10 +161,10 @@ func (data *ExpandedCommunityList) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.Action = types.StringNull()
 		}
-		if value := res.Get("regularExpression"); value.Exists() && !data.Expression.IsNull() {
-			data.Expression = types.StringValue(value.String())
+		if value := res.Get("regularExpression"); value.Exists() && !data.RegularExpression.IsNull() {
+			data.RegularExpression = types.StringValue(value.String())
 		} else {
-			data.Expression = types.StringNull()
+			data.RegularExpression = types.StringNull()
 		}
 		(*parent).Entries[i] = data
 	}

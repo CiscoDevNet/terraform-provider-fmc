@@ -37,5 +37,5 @@ data "fmc_expanded_community_list" "example" {
 
 Read-Only:
 
-- `action` (String) Action to take.
-- `expression` (String) Regular expression pattern to match the community.
+- `action` (String) Indicate redistribution access.
+- `regular_expression` (String) Regular expression pattern to match the community.

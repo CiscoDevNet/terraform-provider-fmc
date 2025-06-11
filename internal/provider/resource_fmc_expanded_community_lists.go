@@ -110,13 +110,13 @@ func (r *ExpandedCommunityListsResource) Schema(ctx context.Context, req resourc
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"action": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Action to take.").AddStringEnumDescription("PERMIT", "DENY").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Indicate redistribution access.").AddStringEnumDescription("PERMIT", "DENY").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PERMIT", "DENY"),
 										},
 									},
-									"expression": schema.StringAttribute{
+									"regular_expression": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Regular expression pattern to match the community.").String,
 										Required:            true,
 									},

@@ -47,8 +47,8 @@ type ExpandedCommunityListsItems struct {
 }
 
 type ExpandedCommunityListsItemsEntries struct {
-	Action     types.String `tfsdk:"action"`
-	Expression types.String `tfsdk:"expression"`
+	Action            types.String `tfsdk:"action"`
+	RegularExpression types.String `tfsdk:"regular_expression"`
 }
 
 // End of section. //template:end types
@@ -89,8 +89,8 @@ func (data ExpandedCommunityLists) toBody(ctx context.Context, state ExpandedCom
 					if !childItem.Action.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "action", childItem.Action.ValueString())
 					}
-					if !childItem.Expression.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.Expression.ValueString())
+					if !childItem.RegularExpression.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.RegularExpression.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
 				}
@@ -147,9 +147,9 @@ func (data *ExpandedCommunityLists) fromBody(ctx context.Context, res gjson.Resu
 					data.Action = types.StringNull()
 				}
 				if value := res.Get("regularExpression"); value.Exists() {
-					data.Expression = types.StringValue(value.String())
+					data.RegularExpression = types.StringValue(value.String())
 				} else {
-					data.Expression = types.StringNull()
+					data.RegularExpression = types.StringNull()
 				}
 				(*parent).Entries = append((*parent).Entries, data)
 				return true
@@ -213,10 +213,10 @@ func (data *ExpandedCommunityLists) fromBodyPartial(ctx context.Context, res gjs
 			} else {
 				data.Action = types.StringNull()
 			}
-			if value := res.Get("regularExpression"); value.Exists() && !data.Expression.IsNull() {
-				data.Expression = types.StringValue(value.String())
+			if value := res.Get("regularExpression"); value.Exists() && !data.RegularExpression.IsNull() {
+				data.RegularExpression = types.StringValue(value.String())
 			} else {
-				data.Expression = types.StringNull()
+				data.RegularExpression = types.StringNull()
 			}
 			(*parent).Entries[i] = data
 		}
@@ -320,10 +320,7 @@ func (data ExpandedCommunityLists) adjustBody(ctx context.Context, req string) s
 	return req
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
 func (data ExpandedCommunityLists) adjustBodyBulk(ctx context.Context, req string) string {
+	// To be updated once FMC supports bulk operations for Expanded Community Lists
 	return req
 }
-
-// End of section. //template:end adjustBodyBulk

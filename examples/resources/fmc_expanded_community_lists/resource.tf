@@ -3,8 +3,8 @@ resource "fmc_expanded_community_lists" "example" {
     my_expanded_community_lists = {
       entries = [
         {
-          action     = "PERMIT"
-          expression = "^123$"
+          action             = "PERMIT"
+          regular_expression = "^123$"
         }
       ]
     }

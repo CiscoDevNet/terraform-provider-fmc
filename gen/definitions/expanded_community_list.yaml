@@ -27,11 +27,10 @@ attributes:
       - model_name: action
         type: String
         mandatory: true
-        description: Action to take.
+        description: Indicate redistribution access.
         enum_values: [PERMIT, DENY]
         example: PERMIT
       - model_name: regularExpression
-        tf_name: expression
         type: String
         mandatory: true
         description: Regular expression pattern to match the community.

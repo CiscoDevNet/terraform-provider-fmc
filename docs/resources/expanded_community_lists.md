@@ -25,8 +25,8 @@ resource "fmc_expanded_community_lists" "example" {
     my_expanded_community_lists = {
       entries = [
         {
-          action     = "PERMIT"
-          expression = "^123$"
+          action             = "PERMIT"
+          regular_expression = "^123$"
         }
       ]
     }
@@ -66,9 +66,9 @@ Read-Only:
 
 Required:
 
-- `action` (String) Action to take.
+- `action` (String) Indicate redistribution access.
   - Choices: `PERMIT`, `DENY`
-- `expression` (String) Regular expression pattern to match the community.
+- `regular_expression` (String) Regular expression pattern to match the community.
 
 ## Import
 

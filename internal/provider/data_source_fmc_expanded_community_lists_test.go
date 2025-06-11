@@ -33,7 +33,7 @@ func TestAccDataSourceFmcExpandedCommunityLists(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_expanded_community_lists.test", "items.my_expanded_community_lists.id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_expanded_community_lists.test", "items.my_expanded_community_lists.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_expanded_community_lists.test", "items.my_expanded_community_lists.entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_expanded_community_lists.test", "items.my_expanded_community_lists.entries.0.expression", "^123$"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_expanded_community_lists.test", "items.my_expanded_community_lists.entries.0.regular_expression", "^123$"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -59,7 +59,7 @@ func testAccDataSourceFmcExpandedCommunityListsConfig() string {
 	config += `	items = { "my_expanded_community_lists" = {` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
-	config += `			expression = "^123$"` + "\n"
+	config += `			regular_expression = "^123$"` + "\n"
 	config += `		}]` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
