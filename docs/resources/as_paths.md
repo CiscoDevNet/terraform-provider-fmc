@@ -40,7 +40,7 @@ resource "fmc_as_paths" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of AS Paths. The key of the map is the name of the individual AS Path. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of AS Paths. The key of the map is the name of the individual AS Path object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -63,7 +63,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed AS Path.
+- `id` (String) Id of the managed AS Path object.
 - `type` (String) Type of the object; this value is always 'ASPathList'.
 
 <a id="nestedatt--items--entries"></a>

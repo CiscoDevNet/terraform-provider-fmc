@@ -27,7 +27,7 @@ data "fmc_as_paths" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of AS Paths. The key of the map is the name of the individual AS Path. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of AS Paths. The key of the map is the name of the individual AS Path object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -39,7 +39,7 @@ data "fmc_as_paths" "example" {
 Read-Only:
 
 - `entries` (Attributes List) List of AS Path entries. (see [below for nested schema](#nestedatt--items--entries))
-- `id` (String) Id of the managed AS Path.
+- `id` (String) Id of the managed AS Path object.
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'ASPathList'.
 

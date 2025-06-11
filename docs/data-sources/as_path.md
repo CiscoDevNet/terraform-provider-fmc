@@ -25,7 +25,7 @@ data "fmc_as_path" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (Number) Name of the AS Path.
+- `name` (Number) Name of the AS Path object.
 
 ### Read-Only
 

@@ -7,7 +7,7 @@ attributes:
   - model_name: name
     type: Int64
     mandatory: true
-    description: Name of the AS Path.
+    description: Name of the AS Path object.
     example: 100
     min_int: 1
     max_int: 500

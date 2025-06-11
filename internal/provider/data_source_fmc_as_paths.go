@@ -66,13 +66,13 @@ func (d *ASPathsDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of AS Paths. The key of the map is the name of the individual AS Path.",
+				MarkdownDescription: "Map of AS Paths. The key of the map is the name of the individual AS Path object.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed AS Path.",
+							MarkdownDescription: "Id of the managed AS Path object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

@@ -332,10 +332,7 @@ func (data ASPaths) adjustBody(ctx context.Context, req string) string {
 	return req
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
 func (data ASPaths) adjustBodyBulk(ctx context.Context, req string) string {
+	// Fill with sequence numbers once FMC starts to support bulk operations for this object
 	return req
 }
-
-// End of section. //template:end adjustBodyBulk

@@ -31,7 +31,7 @@ resource "fmc_as_path" "example" {
 ### Required
 
 - `entries` (Attributes List) List of AS Path entries. (see [below for nested schema](#nestedatt--entries))
-- `name` (Number) Name of the AS Path.
+- `name` (Number) Name of the AS Path object.
   - Range: `1`-`500`
 
 ### Optional

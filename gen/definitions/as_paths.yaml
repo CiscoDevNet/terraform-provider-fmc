@@ -10,14 +10,14 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of AS Paths. The key of the map is the name of the individual AS Path.
+      Map of AS Paths. The key of the map is the name of the individual AS Path object.
     map_key_example: 240
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed AS Path.
+        description: Id of the managed AS Path object.
         exclude_example: true
         exclude_test: true
       - model_name: type

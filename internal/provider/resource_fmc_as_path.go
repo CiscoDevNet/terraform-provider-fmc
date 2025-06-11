@@ -81,7 +81,7 @@ func (r *ASPathResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				},
 			},
 			"name": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the AS Path.").AddIntegerRangeDescription(1, 500).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the AS Path object.").AddIntegerRangeDescription(1, 500).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 500),

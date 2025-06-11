@@ -72,7 +72,7 @@ func (d *ASPathDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:            true,
 			},
 			"name": schema.Int64Attribute{
-				MarkdownDescription: "Name of the AS Path.",
+				MarkdownDescription: "Name of the AS Path object.",
 				Optional:            true,
 				Computed:            true,
 			},

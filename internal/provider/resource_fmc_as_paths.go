@@ -86,12 +86,12 @@ func (r *ASPathsResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of AS Paths. The key of the map is the name of the individual AS Path.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of AS Paths. The key of the map is the name of the individual AS Path object.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed AS Path.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed AS Path object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseStateForUnknown(),
