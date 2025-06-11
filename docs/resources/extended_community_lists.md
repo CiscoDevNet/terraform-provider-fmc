@@ -74,7 +74,7 @@ Required:
 
 Optional:
 
-- `expression` (String) Regular expression (required if sub_type is Expanded)
+- `regular_expression` (String) Regular expression (required if sub_type is Expanded)
 - `route_target` (String) Route target (required if sub_type is Standard)
 
 ## Import
