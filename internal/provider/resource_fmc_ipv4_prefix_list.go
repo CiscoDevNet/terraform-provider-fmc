@@ -108,14 +108,14 @@ func (r *IPv4PrefixListResource) Schema(ctx context.Context, req resource.Schema
 							Required:            true,
 						},
 						"min_prefix_length": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").AddIntegerRangeDescription(1, 32).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Minimum prefix length.").AddIntegerRangeDescription(1, 32).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 32),
 							},
 						},
 						"max_prefix_length": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").AddIntegerRangeDescription(1, 32).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Maximum prefix length.").AddIntegerRangeDescription(1, 32).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 32),
