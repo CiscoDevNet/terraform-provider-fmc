@@ -1,0 +1,60 @@
+---
+name: Standard Community Lists
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/standardcommunitylists
+doc_category: Objects
+is_bulk: true
+adjust_body: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Standard Community Lists. The key of the map is the name of the individual Standard Community List.
+    map_key_example: my_standard_community_lists
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Standard Community List.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CommunityListObject'.
+        computed: true
+      - model_name: entries
+        type: List
+        mandatory: true
+        ordered_list: true
+        description: List of entries
+        attributes:      
+          - model_name: type
+            type: String
+            description: Type of the entry.
+            value: Standard
+          - model_name: action
+            type: String
+            mandatory: true
+            description: Indicate redistribution access.
+            enum_values: [PERMIT, DENY]
+            example: PERMIT
+          - model_name: communities
+            type: String
+            mandatory: true
+            description: List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535
+            example: "123 456 789"
+          - model_name: internet
+            tf_name: internet
+            type: Bool
+            description: Specify Internet well-known community.
+            example: true
+          - model_name: noAdvertise
+            type: Bool
+            description: Specify No-advertise well-known community.
+            example: true
+          - model_name: noExport
+            type: Bool
+            description: Specify No-export well-known community.
+            example: true

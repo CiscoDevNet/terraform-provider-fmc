@@ -1,0 +1,47 @@
+---
+name: Expanded Community Lists
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/expandedcommunitylists
+doc_category: Objects
+is_bulk: true
+adjust_body: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Expanded Community Lists. The key of the map is the name of the individual Expanded Community List.
+    map_key_example: my_expanded_community_lists
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Expanded Community List.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CommunityListObject'.
+        computed: true
+      - model_name: entries
+        type: List
+        mandatory: true
+        ordered_list: true
+        description: List of entries
+        attributes:      
+          - model_name: type
+            type: String
+            description: Type of the entry.
+            value: Expanded
+          - model_name: action
+            type: String
+            mandatory: true
+            description: Indicate redistribution access.
+            enum_values: [PERMIT, DENY]
+            example: PERMIT
+          - model_name: regularExpression
+            type: String
+            mandatory: true
+            description: Regular expression pattern to match the community.
+            example: "^123$"

@@ -1,0 +1,37 @@
+---
+name: Expanded Community List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/expandedcommunitylists
+doc_category: Objects
+adjust_body: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Expanded Community List object.
+    example: my_expanded_community_list
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'CommunityListObject'.
+    computed: true
+  - model_name: entries
+    type: List
+    mandatory: true
+    ordered_list: true
+    description: List of entries
+    attributes:      
+      - model_name: type
+        type: String
+        description: Type of the entry.
+        value: Expanded
+      - model_name: action
+        type: String
+        mandatory: true
+        description: Indicate redistribution access.
+        enum_values: [PERMIT, DENY]
+        example: PERMIT
+      - model_name: regularExpression
+        type: String
+        mandatory: true
+        description: Regular expression pattern to match the community.
+        example: "^123$"
