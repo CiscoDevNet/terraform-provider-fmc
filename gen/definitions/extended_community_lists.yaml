@@ -49,7 +49,6 @@ attributes:
             description: Route target (required if sub_type is Standard)
             example: "64512:1010"
           - model_name: regularExpression
-            tf_name: expression
             type: String
             description: Regular expression (required if sub_type is Expanded)
             exclude_example: true

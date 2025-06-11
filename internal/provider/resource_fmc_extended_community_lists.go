@@ -128,7 +128,7 @@ func (r *ExtendedCommunityListsResource) Schema(ctx context.Context, req resourc
 										MarkdownDescription: helpers.NewAttributeDescription("Route target (required if sub_type is Standard)").String,
 										Optional:            true,
 									},
-									"expression": schema.StringAttribute{
+									"regular_expression": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Regular expression (required if sub_type is Expanded)").String,
 										Optional:            true,
 									},

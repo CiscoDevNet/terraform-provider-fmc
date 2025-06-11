@@ -48,9 +48,9 @@ type ExtendedCommunityListsItems struct {
 }
 
 type ExtendedCommunityListsItemsEntries struct {
-	Action      types.String `tfsdk:"action"`
-	RouteTarget types.String `tfsdk:"route_target"`
-	Expression  types.String `tfsdk:"expression"`
+	Action            types.String `tfsdk:"action"`
+	RouteTarget       types.String `tfsdk:"route_target"`
+	RegularExpression types.String `tfsdk:"regular_expression"`
 }
 
 // End of section. //template:end types
@@ -96,8 +96,8 @@ func (data ExtendedCommunityLists) toBody(ctx context.Context, state ExtendedCom
 					if !childItem.RouteTarget.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "routeTarget", childItem.RouteTarget.ValueString())
 					}
-					if !childItem.Expression.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.Expression.ValueString())
+					if !childItem.RegularExpression.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.RegularExpression.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
 				}
@@ -164,9 +164,9 @@ func (data *ExtendedCommunityLists) fromBody(ctx context.Context, res gjson.Resu
 					data.RouteTarget = types.StringNull()
 				}
 				if value := res.Get("regularExpression"); value.Exists() {
-					data.Expression = types.StringValue(value.String())
+					data.RegularExpression = types.StringValue(value.String())
 				} else {
-					data.Expression = types.StringNull()
+					data.RegularExpression = types.StringNull()
 				}
 				(*parent).Entries = append((*parent).Entries, data)
 				return true
@@ -240,10 +240,10 @@ func (data *ExtendedCommunityLists) fromBodyPartial(ctx context.Context, res gjs
 			} else {
 				data.RouteTarget = types.StringNull()
 			}
-			if value := res.Get("regularExpression"); value.Exists() && !data.Expression.IsNull() {
-				data.Expression = types.StringValue(value.String())
+			if value := res.Get("regularExpression"); value.Exists() && !data.RegularExpression.IsNull() {
+				data.RegularExpression = types.StringValue(value.String())
 			} else {
-				data.Expression = types.StringNull()
+				data.RegularExpression = types.StringNull()
 			}
 			(*parent).Entries[i] = data
 		}
