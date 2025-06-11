@@ -151,7 +151,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Read(ctx context.Con
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.InterfaceName.ValueString() == v.Get("physicalInterface.name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_name '%v', id: %v", config.Id.String(), config.InterfaceName.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_name '%v', id: %v", config.Id.ValueString(), config.InterfaceName.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -164,7 +164,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Read(ctx context.Con
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_name: %s", config.InterfaceName.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with interface_name: %v", config.InterfaceName.ValueString()))
 			return
 		}
 	}

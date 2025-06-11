@@ -1,0 +1,56 @@
+---
+name: IPv4 Prefix Lists
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ipv4prefixlists
+doc_category: Objects
+is_bulk: true
+adjust_body: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of IPv4 Prefix Lists. The key of the map is the name of the individual IPv4 Prefix List.
+    map_key_example: my_ipv4_prefix_lists
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed IPv4 Prefix List.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'IPv4PrefixList'.
+        computed: true
+      - model_name: entries
+        type: List
+        mandatory: true
+        description: List of entries
+        ordered_list: true
+        attributes:
+          - model_name: action
+            type: String
+            mandatory: true
+            description: Action to take.
+            enum_values: [PERMIT, DENY]
+            example: PERMIT
+          - model_name: ipAddress
+            type: String
+            mandatory: true
+            description: IPv4 address with prefix length.
+            example: "10.10.10.0/24"
+          - model_name: minPrefixLenth
+            tf_name: min_prefix_length
+            type: Int64
+            description: Minimum prefix length.
+            min_int: 1
+            max_int: 32
+            example: 25
+          - model_name: maxPrefixLength
+            type: Int64
+            description: Maximum prefix length.
+            min_int: 1
+            max_int: 32
+            example: 30

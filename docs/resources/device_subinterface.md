@@ -34,10 +34,10 @@ resource "fmc_device_subinterface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `interface_name` (String) Name of the parent interface (fmc_device_physical_interface.example.name).
-- `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
+- `interface_name` (String) Name of the parent interface. It has to already exist on the device.
+- `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
   - Range: `0`-`4294967295`
-- `vlan_id` (Number) VLAN identifier, unique per the parent interface.
+- `vlan_id` (Number) VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
   - Range: `1`-`4094`
 
 ### Optional
@@ -115,8 +115,9 @@ resource "fmc_device_subinterface" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
+- `is_multi_instance` (Boolean) Is parent device multi-instance.
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
-- `type` (String) Type of the object.
+- `type` (String) Type of the object, this value is always 'SubInterface'.
 
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`

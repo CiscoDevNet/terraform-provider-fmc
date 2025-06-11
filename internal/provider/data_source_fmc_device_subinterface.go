@@ -77,12 +77,16 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object.",
+				MarkdownDescription: "Type of the object, this value is always 'SubInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
 				MarkdownDescription: "Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).",
 				Optional:            true,
+				Computed:            true,
+			},
+			"is_multi_instance": schema.BoolAttribute{
+				MarkdownDescription: "Is parent device multi-instance.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
@@ -118,15 +122,15 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the parent interface (fmc_device_physical_interface.example.name).",
+				MarkdownDescription: "Name of the parent interface. It has to already exist on the device.",
 				Computed:            true,
 			},
 			"sub_interface_id": schema.Int64Attribute{
-				MarkdownDescription: "The numerical id of this subinterface, unique on the parent interface.",
+				MarkdownDescription: "The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.",
 				Computed:            true,
 			},
 			"vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "VLAN identifier, unique per the parent interface.",
+				MarkdownDescription: "VLAN identifier, unique per the parent interface. For multi-instance devices, this value must match with what was configured on chassis.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -438,6 +442,13 @@ func (d *DeviceSubinterfaceDataSource) Read(ctx context.Context, req datasource.
 	}
 
 	config.fromBody(ctx, res)
+
+	is_multi_instance, diags := FMCIsDeviceMultiInstance(ctx, d.client, config.DeviceId.ValueString(), reqMods)
+	if diags.HasError() {
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	config.IsMultiInstance = types.BoolValue(is_multi_instance)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 

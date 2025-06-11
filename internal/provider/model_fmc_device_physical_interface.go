@@ -1354,7 +1354,7 @@ func (data *DevicePhysicalInterface) fromBodyUnknowns(ctx context.Context, res g
 // End of section. //template:end fromBodyUnknowns
 
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
-func (data DevicePhysicalInterface) toBodyPutDelete(ctx context.Context, state DevicePhysicalInterface) string {
+func (data DevicePhysicalInterface) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	body, _ = sjson.Set(body, "mode", "NONE")
 	if data.Id.ValueString() != "" {

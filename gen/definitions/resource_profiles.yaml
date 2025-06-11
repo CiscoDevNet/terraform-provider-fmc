@@ -1,0 +1,40 @@
+---
+name: Resource Profiles
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/resourceprofiles
+is_bulk: true
+doc_category: Objects
+minimum_version_create: "7.4"
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Resource Profiles. The key of the map is the name of the individual Resource Profile.
+    map_key_example: my_resource_profiles
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Resource Profile.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'ResourceProfile'.
+        value: ResourceProfile
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'ResourceProfile'.
+        computed: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: My Resource Profile object
+      - model_name: numOfCPUs
+        tf_name: number_of_cpus
+        type: Int64
+        mandatory: true
+        description: Number of CPUs.
+        example: 10
