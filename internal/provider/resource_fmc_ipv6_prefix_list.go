@@ -85,7 +85,7 @@ func (r *IPv6PrefixListResource) Schema(ctx context.Context, req resource.Schema
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPv6PrefixList'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPV6PrefixList'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),

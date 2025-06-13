@@ -76,7 +76,7 @@ func (d *IPv6PrefixListsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'IPv6PrefixList'.",
+							MarkdownDescription: "Type of the object; this value is always 'IPV6PrefixList'.",
 							Computed:            true,
 						},
 						"entries": schema.ListNestedAttribute{
