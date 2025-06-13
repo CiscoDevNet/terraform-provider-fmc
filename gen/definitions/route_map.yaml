@@ -1,17 +1,13 @@
 ---
-### TODO IPv4 Prefix Lists
-####      IPv6 Prefix Lists
-#### BGP AS PATH
-#### BGP Community List
-#### BGP Policy List
 name: Route Map
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/routemaps
 doc_category: Objects
+adjust_body: true
 attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the route map object.
+    description: Name of the Route Map object.
     example: my_route_map
     data_source_query: true
   - model_name: type
@@ -25,152 +21,380 @@ attributes:
   - model_name: entries
     type: List
     description: List of route map entries.
+    ordered_list: true
     mandatory: true
     attributes:
-      - model_name: sequence
-        tf_name: sequence_number
-        type: Int64
-        mandatory: true
-        description: Sequence number of the route map entry.
-        example: 10
       - model_name: action
         type: String
         mandatory: true
-        description: Action to take for the route map entry.
+        description: Indicate the redistribution access.
         enum_values: [PERMIT, DENY]
       # Match clauses - Security Zones
       - model_name: interfaces
-        tf_name: security_zones
+        tf_name: match_security_zones
         type: List
-        description: List of interfaces or security zones to match.
+        description: Match traffic based on the (ingress/egress) security_zones.
         attributes:
           - model_name: id
             type: String
             mandatory: true
             description: ID of the security zone.
             example: 0050568A-4E02-1ed3-0000-004294969198
+      - model_name: interfaceNames
+        tf_name: match_interface_names
+        type: List
+        description: List of interface names that are not in the zones.
+        element_type: String
+        example: "GigabitEthernet0/1"
       # Match clauses - IPv4 Addresses
       - model_name: ipv4AccessListAddresses
+        tf_name: match_ipv4_address_access_lists
         type: List
-        description: List of IPv4 Access Control Lists (ACL) to match.
+        description: Match routes based on the route address.
         attributes:
           - model_name: id
             type: String
+            description: Id of the object.
             mandatory: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_standard_acl.test.id
             id: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
           - model_name: type
             type: String
             mandatory: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
+            description: Type of the access list.
+            example: StandardAccessList
+      - model_name: ipv4PrefixListAddresses
+        tf_name: match_ipv4_address_prefix_lists
+        type: List
+        description: Match routes based on the route address.
+        exclude_example: true
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            mandatory: true
+          - model_name: type
+            type: String
+            mandatory: true
+            description: Type of the access list.
+      # Match clauses - IPv4 Next Hop
       - model_name: ipv4AccessListNextHops
+        tf_name: match_ipv4_next_hop_access_lists
         type: List
-        description: List of IPv4 Access Control Lists (ACL) to match.
+        description: Match routes based on the next hop address of a route.
         attributes:
           - model_name: id
             type: String
-            mandatory: true
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_standard_acl.test.id
             id: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
           - model_name: type
             type: String
             mandatory: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
+            description: Type of the access list.
+            example: StandardAccessList
+      - model_name: ipv4PrefixListNexthops
+        tf_name: match_ipv4_next_hop_prefix_lists
+        type: List
+        description: Match routes based on the next hop address of a route.
+        exclude_example: true
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            mandatory: true
+          - model_name: type
+            type: String
+            mandatory: true
+            description: Type of the access list.
+      # Match clauses - IPv4 Route Source
       - model_name: ipv4AccessListRouteSources
+        tf_name: match_ipv4_route_source_access_lists
         type: List
-        description: List of IPv4 Access Control Lists (ACL) to match.
+        description: Match routes based on the advertising source address of the route.
         attributes:
           - model_name: id
             type: String
-            mandatory: true
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_standard_acl.test.id
             id: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
           - model_name: type
             type: String
             mandatory: true
-            description: ID of the IPv4 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
+            description: Type of the access list.
+            example: StandardAccessList
+      - model_name: ipv4PrefixListRouteSources
+        tf_name: match_ipv4_route_source_prefix_lists
+        type: List
+        description: Match routes based on the advertising source address of the route
+        exclude_example: true
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            mandatory: true
+          - model_name: type
+            type: String
+            mandatory: true
+            description: Type of the access list.
       # Match clauses - IPv6 Addresses
-      - model_name: ipv6AccessListAddresses
+      - model_name: id
+        data_path: [ipv6AccessListAddresses.0]
+        tf_name: match_ipv6_address_extended_access_list_id
+        type: String
+        description: Match routes based on the route address.
+      - model_name: id
+        data_path: [ipv6PrefixListAddresses.0]
+        tf_name: match_ipv6_address_prefix_list_id
+        type: String
+        description: Match routes based on the route address.
+        exclude_example: true
+        exclude_test: true
+      # Match clauses - IPv6 Next Hop
+      - model_name: id
+        data_path: [ipv6AccessListNextHops.0]
+        tf_name: match_ipv6_next_hop_extended_access_list_id
+        type: String
+        description: Match routes based on the next hop address of a route.
+      - model_name: id
+        data_path: [ipv6PrefixListNexthops.0]
+        tf_name: match_ipv6_next_hop_prefix_list_id
+        type: String
+        description: Match routes based on the next hop address of a route.
+        exclude_example: true
+        exclude_test: true
+      # Match clauses - IPv6 Route Source
+      - model_name: id
+        data_path: [ipv6AccessListRouteSources.0]
+        tf_name: match_ipv6_route_source_extended_access_list_id
+        type: String
+        description: Match routes based on the advertising source address of the route.
+      - model_name: id
+        data_path: [ipv6PrefixListRouteSources.0]
+        tf_name: match_ipv6_route_source_prefix_list_id
+        type: String
+        description: Match routes based on the advertising source address of the route
+        exclude_example: true
+        exclude_test: true
+      # Match clauses - BGP
+      - model_name: asPathLists
+        tf_name: match_bgp_as_path_lists
         type: List
-        description: List of IPv6 Access Control Lists (ACL) to match.
+        description: Match a BGP autonomous system path.
         attributes:
           - model_name: id
             type: String
-            mandatory: true
-            id: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
-          - model_name: type
-            type: String
-            mandatory: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
-      - model_name: ipv6AccessListNextHops
+            description: Id of object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_as_path.test.id
+      # Match clauses - Community Lists
+      - model_name: communityLists
+        tf_name: match_bgp_community_lists
         type: List
-        description: List of IPv6 Access Control Lists (ACL) to match.
+        description: List of Standard/Expanded Community Lists.
         attributes:
           - model_name: id
             type: String
-            mandatory: true
-            id: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
-          - model_name: type
-            type: String
-            mandatory: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
-      - model_name: ipv6AccessListRouteSources
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_standard_community_list.test.id
+      - model_name: extendedCommunityLists
+        tf_name: match_bgp_extended_community_lists
         type: List
-        description: List of IPv6 Access Control Lists (ACL) to match.
+        description: List of Extended Community Lists.
+        exclude_test: true
+        exclude_example: true
         attributes:
           - model_name: id
             type: String
-            mandatory: true
-            id: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
-          - model_name: type
+            description: Id of the object.
+      # Not supported by API
+      #- model_name: matchCommunityExactly
+      #  tf_name: match_bgp_match_community_exactly
+      #  type: Bool
+      #  description: Match BGP community exactly with the specified community.
+      #  example: "true"
+      # Match clauses - Policy Lists
+      - model_name: policyLists
+        tf_name: match_bgp_policy_lists
+        type: List
+        description: List of Policy Lists.
+        attributes:
+          - model_name: id
             type: String
-            mandatory: true
-            description: ID of the IPv6 ACL.
-            example: 0050568A-4E02-1ed3-0000-004294969199
+            description: Id of the object.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       # Match clauses - Other
       - model_name: metricRouteValues
+        tf_name: match_metric_route_values
         type: List
         element_type: Int64
         description: List of metric values to match.
       - model_name: tagValues
+        tf_name: match_tag_values
         type: List
         element_type: Int64
         description: Tag values.
       - model_name: routeTypeExternal1
+        tf_name: match_route_type_external_1
         type: Bool
         description: Match external type 1 routes.
         example: "true"
       - model_name: routeTypeExternal2
+        tf_name: match_route_type_external_2
         type: Bool
         description: Match external type 2 routes.
         example: "true"
       - model_name: routeTypeInternal
+        tf_name: match_route_type_internal
         type: Bool
         description: Match internal routes.
         example: "true"
       - model_name: routeTypeLocal
+        tf_name: match_route_type_local
         type: Bool
         description: Match local routes.
         example: "true"
       - model_name: routeTypeNSSAExternal1
+        tf_name: match_route_type_nssa_external_1
         type: Bool
         description: Match NSSA external type 1 routes.
         example: "true"
       - model_name: routeTypeNSSAExternal2
+        tf_name: match_route_type_nssa_external_2
         type: Bool
         description: Match NSSA external type 2 routes.
         example: "true"
+      # Set clauses - Metric values
+      - model_name: metricBandwidth
+        tf_name: set_metric_bandwidth
+        type: Int64
+        description: Set the metric bandwidth value in Kbits per second.
+        example: 1000000
+      - model_name: metricType
+        tf_name: set_metric_type
+        type: String
+        description: Set the metric type.
+        enum_values: [INTERNAL, TYPE_1, TYPE_2]
+        example: INTERNAL
+      # Set clauses - BGP Clauses - AS Path
+      - model_name: asPathPrependASPath
+        tf_name: set_bgp_as_path_prepend
+        type: List
+        element_type: Int64
+        description: Set the AS path prepend value.
+      - model_name: asPathPrependLastASToASPath
+        tf_name: set_bgp_as_path_prepend_last_as
+        type: Int64
+        min_int: 0
+        max_int: 10
+        description: Set the AS path prepend value.
+        example: 2
+      - model_name: convertRouteTagIntoASPath
+        tf_name: set_bgp_as_path_convert_route_tag_into_as_path
+        type: Bool
+        description: Convert the route tag into an AS path.
+        example: "true"
+      # Set clauses - BGP Clauses - Community
+      - model_name: specificCommunityNone
+        tf_name: set_bgp_community_none
+        type: Bool
+        description: Set the specific community to none.
+        example: "true"
+      - model_name: communityListSetting
+        tf_name: set_bgp_community_specific_community
+        type: Int64
+        description: Set the specific community.
+        example: 100
+      - model_name: addToExistingCommunity
+        tf_name: set_bgp_community_add_to_existing_communities
+        type: Bool
+        description: Set the specific community to none.
+        example: "true" 
+      - model_name: communityListSettingInternet
+        tf_name: set_bgp_community_internet
+        type: Bool
+        description: Set the specific community to none.
+        example: "true" 
+      - model_name: communityListSettingNoAdvertise
+        tf_name: set_bgp_community_no_advertise
+        type: Bool
+        description: Set the specific community to none.
+        example: "true"
+      - model_name: communityListSettingNoExport
+        tf_name: set_bgp_community_no_export
+        type: Bool
+        description: Set the specific community to none.
+        example: "true"
+      - model_name: extendedCommunityRouteTarget
+        tf_name: set_bgp_community_route_target
+        type: String
+        description: Set the extended community route target.
+      - model_name: extendedCommunityAdditive
+        tf_name: set_bgp_community_add_to_existing_extended_communities
+        type: Bool
+        description: Set the extended community additive.
+        example: "true"
+      # Set clauses - BGP Clauses - Others
+      - model_name: automaticTagSetting
+        tf_name: set_bgp_automatic_tag
+        type: Bool
+        description: Set the automatic tag setting.
+        example: "true"
+      - model_name: localPreferenceSetting
+        tf_name: set_bgp_local_preference
+        type: Int64
+        min_int: 1
+        max_int: 4294967295
+        description: Set the local preference value.
+        example: 100
+      - model_name: weightSetting
+        tf_name: set_bgp_weight
+        type: Int64
+        min_int: 0
+        max_int: 65535
+        description: Set the weight value.
+        example: 100
+      - model_name: originSetting
+        tf_name: set_bgp_origin
+        type: String
+        description: Set the origin value.
+        enum_values: [LOCAL_IGP, INCOMPLETE]
+        example: LOCAL_IGP
+      - model_name: nextHopIPV4Setting
+        tf_name: set_bgp_ipv4_next_hop
+        type: String
+        description: Set the next hop IPv4 address.
+        enum_values: [USE_PEER_ADDRESS, SPECIFIC_IP]
+      - model_name: specificIPsIPV4Setting
+        tf_name: set_bgp_ipv4_next_hop_specific_ip
+        type: List
+        element_type: String
+        description: Set the next hop IPv4 address.
+      - model_name: id
+        data_path: [prefixListIPV4Setting]
+        tf_name: set_bgp_ipv4_prefix_list_id
+        type: String
+        description: Set the prefix list for IPv4.
+      - model_name: nextHopIPV6Setting
+        tf_name: set_bgp_ipv6_next_hop
+        type: String
+        description: Set the next hop IPv6 address.
+        enum_values: [USE_PEER_ADDRESS, SPECIFIC_IP]
+      - model_name: specificIPsIPV6Setting
+        tf_name: set_bgp_ipv6_next_hop_specific_ip
+        type: List
+        element_type: String
+        description: Set the next hop IPv6 address.
+      - model_name: id
+        data_path: [prefixListIPV6Setting]
+        tf_name: set_bgp_ipv6_prefix_list_id
+        type: String
+        description: Set the prefix list for IPv6.
+        

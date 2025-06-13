@@ -34,29 +34,47 @@ func TestAccFmcRouteMap(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "name", "my_route_map"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_route_map.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.sequence_number", "10"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.action", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.security_zones.0.id", "0050568A-4E02-1ed3-0000-004294969198"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_addresses.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_addresses.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_next_hops.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_next_hops.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv4_access_list_route_sources.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_addresses.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_addresses.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_next_hops.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_next_hops.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_route_sources.0.id", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.ipv6_access_list_route_sources.0.type", "0050568A-4E02-1ed3-0000-004294969199"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.metric_route_values.0", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.tag_values.0", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_external1", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_external2", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_internal", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_local", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_n_s_s_a_external1", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.route_type_n_s_s_a_external2", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_security_zones.0.id", "0050568A-4E02-1ed3-0000-004294969198"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_interface_names.0", "GigabitEthernet0/1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv4_address_access_lists.0.type", "StandardAccessList"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv4_next_hop_access_lists.0.type", "StandardAccessList"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv4_route_source_access_lists.0.type", "StandardAccessList"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv6_address_extended_access_list_id", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv6_next_hop_extended_access_list_id", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_ipv6_route_source_extended_access_list_id", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_bgp_policy_lists.0.id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_metric_route_values.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_tag_values.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_external_1", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_external_2", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_internal", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_local", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_nssa_external_1", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.match_route_type_nssa_external_2", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_metric_bandwidth", "1000000"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_metric_type", "INTERNAL"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_as_path_prepend.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_as_path_prepend_last_as", "2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_as_path_convert_route_tag_into_as_path", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_none", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_specific_community", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_add_to_existing_communities", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_internet", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_no_advertise", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_no_export", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_route_target", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_community_add_to_existing_extended_communities", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_automatic_tag", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_local_preference", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_weight", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_origin", "LOCAL_IGP"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv4_next_hop", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv4_next_hop_specific_ip.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv4_prefix_list_id", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv6_next_hop", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv6_next_hop_specific_ip.0", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_route_map.test", "entries.0.set_bgp_ipv6_prefix_list_id", ""))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -92,7 +110,6 @@ func testAccFmcRouteMapConfig_minimum() string {
 	config := `resource "fmc_route_map" "test" {` + "\n"
 	config += `	name = "my_route_map"` + "\n"
 	config += `	entries = [{` + "\n"
-	config += `		sequence_number = 10` + "\n"
 	config += `		action = ""` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
@@ -108,43 +125,66 @@ func testAccFmcRouteMapConfig_all() string {
 	config += `	name = "my_route_map"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `	entries = [{` + "\n"
-	config += `		sequence_number = 10` + "\n"
 	config += `		action = ""` + "\n"
-	config += `		security_zones = [{` + "\n"
+	config += `		match_security_zones = [{` + "\n"
 	config += `			id = "0050568A-4E02-1ed3-0000-004294969198"` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv4_access_list_addresses = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_interface_names = ["GigabitEthernet0/1"]` + "\n"
+	config += `		match_ipv4_address_access_lists = [{` + "\n"
+	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv4_access_list_next_hops = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_ipv4_next_hop_access_lists = [{` + "\n"
+	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv4_access_list_route_sources = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_ipv4_route_source_access_lists = [{` + "\n"
+	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv6_access_list_addresses = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_ipv6_address_extended_access_list_id = ""` + "\n"
+	config += `		match_ipv6_next_hop_extended_access_list_id = ""` + "\n"
+	config += `		match_ipv6_route_source_extended_access_list_id = ""` + "\n"
+	config += `		match_bgp_as_path_lists = [{` + "\n"
+	config += `			id = fmc_as_path.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv6_access_list_next_hops = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_bgp_community_lists = [{` + "\n"
+	config += `			id = fmc_standard_community_list.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		ipv6_access_list_route_sources = [{` + "\n"
-	config += `			id = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
-	config += `			type = "0050568A-4E02-1ed3-0000-004294969199"` + "\n"
+	config += `		match_bgp_policy_lists = [{` + "\n"
+	config += `			id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `		}]` + "\n"
-	config += `		metric_route_values = []` + "\n"
-	config += `		tag_values = []` + "\n"
-	config += `		route_type_external1 = true` + "\n"
-	config += `		route_type_external2 = true` + "\n"
-	config += `		route_type_internal = true` + "\n"
-	config += `		route_type_local = true` + "\n"
-	config += `		route_type_n_s_s_a_external1 = true` + "\n"
-	config += `		route_type_n_s_s_a_external2 = true` + "\n"
+	config += `		match_metric_route_values = []` + "\n"
+	config += `		match_tag_values = []` + "\n"
+	config += `		match_route_type_external_1 = true` + "\n"
+	config += `		match_route_type_external_2 = true` + "\n"
+	config += `		match_route_type_internal = true` + "\n"
+	config += `		match_route_type_local = true` + "\n"
+	config += `		match_route_type_nssa_external_1 = true` + "\n"
+	config += `		match_route_type_nssa_external_2 = true` + "\n"
+	config += `		set_metric_bandwidth = 1000000` + "\n"
+	config += `		set_metric_type = "INTERNAL"` + "\n"
+	config += `		set_bgp_as_path_prepend = []` + "\n"
+	config += `		set_bgp_as_path_prepend_last_as = 2` + "\n"
+	config += `		set_bgp_as_path_convert_route_tag_into_as_path = true` + "\n"
+	config += `		set_bgp_community_none = true` + "\n"
+	config += `		set_bgp_community_specific_community = 100` + "\n"
+	config += `		set_bgp_community_add_to_existing_communities = true` + "\n"
+	config += `		set_bgp_community_internet = true` + "\n"
+	config += `		set_bgp_community_no_advertise = true` + "\n"
+	config += `		set_bgp_community_no_export = true` + "\n"
+	config += `		set_bgp_community_route_target = ""` + "\n"
+	config += `		set_bgp_community_add_to_existing_extended_communities = true` + "\n"
+	config += `		set_bgp_automatic_tag = true` + "\n"
+	config += `		set_bgp_local_preference = 100` + "\n"
+	config += `		set_bgp_weight = 100` + "\n"
+	config += `		set_bgp_origin = "LOCAL_IGP"` + "\n"
+	config += `		set_bgp_ipv4_next_hop = ""` + "\n"
+	config += `		set_bgp_ipv4_next_hop_specific_ip = [""]` + "\n"
+	config += `		set_bgp_ipv4_prefix_list_id = ""` + "\n"
+	config += `		set_bgp_ipv6_next_hop = ""` + "\n"
+	config += `		set_bgp_ipv6_next_hop_specific_ip = [""]` + "\n"
+	config += `		set_bgp_ipv6_prefix_list_id = ""` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

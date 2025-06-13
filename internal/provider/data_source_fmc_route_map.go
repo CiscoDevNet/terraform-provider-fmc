@@ -72,7 +72,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the route map object.",
+				MarkdownDescription: "Name of the Route Map object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -89,16 +89,12 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"sequence_number": schema.Int64Attribute{
-							MarkdownDescription: "Sequence number of the route map entry.",
-							Computed:            true,
-						},
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Action to take for the route map entry.",
+							MarkdownDescription: "Indicate the redistribution access.",
 							Computed:            true,
 						},
-						"security_zones": schema.ListNestedAttribute{
-							MarkdownDescription: "List of interfaces or security zones to match.",
+						"match_security_zones": schema.ListNestedAttribute{
+							MarkdownDescription: "Match traffic based on the (ingress/egress) security_zones.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -109,134 +105,306 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 						},
-						"ipv4_access_list_addresses": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv4 Access Control Lists (ACL) to match.",
+						"match_interface_names": schema.ListAttribute{
+							MarkdownDescription: "List of interface names that are not in the zones.",
+							ElementType:         types.StringType,
+							Computed:            true,
+						},
+						"match_ipv4_address_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the route address.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"ipv4_access_list_next_hops": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv4 Access Control Lists (ACL) to match.",
+						"match_ipv4_address_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the route address.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"ipv4_access_list_route_sources": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv4 Access Control Lists (ACL) to match.",
+						"match_ipv4_next_hop_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the next hop address of a route.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv4 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_addresses": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+						"match_ipv4_next_hop_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the next hop address of a route.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_next_hops": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+						"match_ipv4_route_source_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the advertising source address of the route.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_route_sources": schema.ListNestedAttribute{
-							MarkdownDescription: "List of IPv6 Access Control Lists (ACL) to match.",
+						"match_ipv4_route_source_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match routes based on the advertising source address of the route",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "ID of the IPv6 ACL.",
+										MarkdownDescription: "Type of the access list.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"metric_route_values": schema.ListAttribute{
+						"match_ipv6_address_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the route address.",
+							Computed:            true,
+						},
+						"match_ipv6_address_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the route address.",
+							Computed:            true,
+						},
+						"match_ipv6_next_hop_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the next hop address of a route.",
+							Computed:            true,
+						},
+						"match_ipv6_next_hop_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the next hop address of a route.",
+							Computed:            true,
+						},
+						"match_ipv6_route_source_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the advertising source address of the route.",
+							Computed:            true,
+						},
+						"match_ipv6_route_source_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: "Match routes based on the advertising source address of the route",
+							Computed:            true,
+						},
+						"match_bgp_as_path_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "Match a BGP autonomous system path.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of object.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_community_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "List of Standard/Expanded Community Lists.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the object.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_extended_community_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "List of Extended Community Lists.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the object.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_policy_lists": schema.ListNestedAttribute{
+							MarkdownDescription: "List of Policy Lists.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the object.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"match_metric_route_values": schema.ListAttribute{
 							MarkdownDescription: "List of metric values to match.",
 							ElementType:         types.Int64Type,
 							Computed:            true,
 						},
-						"tag_values": schema.ListAttribute{
+						"match_tag_values": schema.ListAttribute{
 							MarkdownDescription: "Tag values.",
 							ElementType:         types.Int64Type,
 							Computed:            true,
 						},
-						"route_type_external1": schema.BoolAttribute{
+						"match_route_type_external_1": schema.BoolAttribute{
 							MarkdownDescription: "Match external type 1 routes.",
 							Computed:            true,
 						},
-						"route_type_external2": schema.BoolAttribute{
+						"match_route_type_external_2": schema.BoolAttribute{
 							MarkdownDescription: "Match external type 2 routes.",
 							Computed:            true,
 						},
-						"route_type_internal": schema.BoolAttribute{
+						"match_route_type_internal": schema.BoolAttribute{
 							MarkdownDescription: "Match internal routes.",
 							Computed:            true,
 						},
-						"route_type_local": schema.BoolAttribute{
+						"match_route_type_local": schema.BoolAttribute{
 							MarkdownDescription: "Match local routes.",
 							Computed:            true,
 						},
-						"route_type_n_s_s_a_external1": schema.BoolAttribute{
+						"match_route_type_nssa_external_1": schema.BoolAttribute{
 							MarkdownDescription: "Match NSSA external type 1 routes.",
 							Computed:            true,
 						},
-						"route_type_n_s_s_a_external2": schema.BoolAttribute{
+						"match_route_type_nssa_external_2": schema.BoolAttribute{
 							MarkdownDescription: "Match NSSA external type 2 routes.",
+							Computed:            true,
+						},
+						"set_metric_bandwidth": schema.Int64Attribute{
+							MarkdownDescription: "Set the metric bandwidth value in Kbits per second.",
+							Computed:            true,
+						},
+						"set_metric_type": schema.StringAttribute{
+							MarkdownDescription: "Set the metric type.",
+							Computed:            true,
+						},
+						"set_bgp_as_path_prepend": schema.ListAttribute{
+							MarkdownDescription: "Set the AS path prepend value.",
+							ElementType:         types.Int64Type,
+							Computed:            true,
+						},
+						"set_bgp_as_path_prepend_last_as": schema.Int64Attribute{
+							MarkdownDescription: "Set the AS path prepend value.",
+							Computed:            true,
+						},
+						"set_bgp_as_path_convert_route_tag_into_as_path": schema.BoolAttribute{
+							MarkdownDescription: "Convert the route tag into an AS path.",
+							Computed:            true,
+						},
+						"set_bgp_community_none": schema.BoolAttribute{
+							MarkdownDescription: "Set the specific community to none.",
+							Computed:            true,
+						},
+						"set_bgp_community_specific_community": schema.Int64Attribute{
+							MarkdownDescription: "Set the specific community.",
+							Computed:            true,
+						},
+						"set_bgp_community_add_to_existing_communities": schema.BoolAttribute{
+							MarkdownDescription: "Set the specific community to none.",
+							Computed:            true,
+						},
+						"set_bgp_community_internet": schema.BoolAttribute{
+							MarkdownDescription: "Set the specific community to none.",
+							Computed:            true,
+						},
+						"set_bgp_community_no_advertise": schema.BoolAttribute{
+							MarkdownDescription: "Set the specific community to none.",
+							Computed:            true,
+						},
+						"set_bgp_community_no_export": schema.BoolAttribute{
+							MarkdownDescription: "Set the specific community to none.",
+							Computed:            true,
+						},
+						"set_bgp_community_route_target": schema.StringAttribute{
+							MarkdownDescription: "Set the extended community route target.",
+							Computed:            true,
+						},
+						"set_bgp_community_add_to_existing_extended_communities": schema.BoolAttribute{
+							MarkdownDescription: "Set the extended community additive.",
+							Computed:            true,
+						},
+						"set_bgp_automatic_tag": schema.BoolAttribute{
+							MarkdownDescription: "Set the automatic tag setting.",
+							Computed:            true,
+						},
+						"set_bgp_local_preference": schema.Int64Attribute{
+							MarkdownDescription: "Set the local preference value.",
+							Computed:            true,
+						},
+						"set_bgp_weight": schema.Int64Attribute{
+							MarkdownDescription: "Set the weight value.",
+							Computed:            true,
+						},
+						"set_bgp_origin": schema.StringAttribute{
+							MarkdownDescription: "Set the origin value.",
+							Computed:            true,
+						},
+						"set_bgp_ipv4_next_hop": schema.StringAttribute{
+							MarkdownDescription: "Set the next hop IPv4 address.",
+							Computed:            true,
+						},
+						"set_bgp_ipv4_next_hop_specific_ip": schema.ListAttribute{
+							MarkdownDescription: "Set the next hop IPv4 address.",
+							ElementType:         types.StringType,
+							Computed:            true,
+						},
+						"set_bgp_ipv4_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: "Set the prefix list for IPv4.",
+							Computed:            true,
+						},
+						"set_bgp_ipv6_next_hop": schema.StringAttribute{
+							MarkdownDescription: "Set the next hop IPv6 address.",
+							Computed:            true,
+						},
+						"set_bgp_ipv6_next_hop_specific_ip": schema.ListAttribute{
+							MarkdownDescription: "Set the next hop IPv6 address.",
+							ElementType:         types.StringType,
+							Computed:            true,
+						},
+						"set_bgp_ipv6_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: "Set the prefix list for IPv6.",
 							Computed:            true,
 						},
 					},
@@ -297,7 +465,7 @@ func (d *RouteMapDataSource) Read(ctx context.Context, req datasource.ReadReques
 				value.ForEach(func(k, v gjson.Result) bool {
 					if config.Name.ValueString() == v.Get("name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.String(), config.Name.ValueString(), config.Id.String()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueString(), config.Id.ValueString()))
 						return false
 					}
 					return true
@@ -310,7 +478,7 @@ func (d *RouteMapDataSource) Read(ctx context.Context, req datasource.ReadReques
 		}
 
 		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %s", config.Name.ValueString()))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
 			return
 		}
 	}

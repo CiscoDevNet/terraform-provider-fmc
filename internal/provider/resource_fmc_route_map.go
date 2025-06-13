@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -80,7 +81,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the route map object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Route Map object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -99,19 +100,15 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"sequence_number": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Sequence number of the route map entry.").String,
-							Required:            true,
-						},
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Action to take for the route map entry.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Indicate the redistribution access.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
 						},
-						"security_zones": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of interfaces or security zones to match.").String,
+						"match_security_zones": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match traffic based on the (ingress/egress) security_zones.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -122,134 +119,327 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								},
 							},
 						},
-						"ipv4_access_list_addresses": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv4 Access Control Lists (ACL) to match.").String,
+						"match_interface_names": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of interface names that are not in the zones.").String,
+							ElementType:         types.StringType,
+							Optional:            true,
+						},
+						"match_ipv4_address_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the route address.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"ipv4_access_list_next_hops": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv4 Access Control Lists (ACL) to match.").String,
+						"match_ipv4_address_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the route address.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"ipv4_access_list_route_sources": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv4 Access Control Lists (ACL) to match.").String,
+						"match_ipv4_next_hop_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the next hop address of a route.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
-										Required:            true,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv4 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_addresses": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+						"match_ipv4_next_hop_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the next hop address of a route.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_next_hops": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+						"match_ipv4_route_source_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the advertising source address of the route.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
-										Required:            true,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"ipv6_access_list_route_sources": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of IPv6 Access Control Lists (ACL) to match.").String,
+						"match_ipv4_route_source_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the advertising source address of the route").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ID of the IPv6 ACL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the access list.").String,
 										Required:            true,
 									},
 								},
 							},
 						},
-						"metric_route_values": schema.ListAttribute{
+						"match_ipv6_address_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the route address.").String,
+							Optional:            true,
+						},
+						"match_ipv6_address_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the route address.").String,
+							Optional:            true,
+						},
+						"match_ipv6_next_hop_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the next hop address of a route.").String,
+							Optional:            true,
+						},
+						"match_ipv6_next_hop_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the next hop address of a route.").String,
+							Optional:            true,
+						},
+						"match_ipv6_route_source_extended_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the advertising source address of the route.").String,
+							Optional:            true,
+						},
+						"match_ipv6_route_source_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the advertising source address of the route").String,
+							Optional:            true,
+						},
+						"match_bgp_as_path_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Match a BGP autonomous system path.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of object.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_community_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of Standard/Expanded Community Lists.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_extended_community_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of Extended Community Lists.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
+						"match_bgp_policy_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("List of Policy Lists.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
+						"match_metric_route_values": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("List of metric values to match.").String,
 							ElementType:         types.Int64Type,
 							Optional:            true,
 						},
-						"tag_values": schema.ListAttribute{
+						"match_tag_values": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Tag values.").String,
 							ElementType:         types.Int64Type,
 							Optional:            true,
 						},
-						"route_type_external1": schema.BoolAttribute{
+						"match_route_type_external_1": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match external type 1 routes.").String,
 							Optional:            true,
 						},
-						"route_type_external2": schema.BoolAttribute{
+						"match_route_type_external_2": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match external type 2 routes.").String,
 							Optional:            true,
 						},
-						"route_type_internal": schema.BoolAttribute{
+						"match_route_type_internal": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match internal routes.").String,
 							Optional:            true,
 						},
-						"route_type_local": schema.BoolAttribute{
+						"match_route_type_local": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match local routes.").String,
 							Optional:            true,
 						},
-						"route_type_n_s_s_a_external1": schema.BoolAttribute{
+						"match_route_type_nssa_external_1": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match NSSA external type 1 routes.").String,
 							Optional:            true,
 						},
-						"route_type_n_s_s_a_external2": schema.BoolAttribute{
+						"match_route_type_nssa_external_2": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match NSSA external type 2 routes.").String,
+							Optional:            true,
+						},
+						"set_metric_bandwidth": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the metric bandwidth value in Kbits per second.").String,
+							Optional:            true,
+						},
+						"set_metric_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the metric type.").AddStringEnumDescription("INTERNAL", "TYPE_1", "TYPE_2").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("INTERNAL", "TYPE_1", "TYPE_2"),
+							},
+						},
+						"set_bgp_as_path_prepend": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the AS path prepend value.").String,
+							ElementType:         types.Int64Type,
+							Optional:            true,
+						},
+						"set_bgp_as_path_prepend_last_as": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the AS path prepend value.").AddIntegerRangeDescription(0, 10).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(0, 10),
+							},
+						},
+						"set_bgp_as_path_convert_route_tag_into_as_path": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Convert the route tag into an AS path.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_none": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community to none.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_specific_community": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_add_to_existing_communities": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community to none.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_internet": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community to none.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_no_advertise": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community to none.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_no_export": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the specific community to none.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_route_target": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the extended community route target.").String,
+							Optional:            true,
+						},
+						"set_bgp_community_add_to_existing_extended_communities": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the extended community additive.").String,
+							Optional:            true,
+						},
+						"set_bgp_automatic_tag": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the automatic tag setting.").String,
+							Optional:            true,
+						},
+						"set_bgp_local_preference": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the local preference value.").AddIntegerRangeDescription(1, 4294967295).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(1, 4294967295),
+							},
+						},
+						"set_bgp_weight": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the weight value.").AddIntegerRangeDescription(0, 65535).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(0, 65535),
+							},
+						},
+						"set_bgp_origin": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the origin value.").AddStringEnumDescription("LOCAL_IGP", "INCOMPLETE").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("LOCAL_IGP", "INCOMPLETE"),
+							},
+						},
+						"set_bgp_ipv4_next_hop": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv4 address.").AddStringEnumDescription("USE_PEER_ADDRESS", "SPECIFIC_IP").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("USE_PEER_ADDRESS", "SPECIFIC_IP"),
+							},
+						},
+						"set_bgp_ipv4_next_hop_specific_ip": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv4 address.").String,
+							ElementType:         types.StringType,
+							Optional:            true,
+						},
+						"set_bgp_ipv4_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the prefix list for IPv4.").String,
+							Optional:            true,
+						},
+						"set_bgp_ipv6_next_hop": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv6 address.").AddStringEnumDescription("USE_PEER_ADDRESS", "SPECIFIC_IP").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("USE_PEER_ADDRESS", "SPECIFIC_IP"),
+							},
+						},
+						"set_bgp_ipv6_next_hop_specific_ip": schema.ListAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv6 address.").String,
+							ElementType:         types.StringType,
+							Optional:            true,
+						},
+						"set_bgp_ipv6_prefix_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set the prefix list for IPv6.").String,
 							Optional:            true,
 						},
 					},
@@ -290,6 +480,7 @@ func (r *RouteMapResource) Create(ctx context.Context, req resource.CreateReques
 
 	// Create object
 	body := plan.toBody(ctx, RouteMap{})
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -386,6 +577,7 @@ func (r *RouteMapResource) Update(ctx context.Context, req resource.UpdateReques
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))

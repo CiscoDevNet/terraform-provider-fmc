@@ -25,7 +25,7 @@ data "fmc_route_map" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the route map object.
+- `name` (String) Name of the Route Map object.
 
 ### Read-Only
 
@@ -38,80 +38,145 @@ data "fmc_route_map" "example" {
 
 Read-Only:
 
-- `action` (String) Action to take for the route map entry.
-- `ipv4_access_list_addresses` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_addresses))
-- `ipv4_access_list_next_hops` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_next_hops))
-- `ipv4_access_list_route_sources` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_route_sources))
-- `ipv6_access_list_addresses` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_addresses))
-- `ipv6_access_list_next_hops` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_next_hops))
-- `ipv6_access_list_route_sources` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_route_sources))
-- `metric_route_values` (List of Number) List of metric values to match.
-- `route_type_external1` (Boolean) Match external type 1 routes.
-- `route_type_external2` (Boolean) Match external type 2 routes.
-- `route_type_internal` (Boolean) Match internal routes.
-- `route_type_local` (Boolean) Match local routes.
-- `route_type_n_s_s_a_external1` (Boolean) Match NSSA external type 1 routes.
-- `route_type_n_s_s_a_external2` (Boolean) Match NSSA external type 2 routes.
-- `security_zones` (Attributes List) List of interfaces or security zones to match. (see [below for nested schema](#nestedatt--entries--security_zones))
-- `sequence_number` (Number) Sequence number of the route map entry.
-- `tag_values` (List of Number) Tag values.
+- `action` (String) Indicate the redistribution access.
+- `match_bgp_as_path_lists` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--entries--match_bgp_as_path_lists))
+- `match_bgp_community_lists` (Attributes List) List of Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_community_lists))
+- `match_bgp_extended_community_lists` (Attributes List) List of Extended Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_extended_community_lists))
+- `match_bgp_policy_lists` (Attributes List) List of Policy Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_policy_lists))
+- `match_interface_names` (List of String) List of interface names that are not in the zones.
+- `match_ipv4_address_access_lists` (Attributes List) Match routes based on the route address. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_access_lists))
+- `match_ipv4_address_prefix_lists` (Attributes List) Match routes based on the route address. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_prefix_lists))
+- `match_ipv4_next_hop_access_lists` (Attributes List) Match routes based on the next hop address of a route. (see [below for nested schema](#nestedatt--entries--match_ipv4_next_hop_access_lists))
+- `match_ipv4_next_hop_prefix_lists` (Attributes List) Match routes based on the next hop address of a route. (see [below for nested schema](#nestedatt--entries--match_ipv4_next_hop_prefix_lists))
+- `match_ipv4_route_source_access_lists` (Attributes List) Match routes based on the advertising source address of the route. (see [below for nested schema](#nestedatt--entries--match_ipv4_route_source_access_lists))
+- `match_ipv4_route_source_prefix_lists` (Attributes List) Match routes based on the advertising source address of the route (see [below for nested schema](#nestedatt--entries--match_ipv4_route_source_prefix_lists))
+- `match_ipv6_address_extended_access_list_id` (String) Match routes based on the route address.
+- `match_ipv6_address_prefix_list_id` (String) Match routes based on the route address.
+- `match_ipv6_next_hop_extended_access_list_id` (String) Match routes based on the next hop address of a route.
+- `match_ipv6_next_hop_prefix_list_id` (String) Match routes based on the next hop address of a route.
+- `match_ipv6_route_source_extended_access_list_id` (String) Match routes based on the advertising source address of the route.
+- `match_ipv6_route_source_prefix_list_id` (String) Match routes based on the advertising source address of the route
+- `match_metric_route_values` (List of Number) List of metric values to match.
+- `match_route_type_external_1` (Boolean) Match external type 1 routes.
+- `match_route_type_external_2` (Boolean) Match external type 2 routes.
+- `match_route_type_internal` (Boolean) Match internal routes.
+- `match_route_type_local` (Boolean) Match local routes.
+- `match_route_type_nssa_external_1` (Boolean) Match NSSA external type 1 routes.
+- `match_route_type_nssa_external_2` (Boolean) Match NSSA external type 2 routes.
+- `match_security_zones` (Attributes List) Match traffic based on the (ingress/egress) security_zones. (see [below for nested schema](#nestedatt--entries--match_security_zones))
+- `match_tag_values` (List of Number) Tag values.
+- `set_bgp_as_path_convert_route_tag_into_as_path` (Boolean) Convert the route tag into an AS path.
+- `set_bgp_as_path_prepend` (List of Number) Set the AS path prepend value.
+- `set_bgp_as_path_prepend_last_as` (Number) Set the AS path prepend value.
+- `set_bgp_automatic_tag` (Boolean) Set the automatic tag setting.
+- `set_bgp_community_add_to_existing_communities` (Boolean) Set the specific community to none.
+- `set_bgp_community_add_to_existing_extended_communities` (Boolean) Set the extended community additive.
+- `set_bgp_community_internet` (Boolean) Set the specific community to none.
+- `set_bgp_community_no_advertise` (Boolean) Set the specific community to none.
+- `set_bgp_community_no_export` (Boolean) Set the specific community to none.
+- `set_bgp_community_none` (Boolean) Set the specific community to none.
+- `set_bgp_community_route_target` (String) Set the extended community route target.
+- `set_bgp_community_specific_community` (Number) Set the specific community.
+- `set_bgp_ipv4_next_hop` (String) Set the next hop IPv4 address.
+- `set_bgp_ipv4_next_hop_specific_ip` (List of String) Set the next hop IPv4 address.
+- `set_bgp_ipv4_prefix_list_id` (String) Set the prefix list for IPv4.
+- `set_bgp_ipv6_next_hop` (String) Set the next hop IPv6 address.
+- `set_bgp_ipv6_next_hop_specific_ip` (List of String) Set the next hop IPv6 address.
+- `set_bgp_ipv6_prefix_list_id` (String) Set the prefix list for IPv6.
+- `set_bgp_local_preference` (Number) Set the local preference value.
+- `set_bgp_origin` (String) Set the origin value.
+- `set_bgp_weight` (Number) Set the weight value.
+- `set_metric_bandwidth` (Number) Set the metric bandwidth value in Kbits per second.
+- `set_metric_type` (String) Set the metric type.
 
-<a id="nestedatt--entries--ipv4_access_list_addresses"></a>
-### Nested Schema for `entries.ipv4_access_list_addresses`
-
-Read-Only:
-
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
-
-
-<a id="nestedatt--entries--ipv4_access_list_next_hops"></a>
-### Nested Schema for `entries.ipv4_access_list_next_hops`
-
-Read-Only:
-
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
-
-
-<a id="nestedatt--entries--ipv4_access_list_route_sources"></a>
-### Nested Schema for `entries.ipv4_access_list_route_sources`
-
-Read-Only:
-
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
-
-
-<a id="nestedatt--entries--ipv6_access_list_addresses"></a>
-### Nested Schema for `entries.ipv6_access_list_addresses`
-
-Read-Only:
-
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
-
-
-<a id="nestedatt--entries--ipv6_access_list_next_hops"></a>
-### Nested Schema for `entries.ipv6_access_list_next_hops`
+<a id="nestedatt--entries--match_bgp_as_path_lists"></a>
+### Nested Schema for `entries.match_bgp_as_path_lists`
 
 Read-Only:
 
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
+- `id` (String) Id of object.
 
 
-<a id="nestedatt--entries--ipv6_access_list_route_sources"></a>
-### Nested Schema for `entries.ipv6_access_list_route_sources`
+<a id="nestedatt--entries--match_bgp_community_lists"></a>
+### Nested Schema for `entries.match_bgp_community_lists`
 
 Read-Only:
 
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
+- `id` (String) Id of the object.
 
 
-<a id="nestedatt--entries--security_zones"></a>
-### Nested Schema for `entries.security_zones`
+<a id="nestedatt--entries--match_bgp_extended_community_lists"></a>
+### Nested Schema for `entries.match_bgp_extended_community_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_bgp_policy_lists"></a>
+### Nested Schema for `entries.match_bgp_policy_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_ipv4_address_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_address_access_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_ipv4_address_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_address_prefix_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_ipv4_next_hop_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_next_hop_access_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_ipv4_next_hop_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_next_hop_prefix_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_ipv4_route_source_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_route_source_access_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_ipv4_route_source_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_route_source_prefix_lists`
+
+Read-Only:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_security_zones"></a>
+### Nested Schema for `entries.match_security_zones`
 
 Read-Only:
 

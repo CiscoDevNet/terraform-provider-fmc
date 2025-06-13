@@ -18,57 +18,80 @@ resource "fmc_route_map" "example" {
   overridable = true
   entries = [
     {
-      sequence_number = 10
-      action          = ""
-      security_zones = [
+      action = ""
+      match_security_zones = [
         {
           id = "0050568A-4E02-1ed3-0000-004294969198"
         }
       ]
-      ipv4_access_list_addresses = [
+      match_interface_names = ["GigabitEthernet0/1"]
+      match_ipv4_address_access_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "StandardAccessList"
         }
       ]
-      ipv4_access_list_next_hops = [
+      match_ipv4_next_hop_access_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "StandardAccessList"
         }
       ]
-      ipv4_access_list_route_sources = [
+      match_ipv4_route_source_access_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type = "StandardAccessList"
         }
       ]
-      ipv6_access_list_addresses = [
+      match_ipv6_address_extended_access_list_id      = ""
+      match_ipv6_next_hop_extended_access_list_id     = ""
+      match_ipv6_route_source_extended_access_list_id = ""
+      match_bgp_as_path_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      ipv6_access_list_next_hops = [
+      match_bgp_community_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      ipv6_access_list_route_sources = [
+      match_bgp_policy_lists = [
         {
-          id   = "0050568A-4E02-1ed3-0000-004294969199"
-          type = "0050568A-4E02-1ed3-0000-004294969199"
+          id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      metric_route_values          = []
-      tag_values                   = []
-      route_type_external1         = true
-      route_type_external2         = true
-      route_type_internal          = true
-      route_type_local             = true
-      route_type_n_s_s_a_external1 = true
-      route_type_n_s_s_a_external2 = true
+      match_metric_route_values                              = []
+      match_tag_values                                       = []
+      match_route_type_external_1                            = true
+      match_route_type_external_2                            = true
+      match_route_type_internal                              = true
+      match_route_type_local                                 = true
+      match_route_type_nssa_external_1                       = true
+      match_route_type_nssa_external_2                       = true
+      set_metric_bandwidth                                   = 1000000
+      set_metric_type                                        = "INTERNAL"
+      set_bgp_as_path_prepend                                = []
+      set_bgp_as_path_prepend_last_as                        = 2
+      set_bgp_as_path_convert_route_tag_into_as_path         = true
+      set_bgp_community_none                                 = true
+      set_bgp_community_specific_community                   = 100
+      set_bgp_community_add_to_existing_communities          = true
+      set_bgp_community_internet                             = true
+      set_bgp_community_no_advertise                         = true
+      set_bgp_community_no_export                            = true
+      set_bgp_community_route_target                         = ""
+      set_bgp_community_add_to_existing_extended_communities = true
+      set_bgp_automatic_tag                                  = true
+      set_bgp_local_preference                               = 100
+      set_bgp_weight                                         = 100
+      set_bgp_origin                                         = "LOCAL_IGP"
+      set_bgp_ipv4_next_hop                                  = ""
+      set_bgp_ipv4_next_hop_specific_ip                      = [""]
+      set_bgp_ipv4_prefix_list_id                            = ""
+      set_bgp_ipv6_next_hop                                  = ""
+      set_bgp_ipv6_next_hop_specific_ip                      = [""]
+      set_bgp_ipv6_prefix_list_id                            = ""
     }
   ]
 }
@@ -80,7 +103,7 @@ resource "fmc_route_map" "example" {
 ### Required
 
 - `entries` (Attributes List) List of route map entries. (see [below for nested schema](#nestedatt--entries))
-- `name` (String) Name of the route map object.
+- `name` (String) Name of the Route Map object.
 
 ### Optional
 
@@ -97,84 +120,162 @@ resource "fmc_route_map" "example" {
 
 Required:
 
-- `action` (String) Action to take for the route map entry.
+- `action` (String) Indicate the redistribution access.
   - Choices: `PERMIT`, `DENY`
-- `sequence_number` (Number) Sequence number of the route map entry.
 
 Optional:
 
-- `ipv4_access_list_addresses` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_addresses))
-- `ipv4_access_list_next_hops` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_next_hops))
-- `ipv4_access_list_route_sources` (Attributes List) List of IPv4 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv4_access_list_route_sources))
-- `ipv6_access_list_addresses` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_addresses))
-- `ipv6_access_list_next_hops` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_next_hops))
-- `ipv6_access_list_route_sources` (Attributes List) List of IPv6 Access Control Lists (ACL) to match. (see [below for nested schema](#nestedatt--entries--ipv6_access_list_route_sources))
-- `metric_route_values` (List of Number) List of metric values to match.
-- `route_type_external1` (Boolean) Match external type 1 routes.
-- `route_type_external2` (Boolean) Match external type 2 routes.
-- `route_type_internal` (Boolean) Match internal routes.
-- `route_type_local` (Boolean) Match local routes.
-- `route_type_n_s_s_a_external1` (Boolean) Match NSSA external type 1 routes.
-- `route_type_n_s_s_a_external2` (Boolean) Match NSSA external type 2 routes.
-- `security_zones` (Attributes List) List of interfaces or security zones to match. (see [below for nested schema](#nestedatt--entries--security_zones))
-- `tag_values` (List of Number) Tag values.
+- `match_bgp_as_path_lists` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--entries--match_bgp_as_path_lists))
+- `match_bgp_community_lists` (Attributes List) List of Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_community_lists))
+- `match_bgp_extended_community_lists` (Attributes List) List of Extended Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_extended_community_lists))
+- `match_bgp_policy_lists` (Attributes List) List of Policy Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_policy_lists))
+- `match_interface_names` (List of String) List of interface names that are not in the zones.
+- `match_ipv4_address_access_lists` (Attributes List) Match routes based on the route address. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_access_lists))
+- `match_ipv4_address_prefix_lists` (Attributes List) Match routes based on the route address. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_prefix_lists))
+- `match_ipv4_next_hop_access_lists` (Attributes List) Match routes based on the next hop address of a route. (see [below for nested schema](#nestedatt--entries--match_ipv4_next_hop_access_lists))
+- `match_ipv4_next_hop_prefix_lists` (Attributes List) Match routes based on the next hop address of a route. (see [below for nested schema](#nestedatt--entries--match_ipv4_next_hop_prefix_lists))
+- `match_ipv4_route_source_access_lists` (Attributes List) Match routes based on the advertising source address of the route. (see [below for nested schema](#nestedatt--entries--match_ipv4_route_source_access_lists))
+- `match_ipv4_route_source_prefix_lists` (Attributes List) Match routes based on the advertising source address of the route (see [below for nested schema](#nestedatt--entries--match_ipv4_route_source_prefix_lists))
+- `match_ipv6_address_extended_access_list_id` (String) Match routes based on the route address.
+- `match_ipv6_address_prefix_list_id` (String) Match routes based on the route address.
+- `match_ipv6_next_hop_extended_access_list_id` (String) Match routes based on the next hop address of a route.
+- `match_ipv6_next_hop_prefix_list_id` (String) Match routes based on the next hop address of a route.
+- `match_ipv6_route_source_extended_access_list_id` (String) Match routes based on the advertising source address of the route.
+- `match_ipv6_route_source_prefix_list_id` (String) Match routes based on the advertising source address of the route
+- `match_metric_route_values` (List of Number) List of metric values to match.
+- `match_route_type_external_1` (Boolean) Match external type 1 routes.
+- `match_route_type_external_2` (Boolean) Match external type 2 routes.
+- `match_route_type_internal` (Boolean) Match internal routes.
+- `match_route_type_local` (Boolean) Match local routes.
+- `match_route_type_nssa_external_1` (Boolean) Match NSSA external type 1 routes.
+- `match_route_type_nssa_external_2` (Boolean) Match NSSA external type 2 routes.
+- `match_security_zones` (Attributes List) Match traffic based on the (ingress/egress) security_zones. (see [below for nested schema](#nestedatt--entries--match_security_zones))
+- `match_tag_values` (List of Number) Tag values.
+- `set_bgp_as_path_convert_route_tag_into_as_path` (Boolean) Convert the route tag into an AS path.
+- `set_bgp_as_path_prepend` (List of Number) Set the AS path prepend value.
+- `set_bgp_as_path_prepend_last_as` (Number) Set the AS path prepend value.
+  - Range: `0`-`10`
+- `set_bgp_automatic_tag` (Boolean) Set the automatic tag setting.
+- `set_bgp_community_add_to_existing_communities` (Boolean) Set the specific community to none.
+- `set_bgp_community_add_to_existing_extended_communities` (Boolean) Set the extended community additive.
+- `set_bgp_community_internet` (Boolean) Set the specific community to none.
+- `set_bgp_community_no_advertise` (Boolean) Set the specific community to none.
+- `set_bgp_community_no_export` (Boolean) Set the specific community to none.
+- `set_bgp_community_none` (Boolean) Set the specific community to none.
+- `set_bgp_community_route_target` (String) Set the extended community route target.
+- `set_bgp_community_specific_community` (Number) Set the specific community.
+- `set_bgp_ipv4_next_hop` (String) Set the next hop IPv4 address.
+  - Choices: `USE_PEER_ADDRESS`, `SPECIFIC_IP`
+- `set_bgp_ipv4_next_hop_specific_ip` (List of String) Set the next hop IPv4 address.
+- `set_bgp_ipv4_prefix_list_id` (String) Set the prefix list for IPv4.
+- `set_bgp_ipv6_next_hop` (String) Set the next hop IPv6 address.
+  - Choices: `USE_PEER_ADDRESS`, `SPECIFIC_IP`
+- `set_bgp_ipv6_next_hop_specific_ip` (List of String) Set the next hop IPv6 address.
+- `set_bgp_ipv6_prefix_list_id` (String) Set the prefix list for IPv6.
+- `set_bgp_local_preference` (Number) Set the local preference value.
+  - Range: `1`-`4294967295`
+- `set_bgp_origin` (String) Set the origin value.
+  - Choices: `LOCAL_IGP`, `INCOMPLETE`
+- `set_bgp_weight` (Number) Set the weight value.
+  - Range: `0`-`65535`
+- `set_metric_bandwidth` (Number) Set the metric bandwidth value in Kbits per second.
+- `set_metric_type` (String) Set the metric type.
+  - Choices: `INTERNAL`, `TYPE_1`, `TYPE_2`
 
-<a id="nestedatt--entries--ipv4_access_list_addresses"></a>
-### Nested Schema for `entries.ipv4_access_list_addresses`
+<a id="nestedatt--entries--match_bgp_as_path_lists"></a>
+### Nested Schema for `entries.match_bgp_as_path_lists`
+
+Optional:
+
+- `id` (String) Id of object.
+
+
+<a id="nestedatt--entries--match_bgp_community_lists"></a>
+### Nested Schema for `entries.match_bgp_community_lists`
+
+Optional:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_bgp_extended_community_lists"></a>
+### Nested Schema for `entries.match_bgp_extended_community_lists`
+
+Optional:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_bgp_policy_lists"></a>
+### Nested Schema for `entries.match_bgp_policy_lists`
+
+Optional:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_ipv4_address_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_address_access_lists`
 
 Required:
 
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
 
 
-<a id="nestedatt--entries--ipv4_access_list_next_hops"></a>
-### Nested Schema for `entries.ipv4_access_list_next_hops`
-
-Required:
-
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
-
-
-<a id="nestedatt--entries--ipv4_access_list_route_sources"></a>
-### Nested Schema for `entries.ipv4_access_list_route_sources`
+<a id="nestedatt--entries--match_ipv4_address_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_address_prefix_lists`
 
 Required:
 
-- `id` (String) ID of the IPv4 ACL.
-- `type` (String) ID of the IPv4 ACL.
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
 
 
-<a id="nestedatt--entries--ipv6_access_list_addresses"></a>
-### Nested Schema for `entries.ipv6_access_list_addresses`
-
-Required:
-
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
-
-
-<a id="nestedatt--entries--ipv6_access_list_next_hops"></a>
-### Nested Schema for `entries.ipv6_access_list_next_hops`
+<a id="nestedatt--entries--match_ipv4_next_hop_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_next_hop_access_lists`
 
 Required:
 
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
+- `type` (String) Type of the access list.
+
+Optional:
+
+- `id` (String) Id of the object.
 
 
-<a id="nestedatt--entries--ipv6_access_list_route_sources"></a>
-### Nested Schema for `entries.ipv6_access_list_route_sources`
+<a id="nestedatt--entries--match_ipv4_next_hop_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_next_hop_prefix_lists`
 
 Required:
 
-- `id` (String) ID of the IPv6 ACL.
-- `type` (String) ID of the IPv6 ACL.
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
 
 
-<a id="nestedatt--entries--security_zones"></a>
-### Nested Schema for `entries.security_zones`
+<a id="nestedatt--entries--match_ipv4_route_source_access_lists"></a>
+### Nested Schema for `entries.match_ipv4_route_source_access_lists`
+
+Required:
+
+- `type` (String) Type of the access list.
+
+Optional:
+
+- `id` (String) Id of the object.
+
+
+<a id="nestedatt--entries--match_ipv4_route_source_prefix_lists"></a>
+### Nested Schema for `entries.match_ipv4_route_source_prefix_lists`
+
+Required:
+
+- `id` (String) Id of the object.
+- `type` (String) Type of the access list.
+
+
+<a id="nestedatt--entries--match_security_zones"></a>
+### Nested Schema for `entries.match_security_zones`
 
 Required:
 
