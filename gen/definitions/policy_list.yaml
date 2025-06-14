@@ -16,6 +16,7 @@ attributes:
   - model_name: action
     type: String
     description: Select whether to allow or block access for matching conditions.
+    mandatory: true
     enum_values: [PERMIT, DENY]
     example: PERMIT
   # Interfaces
@@ -98,7 +99,7 @@ attributes:
         description: Id of the object.
   # AS Path
   - model_name: asPathLists
-    tf_name: as_paths
+    tf_name: as_path_lists
     type: List
     description: Match a BGP autonomous system path.
     attributes:

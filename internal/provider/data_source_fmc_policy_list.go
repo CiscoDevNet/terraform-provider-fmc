@@ -173,7 +173,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 					},
 				},
 			},
-			"as_paths": schema.ListNestedAttribute{
+			"as_path_lists": schema.ListNestedAttribute{
 				MarkdownDescription: "Match a BGP autonomous system path.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

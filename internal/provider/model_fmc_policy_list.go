@@ -48,7 +48,7 @@ type PolicyList struct {
 	NextHopIpv4PrefixLists         []PolicyListNextHopIpv4PrefixLists         `tfsdk:"next_hop_ipv4_prefix_lists"`
 	RouteSourceStandardAccessLists []PolicyListRouteSourceStandardAccessLists `tfsdk:"route_source_standard_access_lists"`
 	RouteSourceIpv4PrefixLists     []PolicyListRouteSourceIpv4PrefixLists     `tfsdk:"route_source_ipv4_prefix_lists"`
-	AsPaths                        []PolicyListAsPaths                        `tfsdk:"as_paths"`
+	AsPathLists                    []PolicyListAsPathLists                    `tfsdk:"as_path_lists"`
 	CommunityLists                 []PolicyListCommunityLists                 `tfsdk:"community_lists"`
 	ExtendedCommunityLists         []PolicyListExtendedCommunityLists         `tfsdk:"extended_community_lists"`
 	MatchCommunityExactly          types.Bool                                 `tfsdk:"match_community_exactly"`
@@ -84,7 +84,7 @@ type PolicyListRouteSourceIpv4PrefixLists struct {
 	Id types.String `tfsdk:"id"`
 }
 
-type PolicyListAsPaths struct {
+type PolicyListAsPathLists struct {
 	Id types.String `tfsdk:"id"`
 }
 
@@ -198,9 +198,9 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 			body, _ = sjson.SetRaw(body, "ipv4PrefixListRouteSources.-1", itemBody)
 		}
 	}
-	if len(data.AsPaths) > 0 {
+	if len(data.AsPathLists) > 0 {
 		body, _ = sjson.Set(body, "asPathLists", []interface{}{})
-		for _, item := range data.AsPaths {
+		for _, item := range data.AsPathLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
@@ -364,16 +364,16 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("asPathLists"); value.Exists() {
-		data.AsPaths = make([]PolicyListAsPaths, 0)
+		data.AsPathLists = make([]PolicyListAsPathLists, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := PolicyListAsPaths{}
+			data := PolicyListAsPathLists{}
 			if value := res.Get("id"); value.Exists() {
 				data.Id = types.StringValue(value.String())
 			} else {
 				data.Id = types.StringNull()
 			}
-			(*parent).AsPaths = append((*parent).AsPaths, data)
+			(*parent).AsPathLists = append((*parent).AsPathLists, data)
 			return true
 		})
 	}
@@ -752,12 +752,12 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).RouteSourceIpv4PrefixLists[i] = data
 	}
-	for i := 0; i < len(data.AsPaths); i++ {
+	for i := 0; i < len(data.AsPathLists); i++ {
 		keys := [...]string{"id"}
-		keyValues := [...]string{data.AsPaths[i].Id.ValueString()}
+		keyValues := [...]string{data.AsPathLists[i].Id.ValueString()}
 
 		parent := &data
-		data := (*parent).AsPaths[i]
+		data := (*parent).AsPathLists[i]
 		parentRes := &res
 		var res gjson.Result
 
@@ -779,11 +779,11 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing AsPaths[%d] = %+v",
+			tflog.Debug(ctx, fmt.Sprintf("removing AsPathLists[%d] = %+v",
 				i,
-				(*parent).AsPaths[i],
+				(*parent).AsPathLists[i],
 			))
-			(*parent).AsPaths = slices.Delete((*parent).AsPaths, i, i+1)
+			(*parent).AsPathLists = slices.Delete((*parent).AsPathLists, i, i+1)
 			i--
 
 			continue
@@ -793,7 +793,7 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
-		(*parent).AsPaths[i] = data
+		(*parent).AsPathLists[i] = data
 	}
 	for i := 0; i < len(data.CommunityLists); i++ {
 		keys := [...]string{"id"}

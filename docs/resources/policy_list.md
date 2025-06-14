@@ -37,7 +37,7 @@ resource "fmc_policy_list" "example" {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
-  as_paths = [
+  as_path_lists = [
     {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
@@ -58,15 +58,15 @@ resource "fmc_policy_list" "example" {
 
 ### Required
 
+- `action` (String) Select whether to allow or block access for matching conditions.
+  - Choices: `PERMIT`, `DENY`
 - `name` (String) Name of the Policy List object.
 
 ### Optional
 
-- `action` (String) Select whether to allow or block access for matching conditions.
-  - Choices: `PERMIT`, `DENY`
 - `address_ipv4_prefix_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a prefix list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--address_ipv4_prefix_lists))
 - `address_standard_access_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a standard access list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--address_standard_access_lists))
-- `as_paths` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--as_paths))
+- `as_path_lists` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--as_path_lists))
 - `community_lists` (Attributes List) List of Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--community_lists))
 - `domain` (String) Name of the FMC domain
 - `extended_community_lists` (Attributes List) List of Extended Community Lists. (see [below for nested schema](#nestedatt--extended_community_lists))
@@ -103,8 +103,8 @@ Optional:
 - `id` (String) Id of the object.
 
 
-<a id="nestedatt--as_paths"></a>
-### Nested Schema for `as_paths`
+<a id="nestedatt--as_path_lists"></a>
+### Nested Schema for `as_path_lists`
 
 Optional:
 
