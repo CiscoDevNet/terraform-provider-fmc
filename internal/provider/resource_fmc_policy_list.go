@@ -94,7 +94,7 @@ func (r *PolicyListResource) Schema(ctx context.Context, req resource.SchemaRequ
 			},
 			"action": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Select whether to allow or block access for matching conditions.").AddStringEnumDescription("PERMIT", "DENY").String,
-				Optional:            true,
+				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("PERMIT", "DENY"),
 				},
@@ -188,7 +188,7 @@ func (r *PolicyListResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
-			"as_paths": schema.ListNestedAttribute{
+			"as_path_lists": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Match a BGP autonomous system path.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
