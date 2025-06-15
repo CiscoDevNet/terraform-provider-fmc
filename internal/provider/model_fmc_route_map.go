@@ -479,25 +479,6 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 			} else {
 				data.MatchInterfaceNames = types.ListNull(types.StringType)
 			}
-			if value := res.Get("ipv4AccessListAddresses"); value.Exists() {
-				data.MatchIpv4AddressAccessLists = make([]RouteMapEntriesMatchIpv4AddressAccessLists, 0)
-				value.ForEach(func(k, res gjson.Result) bool {
-					parent := &data
-					data := RouteMapEntriesMatchIpv4AddressAccessLists{}
-					if value := res.Get("id"); value.Exists() {
-						data.Id = types.StringValue(value.String())
-					} else {
-						data.Id = types.StringNull()
-					}
-					if value := res.Get("type"); value.Exists() {
-						data.Type = types.StringValue(value.String())
-					} else {
-						data.Type = types.StringNull()
-					}
-					(*parent).MatchIpv4AddressAccessLists = append((*parent).MatchIpv4AddressAccessLists, data)
-					return true
-				})
-			}
 			if value := res.Get("ipv4PrefixListAddresses"); value.Exists() {
 				data.MatchIpv4AddressPrefixLists = make([]RouteMapEntriesMatchIpv4AddressPrefixLists, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -517,25 +498,6 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 					return true
 				})
 			}
-			if value := res.Get("ipv4AccessListNextHops"); value.Exists() {
-				data.MatchIpv4NextHopAccessLists = make([]RouteMapEntriesMatchIpv4NextHopAccessLists, 0)
-				value.ForEach(func(k, res gjson.Result) bool {
-					parent := &data
-					data := RouteMapEntriesMatchIpv4NextHopAccessLists{}
-					if value := res.Get("id"); value.Exists() {
-						data.Id = types.StringValue(value.String())
-					} else {
-						data.Id = types.StringNull()
-					}
-					if value := res.Get("type"); value.Exists() {
-						data.Type = types.StringValue(value.String())
-					} else {
-						data.Type = types.StringNull()
-					}
-					(*parent).MatchIpv4NextHopAccessLists = append((*parent).MatchIpv4NextHopAccessLists, data)
-					return true
-				})
-			}
 			if value := res.Get("ipv4PrefixListNexthops"); value.Exists() {
 				data.MatchIpv4NextHopPrefixLists = make([]RouteMapEntriesMatchIpv4NextHopPrefixLists, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -552,25 +514,6 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 						data.Type = types.StringNull()
 					}
 					(*parent).MatchIpv4NextHopPrefixLists = append((*parent).MatchIpv4NextHopPrefixLists, data)
-					return true
-				})
-			}
-			if value := res.Get("ipv4AccessListRouteSources"); value.Exists() {
-				data.MatchIpv4RouteSourceAccessLists = make([]RouteMapEntriesMatchIpv4RouteSourceAccessLists, 0)
-				value.ForEach(func(k, res gjson.Result) bool {
-					parent := &data
-					data := RouteMapEntriesMatchIpv4RouteSourceAccessLists{}
-					if value := res.Get("id"); value.Exists() {
-						data.Id = types.StringValue(value.String())
-					} else {
-						data.Id = types.StringNull()
-					}
-					if value := res.Get("type"); value.Exists() {
-						data.Type = types.StringValue(value.String())
-					} else {
-						data.Type = types.StringNull()
-					}
-					(*parent).MatchIpv4RouteSourceAccessLists = append((*parent).MatchIpv4RouteSourceAccessLists, data)
 					return true
 				})
 			}
@@ -932,54 +875,6 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.MatchInterfaceNames = types.ListNull(types.StringType)
 		}
-		for i := 0; i < len(data.MatchIpv4AddressAccessLists); i++ {
-			keys := [...]string{"id"}
-			keyValues := [...]string{data.MatchIpv4AddressAccessLists[i].Id.ValueString()}
-
-			parent := &data
-			data := (*parent).MatchIpv4AddressAccessLists[i]
-			parentRes := &res
-			var res gjson.Result
-
-			parentRes.Get("ipv4AccessListAddresses").ForEach(
-				func(_, v gjson.Result) bool {
-					found := false
-					for ik := range keys {
-						if v.Get(keys[ik]).String() != keyValues[ik] {
-							found = false
-							break
-						}
-						found = true
-					}
-					if found {
-						res = v
-						return false
-					}
-					return true
-				},
-			)
-			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing MatchIpv4AddressAccessLists[%d] = %+v",
-					i,
-					(*parent).MatchIpv4AddressAccessLists[i],
-				))
-				(*parent).MatchIpv4AddressAccessLists = slices.Delete((*parent).MatchIpv4AddressAccessLists, i, i+1)
-				i--
-
-				continue
-			}
-			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			(*parent).MatchIpv4AddressAccessLists[i] = data
-		}
 		for i := 0; i < len(data.MatchIpv4AddressPrefixLists); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.MatchIpv4AddressPrefixLists[i].Id.ValueString(), data.MatchIpv4AddressPrefixLists[i].Type.ValueString()}
@@ -1028,54 +923,6 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchIpv4AddressPrefixLists[i] = data
 		}
-		for i := 0; i < len(data.MatchIpv4NextHopAccessLists); i++ {
-			keys := [...]string{"id"}
-			keyValues := [...]string{data.MatchIpv4NextHopAccessLists[i].Id.ValueString()}
-
-			parent := &data
-			data := (*parent).MatchIpv4NextHopAccessLists[i]
-			parentRes := &res
-			var res gjson.Result
-
-			parentRes.Get("ipv4AccessListNextHops").ForEach(
-				func(_, v gjson.Result) bool {
-					found := false
-					for ik := range keys {
-						if v.Get(keys[ik]).String() != keyValues[ik] {
-							found = false
-							break
-						}
-						found = true
-					}
-					if found {
-						res = v
-						return false
-					}
-					return true
-				},
-			)
-			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing MatchIpv4NextHopAccessLists[%d] = %+v",
-					i,
-					(*parent).MatchIpv4NextHopAccessLists[i],
-				))
-				(*parent).MatchIpv4NextHopAccessLists = slices.Delete((*parent).MatchIpv4NextHopAccessLists, i, i+1)
-				i--
-
-				continue
-			}
-			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			(*parent).MatchIpv4NextHopAccessLists[i] = data
-		}
 		for i := 0; i < len(data.MatchIpv4NextHopPrefixLists); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.MatchIpv4NextHopPrefixLists[i].Id.ValueString(), data.MatchIpv4NextHopPrefixLists[i].Type.ValueString()}
@@ -1123,54 +970,6 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				data.Type = types.StringNull()
 			}
 			(*parent).MatchIpv4NextHopPrefixLists[i] = data
-		}
-		for i := 0; i < len(data.MatchIpv4RouteSourceAccessLists); i++ {
-			keys := [...]string{"id"}
-			keyValues := [...]string{data.MatchIpv4RouteSourceAccessLists[i].Id.ValueString()}
-
-			parent := &data
-			data := (*parent).MatchIpv4RouteSourceAccessLists[i]
-			parentRes := &res
-			var res gjson.Result
-
-			parentRes.Get("ipv4AccessListRouteSources").ForEach(
-				func(_, v gjson.Result) bool {
-					found := false
-					for ik := range keys {
-						if v.Get(keys[ik]).String() != keyValues[ik] {
-							found = false
-							break
-						}
-						found = true
-					}
-					if found {
-						res = v
-						return false
-					}
-					return true
-				},
-			)
-			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing MatchIpv4RouteSourceAccessLists[%d] = %+v",
-					i,
-					(*parent).MatchIpv4RouteSourceAccessLists[i],
-				))
-				(*parent).MatchIpv4RouteSourceAccessLists = slices.Delete((*parent).MatchIpv4RouteSourceAccessLists, i, i+1)
-				i--
-
-				continue
-			}
-			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			(*parent).MatchIpv4RouteSourceAccessLists[i] = data
 		}
 		for i := 0; i < len(data.MatchIpv4RouteSourcePrefixLists); i++ {
 			keys := [...]string{"id", "type"}
