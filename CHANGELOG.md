@@ -1,5 +1,6 @@
 ## 2.0.0-rc1 (Unreleased)
 
+- (BREAKING CHANGE) Resource `fmc_device_ha_pair_physical_interface_mac_address` is deprecated and replaced with `fmc_device_ha_pair_failover_interface_mac_address`
 - (Enhancement) Add support for `fmc_policy_list` resources and data sources
 - (Enhancement) Add support for `fmc_extended_community_list` and `fmc_extended_community_lists` resources and data sources
 - (Enhancement) Add support for `fmc_expanded_community_list` and `fmc_expanded_community_lists` resources and data sources

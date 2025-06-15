@@ -4,11 +4,13 @@ page_title: "fmc_device_ha_pair_physical_interface_mac_address Data Source - ter
 subcategory: "Devices"
 description: |-
   This data source reads the Device HA Pair Physical Interface MAC Address.
+  This resource is deprecated and will be removed in 2.0.0 release. Use fmc_device_ha_pair_failover_interface_mac_address instead.
 ---
 
 # fmc_device_ha_pair_physical_interface_mac_address (Data Source)
 
 This data source reads the Device HA Pair Physical Interface MAC Address.
+This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.
 
 ## Example Usage
 

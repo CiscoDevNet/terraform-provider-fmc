@@ -1,10 +1,9 @@
 ---
-name: Device HA Pair Physical Interface MAC Address
+name: Device HA Pair Failover Interface MAC Address
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devicehapairs/ftddevicehapairs/%v/failoverinterfacemacaddressconfigs
 doc_category: Devices
 test_tags: [TF_VAR_device_ha_id, TF_VAR_interface_name]
 skip_minimum_test: true
-deprecation_message: This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.
 attributes:
   - tf_name: ha_pair_id
     type: String
@@ -22,7 +21,7 @@ attributes:
     data_path: ["physicalInterface"]
     tf_name: interface_name
     mandatory: true
-    description: Name of the physical interface
+    description: Name of the physical interface. In case of sub-interfaces, this is the name of the parent interface (fmc_device_subinterface.x.interface_name).
     type: String
     example: "GigabitEthernet0/0"
     data_source_query: true
@@ -32,15 +31,20 @@ attributes:
     data_path: ["physicalInterface"]
     tf_name: interface_id
     mandatory: true
-    description: Id of the interface.
+    description: Id of the interface or sub-interface.
     type: String
     example: "76d24097-41c4-4558-a4d0-a8c07ac08470"
     requires_replace: true
     test_value: data.fmc_device_physical_interface.test.id
   - model_name: type
     data_path: ["physicalInterface"]
+    tf_name: interface_type
+    mandatory: true
     type: String
-    value: "PhysicalInterface"
+    description: Type of the interface.
+    example: "PhysicalInterface"
+    requires_replace: true
+    test_value: data.fmc_device_physical_interface.test.type
   - model_name: failoverActiveMac
     tf_name: active_mac_address
     mandatory: true

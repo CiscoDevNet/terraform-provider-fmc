@@ -30,6 +30,11 @@ func NewAttributeDescription(s string) *AttributeDescription {
 	return &AttributeDescription{s}
 }
 
+func (d *AttributeDescription) AddAttributeDescription(s string) *AttributeDescription {
+	d.String = fmt.Sprintf("%s\n%s", d.String, s)
+	return d
+}
+
 func (d *AttributeDescription) AddMinimumVersionHeaderDescription() *AttributeDescription {
 	d.String = fmt.Sprintf("%s\n\nThe following restrictions apply:", d.String)
 	return d
