@@ -61,7 +61,7 @@ Required:
 Read-Only:
 
 - `id` (String) Id of the managed IPv6 Prefix List.
-- `type` (String) Type of the object; this value is always 'IPv6PrefixList'.
+- `type` (String) Type of the object; this value is always 'IPV6PrefixList'.
 
 <a id="nestedatt--items--entries"></a>
 ### Nested Schema for `items.entries`

@@ -40,7 +40,7 @@ Read-Only:
 
 - `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
 - `id` (String) Id of the managed IPv6 Prefix List.
-- `type` (String) Type of the object; this value is always 'IPv6PrefixList'.
+- `type` (String) Type of the object; this value is always 'IPV6PrefixList'.
 
 <a id="nestedatt--items--entries"></a>
 ### Nested Schema for `items.entries`
