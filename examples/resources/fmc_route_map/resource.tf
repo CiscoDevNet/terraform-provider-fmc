@@ -9,7 +9,7 @@ resource "fmc_route_map" "example" {
           id = "0050568A-4E02-1ed3-0000-004F6D8A4E0"
         }
       ]
-      match_interface_names = ["GigabitEthernet0/1"]
+      match_interface_names = ["outside"]
       match_ipv4_address_access_lists = [
         {
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"

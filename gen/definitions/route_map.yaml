@@ -34,7 +34,7 @@ attributes:
       - model_name: interfaces
         tf_name: match_security_zones
         type: List
-        description: Match traffic based on the (ingress/egress) Security Zones.
+        description: Match traffic based on the ingress/egress Security Zones.
         attributes:
           - model_name: id
             type: String
@@ -45,9 +45,9 @@ attributes:
       - model_name: interfaceNames
         tf_name: match_interface_names
         type: List
-        description: Match traffic based on the (ingress/egress) interface names.
+        description: Match traffic based on the ingress/egress interface names.
         element_type: String
-        example: "GigabitEthernet0/1"
+        example: "outside"
       # Match clauses - IPv4 Addresses
       - model_name: ipv4AccessListAddresses
         tf_name: match_ipv4_address_access_lists
@@ -96,6 +96,7 @@ attributes:
             description: Id of the Access List.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_standard_acl.test.id
+            mandatory: true
             id: true
           - model_name: type
             type: String
@@ -131,6 +132,7 @@ attributes:
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_standard_acl.test.id
             id: true
+            mandatory: true
           - model_name: type
             type: String
             mandatory: true
@@ -207,6 +209,7 @@ attributes:
             description: Id of object.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_as_path.test.id
+            mandatory: true
       # Match clauses - Community Lists
       - model_name: communityLists
         tf_name: match_bgp_community_lists
@@ -218,6 +221,7 @@ attributes:
             description: Id of the object.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_standard_community_list.test.id
+            mandatory: true
       - model_name: extendedCommunityLists
         tf_name: match_bgp_extended_community_lists
         type: List
@@ -228,6 +232,7 @@ attributes:
           - model_name: id
             type: String
             description: Id of the object.
+            mandatory: true
       # FMCBUG: CSCwp73412  Route Map is missing attribute for Match the specified community exactly
       #- model_name: ???
       #  tf_name: match_bgp_match_community_exactly
@@ -245,6 +250,7 @@ attributes:
             description: Id of the object.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_policy_list.test.id
+            mandatory: true
       # Match clauses - Other
       - model_name: metricRouteValues
         tf_name: match_metric_route_values
@@ -343,27 +349,27 @@ attributes:
       - model_name: communityListSettingInternet
         tf_name: set_bgp_community_internet
         type: Bool
-        description: Use Internet well-known community.
+        description: Set Internet well-known community.
         example: "true" 
       - model_name: communityListSettingNoAdvertise
         tf_name: set_bgp_community_no_advertise
         type: Bool
-        description: Use No-Advertise well-known community.
+        description: Set No-Advertise well-known community.
         example: "true"
       - model_name: communityListSettingNoExport
         tf_name: set_bgp_community_no_export
         type: Bool
-        description: Use No-Export well-known community.
+        description: Set No-Export well-known community.
         example: "true"
       - model_name: extendedCommunityRouteTarget
         tf_name: set_bgp_community_route_target
         type: String
-        description: Set Route Target number in format ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.
+        description: Set Route Target number in ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.
         example: "100:100,200:200"
       - model_name: extendedCommunityAdditive
         tf_name: set_bgp_community_add_to_existing_extended_communities
         type: Bool
-        description: Set the extended community additive.
+        description: Add the community to the already existing extended communities.
         example: "true"
       # Set clauses - BGP Clauses - Others
       - model_name: automaticTagSetting

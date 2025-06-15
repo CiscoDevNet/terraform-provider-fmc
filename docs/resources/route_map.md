@@ -24,7 +24,7 @@ resource "fmc_route_map" "example" {
           id = "0050568A-4E02-1ed3-0000-004F6D8A4E0"
         }
       ]
-      match_interface_names = ["GigabitEthernet0/1"]
+      match_interface_names = ["outside"]
       match_ipv4_address_access_lists = [
         {
           id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -122,7 +122,7 @@ Optional:
 - `match_bgp_community_lists` (Attributes List) Match a BGP Community with Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_community_lists))
 - `match_bgp_extended_community_lists` (Attributes List) Match a BGP Community with Extended Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_extended_community_lists))
 - `match_bgp_policy_lists` (Attributes List) Evaluate and process a BGP Policy Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_policy_lists))
-- `match_interface_names` (List of String) Match traffic based on the (ingress/egress) interface names.
+- `match_interface_names` (List of String) Match traffic based on the ingress/egress interface names.
 - `match_ipv4_address_access_lists` (Attributes List) Match routes based on the route address using Standard or Extended IPv4 Access Lists. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_access_lists))
 - `match_ipv4_address_prefix_lists` (Attributes List) Match routes based on the route address using Prefix Lists. (see [below for nested schema](#nestedatt--entries--match_ipv4_address_prefix_lists))
 - `match_ipv4_next_hop_access_lists` (Attributes List) Match routes based on the next hop address of a route using Standard or Extended IPv4 Access Lists. (see [below for nested schema](#nestedatt--entries--match_ipv4_next_hop_access_lists))
@@ -142,7 +142,7 @@ Optional:
 - `match_route_type_local` (Boolean) Match local routes.
 - `match_route_type_nssa_external_1` (Boolean) Match NSSA external type 1 routes.
 - `match_route_type_nssa_external_2` (Boolean) Match NSSA external type 2 routes.
-- `match_security_zones` (Attributes List) Match traffic based on the (ingress/egress) Security Zones. (see [below for nested schema](#nestedatt--entries--match_security_zones))
+- `match_security_zones` (Attributes List) Match traffic based on the ingress/egress Security Zones. (see [below for nested schema](#nestedatt--entries--match_security_zones))
 - `match_tag_values` (List of Number) List of Tag values to match.
 - `set_bgp_as_path_convert_route_tag_into_as_path` (Boolean) Convert the tag of a route into an Autonomous System (AS) path.
 - `set_bgp_as_path_prepend` (List of Number) Prepend an arbitrary Autonomous System (AS) path to BGP routes.
@@ -150,12 +150,12 @@ Optional:
   - Range: `0`-`10`
 - `set_bgp_automatic_tag` (Boolean) Automatically compute the tag value.
 - `set_bgp_community_add_to_existing_communities` (Boolean) Add the community to the already existing communities.
-- `set_bgp_community_add_to_existing_extended_communities` (Boolean) Set the extended community additive.
-- `set_bgp_community_internet` (Boolean) Use Internet well-known community.
-- `set_bgp_community_no_advertise` (Boolean) Use No-Advertise well-known community.
-- `set_bgp_community_no_export` (Boolean) Use No-Export well-known community.
+- `set_bgp_community_add_to_existing_extended_communities` (Boolean) Add the community to the already existing extended communities.
+- `set_bgp_community_internet` (Boolean) Set Internet well-known community.
+- `set_bgp_community_no_advertise` (Boolean) Set No-Advertise well-known community.
+- `set_bgp_community_no_export` (Boolean) Set No-Export well-known community.
 - `set_bgp_community_none` (Boolean) Set the specific community to none.
-- `set_bgp_community_route_target` (String) Set Route Target number in format ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.
+- `set_bgp_community_route_target` (String) Set Route Target number in ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.
 - `set_bgp_community_specific_community` (Number) Set the specific community.
   - Range: `1`-`4294967295`
 - `set_bgp_ipv4_next_hop` (String) Set the next hop IPv4 address.
@@ -180,7 +180,7 @@ Optional:
 <a id="nestedatt--entries--match_bgp_as_path_lists"></a>
 ### Nested Schema for `entries.match_bgp_as_path_lists`
 
-Optional:
+Required:
 
 - `id` (String) Id of object.
 
@@ -188,7 +188,7 @@ Optional:
 <a id="nestedatt--entries--match_bgp_community_lists"></a>
 ### Nested Schema for `entries.match_bgp_community_lists`
 
-Optional:
+Required:
 
 - `id` (String) Id of the object.
 
@@ -196,7 +196,7 @@ Optional:
 <a id="nestedatt--entries--match_bgp_extended_community_lists"></a>
 ### Nested Schema for `entries.match_bgp_extended_community_lists`
 
-Optional:
+Required:
 
 - `id` (String) Id of the object.
 
@@ -204,7 +204,7 @@ Optional:
 <a id="nestedatt--entries--match_bgp_policy_lists"></a>
 ### Nested Schema for `entries.match_bgp_policy_lists`
 
-Optional:
+Required:
 
 - `id` (String) Id of the object.
 
@@ -232,11 +232,8 @@ Required:
 
 Required:
 
-- `type` (String) Type of the Access List.
-
-Optional:
-
 - `id` (String) Id of the Access List.
+- `type` (String) Type of the Access List.
 
 
 <a id="nestedatt--entries--match_ipv4_next_hop_prefix_lists"></a>
@@ -253,11 +250,8 @@ Required:
 
 Required:
 
-- `type` (String) Type of the Access List.
-
-Optional:
-
 - `id` (String) Id of the Access List.
+- `type` (String) Type of the Access List.
 
 
 <a id="nestedatt--entries--match_ipv4_route_source_prefix_lists"></a>

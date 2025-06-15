@@ -34,7 +34,7 @@ func TestAccDataSourceFmcRouteMap(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_route_map.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_interface_names.0", "GigabitEthernet0/1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_interface_names.0", "outside"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_metric_route_values.0", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_tag_values.0", "110"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_route_type_external_1", "true"))
@@ -145,7 +145,7 @@ func testAccDataSourceFmcRouteMapConfig() string {
 	config += `		match_security_zones = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_interface_names = ["GigabitEthernet0/1"]` + "\n"
+	config += `		match_interface_names = ["outside"]` + "\n"
 	config += `		match_ipv4_address_access_lists = [{` + "\n"
 	config += `			id = fmc_standard_acl.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
@@ -214,7 +214,7 @@ func testAccNamedDataSourceFmcRouteMapConfig() string {
 	config += `		match_security_zones = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_interface_names = ["GigabitEthernet0/1"]` + "\n"
+	config += `		match_interface_names = ["outside"]` + "\n"
 	config += `		match_ipv4_address_access_lists = [{` + "\n"
 	config += `			id = fmc_standard_acl.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"

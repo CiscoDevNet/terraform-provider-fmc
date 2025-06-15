@@ -108,7 +108,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"match_security_zones": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Match traffic based on the (ingress/egress) Security Zones.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Match traffic based on the ingress/egress Security Zones.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -120,7 +120,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"match_interface_names": schema.ListAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Match traffic based on the (ingress/egress) interface names.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Match traffic based on the ingress/egress interface names.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 						},
@@ -163,7 +163,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the Access List.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of the Access List.").String,
@@ -195,7 +195,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the Access List.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of the Access List.").String,
@@ -251,7 +251,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -263,7 +263,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -275,7 +275,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -287,7 +287,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -372,23 +372,23 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 							Optional:            true,
 						},
 						"set_bgp_community_internet": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use Internet well-known community.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set Internet well-known community.").String,
 							Optional:            true,
 						},
 						"set_bgp_community_no_advertise": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use No-Advertise well-known community.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set No-Advertise well-known community.").String,
 							Optional:            true,
 						},
 						"set_bgp_community_no_export": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use No-Export well-known community.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set No-Export well-known community.").String,
 							Optional:            true,
 						},
 						"set_bgp_community_route_target": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set Route Target number in format ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set Route Target number in ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.").String,
 							Optional:            true,
 						},
 						"set_bgp_community_add_to_existing_extended_communities": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set the extended community additive.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Add the community to the already existing extended communities.").String,
 							Optional:            true,
 						},
 						"set_bgp_automatic_tag": schema.BoolAttribute{

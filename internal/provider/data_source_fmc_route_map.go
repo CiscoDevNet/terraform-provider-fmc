@@ -94,7 +94,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"match_security_zones": schema.ListNestedAttribute{
-							MarkdownDescription: "Match traffic based on the (ingress/egress) Security Zones.",
+							MarkdownDescription: "Match traffic based on the ingress/egress Security Zones.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -106,7 +106,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							},
 						},
 						"match_interface_names": schema.ListAttribute{
-							MarkdownDescription: "Match traffic based on the (ingress/egress) interface names.",
+							MarkdownDescription: "Match traffic based on the ingress/egress interface names.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
@@ -346,23 +346,23 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"set_bgp_community_internet": schema.BoolAttribute{
-							MarkdownDescription: "Use Internet well-known community.",
+							MarkdownDescription: "Set Internet well-known community.",
 							Computed:            true,
 						},
 						"set_bgp_community_no_advertise": schema.BoolAttribute{
-							MarkdownDescription: "Use No-Advertise well-known community.",
+							MarkdownDescription: "Set No-Advertise well-known community.",
 							Computed:            true,
 						},
 						"set_bgp_community_no_export": schema.BoolAttribute{
-							MarkdownDescription: "Use No-Export well-known community.",
+							MarkdownDescription: "Set No-Export well-known community.",
 							Computed:            true,
 						},
 						"set_bgp_community_route_target": schema.StringAttribute{
-							MarkdownDescription: "Set Route Target number in format ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.",
+							MarkdownDescription: "Set Route Target number in ASN:nn format (range 1:1 to 65534:65535). Separate multiple values with a comma.",
 							Computed:            true,
 						},
 						"set_bgp_community_add_to_existing_extended_communities": schema.BoolAttribute{
-							MarkdownDescription: "Set the extended community additive.",
+							MarkdownDescription: "Add the community to the already existing extended communities.",
 							Computed:            true,
 						},
 						"set_bgp_automatic_tag": schema.BoolAttribute{
