@@ -30,7 +30,7 @@ data "fmc_ipv6_prefix_list" "example" {
 ### Read-Only
 
 - `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--entries))
-- `type` (String) Type of the object; this value is always 'IPv6PrefixList'.
+- `type` (String) Type of the object; this value is always 'IPV6PrefixList'.
 
 <a id="nestedatt--entries"></a>
 ### Nested Schema for `entries`

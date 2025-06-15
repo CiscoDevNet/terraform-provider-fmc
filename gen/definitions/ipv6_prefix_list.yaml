@@ -12,7 +12,7 @@ attributes:
     data_source_query: true
   - model_name: type
     type: String
-    description: Type of the object; this value is always 'IPv6PrefixList'.
+    description: Type of the object; this value is always 'IPV6PrefixList'.
     computed: true
   - model_name: entries
     type: List

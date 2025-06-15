@@ -41,7 +41,7 @@ resource "fmc_ipv6_prefix_list" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this value is always 'IPv6PrefixList'.
+- `type` (String) Type of the object; this value is always 'IPV6PrefixList'.
 
 <a id="nestedatt--entries"></a>
 ### Nested Schema for `entries`
