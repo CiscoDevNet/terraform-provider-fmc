@@ -60,10 +60,16 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: helpers.NewAttributeDescription("{{.DsDescription}}")
+		{{- if .DeprecationMessage -}}
+		.AddAttributeDescription("{{.DeprecationMessage}}")
+		{{- end -}}
 		{{- if .MinimumVersion -}}
 		.AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("{{.MinimumVersion}}")
 		{{- end -}}
 		.String,
+		{{- if .DeprecationMessage }}
+		DeprecationMessage:  helpers.NewAttributeDescription("{{.DeprecationMessage}}").String,
+		{{- end}}
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

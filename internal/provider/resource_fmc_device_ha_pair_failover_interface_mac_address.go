@@ -41,27 +41,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
-	_ resource.ResourceWithImportState = &DeviceHAPairPhysicalInterfaceMACAddressResource{}
+	_ resource.Resource                = &DeviceHAPairFailoverInterfaceMACAddressResource{}
+	_ resource.ResourceWithImportState = &DeviceHAPairFailoverInterfaceMACAddressResource{}
 )
 
-func NewDeviceHAPairPhysicalInterfaceMACAddressResource() resource.Resource {
-	return &DeviceHAPairPhysicalInterfaceMACAddressResource{}
+func NewDeviceHAPairFailoverInterfaceMACAddressResource() resource.Resource {
+	return &DeviceHAPairFailoverInterfaceMACAddressResource{}
 }
 
-type DeviceHAPairPhysicalInterfaceMACAddressResource struct {
+type DeviceHAPairFailoverInterfaceMACAddressResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_failover_interface_mac_address"
 }
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Physical Interface MAC Address.").AddAttributeDescription("This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.").String,
-		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device HA Pair Failover Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -93,14 +92,21 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Con
 				},
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the physical interface").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the physical interface. In case of sub-interfaces, this is the name of the parent interface (fmc_device_subinterface.x.interface_name).").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface or sub-interface.").String,
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"interface_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -118,7 +124,7 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Schema(ctx context.Con
 	}
 }
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -130,8 +136,8 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Configure(_ context.Co
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceHAPairPhysicalInterfaceMACAddress
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceHAPairFailoverInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -148,7 +154,7 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Create(ctx context.Con
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceHAPairPhysicalInterfaceMACAddress{})
+	body := plan.toBody(ctx, DeviceHAPairFailoverInterfaceMACAddress{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -169,8 +175,8 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Create(ctx context.Con
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceHAPairPhysicalInterfaceMACAddress
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceHAPairFailoverInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -221,8 +227,8 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Read(ctx context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceHAPairPhysicalInterfaceMACAddress
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceHAPairFailoverInterfaceMACAddress
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -261,8 +267,8 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Update(ctx context.Con
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceHAPairPhysicalInterfaceMACAddress
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceHAPairFailoverInterfaceMACAddress
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -292,7 +298,7 @@ func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) Delete(ctx context.Con
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *DeviceHAPairPhysicalInterfaceMACAddressResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceHAPairFailoverInterfaceMACAddressResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {

@@ -72,6 +72,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: helpers.NewAttributeDescription("{{.ResDescription}}")
+		{{- if .DeprecationMessage -}}
+		.AddAttributeDescription("{{.DeprecationMessage}}")
+		{{- end -}}
 		{{- if or .MinimumVersion .MinimumVersionCreate .MinimumVersionBulkCreate .MinimumVersionBulkDelete .IsBulk -}}
 		.AddMinimumVersionHeaderDescription()
 		{{- end -}}
@@ -97,6 +100,9 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 		.AddMinimumVersionBulkUpdateDescription()
 		{{- end -}}
 		.String,
+		{{- if .DeprecationMessage }}
+		DeprecationMessage:  helpers.NewAttributeDescription("{{.DeprecationMessage}}").String,
+		{{- end}}
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

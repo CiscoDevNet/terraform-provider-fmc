@@ -40,27 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
-	_ datasource.DataSourceWithConfigure = &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
+	_ datasource.DataSource              = &DeviceHAPairFailoverInterfaceMACAddressDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceHAPairFailoverInterfaceMACAddressDataSource{}
 )
 
-func NewDeviceHAPairPhysicalInterfaceMACAddressDataSource() datasource.DataSource {
-	return &DeviceHAPairPhysicalInterfaceMACAddressDataSource{}
+func NewDeviceHAPairFailoverInterfaceMACAddressDataSource() datasource.DataSource {
+	return &DeviceHAPairFailoverInterfaceMACAddressDataSource{}
 }
 
-type DeviceHAPairPhysicalInterfaceMACAddressDataSource struct {
+type DeviceHAPairFailoverInterfaceMACAddressDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_physical_interface_mac_address"
+func (d *DeviceHAPairFailoverInterfaceMACAddressDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ha_pair_failover_interface_mac_address"
 }
 
-func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceHAPairFailoverInterfaceMACAddressDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device HA Pair Physical Interface MAC Address.").AddAttributeDescription("This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.").String,
-		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in 2.0.0 release. Use `fmc_device_ha_pair_failover_interface_mac_address` instead.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device HA Pair Failover Interface MAC Address.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -81,12 +80,16 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.C
 				Computed:            true,
 			},
 			"interface_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the physical interface",
+				MarkdownDescription: "Name of the physical interface. In case of sub-interfaces, this is the name of the parent interface (fmc_device_subinterface.x.interface_name).",
 				Optional:            true,
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the interface.",
+				MarkdownDescription: "Id of the interface or sub-interface.",
+				Computed:            true,
+			},
+			"interface_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the interface.",
 				Computed:            true,
 			},
 			"active_mac_address": schema.StringAttribute{
@@ -100,7 +103,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Schema(ctx context.C
 		},
 	}
 }
-func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceHAPairFailoverInterfaceMACAddressDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -109,7 +112,7 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) ConfigValidators(ctx
 	}
 }
 
-func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceHAPairFailoverInterfaceMACAddressDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -121,8 +124,8 @@ func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Configure(_ context.
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DeviceHAPairPhysicalInterfaceMACAddressDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DeviceHAPairPhysicalInterfaceMACAddress
+func (d *DeviceHAPairFailoverInterfaceMACAddressDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceHAPairFailoverInterfaceMACAddress
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
