@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-rc1 (Unreleased)
+## 2.0.0-rc1
 
 - (Change) Resource `fmc_device_ha_pair_physical_interface_mac_address` is deprecated and replaced with `fmc_device_ha_pair_failover_interface_mac_address`
 - (Enhancement) Add support for `fmc_route_map` resources and data sources
