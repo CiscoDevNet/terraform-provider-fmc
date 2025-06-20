@@ -54,7 +54,6 @@ resource "fmc_device_bridge_group_interface" "example" {
 - `bridge_group_id` (Number) Bridge Group Id.
   - Range: `1`-`250`
 - `device_id` (String) Id of the parent device.
-- `logical_name` (String) Logical name of the Brige Group interface.
 
 ### Optional
 
@@ -72,6 +71,7 @@ resource "fmc_device_bridge_group_interface" "example" {
   - Range: `1000`-`3600000`
 - `ipv6_reachable_time` (Number) The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
   - Range: `0`-`3600000`
+- `logical_name` (String) Logical name of the Brige Group interface.
 - `selected_interfaces` (Attributes List) List of interfaces that are part of the bridge group. (see [below for nested schema](#nestedatt--selected_interfaces))
 
 ### Read-Only

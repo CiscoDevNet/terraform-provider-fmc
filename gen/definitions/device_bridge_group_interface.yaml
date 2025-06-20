@@ -30,7 +30,6 @@ attributes:
     type: String
     description: Logical name of the Brige Group interface.
     example: my_bridge_group_interface
-    mandatory: true
   - model_name: description
     type: String
     description: Description of the object.

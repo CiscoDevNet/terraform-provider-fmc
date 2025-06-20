@@ -87,7 +87,6 @@ variable "interface_name" {default = null} // tests will set $TF_VAR_interface_n
 func testAccFmcDeviceBridgeGroupInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_bridge_group_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
-	config += `	logical_name = "my_bridge_group_interface"` + "\n"
 	config += `	bridge_group_id = 100` + "\n"
 	config += `}` + "\n"
 	return config
