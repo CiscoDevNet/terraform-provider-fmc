@@ -79,7 +79,8 @@ attributes:
     description: >-
       Value `false` indicates to enable DHCPv4 without obtaining default route.
       Value `true` indicates to enable DHCPv4 and obtain the default route.
-      The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+      The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address.
+      DHCP is not supported when firewall is in transparent mode.
     exclude_example: true
     exclude_test: true
   # IPv6 address
