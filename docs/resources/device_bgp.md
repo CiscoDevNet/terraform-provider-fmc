@@ -3,12 +3,12 @@
 page_title: "fmc_device_bgp Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
+  This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings (fmc_device_bgp_general_settings).
 ---
 
 # fmc_device_bgp (Resource)
 
-This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
+This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings (fmc_device_bgp_general_settings).
 
 ## Example Usage
 
@@ -16,7 +16,7 @@ This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enable
 resource "fmc_device_bgp" "example" {
   device_id                                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ipv4_default_information_orginate        = false
-  ipv4_auto_aummary                        = false
+  ipv4_auto_summary                        = false
   ipv4_bgp_supress_inactive                = false
   ipv4_synchronization                     = false
   ipv4_bgp_redistribute_internal           = false
@@ -27,11 +27,13 @@ resource "fmc_device_bgp" "example" {
   ipv4_forward_packets_over_multipath_ebgp = 1
   ipv4_neighbors = [
     {
-      neighbor_address      = "10.1.1.1"
-      neighbor_remote_as    = "65534"
-      neighbor_bfd          = "SINGLE_HOP"
-      enable_address_family = true
-      neighbor_description  = "My BGP Peer"
+      neighbor_address           = "10.1.1.1"
+      neighbor_remote_as         = "65534"
+      neighbor_bfd               = "SINGLE_HOP"
+      update_source_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      enable_address_family      = true
+      neighbor_as_override       = false
+      neighbor_description       = "My BGP Peer"
     }
   ]
 }
@@ -47,15 +49,15 @@ resource "fmc_device_bgp" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ipv4_aggregate_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
-- `ipv4_auto_aummary` (Boolean) Summarize subnet routes into network level routes
+- `ipv4_aggregate_addresses` (Attributes List) Generate aggregate address information for IPv4. (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
+- `ipv4_auto_summary` (Boolean) Summarize subnet routes into network level routes
 - `ipv4_bgp_redistribute_internal` (Boolean) Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.
-- `ipv4_bgp_supress_inactive` (Boolean) Suppresing advertise inactive routes
-- `ipv4_default_information_orginate` (Boolean) Generate default routes
+- `ipv4_bgp_supress_inactive` (Boolean) Suppressing advertisement of inactive routes
+- `ipv4_default_information_orginate` (Boolean) Generate default route
 - `ipv4_external_distance` (Number) Administrative route distance for external routes
   - Range: `1`-`255`
   - Default value: `20`
-- `ipv4_filterings` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_filterings))
+- `ipv4_filterings` (Attributes List) Filter routes or networks received in incoming BGP updates (see [below for nested schema](#nestedatt--ipv4_filterings))
 - `ipv4_forward_packets_over_multipath_ebgp` (Number) Number of paths to use for EBGP
   - Range: `1`-`8`
   - Default value: `1`
@@ -70,9 +72,9 @@ resource "fmc_device_bgp" "example" {
   - Range: `1`-`255`
   - Default value: `200`
 - `ipv4_neighbors` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_neighbors))
-- `ipv4_networks` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_networks))
-- `ipv4_redistributions` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_redistributions))
-- `ipv4_route_injections` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_route_injections))
+- `ipv4_networks` (Attributes List) Add networks that will be advertised by the BGP routing process (see [below for nested schema](#nestedatt--ipv4_networks))
+- `ipv4_redistributions` (Attributes List) Define the conditions for redistributing routes from another routing domain into BGP. (see [below for nested schema](#nestedatt--ipv4_redistributions))
+- `ipv4_route_injections` (Attributes List) Define routes to be conditionally injected into the BGP routing table. (see [below for nested schema](#nestedatt--ipv4_route_injections))
 - `ipv4_synchronization` (Boolean) Synchronize between BGP and IGP systems
 
 ### Read-Only
@@ -89,24 +91,28 @@ resource "fmc_device_bgp" "example" {
 
 Optional:
 
-- `advertise_map_id` (String) Advertise Map ID
-- `attribute_map_id` (String) Attribute Map ID
+- `advertise_map_id` (String) Advertise Route Map ID (select the routes to create AS_SET origin communities)
+- `attribute_map_id` (String) Attribute Route Map ID (set the attribute of the aggregate route).
 - `filter` (Boolean) Filter all routes from updates (summary only)
 - `generate_as` (Boolean) Generate AS set path information
-- `network_id` (String) Network ID
-- `suppress_map_id` (String) Suppress Map ID
+- `network_id` (String) Network ID (desired network/host object)
+- `suppress_map_id` (String) Suppress Route Map ID (select the routes to be suppressed).
 
 
 <a id="nestedatt--ipv4_filterings"></a>
 ### Nested Schema for `ipv4_filterings`
 
+Required:
+
+- `access_list_id` (String) Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.
+
 Optional:
 
-- `access_list_id` (String) Standard Access List ID
-- `network_direction` (String) Filtering directrion
+- `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates
   - Choices: `incomingroutefilter`, `outgoingroutefilter`
-- `prorocol_process` (String) Process ID
-- `protocol` (String) Protocol
+- `protocol` (String) Routing process for which you want to filter
+  - Choices: `CONNECTED`, `BGP`, `OSPF`, `RIP`, `STATIC`
+- `protocol_process_id` (String) Process ID for the OSPF routing protocol.
 
 
 <a id="nestedatt--ipv4_neighbors"></a>
@@ -114,10 +120,11 @@ Optional:
 
 Optional:
 
-- `enable_address_family` (Boolean) Enable IPv4 address family
+- `enable_address_family` (Boolean) Enable communication with this BGP neighbor
   - Default value: `false`
 - `neighbor_address` (String) IP address of the BGP neighbor
-- `neighbor_authentication_password` (String) Setting password enables authentication.
+- `neighbor_as_override` (Boolean) Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.
+- `neighbor_authentication_password` (String, Sensitive) Setting password enables authentication.
 - `neighbor_bfd` (String) BFD Fallover
   - Choices: `SINGLE_HOP`, `MULTI_HOP`, `AUTO_DETECT_HOP`, `NONE`
   - Default value: `NONE`
@@ -128,18 +135,19 @@ Optional:
 - `neighbor_description` (String) Description of the neighbor
 - `neighbor_disable_connection_verification` (Boolean) Disable Connection Verification
   - Default value: `false`
-- `neighbor_filter_access_lists` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_access_lists))
-- `neighbor_filter_as_path_lists` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_as_path_lists))
+- `neighbor_filter_access_lists` (Attributes List) Set incoming or outgoing Access List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_access_lists))
+- `neighbor_filter_as_paths` (Attributes List) Set incoming or outgoing AS path filter to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_as_paths))
 - `neighbor_filter_max_prefix` (Number) Maximum number of prefixes allowed from the neighbor
   - Range: `1`-`2147483647`
-- `neighbor_filter_prefix_lists` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_prefix_lists))
+- `neighbor_filter_prefix_lists` (Attributes List) Set incoming or outgoing Prefix List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_prefix_lists))
 - `neighbor_filter_restart_interval` (Number) Time interval to restart the maximum prefix limit in Minutes
   - Range: `1`-`65535`
-- `neighbor_filter_route_map_lists` (Attributes List) (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_route_map_lists))
-- `neighbor_filter_threshold_value` (Number) Threshold value for the maximum number of prefixes allowed from the neighbor
+- `neighbor_filter_route_maps` (Attributes List) Set incoming or outgoing Route Maps to apply a route map to incoming or outgoing routes. (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_filter_route_maps))
+- `neighbor_filter_threshold_value` (Number) Threshold value for the maximum number of prefixes allowed from the neighbor (implies session termination).
   - Range: `1`-`100`
-- `neighbor_filter_warning_only` (Boolean) Give only warning message when prefix limit exceeded or terminate peering when prefix limit is exceeded.
+- `neighbor_filter_warning_only` (Boolean) Give only warning message when prefix limit exceeded. Can be set to `true` only. Use `neighbor_filter_threshold_value` to set mode to session termination.
 - `neighbor_generate_default_route_map_id` (String) Generate default routes - Route Map
+- `neighbor_graceful_restart` (Boolean) Enable graceful restart for the neighbor.
 - `neighbor_hold_time` (Number) Time interval to hold the neighbor in seconds
   - Range: `3`-`65535`
 - `neighbor_keepalive_interval` (Number) Time interval to send keepalive messages in seconds
@@ -152,9 +160,7 @@ Optional:
 - `neighbor_nexthop_self` (Boolean) Use itself as next hop for this neighbor
   - Default value: `false`
 - `neighbor_remote_as` (String) AS number of the BGP neighbor
-- `neighbor_routes_advertise_exist_nonexist_map_id` (String) Specified route maps are advertised when the prefix exists only in the Advertise Map.
-- `neighbor_routes_advertise_map_id` (String) Specified route maps are advertised when the prefix exists in the Advertise Map and Exist Map.
-- `neighbor_routes_advertise_map_use_exist` (Boolean) Use Exist Map or Non-Exist Map
+- `neighbor_routes_advertise_maps` (Attributes List) Define conditionally advertised routes. (see [below for nested schema](#nestedatt--ipv4_neighbors--neighbor_routes_advertise_maps))
 - `neighbor_routes_advertisement_interval` (Number) Time interval to advertise routes in seconds
   - Range: `0`-`600`
   - Default value: `0`
@@ -162,7 +168,7 @@ Optional:
   - Default value: `false`
 - `neighbor_send_community_attribute` (Boolean) Send Community attribute to this neighbor
   - Default value: `false`
-- `neighbor_shutdown` (Boolean) Shutdown administratively
+- `neighbor_shutdown` (Boolean) Disable a neighbor or peer group
   - Default value: `false`
 - `neighbor_tcp_mtu_path_discovery` (Boolean) Use TCP path MTU discovery.
   - Default value: `false`
@@ -179,19 +185,20 @@ Optional:
 <a id="nestedatt--ipv4_neighbors--neighbor_filter_access_lists"></a>
 ### Nested Schema for `ipv4_neighbors.neighbor_filter_access_lists`
 
-Optional:
+Required:
 
 - `access_list_id` (String) Access List ID
 - `update_direction` (String) Filter direction
   - Choices: `IN`, `OUT`
 
 
-<a id="nestedatt--ipv4_neighbors--neighbor_filter_as_path_lists"></a>
-### Nested Schema for `ipv4_neighbors.neighbor_filter_as_path_lists`
+<a id="nestedatt--ipv4_neighbors--neighbor_filter_as_paths"></a>
+### Nested Schema for `ipv4_neighbors.neighbor_filter_as_paths`
 
-Optional:
+Required:
 
 - `as_path_id` (String) AS Path ID
+- `as_path_name` (String) AS Path Name
 - `update_direction` (String) Filter direction
   - Choices: `IN`, `OUT`
 
@@ -199,35 +206,53 @@ Optional:
 <a id="nestedatt--ipv4_neighbors--neighbor_filter_prefix_lists"></a>
 ### Nested Schema for `ipv4_neighbors.neighbor_filter_prefix_lists`
 
-Optional:
+Required:
 
-- `prefix_list_id` (String) Route Map ID
+- `prefix_list_id` (String) Prefix List ID
 - `update_direction` (String) Filter direction
   - Choices: `IN`, `OUT`
 
 
-<a id="nestedatt--ipv4_neighbors--neighbor_filter_route_map_lists"></a>
-### Nested Schema for `ipv4_neighbors.neighbor_filter_route_map_lists`
+<a id="nestedatt--ipv4_neighbors--neighbor_filter_route_maps"></a>
+### Nested Schema for `ipv4_neighbors.neighbor_filter_route_maps`
 
-Optional:
+Required:
 
 - `route_map_id` (String) Route Map ID
 - `update_direction` (String) Filter direction
   - Choices: `IN`, `OUT`
+
+
+<a id="nestedatt--ipv4_neighbors--neighbor_routes_advertise_maps"></a>
+### Nested Schema for `ipv4_neighbors.neighbor_routes_advertise_maps`
+
+Required:
+
+- `advertise_map_id` (String) Specified route maps are advertised when conditions of the exist map or the non-exist map are met.
+- `exist_nonexist_map_id` (String) Specify exist / non-exist route map ID.
+- `use_exist_map` (Boolean) Set mode to Exist Map (true) or Non-Exist Map (false).
 
 
 
 <a id="nestedatt--ipv4_networks"></a>
 ### Nested Schema for `ipv4_networks`
 
+Required:
+
+- `network_id` (String) Network to be advertised by the BGP routing processes.
+
 Optional:
 
-- `network_id` (String) Network object ID
-- `route_map_id` (String) Route Map ID
+- `route_map_id` (String) Route Map ID that should be examined to filter the networks to be advertised
 
 
 <a id="nestedatt--ipv4_redistributions"></a>
 ### Nested Schema for `ipv4_redistributions`
+
+Required:
+
+- `source_protocol` (String) Protocol to redistribute
+  - Choices: `RedistributeConnected`, `RedistributeStatic`, `RedistributeOSPF`, `RedistributeEIGRP`
 
 Optional:
 
@@ -236,21 +261,24 @@ Optional:
 - `match_internal` (Boolean) Match OSPF Internal metrics
 - `match_nssa_external1` (Boolean) Match OSPF NSSA External 1 metrics
 - `match_nssa_external2` (Boolean) Match OSPF NSSA External 2 metrics
-- `metric` (Number) Metric value
+- `metric` (Number) Metric for the redistributed route.
   - Range: `0`-`4294967295`
-- `process_id` (String) process ID
-- `route_map_id` (String) Route Map ID
-- `source_protocol` (String) Protocol to redistribute
-  - Choices: `RedistributeConnected`, `RedistributeStatic`, `RedistributeOSPF`, `RedistributeEIGRP`
+- `process_id` (String) OSPF process ID
+- `route_map_id` (String) Route Map ID to filter the networks to be redistributed
 
 
 <a id="nestedatt--ipv4_route_injections"></a>
 ### Nested Schema for `ipv4_route_injections`
 
+Required:
+
+- `exist_route_map_id` (String) Exist Route Map ID containing the prefixes that the BGP speaker will track
+- `inject_route_map_id` (String) Inject Route Map ID (prefixes to inject into the local BGP routing table)
+
 Optional:
 
-- `exist_route_map_id` (String) Exist Route Map ID
-- `inject_route_map_id` (String) Inject Route Map ID
+- `inherit_attributes` (String) Injected route will inherit the attributes of the aggregate route
+  - Default value: `true`
 
 ## Import
 

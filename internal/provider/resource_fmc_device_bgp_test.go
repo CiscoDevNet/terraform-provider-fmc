@@ -40,7 +40,7 @@ func TestAccFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_bgp.test", "ipv4_address_family_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_bgp.test", "ipv4_address_family_type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_default_information_orginate", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_auto_aummary", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_auto_summary", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_bgp_supress_inactive", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_synchronization", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_bgp_redistribute_internal", "false"))
@@ -53,7 +53,7 @@ func TestAccFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_remote_as", "65534"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_bfd", "SINGLE_HOP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.enable_address_family", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_shutdown", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_shutdown", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_description", "My BGP Peer"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_max_prefix", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_bgp.test", "ipv4_neighbors.0.neighbor_filter_threshold_value", "1"))
@@ -123,7 +123,7 @@ func testAccFmcDeviceBGPConfig_all() string {
 	config := `resource "fmc_device_bgp" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	ipv4_default_information_orginate = false` + "\n"
-	config += `	ipv4_auto_aummary = false` + "\n"
+	config += `	ipv4_auto_summary = false` + "\n"
 	config += `	ipv4_bgp_supress_inactive = false` + "\n"
 	config += `	ipv4_synchronization = false` + "\n"
 	config += `	ipv4_bgp_redistribute_internal = false` + "\n"
@@ -137,7 +137,7 @@ func testAccFmcDeviceBGPConfig_all() string {
 	config += `		neighbor_remote_as = "65534"` + "\n"
 	config += `		neighbor_bfd = "SINGLE_HOP"` + "\n"
 	config += `		enable_address_family = true` + "\n"
-	config += `		neighbor_shutdown = false` + "\n"
+	config += `		neighbor_shutdown = ` + "\n"
 	config += `		neighbor_description = "My BGP Peer"` + "\n"
 	config += `		neighbor_filter_max_prefix = 1` + "\n"
 	config += `		neighbor_filter_threshold_value = 1` + "\n"

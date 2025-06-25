@@ -1,7 +1,8 @@
+# TODO: IPv6 BGP support
 ---
 name: Device BGP
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bgp
-res_description: This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.
+res_description: This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings (fmc_device_bgp_general_settings).
 doc_category: Devices
 test_tags: [TF_VAR_device_id]
 attributes:
@@ -51,9 +52,9 @@ attributes:
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
-    description: Generate default routes
+    description: Generate default route
   - model_name: autoSummary
-    tf_name: ipv4_auto_aummary
+    tf_name: ipv4_auto_summary
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
@@ -63,7 +64,7 @@ attributes:
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
-    description: Suppresing advertise inactive routes
+    description: Suppressing advertisement of inactive routes
   - model_name: synchronization
     tf_name: ipv4_synchronization
     data_path: [addressFamilyIPv4]
@@ -137,7 +138,6 @@ attributes:
         tf_name: neighbor_remote_as
         type: String
         description: AS number of the BGP neighbor
-        id: true
         example: "65534"
       - model_name: fallOverBFD
         data_path: [neighborGeneral]
@@ -154,21 +154,33 @@ attributes:
         description: Interface ID for the update source
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true
-        exclude_example: true
       - model_name: enableAddress
         data_path: [neighborGeneral]
         tf_name: enable_address_family
         type: Bool
-        description: Enable IPv4 address family
+        description: Enable communication with this BGP neighbor
         default_value: "false"
         example: "true"
+      - model_name: asOverride
+        data_path: [neighborGeneral]
+        tf_name: neighbor_as_override
+        type: Bool
+        description: Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.
+        example: "false"
+        exclude_test: true
+      - model_name: disable
+        data_path: [neighborHaMode]
+        tf_name: neighbor_graceful_restart
+        type: Bool
+        description: Enable graceful restart for the neighbor.
+        exclude_test: true
+        exclude_example: true
       - model_name: shutdown
         data_path: [neighborGeneral]
         tf_name: neighbor_shutdown
-        description: Shutdown administratively
+        description: Disable a neighbor or peer group
         type: Bool
         default_value: "false"
-        example: "false"
         exclude_example: true
       - model_name: description
         tf_name: neighbor_description
@@ -180,6 +192,7 @@ attributes:
       - model_name: neighborDistributeLists
         tf_name: neighbor_filter_access_lists
         data_path: [neighborFiltering]
+        description: Set incoming or outgoing Access List to distribute BGP neighbor information.
         type: List
         exclude_test: true
         exclude_example: true
@@ -188,41 +201,39 @@ attributes:
             tf_name: access_list_id
             data_path: [accessList]
             type: String
+            mandatory: true
             description: Access List ID
-            exclude_test: true
-            exclude_example: true
           - model_name: filterUpdateAction
             tf_name: update_direction
             type: String
+            mandatory: true
             description: Filter direction
             enum_values: [ IN, OUT ]
-            exclude_test: true
-            exclude_example: true
       - model_name: neighborRouteMap
-        tf_name: neighbor_filter_route_map_lists
+        tf_name: neighbor_filter_route_maps
         data_path: [neighborFiltering]
         type: List
+        description: Set incoming or outgoing Route Maps to apply a route map to incoming or outgoing routes.
         exclude_test: true
         exclude_example: true
         attributes:
           - model_name: id
             tf_name: route_map_id
-            data_path: [RouteMap]
+            data_path: [routeMap]
             type: String
+            mandatory: true
             description: Route Map ID
-            exclude_test: true
-            exclude_example: true
           - model_name: filterUpdateAction
             tf_name: update_direction
             type: String
+            mandatory: true
             description: Filter direction
             enum_values: [ IN, OUT ]
-            exclude_test: true
-            exclude_example: true
       - model_name: ipv4PrefixListFilter
         tf_name: neighbor_filter_prefix_lists
         data_path: [neighborFiltering]
         type: List
+        description: Set incoming or outgoing Prefix List to distribute BGP neighbor information.
         exclude_test: true
         exclude_example: true
         attributes:
@@ -230,37 +241,40 @@ attributes:
             tf_name: prefix_list_id
             data_path: [ipv4PrefixList]
             type: String
-            description: Route Map ID
-            exclude_test: true
-            exclude_example: true
+            mandatory: true
+            description: Prefix List ID
           - model_name: filterUpdateAction
             tf_name: update_direction
             type: String
+            mandatory: true
             description: Filter direction
             enum_values: [ IN, OUT ]
-            exclude_test: true
-            exclude_example: true
       - model_name: neighborFilterList
-        tf_name: neighbor_filter_as_path_lists
-        data_path: [neighborFilterList]
+        tf_name: neighbor_filter_as_paths
+        data_path: [neighborFiltering]
         type: List
+        description: Set incoming or outgoing AS path filter to distribute BGP neighbor information.
         exclude_test: true
         exclude_example: true
         attributes:
-          - model_name: filterUpdateAction
-            tf_name: update_direction
-            type: String
-            description: Filter direction
-            enum_values: [ IN, OUT ]
-            exclude_test: true
-            exclude_example: true
           - model_name: id
             tf_name: as_path_id
             data_path: [asPathList]
             type: String
+            mandatory: true
             description: AS Path ID
-            exclude_test: true
-            exclude_example: true
+          - model_name: name
+            tf_name: as_path_name
+            data_path: [asPathList]
+            type: String
+            mandatory: true
+            description: AS Path Name
+          - model_name: filterUpdateAction
+            tf_name: update_direction
+            type: String
+            mandatory: true
+            description: Filter direction
+            enum_values: [ IN, OUT ]
       - model_name: maxPrefixLimit
         data_path: [neighborFiltering, neighborMaximumPrefix]
         tf_name: neighbor_filter_max_prefix
@@ -274,7 +288,7 @@ attributes:
         data_path: [neighborFiltering, neighborMaximumPrefix]
         tf_name: neighbor_filter_warning_only
         type: Bool
-        description: Give only warning message when prefix limit exceeded or terminate peering when prefix limit is exceeded.
+        description: Give only warning message when prefix limit exceeded. Can be set to `true` only. Use `neighbor_filter_threshold_value` to set mode to session termination.
         example: true
         exclude_example: true
         exclude_test: true
@@ -282,7 +296,7 @@ attributes:
         data_path: [neighborFiltering, neighborMaximumPrefix]
         tf_name: neighbor_filter_threshold_value
         type: Int64
-        description: Threshold value for the maximum number of prefixes allowed from the neighbor
+        description: Threshold value for the maximum number of prefixes allowed from the neighbor (implies session termination).
         min_int: 1
         max_int: 100
         example: 1
@@ -322,29 +336,33 @@ attributes:
         description: Generate default routes - Route Map
         exclude_test: true
         exclude_example: true
-      - model_name: existMap
-        data_path: [neighborRoutes, neighborAdvertiseMaps]
-        tf_name: neighbor_routes_advertise_map_use_exist
-        type: Bool
+      - model_name: neighborAdvertiseMaps
+        data_path: [neighborRoutes]
+        tf_name: neighbor_routes_advertise_maps
+        type: List
+        description: Define conditionally advertised routes.
         exclude_test: true
         exclude_example: true
-        description: Use Exist Map or Non-Exist Map
-      - model_name: id
-        tf_name: neighbor_routes_advertise_map_id
-        data_path: [neighborRoutes, neighborAdvertiseMaps, routeMap]
-        type: String
-        id: true
-        description: Specified route maps are advertised when the prefix exists in the Advertise Map and Exist Map.
-        exclude_test: true
-        exclude_example: true
-      - model_name: id
-        tf_name: neighbor_routes_advertise_exist_nonexist_map_id
-        data_path: [neighborRoutes, neighborAdvertiseMaps, existRouteMap]
-        type: String
-        id: true
-        description: Specified route maps are advertised when the prefix exists only in the Advertise Map.
-        exclude_test: true
-        exclude_example: true
+        attributes:
+          - model_name: id
+            tf_name: advertise_map_id
+            data_path: [routeMap]
+            type: String
+            id: true
+            mandatory: true
+            description: Specified route maps are advertised when conditions of the exist map or the non-exist map are met.
+          - model_name: existMap
+            tf_name: use_exist_map
+            type: Bool
+            mandatory: true
+            description: Set mode to Exist Map (true) or Non-Exist Map (false).
+          - model_name: id
+            tf_name: exist_nonexist_map_id
+            data_path: [existRouteMap]
+            type: String
+            id: true
+            mandatory: true
+            description: Specify exist / non-exist route map ID.
 # BGP - IPv4 - Neighbor - Timers
       - model_name: keepAliveInterval
         data_path: [neighborTimers]
@@ -378,6 +396,7 @@ attributes:
         tf_name: neighbor_authentication_password
         data_path: [neighborAdvanced]
         type: String
+        sensitive: true
         description: Setting password enables authentication.
         exclude_example: true
         exclude_test: true
@@ -484,6 +503,7 @@ attributes:
     tf_name: ipv4_aggregate_addresses
     data_path: [addressFamilyIPv4]
     type: List
+    description: Generate aggregate address information for IPv4.
     exclude_test: true
     exclude_example: true
     attributes:
@@ -491,88 +511,71 @@ attributes:
         tf_name: generate_as
         type: Bool
         description: Generate AS set path information
-        exclude_test: true
-        exclude_example: true
       - model_name: summaryOnly
         tf_name: filter
         type: Bool
         description: Filter all routes from updates (summary only)
-        exclude_test: true
-        exclude_example: true
       - model_name: id
         tf_name: network_id
         data_path: [ipv4AggregateNetwork]
         type: String
-        description: Network ID
+        description: Network ID (desired network/host object)
         id: true
-        exclude_test: true
-        exclude_example: true
       - model_name: id
         tf_name: advertise_map_id
         data_path: [advertiseMap]
         type: String
-        description: Advertise Map ID
+        description: Advertise Route Map ID (select the routes to create AS_SET origin communities)
         id: true
-        exclude_test: true
-        exclude_example: true
       - model_name: id
         tf_name: attribute_map_id
         data_path: [attributeMap]
         type: String
-        description: Attribute Map ID
+        description: Attribute Route Map ID (set the attribute of the aggregate route).
         id: true
-        exclude_test: true
-        exclude_example: true
       - model_name: id
         tf_name: suppress_map_id
         data_path: [suppressMap]
         type: String
-        description: Suppress Map ID
+        description: Suppress Route Map ID (select the routes to be suppressed).
         id: true
-        exclude_test: true
-        exclude_example: true
 # BGP - IPv4 - Filtering
   - model_name: distributeLists
     tf_name: ipv4_filterings
     data_path: [addressFamilyIPv4]
     type: List
+    description: Filter routes or networks received in incoming BGP updates
     exclude_test: true
     exclude_example: true
     attributes:
       - model_name: id
         tf_name: access_list_id
-        data_path: [ipv4AggregateNetwork]
+        data_path: [accessList]
         type: String
-        description: Standard Access List ID
-        id: true
-        exclude_test: true
-        exclude_example: true
+        description: Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.
+        mandatory: true
       - model_name: type
-        tf_name: network_direction
+        tf_name: direction
         type: String
         enum_values: [incomingroutefilter, outgoingroutefilter]
-        description: Filtering directrion
-        exclude_test: true
-        exclude_example: true
+        description: Determine if the filter should be applied to inbound updates or outbound updates
       - model_name: protocol
         tf_name: protocol
         data_path: [protocol]
         type: String
-        description: Protocol ## TODO: Enum values
-        exclude_test: true
-        exclude_example: true
-      - model_name: processId  ## TODO: Enum values
-        tf_name: prorocol_process
+        description: Routing process for which you want to filter
+        enum_values: [ CONNECTED, BGP, OSPF, RIP, STATIC ]
+      - model_name: processId
+        tf_name: protocol_process_id
         data_path: [protocol]
         type: String
-        description: Process ID
-        exclude_test: true
-        exclude_example: true
+        description: Process ID for the OSPF routing protocol.
 # BGP - IPv4 - Networks
   - model_name: networks
     tf_name: ipv4_networks
     data_path: [addressFamilyIPv4]
     type: List
+    description: Add networks that will be advertised by the BGP routing process
     exclude_test: true
     exclude_example: true
     attributes:
@@ -580,23 +583,21 @@ attributes:
         tf_name: network_id
         data_path: [ipv4Address]
         type: String
-        description: Network object ID
+        description: Network to be advertised by the BGP routing processes.
         id: true
-        exclude_test: true
-        exclude_example: true
+        mandatory: true
       - model_name: id
         tf_name: route_map_id
         data_path: [routeMap]
         type: String
-        description: Route Map ID
+        description: Route Map ID that should be examined to filter the networks to be advertised
         id: true
-        exclude_test: true
-        exclude_example: true
 # BGP - IPv4 - Redistribution
   - model_name: redistributeProtocols
     tf_name: ipv4_redistributions
     data_path: [addressFamilyIPv4]
     type: List
+    description: Define the conditions for redistributing routes from another routing domain into BGP.
     exclude_test: true
     exclude_example: true
     attributes:
@@ -605,81 +606,66 @@ attributes:
         type: String
         enum_values: [RedistributeConnected, RedistributeStatic, RedistributeOSPF, RedistributeEIGRP ]
         description: Protocol to redistribute
-        exclude_test: true
-        exclude_example: true
+        id: true
+        mandatory: true
       - model_name: id
         tf_name: route_map_id
         data_path: [routeMap]
         type: String
-        description: Route Map ID
-        id: true
-        exclude_test: true
-        exclude_example: true
+        description: Route Map ID to filter the networks to be redistributed
       - model_name: metricValue
         tf_name: metric
         data_path: [routeMetric]
         type: Int64
-        description: Metric value
+        description: Metric for the redistributed route.
         min_int: 0
         max_int: 4294967295
-        exclude_test: true
-        exclude_example: true
       - model_name: processId
         type: String
-        description: process ID
-        exclude_test: true
-        exclude_example: true
+        description: OSPF process ID
+        id: true
       - model_name: matchExternal1
         type: Bool
         description: Match OSPF External 1 metrics
-        exclude_test: true
-        exclude_example: true
       - model_name: matchExternal2
         type: Bool
         description: Match OSPF External 2 metrics
-        exclude_test: true
-        exclude_example: true
       - model_name: matchInternal
         type: Bool
         description: Match OSPF Internal metrics
-        exclude_test: true
-        exclude_example: true
       - model_name: matchNssaExternal1
         type: Bool
         description: Match OSPF NSSA External 1 metrics
-        exclude_test: true
-        exclude_example: true
       - model_name: matchNssaExternal2
         type: Bool
         description: Match OSPF NSSA External 2 metrics
-        exclude_test: true
-        exclude_example: true
 # BGP - IPv4 - Route Injection
   - model_name: injectMaps
     tf_name: ipv4_route_injections
     data_path: [addressFamilyIPv4]
     type: List
+    description: Define routes to be conditionally injected into the BGP routing table.
     exclude_test: true
     exclude_example: true
     attributes:
       - model_name: id
         tf_name: inject_route_map_id
-        data_path: [injectMap, routeMap]
+        data_path: [injectMap]
         type: String
-        description: Inject Route Map ID
+        description: Inject Route Map ID (prefixes to inject into the local BGP routing table)
         id: true
-        exclude_test: true
-        exclude_example: true
+        mandatory: true
       - model_name: id
         tf_name: exist_route_map_id
-        data_path: [existMap, routeMap]
+        data_path: [existMap]
         type: String
-        description: Exist Route Map ID
-        id: true
-        exclude_test: true
-        exclude_example: true
-
-# BGP - IPv6 - TODO
+        description: Exist Route Map ID containing the prefixes that the BGP speaker will track
+        mandatory: true
+      - model_name: copyAttributes
+        tf_name: inherit_attributes
+        type: String
+        description: Injected route will inherit the attributes of the aggregate route
+        default_value: true
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
