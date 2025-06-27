@@ -54,14 +54,13 @@ resource "fmc_device_bridge_group_interface" "example" {
 - `bridge_group_id` (Number) Bridge Group Id.
   - Range: `1`-`250`
 - `device_id` (String) Id of the parent device.
-- `logical_name` (String) Logical name of the Brige Group interface.
 
 ### Optional
 
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `ipv4_dhcp_obtain_route` (Boolean) Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+- `ipv4_dhcp_obtain_route` (Boolean) Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.
 - `ipv4_static_address` (String) Static IPv4 address.
 - `ipv4_static_netmask` (String) Netmask for ipv4_static_address.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
@@ -72,6 +71,7 @@ resource "fmc_device_bridge_group_interface" "example" {
   - Range: `1000`-`3600000`
 - `ipv6_reachable_time` (Number) The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
   - Range: `0`-`3600000`
+- `logical_name` (String) Logical name of the Brige Group interface.
 - `selected_interfaces` (Attributes List) List of interfaces that are part of the bridge group. (see [below for nested schema](#nestedatt--selected_interfaces))
 
 ### Read-Only

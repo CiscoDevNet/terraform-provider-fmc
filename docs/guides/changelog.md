@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc2 (Unreleased)
+
+- (Fix) `fmc_device_bridge_group_interface`: `logical_name` is no longer `required` field
+
 ## 2.0.0-rc1
 
 - (Change) Resource `fmc_device_ha_pair_physical_interface_mac_address` is deprecated and replaced with `fmc_device_ha_pair_failover_interface_mac_address`
