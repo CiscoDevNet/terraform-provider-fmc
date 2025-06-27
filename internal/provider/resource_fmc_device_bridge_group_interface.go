@@ -103,7 +103,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the Brige Group interface.").String,
-				Required:            true,
+				Optional:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
@@ -144,7 +144,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				Optional:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{

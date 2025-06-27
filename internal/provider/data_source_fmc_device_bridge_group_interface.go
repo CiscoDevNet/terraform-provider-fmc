@@ -121,7 +121,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
+				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
