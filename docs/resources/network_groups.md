@@ -20,6 +20,7 @@ resource "fmc_network_groups" "example" {
       network_groups = ["child_group_1"]
       objects = [
         {
+          id = "cf271be2-e80d-4033-8e1d-285f133a5f8c"
         }
       ]
       literals = [
@@ -65,7 +66,7 @@ Read-Only:
 
 Optional:
 
-- `value` (String) IP address or network in CIDR format.
+- `value` (String) IP address or network in CIDR format. Please do not use /32 mask for host.
 
 
 <a id="nestedatt--items--objects"></a>

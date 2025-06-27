@@ -47,7 +47,7 @@ attributes:
             type: String
             description: Id of the network object.
             id: true
-            exclude_example: true
+            example: cf271be2-e80d-4033-8e1d-285f133a5f8c
             test_value: fmc_range.test.id
           - model_name: type
             type: String
@@ -60,7 +60,7 @@ attributes:
             type: String
             id: true
             example: 10.1.1.0/24
-            description: IP address or network in CIDR format.
+            description: IP address or network in CIDR format. Please do not use /32 mask for host.
           - model_name: type
             type: String
             value: AnyNonEmptyString
