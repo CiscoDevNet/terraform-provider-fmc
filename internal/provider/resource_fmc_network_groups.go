@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -131,7 +132,7 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format. Please do not use /32 mask for host.").String,
 										Optional:            true,
 									},
 								},
@@ -173,7 +174,7 @@ func (r *NetworkGroupsResource) Create(ctx context.Context, req resource.CreateR
 
 	body := plan.toBody(ctx, NetworkGroups{})
 	// A pseudo-resource, no Post needed.
-	plan.Id = types.StringValue("00000000-0000-0000-0000-000000000000")
+	plan.Id = types.StringValue(uuid.New().String())
 
 	state := plan
 	if len(plan.Items) > 0 {
