@@ -60,7 +60,7 @@ attributes:
     example: "false"
     description: Summarize subnet routes into network level routes
   - model_name: bgpSupressInactive
-    tf_name: ipv4_bgp_supress_inactive
+    tf_name: ipv4_suppress_inactive
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
@@ -72,7 +72,7 @@ attributes:
     example: "false"
     description: Synchronize between BGP and IGP systems
   - model_name: bgpRedistributeInternal
-    tf_name: ipv4_bgp_redistribute_internal
+    tf_name: ipv4_redistribute_ibgp_into_igp
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
@@ -105,7 +105,7 @@ attributes:
     example: 200
     default_value: 200
   - model_name: ibgp
-    tf_name: ipv4_forward_packets_over_multipath_ibgp  ## ipv4_number_of_ibgp_paths
+    tf_name: ipv4_number_of_ibgp_paths
     data_path: [addressFamilyIPv4]
     type: Int64
     description: Number of paths to use for IBGP
@@ -114,7 +114,7 @@ attributes:
     example: 1
     default_value: 1
   - model_name: ebgp
-    tf_name: ipv4_forward_packets_over_multipath_ebgp  ## ipv4_number_of_ebgp_paths
+    tf_name: ipv4_number_of_ebgp_paths 
     data_path: [addressFamilyIPv4]
     type: Int64
     description: Number of paths to use for EBGP
@@ -129,19 +129,19 @@ attributes:
     type: List
     attributes:
       - model_name: ipv4Address
-        tf_name: neighbor_address
+        tf_name: address
         type: String
         description: IP address of the BGP neighbor
         id: true
         example: "10.1.1.1"
       - model_name: remoteAs
-        tf_name: neighbor_remote_as
+        tf_name: remote_as
         type: String
         description: AS number of the BGP neighbor
         example: "65534"
       - model_name: fallOverBFD
         data_path: [neighborGeneral]
-        tf_name: neighbor_bfd
+        tf_name: bfd_fallover
         type: String
         description: BFD Fallover
         enum_values: [ SINGLE_HOP, MULTI_HOP, AUTO_DETECT_HOP, NONE ]
@@ -156,41 +156,41 @@ attributes:
         exclude_test: true
       - model_name: enableAddress
         data_path: [neighborGeneral]
-        tf_name: enable_address_family
+        tf_name: enable_address
         type: Bool
         description: Enable communication with this BGP neighbor
         default_value: "false"
         example: "true"
       - model_name: asOverride
         data_path: [neighborGeneral]
-        tf_name: neighbor_as_override
+        tf_name: as_override
         type: Bool
         description: Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.
         example: "false"
         exclude_test: true
       - model_name: disable
         data_path: [neighborHaMode]
-        tf_name: neighbor_graceful_restart
+        tf_name: graceful_restart
         type: Bool
         description: Enable graceful restart for the neighbor.
         exclude_test: true
         exclude_example: true
       - model_name: shutdown
         data_path: [neighborGeneral]
-        tf_name: neighbor_shutdown
+        tf_name: shutdown_administratively
         description: Disable a neighbor or peer group
         type: Bool
         default_value: "false"
         exclude_example: true
       - model_name: description
-        tf_name: neighbor_description
+        tf_name: description
         data_path: [neighborGeneral]
         type: String
         description: Description of the neighbor
         example: "My BGP Peer"
 # BGP - IPv4 - Neighbor - Filtering Routes
       - model_name: neighborDistributeLists
-        tf_name: neighbor_filter_access_lists
+        tf_name: filter_access_lists
         data_path: [neighborFiltering]
         description: Set incoming or outgoing Access List to distribute BGP neighbor information.
         type: List
@@ -210,7 +210,7 @@ attributes:
             description: Filter direction
             enum_values: [ IN, OUT ]
       - model_name: neighborRouteMap
-        tf_name: neighbor_filter_route_maps
+        tf_name: filter_route_maps
         data_path: [neighborFiltering]
         type: List
         description: Set incoming or outgoing Route Maps to apply a route map to incoming or outgoing routes.
@@ -230,7 +230,7 @@ attributes:
             description: Filter direction
             enum_values: [ IN, OUT ]
       - model_name: ipv4PrefixListFilter
-        tf_name: neighbor_filter_prefix_lists
+        tf_name: filter_prefix_lists
         data_path: [neighborFiltering]
         type: List
         description: Set incoming or outgoing Prefix List to distribute BGP neighbor information.
@@ -250,7 +250,7 @@ attributes:
             description: Filter direction
             enum_values: [ IN, OUT ]
       - model_name: neighborFilterList
-        tf_name: neighbor_filter_as_paths
+        tf_name: filter_as_paths
         data_path: [neighborFiltering]
         type: List
         description: Set incoming or outgoing AS path filter to distribute BGP neighbor information.
@@ -277,7 +277,7 @@ attributes:
             enum_values: [ IN, OUT ]
       - model_name: maxPrefixLimit
         data_path: [neighborFiltering, neighborMaximumPrefix]
-        tf_name: neighbor_filter_max_prefix
+        tf_name: filter_maximum_prefixes
         type: Int64
         description: Maximum number of prefixes allowed from the neighbor
         min_int: 1
@@ -286,7 +286,7 @@ attributes:
         exclude_example: true
       - model_name: warningOnly
         data_path: [neighborFiltering, neighborMaximumPrefix]
-        tf_name: neighbor_filter_warning_only
+        tf_name: filter_warning_only
         type: Bool
         description: Give only warning message when prefix limit exceeded. Can be set to `true` only. Use `neighbor_filter_threshold_value` to set mode to session termination.
         example: true
@@ -294,7 +294,7 @@ attributes:
         exclude_test: true
       - model_name: thresholdValue
         data_path: [neighborFiltering, neighborMaximumPrefix]
-        tf_name: neighbor_filter_threshold_value
+        tf_name: filter_threshold_value
         type: Int64
         description: Threshold value for the maximum number of prefixes allowed from the neighbor (implies session termination).
         min_int: 1
@@ -303,7 +303,7 @@ attributes:
         exclude_example: true
       - model_name: restartInterval
         data_path: [neighborFiltering, neighborMaximumPrefix]
-        tf_name: neighbor_filter_restart_interval
+        tf_name: filter_restart_interval
         type: Int64
         description: Time interval to restart the maximum prefix limit in Minutes
         min_int: 1
@@ -313,7 +313,7 @@ attributes:
 # BGP - IPv4 - Neighbor - Routes
       - model_name: advertisementInterval
         data_path: [neighborRoutes]
-        tf_name: neighbor_routes_advertisement_interval
+        tf_name: routes_advertisement_interval
         type: Int64
         description: Time interval to advertise routes in seconds
         min_int: 0
@@ -323,14 +323,14 @@ attributes:
         exclude_example: true
       - model_name: removePrivateAs
         data_path: [neighborRoutes]
-        tf_name: neighbor_routes_remove_private_as
+        tf_name: routes_remove_private_as
         type: Bool
         description: Remove private AS numbers from outgoing routing updates
         default_value: "false"
         example: "false"
         exclude_example: true
       - model_name: id
-        tf_name: neighbor_generate_default_route_map_id
+        tf_name: routes_generate_default_route_map_id
         data_path: [neighborFiltering, neighborDefaultOriginate, routeMap]
         type: String
         description: Generate default routes - Route Map
@@ -338,7 +338,7 @@ attributes:
         exclude_example: true
       - model_name: neighborAdvertiseMaps
         data_path: [neighborRoutes]
-        tf_name: neighbor_routes_advertise_maps
+        tf_name: routes_advertise_maps
         type: List
         description: Define conditionally advertised routes.
         exclude_test: true
@@ -366,7 +366,7 @@ attributes:
 # BGP - IPv4 - Neighbor - Timers
       - model_name: keepAliveInterval
         data_path: [neighborTimers]
-        tf_name: neighbor_keepalive_interval
+        tf_name: keepalive_interval
         type: Int64
         description: Time interval to send keepalive messages in seconds
         min_int: 0
@@ -375,7 +375,7 @@ attributes:
         exclude_example: true
       - model_name: holdTime
         data_path: [neighborTimers]
-        tf_name: neighbor_hold_time
+        tf_name: hold_time
         type: Int64
         description: Time interval to hold the neighbor in seconds
         min_int: 3
@@ -384,7 +384,7 @@ attributes:
         exclude_example: true
       - model_name: minimumHoldTime
         data_path: [neighborTimers]
-        tf_name: neighbor_min_hold_time
+        tf_name: minimum_hold_time
         type: Int64
         description: Minimum hold time in seconds
         min_int: 3
@@ -393,7 +393,7 @@ attributes:
         exclude_example: true
 # BGP - IPv4 - Neighbor - Advanced
       - model_name: neighborSecret
-        tf_name: neighbor_authentication_password
+        tf_name: authentication_password
         data_path: [neighborAdvanced]
         type: String
         sensitive: true
@@ -401,7 +401,7 @@ attributes:
         exclude_example: true
         exclude_test: true
       - model_name: sendCommunity
-        tf_name: neighbor_send_community_attribute
+        tf_name: send_community_attribute
         data_path: [neighborAdvanced]
         type: Bool
         description: Send Community attribute to this neighbor
@@ -409,7 +409,7 @@ attributes:
         example: "false"
         exclude_example: true
       - model_name: nextHopSelf
-        tf_name: neighbor_nexthop_self
+        tf_name: next_hop_self
         data_path: [neighborAdvanced]
         type: Bool
         exclude_example: true
@@ -417,7 +417,7 @@ attributes:
         example: "false"
         description: Use itself as next hop for this neighbor
       - model_name: disableConnectedCheck
-        tf_name: neighbor_disable_connection_verification
+        tf_name: disable_connection_verification
         data_path: [neighborAdvanced, neighborHops]
         type: Bool
         description: Disable Connection Verification
@@ -425,7 +425,7 @@ attributes:
         default_value: "false"
         example: "false"
       - model_name: disable
-        tf_name: neighbor_tcp_mtu_path_discovery
+        tf_name: tcp_path_mtu_discovery
         data_path: [neighborAdvanced, neighborTransportPathMTUDiscovery]
         type: Bool
         description: Use TCP path MTU discovery.
@@ -433,7 +433,7 @@ attributes:
         example: "false"
         exclude_example: true
       - model_name: maxHopCount
-        tf_name: neighbor_max_hop_count
+        tf_name: max_hop_count
         data_path: [neighborAdvanced, neighborHops]
         type: Int64
         description: Maximum number of hops to reach the neighbor
@@ -443,7 +443,7 @@ attributes:
         example: 1
         exclude_example: true
       - model_name: establishTCPSession
-        tf_name: neighbor_tcp_transport_mode
+        tf_name: tcp_transport_mode
         data_path: [neighborAdvanced, neighborTransportConnectionMode]
         type: Bool
         description: True set it to active, False to passive.
@@ -451,7 +451,7 @@ attributes:
         example: "false"
         exclude_example: true
       - model_name: neighborWeight
-        tf_name: neighbor_weight
+        tf_name: weight
         data_path: [neighborAdvanced]
         type: Int64
         description: Weight of the neighbor
@@ -461,7 +461,7 @@ attributes:
         example: 0
         exclude_example: true
       - model_name: neighborVersion
-        tf_name: neighbor_version
+        tf_name: version
         data_path: [neighborAdvanced]
         type: String
         enum_values: ["0", "4"]
@@ -471,28 +471,28 @@ attributes:
         description: "Set BPG version: 0 - default, 4 - IPv4"
 # BGP - IPv4 - Neighbor - Migration
       - model_name: asNumber
-        tf_name: neighbor_customized_local_as_number
+        tf_name: customized_local_as_number
         data_path: [neighborLocalAs]
         type: String
         description: Customize the AS number for the routes received from neighbor
         exclude_test: true
         exclude_example: true
       - model_name: noPrepend
-        tf_name: neighbor_customized_no_prepend
+        tf_name: customized_no_prepend
         data_path: [neighborLocalAs]
         type: Bool
         description: Do not prepend local AS number to routes received from neighbor
         exclude_test: true
         exclude_example: true
       - model_name: replaceAs
-        tf_name: neighbor_customized_replace_as
+        tf_name: customized_replace_as
         data_path: [neighborLocalAs]
         type: Bool
         description: Replace real AS number with local AS number in routes received from neighbor
         exclude_test: true
         exclude_example: true
       - model_name: dualAs
-        tf_name: neighbor_customized_accept_both_as
+        tf_name: customized_accept_both_as
         data_path: [neighborLocalAs]
         type: Bool
         description: Accept either real AS number or local AS number in routes experienced from neighbor

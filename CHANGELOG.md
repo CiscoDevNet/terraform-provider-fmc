@@ -1,5 +1,6 @@
 ## 2.0.0-rc2 (Unreleased)
 
+- (BREAKING CHANGE) Multiple fields renamed in `fmc_device_bgp` resource
 - (Fix) Multiple fixes to `fmc_device_bgp` resource
 - (Fix) `fmc_device_bridge_group_interface`: `logical_name` is no longer `required` field
 - (Fix) `fmc_network_groups`: `id` attribute is set to random value

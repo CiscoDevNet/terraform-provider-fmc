@@ -137,7 +137,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: helpers.NewAttributeDescription("Summarize subnet routes into network level routes").String,
 				Optional:            true,
 			},
-			"ipv4_bgp_supress_inactive": schema.BoolAttribute{
+			"ipv4_suppress_inactive": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Suppressing advertisement of inactive routes").String,
 				Optional:            true,
 			},
@@ -145,7 +145,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: helpers.NewAttributeDescription("Synchronize between BGP and IGP systems").String,
 				Optional:            true,
 			},
-			"ipv4_bgp_redistribute_internal": schema.BoolAttribute{
+			"ipv4_redistribute_ibgp_into_igp": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.").String,
 				Optional:            true,
 			},
@@ -176,7 +176,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Default: int64default.StaticInt64(200),
 			},
-			"ipv4_forward_packets_over_multipath_ibgp": schema.Int64Attribute{
+			"ipv4_number_of_ibgp_paths": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Number of paths to use for IBGP").AddIntegerRangeDescription(1, 8).AddDefaultValueDescription("1").String,
 				Optional:            true,
 				Computed:            true,
@@ -185,7 +185,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Default: int64default.StaticInt64(1),
 			},
-			"ipv4_forward_packets_over_multipath_ebgp": schema.Int64Attribute{
+			"ipv4_number_of_ebgp_paths": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Number of paths to use for EBGP").AddIntegerRangeDescription(1, 8).AddDefaultValueDescription("1").String,
 				Optional:            true,
 				Computed:            true,
@@ -199,15 +199,15 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"neighbor_address": schema.StringAttribute{
+						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP address of the BGP neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_remote_as": schema.StringAttribute{
+						"remote_as": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("AS number of the BGP neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_bfd": schema.StringAttribute{
+						"bfd_fallover": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("BFD Fallover").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP", "AUTO_DETECT_HOP", "NONE").AddDefaultValueDescription("NONE").String,
 							Optional:            true,
 							Computed:            true,
@@ -220,31 +220,31 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							MarkdownDescription: helpers.NewAttributeDescription("Interface ID for the update source").String,
 							Optional:            true,
 						},
-						"enable_address_family": schema.BoolAttribute{
+						"enable_address": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable communication with this BGP neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_as_override": schema.BoolAttribute{
+						"as_override": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.").String,
 							Optional:            true,
 						},
-						"neighbor_graceful_restart": schema.BoolAttribute{
+						"graceful_restart": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable graceful restart for the neighbor.").String,
 							Optional:            true,
 						},
-						"neighbor_shutdown": schema.BoolAttribute{
+						"shutdown_administratively": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Disable a neighbor or peer group").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_description": schema.StringAttribute{
+						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Description of the neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_filter_access_lists": schema.ListNestedAttribute{
+						"filter_access_lists": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Access List to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -263,7 +263,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_route_maps": schema.ListNestedAttribute{
+						"filter_route_maps": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Route Maps to apply a route map to incoming or outgoing routes.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -282,7 +282,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_prefix_lists": schema.ListNestedAttribute{
+						"filter_prefix_lists": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Prefix List to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -301,7 +301,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_as_paths": schema.ListNestedAttribute{
+						"filter_as_paths": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing AS path filter to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -324,32 +324,32 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_max_prefix": schema.Int64Attribute{
+						"filter_maximum_prefixes": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Maximum number of prefixes allowed from the neighbor").AddIntegerRangeDescription(1, 2147483647).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 2147483647),
 							},
 						},
-						"neighbor_filter_warning_only": schema.BoolAttribute{
+						"filter_warning_only": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Give only warning message when prefix limit exceeded. Can be set to `true` only. Use `neighbor_filter_threshold_value` to set mode to session termination.").String,
 							Optional:            true,
 						},
-						"neighbor_filter_threshold_value": schema.Int64Attribute{
+						"filter_threshold_value": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Threshold value for the maximum number of prefixes allowed from the neighbor (implies session termination).").AddIntegerRangeDescription(1, 100).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 100),
 							},
 						},
-						"neighbor_filter_restart_interval": schema.Int64Attribute{
+						"filter_restart_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to restart the maximum prefix limit in Minutes").AddIntegerRangeDescription(1, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 65535),
 							},
 						},
-						"neighbor_routes_advertisement_interval": schema.Int64Attribute{
+						"routes_advertisement_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to advertise routes in seconds").AddIntegerRangeDescription(0, 600).AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -358,17 +358,17 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(0),
 						},
-						"neighbor_routes_remove_private_as": schema.BoolAttribute{
+						"routes_remove_private_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Remove private AS numbers from outgoing routing updates").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_generate_default_route_map_id": schema.StringAttribute{
+						"routes_generate_default_route_map_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Generate default routes - Route Map").String,
 							Optional:            true,
 						},
-						"neighbor_routes_advertise_maps": schema.ListNestedAttribute{
+						"routes_advertise_maps": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Define conditionally advertised routes.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -388,57 +388,57 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_keepalive_interval": schema.Int64Attribute{
+						"keepalive_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to send keepalive messages in seconds").AddIntegerRangeDescription(0, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 65535),
 							},
 						},
-						"neighbor_hold_time": schema.Int64Attribute{
+						"hold_time": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to hold the neighbor in seconds").AddIntegerRangeDescription(3, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(3, 65535),
 							},
 						},
-						"neighbor_min_hold_time": schema.Int64Attribute{
+						"minimum_hold_time": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Minimum hold time in seconds").AddIntegerRangeDescription(3, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(3, 65535),
 							},
 						},
-						"neighbor_authentication_password": schema.StringAttribute{
+						"authentication_password": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Setting password enables authentication.").String,
 							Optional:            true,
 							Sensitive:           true,
 						},
-						"neighbor_send_community_attribute": schema.BoolAttribute{
+						"send_community_attribute": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Send Community attribute to this neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_nexthop_self": schema.BoolAttribute{
+						"next_hop_self": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use itself as next hop for this neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_disable_connection_verification": schema.BoolAttribute{
+						"disable_connection_verification": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Disable Connection Verification").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_tcp_mtu_path_discovery": schema.BoolAttribute{
+						"tcp_path_mtu_discovery": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use TCP path MTU discovery.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_max_hop_count": schema.Int64Attribute{
+						"max_hop_count": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Maximum number of hops to reach the neighbor").AddIntegerRangeDescription(1, 255).AddDefaultValueDescription("1").String,
 							Optional:            true,
 							Computed:            true,
@@ -447,13 +447,13 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(1),
 						},
-						"neighbor_tcp_transport_mode": schema.BoolAttribute{
+						"tcp_transport_mode": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("True set it to active, False to passive.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_weight": schema.Int64Attribute{
+						"weight": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Weight of the neighbor").AddIntegerRangeDescription(0, 65535).AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -462,7 +462,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(0),
 						},
-						"neighbor_version": schema.StringAttribute{
+						"version": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set BPG version: 0 - default, 4 - IPv4").AddStringEnumDescription("0", "4").AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -471,19 +471,19 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: stringdefault.StaticString("0"),
 						},
-						"neighbor_customized_local_as_number": schema.StringAttribute{
+						"customized_local_as_number": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Customize the AS number for the routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_no_prepend": schema.BoolAttribute{
+						"customized_no_prepend": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Do not prepend local AS number to routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_replace_as": schema.BoolAttribute{
+						"customized_replace_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Replace real AS number with local AS number in routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_accept_both_as": schema.BoolAttribute{
+						"customized_accept_both_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Accept either real AS number or local AS number in routes experienced from neighbor").String,
 							Optional:            true,
 						},
