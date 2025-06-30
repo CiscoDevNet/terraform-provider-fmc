@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-rc2 (Unreleased)
+## 2.0.0-rc2
 
 - (BREAKING CHANGE) Multiple fields renamed in `fmc_device_bgp` resource
 - (Fix) Multiple fixes to `fmc_device_bgp` resource
