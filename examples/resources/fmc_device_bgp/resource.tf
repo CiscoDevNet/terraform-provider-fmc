@@ -2,7 +2,7 @@ resource "fmc_device_bgp" "example" {
   device_id                         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ipv4_default_information_orginate = false
   ipv4_auto_summary                 = false
-  ipv4_suppress_inactive            = false
+  ipv4_suppress_inactive_routes     = false
   ipv4_synchronization              = false
   ipv4_redistribute_ibgp_into_igp   = false
   ipv4_external_distance            = 20
@@ -18,6 +18,7 @@ resource "fmc_device_bgp" "example" {
       update_source_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       enable_address             = true
       as_override                = false
+      shutdown_administratively  = false
       description                = "My BGP Peer"
     }
   ]

@@ -108,7 +108,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				MarkdownDescription: "Summarize subnet routes into network level routes",
 				Computed:            true,
 			},
-			"ipv4_suppress_inactive": schema.BoolAttribute{
+			"ipv4_suppress_inactive_routes": schema.BoolAttribute{
 				MarkdownDescription: "Suppressing advertisement of inactive routes",
 				Computed:            true,
 			},
@@ -414,7 +414,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							MarkdownDescription: "Routing process for which you want to filter",
 							Computed:            true,
 						},
-						"protocol_process_id": schema.StringAttribute{
+						"process_id": schema.StringAttribute{
 							MarkdownDescription: "Process ID for the OSPF routing protocol.",
 							Computed:            true,
 						},

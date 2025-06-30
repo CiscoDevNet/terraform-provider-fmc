@@ -41,7 +41,7 @@ func TestAccDataSourceFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_bgp.test", "ipv4_address_family_type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_default_information_orginate", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_auto_summary", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_suppress_inactive", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_suppress_inactive_routes", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_synchronization", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_redistribute_ibgp_into_igp", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_external_distance", "20"))
@@ -53,7 +53,7 @@ func TestAccDataSourceFmcDeviceBGP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.remote_as", "65534"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.bfd_fallover", "SINGLE_HOP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.enable_address", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.shutdown_administratively", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.shutdown_administratively", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.description", "My BGP Peer"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.filter_maximum_prefixes", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bgp.test", "ipv4_neighbors.0.filter_threshold_value", "1"))
@@ -110,7 +110,7 @@ func testAccDataSourceFmcDeviceBGPConfig() string {
 	config += `	device_id = var.device_id` + "\n"
 	config += `	ipv4_default_information_orginate = false` + "\n"
 	config += `	ipv4_auto_summary = false` + "\n"
-	config += `	ipv4_suppress_inactive = false` + "\n"
+	config += `	ipv4_suppress_inactive_routes = false` + "\n"
 	config += `	ipv4_synchronization = false` + "\n"
 	config += `	ipv4_redistribute_ibgp_into_igp = false` + "\n"
 	config += `	ipv4_external_distance = 20` + "\n"
@@ -123,7 +123,7 @@ func testAccDataSourceFmcDeviceBGPConfig() string {
 	config += `		remote_as = "65534"` + "\n"
 	config += `		bfd_fallover = "SINGLE_HOP"` + "\n"
 	config += `		enable_address = true` + "\n"
-	config += `		shutdown_administratively = ` + "\n"
+	config += `		shutdown_administratively = false` + "\n"
 	config += `		description = "My BGP Peer"` + "\n"
 	config += `		filter_maximum_prefixes = 1` + "\n"
 	config += `		filter_threshold_value = 1` + "\n"
@@ -158,7 +158,7 @@ func testAccNamedDataSourceFmcDeviceBGPConfig() string {
 	config += `	device_id = var.device_id` + "\n"
 	config += `	ipv4_default_information_orginate = false` + "\n"
 	config += `	ipv4_auto_summary = false` + "\n"
-	config += `	ipv4_suppress_inactive = false` + "\n"
+	config += `	ipv4_suppress_inactive_routes = false` + "\n"
 	config += `	ipv4_synchronization = false` + "\n"
 	config += `	ipv4_redistribute_ibgp_into_igp = false` + "\n"
 	config += `	ipv4_external_distance = 20` + "\n"
@@ -171,7 +171,7 @@ func testAccNamedDataSourceFmcDeviceBGPConfig() string {
 	config += `		remote_as = "65534"` + "\n"
 	config += `		bfd_fallover = "SINGLE_HOP"` + "\n"
 	config += `		enable_address = true` + "\n"
-	config += `		shutdown_administratively = ` + "\n"
+	config += `		shutdown_administratively = false` + "\n"
 	config += `		description = "My BGP Peer"` + "\n"
 	config += `		filter_maximum_prefixes = 1` + "\n"
 	config += `		filter_threshold_value = 1` + "\n"

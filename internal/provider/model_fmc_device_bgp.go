@@ -46,7 +46,7 @@ type DeviceBGP struct {
 	Ipv4LearnedRouteMapId          types.String                      `tfsdk:"ipv4_learned_route_map_id"`
 	Ipv4DefaultInformationOrginate types.Bool                        `tfsdk:"ipv4_default_information_orginate"`
 	Ipv4AutoSummary                types.Bool                        `tfsdk:"ipv4_auto_summary"`
-	Ipv4SuppressInactive           types.Bool                        `tfsdk:"ipv4_suppress_inactive"`
+	Ipv4SuppressInactiveRoutes     types.Bool                        `tfsdk:"ipv4_suppress_inactive_routes"`
 	Ipv4Synchronization            types.Bool                        `tfsdk:"ipv4_synchronization"`
 	Ipv4RedistributeIbgpIntoIgp    types.Bool                        `tfsdk:"ipv4_redistribute_ibgp_into_igp"`
 	Ipv4ExternalDistance           types.Int64                       `tfsdk:"ipv4_external_distance"`
@@ -112,10 +112,10 @@ type DeviceBGPIpv4AggregateAddresses struct {
 }
 
 type DeviceBGPIpv4Filterings struct {
-	AccessListId      types.String `tfsdk:"access_list_id"`
-	Direction         types.String `tfsdk:"direction"`
-	Protocol          types.String `tfsdk:"protocol"`
-	ProtocolProcessId types.String `tfsdk:"protocol_process_id"`
+	AccessListId types.String `tfsdk:"access_list_id"`
+	Direction    types.String `tfsdk:"direction"`
+	Protocol     types.String `tfsdk:"protocol"`
+	ProcessId    types.String `tfsdk:"process_id"`
 }
 
 type DeviceBGPIpv4Networks struct {
@@ -197,8 +197,8 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 	if !data.Ipv4AutoSummary.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.autoSummary", data.Ipv4AutoSummary.ValueBool())
 	}
-	if !data.Ipv4SuppressInactive.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpSupressInactive", data.Ipv4SuppressInactive.ValueBool())
+	if !data.Ipv4SuppressInactiveRoutes.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpSupressInactive", data.Ipv4SuppressInactiveRoutes.ValueBool())
 	}
 	if !data.Ipv4Synchronization.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.synchronization", data.Ipv4Synchronization.ValueBool())
@@ -433,8 +433,8 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol.protocol", item.Protocol.ValueString())
 			}
-			if !item.ProtocolProcessId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "protocol.processId", item.ProtocolProcessId.ValueString())
+			if !item.ProcessId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "protocol.processId", item.ProcessId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.distributeLists.-1", itemBody)
 		}
@@ -551,9 +551,9 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4AutoSummary = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() {
-		data.Ipv4SuppressInactive = types.BoolValue(value.Bool())
+		data.Ipv4SuppressInactiveRoutes = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4SuppressInactive = types.BoolNull()
+		data.Ipv4SuppressInactiveRoutes = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.synchronization"); value.Exists() {
 		data.Ipv4Synchronization = types.BoolValue(value.Bool())
@@ -924,9 +924,9 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.Protocol = types.StringNull()
 			}
 			if value := res.Get("protocol.processId"); value.Exists() {
-				data.ProtocolProcessId = types.StringValue(value.String())
+				data.ProcessId = types.StringValue(value.String())
 			} else {
-				data.ProtocolProcessId = types.StringNull()
+				data.ProcessId = types.StringNull()
 			}
 			(*parent).Ipv4Filterings = append((*parent).Ipv4Filterings, data)
 			return true
@@ -1080,10 +1080,10 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Ipv4AutoSummary = types.BoolNull()
 	}
-	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() && !data.Ipv4SuppressInactive.IsNull() {
-		data.Ipv4SuppressInactive = types.BoolValue(value.Bool())
+	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() && !data.Ipv4SuppressInactiveRoutes.IsNull() {
+		data.Ipv4SuppressInactiveRoutes = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4SuppressInactive = types.BoolNull()
+		data.Ipv4SuppressInactiveRoutes = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.synchronization"); value.Exists() && !data.Ipv4Synchronization.IsNull() {
 		data.Ipv4Synchronization = types.BoolValue(value.Bool())
@@ -1638,7 +1638,7 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	for i := 0; i < len(data.Ipv4Filterings); i++ {
 		keys := [...]string{"accessList.id", "type", "protocol.protocol", "protocol.processId"}
-		keyValues := [...]string{data.Ipv4Filterings[i].AccessListId.ValueString(), data.Ipv4Filterings[i].Direction.ValueString(), data.Ipv4Filterings[i].Protocol.ValueString(), data.Ipv4Filterings[i].ProtocolProcessId.ValueString()}
+		keyValues := [...]string{data.Ipv4Filterings[i].AccessListId.ValueString(), data.Ipv4Filterings[i].Direction.ValueString(), data.Ipv4Filterings[i].Protocol.ValueString(), data.Ipv4Filterings[i].ProcessId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Filterings[i]
@@ -1687,10 +1687,10 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Protocol = types.StringNull()
 		}
-		if value := res.Get("protocol.processId"); value.Exists() && !data.ProtocolProcessId.IsNull() {
-			data.ProtocolProcessId = types.StringValue(value.String())
+		if value := res.Get("protocol.processId"); value.Exists() && !data.ProcessId.IsNull() {
+			data.ProcessId = types.StringValue(value.String())
 		} else {
-			data.ProtocolProcessId = types.StringNull()
+			data.ProcessId = types.StringNull()
 		}
 		(*parent).Ipv4Filterings[i] = data
 	}

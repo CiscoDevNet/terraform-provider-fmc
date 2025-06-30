@@ -51,7 +51,7 @@ data "fmc_device_bgp" "example" {
 - `ipv4_redistribute_ibgp_into_igp` (Boolean) Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.
 - `ipv4_redistributions` (Attributes List) Define the conditions for redistributing routes from another routing domain into BGP. (see [below for nested schema](#nestedatt--ipv4_redistributions))
 - `ipv4_route_injections` (Attributes List) Define routes to be conditionally injected into the BGP routing table. (see [below for nested schema](#nestedatt--ipv4_route_injections))
-- `ipv4_suppress_inactive` (Boolean) Suppressing advertisement of inactive routes
+- `ipv4_suppress_inactive_routes` (Boolean) Suppressing advertisement of inactive routes
 - `ipv4_synchronization` (Boolean) Synchronize between BGP and IGP systems
 - `name` (String) Name of the object; this is always 'bgp'
 - `type` (String) Type of the object; this is always 'bgp'
@@ -76,8 +76,8 @@ Read-Only:
 
 - `access_list_id` (String) Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.
 - `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates
+- `process_id` (String) Process ID for the OSPF routing protocol.
 - `protocol` (String) Routing process for which you want to filter
-- `protocol_process_id` (String) Process ID for the OSPF routing protocol.
 
 
 <a id="nestedatt--ipv4_neighbors"></a>

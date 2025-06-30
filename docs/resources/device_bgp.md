@@ -17,7 +17,7 @@ resource "fmc_device_bgp" "example" {
   device_id                         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ipv4_default_information_orginate = false
   ipv4_auto_summary                 = false
-  ipv4_suppress_inactive            = false
+  ipv4_suppress_inactive_routes     = false
   ipv4_synchronization              = false
   ipv4_redistribute_ibgp_into_igp   = false
   ipv4_external_distance            = 20
@@ -33,6 +33,7 @@ resource "fmc_device_bgp" "example" {
       update_source_interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       enable_address             = true
       as_override                = false
+      shutdown_administratively  = false
       description                = "My BGP Peer"
     }
   ]
@@ -74,7 +75,7 @@ resource "fmc_device_bgp" "example" {
 - `ipv4_redistribute_ibgp_into_igp` (Boolean) Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.
 - `ipv4_redistributions` (Attributes List) Define the conditions for redistributing routes from another routing domain into BGP. (see [below for nested schema](#nestedatt--ipv4_redistributions))
 - `ipv4_route_injections` (Attributes List) Define routes to be conditionally injected into the BGP routing table. (see [below for nested schema](#nestedatt--ipv4_route_injections))
-- `ipv4_suppress_inactive` (Boolean) Suppressing advertisement of inactive routes
+- `ipv4_suppress_inactive_routes` (Boolean) Suppressing advertisement of inactive routes
 - `ipv4_synchronization` (Boolean) Synchronize between BGP and IGP systems
 
 ### Read-Only
@@ -110,9 +111,9 @@ Optional:
 
 - `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates
   - Choices: `incomingroutefilter`, `outgoingroutefilter`
+- `process_id` (String) Process ID for the OSPF routing protocol.
 - `protocol` (String) Routing process for which you want to filter
   - Choices: `CONNECTED`, `BGP`, `OSPF`, `RIP`, `STATIC`
-- `protocol_process_id` (String) Process ID for the OSPF routing protocol.
 
 
 <a id="nestedatt--ipv4_neighbors"></a>

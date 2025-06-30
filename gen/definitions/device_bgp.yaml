@@ -60,7 +60,7 @@ attributes:
     example: "false"
     description: Summarize subnet routes into network level routes
   - model_name: bgpSupressInactive
-    tf_name: ipv4_suppress_inactive
+    tf_name: ipv4_suppress_inactive_routes
     data_path: [addressFamilyIPv4]
     type: Bool
     example: "false"
@@ -181,7 +181,7 @@ attributes:
         description: Disable a neighbor or peer group
         type: Bool
         default_value: "false"
-        exclude_example: true
+        example: "false"
       - model_name: description
         tf_name: description
         data_path: [neighborGeneral]
@@ -566,7 +566,7 @@ attributes:
         description: Routing process for which you want to filter
         enum_values: [ CONNECTED, BGP, OSPF, RIP, STATIC ]
       - model_name: processId
-        tf_name: protocol_process_id
+        tf_name: process_id
         data_path: [protocol]
         type: String
         description: Process ID for the OSPF routing protocol.

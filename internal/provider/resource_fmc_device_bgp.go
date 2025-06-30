@@ -137,7 +137,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				MarkdownDescription: helpers.NewAttributeDescription("Summarize subnet routes into network level routes").String,
 				Optional:            true,
 			},
-			"ipv4_suppress_inactive": schema.BoolAttribute{
+			"ipv4_suppress_inactive_routes": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Suppressing advertisement of inactive routes").String,
 				Optional:            true,
 			},
@@ -545,7 +545,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								stringvalidator.OneOf("CONNECTED", "BGP", "OSPF", "RIP", "STATIC"),
 							},
 						},
-						"protocol_process_id": schema.StringAttribute{
+						"process_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Process ID for the OSPF routing protocol.").String,
 							Optional:            true,
 						},
