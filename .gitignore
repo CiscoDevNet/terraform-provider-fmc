@@ -27,6 +27,7 @@ website/node_modules
 *.test
 *.iml
 .vscode/settings.json
+log.txt
 
 website/vendor
 vendor

@@ -1,3 +1,7 @@
+## 2.0.0-rc3 (Unreleased)
+
+- (Fix) Fixes to `fmc_network_groups`, including: support for more than 1000 items per resource and bulk delete for FMC 7.4 and newer
+
 ## 2.0.0-rc2
 
 - (BREAKING CHANGE) Multiple fields renamed in `fmc_device_bgp` resource
