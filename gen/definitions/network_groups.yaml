@@ -1,9 +1,13 @@
+# Manual Resource
 ---
 name: Network Groups
 no_data_source: true
 no_import: true
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
 doc_category: Objects
+minimum_version_bulk_delete: "7.4"
+res_description: This resource manages Network Groups through bulk operations.
+# is_bulk: true
 attributes:
   - model_name: items
     type: Map

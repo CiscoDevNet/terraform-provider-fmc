@@ -99,91 +99,113 @@ func testAccFmcNetworkGroupsConfig_all() string {
 
 // End of section. //template:end testAccConfigAll
 
-func TestAccFmcNetworkGroups_GroupNames(t *testing.T) {
+func TestAccFmcNetworkGroups_Sequential(t *testing.T) {
 	steps := []resource.TestStep{{
 		// step 1
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g1" = {` + "\n" +
-			`		network_groups = ["g2"]` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
 			`	}` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 2
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g1" = {` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 3
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.99.0.0/16"}]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 4
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g1" = {` + "\n" +
-			`		network_groups = ["g2","g3","g4","g5"]` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
 			`	}` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
-			`	"g3" = {` + "\n" +
-			`		network_groups = ["g2"]` + "\n" +
+			`	"my_network_groups_g3" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
 			`	}` + "\n" +
-			`	"g4" = {` + "\n" +
-			`		network_groups = ["g2"]` + "\n" +
+			`	"my_network_groups_g4" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
 			`	}` + "\n" +
-			`	"g5" = {` + "\n" +
-			`		network_groups = ["g3", "g4"]` + "\n" +
+			`	"my_network_groups_g5" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g3", "my_network_groups_g4"]` + "\n" +
 			`	}` + "\n" +
-			`	"g6" = {` + "\n" +
-			`		network_groups = ["g2","g3","g4","g5"]` + "\n" +
+			`	"my_network_groups_g6" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 5
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g1" = {` + "\n" +
-			`		network_groups = ["g2","g4","g5"]` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
 			`	}` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
-			`	"g4" = {` + "\n" +
-			`		network_groups = ["g2"]` + "\n" +
+			`	"my_network_groups_g4" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
 			`	}` + "\n" +
-			`	"g5" = {` + "\n" +
-			`		network_groups = ["g4"]` + "\n" +
+			`	"my_network_groups_g5" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g4"]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 6
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g1" = {` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g3" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g4" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g5" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g3", "my_network_groups_g4"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g6" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 	}, {
 		// step 7
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g2" = {` + "\n" +
-			`		network_groups = ["g2"]` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
+			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
+			`	}` + "\n" +
+			`}}`,
+	}, {
+		// step 8
+		Config: `resource fmc_network_groups test { items = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
 		ExpectError: regexp.MustCompile(`Cycle in network_groups`),
 	}, {
-		// step 8
+		// step 9
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"g2" = {` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
 			`		network_groups = ["no_such_group"]` + "\n" +
 			`	}` + "\n" +
 			`}}`,

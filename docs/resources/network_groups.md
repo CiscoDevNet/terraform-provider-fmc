@@ -3,12 +3,18 @@
 page_title: "fmc_network_groups Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource manages a Network Groups.
+  This resource manages Network Groups through bulk operations.
+  The following restrictions apply:
+  Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
 ---
 
 # fmc_network_groups (Resource)
 
-This resource manages a Network Groups.
+This resource manages Network Groups through bulk operations.
+
+The following restrictions apply:
+  - Minimum FMC version for bulk object deletion: `7.4`
+  - If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.
 
 ## Example Usage
 
