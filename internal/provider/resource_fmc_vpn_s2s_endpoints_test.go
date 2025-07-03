@@ -118,6 +118,9 @@ func testAccFmcVPNS2SEndpointsConfig_all() string {
 // End of section. //template:end testAccConfigAll
 
 func TestAccFmcVPNS2SEndpoints_Sequential(t *testing.T) {
+	if os.Getenv("TF_VAR_device_id") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	}
 
 	step_01 := `resource "fmc_vpn_s2s_endpoints" "test" {` + "\n" +
 		`	vpn_s2s_id = fmc_vpn_s2s.test.id` + "\n" +
