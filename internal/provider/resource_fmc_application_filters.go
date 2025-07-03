@@ -641,11 +641,11 @@ func (r *ApplicationFiltersResource) deleteSubresources(ctx context.Context, sta
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(url.QueryEscape(v.Id.ValueString()) + ",")
+			idsToRemove.WriteString(v.Id.ValueString() + ",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
-				urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + idsToRemove.String() + "\""
+				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
 					return state, diag.Diagnostics{
