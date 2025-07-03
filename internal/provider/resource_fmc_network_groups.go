@@ -521,7 +521,7 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 
 		// Process each bulk group for deletion
 		for _, group := range deleteGroups {
-			urlPath := state.getPath() + "?bulk=true&filter=\"ids:" + group.ids + "\""
+			urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(group.ids)
 			res, err := r.client.Delete(urlPath, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{

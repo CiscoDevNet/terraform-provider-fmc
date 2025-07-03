@@ -1,3 +1,8 @@
+## 2.0.0-rc4 (Unreleased)
+
+- (Fix) Corrected URL encoding for multiple resources
+- (Enhancement) Add support for Security Cloud Control (SCC) Firewall Management Base URI
+
 ## 2.0.0-rc3
 
 - (Fix) Fixes to `fmc_network_groups`, including: support for more than 1000 items per resource and bulk delete for FMC 7.4 and newer
