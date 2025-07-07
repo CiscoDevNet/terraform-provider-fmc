@@ -68,7 +68,7 @@ func (r *AccessRulesResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Access Rules in Access Control Policies.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Access Rules in Access Control Policies in bulks.\n Order of the rules is guaranteed to be preserved within the resource, however it is NOT between multiple `fmc_access_rule` resources.\n Any change to the rule will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
