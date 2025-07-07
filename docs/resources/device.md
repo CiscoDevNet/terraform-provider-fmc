@@ -46,7 +46,7 @@ resource "fmc_device" "example" {
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device.
-  - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `Legacy`
+  - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `FTDv100`, `Legacy`
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
 - `snort_engine` (String) SNORT engine version to be enabled.
   - Choices: `SNORT2`, `SNORT3`
