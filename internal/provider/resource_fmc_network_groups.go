@@ -27,6 +27,7 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/google/uuid"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -65,7 +66,7 @@ func (r *NetworkGroupsResource) Metadata(ctx context.Context, req resource.Metad
 func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Network Groups.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Network Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -155,6 +156,25 @@ func (r *NetworkGroupsResource) Configure(_ context.Context, req resource.Config
 
 // End of section. //template:end model
 
+// networkGroup is an internal representation of a single fmc_network_group.
+type networkGroup struct {
+	name     string   // name of the network group
+	children []string // slice of children network group names
+	json     string   // raw JSON of the network group
+	bulk     int      // ID of the bulk in which the group will be created
+}
+
+// networkGroupsBulk is a bulk of network groups to be created in one POST request.
+type networkGroupsBulk struct {
+	groups []networkGroup
+}
+
+// networkGroupsBulkDelete is a bulk of network groups to be deleted in one DELETE request.
+type networkGroupsBulkDelete struct {
+	ids   string
+	names []string
+}
+
 func (r *NetworkGroupsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan NetworkGroups
 
@@ -173,7 +193,6 @@ func (r *NetworkGroupsResource) Create(ctx context.Context, req resource.CreateR
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, NetworkGroups{})
-	// A pseudo-resource, no Post needed.
 	plan.Id = types.StringValue(uuid.New().String())
 
 	state := plan
@@ -210,11 +229,15 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
-	// Pseudo-resource, no Get.
-	res, diags := readNetworkGroupsSubresources(ctx, r.client, state, reqMods...)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+	// Get all Network Groups.
+	res, err := r.client.Get(state.getPath()+"?expanded=true", reqMods...)
+	if err != nil {
+		diags.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects (GET), got error: %s", err))
 		return
 	}
+
+	// Modify API response, by moving child network groups from "objects" to "network_groups" attribute.
+	res = synthesizeNetworkGroups(ctx, res, &state)
 
 	imp, diags := helpers.IsFlagImporting(ctx, req)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
@@ -234,43 +257,6 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 	resp.Diagnostics.Append(diags...)
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
-}
-
-// readNetworkGroupsSubresources processes subobjects of NetworkGroups
-func readNetworkGroupsSubresources(ctx context.Context, client *fmc.Client, state NetworkGroups, reqMods ...func(*fmc.Req)) (gjson.Result, diag.Diagnostics) {
-	var diags diag.Diagnostics
-
-	offset := 0
-	limit := 1000
-	gather := ""
-	for page := 1; ; page++ {
-		queryString := fmt.Sprintf("?expanded=true&limit=%d&offset=%d", limit, offset)
-		res, err := client.Get(state.getPath()+queryString, reqMods...)
-		if err != nil {
-			if strings.Contains(err.Error(), "StatusCode 404") {
-				return gjson.Parse("{}"), diags
-			}
-
-			diags.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects (GET), got error: %s", err))
-			return gjson.Parse("{}"), diags
-		}
-		if gather == "" {
-			gather = res.String()
-		} else if items := res.Get("items"); len(items.Array()) > 0 {
-			items.ForEach(func(k, v gjson.Result) bool {
-				gather, _ = sjson.Set(gather, "items.-1", v)
-				return true
-			})
-		}
-		if !res.Get("paging.next.0").Exists() {
-			break
-		}
-		offset += limit
-	}
-
-	res := synthesizeNetworkGroups(ctx, gjson.Parse(gather), &state)
-
-	return res, diags
 }
 
 // synthesizeNetworkGroups takes a real API Result (json) and converts some of the entries of the original attribute "objects"
@@ -297,6 +283,8 @@ func synthesizeNetworkGroups(ctx context.Context, res gjson.Result, state *Netwo
 	return helpers.SetGjson(res, "items", gjson.Parse(items))
 }
 
+// synthesizeNetworkGroupsItem takes a single item from the API response and converts some of the entries of the original attribute "objects"
+// into synthetic attribute "network_groups".
 func synthesizeNetworkGroupsItem(ctx context.Context, item gjson.Result, ownedIds map[string]string) string {
 	ret := item.String()
 	if _, owned := ownedIds[item.Get("id").String()]; !owned {
@@ -343,10 +331,9 @@ func (r *NetworkGroupsResource) Update(ctx context.Context, req resource.UpdateR
 
 	body := plan.toBody(ctx, state)
 
-	// Pseudo-resource, no Put needed.
-	orig := state
-	state = plan
-	state.Items = orig.Items
+	//orig := state
+	//state = plan
+	//state.Items = orig.Items
 
 	state, diags = r.updateSubresources(ctx, req.Plan, plan, body, req.State, state, reqMods...)
 	resp.Diagnostics.Append(diags...)
@@ -387,21 +374,24 @@ func (r *NetworkGroupsResource) Delete(ctx context.Context, req resource.DeleteR
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 // End of section. //template:end import
 
+// updateSubresource creates, updates and deletes subresources of the Network Groups resource.
 // updateSubresources returns a coherent state whether it fails or succeeds. Caller should always persist that state
 // into the Response (UpdateResponse, CreateResponse, ...), otherwise the API's UUIDs may go out-of-sync with
 // terraform.tfstate, an immediate user-visible bug.
 func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPlan tfsdk.Plan, plan NetworkGroups, planBody string, tfsdkState tfsdk.State, state NetworkGroups, reqMods ...func(*fmc.Req)) (NetworkGroups, diag.Diagnostics) {
+	// Sort objects in a way that any child comes before its parent. 'seq' is sorted list.
 	seq, diags := graphTopologicalSeq(ctx, planBody)
 	if diags.HasError() {
 		return state, diags
 	}
 
-	// Subresources to bulk-Create.
+	// Group objects into bulks to be created (bulks) and objects to be updated (seq)
 	bulks, seq := divideToBulks(ctx, seq, plan)
 	if diags.HasError() {
 		return state, diags
 	}
 
+	// Log bulks for debugging purposes.
 	for _, bulk := range bulks {
 		readable := slices.Clone(bulk.groups)
 		for i := range readable {
@@ -410,21 +400,32 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 		tflog.Debug(ctx, fmt.Sprintf("%s: bulk ordered for Create: %+v", plan.Id.ValueString(), readable))
 	}
 
+	// Create subresources in bulks.
 	for _, bulk := range bulks {
 		state, diags = bulk.Create(ctx, plan, state, r.client, reqMods...)
 		if diags.HasError() {
 			return state, diags
+		}
+
+		// Put IDs of created subresources (individual network groups) into the plan. This is needed for successful resolution of
+		// the children network groups IDs in the following group.Body() call.
+		for _, group := range bulk.groups {
+			tmp := plan.Items[group.name]
+			tmp.Id = state.Items[group.name].Id
+			plan.Items[group.name] = tmp
 		}
 	}
 
 	// Subresources to Update.
 	tflog.Debug(ctx, fmt.Sprintf("%s: considering remaining subresources for Update: %+v", plan.Id.ValueString(), seq))
 	for _, group := range seq {
+		// Check if the subresource has changed.
 		ok, diags := helpers.IsConfigUpdatingAt(ctx, tfsdkPlan, tfsdkState, path.Root("items").AtMapKey(group.name))
 		if diags.HasError() {
 			return state, diags
 		}
 
+		// If the subresource is not changing, skip it.
 		if !ok {
 			continue
 		}
@@ -432,6 +433,7 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 		updating := plan.Items[group.name].Id.ValueString()
 		tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Beginning Update", updating, group.name))
 
+		// Generate the body for the subresource. This includes the children network groups ID resolution.
 		body, diags := group.Body(ctx, plan)
 		if diags.HasError() {
 			return state, diags
@@ -444,6 +446,7 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 			}
 		}
 
+		// Update the state with plan for updated subresource.
 		state.Items[group.name] = plan.Items[group.name]
 
 		tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Update finished successfully", updating, group.name))
@@ -451,47 +454,99 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 
 	// Subresources to Delete.
 	stateBody := state.toBody(ctx, NetworkGroups{})
+	// Sort objects in a way that any child comes before its parent. 'seq' is sorted list.
 	delSeq, diags := graphTopologicalSeq(ctx, stateBody)
 	if diags.HasError() {
 		return state, diags
 	}
 
-	for i := len(delSeq) - 1; i >= 0; i-- {
-		gn := delSeq[i].name
-		if _, found := plan.Items[gn]; found {
-			// item present both in state and in plan, do not delete
-			continue
+	// Get FMC version from the client
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+	// Check if FMC version supports bulk deletes
+	if fmcVersion.LessThan(minFMCVersionBulkDeleteNetworkGroups) {
+		// Traverse delSeq in reverse order, so that any parent comes before its children.
+		for i := len(delSeq) - 1; i >= 0; i-- {
+			gn := delSeq[i].name
+			if _, found := plan.Items[gn]; found {
+				// item present both in state and in plan, do not delete
+				continue
+			}
+
+			deleting := state.Items[gn].Id.ValueString()
+			tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Beginning Delete", deleting, gn))
+
+			res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(deleting), reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String())),
+				}
+			}
+
+			delete(state.Items, gn)
+			tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Delete finished successfully", deleting, gn))
 		}
+	} else {
+		var idsToRemove strings.Builder
+		var namesToRemove []string
+		var deleteGroups []networkGroupsBulkDelete
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk Delete of subresources: Beginning", plan.Id.ValueString()))
+		// Traverse delSeq in reverse order, so that any parent comes before its children.
+		for i := len(delSeq) - 1; i >= 0; i-- {
+			gn := delSeq[i].name
+			if _, found := plan.Items[gn]; !found {
+				// item not present in plan, so it is to be deleted
 
-		deleting := state.Items[gn].Id.ValueString()
-		tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Beginning Delete", deleting, gn))
+				// Prepare URL filter for bulk delete.
+				idsToRemove.WriteString(url.QueryEscape(state.Items[gn].Id.ValueString()) + ",")
 
-		res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(deleting), reqMods...)
-		if err != nil {
-			return state, diag.Diagnostics{
-				diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String())),
+				// Save names of the groups to be deleted, so that we can remove them from the state.
+				namesToRemove = append(namesToRemove, gn)
+			}
+
+			// If this is last element, or the following element is in a different bulk, or the URL parameter length exceeds the limit, AND there are elements to delete
+			if (i == 0 || delSeq[i].bulk != delSeq[i-1].bulk || len(idsToRemove.String()) >= maxUrlParamLength) && len(idsToRemove.String()) > 0 {
+				// Create new bulk group for deletion
+				deleteGroups = append(deleteGroups, networkGroupsBulkDelete{
+					ids:   idsToRemove.String(),
+					names: slices.Clone(namesToRemove),
+				})
+
+				// Reset filter URL
+				idsToRemove.Reset()
+
+				// Reset the slice
+				namesToRemove = namesToRemove[:0]
 			}
 		}
 
-		delete(state.Items, gn)
-		tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Delete finished successfully", deleting, gn))
+		// Process each bulk group for deletion
+		for _, group := range deleteGroups {
+			urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(group.ids)
+			res, err := r.client.Delete(urlPath, reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String())),
+				}
+			}
+
+			// Remove groups from state
+			for _, name := range group.names {
+				delete(state.Items, name)
+			}
+		}
+
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk Delete of subresources: finished successfully", plan.Id.ValueString()))
 	}
 
 	return state, nil
-}
-
-// networkGroup is an internal representation of a single fmc_network_group.
-type networkGroup struct {
-	name     string
-	children []string
-	json     string
-	bulk     int
 }
 
 // graphTopologicalSeq takes "items" of the body and parses their parent-child dependencies (attribute "network_groups").
 // The goal is to ensure that any child is created before its parent.
 // Having the "items" as a graph the func runs the topological sort algorithm to convert it to a sequence:
 // https://en.wikipedia.org/wiki/Topological_sorting
+//
+// Returns ordered sequence of networkGroup objects, with indication (bulk attribute) of which bulk group the object belongs to.
 //
 // And if you iterate the result sequence in reverse, any parent is guaranteed to be placed before its children, which
 // is useful for delete operations.
@@ -563,6 +618,7 @@ func graphTopologicalSeq(ctx context.Context, body string) ([]networkGroup, diag
 	return ret, diags
 }
 
+// Body generates the body of the network group, which includes refresh of the children network group IDs.
 func (group *networkGroup) Body(ctx context.Context, state NetworkGroups) (string, diag.Diagnostics) {
 	ret := group.json
 	ret, _ = sjson.Delete(ret, "network_groups")
@@ -586,26 +642,27 @@ func (group *networkGroup) Body(ctx context.Context, state NetworkGroups) (strin
 	return ret, nil
 }
 
-type networkGroupsBulk struct {
-	groups []networkGroup
-}
-
-// divideToBulks takes seq and divides it into bulks to be created (bulk-POST), and leftovers (some of leftovers can
-// later become individual PUT requests, as there is no bulk-PUT in this API).
+// divideToBulks takes seq (ordered list of network groups to be created) and divides it into bulks (ret) to be created (bulk-POST), and leftovers (for one-by-one PUTs),
+// as there is no bulk-PUT in this API).
 func divideToBulks(ctx context.Context, seq []networkGroup, plan NetworkGroups) (ret []networkGroupsBulk, leftovers []networkGroup) {
 	var g []networkGroup
 	for _, group := range seq {
+		// If the group has ID set, it means it's subject to update, not create. Putting that in leftovers.
 		if !plan.Items[group.name].Id.IsUnknown() {
 			leftovers = append(leftovers, group)
 			continue
 		}
+		// Otherwise, we need to create it.
 		g = append(g, group)
 	}
 
 	b := networkGroupsBulk{}
 	for i := range g {
+		// Add group to the current bulk.
 		b.groups = append(b.groups, g[i])
-		if i == len(g)-1 || g[i].bulk != g[i+1].bulk {
+		// If this is last element, or the following element is in a different bulk, or number of elements in the bulk group exceeds the limit,
+		// then we need to create a new bulk group.
+		if i == len(g)-1 || g[i].bulk != g[i+1].bulk || len(b.groups) >= bulkSizeCreate {
 			ret = append(ret, b)
 			b = networkGroupsBulk{}
 		}
@@ -614,6 +671,7 @@ func divideToBulks(ctx context.Context, seq []networkGroup, plan NetworkGroups) 
 	return ret, leftovers
 }
 
+// Create creates a bulk of network groups in one POST request.
 func (bulk *networkGroupsBulk) Create(ctx context.Context, plan, state NetworkGroups, client *fmc.Client, reqMods ...func(*fmc.Req)) (NetworkGroups, diag.Diagnostics) {
 	ret := state.Clone()
 	bodies := "[]"

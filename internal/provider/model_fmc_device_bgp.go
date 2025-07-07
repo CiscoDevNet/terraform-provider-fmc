@@ -35,71 +35,71 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type DeviceBGP struct {
-	Id                                  types.String                      `tfsdk:"id"`
-	Domain                              types.String                      `tfsdk:"domain"`
-	DeviceId                            types.String                      `tfsdk:"device_id"`
-	Name                                types.String                      `tfsdk:"name"`
-	Type                                types.String                      `tfsdk:"type"`
-	AsNumber                            types.String                      `tfsdk:"as_number"`
-	Ipv4AddressFamilyId                 types.String                      `tfsdk:"ipv4_address_family_id"`
-	Ipv4AddressFamilyType               types.String                      `tfsdk:"ipv4_address_family_type"`
-	Ipv4LearnedRouteMapId               types.String                      `tfsdk:"ipv4_learned_route_map_id"`
-	Ipv4DefaultInformationOrginate      types.Bool                        `tfsdk:"ipv4_default_information_orginate"`
-	Ipv4AutoAummary                     types.Bool                        `tfsdk:"ipv4_auto_aummary"`
-	Ipv4BgpSupressInactive              types.Bool                        `tfsdk:"ipv4_bgp_supress_inactive"`
-	Ipv4Synchronization                 types.Bool                        `tfsdk:"ipv4_synchronization"`
-	Ipv4BgpRedistributeInternal         types.Bool                        `tfsdk:"ipv4_bgp_redistribute_internal"`
-	Ipv4ExternalDistance                types.Int64                       `tfsdk:"ipv4_external_distance"`
-	Ipv4InternalDistance                types.Int64                       `tfsdk:"ipv4_internal_distance"`
-	Ipv4LocalDistance                   types.Int64                       `tfsdk:"ipv4_local_distance"`
-	Ipv4ForwardPacketsOverMultipathIbgp types.Int64                       `tfsdk:"ipv4_forward_packets_over_multipath_ibgp"`
-	Ipv4ForwardPacketsOverMultipathEbgp types.Int64                       `tfsdk:"ipv4_forward_packets_over_multipath_ebgp"`
-	Ipv4Neighbors                       []DeviceBGPIpv4Neighbors          `tfsdk:"ipv4_neighbors"`
-	Ipv4AggregateAddresses              []DeviceBGPIpv4AggregateAddresses `tfsdk:"ipv4_aggregate_addresses"`
-	Ipv4Filterings                      []DeviceBGPIpv4Filterings         `tfsdk:"ipv4_filterings"`
-	Ipv4Networks                        []DeviceBGPIpv4Networks           `tfsdk:"ipv4_networks"`
-	Ipv4Redistributions                 []DeviceBGPIpv4Redistributions    `tfsdk:"ipv4_redistributions"`
-	Ipv4RouteInjections                 []DeviceBGPIpv4RouteInjections    `tfsdk:"ipv4_route_injections"`
+	Id                             types.String                      `tfsdk:"id"`
+	Domain                         types.String                      `tfsdk:"domain"`
+	DeviceId                       types.String                      `tfsdk:"device_id"`
+	Name                           types.String                      `tfsdk:"name"`
+	Type                           types.String                      `tfsdk:"type"`
+	AsNumber                       types.String                      `tfsdk:"as_number"`
+	Ipv4AddressFamilyId            types.String                      `tfsdk:"ipv4_address_family_id"`
+	Ipv4AddressFamilyType          types.String                      `tfsdk:"ipv4_address_family_type"`
+	Ipv4LearnedRouteMapId          types.String                      `tfsdk:"ipv4_learned_route_map_id"`
+	Ipv4DefaultInformationOrginate types.Bool                        `tfsdk:"ipv4_default_information_orginate"`
+	Ipv4AutoSummary                types.Bool                        `tfsdk:"ipv4_auto_summary"`
+	Ipv4SuppressInactiveRoutes     types.Bool                        `tfsdk:"ipv4_suppress_inactive_routes"`
+	Ipv4Synchronization            types.Bool                        `tfsdk:"ipv4_synchronization"`
+	Ipv4RedistributeIbgpIntoIgp    types.Bool                        `tfsdk:"ipv4_redistribute_ibgp_into_igp"`
+	Ipv4ExternalDistance           types.Int64                       `tfsdk:"ipv4_external_distance"`
+	Ipv4InternalDistance           types.Int64                       `tfsdk:"ipv4_internal_distance"`
+	Ipv4LocalDistance              types.Int64                       `tfsdk:"ipv4_local_distance"`
+	Ipv4NumberOfIbgpPaths          types.Int64                       `tfsdk:"ipv4_number_of_ibgp_paths"`
+	Ipv4NumberOfEbgpPaths          types.Int64                       `tfsdk:"ipv4_number_of_ebgp_paths"`
+	Ipv4Neighbors                  []DeviceBGPIpv4Neighbors          `tfsdk:"ipv4_neighbors"`
+	Ipv4AggregateAddresses         []DeviceBGPIpv4AggregateAddresses `tfsdk:"ipv4_aggregate_addresses"`
+	Ipv4Filterings                 []DeviceBGPIpv4Filterings         `tfsdk:"ipv4_filterings"`
+	Ipv4Networks                   []DeviceBGPIpv4Networks           `tfsdk:"ipv4_networks"`
+	Ipv4Redistributions            []DeviceBGPIpv4Redistributions    `tfsdk:"ipv4_redistributions"`
+	Ipv4RouteInjections            []DeviceBGPIpv4RouteInjections    `tfsdk:"ipv4_route_injections"`
 }
 
 type DeviceBGPIpv4Neighbors struct {
-	NeighborAddress                           types.String                                        `tfsdk:"neighbor_address"`
-	NeighborRemoteAs                          types.String                                        `tfsdk:"neighbor_remote_as"`
-	NeighborBfd                               types.String                                        `tfsdk:"neighbor_bfd"`
-	UpdateSourceInterfaceId                   types.String                                        `tfsdk:"update_source_interface_id"`
-	EnableAddressFamily                       types.Bool                                          `tfsdk:"enable_address_family"`
-	NeighborShutdown                          types.Bool                                          `tfsdk:"neighbor_shutdown"`
-	NeighborDescription                       types.String                                        `tfsdk:"neighbor_description"`
-	NeighborFilterAccessLists                 []DeviceBGPIpv4NeighborsNeighborFilterAccessLists   `tfsdk:"neighbor_filter_access_lists"`
-	NeighborFilterRouteMapLists               []DeviceBGPIpv4NeighborsNeighborFilterRouteMapLists `tfsdk:"neighbor_filter_route_map_lists"`
-	NeighborFilterPrefixLists                 []DeviceBGPIpv4NeighborsNeighborFilterPrefixLists   `tfsdk:"neighbor_filter_prefix_lists"`
-	NeighborFilterAsPathLists                 []DeviceBGPIpv4NeighborsNeighborFilterAsPathLists   `tfsdk:"neighbor_filter_as_path_lists"`
-	NeighborFilterMaxPrefix                   types.Int64                                         `tfsdk:"neighbor_filter_max_prefix"`
-	NeighborFilterWarningOnly                 types.Bool                                          `tfsdk:"neighbor_filter_warning_only"`
-	NeighborFilterThresholdValue              types.Int64                                         `tfsdk:"neighbor_filter_threshold_value"`
-	NeighborFilterRestartInterval             types.Int64                                         `tfsdk:"neighbor_filter_restart_interval"`
-	NeighborRoutesAdvertisementInterval       types.Int64                                         `tfsdk:"neighbor_routes_advertisement_interval"`
-	NeighborRoutesRemovePrivateAs             types.Bool                                          `tfsdk:"neighbor_routes_remove_private_as"`
-	NeighborGenerateDefaultRouteMapId         types.String                                        `tfsdk:"neighbor_generate_default_route_map_id"`
-	NeighborRoutesAdvertiseMapUseExist        types.Bool                                          `tfsdk:"neighbor_routes_advertise_map_use_exist"`
-	NeighborRoutesAdvertiseMapId              types.String                                        `tfsdk:"neighbor_routes_advertise_map_id"`
-	NeighborRoutesAdvertiseExistNonexistMapId types.String                                        `tfsdk:"neighbor_routes_advertise_exist_nonexist_map_id"`
-	NeighborKeepaliveInterval                 types.Int64                                         `tfsdk:"neighbor_keepalive_interval"`
-	NeighborHoldTime                          types.Int64                                         `tfsdk:"neighbor_hold_time"`
-	NeighborMinHoldTime                       types.Int64                                         `tfsdk:"neighbor_min_hold_time"`
-	NeighborAuthenticationPassword            types.String                                        `tfsdk:"neighbor_authentication_password"`
-	NeighborSendCommunityAttribute            types.Bool                                          `tfsdk:"neighbor_send_community_attribute"`
-	NeighborNexthopSelf                       types.Bool                                          `tfsdk:"neighbor_nexthop_self"`
-	NeighborDisableConnectionVerification     types.Bool                                          `tfsdk:"neighbor_disable_connection_verification"`
-	NeighborTcpMtuPathDiscovery               types.Bool                                          `tfsdk:"neighbor_tcp_mtu_path_discovery"`
-	NeighborMaxHopCount                       types.Int64                                         `tfsdk:"neighbor_max_hop_count"`
-	NeighborTcpTransportMode                  types.Bool                                          `tfsdk:"neighbor_tcp_transport_mode"`
-	NeighborWeight                            types.Int64                                         `tfsdk:"neighbor_weight"`
-	NeighborVersion                           types.String                                        `tfsdk:"neighbor_version"`
-	NeighborCustomizedLocalAsNumber           types.String                                        `tfsdk:"neighbor_customized_local_as_number"`
-	NeighborCustomizedNoPrepend               types.Bool                                          `tfsdk:"neighbor_customized_no_prepend"`
-	NeighborCustomizedReplaceAs               types.Bool                                          `tfsdk:"neighbor_customized_replace_as"`
-	NeighborCustomizedAcceptBothAs            types.Bool                                          `tfsdk:"neighbor_customized_accept_both_as"`
+	Address                         types.String                                `tfsdk:"address"`
+	RemoteAs                        types.String                                `tfsdk:"remote_as"`
+	BfdFallover                     types.String                                `tfsdk:"bfd_fallover"`
+	UpdateSourceInterfaceId         types.String                                `tfsdk:"update_source_interface_id"`
+	EnableAddress                   types.Bool                                  `tfsdk:"enable_address"`
+	AsOverride                      types.Bool                                  `tfsdk:"as_override"`
+	GracefulRestart                 types.Bool                                  `tfsdk:"graceful_restart"`
+	ShutdownAdministratively        types.Bool                                  `tfsdk:"shutdown_administratively"`
+	Description                     types.String                                `tfsdk:"description"`
+	FilterAccessLists               []DeviceBGPIpv4NeighborsFilterAccessLists   `tfsdk:"filter_access_lists"`
+	FilterRouteMaps                 []DeviceBGPIpv4NeighborsFilterRouteMaps     `tfsdk:"filter_route_maps"`
+	FilterPrefixLists               []DeviceBGPIpv4NeighborsFilterPrefixLists   `tfsdk:"filter_prefix_lists"`
+	FilterAsPaths                   []DeviceBGPIpv4NeighborsFilterAsPaths       `tfsdk:"filter_as_paths"`
+	FilterMaximumPrefixes           types.Int64                                 `tfsdk:"filter_maximum_prefixes"`
+	FilterWarningOnly               types.Bool                                  `tfsdk:"filter_warning_only"`
+	FilterThresholdValue            types.Int64                                 `tfsdk:"filter_threshold_value"`
+	FilterRestartInterval           types.Int64                                 `tfsdk:"filter_restart_interval"`
+	RoutesAdvertisementInterval     types.Int64                                 `tfsdk:"routes_advertisement_interval"`
+	RoutesRemovePrivateAs           types.Bool                                  `tfsdk:"routes_remove_private_as"`
+	RoutesGenerateDefaultRouteMapId types.String                                `tfsdk:"routes_generate_default_route_map_id"`
+	RoutesAdvertiseMaps             []DeviceBGPIpv4NeighborsRoutesAdvertiseMaps `tfsdk:"routes_advertise_maps"`
+	KeepaliveInterval               types.Int64                                 `tfsdk:"keepalive_interval"`
+	HoldTime                        types.Int64                                 `tfsdk:"hold_time"`
+	MinimumHoldTime                 types.Int64                                 `tfsdk:"minimum_hold_time"`
+	AuthenticationPassword          types.String                                `tfsdk:"authentication_password"`
+	SendCommunityAttribute          types.Bool                                  `tfsdk:"send_community_attribute"`
+	NextHopSelf                     types.Bool                                  `tfsdk:"next_hop_self"`
+	DisableConnectionVerification   types.Bool                                  `tfsdk:"disable_connection_verification"`
+	TcpPathMtuDiscovery             types.Bool                                  `tfsdk:"tcp_path_mtu_discovery"`
+	MaxHopCount                     types.Int64                                 `tfsdk:"max_hop_count"`
+	TcpTransportMode                types.Bool                                  `tfsdk:"tcp_transport_mode"`
+	Weight                          types.Int64                                 `tfsdk:"weight"`
+	Version                         types.String                                `tfsdk:"version"`
+	CustomizedLocalAsNumber         types.String                                `tfsdk:"customized_local_as_number"`
+	CustomizedNoPrepend             types.Bool                                  `tfsdk:"customized_no_prepend"`
+	CustomizedReplaceAs             types.Bool                                  `tfsdk:"customized_replace_as"`
+	CustomizedAcceptBothAs          types.Bool                                  `tfsdk:"customized_accept_both_as"`
 }
 
 type DeviceBGPIpv4AggregateAddresses struct {
@@ -112,10 +112,10 @@ type DeviceBGPIpv4AggregateAddresses struct {
 }
 
 type DeviceBGPIpv4Filterings struct {
-	AccessListId     types.String `tfsdk:"access_list_id"`
-	NetworkDirection types.String `tfsdk:"network_direction"`
-	Protocol         types.String `tfsdk:"protocol"`
-	ProrocolProcess  types.String `tfsdk:"prorocol_process"`
+	AccessListId types.String `tfsdk:"access_list_id"`
+	Direction    types.String `tfsdk:"direction"`
+	Protocol     types.String `tfsdk:"protocol"`
+	ProcessId    types.String `tfsdk:"process_id"`
 }
 
 type DeviceBGPIpv4Networks struct {
@@ -136,25 +136,32 @@ type DeviceBGPIpv4Redistributions struct {
 }
 
 type DeviceBGPIpv4RouteInjections struct {
-	InjectRouteMapId types.String `tfsdk:"inject_route_map_id"`
-	ExistRouteMapId  types.String `tfsdk:"exist_route_map_id"`
+	InjectRouteMapId  types.String `tfsdk:"inject_route_map_id"`
+	ExistRouteMapId   types.String `tfsdk:"exist_route_map_id"`
+	InheritAttributes types.String `tfsdk:"inherit_attributes"`
 }
 
-type DeviceBGPIpv4NeighborsNeighborFilterAccessLists struct {
+type DeviceBGPIpv4NeighborsFilterAccessLists struct {
 	AccessListId    types.String `tfsdk:"access_list_id"`
 	UpdateDirection types.String `tfsdk:"update_direction"`
 }
-type DeviceBGPIpv4NeighborsNeighborFilterRouteMapLists struct {
+type DeviceBGPIpv4NeighborsFilterRouteMaps struct {
 	RouteMapId      types.String `tfsdk:"route_map_id"`
 	UpdateDirection types.String `tfsdk:"update_direction"`
 }
-type DeviceBGPIpv4NeighborsNeighborFilterPrefixLists struct {
+type DeviceBGPIpv4NeighborsFilterPrefixLists struct {
 	PrefixListId    types.String `tfsdk:"prefix_list_id"`
 	UpdateDirection types.String `tfsdk:"update_direction"`
 }
-type DeviceBGPIpv4NeighborsNeighborFilterAsPathLists struct {
-	UpdateDirection types.String `tfsdk:"update_direction"`
+type DeviceBGPIpv4NeighborsFilterAsPaths struct {
 	AsPathId        types.String `tfsdk:"as_path_id"`
+	AsPathName      types.String `tfsdk:"as_path_name"`
+	UpdateDirection types.String `tfsdk:"update_direction"`
+}
+type DeviceBGPIpv4NeighborsRoutesAdvertiseMaps struct {
+	AdvertiseMapId     types.String `tfsdk:"advertise_map_id"`
+	UseExistMap        types.Bool   `tfsdk:"use_exist_map"`
+	ExistNonexistMapId types.String `tfsdk:"exist_nonexist_map_id"`
 }
 
 // End of section. //template:end types
@@ -187,17 +194,17 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 	if !data.Ipv4DefaultInformationOrginate.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.defaultInformationOrginate", data.Ipv4DefaultInformationOrginate.ValueBool())
 	}
-	if !data.Ipv4AutoAummary.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.autoSummary", data.Ipv4AutoAummary.ValueBool())
+	if !data.Ipv4AutoSummary.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.autoSummary", data.Ipv4AutoSummary.ValueBool())
 	}
-	if !data.Ipv4BgpSupressInactive.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpSupressInactive", data.Ipv4BgpSupressInactive.ValueBool())
+	if !data.Ipv4SuppressInactiveRoutes.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpSupressInactive", data.Ipv4SuppressInactiveRoutes.ValueBool())
 	}
 	if !data.Ipv4Synchronization.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.synchronization", data.Ipv4Synchronization.ValueBool())
 	}
-	if !data.Ipv4BgpRedistributeInternal.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpRedistributeInternal", data.Ipv4BgpRedistributeInternal.ValueBool())
+	if !data.Ipv4RedistributeIbgpIntoIgp.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.bgpRedistributeInternal", data.Ipv4RedistributeIbgpIntoIgp.ValueBool())
 	}
 	if !data.Ipv4ExternalDistance.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.distance.externalDistance", data.Ipv4ExternalDistance.ValueInt64())
@@ -208,40 +215,46 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 	if !data.Ipv4LocalDistance.IsNull() {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.distance.localDistance", data.Ipv4LocalDistance.ValueInt64())
 	}
-	if !data.Ipv4ForwardPacketsOverMultipathIbgp.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.ibgp", data.Ipv4ForwardPacketsOverMultipathIbgp.ValueInt64())
+	if !data.Ipv4NumberOfIbgpPaths.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.ibgp", data.Ipv4NumberOfIbgpPaths.ValueInt64())
 	}
-	if !data.Ipv4ForwardPacketsOverMultipathEbgp.IsNull() {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.ebgp", data.Ipv4ForwardPacketsOverMultipathEbgp.ValueInt64())
+	if !data.Ipv4NumberOfEbgpPaths.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.ebgp", data.Ipv4NumberOfEbgpPaths.ValueInt64())
 	}
 	if len(data.Ipv4Neighbors) > 0 {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.neighbors", []interface{}{})
 		for _, item := range data.Ipv4Neighbors {
 			itemBody := ""
-			if !item.NeighborAddress.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipv4Address", item.NeighborAddress.ValueString())
+			if !item.Address.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipv4Address", item.Address.ValueString())
 			}
-			if !item.NeighborRemoteAs.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "remoteAs", item.NeighborRemoteAs.ValueString())
+			if !item.RemoteAs.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "remoteAs", item.RemoteAs.ValueString())
 			}
-			if !item.NeighborBfd.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.fallOverBFD", item.NeighborBfd.ValueString())
+			if !item.BfdFallover.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.fallOverBFD", item.BfdFallover.ValueString())
 			}
 			if !item.UpdateSourceInterfaceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.updateSource.id", item.UpdateSourceInterfaceId.ValueString())
 			}
-			if !item.EnableAddressFamily.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.enableAddress", item.EnableAddressFamily.ValueBool())
+			if !item.EnableAddress.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.enableAddress", item.EnableAddress.ValueBool())
 			}
-			if !item.NeighborShutdown.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.shutdown", item.NeighborShutdown.ValueBool())
+			if !item.AsOverride.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.asOverride", item.AsOverride.ValueBool())
 			}
-			if !item.NeighborDescription.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.description", item.NeighborDescription.ValueString())
+			if !item.GracefulRestart.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborHaMode.disable", item.GracefulRestart.ValueBool())
 			}
-			if len(item.NeighborFilterAccessLists) > 0 {
+			if !item.ShutdownAdministratively.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.shutdown", item.ShutdownAdministratively.ValueBool())
+			}
+			if !item.Description.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.description", item.Description.ValueString())
+			}
+			if len(item.FilterAccessLists) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDistributeLists", []interface{}{})
-				for _, childItem := range item.NeighborFilterAccessLists {
+				for _, childItem := range item.FilterAccessLists {
 					itemChildBody := ""
 					if !childItem.AccessListId.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "accessList.id", childItem.AccessListId.ValueString())
@@ -252,12 +265,12 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborDistributeLists.-1", itemChildBody)
 				}
 			}
-			if len(item.NeighborFilterRouteMapLists) > 0 {
+			if len(item.FilterRouteMaps) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborRouteMap", []interface{}{})
-				for _, childItem := range item.NeighborFilterRouteMapLists {
+				for _, childItem := range item.FilterRouteMaps {
 					itemChildBody := ""
 					if !childItem.RouteMapId.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "RouteMap.id", childItem.RouteMapId.ValueString())
+						itemChildBody, _ = sjson.Set(itemChildBody, "routeMap.id", childItem.RouteMapId.ValueString())
 					}
 					if !childItem.UpdateDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
@@ -265,9 +278,9 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborRouteMap.-1", itemChildBody)
 				}
 			}
-			if len(item.NeighborFilterPrefixLists) > 0 {
+			if len(item.FilterPrefixLists) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.ipv4PrefixListFilter", []interface{}{})
-				for _, childItem := range item.NeighborFilterPrefixLists {
+				for _, childItem := range item.FilterPrefixLists {
 					itemChildBody := ""
 					if !childItem.PrefixListId.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "ipv4PrefixList.id", childItem.PrefixListId.ValueString())
@@ -278,96 +291,106 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.ipv4PrefixListFilter.-1", itemChildBody)
 				}
 			}
-			if len(item.NeighborFilterAsPathLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFilterList.neighborFilterList", []interface{}{})
-				for _, childItem := range item.NeighborFilterAsPathLists {
+			if len(item.FilterAsPaths) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborFilterList", []interface{}{})
+				for _, childItem := range item.FilterAsPaths {
 					itemChildBody := ""
-					if !childItem.UpdateDirection.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
-					}
 					if !childItem.AsPathId.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "asPathList.id", childItem.AsPathId.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborFilterList.neighborFilterList.-1", itemChildBody)
+					if !childItem.AsPathName.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "asPathList.name", childItem.AsPathName.ValueString())
+					}
+					if !childItem.UpdateDirection.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborFilterList.-1", itemChildBody)
 				}
 			}
-			if !item.NeighborFilterMaxPrefix.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.maxPrefixLimit", item.NeighborFilterMaxPrefix.ValueInt64())
+			if !item.FilterMaximumPrefixes.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.maxPrefixLimit", item.FilterMaximumPrefixes.ValueInt64())
 			}
-			if !item.NeighborFilterWarningOnly.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.warningOnly", item.NeighborFilterWarningOnly.ValueBool())
+			if !item.FilterWarningOnly.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.warningOnly", item.FilterWarningOnly.ValueBool())
 			}
-			if !item.NeighborFilterThresholdValue.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.thresholdValue", item.NeighborFilterThresholdValue.ValueInt64())
+			if !item.FilterThresholdValue.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.thresholdValue", item.FilterThresholdValue.ValueInt64())
 			}
-			if !item.NeighborFilterRestartInterval.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.restartInterval", item.NeighborFilterRestartInterval.ValueInt64())
+			if !item.FilterRestartInterval.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.restartInterval", item.FilterRestartInterval.ValueInt64())
 			}
-			if !item.NeighborRoutesAdvertisementInterval.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.advertisementInterval", item.NeighborRoutesAdvertisementInterval.ValueInt64())
+			if !item.RoutesAdvertisementInterval.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.advertisementInterval", item.RoutesAdvertisementInterval.ValueInt64())
 			}
-			if !item.NeighborRoutesRemovePrivateAs.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.removePrivateAs", item.NeighborRoutesRemovePrivateAs.ValueBool())
+			if !item.RoutesRemovePrivateAs.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.removePrivateAs", item.RoutesRemovePrivateAs.ValueBool())
 			}
-			if !item.NeighborGenerateDefaultRouteMapId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDefaultOriginate.routeMap.id", item.NeighborGenerateDefaultRouteMapId.ValueString())
+			if !item.RoutesGenerateDefaultRouteMapId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDefaultOriginate.routeMap.id", item.RoutesGenerateDefaultRouteMapId.ValueString())
 			}
-			if !item.NeighborRoutesAdvertiseMapUseExist.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps.existMap", item.NeighborRoutesAdvertiseMapUseExist.ValueBool())
+			if len(item.RoutesAdvertiseMaps) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps", []interface{}{})
+				for _, childItem := range item.RoutesAdvertiseMaps {
+					itemChildBody := ""
+					if !childItem.AdvertiseMapId.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "routeMap.id", childItem.AdvertiseMapId.ValueString())
+					}
+					if !childItem.UseExistMap.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "existMap", childItem.UseExistMap.ValueBool())
+					}
+					if !childItem.ExistNonexistMapId.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "existRouteMap.id", childItem.ExistNonexistMapId.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "neighborRoutes.neighborAdvertiseMaps.-1", itemChildBody)
+				}
 			}
-			if !item.NeighborRoutesAdvertiseMapId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps.routeMap.id", item.NeighborRoutesAdvertiseMapId.ValueString())
+			if !item.KeepaliveInterval.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborTimers.keepAliveInterval", item.KeepaliveInterval.ValueInt64())
 			}
-			if !item.NeighborRoutesAdvertiseExistNonexistMapId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps.existRouteMap.id", item.NeighborRoutesAdvertiseExistNonexistMapId.ValueString())
+			if !item.HoldTime.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborTimers.holdTime", item.HoldTime.ValueInt64())
 			}
-			if !item.NeighborKeepaliveInterval.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborTimers.keepAliveInterval", item.NeighborKeepaliveInterval.ValueInt64())
+			if !item.MinimumHoldTime.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborTimers.minimumHoldTime", item.MinimumHoldTime.ValueInt64())
 			}
-			if !item.NeighborHoldTime.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborTimers.holdTime", item.NeighborHoldTime.ValueInt64())
+			if !item.AuthenticationPassword.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborSecret", item.AuthenticationPassword.ValueString())
 			}
-			if !item.NeighborMinHoldTime.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborTimers.minimumHoldTime", item.NeighborMinHoldTime.ValueInt64())
+			if !item.SendCommunityAttribute.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.sendCommunity", item.SendCommunityAttribute.ValueBool())
 			}
-			if !item.NeighborAuthenticationPassword.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborSecret", item.NeighborAuthenticationPassword.ValueString())
+			if !item.NextHopSelf.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.nextHopSelf", item.NextHopSelf.ValueBool())
 			}
-			if !item.NeighborSendCommunityAttribute.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.sendCommunity", item.NeighborSendCommunityAttribute.ValueBool())
+			if !item.DisableConnectionVerification.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborHops.disableConnectedCheck", item.DisableConnectionVerification.ValueBool())
 			}
-			if !item.NeighborNexthopSelf.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.nextHopSelf", item.NeighborNexthopSelf.ValueBool())
+			if !item.TcpPathMtuDiscovery.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborTransportPathMTUDiscovery.disable", item.TcpPathMtuDiscovery.ValueBool())
 			}
-			if !item.NeighborDisableConnectionVerification.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborHops.disableConnectedCheck", item.NeighborDisableConnectionVerification.ValueBool())
+			if !item.MaxHopCount.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborHops.maxHopCount", item.MaxHopCount.ValueInt64())
 			}
-			if !item.NeighborTcpMtuPathDiscovery.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborTransportPathMTUDiscovery.disable", item.NeighborTcpMtuPathDiscovery.ValueBool())
+			if !item.TcpTransportMode.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborTransportConnectionMode.establishTCPSession", item.TcpTransportMode.ValueBool())
 			}
-			if !item.NeighborMaxHopCount.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborHops.maxHopCount", item.NeighborMaxHopCount.ValueInt64())
+			if !item.Weight.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborWeight", item.Weight.ValueInt64())
 			}
-			if !item.NeighborTcpTransportMode.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborTransportConnectionMode.establishTCPSession", item.NeighborTcpTransportMode.ValueBool())
+			if !item.Version.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborVersion", item.Version.ValueString())
 			}
-			if !item.NeighborWeight.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborWeight", item.NeighborWeight.ValueInt64())
+			if !item.CustomizedLocalAsNumber.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.asNumber", item.CustomizedLocalAsNumber.ValueString())
 			}
-			if !item.NeighborVersion.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborAdvanced.neighborVersion", item.NeighborVersion.ValueString())
+			if !item.CustomizedNoPrepend.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.noPrepend", item.CustomizedNoPrepend.ValueBool())
 			}
-			if !item.NeighborCustomizedLocalAsNumber.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.asNumber", item.NeighborCustomizedLocalAsNumber.ValueString())
+			if !item.CustomizedReplaceAs.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.replaceAs", item.CustomizedReplaceAs.ValueBool())
 			}
-			if !item.NeighborCustomizedNoPrepend.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.noPrepend", item.NeighborCustomizedNoPrepend.ValueBool())
-			}
-			if !item.NeighborCustomizedReplaceAs.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.replaceAs", item.NeighborCustomizedReplaceAs.ValueBool())
-			}
-			if !item.NeighborCustomizedAcceptBothAs.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.dualAs", item.NeighborCustomizedAcceptBothAs.ValueBool())
+			if !item.CustomizedAcceptBothAs.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.dualAs", item.CustomizedAcceptBothAs.ValueBool())
 			}
 			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.neighbors.-1", itemBody)
 		}
@@ -402,16 +425,16 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		for _, item := range data.Ipv4Filterings {
 			itemBody := ""
 			if !item.AccessListId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipv4AggregateNetwork.id", item.AccessListId.ValueString())
+				itemBody, _ = sjson.Set(itemBody, "accessList.id", item.AccessListId.ValueString())
 			}
-			if !item.NetworkDirection.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.NetworkDirection.ValueString())
+			if !item.Direction.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "type", item.Direction.ValueString())
 			}
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol.protocol", item.Protocol.ValueString())
 			}
-			if !item.ProrocolProcess.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "protocol.processId", item.ProrocolProcess.ValueString())
+			if !item.ProcessId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "protocol.processId", item.ProcessId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.distributeLists.-1", itemBody)
 		}
@@ -468,10 +491,13 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		for _, item := range data.Ipv4RouteInjections {
 			itemBody := ""
 			if !item.InjectRouteMapId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "injectMap.routeMap.id", item.InjectRouteMapId.ValueString())
+				itemBody, _ = sjson.Set(itemBody, "injectMap.id", item.InjectRouteMapId.ValueString())
 			}
 			if !item.ExistRouteMapId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "existMap.routeMap.id", item.ExistRouteMapId.ValueString())
+				itemBody, _ = sjson.Set(itemBody, "existMap.id", item.ExistRouteMapId.ValueString())
+			}
+			if !item.InheritAttributes.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "copyAttributes", item.InheritAttributes.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.injectMaps.-1", itemBody)
 		}
@@ -520,14 +546,14 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4DefaultInformationOrginate = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.autoSummary"); value.Exists() {
-		data.Ipv4AutoAummary = types.BoolValue(value.Bool())
+		data.Ipv4AutoSummary = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4AutoAummary = types.BoolNull()
+		data.Ipv4AutoSummary = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() {
-		data.Ipv4BgpSupressInactive = types.BoolValue(value.Bool())
+		data.Ipv4SuppressInactiveRoutes = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4BgpSupressInactive = types.BoolNull()
+		data.Ipv4SuppressInactiveRoutes = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.synchronization"); value.Exists() {
 		data.Ipv4Synchronization = types.BoolValue(value.Bool())
@@ -535,9 +561,9 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4Synchronization = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.bgpRedistributeInternal"); value.Exists() {
-		data.Ipv4BgpRedistributeInternal = types.BoolValue(value.Bool())
+		data.Ipv4RedistributeIbgpIntoIgp = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4BgpRedistributeInternal = types.BoolNull()
+		data.Ipv4RedistributeIbgpIntoIgp = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.distance.externalDistance"); value.Exists() {
 		data.Ipv4ExternalDistance = types.Int64Value(value.Int())
@@ -555,14 +581,14 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4LocalDistance = types.Int64Value(200)
 	}
 	if value := res.Get("addressFamilyIPv4.ibgp"); value.Exists() {
-		data.Ipv4ForwardPacketsOverMultipathIbgp = types.Int64Value(value.Int())
+		data.Ipv4NumberOfIbgpPaths = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4ForwardPacketsOverMultipathIbgp = types.Int64Value(1)
+		data.Ipv4NumberOfIbgpPaths = types.Int64Value(1)
 	}
 	if value := res.Get("addressFamilyIPv4.ebgp"); value.Exists() {
-		data.Ipv4ForwardPacketsOverMultipathEbgp = types.Int64Value(value.Int())
+		data.Ipv4NumberOfEbgpPaths = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4ForwardPacketsOverMultipathEbgp = types.Int64Value(1)
+		data.Ipv4NumberOfEbgpPaths = types.Int64Value(1)
 	}
 	if value := res.Get("addressFamilyIPv4.neighbors"); value.Exists() {
 		data.Ipv4Neighbors = make([]DeviceBGPIpv4Neighbors, 0)
@@ -570,19 +596,19 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 			parent := &data
 			data := DeviceBGPIpv4Neighbors{}
 			if value := res.Get("ipv4Address"); value.Exists() {
-				data.NeighborAddress = types.StringValue(value.String())
+				data.Address = types.StringValue(value.String())
 			} else {
-				data.NeighborAddress = types.StringNull()
+				data.Address = types.StringNull()
 			}
 			if value := res.Get("remoteAs"); value.Exists() {
-				data.NeighborRemoteAs = types.StringValue(value.String())
+				data.RemoteAs = types.StringValue(value.String())
 			} else {
-				data.NeighborRemoteAs = types.StringNull()
+				data.RemoteAs = types.StringNull()
 			}
 			if value := res.Get("neighborGeneral.fallOverBFD"); value.Exists() {
-				data.NeighborBfd = types.StringValue(value.String())
+				data.BfdFallover = types.StringValue(value.String())
 			} else {
-				data.NeighborBfd = types.StringValue("NONE")
+				data.BfdFallover = types.StringValue("NONE")
 			}
 			if value := res.Get("neighborGeneral.updateSource.id"); value.Exists() {
 				data.UpdateSourceInterfaceId = types.StringValue(value.String())
@@ -590,25 +616,35 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.UpdateSourceInterfaceId = types.StringNull()
 			}
 			if value := res.Get("neighborGeneral.enableAddress"); value.Exists() {
-				data.EnableAddressFamily = types.BoolValue(value.Bool())
+				data.EnableAddress = types.BoolValue(value.Bool())
 			} else {
-				data.EnableAddressFamily = types.BoolValue(false)
+				data.EnableAddress = types.BoolValue(false)
+			}
+			if value := res.Get("neighborGeneral.asOverride"); value.Exists() {
+				data.AsOverride = types.BoolValue(value.Bool())
+			} else {
+				data.AsOverride = types.BoolNull()
+			}
+			if value := res.Get("neighborHaMode.disable"); value.Exists() {
+				data.GracefulRestart = types.BoolValue(value.Bool())
+			} else {
+				data.GracefulRestart = types.BoolNull()
 			}
 			if value := res.Get("neighborGeneral.shutdown"); value.Exists() {
-				data.NeighborShutdown = types.BoolValue(value.Bool())
+				data.ShutdownAdministratively = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborShutdown = types.BoolValue(false)
+				data.ShutdownAdministratively = types.BoolValue(false)
 			}
 			if value := res.Get("neighborGeneral.description"); value.Exists() {
-				data.NeighborDescription = types.StringValue(value.String())
+				data.Description = types.StringValue(value.String())
 			} else {
-				data.NeighborDescription = types.StringNull()
+				data.Description = types.StringNull()
 			}
 			if value := res.Get("neighborFiltering.neighborDistributeLists"); value.Exists() {
-				data.NeighborFilterAccessLists = make([]DeviceBGPIpv4NeighborsNeighborFilterAccessLists, 0)
+				data.FilterAccessLists = make([]DeviceBGPIpv4NeighborsFilterAccessLists, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := DeviceBGPIpv4NeighborsNeighborFilterAccessLists{}
+					data := DeviceBGPIpv4NeighborsFilterAccessLists{}
 					if value := res.Get("accessList.id"); value.Exists() {
 						data.AccessListId = types.StringValue(value.String())
 					} else {
@@ -619,16 +655,16 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.UpdateDirection = types.StringNull()
 					}
-					(*parent).NeighborFilterAccessLists = append((*parent).NeighborFilterAccessLists, data)
+					(*parent).FilterAccessLists = append((*parent).FilterAccessLists, data)
 					return true
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborRouteMap"); value.Exists() {
-				data.NeighborFilterRouteMapLists = make([]DeviceBGPIpv4NeighborsNeighborFilterRouteMapLists, 0)
+				data.FilterRouteMaps = make([]DeviceBGPIpv4NeighborsFilterRouteMaps, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := DeviceBGPIpv4NeighborsNeighborFilterRouteMapLists{}
-					if value := res.Get("RouteMap.id"); value.Exists() {
+					data := DeviceBGPIpv4NeighborsFilterRouteMaps{}
+					if value := res.Get("routeMap.id"); value.Exists() {
 						data.RouteMapId = types.StringValue(value.String())
 					} else {
 						data.RouteMapId = types.StringNull()
@@ -638,15 +674,15 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.UpdateDirection = types.StringNull()
 					}
-					(*parent).NeighborFilterRouteMapLists = append((*parent).NeighborFilterRouteMapLists, data)
+					(*parent).FilterRouteMaps = append((*parent).FilterRouteMaps, data)
 					return true
 				})
 			}
 			if value := res.Get("neighborFiltering.ipv4PrefixListFilter"); value.Exists() {
-				data.NeighborFilterPrefixLists = make([]DeviceBGPIpv4NeighborsNeighborFilterPrefixLists, 0)
+				data.FilterPrefixLists = make([]DeviceBGPIpv4NeighborsFilterPrefixLists, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := DeviceBGPIpv4NeighborsNeighborFilterPrefixLists{}
+					data := DeviceBGPIpv4NeighborsFilterPrefixLists{}
 					if value := res.Get("ipv4PrefixList.id"); value.Exists() {
 						data.PrefixListId = types.StringValue(value.String())
 					} else {
@@ -657,158 +693,172 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.UpdateDirection = types.StringNull()
 					}
-					(*parent).NeighborFilterPrefixLists = append((*parent).NeighborFilterPrefixLists, data)
+					(*parent).FilterPrefixLists = append((*parent).FilterPrefixLists, data)
 					return true
 				})
 			}
-			if value := res.Get("neighborFilterList.neighborFilterList"); value.Exists() {
-				data.NeighborFilterAsPathLists = make([]DeviceBGPIpv4NeighborsNeighborFilterAsPathLists, 0)
+			if value := res.Get("neighborFiltering.neighborFilterList"); value.Exists() {
+				data.FilterAsPaths = make([]DeviceBGPIpv4NeighborsFilterAsPaths, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := DeviceBGPIpv4NeighborsNeighborFilterAsPathLists{}
-					if value := res.Get("filterUpdateAction"); value.Exists() {
-						data.UpdateDirection = types.StringValue(value.String())
-					} else {
-						data.UpdateDirection = types.StringNull()
-					}
+					data := DeviceBGPIpv4NeighborsFilterAsPaths{}
 					if value := res.Get("asPathList.id"); value.Exists() {
 						data.AsPathId = types.StringValue(value.String())
 					} else {
 						data.AsPathId = types.StringNull()
 					}
-					(*parent).NeighborFilterAsPathLists = append((*parent).NeighborFilterAsPathLists, data)
+					if value := res.Get("asPathList.name"); value.Exists() {
+						data.AsPathName = types.StringValue(value.String())
+					} else {
+						data.AsPathName = types.StringNull()
+					}
+					if value := res.Get("filterUpdateAction"); value.Exists() {
+						data.UpdateDirection = types.StringValue(value.String())
+					} else {
+						data.UpdateDirection = types.StringNull()
+					}
+					(*parent).FilterAsPaths = append((*parent).FilterAsPaths, data)
 					return true
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborMaximumPrefix.maxPrefixLimit"); value.Exists() {
-				data.NeighborFilterMaxPrefix = types.Int64Value(value.Int())
+				data.FilterMaximumPrefixes = types.Int64Value(value.Int())
 			} else {
-				data.NeighborFilterMaxPrefix = types.Int64Null()
+				data.FilterMaximumPrefixes = types.Int64Null()
 			}
 			if value := res.Get("neighborFiltering.neighborMaximumPrefix.warningOnly"); value.Exists() {
-				data.NeighborFilterWarningOnly = types.BoolValue(value.Bool())
+				data.FilterWarningOnly = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborFilterWarningOnly = types.BoolNull()
+				data.FilterWarningOnly = types.BoolNull()
 			}
 			if value := res.Get("neighborFiltering.neighborMaximumPrefix.thresholdValue"); value.Exists() {
-				data.NeighborFilterThresholdValue = types.Int64Value(value.Int())
+				data.FilterThresholdValue = types.Int64Value(value.Int())
 			} else {
-				data.NeighborFilterThresholdValue = types.Int64Null()
+				data.FilterThresholdValue = types.Int64Null()
 			}
 			if value := res.Get("neighborFiltering.neighborMaximumPrefix.restartInterval"); value.Exists() {
-				data.NeighborFilterRestartInterval = types.Int64Value(value.Int())
+				data.FilterRestartInterval = types.Int64Value(value.Int())
 			} else {
-				data.NeighborFilterRestartInterval = types.Int64Null()
+				data.FilterRestartInterval = types.Int64Null()
 			}
 			if value := res.Get("neighborRoutes.advertisementInterval"); value.Exists() {
-				data.NeighborRoutesAdvertisementInterval = types.Int64Value(value.Int())
+				data.RoutesAdvertisementInterval = types.Int64Value(value.Int())
 			} else {
-				data.NeighborRoutesAdvertisementInterval = types.Int64Value(0)
+				data.RoutesAdvertisementInterval = types.Int64Value(0)
 			}
 			if value := res.Get("neighborRoutes.removePrivateAs"); value.Exists() {
-				data.NeighborRoutesRemovePrivateAs = types.BoolValue(value.Bool())
+				data.RoutesRemovePrivateAs = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborRoutesRemovePrivateAs = types.BoolValue(false)
+				data.RoutesRemovePrivateAs = types.BoolValue(false)
 			}
 			if value := res.Get("neighborFiltering.neighborDefaultOriginate.routeMap.id"); value.Exists() {
-				data.NeighborGenerateDefaultRouteMapId = types.StringValue(value.String())
+				data.RoutesGenerateDefaultRouteMapId = types.StringValue(value.String())
 			} else {
-				data.NeighborGenerateDefaultRouteMapId = types.StringNull()
+				data.RoutesGenerateDefaultRouteMapId = types.StringNull()
 			}
-			if value := res.Get("neighborRoutes.neighborAdvertiseMaps.existMap"); value.Exists() {
-				data.NeighborRoutesAdvertiseMapUseExist = types.BoolValue(value.Bool())
-			} else {
-				data.NeighborRoutesAdvertiseMapUseExist = types.BoolNull()
-			}
-			if value := res.Get("neighborRoutes.neighborAdvertiseMaps.routeMap.id"); value.Exists() {
-				data.NeighborRoutesAdvertiseMapId = types.StringValue(value.String())
-			} else {
-				data.NeighborRoutesAdvertiseMapId = types.StringNull()
-			}
-			if value := res.Get("neighborRoutes.neighborAdvertiseMaps.existRouteMap.id"); value.Exists() {
-				data.NeighborRoutesAdvertiseExistNonexistMapId = types.StringValue(value.String())
-			} else {
-				data.NeighborRoutesAdvertiseExistNonexistMapId = types.StringNull()
+			if value := res.Get("neighborRoutes.neighborAdvertiseMaps"); value.Exists() {
+				data.RoutesAdvertiseMaps = make([]DeviceBGPIpv4NeighborsRoutesAdvertiseMaps, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := DeviceBGPIpv4NeighborsRoutesAdvertiseMaps{}
+					if value := res.Get("routeMap.id"); value.Exists() {
+						data.AdvertiseMapId = types.StringValue(value.String())
+					} else {
+						data.AdvertiseMapId = types.StringNull()
+					}
+					if value := res.Get("existMap"); value.Exists() {
+						data.UseExistMap = types.BoolValue(value.Bool())
+					} else {
+						data.UseExistMap = types.BoolNull()
+					}
+					if value := res.Get("existRouteMap.id"); value.Exists() {
+						data.ExistNonexistMapId = types.StringValue(value.String())
+					} else {
+						data.ExistNonexistMapId = types.StringNull()
+					}
+					(*parent).RoutesAdvertiseMaps = append((*parent).RoutesAdvertiseMaps, data)
+					return true
+				})
 			}
 			if value := res.Get("neighborTimers.keepAliveInterval"); value.Exists() {
-				data.NeighborKeepaliveInterval = types.Int64Value(value.Int())
+				data.KeepaliveInterval = types.Int64Value(value.Int())
 			} else {
-				data.NeighborKeepaliveInterval = types.Int64Null()
+				data.KeepaliveInterval = types.Int64Null()
 			}
 			if value := res.Get("neighborTimers.holdTime"); value.Exists() {
-				data.NeighborHoldTime = types.Int64Value(value.Int())
+				data.HoldTime = types.Int64Value(value.Int())
 			} else {
-				data.NeighborHoldTime = types.Int64Null()
+				data.HoldTime = types.Int64Null()
 			}
 			if value := res.Get("neighborTimers.minimumHoldTime"); value.Exists() {
-				data.NeighborMinHoldTime = types.Int64Value(value.Int())
+				data.MinimumHoldTime = types.Int64Value(value.Int())
 			} else {
-				data.NeighborMinHoldTime = types.Int64Null()
+				data.MinimumHoldTime = types.Int64Null()
 			}
 			if value := res.Get("neighborAdvanced.neighborSecret"); value.Exists() {
-				data.NeighborAuthenticationPassword = types.StringValue(value.String())
+				data.AuthenticationPassword = types.StringValue(value.String())
 			} else {
-				data.NeighborAuthenticationPassword = types.StringNull()
+				data.AuthenticationPassword = types.StringNull()
 			}
 			if value := res.Get("neighborAdvanced.sendCommunity"); value.Exists() {
-				data.NeighborSendCommunityAttribute = types.BoolValue(value.Bool())
+				data.SendCommunityAttribute = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborSendCommunityAttribute = types.BoolValue(false)
+				data.SendCommunityAttribute = types.BoolValue(false)
 			}
 			if value := res.Get("neighborAdvanced.nextHopSelf"); value.Exists() {
-				data.NeighborNexthopSelf = types.BoolValue(value.Bool())
+				data.NextHopSelf = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborNexthopSelf = types.BoolValue(false)
+				data.NextHopSelf = types.BoolValue(false)
 			}
 			if value := res.Get("neighborAdvanced.neighborHops.disableConnectedCheck"); value.Exists() {
-				data.NeighborDisableConnectionVerification = types.BoolValue(value.Bool())
+				data.DisableConnectionVerification = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborDisableConnectionVerification = types.BoolValue(false)
+				data.DisableConnectionVerification = types.BoolValue(false)
 			}
 			if value := res.Get("neighborAdvanced.neighborTransportPathMTUDiscovery.disable"); value.Exists() {
-				data.NeighborTcpMtuPathDiscovery = types.BoolValue(value.Bool())
+				data.TcpPathMtuDiscovery = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborTcpMtuPathDiscovery = types.BoolValue(false)
+				data.TcpPathMtuDiscovery = types.BoolValue(false)
 			}
 			if value := res.Get("neighborAdvanced.neighborHops.maxHopCount"); value.Exists() {
-				data.NeighborMaxHopCount = types.Int64Value(value.Int())
+				data.MaxHopCount = types.Int64Value(value.Int())
 			} else {
-				data.NeighborMaxHopCount = types.Int64Value(1)
+				data.MaxHopCount = types.Int64Value(1)
 			}
 			if value := res.Get("neighborAdvanced.neighborTransportConnectionMode.establishTCPSession"); value.Exists() {
-				data.NeighborTcpTransportMode = types.BoolValue(value.Bool())
+				data.TcpTransportMode = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborTcpTransportMode = types.BoolValue(false)
+				data.TcpTransportMode = types.BoolValue(false)
 			}
 			if value := res.Get("neighborAdvanced.neighborWeight"); value.Exists() {
-				data.NeighborWeight = types.Int64Value(value.Int())
+				data.Weight = types.Int64Value(value.Int())
 			} else {
-				data.NeighborWeight = types.Int64Value(0)
+				data.Weight = types.Int64Value(0)
 			}
 			if value := res.Get("neighborAdvanced.neighborVersion"); value.Exists() {
-				data.NeighborVersion = types.StringValue(value.String())
+				data.Version = types.StringValue(value.String())
 			} else {
-				data.NeighborVersion = types.StringValue("0")
+				data.Version = types.StringValue("0")
 			}
 			if value := res.Get("neighborLocalAs.asNumber"); value.Exists() {
-				data.NeighborCustomizedLocalAsNumber = types.StringValue(value.String())
+				data.CustomizedLocalAsNumber = types.StringValue(value.String())
 			} else {
-				data.NeighborCustomizedLocalAsNumber = types.StringNull()
+				data.CustomizedLocalAsNumber = types.StringNull()
 			}
 			if value := res.Get("neighborLocalAs.noPrepend"); value.Exists() {
-				data.NeighborCustomizedNoPrepend = types.BoolValue(value.Bool())
+				data.CustomizedNoPrepend = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborCustomizedNoPrepend = types.BoolNull()
+				data.CustomizedNoPrepend = types.BoolNull()
 			}
 			if value := res.Get("neighborLocalAs.replaceAs"); value.Exists() {
-				data.NeighborCustomizedReplaceAs = types.BoolValue(value.Bool())
+				data.CustomizedReplaceAs = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborCustomizedReplaceAs = types.BoolNull()
+				data.CustomizedReplaceAs = types.BoolNull()
 			}
 			if value := res.Get("neighborLocalAs.dualAs"); value.Exists() {
-				data.NeighborCustomizedAcceptBothAs = types.BoolValue(value.Bool())
+				data.CustomizedAcceptBothAs = types.BoolValue(value.Bool())
 			} else {
-				data.NeighborCustomizedAcceptBothAs = types.BoolNull()
+				data.CustomizedAcceptBothAs = types.BoolNull()
 			}
 			(*parent).Ipv4Neighbors = append((*parent).Ipv4Neighbors, data)
 			return true
@@ -858,15 +908,15 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Filterings{}
-			if value := res.Get("ipv4AggregateNetwork.id"); value.Exists() {
+			if value := res.Get("accessList.id"); value.Exists() {
 				data.AccessListId = types.StringValue(value.String())
 			} else {
 				data.AccessListId = types.StringNull()
 			}
 			if value := res.Get("type"); value.Exists() {
-				data.NetworkDirection = types.StringValue(value.String())
+				data.Direction = types.StringValue(value.String())
 			} else {
-				data.NetworkDirection = types.StringNull()
+				data.Direction = types.StringNull()
 			}
 			if value := res.Get("protocol.protocol"); value.Exists() {
 				data.Protocol = types.StringValue(value.String())
@@ -874,9 +924,9 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.Protocol = types.StringNull()
 			}
 			if value := res.Get("protocol.processId"); value.Exists() {
-				data.ProrocolProcess = types.StringValue(value.String())
+				data.ProcessId = types.StringValue(value.String())
 			} else {
-				data.ProrocolProcess = types.StringNull()
+				data.ProcessId = types.StringNull()
 			}
 			(*parent).Ipv4Filterings = append((*parent).Ipv4Filterings, data)
 			return true
@@ -960,15 +1010,20 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4RouteInjections{}
-			if value := res.Get("injectMap.routeMap.id"); value.Exists() {
+			if value := res.Get("injectMap.id"); value.Exists() {
 				data.InjectRouteMapId = types.StringValue(value.String())
 			} else {
 				data.InjectRouteMapId = types.StringNull()
 			}
-			if value := res.Get("existMap.routeMap.id"); value.Exists() {
+			if value := res.Get("existMap.id"); value.Exists() {
 				data.ExistRouteMapId = types.StringValue(value.String())
 			} else {
 				data.ExistRouteMapId = types.StringNull()
+			}
+			if value := res.Get("copyAttributes"); value.Exists() {
+				data.InheritAttributes = types.StringValue(value.String())
+			} else {
+				data.InheritAttributes = types.StringValue("true")
 			}
 			(*parent).Ipv4RouteInjections = append((*parent).Ipv4RouteInjections, data)
 			return true
@@ -1020,25 +1075,25 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Ipv4DefaultInformationOrginate = types.BoolNull()
 	}
-	if value := res.Get("addressFamilyIPv4.autoSummary"); value.Exists() && !data.Ipv4AutoAummary.IsNull() {
-		data.Ipv4AutoAummary = types.BoolValue(value.Bool())
+	if value := res.Get("addressFamilyIPv4.autoSummary"); value.Exists() && !data.Ipv4AutoSummary.IsNull() {
+		data.Ipv4AutoSummary = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4AutoAummary = types.BoolNull()
+		data.Ipv4AutoSummary = types.BoolNull()
 	}
-	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() && !data.Ipv4BgpSupressInactive.IsNull() {
-		data.Ipv4BgpSupressInactive = types.BoolValue(value.Bool())
+	if value := res.Get("addressFamilyIPv4.bgpSupressInactive"); value.Exists() && !data.Ipv4SuppressInactiveRoutes.IsNull() {
+		data.Ipv4SuppressInactiveRoutes = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4BgpSupressInactive = types.BoolNull()
+		data.Ipv4SuppressInactiveRoutes = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.synchronization"); value.Exists() && !data.Ipv4Synchronization.IsNull() {
 		data.Ipv4Synchronization = types.BoolValue(value.Bool())
 	} else {
 		data.Ipv4Synchronization = types.BoolNull()
 	}
-	if value := res.Get("addressFamilyIPv4.bgpRedistributeInternal"); value.Exists() && !data.Ipv4BgpRedistributeInternal.IsNull() {
-		data.Ipv4BgpRedistributeInternal = types.BoolValue(value.Bool())
+	if value := res.Get("addressFamilyIPv4.bgpRedistributeInternal"); value.Exists() && !data.Ipv4RedistributeIbgpIntoIgp.IsNull() {
+		data.Ipv4RedistributeIbgpIntoIgp = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4BgpRedistributeInternal = types.BoolNull()
+		data.Ipv4RedistributeIbgpIntoIgp = types.BoolNull()
 	}
 	if value := res.Get("addressFamilyIPv4.distance.externalDistance"); value.Exists() && !data.Ipv4ExternalDistance.IsNull() {
 		data.Ipv4ExternalDistance = types.Int64Value(value.Int())
@@ -1055,19 +1110,19 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else if data.Ipv4LocalDistance.ValueInt64() != 200 {
 		data.Ipv4LocalDistance = types.Int64Null()
 	}
-	if value := res.Get("addressFamilyIPv4.ibgp"); value.Exists() && !data.Ipv4ForwardPacketsOverMultipathIbgp.IsNull() {
-		data.Ipv4ForwardPacketsOverMultipathIbgp = types.Int64Value(value.Int())
-	} else if data.Ipv4ForwardPacketsOverMultipathIbgp.ValueInt64() != 1 {
-		data.Ipv4ForwardPacketsOverMultipathIbgp = types.Int64Null()
+	if value := res.Get("addressFamilyIPv4.ibgp"); value.Exists() && !data.Ipv4NumberOfIbgpPaths.IsNull() {
+		data.Ipv4NumberOfIbgpPaths = types.Int64Value(value.Int())
+	} else if data.Ipv4NumberOfIbgpPaths.ValueInt64() != 1 {
+		data.Ipv4NumberOfIbgpPaths = types.Int64Null()
 	}
-	if value := res.Get("addressFamilyIPv4.ebgp"); value.Exists() && !data.Ipv4ForwardPacketsOverMultipathEbgp.IsNull() {
-		data.Ipv4ForwardPacketsOverMultipathEbgp = types.Int64Value(value.Int())
-	} else if data.Ipv4ForwardPacketsOverMultipathEbgp.ValueInt64() != 1 {
-		data.Ipv4ForwardPacketsOverMultipathEbgp = types.Int64Null()
+	if value := res.Get("addressFamilyIPv4.ebgp"); value.Exists() && !data.Ipv4NumberOfEbgpPaths.IsNull() {
+		data.Ipv4NumberOfEbgpPaths = types.Int64Value(value.Int())
+	} else if data.Ipv4NumberOfEbgpPaths.ValueInt64() != 1 {
+		data.Ipv4NumberOfEbgpPaths = types.Int64Null()
 	}
 	for i := 0; i < len(data.Ipv4Neighbors); i++ {
-		keys := [...]string{"ipv4Address", "remoteAs", "neighborRoutes.neighborAdvertiseMaps.routeMap.id", "neighborRoutes.neighborAdvertiseMaps.existRouteMap.id"}
-		keyValues := [...]string{data.Ipv4Neighbors[i].NeighborAddress.ValueString(), data.Ipv4Neighbors[i].NeighborRemoteAs.ValueString(), data.Ipv4Neighbors[i].NeighborRoutesAdvertiseMapId.ValueString(), data.Ipv4Neighbors[i].NeighborRoutesAdvertiseExistNonexistMapId.ValueString()}
+		keys := [...]string{"ipv4Address"}
+		keyValues := [...]string{data.Ipv4Neighbors[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Neighbors[i]
@@ -1101,47 +1156,57 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("ipv4Address"); value.Exists() && !data.NeighborAddress.IsNull() {
-			data.NeighborAddress = types.StringValue(value.String())
+		if value := res.Get("ipv4Address"); value.Exists() && !data.Address.IsNull() {
+			data.Address = types.StringValue(value.String())
 		} else {
-			data.NeighborAddress = types.StringNull()
+			data.Address = types.StringNull()
 		}
-		if value := res.Get("remoteAs"); value.Exists() && !data.NeighborRemoteAs.IsNull() {
-			data.NeighborRemoteAs = types.StringValue(value.String())
+		if value := res.Get("remoteAs"); value.Exists() && !data.RemoteAs.IsNull() {
+			data.RemoteAs = types.StringValue(value.String())
 		} else {
-			data.NeighborRemoteAs = types.StringNull()
+			data.RemoteAs = types.StringNull()
 		}
-		if value := res.Get("neighborGeneral.fallOverBFD"); value.Exists() && !data.NeighborBfd.IsNull() {
-			data.NeighborBfd = types.StringValue(value.String())
-		} else if data.NeighborBfd.ValueString() != "NONE" {
-			data.NeighborBfd = types.StringNull()
+		if value := res.Get("neighborGeneral.fallOverBFD"); value.Exists() && !data.BfdFallover.IsNull() {
+			data.BfdFallover = types.StringValue(value.String())
+		} else if data.BfdFallover.ValueString() != "NONE" {
+			data.BfdFallover = types.StringNull()
 		}
 		if value := res.Get("neighborGeneral.updateSource.id"); value.Exists() && !data.UpdateSourceInterfaceId.IsNull() {
 			data.UpdateSourceInterfaceId = types.StringValue(value.String())
 		} else {
 			data.UpdateSourceInterfaceId = types.StringNull()
 		}
-		if value := res.Get("neighborGeneral.enableAddress"); value.Exists() && !data.EnableAddressFamily.IsNull() {
-			data.EnableAddressFamily = types.BoolValue(value.Bool())
-		} else if data.EnableAddressFamily.ValueBool() != false {
-			data.EnableAddressFamily = types.BoolNull()
+		if value := res.Get("neighborGeneral.enableAddress"); value.Exists() && !data.EnableAddress.IsNull() {
+			data.EnableAddress = types.BoolValue(value.Bool())
+		} else if data.EnableAddress.ValueBool() != false {
+			data.EnableAddress = types.BoolNull()
 		}
-		if value := res.Get("neighborGeneral.shutdown"); value.Exists() && !data.NeighborShutdown.IsNull() {
-			data.NeighborShutdown = types.BoolValue(value.Bool())
-		} else if data.NeighborShutdown.ValueBool() != false {
-			data.NeighborShutdown = types.BoolNull()
-		}
-		if value := res.Get("neighborGeneral.description"); value.Exists() && !data.NeighborDescription.IsNull() {
-			data.NeighborDescription = types.StringValue(value.String())
+		if value := res.Get("neighborGeneral.asOverride"); value.Exists() && !data.AsOverride.IsNull() {
+			data.AsOverride = types.BoolValue(value.Bool())
 		} else {
-			data.NeighborDescription = types.StringNull()
+			data.AsOverride = types.BoolNull()
 		}
-		for i := 0; i < len(data.NeighborFilterAccessLists); i++ {
+		if value := res.Get("neighborHaMode.disable"); value.Exists() && !data.GracefulRestart.IsNull() {
+			data.GracefulRestart = types.BoolValue(value.Bool())
+		} else {
+			data.GracefulRestart = types.BoolNull()
+		}
+		if value := res.Get("neighborGeneral.shutdown"); value.Exists() && !data.ShutdownAdministratively.IsNull() {
+			data.ShutdownAdministratively = types.BoolValue(value.Bool())
+		} else if data.ShutdownAdministratively.ValueBool() != false {
+			data.ShutdownAdministratively = types.BoolNull()
+		}
+		if value := res.Get("neighborGeneral.description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			data.Description = types.StringNull()
+		}
+		for i := 0; i < len(data.FilterAccessLists); i++ {
 			keys := [...]string{"accessList.id", "filterUpdateAction"}
-			keyValues := [...]string{data.NeighborFilterAccessLists[i].AccessListId.ValueString(), data.NeighborFilterAccessLists[i].UpdateDirection.ValueString()}
+			keyValues := [...]string{data.FilterAccessLists[i].AccessListId.ValueString(), data.FilterAccessLists[i].UpdateDirection.ValueString()}
 
 			parent := &data
-			data := (*parent).NeighborFilterAccessLists[i]
+			data := (*parent).FilterAccessLists[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1163,11 +1228,11 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing NeighborFilterAccessLists[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing FilterAccessLists[%d] = %+v",
 					i,
-					(*parent).NeighborFilterAccessLists[i],
+					(*parent).FilterAccessLists[i],
 				))
-				(*parent).NeighborFilterAccessLists = slices.Delete((*parent).NeighborFilterAccessLists, i, i+1)
+				(*parent).FilterAccessLists = slices.Delete((*parent).FilterAccessLists, i, i+1)
 				i--
 
 				continue
@@ -1182,14 +1247,14 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else {
 				data.UpdateDirection = types.StringNull()
 			}
-			(*parent).NeighborFilterAccessLists[i] = data
+			(*parent).FilterAccessLists[i] = data
 		}
-		for i := 0; i < len(data.NeighborFilterRouteMapLists); i++ {
-			keys := [...]string{"RouteMap.id", "filterUpdateAction"}
-			keyValues := [...]string{data.NeighborFilterRouteMapLists[i].RouteMapId.ValueString(), data.NeighborFilterRouteMapLists[i].UpdateDirection.ValueString()}
+		for i := 0; i < len(data.FilterRouteMaps); i++ {
+			keys := [...]string{"routeMap.id", "filterUpdateAction"}
+			keyValues := [...]string{data.FilterRouteMaps[i].RouteMapId.ValueString(), data.FilterRouteMaps[i].UpdateDirection.ValueString()}
 
 			parent := &data
-			data := (*parent).NeighborFilterRouteMapLists[i]
+			data := (*parent).FilterRouteMaps[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1211,16 +1276,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing NeighborFilterRouteMapLists[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing FilterRouteMaps[%d] = %+v",
 					i,
-					(*parent).NeighborFilterRouteMapLists[i],
+					(*parent).FilterRouteMaps[i],
 				))
-				(*parent).NeighborFilterRouteMapLists = slices.Delete((*parent).NeighborFilterRouteMapLists, i, i+1)
+				(*parent).FilterRouteMaps = slices.Delete((*parent).FilterRouteMaps, i, i+1)
 				i--
 
 				continue
 			}
-			if value := res.Get("RouteMap.id"); value.Exists() && !data.RouteMapId.IsNull() {
+			if value := res.Get("routeMap.id"); value.Exists() && !data.RouteMapId.IsNull() {
 				data.RouteMapId = types.StringValue(value.String())
 			} else {
 				data.RouteMapId = types.StringNull()
@@ -1230,14 +1295,14 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else {
 				data.UpdateDirection = types.StringNull()
 			}
-			(*parent).NeighborFilterRouteMapLists[i] = data
+			(*parent).FilterRouteMaps[i] = data
 		}
-		for i := 0; i < len(data.NeighborFilterPrefixLists); i++ {
+		for i := 0; i < len(data.FilterPrefixLists); i++ {
 			keys := [...]string{"ipv4PrefixList.id", "filterUpdateAction"}
-			keyValues := [...]string{data.NeighborFilterPrefixLists[i].PrefixListId.ValueString(), data.NeighborFilterPrefixLists[i].UpdateDirection.ValueString()}
+			keyValues := [...]string{data.FilterPrefixLists[i].PrefixListId.ValueString(), data.FilterPrefixLists[i].UpdateDirection.ValueString()}
 
 			parent := &data
-			data := (*parent).NeighborFilterPrefixLists[i]
+			data := (*parent).FilterPrefixLists[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1259,11 +1324,11 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing NeighborFilterPrefixLists[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing FilterPrefixLists[%d] = %+v",
 					i,
-					(*parent).NeighborFilterPrefixLists[i],
+					(*parent).FilterPrefixLists[i],
 				))
-				(*parent).NeighborFilterPrefixLists = slices.Delete((*parent).NeighborFilterPrefixLists, i, i+1)
+				(*parent).FilterPrefixLists = slices.Delete((*parent).FilterPrefixLists, i, i+1)
 				i--
 
 				continue
@@ -1278,18 +1343,18 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else {
 				data.UpdateDirection = types.StringNull()
 			}
-			(*parent).NeighborFilterPrefixLists[i] = data
+			(*parent).FilterPrefixLists[i] = data
 		}
-		for i := 0; i < len(data.NeighborFilterAsPathLists); i++ {
-			keys := [...]string{"filterUpdateAction", "asPathList.id"}
-			keyValues := [...]string{data.NeighborFilterAsPathLists[i].UpdateDirection.ValueString(), data.NeighborFilterAsPathLists[i].AsPathId.ValueString()}
+		for i := 0; i < len(data.FilterAsPaths); i++ {
+			keys := [...]string{"asPathList.id", "asPathList.name", "filterUpdateAction"}
+			keyValues := [...]string{data.FilterAsPaths[i].AsPathId.ValueString(), data.FilterAsPaths[i].AsPathName.ValueString(), data.FilterAsPaths[i].UpdateDirection.ValueString()}
 
 			parent := &data
-			data := (*parent).NeighborFilterAsPathLists[i]
+			data := (*parent).FilterAsPaths[i]
 			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborFilterList.neighborFilterList").ForEach(
+			parentRes.Get("neighborFiltering.neighborFilterList").ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1307,156 +1372,199 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing NeighborFilterAsPathLists[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing FilterAsPaths[%d] = %+v",
 					i,
-					(*parent).NeighborFilterAsPathLists[i],
+					(*parent).FilterAsPaths[i],
 				))
-				(*parent).NeighborFilterAsPathLists = slices.Delete((*parent).NeighborFilterAsPathLists, i, i+1)
+				(*parent).FilterAsPaths = slices.Delete((*parent).FilterAsPaths, i, i+1)
 				i--
 
 				continue
-			}
-			if value := res.Get("filterUpdateAction"); value.Exists() && !data.UpdateDirection.IsNull() {
-				data.UpdateDirection = types.StringValue(value.String())
-			} else {
-				data.UpdateDirection = types.StringNull()
 			}
 			if value := res.Get("asPathList.id"); value.Exists() && !data.AsPathId.IsNull() {
 				data.AsPathId = types.StringValue(value.String())
 			} else {
 				data.AsPathId = types.StringNull()
 			}
-			(*parent).NeighborFilterAsPathLists[i] = data
+			if value := res.Get("asPathList.name"); value.Exists() && !data.AsPathName.IsNull() {
+				data.AsPathName = types.StringValue(value.String())
+			} else {
+				data.AsPathName = types.StringNull()
+			}
+			if value := res.Get("filterUpdateAction"); value.Exists() && !data.UpdateDirection.IsNull() {
+				data.UpdateDirection = types.StringValue(value.String())
+			} else {
+				data.UpdateDirection = types.StringNull()
+			}
+			(*parent).FilterAsPaths[i] = data
 		}
-		if value := res.Get("neighborFiltering.neighborMaximumPrefix.maxPrefixLimit"); value.Exists() && !data.NeighborFilterMaxPrefix.IsNull() {
-			data.NeighborFilterMaxPrefix = types.Int64Value(value.Int())
+		if value := res.Get("neighborFiltering.neighborMaximumPrefix.maxPrefixLimit"); value.Exists() && !data.FilterMaximumPrefixes.IsNull() {
+			data.FilterMaximumPrefixes = types.Int64Value(value.Int())
 		} else {
-			data.NeighborFilterMaxPrefix = types.Int64Null()
+			data.FilterMaximumPrefixes = types.Int64Null()
 		}
-		if value := res.Get("neighborFiltering.neighborMaximumPrefix.warningOnly"); value.Exists() && !data.NeighborFilterWarningOnly.IsNull() {
-			data.NeighborFilterWarningOnly = types.BoolValue(value.Bool())
+		if value := res.Get("neighborFiltering.neighborMaximumPrefix.warningOnly"); value.Exists() && !data.FilterWarningOnly.IsNull() {
+			data.FilterWarningOnly = types.BoolValue(value.Bool())
 		} else {
-			data.NeighborFilterWarningOnly = types.BoolNull()
+			data.FilterWarningOnly = types.BoolNull()
 		}
-		if value := res.Get("neighborFiltering.neighborMaximumPrefix.thresholdValue"); value.Exists() && !data.NeighborFilterThresholdValue.IsNull() {
-			data.NeighborFilterThresholdValue = types.Int64Value(value.Int())
+		if value := res.Get("neighborFiltering.neighborMaximumPrefix.thresholdValue"); value.Exists() && !data.FilterThresholdValue.IsNull() {
+			data.FilterThresholdValue = types.Int64Value(value.Int())
 		} else {
-			data.NeighborFilterThresholdValue = types.Int64Null()
+			data.FilterThresholdValue = types.Int64Null()
 		}
-		if value := res.Get("neighborFiltering.neighborMaximumPrefix.restartInterval"); value.Exists() && !data.NeighborFilterRestartInterval.IsNull() {
-			data.NeighborFilterRestartInterval = types.Int64Value(value.Int())
+		if value := res.Get("neighborFiltering.neighborMaximumPrefix.restartInterval"); value.Exists() && !data.FilterRestartInterval.IsNull() {
+			data.FilterRestartInterval = types.Int64Value(value.Int())
 		} else {
-			data.NeighborFilterRestartInterval = types.Int64Null()
+			data.FilterRestartInterval = types.Int64Null()
 		}
-		if value := res.Get("neighborRoutes.advertisementInterval"); value.Exists() && !data.NeighborRoutesAdvertisementInterval.IsNull() {
-			data.NeighborRoutesAdvertisementInterval = types.Int64Value(value.Int())
-		} else if data.NeighborRoutesAdvertisementInterval.ValueInt64() != 0 {
-			data.NeighborRoutesAdvertisementInterval = types.Int64Null()
+		if value := res.Get("neighborRoutes.advertisementInterval"); value.Exists() && !data.RoutesAdvertisementInterval.IsNull() {
+			data.RoutesAdvertisementInterval = types.Int64Value(value.Int())
+		} else if data.RoutesAdvertisementInterval.ValueInt64() != 0 {
+			data.RoutesAdvertisementInterval = types.Int64Null()
 		}
-		if value := res.Get("neighborRoutes.removePrivateAs"); value.Exists() && !data.NeighborRoutesRemovePrivateAs.IsNull() {
-			data.NeighborRoutesRemovePrivateAs = types.BoolValue(value.Bool())
-		} else if data.NeighborRoutesRemovePrivateAs.ValueBool() != false {
-			data.NeighborRoutesRemovePrivateAs = types.BoolNull()
+		if value := res.Get("neighborRoutes.removePrivateAs"); value.Exists() && !data.RoutesRemovePrivateAs.IsNull() {
+			data.RoutesRemovePrivateAs = types.BoolValue(value.Bool())
+		} else if data.RoutesRemovePrivateAs.ValueBool() != false {
+			data.RoutesRemovePrivateAs = types.BoolNull()
 		}
-		if value := res.Get("neighborFiltering.neighborDefaultOriginate.routeMap.id"); value.Exists() && !data.NeighborGenerateDefaultRouteMapId.IsNull() {
-			data.NeighborGenerateDefaultRouteMapId = types.StringValue(value.String())
+		if value := res.Get("neighborFiltering.neighborDefaultOriginate.routeMap.id"); value.Exists() && !data.RoutesGenerateDefaultRouteMapId.IsNull() {
+			data.RoutesGenerateDefaultRouteMapId = types.StringValue(value.String())
 		} else {
-			data.NeighborGenerateDefaultRouteMapId = types.StringNull()
+			data.RoutesGenerateDefaultRouteMapId = types.StringNull()
 		}
-		if value := res.Get("neighborRoutes.neighborAdvertiseMaps.existMap"); value.Exists() && !data.NeighborRoutesAdvertiseMapUseExist.IsNull() {
-			data.NeighborRoutesAdvertiseMapUseExist = types.BoolValue(value.Bool())
+		for i := 0; i < len(data.RoutesAdvertiseMaps); i++ {
+			keys := [...]string{"routeMap.id", "existRouteMap.id"}
+			keyValues := [...]string{data.RoutesAdvertiseMaps[i].AdvertiseMapId.ValueString(), data.RoutesAdvertiseMaps[i].ExistNonexistMapId.ValueString()}
+
+			parent := &data
+			data := (*parent).RoutesAdvertiseMaps[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("neighborRoutes.neighborAdvertiseMaps").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing RoutesAdvertiseMaps[%d] = %+v",
+					i,
+					(*parent).RoutesAdvertiseMaps[i],
+				))
+				(*parent).RoutesAdvertiseMaps = slices.Delete((*parent).RoutesAdvertiseMaps, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("routeMap.id"); value.Exists() && !data.AdvertiseMapId.IsNull() {
+				data.AdvertiseMapId = types.StringValue(value.String())
+			} else {
+				data.AdvertiseMapId = types.StringNull()
+			}
+			if value := res.Get("existMap"); value.Exists() && !data.UseExistMap.IsNull() {
+				data.UseExistMap = types.BoolValue(value.Bool())
+			} else {
+				data.UseExistMap = types.BoolNull()
+			}
+			if value := res.Get("existRouteMap.id"); value.Exists() && !data.ExistNonexistMapId.IsNull() {
+				data.ExistNonexistMapId = types.StringValue(value.String())
+			} else {
+				data.ExistNonexistMapId = types.StringNull()
+			}
+			(*parent).RoutesAdvertiseMaps[i] = data
+		}
+		if value := res.Get("neighborTimers.keepAliveInterval"); value.Exists() && !data.KeepaliveInterval.IsNull() {
+			data.KeepaliveInterval = types.Int64Value(value.Int())
 		} else {
-			data.NeighborRoutesAdvertiseMapUseExist = types.BoolNull()
+			data.KeepaliveInterval = types.Int64Null()
 		}
-		if value := res.Get("neighborRoutes.neighborAdvertiseMaps.routeMap.id"); value.Exists() && !data.NeighborRoutesAdvertiseMapId.IsNull() {
-			data.NeighborRoutesAdvertiseMapId = types.StringValue(value.String())
+		if value := res.Get("neighborTimers.holdTime"); value.Exists() && !data.HoldTime.IsNull() {
+			data.HoldTime = types.Int64Value(value.Int())
 		} else {
-			data.NeighborRoutesAdvertiseMapId = types.StringNull()
+			data.HoldTime = types.Int64Null()
 		}
-		if value := res.Get("neighborRoutes.neighborAdvertiseMaps.existRouteMap.id"); value.Exists() && !data.NeighborRoutesAdvertiseExistNonexistMapId.IsNull() {
-			data.NeighborRoutesAdvertiseExistNonexistMapId = types.StringValue(value.String())
+		if value := res.Get("neighborTimers.minimumHoldTime"); value.Exists() && !data.MinimumHoldTime.IsNull() {
+			data.MinimumHoldTime = types.Int64Value(value.Int())
 		} else {
-			data.NeighborRoutesAdvertiseExistNonexistMapId = types.StringNull()
+			data.MinimumHoldTime = types.Int64Null()
 		}
-		if value := res.Get("neighborTimers.keepAliveInterval"); value.Exists() && !data.NeighborKeepaliveInterval.IsNull() {
-			data.NeighborKeepaliveInterval = types.Int64Value(value.Int())
+		if value := res.Get("neighborAdvanced.neighborSecret"); value.Exists() && !data.AuthenticationPassword.IsNull() {
+			data.AuthenticationPassword = types.StringValue(value.String())
 		} else {
-			data.NeighborKeepaliveInterval = types.Int64Null()
+			data.AuthenticationPassword = types.StringNull()
 		}
-		if value := res.Get("neighborTimers.holdTime"); value.Exists() && !data.NeighborHoldTime.IsNull() {
-			data.NeighborHoldTime = types.Int64Value(value.Int())
+		if value := res.Get("neighborAdvanced.sendCommunity"); value.Exists() && !data.SendCommunityAttribute.IsNull() {
+			data.SendCommunityAttribute = types.BoolValue(value.Bool())
+		} else if data.SendCommunityAttribute.ValueBool() != false {
+			data.SendCommunityAttribute = types.BoolNull()
+		}
+		if value := res.Get("neighborAdvanced.nextHopSelf"); value.Exists() && !data.NextHopSelf.IsNull() {
+			data.NextHopSelf = types.BoolValue(value.Bool())
+		} else if data.NextHopSelf.ValueBool() != false {
+			data.NextHopSelf = types.BoolNull()
+		}
+		if value := res.Get("neighborAdvanced.neighborHops.disableConnectedCheck"); value.Exists() && !data.DisableConnectionVerification.IsNull() {
+			data.DisableConnectionVerification = types.BoolValue(value.Bool())
+		} else if data.DisableConnectionVerification.ValueBool() != false {
+			data.DisableConnectionVerification = types.BoolNull()
+		}
+		if value := res.Get("neighborAdvanced.neighborTransportPathMTUDiscovery.disable"); value.Exists() && !data.TcpPathMtuDiscovery.IsNull() {
+			data.TcpPathMtuDiscovery = types.BoolValue(value.Bool())
+		} else if data.TcpPathMtuDiscovery.ValueBool() != false {
+			data.TcpPathMtuDiscovery = types.BoolNull()
+		}
+		if value := res.Get("neighborAdvanced.neighborHops.maxHopCount"); value.Exists() && !data.MaxHopCount.IsNull() {
+			data.MaxHopCount = types.Int64Value(value.Int())
+		} else if data.MaxHopCount.ValueInt64() != 1 {
+			data.MaxHopCount = types.Int64Null()
+		}
+		if value := res.Get("neighborAdvanced.neighborTransportConnectionMode.establishTCPSession"); value.Exists() && !data.TcpTransportMode.IsNull() {
+			data.TcpTransportMode = types.BoolValue(value.Bool())
+		} else if data.TcpTransportMode.ValueBool() != false {
+			data.TcpTransportMode = types.BoolNull()
+		}
+		if value := res.Get("neighborAdvanced.neighborWeight"); value.Exists() && !data.Weight.IsNull() {
+			data.Weight = types.Int64Value(value.Int())
+		} else if data.Weight.ValueInt64() != 0 {
+			data.Weight = types.Int64Null()
+		}
+		if value := res.Get("neighborAdvanced.neighborVersion"); value.Exists() && !data.Version.IsNull() {
+			data.Version = types.StringValue(value.String())
+		} else if data.Version.ValueString() != "0" {
+			data.Version = types.StringNull()
+		}
+		if value := res.Get("neighborLocalAs.asNumber"); value.Exists() && !data.CustomizedLocalAsNumber.IsNull() {
+			data.CustomizedLocalAsNumber = types.StringValue(value.String())
 		} else {
-			data.NeighborHoldTime = types.Int64Null()
+			data.CustomizedLocalAsNumber = types.StringNull()
 		}
-		if value := res.Get("neighborTimers.minimumHoldTime"); value.Exists() && !data.NeighborMinHoldTime.IsNull() {
-			data.NeighborMinHoldTime = types.Int64Value(value.Int())
+		if value := res.Get("neighborLocalAs.noPrepend"); value.Exists() && !data.CustomizedNoPrepend.IsNull() {
+			data.CustomizedNoPrepend = types.BoolValue(value.Bool())
 		} else {
-			data.NeighborMinHoldTime = types.Int64Null()
+			data.CustomizedNoPrepend = types.BoolNull()
 		}
-		if value := res.Get("neighborAdvanced.neighborSecret"); value.Exists() && !data.NeighborAuthenticationPassword.IsNull() {
-			data.NeighborAuthenticationPassword = types.StringValue(value.String())
+		if value := res.Get("neighborLocalAs.replaceAs"); value.Exists() && !data.CustomizedReplaceAs.IsNull() {
+			data.CustomizedReplaceAs = types.BoolValue(value.Bool())
 		} else {
-			data.NeighborAuthenticationPassword = types.StringNull()
+			data.CustomizedReplaceAs = types.BoolNull()
 		}
-		if value := res.Get("neighborAdvanced.sendCommunity"); value.Exists() && !data.NeighborSendCommunityAttribute.IsNull() {
-			data.NeighborSendCommunityAttribute = types.BoolValue(value.Bool())
-		} else if data.NeighborSendCommunityAttribute.ValueBool() != false {
-			data.NeighborSendCommunityAttribute = types.BoolNull()
-		}
-		if value := res.Get("neighborAdvanced.nextHopSelf"); value.Exists() && !data.NeighborNexthopSelf.IsNull() {
-			data.NeighborNexthopSelf = types.BoolValue(value.Bool())
-		} else if data.NeighborNexthopSelf.ValueBool() != false {
-			data.NeighborNexthopSelf = types.BoolNull()
-		}
-		if value := res.Get("neighborAdvanced.neighborHops.disableConnectedCheck"); value.Exists() && !data.NeighborDisableConnectionVerification.IsNull() {
-			data.NeighborDisableConnectionVerification = types.BoolValue(value.Bool())
-		} else if data.NeighborDisableConnectionVerification.ValueBool() != false {
-			data.NeighborDisableConnectionVerification = types.BoolNull()
-		}
-		if value := res.Get("neighborAdvanced.neighborTransportPathMTUDiscovery.disable"); value.Exists() && !data.NeighborTcpMtuPathDiscovery.IsNull() {
-			data.NeighborTcpMtuPathDiscovery = types.BoolValue(value.Bool())
-		} else if data.NeighborTcpMtuPathDiscovery.ValueBool() != false {
-			data.NeighborTcpMtuPathDiscovery = types.BoolNull()
-		}
-		if value := res.Get("neighborAdvanced.neighborHops.maxHopCount"); value.Exists() && !data.NeighborMaxHopCount.IsNull() {
-			data.NeighborMaxHopCount = types.Int64Value(value.Int())
-		} else if data.NeighborMaxHopCount.ValueInt64() != 1 {
-			data.NeighborMaxHopCount = types.Int64Null()
-		}
-		if value := res.Get("neighborAdvanced.neighborTransportConnectionMode.establishTCPSession"); value.Exists() && !data.NeighborTcpTransportMode.IsNull() {
-			data.NeighborTcpTransportMode = types.BoolValue(value.Bool())
-		} else if data.NeighborTcpTransportMode.ValueBool() != false {
-			data.NeighborTcpTransportMode = types.BoolNull()
-		}
-		if value := res.Get("neighborAdvanced.neighborWeight"); value.Exists() && !data.NeighborWeight.IsNull() {
-			data.NeighborWeight = types.Int64Value(value.Int())
-		} else if data.NeighborWeight.ValueInt64() != 0 {
-			data.NeighborWeight = types.Int64Null()
-		}
-		if value := res.Get("neighborAdvanced.neighborVersion"); value.Exists() && !data.NeighborVersion.IsNull() {
-			data.NeighborVersion = types.StringValue(value.String())
-		} else if data.NeighborVersion.ValueString() != "0" {
-			data.NeighborVersion = types.StringNull()
-		}
-		if value := res.Get("neighborLocalAs.asNumber"); value.Exists() && !data.NeighborCustomizedLocalAsNumber.IsNull() {
-			data.NeighborCustomizedLocalAsNumber = types.StringValue(value.String())
+		if value := res.Get("neighborLocalAs.dualAs"); value.Exists() && !data.CustomizedAcceptBothAs.IsNull() {
+			data.CustomizedAcceptBothAs = types.BoolValue(value.Bool())
 		} else {
-			data.NeighborCustomizedLocalAsNumber = types.StringNull()
-		}
-		if value := res.Get("neighborLocalAs.noPrepend"); value.Exists() && !data.NeighborCustomizedNoPrepend.IsNull() {
-			data.NeighborCustomizedNoPrepend = types.BoolValue(value.Bool())
-		} else {
-			data.NeighborCustomizedNoPrepend = types.BoolNull()
-		}
-		if value := res.Get("neighborLocalAs.replaceAs"); value.Exists() && !data.NeighborCustomizedReplaceAs.IsNull() {
-			data.NeighborCustomizedReplaceAs = types.BoolValue(value.Bool())
-		} else {
-			data.NeighborCustomizedReplaceAs = types.BoolNull()
-		}
-		if value := res.Get("neighborLocalAs.dualAs"); value.Exists() && !data.NeighborCustomizedAcceptBothAs.IsNull() {
-			data.NeighborCustomizedAcceptBothAs = types.BoolValue(value.Bool())
-		} else {
-			data.NeighborCustomizedAcceptBothAs = types.BoolNull()
+			data.CustomizedAcceptBothAs = types.BoolNull()
 		}
 		(*parent).Ipv4Neighbors[i] = data
 	}
@@ -1529,8 +1637,8 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		(*parent).Ipv4AggregateAddresses[i] = data
 	}
 	for i := 0; i < len(data.Ipv4Filterings); i++ {
-		keys := [...]string{"ipv4AggregateNetwork.id"}
-		keyValues := [...]string{data.Ipv4Filterings[i].AccessListId.ValueString()}
+		keys := [...]string{"accessList.id", "type", "protocol.protocol", "protocol.processId"}
+		keyValues := [...]string{data.Ipv4Filterings[i].AccessListId.ValueString(), data.Ipv4Filterings[i].Direction.ValueString(), data.Ipv4Filterings[i].Protocol.ValueString(), data.Ipv4Filterings[i].ProcessId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Filterings[i]
@@ -1564,25 +1672,25 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("ipv4AggregateNetwork.id"); value.Exists() && !data.AccessListId.IsNull() {
+		if value := res.Get("accessList.id"); value.Exists() && !data.AccessListId.IsNull() {
 			data.AccessListId = types.StringValue(value.String())
 		} else {
 			data.AccessListId = types.StringNull()
 		}
-		if value := res.Get("type"); value.Exists() && !data.NetworkDirection.IsNull() {
-			data.NetworkDirection = types.StringValue(value.String())
+		if value := res.Get("type"); value.Exists() && !data.Direction.IsNull() {
+			data.Direction = types.StringValue(value.String())
 		} else {
-			data.NetworkDirection = types.StringNull()
+			data.Direction = types.StringNull()
 		}
 		if value := res.Get("protocol.protocol"); value.Exists() && !data.Protocol.IsNull() {
 			data.Protocol = types.StringValue(value.String())
 		} else {
 			data.Protocol = types.StringNull()
 		}
-		if value := res.Get("protocol.processId"); value.Exists() && !data.ProrocolProcess.IsNull() {
-			data.ProrocolProcess = types.StringValue(value.String())
+		if value := res.Get("protocol.processId"); value.Exists() && !data.ProcessId.IsNull() {
+			data.ProcessId = types.StringValue(value.String())
 		} else {
-			data.ProrocolProcess = types.StringNull()
+			data.ProcessId = types.StringNull()
 		}
 		(*parent).Ipv4Filterings[i] = data
 	}
@@ -1635,8 +1743,8 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		(*parent).Ipv4Networks[i] = data
 	}
 	for i := 0; i < len(data.Ipv4Redistributions); i++ {
-		keys := [...]string{"routeMap.id"}
-		keyValues := [...]string{data.Ipv4Redistributions[i].RouteMapId.ValueString()}
+		keys := [...]string{"type", "processId"}
+		keyValues := [...]string{data.Ipv4Redistributions[i].SourceProtocol.ValueString(), data.Ipv4Redistributions[i].ProcessId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Redistributions[i]
@@ -1718,8 +1826,8 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		(*parent).Ipv4Redistributions[i] = data
 	}
 	for i := 0; i < len(data.Ipv4RouteInjections); i++ {
-		keys := [...]string{"injectMap.routeMap.id", "existMap.routeMap.id"}
-		keyValues := [...]string{data.Ipv4RouteInjections[i].InjectRouteMapId.ValueString(), data.Ipv4RouteInjections[i].ExistRouteMapId.ValueString()}
+		keys := [...]string{"injectMap.id"}
+		keyValues := [...]string{data.Ipv4RouteInjections[i].InjectRouteMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4RouteInjections[i]
@@ -1753,15 +1861,20 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("injectMap.routeMap.id"); value.Exists() && !data.InjectRouteMapId.IsNull() {
+		if value := res.Get("injectMap.id"); value.Exists() && !data.InjectRouteMapId.IsNull() {
 			data.InjectRouteMapId = types.StringValue(value.String())
 		} else {
 			data.InjectRouteMapId = types.StringNull()
 		}
-		if value := res.Get("existMap.routeMap.id"); value.Exists() && !data.ExistRouteMapId.IsNull() {
+		if value := res.Get("existMap.id"); value.Exists() && !data.ExistRouteMapId.IsNull() {
 			data.ExistRouteMapId = types.StringValue(value.String())
 		} else {
 			data.ExistRouteMapId = types.StringNull()
+		}
+		if value := res.Get("copyAttributes"); value.Exists() && !data.InheritAttributes.IsNull() {
+			data.InheritAttributes = types.StringValue(value.String())
+		} else if data.InheritAttributes.ValueString() != "true" {
+			data.InheritAttributes = types.StringNull()
 		}
 		(*parent).Ipv4RouteInjections[i] = data
 	}

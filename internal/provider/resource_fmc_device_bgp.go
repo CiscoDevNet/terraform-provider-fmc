@@ -66,7 +66,7 @@ func (r *DeviceBGPResource) Metadata(ctx context.Context, req resource.MetadataR
 func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings (fmc_device_bgp_general_settings).").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -130,22 +130,22 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 			},
 			"ipv4_default_information_orginate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Generate default routes").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Generate default route").String,
 				Optional:            true,
 			},
-			"ipv4_auto_aummary": schema.BoolAttribute{
+			"ipv4_auto_summary": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Summarize subnet routes into network level routes").String,
 				Optional:            true,
 			},
-			"ipv4_bgp_supress_inactive": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Suppresing advertise inactive routes").String,
+			"ipv4_suppress_inactive_routes": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Suppressing advertisement of inactive routes").String,
 				Optional:            true,
 			},
 			"ipv4_synchronization": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Synchronize between BGP and IGP systems").String,
 				Optional:            true,
 			},
-			"ipv4_bgp_redistribute_internal": schema.BoolAttribute{
+			"ipv4_redistribute_ibgp_into_igp": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute IBGP into IGP. Use filtering to limit the number of prefixes that are redistributed.").String,
 				Optional:            true,
 			},
@@ -176,7 +176,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Default: int64default.StaticInt64(200),
 			},
-			"ipv4_forward_packets_over_multipath_ibgp": schema.Int64Attribute{
+			"ipv4_number_of_ibgp_paths": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Number of paths to use for IBGP").AddIntegerRangeDescription(1, 8).AddDefaultValueDescription("1").String,
 				Optional:            true,
 				Computed:            true,
@@ -185,7 +185,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 				Default: int64default.StaticInt64(1),
 			},
-			"ipv4_forward_packets_over_multipath_ebgp": schema.Int64Attribute{
+			"ipv4_number_of_ebgp_paths": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Number of paths to use for EBGP").AddIntegerRangeDescription(1, 8).AddDefaultValueDescription("1").String,
 				Optional:            true,
 				Computed:            true,
@@ -199,15 +199,15 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"neighbor_address": schema.StringAttribute{
+						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP address of the BGP neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_remote_as": schema.StringAttribute{
+						"remote_as": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("AS number of the BGP neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_bfd": schema.StringAttribute{
+						"bfd_fallover": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("BFD Fallover").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP", "AUTO_DETECT_HOP", "NONE").AddDefaultValueDescription("NONE").String,
 							Optional:            true,
 							Computed:            true,
@@ -220,34 +220,42 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							MarkdownDescription: helpers.NewAttributeDescription("Interface ID for the update source").String,
 							Optional:            true,
 						},
-						"enable_address_family": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable IPv4 address family").AddDefaultValueDescription("false").String,
+						"enable_address": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable communication with this BGP neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_shutdown": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Shutdown administratively").AddDefaultValueDescription("false").String,
+						"as_override": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.").String,
+							Optional:            true,
+						},
+						"graceful_restart": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable graceful restart for the neighbor.").String,
+							Optional:            true,
+						},
+						"shutdown_administratively": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Disable a neighbor or peer group").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_description": schema.StringAttribute{
+						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Description of the neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_filter_access_lists": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+						"filter_access_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Access List to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"access_list_id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Access List ID").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"update_direction": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Filter direction").AddStringEnumDescription("IN", "OUT").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("IN", "OUT"),
 										},
@@ -255,18 +263,18 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_route_map_lists": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+						"filter_route_maps": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Route Maps to apply a route map to incoming or outgoing routes.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"route_map_id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Route Map ID").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"update_direction": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Filter direction").AddStringEnumDescription("IN", "OUT").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("IN", "OUT"),
 										},
@@ -274,18 +282,18 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_prefix_lists": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+						"filter_prefix_lists": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Prefix List to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"prefix_list_id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Route Map ID").String,
-										Optional:            true,
+										MarkdownDescription: helpers.NewAttributeDescription("Prefix List ID").String,
+										Required:            true,
 									},
 									"update_direction": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Filter direction").AddStringEnumDescription("IN", "OUT").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("IN", "OUT"),
 										},
@@ -293,51 +301,55 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 								},
 							},
 						},
-						"neighbor_filter_as_path_lists": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+						"filter_as_paths": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing AS path filter to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
+									"as_path_id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("AS Path ID").String,
+										Required:            true,
+									},
+									"as_path_name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("AS Path Name").String,
+										Required:            true,
+									},
 									"update_direction": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Filter direction").AddStringEnumDescription("IN", "OUT").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("IN", "OUT"),
 										},
 									},
-									"as_path_id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("AS Path ID").String,
-										Optional:            true,
-									},
 								},
 							},
 						},
-						"neighbor_filter_max_prefix": schema.Int64Attribute{
+						"filter_maximum_prefixes": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Maximum number of prefixes allowed from the neighbor").AddIntegerRangeDescription(1, 2147483647).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 2147483647),
 							},
 						},
-						"neighbor_filter_warning_only": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Give only warning message when prefix limit exceeded or terminate peering when prefix limit is exceeded.").String,
+						"filter_warning_only": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Give only warning message when prefix limit exceeded. Can be set to `true` only. Use `neighbor_filter_threshold_value` to set mode to session termination.").String,
 							Optional:            true,
 						},
-						"neighbor_filter_threshold_value": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Threshold value for the maximum number of prefixes allowed from the neighbor").AddIntegerRangeDescription(1, 100).String,
+						"filter_threshold_value": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Threshold value for the maximum number of prefixes allowed from the neighbor (implies session termination).").AddIntegerRangeDescription(1, 100).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 100),
 							},
 						},
-						"neighbor_filter_restart_interval": schema.Int64Attribute{
+						"filter_restart_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to restart the maximum prefix limit in Minutes").AddIntegerRangeDescription(1, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 65535),
 							},
 						},
-						"neighbor_routes_advertisement_interval": schema.Int64Attribute{
+						"routes_advertisement_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to advertise routes in seconds").AddIntegerRangeDescription(0, 600).AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -346,78 +358,87 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(0),
 						},
-						"neighbor_routes_remove_private_as": schema.BoolAttribute{
+						"routes_remove_private_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Remove private AS numbers from outgoing routing updates").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_generate_default_route_map_id": schema.StringAttribute{
+						"routes_generate_default_route_map_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Generate default routes - Route Map").String,
 							Optional:            true,
 						},
-						"neighbor_routes_advertise_map_use_exist": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use Exist Map or Non-Exist Map").String,
+						"routes_advertise_maps": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Define conditionally advertised routes.").String,
 							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"advertise_map_id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Specified route maps are advertised when conditions of the exist map or the non-exist map are met.").String,
+										Required:            true,
+									},
+									"use_exist_map": schema.BoolAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Set mode to Exist Map (true) or Non-Exist Map (false).").String,
+										Required:            true,
+									},
+									"exist_nonexist_map_id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Specify exist / non-exist route map ID.").String,
+										Required:            true,
+									},
+								},
+							},
 						},
-						"neighbor_routes_advertise_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Specified route maps are advertised when the prefix exists in the Advertise Map and Exist Map.").String,
-							Optional:            true,
-						},
-						"neighbor_routes_advertise_exist_nonexist_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Specified route maps are advertised when the prefix exists only in the Advertise Map.").String,
-							Optional:            true,
-						},
-						"neighbor_keepalive_interval": schema.Int64Attribute{
+						"keepalive_interval": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to send keepalive messages in seconds").AddIntegerRangeDescription(0, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 65535),
 							},
 						},
-						"neighbor_hold_time": schema.Int64Attribute{
+						"hold_time": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Time interval to hold the neighbor in seconds").AddIntegerRangeDescription(3, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(3, 65535),
 							},
 						},
-						"neighbor_min_hold_time": schema.Int64Attribute{
+						"minimum_hold_time": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Minimum hold time in seconds").AddIntegerRangeDescription(3, 65535).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(3, 65535),
 							},
 						},
-						"neighbor_authentication_password": schema.StringAttribute{
+						"authentication_password": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Setting password enables authentication.").String,
 							Optional:            true,
+							Sensitive:           true,
 						},
-						"neighbor_send_community_attribute": schema.BoolAttribute{
+						"send_community_attribute": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Send Community attribute to this neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_nexthop_self": schema.BoolAttribute{
+						"next_hop_self": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use itself as next hop for this neighbor").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_disable_connection_verification": schema.BoolAttribute{
+						"disable_connection_verification": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Disable Connection Verification").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_tcp_mtu_path_discovery": schema.BoolAttribute{
+						"tcp_path_mtu_discovery": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use TCP path MTU discovery.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_max_hop_count": schema.Int64Attribute{
+						"max_hop_count": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Maximum number of hops to reach the neighbor").AddIntegerRangeDescription(1, 255).AddDefaultValueDescription("1").String,
 							Optional:            true,
 							Computed:            true,
@@ -426,13 +447,13 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(1),
 						},
-						"neighbor_tcp_transport_mode": schema.BoolAttribute{
+						"tcp_transport_mode": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("True set it to active, False to passive.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
 						},
-						"neighbor_weight": schema.Int64Attribute{
+						"weight": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Weight of the neighbor").AddIntegerRangeDescription(0, 65535).AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -441,7 +462,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: int64default.StaticInt64(0),
 						},
-						"neighbor_version": schema.StringAttribute{
+						"version": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set BPG version: 0 - default, 4 - IPv4").AddStringEnumDescription("0", "4").AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
@@ -450,19 +471,19 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							},
 							Default: stringdefault.StaticString("0"),
 						},
-						"neighbor_customized_local_as_number": schema.StringAttribute{
+						"customized_local_as_number": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Customize the AS number for the routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_no_prepend": schema.BoolAttribute{
+						"customized_no_prepend": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Do not prepend local AS number to routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_replace_as": schema.BoolAttribute{
+						"customized_replace_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Replace real AS number with local AS number in routes received from neighbor").String,
 							Optional:            true,
 						},
-						"neighbor_customized_accept_both_as": schema.BoolAttribute{
+						"customized_accept_both_as": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Accept either real AS number or local AS number in routes experienced from neighbor").String,
 							Optional:            true,
 						},
@@ -470,7 +491,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"ipv4_aggregate_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Generate aggregate address information for IPv4.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -483,92 +504,95 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							Optional:            true,
 						},
 						"network_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Network ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Network ID (desired network/host object)").String,
 							Optional:            true,
 						},
 						"advertise_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Advertise Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Advertise Route Map ID (select the routes to create AS_SET origin communities)").String,
 							Optional:            true,
 						},
 						"attribute_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Attribute Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Attribute Route Map ID (set the attribute of the aggregate route).").String,
 							Optional:            true,
 						},
 						"suppress_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Suppress Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Suppress Route Map ID (select the routes to be suppressed).").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
 			"ipv4_filterings": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Filter routes or networks received in incoming BGP updates").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"access_list_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Standard Access List ID").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.").String,
+							Required:            true,
 						},
-						"network_direction": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Filtering directrion").AddStringEnumDescription("incomingroutefilter", "outgoingroutefilter").String,
+						"direction": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Determine if the filter should be applied to inbound updates or outbound updates").AddStringEnumDescription("incomingroutefilter", "outgoingroutefilter").String,
 							Optional:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("incomingroutefilter", "outgoingroutefilter"),
 							},
 						},
 						"protocol": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Protocol").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Routing process for which you want to filter").AddStringEnumDescription("CONNECTED", "BGP", "OSPF", "RIP", "STATIC").String,
 							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("CONNECTED", "BGP", "OSPF", "RIP", "STATIC"),
+							},
 						},
-						"prorocol_process": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Process ID").String,
+						"process_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Process ID for the OSPF routing protocol.").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
 			"ipv4_networks": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Add networks that will be advertised by the BGP routing process").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"network_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Network object ID").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Network to be advertised by the BGP routing processes.").String,
+							Required:            true,
 						},
 						"route_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Route Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Route Map ID that should be examined to filter the networks to be advertised").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
 			"ipv4_redistributions": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Define the conditions for redistributing routes from another routing domain into BGP.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"source_protocol": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Protocol to redistribute").AddStringEnumDescription("RedistributeConnected", "RedistributeStatic", "RedistributeOSPF", "RedistributeEIGRP").String,
-							Optional:            true,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("RedistributeConnected", "RedistributeStatic", "RedistributeOSPF", "RedistributeEIGRP"),
 							},
 						},
 						"route_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Route Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Route Map ID to filter the networks to be redistributed").String,
 							Optional:            true,
 						},
 						"metric": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Metric value").AddIntegerRangeDescription(0, 4294967295).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Metric for the redistributed route.").AddIntegerRangeDescription(0, 4294967295).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 4294967295),
 							},
 						},
 						"process_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("process ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID").String,
 							Optional:            true,
 						},
 						"match_external1": schema.BoolAttribute{
@@ -595,17 +619,23 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"ipv4_route_injections": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Define routes to be conditionally injected into the BGP routing table.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"inject_route_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Inject Route Map ID").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Inject Route Map ID (prefixes to inject into the local BGP routing table)").String,
+							Required:            true,
 						},
 						"exist_route_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Exist Route Map ID").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Exist Route Map ID containing the prefixes that the BGP speaker will track").String,
+							Required:            true,
+						},
+						"inherit_attributes": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Injected route will inherit the attributes of the aggregate route").AddDefaultValueDescription("true").String,
 							Optional:            true,
+							Computed:            true,
+							Default:             stringdefault.StaticString("true"),
 						},
 					},
 				},

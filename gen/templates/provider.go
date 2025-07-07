@@ -96,7 +96,7 @@ func (p *FmcProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 				Sensitive:           true,
 			},
 			"url": schema.StringAttribute{
-				MarkdownDescription: "URL of the Cisco FMC or cdFMC instance. This can also be set as the FMC_URL environment variable.",
+				MarkdownDescription: "URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall) . This can also be set as the FMC_URL environment variable.",
 				Optional:            true,
 			},
 			"insecure": schema.BoolAttribute{
@@ -205,6 +205,21 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 		return
 	}
 
+	// Check if URL points to Security Cloud Control (SCC) base URI
+	scc, err := regexp.MatchString("^https://api\\.\\S+?\\.security\\.cisco\\.com/firewall$", url)
+	if err != nil {
+		resp.Diagnostics.AddError(
+			"Unable to parse URL",
+			fmt.Sprintf("Cannot parse the URL: %v", err),
+		)
+		return
+	}
+
+	// If it is a Security Cloud Control API router, append the path
+	if scc {
+		url += "/v1/cdfmc" 
+	}
+
 	var insecure bool
 	if config.Insecure.IsUnknown() {
 		// Cannot connect to client with an unknown value
@@ -245,7 +260,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	} else {
 		reqTimeoutStr = config.ReqTimeout.ValueString()
 	}
-	reqTimeout, err := time.ParseDuration(reqTimeoutStr)
+	reqTimeout, err = time.ParseDuration(reqTimeoutStr)
 	if err != nil {
 		resp.Diagnostics.AddError(
 			"Unable to create client",

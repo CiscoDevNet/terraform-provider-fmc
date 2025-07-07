@@ -131,10 +131,10 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				Optional:            true,
 			},
 			"performance_tier": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Performance tier for the managed device.").AddStringEnumDescription("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "Legacy").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Performance tier for the managed device.").AddStringEnumDescription("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "FTDv100", "Legacy").String,
 				Optional:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "Legacy"),
+					stringvalidator.OneOf("FTDv5", "FTDv10", "FTDv20", "FTDv30", "FTDv50", "FTDv100", "Legacy"),
 				},
 			},
 			"snort_engine": schema.StringAttribute{
