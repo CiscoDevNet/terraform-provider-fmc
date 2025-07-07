@@ -1,6 +1,7 @@
 ## 2.0.0-rc4 (Unreleased)
 
 - (Fix) Corrected URL encoding for multiple resources
+- (Fix) `fmc_device`: add missing FTDv100 performance tier
 - (Enhancement) Add support for Security Cloud Control (SCC) Firewall Management Base URI
 
 ## 2.0.0-rc3
