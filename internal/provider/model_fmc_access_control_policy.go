@@ -56,6 +56,7 @@ type AccessControlPolicy struct {
 	DefaultActionSnmpConfigId      types.String                    `tfsdk:"default_action_snmp_config_id"`
 	DefaultActionIntrusionPolicyId types.String                    `tfsdk:"default_action_intrusion_policy_id"`
 	Categories                     []AccessControlPolicyCategories `tfsdk:"categories"`
+	ManageRules                    types.Bool                      `tfsdk:"manage_rules"`
 	Rules                          []AccessControlPolicyRules      `tfsdk:"rules"`
 }
 
@@ -321,6 +322,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			}
 			body, _ = sjson.SetRaw(body, "dummy_categories.-1", itemBody)
 		}
+	}
+	if !data.ManageRules.IsNull() {
+		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.Rules) > 0 {
 		body, _ = sjson.Set(body, "dummy_rules", []interface{}{})
@@ -824,6 +828,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			(*parent).Categories = append((*parent).Categories, data)
 			return true
 		})
+	}
+	if value := res.Get("dummy_manage_rules"); value.Exists() {
+		data.ManageRules = types.BoolValue(value.Bool())
+	} else {
+		data.ManageRules = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
 		data.Rules = make([]AccessControlPolicyRules, 0)
@@ -1508,6 +1517,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.Name = types.StringNull()
 		}
 		(*parent).Categories[i] = data
+	}
+	if value := res.Get("dummy_manage_rules"); value.Exists() && !data.ManageRules.IsNull() {
+		data.ManageRules = types.BoolValue(value.Bool())
+	} else if data.ManageRules.ValueBool() != true {
+		data.ManageRules = types.BoolNull()
 	}
 	{
 		l := len(res.Get("dummy_rules").Array())

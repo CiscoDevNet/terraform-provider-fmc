@@ -183,6 +183,12 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 					},
 				},
 			},
+			"manage_rules": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Should this resource manage Access Rules.").AddDefaultValueDescription("true").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
+			},
 			"rules": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules.").String,
 				Optional:            true,
@@ -715,6 +721,27 @@ func (r *AccessControlPolicyResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
+var _ resource.ResourceWithValidateConfig = &AccessControlPolicyResource{}
+
+func (p *AccessControlPolicyResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data AccessControlPolicy
+
+	diags := req.Config.Get(ctx, &data)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If manage_rules is not set, it defaults to true.
+	if !data.ManageRules.IsNull() && !data.ManageRules.ValueBool() && len(data.Rules) > 0 {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("rules"),
+			"Conflicting Configuration",
+			"Rules cannot be defined when manage_rules is set to false",
+		)
+		return
+	}
+}
+
 func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan AccessControlPolicy
 
@@ -737,6 +764,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 	// Create object
 	body := planBody
 	body, _ = sjson.Delete(body, "dummy_categories")
+	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -801,31 +829,34 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
+	// Prepare json string to be filled in with categories and rules, that come from separate endpoints.
+	s := resGet.String()
+
+	// Get categories
 	resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true", reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
 		return
 	}
-
-	resRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/accessrules?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
-		return
-	}
-
-	s := resGet.String()
-
 	replaceCats := resCats.Get("items").String()
 	if replaceCats == "" {
 		replaceCats = "[]"
 	}
 	s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 
-	replaceRules := resRules.Get("items").String()
-	if replaceRules == "" {
-		replaceRules = "[]"
+	// Get rules, if we manage them
+	if state.ManageRules.ValueBool() {
+		resRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/accessrules?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
+			return
+		}
+		replaceRules := resRules.Get("items").String()
+		if replaceRules == "" {
+			replaceRules = "[]"
+		}
+		s, _ = sjson.SetRaw(s, "dummy_rules", replaceRules)
 	}
-	s, _ = sjson.SetRaw(s, "dummy_rules", replaceRules)
 
 	res := gjson.Parse(s)
 
@@ -834,6 +865,8 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
+	manageRules := state.ManageRules
+
 	// After `terraform import` we switch to a full read.
 	if imp {
 		state.fromBody(ctx, res)
@@ -841,6 +874,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		state.fromBodyPartial(ctx, res)
 	}
 	state.adjustFromBody(ctx, res)
+	state.ManageRules = manageRules
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
@@ -875,6 +909,7 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 	planBody := plan.toBody(ctx, state)
 	body := planBody
 	body, _ = sjson.Delete(body, "dummy_categories")
+	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
@@ -917,13 +952,15 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 
 	keptCats, keptRules := r.countKept(ctx, state, plan)
 
-	err := r.truncateRulesAt(ctx, &state, keptRules, reqMods...)
-	if err != nil {
-		diags.AddError("Client Error", err.Error())
-		return state, diags
+	if plan.ManageRules.ValueBool() {
+		err := r.truncateRulesAt(ctx, &state, keptRules, reqMods...)
+		if err != nil {
+			diags.AddError("Client Error", err.Error())
+			return state, diags
+		}
 	}
 
-	err = r.truncateCatsAt(ctx, &state, keptCats, reqMods...)
+	err := r.truncateCatsAt(ctx, &state, keptCats, reqMods...)
 	if err != nil {
 		diags.AddError("Client Error", err.Error())
 		return state, diags
@@ -943,10 +980,12 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 		return state, diags
 	}
 
-	err = r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
-	if err != nil {
-		diags.AddError("Client Error", err.Error())
-		return state, diags
+	if plan.ManageRules.ValueBool() {
+		err = r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
+		if err != nil {
+			diags.AddError("Client Error", err.Error())
+			return state, diags
+		}
 	}
 
 	return state, diags

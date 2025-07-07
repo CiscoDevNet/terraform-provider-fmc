@@ -15,6 +15,7 @@ resource "fmc_access_control_policy" "example" {
       name = "category_1"
     }
   ]
+  manage_rules = true
   rules = [
     {
       action = "ALLOW"

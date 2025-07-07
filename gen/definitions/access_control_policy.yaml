@@ -138,6 +138,12 @@ attributes:
         write_only: true # absent in GET
         exclude_example: true
         exclude_test: true
+  - model_name: dummy_manage_rules
+    tf_name: manage_rules
+    type: Bool
+    description: Should this resource manage Access Rules.
+    default_value: "true"
+    example: "true"
   - model_name: dummy_rules
     tf_name: rules
     type: List

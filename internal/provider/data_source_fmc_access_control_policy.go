@@ -149,6 +149,10 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 					},
 				},
 			},
+			"manage_rules": schema.BoolAttribute{
+				MarkdownDescription: "Should this resource manage Access Rules.",
+				Computed:            true,
+			},
 			"rules": schema.ListNestedAttribute{
 				MarkdownDescription: "Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules.",
 				Computed:            true,
@@ -740,6 +744,8 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 
 	config.fromBody(ctx, res)
 	config.adjustFromBody(ctx, res)
+
+	config.ManageRules = types.BoolValue(true)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
