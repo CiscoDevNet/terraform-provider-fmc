@@ -27,7 +27,7 @@ Please note that resources and data sources support depends on FMC version.
 
 The authentication method varies depending on the target type:
 - Self-Hosted FMC: Requires the username and password fields to be configured.
-- Cloud-Delivered FMC: Requires the token to be configured.
+- Cloud-Delivered FMC (cdFMC) / Security Cloud Control (SCC) Firewall Manager: Requires the token to be configured.
 
 The provider automatically determines the target device type based on the attributes provided.
 
@@ -51,5 +51,5 @@ provider "fmc" {
 - `req_timeout` (String) Timeout for a single HTTPS request made to REST API before it is retried. This can also be set as the FMC_REQTIMEOUT environment variable. A string like `"1s"` means one second. Defaults to `"5s"`.
 - `retries` (Number) Number of retries for REST API calls. This can also be set as the FMC_RETRIES environment variable. Defaults to `3`.
 - `token` (String, Sensitive) API token for cdFMC instance. This can also be set as the FMC_TOKEN environment variable.
-- `url` (String) URL of the Cisco FMC or cdFMC instance. This can also be set as the FMC_URL environment variable.
+- `url` (String) URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall) . This can also be set as the FMC_URL environment variable.
 - `username` (String) Username for the FMC instance. This can also be set as the FMC_USERNAME environment variable.
