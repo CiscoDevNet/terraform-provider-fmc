@@ -1,3 +1,4 @@
+# Manual resource
 ---
 name: Access Rules
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
@@ -65,26 +66,6 @@ attributes:
         description: Name of the Access Rule. This name needs to be uqique within the policy.
         mandatory: true
         example: rule_1
-      - model_name: category
-        data_path: [metadata]
-        tf_name: category_name
-        type: String
-        description: Name of the category that owns this rule (`name` from `categories` list).
-        exclude_example: true
-        test_value: '"category_1"'
-      - model_name: section
-        data_path: [metadata]
-        type: String
-        description: >-
-          The section of the policy to which the rule belongs. Can only be used when the `category_name` is null.
-          Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means
-          'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the
-          default section applies after child policy's own rules.
-        enum_values:
-          - default
-          - mandatory
-        exclude_example: true
-        exclude_test: true
       - model_name: enabled
         type: Bool
         description: Indicates whether the access rule is in effect (true) or not (false).

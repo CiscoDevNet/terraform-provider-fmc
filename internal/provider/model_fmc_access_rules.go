@@ -47,8 +47,6 @@ type AccessRulesItems struct {
 	Id                         types.String                                 `tfsdk:"id"`
 	Action                     types.String                                 `tfsdk:"action"`
 	Name                       types.String                                 `tfsdk:"name"`
-	CategoryName               types.String                                 `tfsdk:"category_name"`
-	Section                    types.String                                 `tfsdk:"section"`
 	Enabled                    types.Bool                                   `tfsdk:"enabled"`
 	SourceNetworkLiterals      []AccessRulesItemsSourceNetworkLiterals      `tfsdk:"source_network_literals"`
 	DestinationNetworkLiterals []AccessRulesItemsDestinationNetworkLiterals `tfsdk:"destination_network_literals"`
@@ -231,12 +229,6 @@ func (data AccessRules) toBody(ctx context.Context, state AccessRules) string {
 			}
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
-			}
-			if !item.CategoryName.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "metadata.category", item.CategoryName.ValueString())
-			}
-			if !item.Section.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "metadata.section", item.Section.ValueString())
 			}
 			if !item.Enabled.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enabled", item.Enabled.ValueBool())
@@ -662,16 +654,6 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				data.Name = types.StringValue(value.String())
 			} else {
 				data.Name = types.StringNull()
-			}
-			if value := res.Get("metadata.category"); value.Exists() {
-				data.CategoryName = types.StringValue(value.String())
-			} else {
-				data.CategoryName = types.StringNull()
-			}
-			if value := res.Get("metadata.section"); value.Exists() {
-				data.Section = types.StringValue(value.String())
-			} else {
-				data.Section = types.StringNull()
 			}
 			if value := res.Get("enabled"); value.Exists() {
 				data.Enabled = types.BoolValue(value.Bool())
@@ -1269,16 +1251,6 @@ func (data *AccessRules) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			data.Name = types.StringValue(value.String())
 		} else {
 			data.Name = types.StringNull()
-		}
-		if value := res.Get("metadata.category"); value.Exists() && !data.CategoryName.IsNull() {
-			data.CategoryName = types.StringValue(value.String())
-		} else {
-			data.CategoryName = types.StringNull()
-		}
-		if value := res.Get("metadata.section"); value.Exists() && !data.Section.IsNull() {
-			data.Section = types.StringValue(value.String())
-		} else {
-			data.Section = types.StringNull()
 		}
 		if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
 			data.Enabled = types.BoolValue(value.Bool())

@@ -326,6 +326,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource {
 	return []func() resource.Resource{
 		NewAccessControlPolicyResource,
+		NewAccessRuleResource,
 		NewAccessRulesResource,
 		NewApplicationFilterResource,
 		NewApplicationFiltersResource,

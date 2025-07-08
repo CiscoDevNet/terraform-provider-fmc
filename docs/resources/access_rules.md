@@ -231,7 +231,6 @@ Optional:
 - `application_filter_objects` (Attributes Set) Set of Application Filtering objects. (see [below for nested schema](#nestedatt--items--application_filter_objects))
 - `application_filters` (Attributes List) List of Application Filtering conditions. (see [below for nested schema](#nestedatt--items--application_filters))
 - `applications` (Attributes Set) Set of applications. (see [below for nested schema](#nestedatt--items--applications))
-- `category_name` (String) Name of the category that owns this rule (`name` from `categories` list).
 - `description` (String) Rule description.
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic. (see [below for nested schema](#nestedatt--items--destination_dynamic_objects))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--items--destination_network_literals))
@@ -251,8 +250,6 @@ Optional:
   - Default value: `false`
 - `log_files` (Boolean) Log file events.
   - Default value: `false`
-- `section` (String) The section of the policy to which the rule belongs. Can only be used when the `category_name` is null. Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means 'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the default section applies after child policy's own rules.
-  - Choices: `default`, `mandatory`
 - `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.
   - Default value: `false`
 - `send_syslog` (Boolean) Send alerts to syslog.

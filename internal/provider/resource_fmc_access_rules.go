@@ -129,17 +129,6 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							MarkdownDescription: helpers.NewAttributeDescription("Name of the Access Rule. This name needs to be uqique within the policy.").String,
 							Required:            true,
 						},
-						"category_name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the category that owns this rule (`name` from `categories` list).").String,
-							Optional:            true,
-						},
-						"section": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The section of the policy to which the rule belongs. Can only be used when the `category_name` is null. Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means 'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the default section applies after child policy's own rules.").AddStringEnumDescription("default", "mandatory").String,
-							Optional:            true,
-							Validators: []validator.String{
-								stringvalidator.OneOf("default", "mandatory"),
-							},
-						},
 						"enabled": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the access rule is in effect (true) or not (false).").AddDefaultValueDescription("true").String,
 							Optional:            true,

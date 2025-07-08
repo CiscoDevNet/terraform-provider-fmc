@@ -97,7 +97,6 @@ func testAccFmcAccessRulesConfig_all() string {
 	config += `	items = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
 	config += `		name = "rule_1"` + "\n"
-	config += `		category_name = "category_1"` + "\n"
 	config += `		enabled = true` + "\n"
 	config += `		source_network_literals = [{` + "\n"
 	config += `			value = "10.1.1.0/24"` + "\n"
