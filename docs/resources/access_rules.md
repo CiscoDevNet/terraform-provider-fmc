@@ -3,16 +3,18 @@
 page_title: "fmc_access_rules Resource - terraform-provider-fmc"
 subcategory: "Policies"
 description: |-
+  This is BETA resource and it's behaviour may change in the future releases.
   This resource manages Access Rules in Access Control Policies in bulks.
-  Order of the rules is guaranteed to be preserved within the resource, however it is NOT between multiple fmc_access_rule resources.
-  Any change to the rule will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.
+  Order of the rules is meant to be preserved within the resource, however NOT between multiple fmc_access_rule resources that create rules within a single category/section.
+  Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.
 ---
 
 # fmc_access_rules (Resource)
 
-This resource manages Access Rules in Access Control Policies in bulks.
- Order of the rules is guaranteed to be preserved within the resource, however it is NOT between multiple `fmc_access_rule` resources.
- Any change to the rule will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.
+This is BETA resource and it's behaviour may change in the future releases.
+ This resource manages Access Rules in Access Control Policies in bulks.
+ Order of the rules is meant to be preserved within the resource, however NOT between multiple `fmc_access_rule` resources that create rules within a single category/section.
+ Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.
 
 ## Example Usage
 

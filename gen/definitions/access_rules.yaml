@@ -3,9 +3,10 @@ name: Access Rules
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
 doc_category: Policies
 res_description:  >-
+ This is BETA resource and it's behaviour may change in the future releases.\n
  This resource manages Access Rules in Access Control Policies in bulks.\n
- Order of the rules is guaranteed to be preserved within the resource, however it is NOT between multiple `fmc_access_rule` resources.\n
- Any change to the rule will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n
+ Order of the rules is meant to be preserved within the resource, however NOT between multiple `fmc_access_rule` resources that create rules within a single category/section.\n
+ Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n
 no_data_source: true
 no_import: true
 attributes:

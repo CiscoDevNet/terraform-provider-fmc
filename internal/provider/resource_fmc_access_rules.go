@@ -68,7 +68,7 @@ func (r *AccessRulesResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Access Rules in Access Control Policies in bulks.\n Order of the rules is guaranteed to be preserved within the resource, however it is NOT between multiple `fmc_access_rule` resources.\n Any change to the rule will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This is BETA resource and it's behaviour may change in the future releases.\n This resource manages Access Rules in Access Control Policies in bulks.\n Order of the rules is meant to be preserved within the resource, however NOT between multiple `fmc_access_rule` resources that create rules within a single category/section.\n Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -699,19 +699,44 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 
 	// Create URL path for the request
-	// TODO: Split into multiple requests if there are too many rules
 	var ruleNames strings.Builder
-	for _, item := range state.Items {
-		ruleNames.WriteString(item.Name.ValueString() + ",")
+	var bulks []string
+	var resAccessRules string = ""
+	for i := 0; i < len(state.Items); i++ {
+		if ruleNames.Len() > 0 {
+			ruleNames.WriteString(",")
+		}
+		ruleNames.WriteString(url.QueryEscape(state.Items[i].Name.ValueString()))
+		if ruleNames.Len() >= maxUrlParamLength || (i+1)%1000 == 0 {
+			bulks = append(bulks, ruleNames.String())
+			ruleNames.Reset()
+		}
 	}
-	urlPath := state.getPath() + "?expanded=true&filter=name:" + url.QueryEscape(ruleNames.String())
+	if ruleNames.Len() > 0 {
+		bulks = append(bulks, ruleNames.String())
+	}
 
-	// Read Access Rules
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
-	resAccessRules, err := r.client.Get(urlPath, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resAccessRules.String()))
-		return
+	for _, bulk := range bulks {
+		urlPath := state.getPath() + "?expanded=true&limit=1000&filter=name:" + bulk
+
+		// Read Access Rules
+		resTemp, err := r.client.Get(urlPath, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resAccessRules))
+			return
+		}
+		if resAccessRules == "" {
+			resAccessRules = resTemp.String()
+		} else {
+			items := gjson.Get(resTemp.String(), "items")
+			if !items.Exists() {
+				continue
+			}
+			if resItems := items.String()[1 : len(items.String())-1]; resItems != "" {
+				resAccessRules, _ = sjson.SetRaw(resAccessRules, "items.-1", resItems)
+			}
+		}
 	}
 
 	var tmp string
@@ -724,17 +749,43 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 	})
 
 	if !state.CategoryName.IsUnknown() && state.CategoryName.ValueString() != "" {
-		// TODO: Check if all categories are the same
-		res := gjson.Get(resAccessRules.String(), "items.#.metadata.category")
-		tmp, _ = sjson.Set(tmp, "category", res.Array()[0].String())
+		var category string
+		// Get the categories from the response
+		res := gjson.Get(resAccessRules, "items.#.metadata.category")
+		// Check if all categories are the same
+		unique := make(map[string]struct{})
+		for _, item := range res.Array() {
+			unique[item.String()] = struct{}{}
+		}
+		if len(unique) > 1 {
+			// If there are multiple categories, set a warning that would trigger resource recreation
+			category = "[WARN] Inconsistent categories detected"
+		} else {
+			category = res.Array()[0].String()
+		}
+		// Assign the category to the temporary JSON string
+		tmp, _ = sjson.Set(tmp, "category", category)
 	} else if !state.Section.IsUnknown() && state.Section.ValueString() != "" {
-		// TODO: Check if all sections are the same
-		res := gjson.Get(resAccessRules.String(), "items.#.metadata.section|@case:lower")
-		tmp, _ = sjson.Set(tmp, "section", res.Array()[0].String())
+		var section string
+		// Get all sections from the response
+		res := gjson.Get(resAccessRules, "items.#.metadata.section|@case:lower")
+		// Check if all sections are the same
+		unique := make(map[string]struct{})
+		for _, item := range res.Array() {
+			unique[item.String()] = struct{}{}
+		}
+		if len(unique) > 1 {
+			// If there are multiple sections, set a warning that would trigger resource recreation
+			section = "[WARN] Inconsistent sections detected"
+		} else {
+			section = res.Array()[0].String()
+		}
+		// Assign the section to the temporary JSON string
+		tmp, _ = sjson.Set(tmp, "section", section)
 	}
 
 	// Merge computed category/section into the response
-	tmp, _ = sjson.SetRaw(tmp, "items", gjson.Get(resAccessRules.String(), "items").String())
+	tmp, _ = sjson.SetRaw(tmp, "items", gjson.Get(resAccessRules, "items").String())
 	res := gjson.Parse(tmp)
 
 	tflog.Debug(ctx, fmt.Sprintf("res: %s", res.String()))
@@ -831,29 +882,50 @@ func (r *AccessRulesResource) Delete(ctx context.Context, req resource.DeleteReq
 // End of section. //template:end import
 
 func (r *AccessRulesResource) createRulesAt(ctx context.Context, plan AccessRules, state *AccessRules, reqMods ...func(*fmc.Req)) error {
+	var idx = 0
+	bulk := plan
+	bulk.Items = make([]AccessRulesItems, 0, bulkSizeCreate)
+	state.Items = state.Items[:0] // reset state items
 
-	// Create object
-	body := plan.toBody(ctx, AccessRules{})
-	body = gjson.Get(body, "items").String()
+	// Mutex ensures that all rules, even if split into multiple bulks, are not mixed with
+	// other rules being created at the same time.
+	accessRulesCreateMu.Lock()
+	defer accessRulesCreateMu.Unlock()
 
-	urlParams := "?bulk=true"
+	// iterate over all items
+	for _, v := range plan.Items {
+		// count loops
+		idx++
 
-	if c := plan.CategoryName.ValueString(); c != "" {
-		urlParams += "&category=" + url.QueryEscape(c)
-	} else if s := plan.Section.ValueString(); s != "" {
-		urlParams += "&section=" + url.QueryEscape(s)
+		// add object to current bulk
+		bulk.Items = append(bulk.Items, v)
+
+		// If bulk size was reached or all entries have been processed
+		if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
+
+			// Create object
+			body := bulk.toBody(ctx, AccessRules{})
+			body = gjson.Get(body, "items").String()
+
+			// Execute request
+			urlParams := "?bulk=true"
+			if c := plan.CategoryName.ValueString(); c != "" {
+				urlParams += "&category=" + url.QueryEscape(c)
+			} else if s := plan.Section.ValueString(); s != "" {
+				urlParams += "&section=" + url.QueryEscape(s)
+			}
+
+			res, err := r.client.Post(plan.getPath()+urlParams, body, reqMods...)
+			if err != nil {
+				return err
+			}
+
+			// Read result and save it to state
+			bulk.fromBodyUnknowns(ctx, res)
+			state.Items = append(state.Items, bulk.Items...)
+			bulk.Items = bulk.Items[:0] // reset bulk items
+		}
 	}
-
-	// TODO: Split into multiple requests if too long
-	res, err := r.client.Post(plan.getPath()+urlParams, body, reqMods...)
-	if err != nil {
-		return err
-	}
-
-	plan.fromBodyUnknowns(ctx, res)
-
-	state = &plan
-
 	return nil
 }
 
@@ -865,6 +937,7 @@ func (r *AccessRulesResource) truncateRulesAt(ctx context.Context, state *Access
 
 	for i := kept; i < len(state.Items); i++ {
 		if b.Len() != 0 {
+			// URL encoded comma
 			b.WriteString(",")
 		}
 		b.WriteString(state.Items[i].Id.ValueString())
@@ -887,9 +960,9 @@ func (r *AccessRulesResource) truncateRulesAt(ctx context.Context, state *Access
 	}()
 
 	for i, bulk := range bulks {
-		res, err := r.client.Delete(state.getPath()+"?bulk=true&filter=ids:"+url.QueryEscape(bulk), reqMods...)
+		res, err := r.client.Delete(state.getPath()+"?bulk=true&filter=ids:"+bulk, reqMods...)
 		if err != nil {
-			return fmt.Errorf("Failed to bulk-delete rules, got error: %v, %s", err, res.String())
+			return fmt.Errorf("failed to bulk-delete rules, got error: %v, %s", err, res.String())
 		}
 
 		state.Items = slices.Delete(state.Items, kept, kept+counts[i])
