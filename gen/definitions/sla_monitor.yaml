@@ -1,0 +1,96 @@
+---
+name: SLA Monitor
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/slamonitors
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the SLA monitor object.
+    example: my_sla_monitor
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SLAMonitor'.
+    computed: true
+  - model_name: type
+    type: String
+    value: SLAMonitor
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My SLA Monitor object
+  - model_name: slaId
+    tf_name: sla_monitor_id
+    type: Int64
+    mandatory: true
+    description: SLA Monitor ID.
+    example: 10
+    min_int: 1
+    max_int: 2147483647
+  - model_name: timeout
+    type: Int64
+    description: Timeout in milliseconds.
+    example: 5000
+    default_value: 5000
+    min_int: 0
+    max_int: 604800000
+  - model_name: frequency
+    type: Int64
+    description: Frequency in seconds.
+    example: 60
+    default_value: 60
+    min_int: 1
+    max_int: 604800
+  - model_name: threshold
+    type: Int64
+    description: Threshold in milliseconds.
+    example: 1000
+    min_int: 0
+    max_int: 2147483647
+  - model_name: dataSize
+    type: Int64
+    description: Data size in bytes.
+    example: 28
+    default_value: 28
+    min_int: 0
+    max_int: 16384
+  - model_name: tos
+    type: Int64
+    description: Type of Service (ToS) value.
+    example: 20
+    default_value: 0
+    min_int: 0
+    max_int: 255
+  - model_name: noOfPackets
+    tf_name: number_of_packets
+    type: Int64
+    description: Number of packets that are sent.
+    example: 1
+    default_value: 1
+    min_int: 1
+    max_int: 100
+  - model_name: monitorAddress
+    tf_name: monitor_address
+    type: String
+    description: IP address to monitor.
+    example: 10.10.10.1
+    mandatory: true
+  - model_name: interfaceObjects
+    tf_name: selected_interfaces
+    type: List
+    mandatory: true
+    description: Security zones or interface groups that contain the interfaces through which the device communicates with the management station.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the security zone or interface object.
+        example: 12345678-1234-1234-1234-123456789012
+        test_value: fmc_interface_group.test.id
+        mandatory: true
+
+test_prerequisites: |-
+  resource "fmc_interface_group" "test" {
+    name           = "sla_monitor_interface_group"
+    interface_mode = "ROUTED"
+  }
