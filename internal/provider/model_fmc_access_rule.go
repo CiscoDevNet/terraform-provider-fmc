@@ -2595,15 +2595,11 @@ func (data *AccessRule) fromBodyUnknowns(ctx context.Context, res gjson.Result) 
 
 // End of section. //template:end toBodyPutDelete
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
 func (data AccessRule) adjustBody(ctx context.Context, req string) string {
 	// metadata includes category_name and section
 	req, _ = sjson.Delete(req, "metadata")
 	return req
 }
-
-// End of section. //template:end adjustBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
 
