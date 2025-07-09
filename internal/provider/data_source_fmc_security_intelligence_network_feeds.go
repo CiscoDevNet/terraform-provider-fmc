@@ -35,26 +35,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &SecurityIntelligenceDNSListsDataSource{}
-	_ datasource.DataSourceWithConfigure = &SecurityIntelligenceDNSListsDataSource{}
+	_ datasource.DataSource              = &SecurityIntelligenceNetworkFeedsDataSource{}
+	_ datasource.DataSourceWithConfigure = &SecurityIntelligenceNetworkFeedsDataSource{}
 )
 
-func NewSecurityIntelligenceDNSListsDataSource() datasource.DataSource {
-	return &SecurityIntelligenceDNSListsDataSource{}
+func NewSecurityIntelligenceNetworkFeedsDataSource() datasource.DataSource {
+	return &SecurityIntelligenceNetworkFeedsDataSource{}
 }
 
-type SecurityIntelligenceDNSListsDataSource struct {
+type SecurityIntelligenceNetworkFeedsDataSource struct {
 	client *fmc.Client
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_security_intelligence_dns_lists"
+func (d *SecurityIntelligenceNetworkFeedsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_security_intelligence_network_feeds"
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *SecurityIntelligenceNetworkFeedsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Security Intelligence DNS Lists.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Security Intelligence Network Feeds.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -66,17 +66,29 @@ func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of Security Intelligence DNS Lists. The key of the map is the name of the individual Security Intelligence DNS List.",
+				MarkdownDescription: "Map of Security Intelligence Network Feeds. The key of the map is the name of the individual Security Intelligence Network Feed.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Security Intelligence DNS List.",
+							MarkdownDescription: "Id of the managed Security Intelligence Network Feed.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'SIDNSList'.",
+							MarkdownDescription: "Type of the object; this value is always 'SINetworkFeed'.",
+							Computed:            true,
+						},
+						"feed_url": schema.StringAttribute{
+							MarkdownDescription: "Security Intelligence feed location.",
+							Computed:            true,
+						},
+						"checksum_url": schema.StringAttribute{
+							MarkdownDescription: "Checksum (md5) URL of the feed file on remote server.",
+							Computed:            true,
+						},
+						"update_frequency": schema.Int64Attribute{
+							MarkdownDescription: "Update frequency (in minutes) of the feed.",
 							Computed:            true,
 						},
 					},
@@ -86,7 +98,7 @@ func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req
 	}
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *SecurityIntelligenceNetworkFeedsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -98,8 +110,8 @@ func (d *SecurityIntelligenceDNSListsDataSource) Configure(_ context.Context, re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *SecurityIntelligenceDNSListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config SecurityIntelligenceDNSLists
+func (d *SecurityIntelligenceNetworkFeedsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config SecurityIntelligenceNetworkFeeds
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

@@ -1,36 +1,39 @@
 ---
-name: Security Intelligence DNS Feeds
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sidnsfeeds
-no_resource: true
-no_import: true
-is_bulk: true
+name: Security Intelligence Network Feeds
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworkfeeds
 doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
 attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of Security Intelligence DNS Feeds. The key of the map is the name of the individual Security Intelligence DNS Feed.
-    map_key_example: Cisco-DNS-and-URL-Intelligence-Feed
+      Map of Security Intelligence Network Feeds. The key of the map is the name of the individual Security Intelligence Network Feed.
+    map_key_example: Global-Block-List
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Security Intelligence DNS Feed.
+        description: Id of the managed Security Intelligence Network Feed.
         exclude_example: true
         exclude_test: true
       - model_name: type
         type: String
-        description: Type of the object; this value is always 'SIDNSFeed'.
+        description: Type of the object; this value is always 'SINetworkFeed'.
         computed: true
       - model_name: feedURL
         tf_name: feed_url
         type: String
         description: Security Intelligence feed location.
+        example: https://example.com/path/to/feed.txt
       - model_name: checksumURL
         tf_name: checksum_url
         type: String
         description: Checksum (md5) URL of the feed file on remote server.
+        example: https://example.com/path/to/checksum.md5
       - model_name: updateFrequency
         type: Int64
         description: Update frequency (in minutes) of the feed.
+        example: 120

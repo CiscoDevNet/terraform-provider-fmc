@@ -20,10 +20,8 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"context"
-	"fmt"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
-	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
 )
 
@@ -31,18 +29,11 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type SecurityIntelligenceDNSFeeds struct {
-	Id     types.String                                 `tfsdk:"id"`
-	Domain types.String                                 `tfsdk:"domain"`
-	Items  map[string]SecurityIntelligenceDNSFeedsItems `tfsdk:"items"`
-}
-
-type SecurityIntelligenceDNSFeedsItems struct {
-	Id              types.String `tfsdk:"id"`
-	Type            types.String `tfsdk:"type"`
-	FeedUrl         types.String `tfsdk:"feed_url"`
-	ChecksumUrl     types.String `tfsdk:"checksum_url"`
-	UpdateFrequency types.Int64  `tfsdk:"update_frequency"`
+type SecurityIntelligenceNetworkList struct {
+	Id     types.String `tfsdk:"id"`
+	Domain types.String `tfsdk:"domain"`
+	Name   types.String `tfsdk:"name"`
+	Type   types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -53,8 +44,8 @@ type SecurityIntelligenceDNSFeedsItems struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data SecurityIntelligenceDNSFeeds) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sidnsfeeds"
+func (data SecurityIntelligenceNetworkList) getPath() string {
+	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworklists"
 }
 
 // End of section. //template:end getPath
@@ -65,53 +56,16 @@ func (data SecurityIntelligenceDNSFeeds) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *SecurityIntelligenceDNSFeeds) fromBody(ctx context.Context, res gjson.Result) {
-	for k := range data.Items {
-		parent := &data
-		data := (*parent).Items[k]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.Get("items").ForEach(
-			func(_, v gjson.Result) bool {
-				if v.Get("name").String() == k {
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
-			delete((*parent).Items, k)
-			continue
-		}
-		if value := res.Get("id"); value.Exists() {
-			data.Id = types.StringValue(value.String())
-		} else {
-			data.Id = types.StringNull()
-		}
-		if value := res.Get("type"); value.Exists() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
-		}
-		if value := res.Get("feedURL"); value.Exists() {
-			data.FeedUrl = types.StringValue(value.String())
-		} else {
-			data.FeedUrl = types.StringNull()
-		}
-		if value := res.Get("checksumURL"); value.Exists() {
-			data.ChecksumUrl = types.StringValue(value.String())
-		} else {
-			data.ChecksumUrl = types.StringNull()
-		}
-		if value := res.Get("updateFrequency"); value.Exists() {
-			data.UpdateFrequency = types.Int64Value(value.Int())
-		} else {
-			data.UpdateFrequency = types.Int64Null()
-		}
-		(*parent).Items[k] = data
+func (data *SecurityIntelligenceNetworkList) fromBody(ctx context.Context, res gjson.Result) {
+	if value := res.Get("name"); value.Exists() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 }
 

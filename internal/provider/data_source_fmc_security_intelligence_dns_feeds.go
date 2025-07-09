@@ -79,12 +79,12 @@ func (d *SecurityIntelligenceDNSFeedsDataSource) Schema(ctx context.Context, req
 							MarkdownDescription: "Type of the object; this value is always 'SIDNSFeed'.",
 							Computed:            true,
 						},
-						"feed_u_r_l": schema.StringAttribute{
-							MarkdownDescription: "Feed URL",
+						"feed_url": schema.StringAttribute{
+							MarkdownDescription: "Security Intelligence feed location.",
 							Computed:            true,
 						},
-						"checksum_u_r_l": schema.StringAttribute{
-							MarkdownDescription: "Checksum URL",
+						"checksum_url": schema.StringAttribute{
+							MarkdownDescription: "Checksum (md5) URL of the feed file on remote server.",
 							Computed:            true,
 						},
 						"update_frequency": schema.Int64Attribute{

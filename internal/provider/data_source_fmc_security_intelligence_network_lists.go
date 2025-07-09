@@ -35,26 +35,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &SecurityIntelligenceDNSListsDataSource{}
-	_ datasource.DataSourceWithConfigure = &SecurityIntelligenceDNSListsDataSource{}
+	_ datasource.DataSource              = &SecurityIntelligenceNetworkListsDataSource{}
+	_ datasource.DataSourceWithConfigure = &SecurityIntelligenceNetworkListsDataSource{}
 )
 
-func NewSecurityIntelligenceDNSListsDataSource() datasource.DataSource {
-	return &SecurityIntelligenceDNSListsDataSource{}
+func NewSecurityIntelligenceNetworkListsDataSource() datasource.DataSource {
+	return &SecurityIntelligenceNetworkListsDataSource{}
 }
 
-type SecurityIntelligenceDNSListsDataSource struct {
+type SecurityIntelligenceNetworkListsDataSource struct {
 	client *fmc.Client
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_security_intelligence_dns_lists"
+func (d *SecurityIntelligenceNetworkListsDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_security_intelligence_network_lists"
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *SecurityIntelligenceNetworkListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Security Intelligence DNS Lists.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Security Intelligence Network Lists.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -66,17 +66,17 @@ func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of Security Intelligence DNS Lists. The key of the map is the name of the individual Security Intelligence DNS List.",
+				MarkdownDescription: "Map of Security Intelligence Network Lists. The key of the map is the name of the individual Security Intelligence Network List.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Security Intelligence DNS List.",
+							MarkdownDescription: "Id of the managed Security Intelligence Network List.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'SIDNSList'.",
+							MarkdownDescription: "Type of the object; this value is always 'SINetworkList'.",
 							Computed:            true,
 						},
 					},
@@ -86,7 +86,7 @@ func (d *SecurityIntelligenceDNSListsDataSource) Schema(ctx context.Context, req
 	}
 }
 
-func (d *SecurityIntelligenceDNSListsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *SecurityIntelligenceNetworkListsDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -98,8 +98,8 @@ func (d *SecurityIntelligenceDNSListsDataSource) Configure(_ context.Context, re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *SecurityIntelligenceDNSListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config SecurityIntelligenceDNSLists
+func (d *SecurityIntelligenceNetworkListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config SecurityIntelligenceNetworkLists
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

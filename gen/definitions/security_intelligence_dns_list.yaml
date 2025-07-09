@@ -15,6 +15,3 @@ attributes:
     type: String
     description: Type of the object; this value is always 'SIDNSList'.
     computed: true
-  - model_name: fileName
-    type: String
-    description: Name of the file containing the DNS list.

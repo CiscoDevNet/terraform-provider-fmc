@@ -30,11 +30,10 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type SecurityIntelligenceDNSList struct {
-	Id       types.String `tfsdk:"id"`
-	Domain   types.String `tfsdk:"domain"`
-	Name     types.String `tfsdk:"name"`
-	Type     types.String `tfsdk:"type"`
-	FileName types.String `tfsdk:"file_name"`
+	Id     types.String `tfsdk:"id"`
+	Domain types.String `tfsdk:"domain"`
+	Name   types.String `tfsdk:"name"`
+	Type   types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -67,11 +66,6 @@ func (data *SecurityIntelligenceDNSList) fromBody(ctx context.Context, res gjson
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
-	}
-	if value := res.Get("fileName"); value.Exists() {
-		data.FileName = types.StringValue(value.String())
-	} else {
-		data.FileName = types.StringNull()
 	}
 }
 

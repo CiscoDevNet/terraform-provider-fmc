@@ -16,13 +16,10 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed ASecurity Intelligence DNS List.
+        description: Id of the managed Security Intelligence DNS List.
         exclude_example: true
         exclude_test: true
       - model_name: type
         type: String
         description: Type of the object; this value is always 'SIDNSList'.
         computed: true
-      - model_name: fileName
-        type: String
-        description: Name of the file containing the DNS list.

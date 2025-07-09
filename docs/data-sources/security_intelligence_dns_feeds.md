@@ -38,8 +38,8 @@ data "fmc_security_intelligence_dns_feeds" "example" {
 
 Read-Only:
 
-- `checksum_u_r_l` (String) Checksum URL
-- `feed_u_r_l` (String) Feed URL
+- `checksum_url` (String) Checksum (md5) URL of the feed file on remote server.
+- `feed_url` (String) Security Intelligence feed location.
 - `id` (String) Id of the managed Security Intelligence DNS Feed.
 - `type` (String) Type of the object; this value is always 'SIDNSFeed'.
 - `update_frequency` (Number) Update frequency (in minutes) of the feed.

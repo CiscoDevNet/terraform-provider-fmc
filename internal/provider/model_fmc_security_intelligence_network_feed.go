@@ -23,13 +23,14 @@ import (
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
+	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type SecurityIntelligenceDNSFeed struct {
+type SecurityIntelligenceNetworkFeed struct {
 	Id              types.String `tfsdk:"id"`
 	Domain          types.String `tfsdk:"domain"`
 	Name            types.String `tfsdk:"name"`
@@ -47,19 +48,39 @@ type SecurityIntelligenceDNSFeed struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data SecurityIntelligenceDNSFeed) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sidnsfeeds"
+func (data SecurityIntelligenceNetworkFeed) getPath() string {
+	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworkfeeds"
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
+func (data SecurityIntelligenceNetworkFeed) toBody(ctx context.Context, state SecurityIntelligenceNetworkFeed) string {
+	body := ""
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if !data.Name.IsNull() {
+		body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	}
+	if !data.FeedUrl.IsNull() {
+		body, _ = sjson.Set(body, "feedURL", data.FeedUrl.ValueString())
+	}
+	if !data.ChecksumUrl.IsNull() {
+		body, _ = sjson.Set(body, "checksumURL", data.ChecksumUrl.ValueString())
+	}
+	if !data.UpdateFrequency.IsNull() {
+		body, _ = sjson.Set(body, "updateFrequency", data.UpdateFrequency.ValueInt64())
+	}
+	return body
+}
+
 // End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *SecurityIntelligenceDNSFeed) fromBody(ctx context.Context, res gjson.Result) {
+func (data *SecurityIntelligenceNetworkFeed) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -91,9 +112,53 @@ func (data *SecurityIntelligenceDNSFeed) fromBody(ctx context.Context, res gjson
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
 
+// fromBodyPartial reads values from a gjson.Result into a tfstate model. It ignores null attributes in order to
+// uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
+// easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
+// "managed" elements, instead of all elements.
+func (data *SecurityIntelligenceNetworkFeed) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+		data.Name = types.StringValue(value.String())
+	} else {
+		data.Name = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
+	if value := res.Get("feedURL"); value.Exists() && !data.FeedUrl.IsNull() {
+		data.FeedUrl = types.StringValue(value.String())
+	} else {
+		data.FeedUrl = types.StringNull()
+	}
+	if value := res.Get("checksumURL"); value.Exists() && !data.ChecksumUrl.IsNull() {
+		data.ChecksumUrl = types.StringValue(value.String())
+	} else {
+		data.ChecksumUrl = types.StringNull()
+	}
+	if value := res.Get("updateFrequency"); value.Exists() && !data.UpdateFrequency.IsNull() {
+		data.UpdateFrequency = types.Int64Value(value.Int())
+	} else {
+		data.UpdateFrequency = types.Int64Null()
+	}
+}
+
 // End of section. //template:end fromBodyPartial
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyUnknowns
+
+// fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
+// Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
+func (data *SecurityIntelligenceNetworkFeed) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	if data.Type.IsUnknown() {
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+	}
+}
 
 // End of section. //template:end fromBodyUnknowns
 

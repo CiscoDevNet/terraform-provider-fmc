@@ -38,6 +38,5 @@ data "fmc_security_intelligence_dns_lists" "example" {
 
 Read-Only:
 
-- `file_name` (String) Name of the file containing the DNS list.
-- `id` (String) Id of the managed ASecurity Intelligence DNS List.
+- `id` (String) Id of the managed Security Intelligence DNS List.
 - `type` (String) Type of the object; this value is always 'SIDNSList'.

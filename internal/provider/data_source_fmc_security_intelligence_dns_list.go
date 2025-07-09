@@ -80,10 +80,6 @@ func (d *SecurityIntelligenceDNSListDataSource) Schema(ctx context.Context, req 
 				MarkdownDescription: "Type of the object; this value is always 'SIDNSList'.",
 				Computed:            true,
 			},
-			"file_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the file containing the DNS list.",
-				Computed:            true,
-			},
 		},
 	}
 }

@@ -31,18 +31,15 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type SecurityIntelligenceDNSFeeds struct {
-	Id     types.String                                 `tfsdk:"id"`
-	Domain types.String                                 `tfsdk:"domain"`
-	Items  map[string]SecurityIntelligenceDNSFeedsItems `tfsdk:"items"`
+type SecurityIntelligenceNetworkLists struct {
+	Id     types.String                                     `tfsdk:"id"`
+	Domain types.String                                     `tfsdk:"domain"`
+	Items  map[string]SecurityIntelligenceNetworkListsItems `tfsdk:"items"`
 }
 
-type SecurityIntelligenceDNSFeedsItems struct {
-	Id              types.String `tfsdk:"id"`
-	Type            types.String `tfsdk:"type"`
-	FeedUrl         types.String `tfsdk:"feed_url"`
-	ChecksumUrl     types.String `tfsdk:"checksum_url"`
-	UpdateFrequency types.Int64  `tfsdk:"update_frequency"`
+type SecurityIntelligenceNetworkListsItems struct {
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -53,8 +50,8 @@ type SecurityIntelligenceDNSFeedsItems struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data SecurityIntelligenceDNSFeeds) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sidnsfeeds"
+func (data SecurityIntelligenceNetworkLists) getPath() string {
+	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworklists"
 }
 
 // End of section. //template:end getPath
@@ -65,7 +62,7 @@ func (data SecurityIntelligenceDNSFeeds) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *SecurityIntelligenceDNSFeeds) fromBody(ctx context.Context, res gjson.Result) {
+func (data *SecurityIntelligenceNetworkLists) fromBody(ctx context.Context, res gjson.Result) {
 	for k := range data.Items {
 		parent := &data
 		data := (*parent).Items[k]
@@ -95,21 +92,6 @@ func (data *SecurityIntelligenceDNSFeeds) fromBody(ctx context.Context, res gjso
 			data.Type = types.StringValue(value.String())
 		} else {
 			data.Type = types.StringNull()
-		}
-		if value := res.Get("feedURL"); value.Exists() {
-			data.FeedUrl = types.StringValue(value.String())
-		} else {
-			data.FeedUrl = types.StringNull()
-		}
-		if value := res.Get("checksumURL"); value.Exists() {
-			data.ChecksumUrl = types.StringValue(value.String())
-		} else {
-			data.ChecksumUrl = types.StringNull()
-		}
-		if value := res.Get("updateFrequency"); value.Exists() {
-			data.UpdateFrequency = types.Int64Value(value.Int())
-		} else {
-			data.UpdateFrequency = types.Int64Null()
 		}
 		(*parent).Items[k] = data
 	}

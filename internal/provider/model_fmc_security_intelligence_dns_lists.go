@@ -38,9 +38,8 @@ type SecurityIntelligenceDNSLists struct {
 }
 
 type SecurityIntelligenceDNSListsItems struct {
-	Id       types.String `tfsdk:"id"`
-	Type     types.String `tfsdk:"type"`
-	FileName types.String `tfsdk:"file_name"`
+	Id   types.String `tfsdk:"id"`
+	Type types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -93,11 +92,6 @@ func (data *SecurityIntelligenceDNSLists) fromBody(ctx context.Context, res gjso
 			data.Type = types.StringValue(value.String())
 		} else {
 			data.Type = types.StringNull()
-		}
-		if value := res.Get("fileName"); value.Exists() {
-			data.FileName = types.StringValue(value.String())
-		} else {
-			data.FileName = types.StringNull()
 		}
 		(*parent).Items[k] = data
 	}
