@@ -501,13 +501,14 @@ func (r *VPNS2SEndpointsResource) Delete(ctx context.Context, req resource.Delet
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]
+	// Import looks for string in the following format: <domain_name>,<ref_id>,[<object1_name>,<object2_name>,...]
 	// <domain_name> is optional
+	// <ref_id> for objects that have `reference` attributes
 	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config VPNS2SEndpoints
 
 	// Compile pattern for import command parsing
-	var inputPattern = regexp.MustCompile(`^(?P<domain>[^\s,]*),*\[(?P<names>.*?),*\]`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<vpn_s2s_id>[^\s,]+),\[(?P<names>.*?)\]$`)
 
 	// Parse parameter
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -529,6 +530,9 @@ func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.
 	for _, v := range names {
 		config.Items[v] = VPNS2SEndpointsItems{}
 	}
+
+	// Fill reference attributes
+	config.VpnS2sId = types.StringValue(match[inputPattern.SubexpIndex("vpn_s2s_id")])
 
 	// Generate new ID
 	config.Id = types.StringValue(uuid.New().String())
