@@ -5,7 +5,7 @@ subcategory: "Objects"
 description: |-
   This resource manages Security Intelligence URL Feeds through bulk operations.
   The following restrictions apply:
-  Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_security_intelligence_url_feeds (Resource)
@@ -13,6 +13,8 @@ description: |-
 This resource manages Security Intelligence URL Feeds through bulk operations.
 
 The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
   - Bulk object creation is not supported by FMC, it will be handled one-by-one
   - Bulk object deletion is not supported by FMC, it will be handled one-by-one
   - Updates are always done one-by-one.
@@ -49,11 +51,14 @@ resource "fmc_security_intelligence_url_feeds" "example" {
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
+Required:
+
+- `feed_url` (String) Security Intelligence feed location.
+- `update_frequency` (Number) Update frequency (in minutes) of the feed.
+
 Optional:
 
 - `checksum_url` (String) Checksum (md5) URL of the feed file on remote server.
-- `feed_url` (String) Security Intelligence feed location.
-- `update_frequency` (Number) Update frequency (in minutes) of the feed.
 
 Read-Only:
 

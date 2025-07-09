@@ -3,6 +3,7 @@ name: Security Intelligence Network Feeds
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworkfeeds
 doc_category: Objects
 is_bulk: true
+minimum_version_create: "7.4"
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"
 attributes:
@@ -26,6 +27,7 @@ attributes:
       - model_name: feedURL
         tf_name: feed_url
         type: String
+        mandatory: true
         description: Security Intelligence feed location.
         example: https://example.com/path/to/feed.txt
       - model_name: checksumURL
@@ -37,3 +39,4 @@ attributes:
         type: Int64
         description: Update frequency (in minutes) of the feed.
         example: 120
+        mandatory: true

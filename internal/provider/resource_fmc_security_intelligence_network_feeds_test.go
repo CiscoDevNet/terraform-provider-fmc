@@ -66,6 +66,8 @@ func TestAccFmcSecurityIntelligenceNetworkFeeds(t *testing.T) {
 func testAccFmcSecurityIntelligenceNetworkFeedsConfig_minimum() string {
 	config := `resource "fmc_security_intelligence_network_feeds" "test" {` + "\n"
 	config += `	items = { "my_si_network_feeds" = {` + "\n"
+	config += `		feed_url = "https://example.com/path/to/feed.txt"` + "\n"
+	config += `		update_frequency = 120` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config

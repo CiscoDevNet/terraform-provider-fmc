@@ -51,6 +51,7 @@ type SecurityIntelligenceNetworkFeedsItems struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionCreateSecurityIntelligenceNetworkFeeds = version.Must(version.NewVersion("7.4"))
 var minFMCVersionBulkCreateSecurityIntelligenceNetworkFeeds = version.Must(version.NewVersion("999"))
 var minFMCVersionBulkDeleteSecurityIntelligenceNetworkFeeds = version.Must(version.NewVersion("999"))
 

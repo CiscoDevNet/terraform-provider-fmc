@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -60,7 +61,7 @@ func (r *SecurityIntelligenceURLFeedResource) Metadata(ctx context.Context, req 
 func (r *SecurityIntelligenceURLFeedResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Security Intelligence URL Feed.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Security Intelligence URL Feed.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -90,7 +91,7 @@ func (r *SecurityIntelligenceURLFeedResource) Schema(ctx context.Context, req re
 			},
 			"feed_url": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Security Intelligence feed location.").String,
-				Optional:            true,
+				Required:            true,
 			},
 			"checksum_url": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Checksum (md5) URL of the feed file on remote server.").String,
@@ -98,7 +99,7 @@ func (r *SecurityIntelligenceURLFeedResource) Schema(ctx context.Context, req re
 			},
 			"update_frequency": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Update frequency (in minutes) of the feed.").String,
-				Optional:            true,
+				Required:            true,
 			},
 		},
 	}
@@ -117,6 +118,14 @@ func (r *SecurityIntelligenceURLFeedResource) Configure(_ context.Context, req r
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *SecurityIntelligenceURLFeedResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateSecurityIntelligenceURLFeed) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Security Intelligence URL Feed creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan SecurityIntelligenceURLFeed
 
 	// Read plan

@@ -4,11 +4,17 @@ page_title: "fmc_security_intelligence_network_feed Resource - terraform-provide
 subcategory: "Objects"
 description: |-
   This resource manages a Security Intelligence Network Feed.
+  The following restrictions apply:
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4
 ---
 
 # fmc_security_intelligence_network_feed (Resource)
 
 This resource manages a Security Intelligence Network Feed.
+
+The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
 
 ## Example Usage
 
@@ -26,14 +32,14 @@ resource "fmc_security_intelligence_network_feed" "example" {
 
 ### Required
 
+- `feed_url` (String) Security Intelligence feed location.
 - `name` (String) Name of the Security Intelligence Network Feed.
+- `update_frequency` (Number) Update frequency (in minutes) of the feed.
 
 ### Optional
 
 - `checksum_url` (String) Checksum (md5) URL of the feed file on remote server.
 - `domain` (String) Name of the FMC domain
-- `feed_url` (String) Security Intelligence feed location.
-- `update_frequency` (Number) Update frequency (in minutes) of the feed.
 
 ### Read-Only
 
