@@ -85,27 +85,27 @@ func (d *SLAMonitorDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"sla_monitor_id": schema.Int64Attribute{
-				MarkdownDescription: "SLA Monitor ID.",
+				MarkdownDescription: "ID number of the SLA operation.",
 				Computed:            true,
 			},
 			"timeout": schema.Int64Attribute{
-				MarkdownDescription: "Timeout in milliseconds.",
+				MarkdownDescription: "Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.",
 				Computed:            true,
 			},
 			"frequency": schema.Int64Attribute{
-				MarkdownDescription: "Frequency in seconds.",
+				MarkdownDescription: "Frequency (in seconds) of ICMP echo request transmissions.",
 				Computed:            true,
 			},
 			"threshold": schema.Int64Attribute{
-				MarkdownDescription: "Threshold in milliseconds.",
+				MarkdownDescription: "Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.",
 				Computed:            true,
 			},
 			"data_size": schema.Int64Attribute{
-				MarkdownDescription: "Data size in bytes.",
+				MarkdownDescription: "Size (in bytes) of the ICMP request packet payload.",
 				Computed:            true,
 			},
 			"tos": schema.Int64Attribute{
-				MarkdownDescription: "Type of Service (ToS) value.",
+				MarkdownDescription: "Type of Service (ToS) defined in the IP header of the ICMP request packet.",
 				Computed:            true,
 			},
 			"number_of_packets": schema.Int64Attribute{

@@ -157,7 +157,7 @@ func (data *SLAMonitor) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("threshold"); value.Exists() {
 		data.Threshold = types.Int64Value(value.Int())
 	} else {
-		data.Threshold = types.Int64Null()
+		data.Threshold = types.Int64Value(5000)
 	}
 	if value := res.Get("dataSize"); value.Exists() {
 		data.DataSize = types.Int64Value(value.Int())
@@ -236,7 +236,7 @@ func (data *SLAMonitor) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	if value := res.Get("threshold"); value.Exists() && !data.Threshold.IsNull() {
 		data.Threshold = types.Int64Value(value.Int())
-	} else {
+	} else if data.Threshold.ValueInt64() != 5000 {
 		data.Threshold = types.Int64Null()
 	}
 	if value := res.Get("dataSize"); value.Exists() && !data.DataSize.IsNull() {

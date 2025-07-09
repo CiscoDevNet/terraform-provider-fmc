@@ -24,40 +24,41 @@ attributes:
     tf_name: sla_monitor_id
     type: Int64
     mandatory: true
-    description: SLA Monitor ID.
+    description: ID number of the SLA operation.
     example: 10
     min_int: 1
     max_int: 2147483647
   - model_name: timeout
     type: Int64
-    description: Timeout in milliseconds.
+    description: Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.
     example: 5000
     default_value: 5000
     min_int: 0
     max_int: 604800000
   - model_name: frequency
     type: Int64
-    description: Frequency in seconds.
+    description: Frequency (in seconds) of ICMP echo request transmissions.
     example: 60
     default_value: 60
     min_int: 1
     max_int: 604800
   - model_name: threshold
     type: Int64
-    description: Threshold in milliseconds.
-    example: 1000
+    description: Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.
+    example: 5000
+    default_value: 5000
     min_int: 0
     max_int: 2147483647
   - model_name: dataSize
     type: Int64
-    description: Data size in bytes.
+    description: Size (in bytes) of the ICMP request packet payload.
     example: 28
     default_value: 28
     min_int: 0
     max_int: 16384
   - model_name: tos
     type: Int64
-    description: Type of Service (ToS) value.
+    description: Type of Service (ToS) defined in the IP header of the ICMP request packet.
     example: 20
     default_value: 0
     min_int: 0

@@ -96,14 +96,14 @@ func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 			},
 			"sla_monitor_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("SLA Monitor ID.").AddIntegerRangeDescription(1, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID number of the SLA operation.").AddIntegerRangeDescription(1, 2147483647).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 2147483647),
 				},
 			},
 			"timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout in milliseconds.").AddIntegerRangeDescription(0, 604800000).AddDefaultValueDescription("5000").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.").AddIntegerRangeDescription(0, 604800000).AddDefaultValueDescription("5000").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -112,7 +112,7 @@ func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default: int64default.StaticInt64(5000),
 			},
 			"frequency": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Frequency in seconds.").AddIntegerRangeDescription(1, 604800).AddDefaultValueDescription("60").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Frequency (in seconds) of ICMP echo request transmissions.").AddIntegerRangeDescription(1, 604800).AddDefaultValueDescription("60").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -121,14 +121,16 @@ func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default: int64default.StaticInt64(60),
 			},
 			"threshold": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Threshold in milliseconds.").AddIntegerRangeDescription(0, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.").AddIntegerRangeDescription(0, 2147483647).AddDefaultValueDescription("5000").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 2147483647),
 				},
+				Default: int64default.StaticInt64(5000),
 			},
 			"data_size": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Data size in bytes.").AddIntegerRangeDescription(0, 16384).AddDefaultValueDescription("28").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Size (in bytes) of the ICMP request packet payload.").AddIntegerRangeDescription(0, 16384).AddDefaultValueDescription("28").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -137,7 +139,7 @@ func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default: int64default.StaticInt64(28),
 			},
 			"tos": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of Service (ToS) value.").AddIntegerRangeDescription(0, 255).AddDefaultValueDescription("0").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of Service (ToS) defined in the IP header of the ICMP request packet.").AddIntegerRangeDescription(0, 255).AddDefaultValueDescription("0").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{

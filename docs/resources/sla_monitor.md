@@ -19,7 +19,7 @@ resource "fmc_sla_monitor" "example" {
   sla_monitor_id    = 10
   timeout           = 5000
   frequency         = 60
-  threshold         = 1000
+  threshold         = 5000
   data_size         = 28
   tos               = 20
   number_of_packets = 1
@@ -40,28 +40,29 @@ resource "fmc_sla_monitor" "example" {
 - `monitor_address` (String) IP address to monitor.
 - `name` (String) Name of the SLA monitor object.
 - `selected_interfaces` (Attributes List) Security zones or interface groups that contain the interfaces through which the device communicates with the management station. (see [below for nested schema](#nestedatt--selected_interfaces))
-- `sla_monitor_id` (Number) SLA Monitor ID.
+- `sla_monitor_id` (Number) ID number of the SLA operation.
   - Range: `1`-`2147483647`
 
 ### Optional
 
-- `data_size` (Number) Data size in bytes.
+- `data_size` (Number) Size (in bytes) of the ICMP request packet payload.
   - Range: `0`-`16384`
   - Default value: `28`
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `frequency` (Number) Frequency in seconds.
+- `frequency` (Number) Frequency (in seconds) of ICMP echo request transmissions.
   - Range: `1`-`604800`
   - Default value: `60`
 - `number_of_packets` (Number) Number of packets that are sent.
   - Range: `1`-`100`
   - Default value: `1`
-- `threshold` (Number) Threshold in milliseconds.
+- `threshold` (Number) Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.
   - Range: `0`-`2147483647`
-- `timeout` (Number) Timeout in milliseconds.
+  - Default value: `5000`
+- `timeout` (Number) Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.
   - Range: `0`-`604800000`
   - Default value: `5000`
-- `tos` (Number) Type of Service (ToS) value.
+- `tos` (Number) Type of Service (ToS) defined in the IP header of the ICMP request packet.
   - Range: `0`-`255`
   - Default value: `0`
 

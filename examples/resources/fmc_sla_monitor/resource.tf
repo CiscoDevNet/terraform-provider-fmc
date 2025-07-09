@@ -4,7 +4,7 @@ resource "fmc_sla_monitor" "example" {
   sla_monitor_id    = 10
   timeout           = 5000
   frequency         = 60
-  threshold         = 1000
+  threshold         = 5000
   data_size         = 28
   tos               = 20
   number_of_packets = 1

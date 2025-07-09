@@ -37,7 +37,7 @@ func TestAccFmcSLAMonitor(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "sla_monitor_id", "10"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "timeout", "5000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "frequency", "60"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "threshold", "1000"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "threshold", "5000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "data_size", "28"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "tos", "20"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_sla_monitor.test", "number_of_packets", "1"))
@@ -104,7 +104,7 @@ func testAccFmcSLAMonitorConfig_all() string {
 	config += `	sla_monitor_id = 10` + "\n"
 	config += `	timeout = 5000` + "\n"
 	config += `	frequency = 60` + "\n"
-	config += `	threshold = 1000` + "\n"
+	config += `	threshold = 5000` + "\n"
 	config += `	data_size = 28` + "\n"
 	config += `	tos = 20` + "\n"
 	config += `	number_of_packets = 1` + "\n"
