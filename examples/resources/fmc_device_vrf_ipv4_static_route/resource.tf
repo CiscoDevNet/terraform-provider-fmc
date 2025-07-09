@@ -10,4 +10,5 @@ resource "fmc_device_vrf_ipv4_static_route" "example" {
   ]
   metric_value         = 254
   gateway_host_literal = "10.0.0.1"
+  sla_monitor_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }

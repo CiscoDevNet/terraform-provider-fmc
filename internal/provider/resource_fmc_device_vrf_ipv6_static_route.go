@@ -157,6 +157,15 @@ func (r *DeviceVRFIPv6StaticRouteResource) Configure(_ context.Context, req reso
 
 // End of section. //template:end model
 
+func (r DeviceVRFIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.ExactlyOneOf(
+			path.MatchRoot("gateway_host_object_id"),
+			path.MatchRoot("gateway_host_literal"),
+		),
+	}
+}
+
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DeviceVRFIPv6StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -351,12 +360,3 @@ func (r *DeviceVRFIPv6StaticRouteResource) ImportState(ctx context.Context, req 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 
 // End of section. //template:end updateSubresources
-
-func (r DeviceVRFIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.Conflicting(
-			path.MatchRoot("gateway_host_object_id"),
-			path.MatchRoot("gateway_host_literal"),
-		),
-	}
-}

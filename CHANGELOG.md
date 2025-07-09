@@ -4,6 +4,7 @@
 - (Fix) `fmc_device`: add missing FTDv100 performance tier
 - (Enhancement) Add support for Security Cloud Control (SCC) Firewall Management Base URI
 - (Enhancement) Add support for `fmc_sla_monitor` and `fmc_sla_monitors` resources and data sources
+- (Enhancement) Add support for SLA Monitors under IPv4 static routes
 
 ## 2.0.0-rc3
 

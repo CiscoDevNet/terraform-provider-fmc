@@ -25,6 +25,7 @@ resource "fmc_device_vrf_ipv4_static_route" "example" {
   ]
   metric_value         = 254
   gateway_host_literal = "10.0.0.1"
+  sla_monitor_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -48,6 +49,7 @@ resource "fmc_device_vrf_ipv4_static_route" "example" {
   - Default value: `false`
 - `metric_value` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.
   - Range: `1`-`254`
+- `sla_monitor_id` (String) ID of SLA Monitor for Route Tracking.
 
 ### Read-Only
 

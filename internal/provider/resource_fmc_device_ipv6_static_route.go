@@ -150,6 +150,15 @@ func (r *DeviceIPv6StaticRouteResource) Configure(_ context.Context, req resourc
 
 // End of section. //template:end model
 
+func (r DeviceIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.ExactlyOneOf(
+			path.MatchRoot("gateway_host_object_id"),
+			path.MatchRoot("gateway_host_literal"),
+		),
+	}
+}
+
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DeviceIPv6StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -331,12 +340,3 @@ func (r *DeviceIPv6StaticRouteResource) ImportState(ctx context.Context, req res
 }
 
 // End of section. //template:end import
-
-func (r DeviceIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.Conflicting(
-			path.MatchRoot("gateway_host_object_id"),
-			path.MatchRoot("gateway_host_literal"),
-		),
-	}
-}
