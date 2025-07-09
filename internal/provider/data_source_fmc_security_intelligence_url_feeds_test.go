@@ -28,20 +28,20 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
-func TestAccDataSourceFmcSecurityIntelligenceNetworkFeeds(t *testing.T) {
+func TestAccDataSourceFmcSecurityIntelligenceURLFeeds(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.feed_url", "https://example.com/path/to/feed.txt"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.checksum_url", "https://example.com/path/to/checksum.md5"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.update_frequency", "120"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.feed_url", "https://example.com/path/to/feed.txt"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.checksum_url", "https://example.com/path/to/checksum.md5"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.update_frequency", "120"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcSecurityIntelligenceNetworkFeedsConfig(),
+				Config: testAccDataSourceFmcSecurityIntelligenceURLFeedsConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -55,9 +55,9 @@ func TestAccDataSourceFmcSecurityIntelligenceNetworkFeeds(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
-func testAccDataSourceFmcSecurityIntelligenceNetworkFeedsConfig() string {
-	config := `resource "fmc_security_intelligence_network_feeds" "test" {` + "\n"
-	config += `	items = { "my_si_network_feeds" = {` + "\n"
+func testAccDataSourceFmcSecurityIntelligenceURLFeedsConfig() string {
+	config := `resource "fmc_security_intelligence_url_feeds" "test" {` + "\n"
+	config += `	items = { "my_si_url_feeds" = {` + "\n"
 	config += `		feed_url = "https://example.com/path/to/feed.txt"` + "\n"
 	config += `		checksum_url = "https://example.com/path/to/checksum.md5"` + "\n"
 	config += `		update_frequency = 120` + "\n"
@@ -65,10 +65,10 @@ func testAccDataSourceFmcSecurityIntelligenceNetworkFeedsConfig() string {
 	config += `}` + "\n"
 
 	config += `
-		data "fmc_security_intelligence_network_feeds" "test" {
-			depends_on = [fmc_security_intelligence_network_feeds.test]
+		data "fmc_security_intelligence_url_feeds" "test" {
+			depends_on = [fmc_security_intelligence_url_feeds.test]
 			items = {
-				"my_si_network_feeds" = {
+				"my_si_url_feeds" = {
 				}
 			}
 		}

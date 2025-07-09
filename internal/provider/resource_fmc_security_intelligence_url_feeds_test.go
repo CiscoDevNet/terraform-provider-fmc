@@ -29,22 +29,22 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcSecurityIntelligenceNetworkFeeds(t *testing.T) {
+func TestAccFmcSecurityIntelligenceURLFeeds(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.feed_url", "https://example.com/path/to/feed.txt"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.checksum_url", "https://example.com/path/to/checksum.md5"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_network_feeds.test", "items.my_si_network_feeds.update_frequency", "120"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.feed_url", "https://example.com/path/to/feed.txt"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.checksum_url", "https://example.com/path/to/checksum.md5"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_security_intelligence_url_feeds.test", "items.my_si_url_feeds.update_frequency", "120"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcSecurityIntelligenceNetworkFeedsConfig_minimum(),
+			Config: testAccFmcSecurityIntelligenceURLFeedsConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcSecurityIntelligenceNetworkFeedsConfig_all(),
+		Config: testAccFmcSecurityIntelligenceURLFeedsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -63,9 +63,9 @@ func TestAccFmcSecurityIntelligenceNetworkFeeds(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcSecurityIntelligenceNetworkFeedsConfig_minimum() string {
-	config := `resource "fmc_security_intelligence_network_feeds" "test" {` + "\n"
-	config += `	items = { "my_si_network_feeds" = {` + "\n"
+func testAccFmcSecurityIntelligenceURLFeedsConfig_minimum() string {
+	config := `resource "fmc_security_intelligence_url_feeds" "test" {` + "\n"
+	config += `	items = { "my_si_url_feeds" = {` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
@@ -75,9 +75,9 @@ func testAccFmcSecurityIntelligenceNetworkFeedsConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcSecurityIntelligenceNetworkFeedsConfig_all() string {
-	config := `resource "fmc_security_intelligence_network_feeds" "test" {` + "\n"
-	config += `	items = { "my_si_network_feeds" = {` + "\n"
+func testAccFmcSecurityIntelligenceURLFeedsConfig_all() string {
+	config := `resource "fmc_security_intelligence_url_feeds" "test" {` + "\n"
+	config += `	items = { "my_si_url_feeds" = {` + "\n"
 	config += `		feed_url = "https://example.com/path/to/feed.txt"` + "\n"
 	config += `		checksum_url = "https://example.com/path/to/checksum.md5"` + "\n"
 	config += `		update_frequency = 120` + "\n"
