@@ -416,13 +416,14 @@ func (r *CertificateMapsResource) Delete(ctx context.Context, req resource.Delet
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *CertificateMapsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]
+	// Import looks for string in the following format: <domain_name>,<ref_id>,[<object1_name>,<object2_name>,...]
 	// <domain_name> is optional
+	// <ref_id> for objects that have `reference` attributes
 	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config CertificateMaps
 
 	// Compile pattern for import command parsing
-	var inputPattern = regexp.MustCompile(`^(?P<domain>[^\s,]*),*\[(?P<names>.*?),*\]`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
 
 	// Parse parameter
 	match := inputPattern.FindStringSubmatch(req.ID)

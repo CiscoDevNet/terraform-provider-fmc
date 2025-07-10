@@ -117,5 +117,5 @@ Required:
 Import is supported using the following syntax:
 
 ```shell
-terraform import fmc_vpn_s2s_endpoints.example "<domain>,[<vpn_s2s_endpoints_name>]"
+terraform import fmc_vpn_s2s_endpoints.example "<domain>,<vpn_s2s_id>,[<vpn_s2s_endpoints_name>]"
 ```

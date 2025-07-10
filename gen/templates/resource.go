@@ -1043,13 +1043,18 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 
 {{- if .IsBulk}}
 func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]
+	// Import looks for string in the following format: <domain_name>,<ref_id>,[<object1_name>,<object2_name>,...]
 	// <domain_name> is optional
+	// <ref_id> for objects that have `reference` attributes
 	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config {{camelCase .Name}}
 
 	// Compile pattern for import command parsing
-	var inputPattern = regexp.MustCompile(`^(?P<domain>[^\s,]*),*\[(?P<names>.*?),*\]`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
+	{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
+	(?P<{{$attr.TfName}}>[^\s,]+),
+	{{- end -}}{{- end -}}{{- end -}}
+	\[(?P<names>.*?)\]$`)
 
 	// Parse parameter
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -1071,6 +1076,15 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 	for _, v := range names {
 		config.Items[v] = {{camelCase .Name}}Items{}
 	}
+
+	{{if hasReference .Attributes -}}
+	// Set reference attributes
+	{{range $index, $attr := .Attributes -}}
+	{{- if $attr.Reference -}}
+	config.{{toGoName $attr.TfName}} = types.StringValue(match[inputPattern.SubexpIndex("{{$attr.TfName}}")])
+	{{- end -}}
+	{{- end -}}
+	{{- end}}
 
 	// Generate new ID
 	config.Id = types.StringValue(uuid.New().String())
