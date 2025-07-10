@@ -40,6 +40,9 @@ import (
 // Mutex to protect deployments
 var deploymentMu sync.Mutex
 
+// Mutex to sync fmc_access_rule and fmc_access_rules creation
+var accessRulesCreateMu sync.Mutex
+
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 	const atom time.Duration = 5 * time.Second

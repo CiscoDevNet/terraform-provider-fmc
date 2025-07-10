@@ -30,6 +30,7 @@ resource "fmc_access_control_policy" "example" {
       name = "category_1"
     }
   ]
+  manage_rules = true
   rules = [
     {
       action = "ALLOW"
@@ -233,6 +234,8 @@ resource "fmc_access_control_policy" "example" {
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `description` (String) Description of the Access Control Policy.
 - `domain` (String) Name of the FMC domain
+- `manage_rules` (Boolean) Should this resource manage Access Rules.
+  - Default value: `true`
 - `prefilter_policy_id` (String) Id of the Prefilter Policy.
 - `rules` (Attributes List) Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. (see [below for nested schema](#nestedatt--rules))
 
