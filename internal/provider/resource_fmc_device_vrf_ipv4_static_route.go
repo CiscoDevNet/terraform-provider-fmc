@@ -143,6 +143,10 @@ func (r *DeviceVRFIPv4StaticRouteResource) Schema(ctx context.Context, req resou
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
+			"sla_monitor_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of SLA Monitor for Route Tracking.").String,
+				Optional:            true,
+			},
 		},
 	}
 }
@@ -156,6 +160,15 @@ func (r *DeviceVRFIPv4StaticRouteResource) Configure(_ context.Context, req reso
 }
 
 // End of section. //template:end model
+
+func (r DeviceVRFIPv4StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.ExactlyOneOf(
+			path.MatchRoot("gateway_host_object_id"),
+			path.MatchRoot("gateway_host_literal"),
+		),
+	}
+}
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
@@ -351,12 +364,3 @@ func (r *DeviceVRFIPv4StaticRouteResource) ImportState(ctx context.Context, req 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 
 // End of section. //template:end updateSubresources
-
-func (r DeviceVRFIPv4StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.Conflicting(
-			path.MatchRoot("gateway_host_object_id"),
-			path.MatchRoot("gateway_host_literal"),
-		),
-	}
-}

@@ -96,6 +96,13 @@ attributes:
     exclude_example: true
     default_value: "false"
     exclude_test: true
+  - model_name: id
+    data_path: [routeTracking]
+    tf_name: sla_monitor_id
+    type: String
+    description: ID of SLA Monitor for Route Tracking.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
