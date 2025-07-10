@@ -62,7 +62,7 @@ resource "fmc_sla_monitors" "example" {
 Required:
 
 - `monitor_address` (String) IP address to monitor.
-- `selected_interfaces` (Attributes List) Security zones or interface groups that contain the interfaces through which the device communicates with the management station. (see [below for nested schema](#nestedatt--items--selected_interfaces))
+- `selected_interfaces` (Attributes List) Security zones or interface groups that contain interfaces through which the device communicates. (see [below for nested schema](#nestedatt--items--selected_interfaces))
 - `sla_monitor_id` (Number) ID number of the SLA operation.
   - Range: `1`-`2147483647`
 
@@ -98,7 +98,7 @@ Read-Only:
 
 Required:
 
-- `id` (String) Id of the security zone or interface object.
+- `id` (String) Id of the security zone or interface group object.
 
 ## Import
 

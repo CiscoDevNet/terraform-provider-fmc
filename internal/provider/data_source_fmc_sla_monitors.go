@@ -116,12 +116,12 @@ func (d *SLAMonitorsDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"selected_interfaces": schema.ListNestedAttribute{
-							MarkdownDescription: "Security zones or interface groups that contain the interfaces through which the device communicates with the management station.",
+							MarkdownDescription: "Security zones or interface groups that contain interfaces through which the device communicates.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "Id of the security zone or interface object.",
+										MarkdownDescription: "Id of the security zone or interface group object.",
 										Computed:            true,
 									},
 								},

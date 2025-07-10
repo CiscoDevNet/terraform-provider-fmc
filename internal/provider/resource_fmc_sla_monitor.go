@@ -161,12 +161,12 @@ func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Required:            true,
 			},
 			"selected_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Security zones or interface groups that contain the interfaces through which the device communicates with the management station.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Security zones or interface groups that contain interfaces through which the device communicates.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the security zone or interface object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the security zone or interface group object.").String,
 							Required:            true,
 						},
 					},
