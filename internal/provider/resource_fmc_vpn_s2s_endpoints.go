@@ -531,7 +531,7 @@ func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.
 		config.Items[v] = VPNS2SEndpointsItems{}
 	}
 
-	// Fill reference attributes
+	// Set reference attributes
 	config.VpnS2sId = types.StringValue(match[inputPattern.SubexpIndex("vpn_s2s_id")])
 
 	// Generate new ID

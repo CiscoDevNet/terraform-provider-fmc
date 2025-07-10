@@ -1051,13 +1051,9 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 
 	// Compile pattern for import command parsing
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
-	{{- if hasReference .Attributes -}}
-	{{- range $index, $attr := .Attributes -}}
-	{{- if $attr.Reference -}}
+	{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
 	(?P<{{$attr.TfName}}>[^\s,]+),
-	{{- end -}}
-	{{- end -}}
-	{{- end -}}
+	{{- end -}}{{- end -}}{{- end -}}
 	\[(?P<names>.*?)\]$`)
 
 	// Parse parameter
@@ -1082,7 +1078,7 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 	}
 
 	{{if hasReference .Attributes -}}
-	// Fill reference attributes
+	// Set reference attributes
 	{{range $index, $attr := .Attributes -}}
 	{{- if $attr.Reference -}}
 	config.{{toGoName $attr.TfName}} = types.StringValue(match[inputPattern.SubexpIndex("{{$attr.TfName}}")])
