@@ -26,11 +26,10 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -45,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceVRFIPv6StaticRouteResource{}
-	_ resource.ResourceWithImportState = &DeviceVRFIPv6StaticRouteResource{}
+	_ resource.Resource                = &SLAMonitorResource{}
+	_ resource.ResourceWithImportState = &SLAMonitorResource{}
 )
 
-func NewDeviceVRFIPv6StaticRouteResource() resource.Resource {
-	return &DeviceVRFIPv6StaticRouteResource{}
+func NewSLAMonitorResource() resource.Resource {
+	return &SLAMonitorResource{}
 }
 
-type DeviceVRFIPv6StaticRouteResource struct {
+type SLAMonitorResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceVRFIPv6StaticRouteResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_vrf_ipv6_static_route"
+func (r *SLAMonitorResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_sla_monitor"
 }
 
-func (r *DeviceVRFIPv6StaticRouteResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *SLAMonitorResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device VRF IPv6 Static Route.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a SLA Monitor.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -81,73 +80,103 @@ func (r *DeviceVRFIPv6StaticRouteResource) Schema(ctx context.Context, req resou
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"device_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device .").String,
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"vrf_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
-				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"interface_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the parent interface. For transparent mode, any bridge group member interface. For routed mode with bridge groups, any bridge group member interface for the BVI name.").String,
+			"name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the SLA monitor object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPv6StaticRoute'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SLAMonitor'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface provided in `interface_logical_name`. The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).").String,
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+				Optional:            true,
+			},
+			"sla_monitor_id": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID number of the SLA operation.").AddIntegerRangeDescription(1, 2147483647).String,
+				Required:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 2147483647),
+				},
+			},
+			"timeout": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.").AddIntegerRangeDescription(0, 604800000).AddDefaultValueDescription("5000").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 604800000),
+				},
+				Default: int64default.StaticInt64(5000),
+			},
+			"frequency": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Frequency (in seconds) of ICMP echo request transmissions.").AddIntegerRangeDescription(1, 604800).AddDefaultValueDescription("60").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 604800),
+				},
+				Default: int64default.StaticInt64(60),
+			},
+			"threshold": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.").AddIntegerRangeDescription(0, 2147483647).AddDefaultValueDescription("5000").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 2147483647),
+				},
+				Default: int64default.StaticInt64(5000),
+			},
+			"data_size": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Size (in bytes) of the ICMP request packet payload.").AddIntegerRangeDescription(0, 16384).AddDefaultValueDescription("28").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 16384),
+				},
+				Default: int64default.StaticInt64(28),
+			},
+			"tos": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of Service (ToS) defined in the IP header of the ICMP request packet.").AddIntegerRangeDescription(0, 255).AddDefaultValueDescription("0").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 255),
+				},
+				Default: int64default.StaticInt64(0),
+			},
+			"number_of_packets": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Number of packets that are sent.").AddIntegerRangeDescription(1, 100).AddDefaultValueDescription("1").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 100),
+				},
+				Default: int64default.StaticInt64(1),
+			},
+			"monitor_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IP address to monitor.").String,
 				Required:            true,
 			},
-			"destination_networks": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of the destination networks matching this route (Host, Networks or Ranges).").String,
+			"selected_interfaces": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Security zones or interface groups that contain interfaces through which the device communicates.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the security zone or interface group object.").String,
+							Required:            true,
 						},
 					},
 				},
-			},
-			"metric_value": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.").AddIntegerRangeDescription(1, 254).String,
-				Optional:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 254),
-				},
-			},
-			"gateway_host_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the next hop for this route. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.").String,
-				Optional:            true,
-			},
-			"gateway_host_literal": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Next hop for this route as a literal IPv6 address. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.").String,
-				Optional:            true,
-			},
-			"is_tunneled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin host 'any-ipv6'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.").AddDefaultValueDescription("false").String,
-				Optional:            true,
-				Computed:            true,
-				Default:             booldefault.StaticBool(false),
 			},
 		},
 	}
 }
 
-func (r *DeviceVRFIPv6StaticRouteResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *SLAMonitorResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -157,19 +186,10 @@ func (r *DeviceVRFIPv6StaticRouteResource) Configure(_ context.Context, req reso
 
 // End of section. //template:end model
 
-func (r DeviceVRFIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.ExactlyOneOf(
-			path.MatchRoot("gateway_host_object_id"),
-			path.MatchRoot("gateway_host_literal"),
-		),
-	}
-}
-
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *DeviceVRFIPv6StaticRouteResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceVRFIPv6StaticRoute
+func (r *SLAMonitorResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan SLAMonitor
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -186,7 +206,7 @@ func (r *DeviceVRFIPv6StaticRouteResource) Create(ctx context.Context, req resou
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceVRFIPv6StaticRoute{})
+	body := plan.toBody(ctx, SLAMonitor{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -207,8 +227,8 @@ func (r *DeviceVRFIPv6StaticRouteResource) Create(ctx context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DeviceVRFIPv6StaticRouteResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceVRFIPv6StaticRoute
+func (r *SLAMonitorResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state SLAMonitor
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -259,8 +279,8 @@ func (r *DeviceVRFIPv6StaticRouteResource) Read(ctx context.Context, req resourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *DeviceVRFIPv6StaticRouteResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceVRFIPv6StaticRoute
+func (r *SLAMonitorResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state SLAMonitor
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -299,8 +319,8 @@ func (r *DeviceVRFIPv6StaticRouteResource) Update(ctx context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *DeviceVRFIPv6StaticRouteResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceVRFIPv6StaticRoute
+func (r *SLAMonitorResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state SLAMonitor
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -330,19 +350,8 @@ func (r *DeviceVRFIPv6StaticRouteResource) Delete(ctx context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *DeviceVRFIPv6StaticRouteResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	idParts := strings.Split(req.ID, ",")
-
-	if len(idParts) != 3 || idParts[0] == "" || idParts[1] == "" || idParts[2] == "" {
-		resp.Diagnostics.AddError(
-			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: <device_id>,<vrf_id>,<id>. Got: %q", req.ID),
-		)
-		return
-	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), idParts[0])...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vrf_id"), idParts[1])...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[2])...)
+func (r *SLAMonitorResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
