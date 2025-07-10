@@ -15,7 +15,7 @@ This data source reads the Security Intelligence DNS Lists.
 ```terraform
 data "fmc_security_intelligence_dns_lists" "example" {
   items = {
-    "Very High" = {
+    "Global-Block-List-for-DNS" = {
     }
   }
 }

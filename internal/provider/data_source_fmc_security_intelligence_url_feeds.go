@@ -80,15 +80,15 @@ func (d *SecurityIntelligenceURLFeedsDataSource) Schema(ctx context.Context, req
 							Computed:            true,
 						},
 						"feed_url": schema.StringAttribute{
-							MarkdownDescription: "Security Intelligence feed location.",
+							MarkdownDescription: "Security Intelligence Url Feed location.",
 							Computed:            true,
 						},
 						"checksum_url": schema.StringAttribute{
-							MarkdownDescription: "Checksum (md5) URL of the feed file on remote server.",
+							MarkdownDescription: "URL with md5 checksum of the feed.",
 							Computed:            true,
 						},
 						"update_frequency": schema.Int64Attribute{
-							MarkdownDescription: "Update frequency (in minutes) of the feed.",
+							MarkdownDescription: "Feed update frequency (in minutes).",
 							Computed:            true,
 						},
 					},

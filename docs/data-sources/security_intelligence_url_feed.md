@@ -29,7 +29,7 @@ data "fmc_security_intelligence_url_feed" "example" {
 
 ### Read-Only
 
-- `checksum_url` (String) Checksum (md5) URL of the feed file on remote server.
-- `feed_url` (String) Security Intelligence feed location.
+- `checksum_url` (String) URL with md5 checksum of the feed.
+- `feed_url` (String) Security Intelligence Url Feed location.
 - `type` (String) Type of the object; this value is always 'SIURLFeed'.
-- `update_frequency` (Number) Update frequency (in minutes) of the feed.
+- `update_frequency` (Number) Feed update frequency (in minutes).

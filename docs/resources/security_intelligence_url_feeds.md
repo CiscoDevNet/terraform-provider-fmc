@@ -53,12 +53,12 @@ resource "fmc_security_intelligence_url_feeds" "example" {
 
 Required:
 
-- `feed_url` (String) Security Intelligence feed location.
-- `update_frequency` (Number) Update frequency (in minutes) of the feed.
+- `feed_url` (String) Security Intelligence Url Feed location.
+- `update_frequency` (Number) Feed update frequency (in minutes).
 
 Optional:
 
-- `checksum_url` (String) Checksum (md5) URL of the feed file on remote server.
+- `checksum_url` (String) URL with md5 checksum of the feed.
 
 Read-Only:
 

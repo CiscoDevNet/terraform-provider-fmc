@@ -18,15 +18,15 @@ attributes:
     tf_name: feed_url
     type: String
     mandatory: true
-    description: Security Intelligence feed location.
+    description: Security Intelligence Network Feed location.
     example: https://example.com/path/to/feed.txt
   - model_name: checksumURL
     tf_name: checksum_url
     type: String
-    description: Checksum (md5) URL of the feed file on remote server.
+    description: URL with md5 checksum of the feed.
     example: https://example.com/path/to/checksum.md5
   - model_name: updateFrequency
     type: Int64
-    description: Update frequency (in minutes) of the feed.
+    description: Feed update frequency (in minutes).
     example: 120
     mandatory: true

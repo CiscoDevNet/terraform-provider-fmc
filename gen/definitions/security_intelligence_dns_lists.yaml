@@ -10,7 +10,7 @@ attributes:
     type: Map
     description: >-
       Map of Security Intelligence DNS Lists. The key of the map is the name of the individual Security Intelligence DNS List.
-    map_key_example: Very High
+    map_key_example: Global-Block-List-for-DNS
     mandatory: true
     attributes:
       - model_name: id
