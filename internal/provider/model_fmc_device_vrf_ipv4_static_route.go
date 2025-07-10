@@ -47,6 +47,7 @@ type DeviceVRFIPv4StaticRoute struct {
 	GatewayHostObjectId  types.String                                  `tfsdk:"gateway_host_object_id"`
 	GatewayHostLiteral   types.String                                  `tfsdk:"gateway_host_literal"`
 	IsTunneled           types.Bool                                    `tfsdk:"is_tunneled"`
+	SlaMonitorId         types.String                                  `tfsdk:"sla_monitor_id"`
 }
 
 type DeviceVRFIPv4StaticRouteDestinationNetworks struct {
@@ -102,6 +103,9 @@ func (data DeviceVRFIPv4StaticRoute) toBody(ctx context.Context, state DeviceVRF
 	if !data.IsTunneled.IsNull() {
 		body, _ = sjson.Set(body, "isTunneled", data.IsTunneled.ValueBool())
 	}
+	if !data.SlaMonitorId.IsNull() {
+		body, _ = sjson.Set(body, "routeTracking.id", data.SlaMonitorId.ValueString())
+	}
 	return body
 }
 
@@ -153,6 +157,11 @@ func (data *DeviceVRFIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Re
 		data.IsTunneled = types.BoolValue(value.Bool())
 	} else {
 		data.IsTunneled = types.BoolValue(false)
+	}
+	if value := res.Get("routeTracking.id"); value.Exists() {
+		data.SlaMonitorId = types.StringValue(value.String())
+	} else {
+		data.SlaMonitorId = types.StringNull()
 	}
 }
 
@@ -237,6 +246,11 @@ func (data *DeviceVRFIPv4StaticRoute) fromBodyPartial(ctx context.Context, res g
 		data.IsTunneled = types.BoolValue(value.Bool())
 	} else if data.IsTunneled.ValueBool() != false {
 		data.IsTunneled = types.BoolNull()
+	}
+	if value := res.Get("routeTracking.id"); value.Exists() && !data.SlaMonitorId.IsNull() {
+		data.SlaMonitorId = types.StringValue(value.String())
+	} else {
+		data.SlaMonitorId = types.StringNull()
 	}
 }
 

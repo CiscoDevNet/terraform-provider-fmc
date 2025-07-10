@@ -1,0 +1,32 @@
+---
+name: Security Intelligence Network Feed
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworkfeeds
+doc_category: Objects
+minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the Security Intelligence Network Feed.
+    mandatory: true
+    example: my_si_network_feed
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SINetworkFeed'.
+    computed: true
+  - model_name: feedURL
+    tf_name: feed_url
+    type: String
+    mandatory: true
+    description: Security Intelligence Network Feed location.
+    example: https://example.com/path/to/feed.txt
+  - model_name: checksumURL
+    tf_name: checksum_url
+    type: String
+    description: URL with md5 checksum of the feed.
+    example: https://example.com/path/to/checksum.md5
+  - model_name: updateFrequency
+    type: Int64
+    description: Feed update frequency (in minutes).
+    example: 120
+    mandatory: true
