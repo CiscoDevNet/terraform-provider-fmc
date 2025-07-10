@@ -1,0 +1,17 @@
+---
+name: Security Intelligence Network List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinetworklists
+no_resource: true
+no_import: true
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the Security Intelligence Network List.
+    mandatory: true
+    example: Global-Block-List
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SINetworkList'.
+    computed: true
