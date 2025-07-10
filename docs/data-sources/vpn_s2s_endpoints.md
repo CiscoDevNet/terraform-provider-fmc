@@ -32,7 +32,7 @@ data "fmc_vpn_s2s_endpoints" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of Endpoints. The key of the map is the name of the Endpoint. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Endpoints. The key of the map is the name of the Endpoint.  For FMC managed endpoints, please use the name under which the device is registered in FMC. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
