@@ -184,7 +184,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"manage_rules": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Should this resource manage Access Rules.").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),

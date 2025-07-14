@@ -141,7 +141,8 @@ attributes:
   - model_name: dummy_manage_rules
     tf_name: manage_rules
     type: Bool
-    description: Should this resource manage Access Rules.
+    description: Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).
+    data_source_optional_parameter: true
     default_value: "true"
     example: "true"
   - model_name: dummy_rules

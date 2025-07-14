@@ -25,6 +25,7 @@ data "fmc_access_control_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `manage_rules` (Boolean) Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).
 - `name` (String) Name of the Access Control Policy.
 
 ### Read-Only
@@ -41,7 +42,6 @@ data "fmc_access_control_policy" "example" {
 - `default_action_syslog_config_id` (String) Id of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `default_action_syslog_severity` (String) Override the Severity of syslog alerts.
 - `description` (String) Description of the Access Control Policy.
-- `manage_rules` (Boolean) Should this resource manage Access Rules.
 - `prefilter_policy_id` (String) Id of the Prefilter Policy.
 - `rules` (Attributes List) Ordered list of Access Rules. Rules must be sorted in the order of the corresponding categories, if they have `category_name`. Uncategorized non-mandatory rules must be below all other rules. (see [below for nested schema](#nestedatt--rules))
 - `type` (String) Type of the object; this value is always 'AccessPolicy'.

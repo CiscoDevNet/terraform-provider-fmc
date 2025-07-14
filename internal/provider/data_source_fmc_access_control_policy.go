@@ -150,7 +150,8 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				},
 			},
 			"manage_rules": schema.BoolAttribute{
-				MarkdownDescription: "Should this resource manage Access Rules.",
+				MarkdownDescription: "Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).",
+				Optional:            true,
 				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
@@ -680,6 +681,8 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+
+	// If the name is provided, we need to find the ID first
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000
@@ -712,36 +715,49 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		}
 	}
 
+	// Get Access Control Policy by ID
 	res, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString()), reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
 
+	// Get Access Control Policy Categories
 	resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
 	}
 
-	resRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/accessrules?expanded=true&offset=0&limit=1000", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
-
+	// Extracct categories and inser them into main Access Control Policy object
 	replaceCats := resCats.Get("items").String()
 	if replaceCats == "" {
 		replaceCats = "[]"
 	}
-	replaceRules := resRules.Get("items").String()
-	if replaceRules == "" {
-		replaceRules = "[]"
-	}
 	replace, _ := sjson.SetRaw(res.String(), "dummy_categories", replaceCats)
-	replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
+
+	// if manage_rules is set to true, retrieve rules
+	if !config.ManageRules.IsUnknown() && config.ManageRules.ValueBool() {
+
+		// Get Access Control Policy Rules
+		resRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/accessrules?expanded=true&offset=0&limit=1000", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Extract rules and insert them into main Access Control Policy object
+		replaceRules := resRules.Get("items").String()
+		if replaceRules == "" {
+			replaceRules = "[]"
+		}
+		replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
+	}
+
+	// Parse modified JSON with injected categories and rules
 	res = gjson.Parse(replace)
 
+	// Extract the values from the response and set them in the config
 	config.fromBody(ctx, res)
 	config.adjustFromBody(ctx, res)
 
