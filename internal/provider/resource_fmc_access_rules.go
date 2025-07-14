@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -629,6 +630,11 @@ func (r *AccessRulesResource) Configure(_ context.Context, req resource.Configur
 }
 
 // End of section. //template:end model
+
+// Mutex to sync fmc_access_rules creation
+// Since creation of the access rules may be split into multible bulks,
+// we need to ensure that no other fmc_access_rules resource is trying to create access rules at the same time.
+var accessRulesCreateMu sync.Mutex
 
 func (r AccessRulesResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
 	return []resource.ConfigValidator{
