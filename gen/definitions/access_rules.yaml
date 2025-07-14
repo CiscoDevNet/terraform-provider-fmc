@@ -1,12 +1,12 @@
-# Manual resource
+# Manual resource - Resource (Read, Create, Update, Delete), ValidateConfig
 ---
 name: Access Rules
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
 doc_category: Policies
 res_description:  >-
- This is BETA resource and it's behaviour may change in the future releases.\n
- This resource manages Access Rules in Access Control Policies in bulks.\n
- Order of the rules is meant to be preserved within the resource, however NOT between multiple `fmc_access_rule` resources that create rules within a single category/section.\n
+ This is an early access resource and it's behaviour may change in future releases.\n
+ This resource manages Access Rules in Access Control Policies in bulk.\n
+ Order of the rules is meant to be preserved within the resource, however *not* between multiple `fmc_access_rules` resources that create rules within a single category/section.\n
  Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n
 no_data_source: true
 no_import: true
@@ -15,7 +15,6 @@ attributes:
     type: String
     description: Id of the Access Control Policy.
     reference: true
-    requires_replace: true
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_access_control_policy.test.id
   - model_name: category
