@@ -156,7 +156,7 @@ func (r *DeviceIPv4StaticRouteResource) Configure(_ context.Context, req resourc
 
 func (r DeviceIPv4StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
 	return []resource.ConfigValidator{
-		resourcevalidator.ExactlyOneOf(
+		resourcevalidator.Conflicting(
 			path.MatchRoot("gateway_host_object_id"),
 			path.MatchRoot("gateway_host_literal"),
 		),

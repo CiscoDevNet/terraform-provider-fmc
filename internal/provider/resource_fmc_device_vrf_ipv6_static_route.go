@@ -159,7 +159,7 @@ func (r *DeviceVRFIPv6StaticRouteResource) Configure(_ context.Context, req reso
 
 func (r DeviceVRFIPv6StaticRouteResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
 	return []resource.ConfigValidator{
-		resourcevalidator.ExactlyOneOf(
+		resourcevalidator.Conflicting(
 			path.MatchRoot("gateway_host_object_id"),
 			path.MatchRoot("gateway_host_literal"),
 		),
