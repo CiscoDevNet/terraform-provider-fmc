@@ -107,6 +107,13 @@ attributes:
     description: Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
     exclude_example: true
     exclude_test: true
+  - model_name: dummy_manage_categories
+    tf_name: manage_categories
+    type: Bool
+    description: Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).
+    data_source_optional_parameter: true
+    default_value: "true"
+    example: "true"
   - model_name: dummy_categories
     tf_name: categories
     type: List

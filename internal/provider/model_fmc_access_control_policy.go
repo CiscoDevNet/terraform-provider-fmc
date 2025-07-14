@@ -55,6 +55,7 @@ type AccessControlPolicy struct {
 	DefaultActionSyslogSeverity    types.String                    `tfsdk:"default_action_syslog_severity"`
 	DefaultActionSnmpConfigId      types.String                    `tfsdk:"default_action_snmp_config_id"`
 	DefaultActionIntrusionPolicyId types.String                    `tfsdk:"default_action_intrusion_policy_id"`
+	ManageCategories               types.Bool                      `tfsdk:"manage_categories"`
 	Categories                     []AccessControlPolicyCategories `tfsdk:"categories"`
 	ManageRules                    types.Bool                      `tfsdk:"manage_rules"`
 	Rules                          []AccessControlPolicyRules      `tfsdk:"rules"`
@@ -306,6 +307,9 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	}
 	if !data.DefaultActionIntrusionPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.intrusionPolicy.id", data.DefaultActionIntrusionPolicyId.ValueString())
+	}
+	if !data.ManageCategories.IsNull() {
+		body, _ = sjson.Set(body, "dummy_manage_categories", data.ManageCategories.ValueBool())
 	}
 	if len(data.Categories) > 0 {
 		body, _ = sjson.Set(body, "dummy_categories", []interface{}{})
@@ -809,6 +813,11 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 		data.DefaultActionIntrusionPolicyId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionIntrusionPolicyId = types.StringNull()
+	}
+	if value := res.Get("dummy_manage_categories"); value.Exists() {
+		data.ManageCategories = types.BoolValue(value.Bool())
+	} else {
+		data.ManageCategories = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_categories"); value.Exists() {
 		data.Categories = make([]AccessControlPolicyCategories, 0)
@@ -1490,6 +1499,11 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		data.DefaultActionIntrusionPolicyId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionIntrusionPolicyId = types.StringNull()
+	}
+	if value := res.Get("dummy_manage_categories"); value.Exists() && !data.ManageCategories.IsNull() {
+		data.ManageCategories = types.BoolValue(value.Bool())
+	} else if data.ManageCategories.ValueBool() != true {
+		data.ManageCategories = types.BoolNull()
 	}
 	{
 		l := len(res.Get("dummy_categories").Array())

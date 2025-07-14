@@ -158,6 +158,12 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.").String,
 				Optional:            true,
 			},
+			"manage_categories": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).").AddDefaultValueDescription("true").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
+			},
 			"categories": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of categories.").String,
 				Optional:            true,
@@ -740,6 +746,16 @@ func (p *AccessControlPolicyResource) ValidateConfig(ctx context.Context, req re
 		)
 		return
 	}
+
+	// If manage_categories is not set, it defaults to true.
+	if !data.ManageCategories.IsNull() && !data.ManageCategories.ValueBool() && len(data.Categories) > 0 {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("categories"),
+			"Conflicting Configuration",
+			"Categories cannot be defined when manage_categories is set to false",
+		)
+		return
+	}
 }
 
 func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -763,6 +779,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := planBody
+	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
 	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
@@ -832,20 +849,22 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 	// Prepare json string to be filled in with categories and rules, that come from separate endpoints.
 	s := resGet.String()
 
-	// Get categories
-	resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
-		return
+	// Get categories, if we manage them
+	if !state.ManageCategories.IsUnknown() && state.ManageCategories.ValueBool() {
+		resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
+			return
+		}
+		replaceCats := resCats.Get("items").String()
+		if replaceCats == "" {
+			replaceCats = "[]"
+		}
+		s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 	}
-	replaceCats := resCats.Get("items").String()
-	if replaceCats == "" {
-		replaceCats = "[]"
-	}
-	s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 
 	// Get rules, if we manage them
-	if state.ManageRules.ValueBool() {
+	if !state.ManageRules.IsUnknown() && state.ManageRules.ValueBool() {
 		resRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/accessrules?expanded=true", reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resGet.String()))
@@ -865,6 +884,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		return
 	}
 
+	manageCategories := state.ManageCategories
 	manageRules := state.ManageRules
 
 	// After `terraform import` we switch to a full read.
@@ -874,6 +894,8 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		state.fromBodyPartial(ctx, res)
 	}
 	state.adjustFromBody(ctx, res)
+
+	state.ManageCategories = manageCategories
 	state.ManageRules = manageRules
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
@@ -952,7 +974,8 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 
 	keptCats, keptRules := r.countKept(ctx, state, plan)
 
-	if plan.ManageRules.ValueBool() {
+	// Remove rules, if we manage them
+	if !plan.ManageRules.IsUnknown() && plan.ManageRules.ValueBool() {
 		err := r.truncateRulesAt(ctx, &state, keptRules, reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", err.Error())
@@ -960,10 +983,13 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 		}
 	}
 
-	err := r.truncateCatsAt(ctx, &state, keptCats, reqMods...)
-	if err != nil {
-		diags.AddError("Client Error", err.Error())
-		return state, diags
+	// Remove categories, if we manage them
+	if !plan.ManageCategories.IsUnknown() && plan.ManageCategories.ValueBool() {
+		err := r.truncateCatsAt(ctx, &state, keptCats, reqMods...)
+		if err != nil {
+			diags.AddError("Client Error", err.Error())
+			return state, diags
+		}
 	}
 
 	if len(plan.Categories) == 0 {
@@ -974,14 +1000,18 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 		state.Rules = plan.Rules
 	}
 
-	err = r.createCatsAt(ctx, plan, bodyCats, keptCats, &state, reqMods...)
-	if err != nil {
-		diags.AddError("Client Error", err.Error())
-		return state, diags
+	// Recreate categories, if we manage them
+	if !plan.ManageCategories.IsUnknown() && !plan.ManageCategories.ValueBool() {
+		err := r.createCatsAt(ctx, plan, bodyCats, keptCats, &state, reqMods...)
+		if err != nil {
+			diags.AddError("Client Error", err.Error())
+			return state, diags
+		}
 	}
 
-	if plan.ManageRules.ValueBool() {
-		err = r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
+	// Recreate rules, if we manage the
+	if !plan.ManageCategories.IsNull() && plan.ManageRules.ValueBool() {
+		err := r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", err.Error())
 			return state, diags

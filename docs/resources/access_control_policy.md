@@ -25,6 +25,7 @@ resource "fmc_access_control_policy" "example" {
   prefilter_policy_id               = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
   default_action_syslog_severity    = "DEBUG"
   default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  manage_categories                 = true
   categories = [
     {
       name = "category_1"
@@ -234,6 +235,8 @@ resource "fmc_access_control_policy" "example" {
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `description` (String) Description of the Access Control Policy.
 - `domain` (String) Name of the FMC domain
+- `manage_categories` (Boolean) Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).
+  - Default value: `true`
 - `manage_rules` (Boolean) Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).
   - Default value: `true`
 - `prefilter_policy_id` (String) Id of the Prefilter Policy.

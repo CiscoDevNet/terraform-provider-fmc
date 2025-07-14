@@ -38,6 +38,7 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_syslog_severity", "DEBUG"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "manage_categories", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "categories.0.name", "category_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "manage_rules", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.action", "ALLOW"))
@@ -118,6 +119,7 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
+	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"
@@ -200,6 +202,7 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
+	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"

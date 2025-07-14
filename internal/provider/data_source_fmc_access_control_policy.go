@@ -129,6 +129,11 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				MarkdownDescription: "Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.",
 				Computed:            true,
 			},
+			"manage_categories": schema.BoolAttribute{
+				MarkdownDescription: "Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).",
+				Optional:            true,
+				Computed:            true,
+			},
 			"categories": schema.ListNestedAttribute{
 				MarkdownDescription: "Ordered list of categories.",
 				Computed:            true,
@@ -722,19 +727,31 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
-	// Get Access Control Policy Categories
-	resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
+	// Set string that will have categories and rules injected
+	replace := res.String()
 
-	// Extracct categories and inser them into main Access Control Policy object
-	replaceCats := resCats.Get("items").String()
-	if replaceCats == "" {
-		replaceCats = "[]"
+	// Save state of categories and rules management
+	manageCategories := false
+	manageRules := false
+
+	// If manage_categories is set to true, retrieve categories
+	if !config.ManageCategories.IsUnknown() && config.ManageCategories.ValueBool() {
+
+		// Get Access Control Policy Categories
+		resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		// Extracct categories and inser them into main Access Control Policy object
+		replaceCats := resCats.Get("items").String()
+		if replaceCats == "" {
+			replaceCats = "[]"
+		}
+		replace, _ = sjson.SetRaw(replace, "dummy_categories", replaceCats)
+		manageCategories = true
 	}
-	replace, _ := sjson.SetRaw(res.String(), "dummy_categories", replaceCats)
 
 	// if manage_rules is set to true, retrieve rules
 	if !config.ManageRules.IsUnknown() && config.ManageRules.ValueBool() {
@@ -752,6 +769,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 			replaceRules = "[]"
 		}
 		replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
+		manageRules = true
 	}
 
 	// Parse modified JSON with injected categories and rules
@@ -761,7 +779,8 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 	config.fromBody(ctx, res)
 	config.adjustFromBody(ctx, res)
 
-	config.ManageRules = types.BoolValue(true)
+	config.ManageCategories = types.BoolValue(manageCategories)
+	config.ManageRules = types.BoolValue(manageRules)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
