@@ -3,8 +3,6 @@
 name: Access Rule
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
 doc_category: Policies
-no_data_source: true
-no_import: true
 adjust_body: true
 attributes:
   - model_name: access_policy_id
@@ -51,6 +49,7 @@ attributes:
     description: Name of the Access Rule. This name needs to be uqique within the policy.
     mandatory: true
     example: rule_1
+    data_source_query: true
   - model_name: enabled
     type: Bool
     description: Indicates whether the access rule is in effect (true) or not (false).

@@ -45,7 +45,8 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource = &AccessRuleResource{}
+	_ resource.Resource                = &AccessRuleResource{}
+	_ resource.ResourceWithImportState = &AccessRuleResource{}
 )
 
 func NewAccessRuleResource() resource.Resource {
@@ -791,6 +792,23 @@ func (r *AccessRuleResource) Delete(ctx context.Context, req resource.DeleteRequ
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
+
+func (r *AccessRuleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	idParts := strings.Split(req.ID, ",")
+
+	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
+		resp.Diagnostics.AddError(
+			"Unexpected Import Identifier",
+			fmt.Sprintf("Expected import identifier with format: <access_policy_id>,<id>. Got: %q", req.ID),
+		)
+		return
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("access_policy_id"), idParts[0])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
+}
+
 // End of section. //template:end import
 
 // Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
