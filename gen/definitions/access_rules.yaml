@@ -17,12 +17,13 @@ attributes:
     reference: true
     requires_replace: true
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_access_control_policy.test.id
   - model_name: category
     tf_name: category_name
     type: String
     description: Name of the category that owns this rule. Either 'section' or 'category_name' can be set.
-    exclude_example: true
-    test_value: '"category_1"'
+    example: category_1
+    exclude_test: true
     requires_replace: true
   - model_name: section
     type: String
@@ -656,3 +657,33 @@ attributes:
               example: "24"
               id: true
               mandatory: true
+
+test_prerequisites: |-
+  resource "fmc_access_control_policy" "test" {
+    name              = "access_rules"
+    default_action    = "BLOCK"
+    manage_rules      = false
+    manage_categories = false
+  }
+
+  resource "fmc_network" "test" {
+    name   = "fmc_access_rules_network"
+    prefix = "10.0.0.0/24"
+  }
+
+  resource "fmc_host" "test" {
+    name = "fmc_access_rules_host"
+    ip   = "10.1.1.1"
+  }
+
+  resource "fmc_port" "test" {
+    name     = "fmc_access_rules_port"
+    protocol = "UDP"
+    port     = "53"
+  }
+
+  resource "fmc_vlan_tag" "test" {
+    name      = "fmc_access_rules_vlan_tag"
+    start_tag = "10"
+    end_tag   = "11"
+  }

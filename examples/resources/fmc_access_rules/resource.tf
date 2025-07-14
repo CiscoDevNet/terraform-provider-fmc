@@ -1,5 +1,6 @@
 resource "fmc_access_rules" "example" {
   access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  category_name    = "category_1"
   items = [
     {
       action = "ALLOW"

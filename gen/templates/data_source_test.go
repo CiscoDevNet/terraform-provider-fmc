@@ -274,7 +274,7 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 		data "fmc_{{snakeCase .Name}}" "test" {
 			{{if not .IsBulk}}id = fmc_{{snakeCase $name}}.test.id{{else}}depends_on = [fmc_{{snakeCase $name}}.test]{{end}}
 			{{- range  .Attributes}}
-			{{- if .Reference}}
+			{{- if or .Reference .DataSourceOptionalParameter}}
 			{{.TfName}} = {{if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}
 			{{- else if isNestedMap .}}
 			{{- $map := .TfName}}
@@ -387,7 +387,7 @@ func testAccNamedDataSourceFmc{{camelCase .Name}}Config() string {
 	config += `
 		data "fmc_{{snakeCase .Name}}" "test" {
 			{{- range  .Attributes}}
-			{{- if .Reference}}
+			{{- if or .Reference .DataSourceOptionalParameter}}
 			{{.TfName}} = {{if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}
 			{{- end}}
 			{{- end}}

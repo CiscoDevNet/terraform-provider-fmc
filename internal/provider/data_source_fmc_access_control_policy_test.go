@@ -188,6 +188,8 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `
 		data "fmc_access_control_policy" "test" {
 			id = fmc_access_control_policy.test.id
+			manage_categories = true
+			manage_rules = true
 		}
 	`
 	return config
@@ -270,6 +272,8 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 
 	config += `
 		data "fmc_access_control_policy" "test" {
+			manage_categories = true
+			manage_rules = true
 			name = fmc_access_control_policy.test.name
 		}
 	`

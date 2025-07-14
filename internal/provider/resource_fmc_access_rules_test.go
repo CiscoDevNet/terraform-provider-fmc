@@ -31,7 +31,6 @@ import (
 
 func TestAccFmcAccessRules(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "access_policy_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.action", "ALLOW"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.name", "rule_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.source_network_literals.0.value", "10.1.1.0/24"))
@@ -56,11 +55,11 @@ func TestAccFmcAccessRules(t *testing.T) {
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcAccessRulesConfig_minimum(),
+			Config: testAccFmcAccessRulesPrerequisitesConfig + testAccFmcAccessRulesConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcAccessRulesConfig_all(),
+		Config: testAccFmcAccessRulesPrerequisitesConfig + testAccFmcAccessRulesConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -75,13 +74,45 @@ func TestAccFmcAccessRules(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcAccessRulesPrerequisitesConfig = `
+resource "fmc_access_control_policy" "test" {
+  name              = "access_rules"
+  default_action    = "BLOCK"
+  manage_rules      = false
+  manage_categories = false
+}
+
+resource "fmc_network" "test" {
+  name   = "fmc_access_rules_network"
+  prefix = "10.0.0.0/24"
+}
+
+resource "fmc_host" "test" {
+  name = "fmc_access_rules_host"
+  ip   = "10.1.1.1"
+}
+
+resource "fmc_port" "test" {
+  name     = "fmc_access_rules_port"
+  protocol = "UDP"
+  port     = "53"
+}
+
+resource "fmc_vlan_tag" "test" {
+  name      = "fmc_access_rules_vlan_tag"
+  start_tag = "10"
+  end_tag   = "11"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
 func testAccFmcAccessRulesConfig_minimum() string {
 	config := `resource "fmc_access_rules" "test" {` + "\n"
-	config += `	access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -92,8 +123,7 @@ func testAccFmcAccessRulesConfig_minimum() string {
 
 func testAccFmcAccessRulesConfig_all() string {
 	config := `resource "fmc_access_rules" "test" {` + "\n"
-	config += `	access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	category_name = "category_1"` + "\n"
+	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `	items = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
 	config += `		name = "rule_1"` + "\n"
