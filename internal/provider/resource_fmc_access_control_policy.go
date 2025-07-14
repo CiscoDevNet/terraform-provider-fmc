@@ -930,6 +930,7 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	planBody := plan.toBody(ctx, state)
 	body := planBody
+	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
 	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
@@ -1001,7 +1002,7 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 	}
 
 	// Recreate categories, if we manage them
-	if !plan.ManageCategories.IsUnknown() && !plan.ManageCategories.ValueBool() {
+	if !plan.ManageCategories.IsUnknown() && plan.ManageCategories.ValueBool() {
 		err := r.createCatsAt(ctx, plan, bodyCats, keptCats, &state, reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", err.Error())
