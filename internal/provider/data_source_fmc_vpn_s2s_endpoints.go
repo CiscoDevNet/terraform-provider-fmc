@@ -70,7 +70,7 @@ func (d *VPNS2SEndpointsDataSource) Schema(ctx context.Context, req datasource.S
 				Required:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of Endpoints. The key of the map is the name of the Endpoint.",
+				MarkdownDescription: "Map of Endpoints. The key of the map is the name of the Endpoint.  For FMC managed endpoints, please use the name under which the device is registered in FMC.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

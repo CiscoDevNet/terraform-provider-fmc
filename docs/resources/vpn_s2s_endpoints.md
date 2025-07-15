@@ -52,7 +52,7 @@ resource "fmc_vpn_s2s_endpoints" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of Endpoints. The key of the map is the name of the Endpoint. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Endpoints. The key of the map is the name of the Endpoint.  For FMC managed endpoints, please use the name under which the device is registered in FMC. (see [below for nested schema](#nestedatt--items))
 - `vpn_s2s_id` (String) Id of the parent VPN S2S Topology.
 
 ### Optional
@@ -115,6 +115,8 @@ Required:
 ## Import
 
 Import is supported using the following syntax:
+
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
 terraform import fmc_vpn_s2s_endpoints.example "<domain>,<vpn_s2s_id>,[<vpn_s2s_endpoints_name>]"
