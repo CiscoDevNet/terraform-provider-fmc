@@ -92,6 +92,8 @@ resource "fmc_vpn_s2s_advanced_settings" "example" {
 
 Import is supported using the following syntax:
 
+The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
+
 ```shell
 terraform import fmc_vpn_s2s_advanced_settings.example "<vpn_s2s_id>,<id>"
 ```
