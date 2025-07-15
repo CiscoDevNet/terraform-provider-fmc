@@ -14,10 +14,10 @@ This resource manages an Access Rule.
 
 ```terraform
 resource "fmc_access_rule" "example" {
-  access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  category_name    = "category_1"
-  action           = "ALLOW"
-  name             = "rule_1"
+  access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  category_name            = "category_1"
+  action                   = "ALLOW"
+  name                     = "rule_1"
   source_network_literals = [
     {
       value = "10.1.1.0/24"
@@ -194,7 +194,7 @@ resource "fmc_access_rule" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy.
+- `access_control_policy_id` (String) Id of the Access Control Policy.
 - `action` (String) Rule action.
   - Choices: `ALLOW`, `TRUST`, `BLOCK`, `MONITOR`, `BLOCK_RESET`, `BLOCK_INTERACTIVE`, `BLOCK_RESET_INTERACTIVE`
 - `name` (String) Name of the Access Rule. This name needs to be uqique within the policy.
@@ -513,5 +513,5 @@ Optional:
 Import is supported using the following syntax:
 
 ```shell
-terraform import fmc_access_rule.example "<access_policy_id>,<id>"
+terraform import fmc_access_rule.example "<access_control_policy_id>,<id>"
 ```

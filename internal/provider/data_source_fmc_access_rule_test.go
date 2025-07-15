@@ -108,7 +108,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccDataSourceFmcAccessRuleConfig() string {
 	config := `resource "fmc_access_rule" "test" {` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `	action = "ALLOW"` + "\n"
 	config += `	name = "rule_1"` + "\n"
 	config += `	enabled = true` + "\n"
@@ -170,7 +170,7 @@ func testAccDataSourceFmcAccessRuleConfig() string {
 	config += `
 		data "fmc_access_rule" "test" {
 			id = fmc_access_rule.test.id
-			access_policy_id = fmc_access_control_policy.test.id
+			access_control_policy_id = fmc_access_control_policy.test.id
 		}
 	`
 	return config
@@ -178,7 +178,7 @@ func testAccDataSourceFmcAccessRuleConfig() string {
 
 func testAccNamedDataSourceFmcAccessRuleConfig() string {
 	config := `resource "fmc_access_rule" "test" {` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `	action = "ALLOW"` + "\n"
 	config += `	name = "rule_1"` + "\n"
 	config += `	enabled = true` + "\n"
@@ -239,7 +239,7 @@ func testAccNamedDataSourceFmcAccessRuleConfig() string {
 
 	config += `
 		data "fmc_access_rule" "test" {
-			access_policy_id = fmc_access_control_policy.test.id
+			access_control_policy_id = fmc_access_control_policy.test.id
 			name = fmc_access_rule.test.name
 		}
 	`

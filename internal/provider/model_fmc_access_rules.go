@@ -35,12 +35,12 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type AccessRules struct {
-	Id             types.String       `tfsdk:"id"`
-	Domain         types.String       `tfsdk:"domain"`
-	AccessPolicyId types.String       `tfsdk:"access_policy_id"`
-	CategoryName   types.String       `tfsdk:"category_name"`
-	Section        types.String       `tfsdk:"section"`
-	Items          []AccessRulesItems `tfsdk:"items"`
+	Id                    types.String       `tfsdk:"id"`
+	Domain                types.String       `tfsdk:"domain"`
+	AccessControlPolicyId types.String       `tfsdk:"access_control_policy_id"`
+	CategoryName          types.String       `tfsdk:"category_name"`
+	Section               types.String       `tfsdk:"section"`
+	Items                 []AccessRulesItems `tfsdk:"items"`
 }
 
 type AccessRulesItems struct {
@@ -199,7 +199,7 @@ type AccessRulesItemsApplicationFiltersTags struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data AccessRules) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules", url.QueryEscape(data.AccessPolicyId.ValueString()))
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules", url.QueryEscape(data.AccessControlPolicyId.ValueString()))
 }
 
 // End of section. //template:end getPath

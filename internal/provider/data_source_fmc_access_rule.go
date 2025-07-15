@@ -71,7 +71,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"access_policy_id": schema.StringAttribute{
+			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the Access Control Policy.",
 				Required:            true,
 			},

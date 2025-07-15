@@ -14,8 +14,8 @@ This data source reads the Access Rule.
 
 ```terraform
 data "fmc_access_rule" "example" {
-  id               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  id                       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -24,7 +24,7 @@ data "fmc_access_rule" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy.
+- `access_control_policy_id` (String) Id of the Access Control Policy.
 
 ### Optional
 

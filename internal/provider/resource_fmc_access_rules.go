@@ -86,7 +86,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"access_policy_id": schema.StringAttribute{
+			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
@@ -697,15 +697,18 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 	var ruleNames strings.Builder
 	var bulks []string
 	var resAccessRules string = ""
+	var counter int = 0
 	for i := 0; i < len(state.Items); i++ {
+		counter += 1
 		if ruleNames.Len() > 0 {
 			ruleNames.WriteString(",")
 		}
 		ruleNames.WriteString(state.Items[i].Name.ValueString())
 		// Values below are estimated based on experience with FMC API.
-		if ruleNames.Len() >= 2500 || (i+1)%250 == 0 {
+		if ruleNames.Len() >= 2500 || counter%250 == 0 {
 			bulks = append(bulks, ruleNames.String())
 			ruleNames.Reset()
+			counter = 0
 		}
 	}
 	if ruleNames.Len() > 0 {

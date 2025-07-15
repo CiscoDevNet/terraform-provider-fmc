@@ -20,8 +20,8 @@ This is an early access resource and it's behaviour may change in future release
 
 ```terraform
 resource "fmc_access_rules" "example" {
-  access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  category_name    = "category_1"
+  access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  category_name            = "category_1"
   items = [
     {
       action = "ALLOW"
@@ -204,7 +204,7 @@ resource "fmc_access_rules" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy.
+- `access_control_policy_id` (String) Id of the Access Control Policy.
 
 ### Optional
 

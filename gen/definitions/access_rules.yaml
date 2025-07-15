@@ -11,7 +11,7 @@ res_description:  >-
 no_data_source: true
 no_import: true
 attributes:
-  - model_name: access_policy_id
+  - model_name: access_control_policy_id
     type: String
     description: Id of the Access Control Policy.
     reference: true

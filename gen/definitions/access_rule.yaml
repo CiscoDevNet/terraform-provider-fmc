@@ -5,7 +5,7 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/
 doc_category: Policies
 adjust_body: true
 attributes:
-  - model_name: access_policy_id
+  - model_name: access_control_policy_id
     type: String
     description: Id of the Access Control Policy.
     reference: true

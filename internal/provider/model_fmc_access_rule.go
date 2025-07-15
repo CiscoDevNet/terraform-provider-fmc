@@ -37,7 +37,7 @@ import (
 type AccessRule struct {
 	Id                         types.String                           `tfsdk:"id"`
 	Domain                     types.String                           `tfsdk:"domain"`
-	AccessPolicyId             types.String                           `tfsdk:"access_policy_id"`
+	AccessControlPolicyId      types.String                           `tfsdk:"access_control_policy_id"`
 	CategoryName               types.String                           `tfsdk:"category_name"`
 	Section                    types.String                           `tfsdk:"section"`
 	Action                     types.String                           `tfsdk:"action"`
@@ -220,7 +220,7 @@ type AccessRuleApplicationFiltersTags struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data AccessRule) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules", url.QueryEscape(data.AccessPolicyId.ValueString()))
+	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules", url.QueryEscape(data.AccessControlPolicyId.ValueString()))
 }
 
 // End of section. //template:end getPath

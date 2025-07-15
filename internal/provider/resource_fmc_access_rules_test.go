@@ -112,7 +112,7 @@ resource "fmc_vlan_tag" "test" {
 
 func testAccFmcAccessRulesConfig_minimum() string {
 	config := `resource "fmc_access_rules" "test" {` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -123,7 +123,7 @@ func testAccFmcAccessRulesConfig_minimum() string {
 
 func testAccFmcAccessRulesConfig_all() string {
 	config := `resource "fmc_access_rules" "test" {` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `	items = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
 	config += `		name = "rule_1"` + "\n"
