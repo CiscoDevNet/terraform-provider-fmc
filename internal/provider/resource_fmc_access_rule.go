@@ -682,7 +682,7 @@ func (r *AccessRuleResource) Read(ctx context.Context, req resource.ReadRequest,
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.ValueString()))
 
 	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
 	res, err := r.client.Get(urlPath, reqMods...)

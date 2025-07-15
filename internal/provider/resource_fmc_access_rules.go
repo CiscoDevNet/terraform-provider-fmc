@@ -701,8 +701,9 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 		if ruleNames.Len() > 0 {
 			ruleNames.WriteString(",")
 		}
-		ruleNames.WriteString(url.QueryEscape(state.Items[i].Name.ValueString()))
-		if ruleNames.Len() >= maxUrlParamLength || (i+1)%1000 == 0 {
+		ruleNames.WriteString(state.Items[i].Name.ValueString())
+		// Values below are estimated based on experience with FMC API.
+		if ruleNames.Len() >= 2500 || (i+1)%250 == 0 {
 			bulks = append(bulks, ruleNames.String())
 			ruleNames.Reset()
 		}
@@ -711,9 +712,9 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 		bulks = append(bulks, ruleNames.String())
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.ValueString()))
 	for _, bulk := range bulks {
-		urlPath := state.getPath() + "?expanded=true&limit=1000&filter=name:" + bulk
+		urlPath := state.getPath() + "?expanded=true&limit=1000&filter=name:" + url.QueryEscape(bulk)
 
 		// Read Access Rules
 		resTemp, err := r.client.Get(urlPath, reqMods...)
@@ -752,8 +753,8 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 		for _, item := range res.Array() {
 			unique[item.String()] = struct{}{}
 		}
-		if len(unique) > 1 {
-			// If there are multiple categories, set a warning that would trigger resource recreation
+		if len(unique) != 1 {
+			// If there are no or multiple categories, set a warning that would trigger resource recreation
 			category = "[WARN] Inconsistent categories detected"
 		} else {
 			category = res.Array()[0].String()
@@ -769,8 +770,8 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 		for _, item := range res.Array() {
 			unique[item.String()] = struct{}{}
 		}
-		if len(unique) > 1 {
-			// If there are multiple sections, set a warning that would trigger resource recreation
+		if len(unique) != 1 {
+			// If there are no or multiple sections, set a warning that would trigger resource recreation
 			section = "[WARN] Inconsistent sections detected"
 		} else {
 			section = res.Array()[0].String()
@@ -932,7 +933,6 @@ func (r *AccessRulesResource) truncateRulesAt(ctx context.Context, state *Access
 
 	for i := kept; i < len(state.Items); i++ {
 		if b.Len() != 0 {
-			// URL encoded comma
 			b.WriteString(",")
 		}
 		b.WriteString(state.Items[i].Id.ValueString())
@@ -955,7 +955,7 @@ func (r *AccessRulesResource) truncateRulesAt(ctx context.Context, state *Access
 	}()
 
 	for i, bulk := range bulks {
-		res, err := r.client.Delete(state.getPath()+"?bulk=true&filter=ids:"+bulk, reqMods...)
+		res, err := r.client.Delete(state.getPath()+"?bulk=true&filter=ids:"+url.QueryEscape(bulk), reqMods...)
 		if err != nil {
 			return fmt.Errorf("failed to bulk-delete rules, got error: %v, %s", err, res.String())
 		}
