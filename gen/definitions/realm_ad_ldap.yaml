@@ -1,0 +1,83 @@
+---
+name: Realm AD LDAP
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts
+doc_category: Integrations
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the realm.
+    example: my_ldap_realm
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Realm'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the realm.
+    example: My realm
+  - model_name: realmType
+    type: String
+    mandatory: true
+    description: Type of the realm
+    enum_values: ["AD", "LDAP", "LOCAL"]
+    example: LDAP
+    requires_replace: true
+  - model_name: adPrimaryDomain
+    type: String
+    description: Primary domain for AD realm.
+    example: example.com
+    requires_replace: true
+  - model_name: adJoinUsername
+    type: String
+    tf_name: directory_username
+    description: Username for joining the AD domain.
+    example: user@example.com
+  - model_name: dirPassword
+    type: String
+    tf_name: directory_password
+    description: Password for the AD domain user.
+    sensitive: true
+    example: my_password
+  - model_name: baseDn
+    type: String
+    description: Base DN for the LDAP search.
+    example: "dc=example,dc=com"
+  - model_name: groupDn
+    type: String
+    description: DN of the group to search for users.
+    example: "ou=users,dc=example,dc=com"
+  - model_name: directoryConfigurations
+    type: List
+    description: List of directory configurations for the realm.
+    attributes:
+      - model_name: hostname
+        type: String
+        description: Hostname or IP address of the LDAP server.
+        example: ldap.example.com
+      - model_name: port
+        type: Int64
+        description: Port number for the LDAP server.
+        example: 389
+      - model_name: encryption
+        type: String
+        description: Encryption method for the LDAP connection.
+        enum_values: ["NONE", "LDAPS", "STARTTLS"]
+        example: LDAPS
+      - model_name: id
+        data_path: ["encryptionCert"]
+        tf_name: encryption_certificate
+        type: String
+        description: ID of the encryption certificate for LDAPS.
+        example: 1234-5678-90AB-CDEF12345678
+      - model_name: useRoutingToSelectInterface
+        type: Bool
+        description: Whether to use routing to select the interface for LDAP communication.
+        example: true
+      - model_name: id
+        data_path: ["interface"]
+        tf_name: interface_group_id
+        type: String
+        description: ID of the interface group to use for LDAP communication.
+        example: 1234-5678-90AB-CDEF12345678
