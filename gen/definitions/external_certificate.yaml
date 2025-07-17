@@ -1,0 +1,24 @@
+---
+name: External Certificate
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/externalcertificates
+doc_category: Objects
+skip_test: true
+no_update: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the external certificate.
+    example: my_certificate_external
+    data_source_query: true
+    requires_replace: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExternalCertificate'.
+    computed: true
+  - model_name: cert
+    tf_name: certificate
+    type: String
+    description: PEM, DER, or PKCS#7 formatted certificate contents.
+    example: -----BEGIN CERTIFICATE-----\nMII(...)\n-----END CERTIFICATE-----
+    requires_replace: true
