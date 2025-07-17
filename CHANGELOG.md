@@ -1,3 +1,10 @@
+## 2.0.0-rc5
+
+- (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
+- (Enhancement) Add support for `fmc_access_rule` resource and data source
+- (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
+- (Enhancement) Add support for `fmc_access_category` resource and data source
+
 ## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources
@@ -7,10 +14,6 @@
 - (Enhancement) Add support for `fmc_security_intelligence_*` DNS/URL/Network feeds and lists data sources and available resources
 - (Enhancement) Add support for `fmc_sla_monitor` and `fmc_sla_monitors` resources and data sources
 - (Enhancement) Add support for SLA Monitors under IPv4 static routes
-- (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
-- (Enhancement) Add support for `fmc_access_rule` resource and data source
-- (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
-- (Enhancement) Add support for `fmc_access_category` resource and data source
 
 ## 2.0.0-rc3
 
