@@ -1,0 +1,32 @@
+# Manual resource - Resource (Create, Update), custom toBody
+---
+name: Secure Client Image
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectpackages
+doc_category: Objects
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: User defined name of the Secure Client Image
+    example: my_secure_client_image
+    data_source_query: true
+  - model_name: fileName
+    type: String
+    description: Name of the Secure Client Image.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectPackage'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Image.
+    example: My Secure Client Image
+  - model_name: filesMap
+    tf_name: path
+    type: String
+    mandatory: true
+    description: Path to the file
+    example: ./secure_client_image.pkg
+    write_only: true
