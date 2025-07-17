@@ -7,6 +7,13 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc5
+
+- (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
+- (Enhancement) Add support for `fmc_access_rule` resource and data source
+- (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
+- (Enhancement) Add support for `fmc_access_category` resource and data source
+
 ## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources

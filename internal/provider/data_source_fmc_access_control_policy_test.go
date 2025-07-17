@@ -38,7 +38,9 @@ func TestAccDataSourceFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_log_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "default_action_syslog_severity", "DEBUG"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "manage_categories", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "categories.0.name", "category_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "manage_rules", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.action", "ALLOW"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.name", "rule_1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_control_policy.test", "rules.0.source_network_literals.0.value", "10.1.1.0/24"))
@@ -117,9 +119,11 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
+	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
 	config += `		name = "rule_1"` + "\n"
@@ -184,6 +188,8 @@ func testAccDataSourceFmcAccessControlPolicyConfig() string {
 	config += `
 		data "fmc_access_control_policy" "test" {
 			id = fmc_access_control_policy.test.id
+			manage_categories = true
+			manage_rules = true
 		}
 	`
 	return config
@@ -198,9 +204,11 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
+	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "category_1"` + "\n"
 	config += `	}]` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		action = "ALLOW"` + "\n"
 	config += `		name = "rule_1"` + "\n"
@@ -264,6 +272,8 @@ func testAccNamedDataSourceFmcAccessControlPolicyConfig() string {
 
 	config += `
 		data "fmc_access_control_policy" "test" {
+			manage_categories = true
+			manage_rules = true
 			name = fmc_access_control_policy.test.name
 		}
 	`

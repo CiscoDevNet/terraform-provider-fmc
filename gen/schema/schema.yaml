@@ -65,5 +65,6 @@ attribute:
   minimum_test_value: str(required=False) # Value used for "minimum" resource acceptance test
   test_tags: list(str(), required=False) # List of test tags, attribute is only included in acceptance tests if an environment variable with one of these tags is configured
   data_source_query: bool(required=False) # Set to true if the attribute can be used in the data source query. This is supported only for top-level attributes.
+  data_source_optional_parameter: bool(required=False) # Set to true if the attribute can be used as an optional parameter in the data source query. This is supported only for top-level attributes.
   sensitive: bool(required=False) # Set to true if the attribute is sensitive
   attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"
