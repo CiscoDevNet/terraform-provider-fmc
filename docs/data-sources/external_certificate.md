@@ -30,4 +30,4 @@ data "fmc_external_certificate" "example" {
 ### Read-Only
 
 - `certificate` (String) PEM, DER, or PKCS#7 formatted certificate contents.
-- `type` (String) Type of the object; this value is always ''.
+- `type` (String) Type of the object; this value is always 'ExternalCertificate'.

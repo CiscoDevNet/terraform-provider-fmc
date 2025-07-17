@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &ExternalCertificateDataSource{}
-	_ datasource.DataSourceWithConfigure = &ExternalCertificateDataSource{}
+	_ datasource.DataSource              = &InternalCertificateAuthorityDataSource{}
+	_ datasource.DataSourceWithConfigure = &InternalCertificateAuthorityDataSource{}
 )
 
-func NewExternalCertificateDataSource() datasource.DataSource {
-	return &ExternalCertificateDataSource{}
+func NewInternalCertificateAuthorityDataSource() datasource.DataSource {
+	return &InternalCertificateAuthorityDataSource{}
 }
 
-type ExternalCertificateDataSource struct {
+type InternalCertificateAuthorityDataSource struct {
 	client *fmc.Client
 }
 
-func (d *ExternalCertificateDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_external_certificate"
+func (d *InternalCertificateAuthorityDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_internal_certificate_authority"
 }
 
-func (d *ExternalCertificateDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *InternalCertificateAuthorityDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the External Certificate.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Internal Certificate Authority.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,22 +72,32 @@ func (d *ExternalCertificateDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the external certificate.",
+				MarkdownDescription: "Name of the internal certificate authority.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'ExternalCertificate'.",
+				MarkdownDescription: "Type of the object; this value is always 'InternalCA'.",
 				Computed:            true,
 			},
 			"certificate": schema.StringAttribute{
 				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
 				Computed:            true,
 			},
+			"private_key": schema.StringAttribute{
+				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
+				Computed:            true,
+				Sensitive:           true,
+			},
+			"password": schema.StringAttribute{
+				MarkdownDescription: "Passphrase for the private key.",
+				Computed:            true,
+				Sensitive:           true,
+			},
 		},
 	}
 }
-func (d *ExternalCertificateDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *InternalCertificateAuthorityDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -96,7 +106,7 @@ func (d *ExternalCertificateDataSource) ConfigValidators(ctx context.Context) []
 	}
 }
 
-func (d *ExternalCertificateDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *InternalCertificateAuthorityDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -108,8 +118,8 @@ func (d *ExternalCertificateDataSource) Configure(_ context.Context, req datasou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *ExternalCertificateDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config ExternalCertificate
+func (d *InternalCertificateAuthorityDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config InternalCertificateAuthority
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

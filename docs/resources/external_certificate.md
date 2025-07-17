@@ -34,7 +34,7 @@ resource "fmc_external_certificate" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this value is always ''.
+- `type` (String) Type of the object; this value is always 'ExternalCertificate'.
 
 ## Import
 

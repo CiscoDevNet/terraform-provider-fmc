@@ -41,26 +41,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &ExternalCertificateResource{}
-	_ resource.ResourceWithImportState = &ExternalCertificateResource{}
+	_ resource.Resource                = &InternalCertificateAuthorityResource{}
+	_ resource.ResourceWithImportState = &InternalCertificateAuthorityResource{}
 )
 
-func NewExternalCertificateResource() resource.Resource {
-	return &ExternalCertificateResource{}
+func NewInternalCertificateAuthorityResource() resource.Resource {
+	return &InternalCertificateAuthorityResource{}
 }
 
-type ExternalCertificateResource struct {
+type InternalCertificateAuthorityResource struct {
 	client *fmc.Client
 }
 
-func (r *ExternalCertificateResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_external_certificate"
+func (r *InternalCertificateAuthorityResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_internal_certificate_authority"
 }
 
-func (r *ExternalCertificateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *InternalCertificateAuthorityResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an External Certificate.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Internal Certificate Authority.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -78,14 +78,11 @@ func (r *ExternalCertificateResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the external certificate.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the internal certificate authority.").String,
 				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ExternalCertificate'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'InternalCA'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -98,11 +95,27 @@ func (r *ExternalCertificateResource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			"private_key": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("PEM, DER, or PKCS#7 formatted certificate contents.").String,
+				Optional:            true,
+				Sensitive:           true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"password": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Passphrase for the private key.").String,
+				Optional:            true,
+				Sensitive:           true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
 		},
 	}
 }
 
-func (r *ExternalCertificateResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *InternalCertificateAuthorityResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -114,8 +127,8 @@ func (r *ExternalCertificateResource) Configure(_ context.Context, req resource.
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *ExternalCertificateResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan ExternalCertificate
+func (r *InternalCertificateAuthorityResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan InternalCertificateAuthority
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -132,7 +145,7 @@ func (r *ExternalCertificateResource) Create(ctx context.Context, req resource.C
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, ExternalCertificate{})
+	body := plan.toBody(ctx, InternalCertificateAuthority{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -153,8 +166,8 @@ func (r *ExternalCertificateResource) Create(ctx context.Context, req resource.C
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *ExternalCertificateResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state ExternalCertificate
+func (r *InternalCertificateAuthorityResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state InternalCertificateAuthority
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -205,8 +218,8 @@ func (r *ExternalCertificateResource) Read(ctx context.Context, req resource.Rea
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *ExternalCertificateResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state ExternalCertificate
+func (r *InternalCertificateAuthorityResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state InternalCertificateAuthority
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -221,8 +234,19 @@ func (r *ExternalCertificateResource) Update(ctx context.Context, req resource.U
 	}
 
 	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+
+	body := plan.toBody(ctx, state)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
@@ -234,8 +258,8 @@ func (r *ExternalCertificateResource) Update(ctx context.Context, req resource.U
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *ExternalCertificateResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state ExternalCertificate
+func (r *InternalCertificateAuthorityResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state InternalCertificateAuthority
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -265,7 +289,7 @@ func (r *ExternalCertificateResource) Delete(ctx context.Context, req resource.D
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *ExternalCertificateResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *InternalCertificateAuthorityResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
