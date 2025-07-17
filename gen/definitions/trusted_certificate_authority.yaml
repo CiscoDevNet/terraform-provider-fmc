@@ -1,0 +1,23 @@
+---
+name: Trusted Certificate Authority
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/externalcacertificates
+doc_category: Objects
+no_update: true
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the internal certificate authority.
+    example: my_trusted_ca
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExternalCACertificate'.
+    computed: true
+  - model_name: cert
+    tf_name: certificate
+    type: String
+    description: PEM, DER, or PKCS#7 formatted certificate contents.
+    example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
+    requires_replace: true
