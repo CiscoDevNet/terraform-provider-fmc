@@ -26,6 +26,7 @@ resource "fmc_secure_client_profile" "example" {
 
 ### Required
 
+- `file_type` (String) - Choices: `ANYCONNECT_MANAGEMENT_VPN_PROFILE`, `AMP_ENABLER`, `FEEDBACK`, `WEB_SECURITY`, `ANYCONNECT_VPN_PROFILE`, `UMBRELLA_ROAMING`, `NETWORK_ACCESS_MANAGER`, `ISE_POSTURE`, `NETWORK_VISIBILITY`
 - `name` (String) User defined name of the Secure Client Profile
 - `path` (String) Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
 
@@ -33,7 +34,6 @@ resource "fmc_secure_client_profile" "example" {
 
 - `description` (String) Description of the Secure Client Profile.
 - `domain` (String) Name of the FMC domain
-- `file_type` (String) - Choices: `ANYCONNECT_MANAGEMENT_VPN_PROFILE`, `AMP_ENABLER`, `FEEDBACK`, `WEB_SECURITY`, `ANYCONNECT_VPN_PROFILE`, `UMBRELLA_ROAMING`, `NETWORK_ACCESS_MANAGER`, `ISE_POSTURE`, `NETWORK_VISIBILITY`
 
 ### Read-Only
 

@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -43,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &SecureClientProfileResource{}
-	_ resource.ResourceWithImportState = &SecureClientProfileResource{}
+	_ resource.Resource                = &SecureClientCustomAttributeResource{}
+	_ resource.ResourceWithImportState = &SecureClientCustomAttributeResource{}
 )
 
-func NewSecureClientProfileResource() resource.Resource {
-	return &SecureClientProfileResource{}
+func NewSecureClientCustomAttributeResource() resource.Resource {
+	return &SecureClientCustomAttributeResource{}
 }
 
-type SecureClientProfileResource struct {
+type SecureClientCustomAttributeResource struct {
 	client *fmc.Client
 }
 
-func (r *SecureClientProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_secure_client_profile"
+func (r *SecureClientCustomAttributeResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_secure_client_custom_attribute"
 }
 
-func (r *SecureClientProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Secure Client Profile.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Secure Client Custom Attribute.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -80,43 +81,76 @@ func (r *SecureClientProfileResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client Profile").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Custom Attribute").String,
 				Required:            true,
 			},
-			"file_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Image.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'AnyConnectProfile'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'AnyConnectCustomAttribute'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Custom Attribute.").String,
 				Optional:            true,
 			},
-			"file_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY").String,
+			"attribute_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the attribute.").AddStringEnumDescription("ALLOW_DEFER_UPDATE", "PER_APP_VPN", "DYNAMIC_SPLIT_TUNNELING", "USER_DEFINED_CUSTOM_ATTR").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY"),
+					stringvalidator.OneOf("ALLOW_DEFER_UPDATE", "PER_APP_VPN", "DYNAMIC_SPLIT_TUNNELING", "USER_DEFINED_CUSTOM_ATTR"),
 				},
 			},
-			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.").String,
-				Required:            true,
+			"user_defined_attribute_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the user-defined attribute.").String,
+				Optional:            true,
+			},
+			"user_defined_attribute_value": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Value of the user-defined attribute.").String,
+				Optional:            true,
+			},
+			"per_app_vpn_value": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Base64 encoded value for Per App VPN.").String,
+				Optional:            true,
+			},
+			"dynamic_split_tunnel_included_domains": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of domains to include in the dynamic split tunneling.").String,
+				ElementType:         types.StringType,
+				Optional:            true,
+			},
+			"dynamic_split_tunnel_excluded_domains": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of domains to exclude from the dynamic split tunneling.").String,
+				ElementType:         types.StringType,
+				Optional:            true,
+			},
+			"defer_update_prompt_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Prompt type for allowing defer update.").AddStringEnumDescription("SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION"),
+				},
+			},
+			"defer_update_default_action": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Default action for allowing defer update.").AddStringEnumDescription("DEFER", "UPDATE").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("DEFER", "UPDATE"),
+				},
+			},
+			"defer_update_minimum_secure_client_version": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Minimum Secure Client version to defer update in x.x.x format.").String,
+				Optional:            true,
+			},
+			"defer_update_prompt_dismiss_timeout": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout in seconds for the prompt dismissal.").String,
+				Optional:            true,
 			},
 		},
 	}
 }
 
-func (r *SecureClientProfileResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *SecureClientCustomAttributeResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -126,8 +160,18 @@ func (r *SecureClientProfileResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-func (r *SecureClientProfileResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan SecureClientProfile
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *SecureClientCustomAttributeResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateSecureClientCustomAttribute) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Secure Client Custom Attribute creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
+	var plan SecureClientCustomAttribute
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -143,30 +187,13 @@ func (r *SecureClientProfileResource) Create(ctx context.Context, req resource.C
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Create request body for the POST request
-	body, contentType, err := plan.toBodyMultiPartUpload(ctx)
+	// Create object
+	body := plan.toBody(ctx, SecureClientCustomAttribute{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to upload local file: %v", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
-	// Create a new request for the POST operation
-	request, _ := r.client.NewReq("POST", plan.getPath(), body, reqMods...)
-
-	// Set the content type header to multipart/form-data
-	request.HttpReq.Header.Set("Content-Type", contentType)
-
-	// No logging. The tflog can only log from memory, but the body might be larger than available memory.
-	request.LogPayload = false
-
-	// Perform the request
-	res, err := r.client.Do(request)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	// Response is in JSON format, so we do as always
 	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
 
@@ -178,10 +205,12 @@ func (r *SecureClientProfileResource) Create(ctx context.Context, req resource.C
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
+// End of section. //template:end create
+
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *SecureClientProfileResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state SecureClientProfile
+func (r *SecureClientCustomAttributeResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state SecureClientCustomAttribute
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -230,8 +259,10 @@ func (r *SecureClientProfileResource) Read(ctx context.Context, req resource.Rea
 
 // End of section. //template:end read
 
-func (r *SecureClientProfileResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state SecureClientProfile
+// Section below is generated&owned by "gen/generator.go". //template:begin update
+
+func (r *SecureClientCustomAttributeResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state SecureClientCustomAttribute
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -253,31 +284,12 @@ func (r *SecureClientProfileResource) Update(ctx context.Context, req resource.U
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
-	// Create request body for the PUT request
-	body, contentType, err := plan.toBodyMultiPartUpload(ctx)
+	body := plan.toBody(ctx, state)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to upload local file: %v", err))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
 	}
-
-	// Create a new request for the PUT operation
-	request, _ := r.client.NewReq("PUT", plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-
-	// Set the content type header to multipart/form-data
-	request.HttpReq.Header.Set("Content-Type", contentType)
-
-	// No logging. The tflog can only log from memory, but the body might be larger than available memory.
-	request.LogPayload = false
-
-	// Perform the request
-	res, err := r.client.Do(request)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	// Response is in JSON format, so we do as always
-	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
@@ -285,10 +297,12 @@ func (r *SecureClientProfileResource) Update(ctx context.Context, req resource.U
 	resp.Diagnostics.Append(diags...)
 }
 
+// End of section. //template:end update
+
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *SecureClientProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state SecureClientProfile
+func (r *SecureClientCustomAttributeResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state SecureClientCustomAttribute
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -318,7 +332,7 @@ func (r *SecureClientProfileResource) Delete(ctx context.Context, req resource.D
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *SecureClientProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *SecureClientCustomAttributeResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)

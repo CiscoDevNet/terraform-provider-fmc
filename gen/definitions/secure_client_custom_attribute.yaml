@@ -1,0 +1,105 @@
+---
+name: Secure Client Custom Attribute
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectcustomattributes
+doc_category: Objects
+minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Secure Client Custom Attribute
+    example: my_secure_client_image
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectCustomAttribute'.
+    computed: true
+  - model_name: type
+    type: String
+    value: AnyConnectCustomAttribute
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Custom Attribute.
+    example: My Secure Client Custom Attribute
+  - model_name: attributeType
+    type: String
+    mandatory: true
+    description: Type of the attribute.
+    enum_values: ['ALLOW_DEFER_UPDATE', 'PER_APP_VPN', 'DYNAMIC_SPLIT_TUNNELING', 'USER_DEFINED_CUSTOM_ATTR']
+    example: USER_DEFINED_CUSTOM_ATTR
+  
+  # User Defined Custom Attribute
+  - model_name: name
+    data_path: ["userDefinedAttribute"]
+    tf_name: user_defined_attribute_name
+    type: String
+    description: Name of the user-defined attribute.
+    example: my_user_defined_attribute
+    minimum_test_value: '"my_user_defined_attribute"'
+  - model_name: value
+    data_path: ["userDefinedAttribute"]
+    tf_name: user_defined_attribute_value
+    type: String
+    description: Value of the user-defined attribute.
+    example: my_value
+    minimum_test_value: '"my_value"'
+
+  # Per App VPN
+  - model_name: perAppVpnBase64EncodedValue
+    tf_name: per_app_vpn_value
+    type: String
+    description: Base64 encoded value for Per App VPN.
+    exclude_example: true
+    exclude_test: true
+  
+  # Dynamic Split Tunneling
+  - model_name: includeDomains
+    data_path: ["dynamicSplitTunnel"]
+    tf_name: dynamic_split_tunnel_included_domains
+    type: List
+    element_type: String
+    description: List of domains to include in the dynamic split tunneling.
+    exclude_example: true
+    exclude_test: true
+  - model_name: excludeDomains
+    data_path: ["dynamicSplitTunnel"]
+    tf_name: dynamic_split_tunnel_excluded_domains
+    type: List
+    element_type: String
+    description: List of domains to exclude from the dynamic split tunneling.
+    exclude_example: true
+    exclude_test: true
+  
+  # Allow Defer Update
+  - model_name: promptType
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_prompt_type
+    type: String
+    description: Prompt type for allowing defer update.
+    enum_values: ["SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION"]
+    exclude_example: true
+    exclude_test: true
+  - model_name: defaultAction
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_default_action
+    type: String
+    description: Default action for allowing defer update.
+    enum_values: ["DEFER", "UPDATE"]
+    exclude_example: true
+    exclude_test: true
+  - model_name: minimumAnyConnectVersion
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_minimum_secure_client_version
+    type: String
+    description: Minimum Secure Client version to defer update in x.x.x format.
+    exclude_example: true
+    exclude_test: true
+  - model_name: promptDismissTimeout
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_prompt_dismiss_timeout
+    type: Int64
+    int_min: 1
+    int_max: 300
+    description: Timeout in seconds for the prompt dismissal.
+    exclude_example: true
+    exclude_test: true
