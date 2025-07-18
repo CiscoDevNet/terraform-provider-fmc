@@ -34,14 +34,18 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type SecureClientExternalBrowserPackage struct {
-	Id          types.String `tfsdk:"id"`
-	Domain      types.String `tfsdk:"domain"`
-	Name        types.String `tfsdk:"name"`
-	FileName    types.String `tfsdk:"file_name"`
-	Type        types.String `tfsdk:"type"`
-	Description types.String `tfsdk:"description"`
-	Path        types.String `tfsdk:"path"`
+type SecureClientCustomization struct {
+	Id                types.String `tfsdk:"id"`
+	Domain            types.String `tfsdk:"domain"`
+	Name              types.String `tfsdk:"name"`
+	FileName          types.String `tfsdk:"file_name"`
+	Type              types.String `tfsdk:"type"`
+	Description       types.String `tfsdk:"description"`
+	CustomizationType types.String `tfsdk:"customization_type"`
+	Language          types.String `tfsdk:"language"`
+	ScriptType        types.String `tfsdk:"script_type"`
+	OperatingSystem   types.String `tfsdk:"operating_system"`
+	Path              types.String `tfsdk:"path"`
 }
 
 // End of section. //template:end types
@@ -52,15 +56,15 @@ type SecureClientExternalBrowserPackage struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data SecureClientExternalBrowserPackage) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectexternalbrowserpackages"
+func (data SecureClientCustomization) getPath() string {
+	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/secureclientcustomizations"
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *SecureClientExternalBrowserPackage) fromBody(ctx context.Context, res gjson.Result) {
+func (data *SecureClientCustomization) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -81,6 +85,26 @@ func (data *SecureClientExternalBrowserPackage) fromBody(ctx context.Context, re
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("customizationType"); value.Exists() {
+		data.CustomizationType = types.StringValue(value.String())
+	} else {
+		data.CustomizationType = types.StringNull()
+	}
+	if value := res.Get("language"); value.Exists() {
+		data.Language = types.StringValue(value.String())
+	} else {
+		data.Language = types.StringNull()
+	}
+	if value := res.Get("scriptType"); value.Exists() {
+		data.ScriptType = types.StringValue(value.String())
+	} else {
+		data.ScriptType = types.StringNull()
+	}
+	if value := res.Get("operatingSystem"); value.Exists() {
+		data.OperatingSystem = types.StringValue(value.String())
+	} else {
+		data.OperatingSystem = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -91,7 +115,7 @@ func (data *SecureClientExternalBrowserPackage) fromBody(ctx context.Context, re
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *SecureClientExternalBrowserPackage) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *SecureClientCustomization) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -112,6 +136,26 @@ func (data *SecureClientExternalBrowserPackage) fromBodyPartial(ctx context.Cont
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("customizationType"); value.Exists() && !data.CustomizationType.IsNull() {
+		data.CustomizationType = types.StringValue(value.String())
+	} else {
+		data.CustomizationType = types.StringNull()
+	}
+	if value := res.Get("language"); value.Exists() && !data.Language.IsNull() {
+		data.Language = types.StringValue(value.String())
+	} else {
+		data.Language = types.StringNull()
+	}
+	if value := res.Get("scriptType"); value.Exists() && !data.ScriptType.IsNull() {
+		data.ScriptType = types.StringValue(value.String())
+	} else {
+		data.ScriptType = types.StringNull()
+	}
+	if value := res.Get("operatingSystem"); value.Exists() && !data.OperatingSystem.IsNull() {
+		data.OperatingSystem = types.StringValue(value.String())
+	} else {
+		data.OperatingSystem = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -120,7 +164,7 @@ func (data *SecureClientExternalBrowserPackage) fromBodyPartial(ctx context.Cont
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *SecureClientExternalBrowserPackage) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *SecureClientCustomization) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.FileName.IsUnknown() {
 		if value := res.Get("fileName"); value.Exists() {
 			data.FileName = types.StringValue(value.String())
@@ -142,7 +186,7 @@ func (data *SecureClientExternalBrowserPackage) fromBodyUnknowns(ctx context.Con
 // toBodyMultiPartUpload opens a file located at the Path, formats the contents as a MIME multipart/form-data
 // body of a HTTP POST request (so, a file upload) and returns them as a stream.
 // The second return is the corresponding Content-Type header value, and the third an error.
-func (data *SecureClientExternalBrowserPackage) toBodyMultiPartUpload(ctx context.Context) (io.Reader, string, error) {
+func (data *SecureClientCustomization) toBodyMultiPartUpload(ctx context.Context) (io.Reader, string, error) {
 	const dummyContentType = "application/octet-stream"
 
 	source, err := os.Open(data.Path.ValueString())
@@ -163,6 +207,26 @@ func (data *SecureClientExternalBrowserPackage) toBodyMultiPartUpload(ctx contex
 		// Create a form field for the user-defined name of the secure client image
 		if err := mw.WriteField("name", data.Name.ValueString()); err != nil {
 			panic(err)
+		}
+
+		if err := mw.WriteField("customizationType", data.CustomizationType.ValueString()); err != nil {
+			panic(err)
+		}
+
+		if data.Language.ValueString() != "" {
+			if err := mw.WriteField("language", data.Language.ValueString()); err != nil {
+				panic(err)
+			}
+		}
+		if data.ScriptType.ValueString() != "" {
+			if err := mw.WriteField("scriptType", data.ScriptType.ValueString()); err != nil {
+				panic(err)
+			}
+		}
+		if data.OperatingSystem.ValueString() != "" {
+			if err := mw.WriteField("operatingSystem", data.OperatingSystem.ValueString()); err != nil {
+				panic(err)
+			}
 		}
 
 		if data.Id.ValueString() != "" {

@@ -28,7 +28,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
-	"github.com/tidwall/sjson"
 )
 
 // End of section. //template:end imports
@@ -59,30 +58,6 @@ func (data SecureClientProfile) getPath() string {
 }
 
 // End of section. //template:end getPath
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBody
-
-func (data SecureClientProfile) toBody(ctx context.Context, state SecureClientProfile) string {
-	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
-	if !data.Name.IsNull() {
-		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
-	if !data.Description.IsNull() {
-		body, _ = sjson.Set(body, "description", data.Description.ValueString())
-	}
-	if !data.FileType.IsNull() {
-		body, _ = sjson.Set(body, "fileType", data.FileType.ValueString())
-	}
-	if !data.Path.IsNull() {
-		body, _ = sjson.Set(body, "payloadFile", data.Path.ValueString())
-	}
-	return body
-}
-
-// End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
