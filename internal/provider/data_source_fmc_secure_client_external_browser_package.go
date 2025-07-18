@@ -72,12 +72,12 @@ func (d *SecureClientExternalBrowserPackageDataSource) Schema(ctx context.Contex
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User defined name of the Secure Client External Browser Package",
+				MarkdownDescription: "Name of the Secure Client External Browser Package object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Secure Client External Browser Package.",
+				MarkdownDescription: "Name of the Secure Client External Browser Package file.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,11 +85,11 @@ func (d *SecureClientExternalBrowserPackageDataSource) Schema(ctx context.Contex
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client External Browser Package.",
+				MarkdownDescription: "Description of the Secure Client External Browser Package object.",
 				Computed:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: "Path to the Secure Client External Browser Package file. Accepted file types are .pkg and .zip.",
+				MarkdownDescription: "Path to the Secure Client External Browser Package file. Supported file types are .pkg, .zip.",
 				Computed:            true,
 			},
 		},

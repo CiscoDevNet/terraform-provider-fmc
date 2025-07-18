@@ -81,7 +81,7 @@ func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req re
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Custom Attribute").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Custom Attribute object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -92,7 +92,7 @@ func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req re
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Custom Attribute.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Custom Attribute object.").String,
 				Optional:            true,
 			},
 			"attribute_type": schema.StringAttribute{
@@ -103,47 +103,47 @@ func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req re
 				},
 			},
 			"user_defined_attribute_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the user-defined attribute.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.").String,
 				Optional:            true,
 			},
 			"user_defined_attribute_value": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value of the user-defined attribute.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Value of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.").String,
 				Optional:            true,
 			},
 			"per_app_vpn_value": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Base64 encoded value for Per App VPN.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Base64 encoded value for Per App VPN. Applicable only when `attribute_type` is PER_APP_VPN.").String,
 				Optional:            true,
 			},
 			"dynamic_split_tunnel_included_domains": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of domains to include in the dynamic split tunneling.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Domain names that will be included in the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"dynamic_split_tunnel_excluded_domains": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of domains to exclude from the dynamic split tunneling.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Domain names that will be excluded from the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"defer_update_prompt_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Prompt type for allowing defer update.").AddStringEnumDescription("SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Prompt type.").AddStringEnumDescription("SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION"),
 				},
 			},
 			"defer_update_default_action": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default action for allowing defer update.").AddStringEnumDescription("DEFER", "UPDATE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.").AddStringEnumDescription("DEFER", "UPDATE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DEFER", "UPDATE"),
 				},
 			},
 			"defer_update_minimum_secure_client_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Minimum Secure Client version to defer update in x.x.x format.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.").String,
 				Optional:            true,
 			},
 			"defer_update_prompt_dismiss_timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout in seconds for the prompt dismissal.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) for the prompt dismissal.").String,
 				Optional:            true,
 			},
 		},

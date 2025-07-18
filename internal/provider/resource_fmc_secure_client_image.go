@@ -78,11 +78,11 @@ func (r *SecureClientImageResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client Image").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Image object.").String,
 				Required:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Image.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Image file.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -96,11 +96,11 @@ func (r *SecureClientImageResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Image.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Image object.").String,
 				Optional:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to the *.pkg Secure Client Image file").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Path to the Secure Client Image file. Supported file type is .pkg.").String,
 				Required:            true,
 			},
 		},

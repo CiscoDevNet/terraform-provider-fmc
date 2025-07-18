@@ -25,15 +25,15 @@ data "fmc_secure_client_customization" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the Secure Client Customization.
+- `name` (String) Name of the Secure Client Customization object.
 
 ### Read-Only
 
-- `customization_type` (String) Type of the Secure Client Customization.
-- `description` (String) Description of the Secure Client Customization.
+- `customization_type` (String) Type of the Secure Client Customization object.
+- `description` (String) Description of the Secure Client Customization object.
 - `file_name` (String) Name of the Secure Client Customization file.
-- `language` (String) Language code. Applicable only when customization is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.
-- `operating_system` (String) Operating System. Applicable only when customization is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.
-- `path` (String) Path to Secure Client Customization file
-- `script_type` (String) Type of the script. Applicable only when customization is of type SCRIPT.
-- `type` (String) Type of the object; this value is always 'SecureClientCustomizationModel'.
+- `language` (String) Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.
+- `operating_system` (String) Operating System. Applicable only when `customization_type` is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.
+- `path` (String) Path to Secure Client Customization file.
+- `script_type` (String) Type of the script. Applicable only when `customization_type` is of type SCRIPT.
+- `type` (String) Type of the object; this value is always 'SecureClientCustomization'.

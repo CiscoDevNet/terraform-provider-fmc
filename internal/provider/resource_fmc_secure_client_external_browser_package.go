@@ -78,11 +78,11 @@ func (r *SecureClientExternalBrowserPackageResource) Schema(ctx context.Context,
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client External Browser Package").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client External Browser Package object.").String,
 				Required:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client External Browser Package.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client External Browser Package file.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -96,11 +96,11 @@ func (r *SecureClientExternalBrowserPackageResource) Schema(ctx context.Context,
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client External Browser Package.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client External Browser Package object.").String,
 				Optional:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to the Secure Client External Browser Package file. Accepted file types are .pkg and .zip.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Path to the Secure Client External Browser Package file. Supported file types are .pkg, .zip.").String,
 				Required:            true,
 			},
 		},

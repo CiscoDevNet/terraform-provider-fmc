@@ -72,12 +72,12 @@ func (d *SecureClientProfileDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User defined name of the Secure Client Profile",
+				MarkdownDescription: "Name of the Secure Client Profile object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Secure Client Image.",
+				MarkdownDescription: "Name of the Secure Client Profile file.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,15 +85,15 @@ func (d *SecureClientProfileDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client Profile.",
+				MarkdownDescription: "Description of the Secure Client Profile object.",
 				Computed:            true,
 			},
 			"file_type": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Type of the Secure Client Profile file.",
 				Computed:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: "Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.",
+				MarkdownDescription: "Path to the Secure Client Profile file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.",
 				Computed:            true,
 			},
 		},

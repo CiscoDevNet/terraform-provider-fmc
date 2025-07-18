@@ -26,18 +26,19 @@ resource "fmc_secure_client_profile" "example" {
 
 ### Required
 
-- `file_type` (String) - Choices: `ANYCONNECT_MANAGEMENT_VPN_PROFILE`, `AMP_ENABLER`, `FEEDBACK`, `WEB_SECURITY`, `ANYCONNECT_VPN_PROFILE`, `UMBRELLA_ROAMING`, `NETWORK_ACCESS_MANAGER`, `ISE_POSTURE`, `NETWORK_VISIBILITY`
-- `name` (String) User defined name of the Secure Client Profile
-- `path` (String) Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
+- `file_type` (String) Type of the Secure Client Profile file.
+  - Choices: `ANYCONNECT_MANAGEMENT_VPN_PROFILE`, `AMP_ENABLER`, `FEEDBACK`, `WEB_SECURITY`, `ANYCONNECT_VPN_PROFILE`, `UMBRELLA_ROAMING`, `NETWORK_ACCESS_MANAGER`, `ISE_POSTURE`, `NETWORK_VISIBILITY`
+- `name` (String) Name of the Secure Client Profile object.
+- `path` (String) Path to the Secure Client Profile file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
 
 ### Optional
 
-- `description` (String) Description of the Secure Client Profile.
+- `description` (String) Description of the Secure Client Profile object.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `file_name` (String) Name of the Secure Client Image.
+- `file_name` (String) Name of the Secure Client Profile file.
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'AnyConnectProfile'.
 

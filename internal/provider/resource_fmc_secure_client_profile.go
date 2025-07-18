@@ -80,11 +80,11 @@ func (r *SecureClientProfileResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client Profile").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Profile object.").String,
 				Required:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Image.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Profile file.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -98,18 +98,18 @@ func (r *SecureClientProfileResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Profile object.").String,
 				Optional:            true,
 			},
 			"file_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the Secure Client Profile file.").AddStringEnumDescription("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY"),
 				},
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Path to the Secure Client Profile file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.").String,
 				Required:            true,
 			},
 		},

@@ -80,7 +80,7 @@ func (r *SecureClientCustomizationResource) Schema(ctx context.Context, req reso
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Customization.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Secure Client Customization object.").String,
 				Required:            true,
 			},
 			"file_name": schema.StringAttribute{
@@ -91,43 +91,43 @@ func (r *SecureClientCustomizationResource) Schema(ctx context.Context, req reso
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecureClientCustomizationModel'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecureClientCustomization'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Customization.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Customization object.").String,
 				Optional:            true,
 			},
 			"customization_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the Secure Client Customization.").AddStringEnumDescription("LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the Secure Client Customization object.").AddStringEnumDescription("LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM"),
 				},
 			},
 			"language": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Language code. Applicable only when customization is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.").String,
 				Optional:            true,
 			},
 			"script_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the script. Applicable only when customization is of type SCRIPT.").AddStringEnumDescription("ON_CONNECT", "ON_DISCONNECT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the script. Applicable only when `customization_type` is of type SCRIPT.").AddStringEnumDescription("ON_CONNECT", "ON_DISCONNECT").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ON_CONNECT", "ON_DISCONNECT"),
 				},
 			},
 			"operating_system": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Operating System. Applicable only when customization is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.").AddStringEnumDescription("WINDOWS", "MAC", "LINUX").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Operating System. Applicable only when `customization_type` is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.").AddStringEnumDescription("WINDOWS", "MAC", "LINUX").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("WINDOWS", "MAC", "LINUX"),
 				},
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to Secure Client Customization file").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Path to Secure Client Customization file.").String,
 				Required:            true,
 			},
 		},

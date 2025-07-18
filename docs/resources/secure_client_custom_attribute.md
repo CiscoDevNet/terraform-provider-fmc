@@ -35,23 +35,23 @@ resource "fmc_secure_client_custom_attribute" "example" {
 
 - `attribute_type` (String) Type of the attribute.
   - Choices: `ALLOW_DEFER_UPDATE`, `PER_APP_VPN`, `DYNAMIC_SPLIT_TUNNELING`, `USER_DEFINED_CUSTOM_ATTR`
-- `name` (String) Name of the Secure Client Custom Attribute
+- `name` (String) Name of the Secure Client Custom Attribute object.
 
 ### Optional
 
-- `defer_update_default_action` (String) Default action for allowing defer update.
+- `defer_update_default_action` (String) Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.
   - Choices: `DEFER`, `UPDATE`
-- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version to defer update in x.x.x format.
-- `defer_update_prompt_dismiss_timeout` (Number) Timeout in seconds for the prompt dismissal.
-- `defer_update_prompt_type` (String) Prompt type for allowing defer update.
+- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.
+- `defer_update_prompt_dismiss_timeout` (Number) Timeout (in seconds) for the prompt dismissal.
+- `defer_update_prompt_type` (String) Prompt type.
   - Choices: `SHOW_UNTIL_USER_ACTION`, `SHOW_UNTIL_TIMEOUT`, `NO_PROMPT_AUTO_ACTION`
-- `description` (String) Description of the Secure Client Custom Attribute.
+- `description` (String) Description of the Secure Client Custom Attribute object.
 - `domain` (String) Name of the FMC domain
-- `dynamic_split_tunnel_excluded_domains` (List of String) List of domains to exclude from the dynamic split tunneling.
-- `dynamic_split_tunnel_included_domains` (List of String) List of domains to include in the dynamic split tunneling.
-- `per_app_vpn_value` (String) Base64 encoded value for Per App VPN.
-- `user_defined_attribute_name` (String) Name of the user-defined attribute.
-- `user_defined_attribute_value` (String) Value of the user-defined attribute.
+- `dynamic_split_tunnel_excluded_domains` (List of String) Domain names that will be excluded from the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.
+- `dynamic_split_tunnel_included_domains` (List of String) Domain names that will be included in the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.
+- `per_app_vpn_value` (String) Base64 encoded value for Per App VPN. Applicable only when `attribute_type` is PER_APP_VPN.
+- `user_defined_attribute_name` (String) Name of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.
+- `user_defined_attribute_value` (String) Value of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.
 
 ### Read-Only
 

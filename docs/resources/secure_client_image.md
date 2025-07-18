@@ -25,17 +25,17 @@ resource "fmc_secure_client_image" "example" {
 
 ### Required
 
-- `name` (String) User defined name of the Secure Client Image
-- `path` (String) Path to the *.pkg Secure Client Image file
+- `name` (String) Name of the Secure Client Image object.
+- `path` (String) Path to the Secure Client Image file. Supported file type is .pkg.
 
 ### Optional
 
-- `description` (String) Description of the Secure Client Image.
+- `description` (String) Description of the Secure Client Image object.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only
 
-- `file_name` (String) Name of the Secure Client Image.
+- `file_name` (String) Name of the Secure Client Image file.
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'AnyConnectPackage'.
 

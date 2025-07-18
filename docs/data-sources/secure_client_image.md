@@ -25,11 +25,11 @@ data "fmc_secure_client_image" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User defined name of the Secure Client Image
+- `name` (String) Name of the Secure Client Image object.
 
 ### Read-Only
 
-- `description` (String) Description of the Secure Client Image.
-- `file_name` (String) Name of the Secure Client Image.
-- `path` (String) Path to the *.pkg Secure Client Image file
+- `description` (String) Description of the Secure Client Image object.
+- `file_name` (String) Name of the Secure Client Image file.
+- `path` (String) Path to the Secure Client Image file. Supported file type is .pkg.
 - `type` (String) Type of the object; this value is always 'AnyConnectPackage'.

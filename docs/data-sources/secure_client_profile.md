@@ -25,12 +25,12 @@ data "fmc_secure_client_profile" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User defined name of the Secure Client Profile
+- `name` (String) Name of the Secure Client Profile object.
 
 ### Read-Only
 
-- `description` (String) Description of the Secure Client Profile.
-- `file_name` (String) Name of the Secure Client Image.
-- `file_type` (String)
-- `path` (String) Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
+- `description` (String) Description of the Secure Client Profile object.
+- `file_name` (String) Name of the Secure Client Profile file.
+- `file_type` (String) Type of the Secure Client Profile file.
+- `path` (String) Path to the Secure Client Profile file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
 - `type` (String) Type of the object; this value is always 'AnyConnectProfile'.

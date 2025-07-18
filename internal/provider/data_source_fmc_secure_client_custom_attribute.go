@@ -72,7 +72,7 @@ func (d *SecureClientCustomAttributeDataSource) Schema(ctx context.Context, req 
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Secure Client Custom Attribute",
+				MarkdownDescription: "Name of the Secure Client Custom Attribute object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *SecureClientCustomAttributeDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client Custom Attribute.",
+				MarkdownDescription: "Description of the Secure Client Custom Attribute object.",
 				Computed:            true,
 			},
 			"attribute_type": schema.StringAttribute{
@@ -89,41 +89,41 @@ func (d *SecureClientCustomAttributeDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"user_defined_attribute_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the user-defined attribute.",
+				MarkdownDescription: "Name of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.",
 				Computed:            true,
 			},
 			"user_defined_attribute_value": schema.StringAttribute{
-				MarkdownDescription: "Value of the user-defined attribute.",
+				MarkdownDescription: "Value of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.",
 				Computed:            true,
 			},
 			"per_app_vpn_value": schema.StringAttribute{
-				MarkdownDescription: "Base64 encoded value for Per App VPN.",
+				MarkdownDescription: "Base64 encoded value for Per App VPN. Applicable only when `attribute_type` is PER_APP_VPN.",
 				Computed:            true,
 			},
 			"dynamic_split_tunnel_included_domains": schema.ListAttribute{
-				MarkdownDescription: "List of domains to include in the dynamic split tunneling.",
+				MarkdownDescription: "Domain names that will be included in the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"dynamic_split_tunnel_excluded_domains": schema.ListAttribute{
-				MarkdownDescription: "List of domains to exclude from the dynamic split tunneling.",
+				MarkdownDescription: "Domain names that will be excluded from the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"defer_update_prompt_type": schema.StringAttribute{
-				MarkdownDescription: "Prompt type for allowing defer update.",
+				MarkdownDescription: "Prompt type.",
 				Computed:            true,
 			},
 			"defer_update_default_action": schema.StringAttribute{
-				MarkdownDescription: "Default action for allowing defer update.",
+				MarkdownDescription: "Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.",
 				Computed:            true,
 			},
 			"defer_update_minimum_secure_client_version": schema.StringAttribute{
-				MarkdownDescription: "Minimum Secure Client version to defer update in x.x.x format.",
+				MarkdownDescription: "Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.",
 				Computed:            true,
 			},
 			"defer_update_prompt_dismiss_timeout": schema.Int64Attribute{
-				MarkdownDescription: "Timeout in seconds for the prompt dismissal.",
+				MarkdownDescription: "Timeout (in seconds) for the prompt dismissal.",
 				Computed:            true,
 			},
 		},

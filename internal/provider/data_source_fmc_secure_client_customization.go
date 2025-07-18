@@ -72,7 +72,7 @@ func (d *SecureClientCustomizationDataSource) Schema(ctx context.Context, req da
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Secure Client Customization.",
+				MarkdownDescription: "Name of the Secure Client Customization object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,31 +81,31 @@ func (d *SecureClientCustomizationDataSource) Schema(ctx context.Context, req da
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'SecureClientCustomizationModel'.",
+				MarkdownDescription: "Type of the object; this value is always 'SecureClientCustomization'.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client Customization.",
+				MarkdownDescription: "Description of the Secure Client Customization object.",
 				Computed:            true,
 			},
 			"customization_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the Secure Client Customization.",
+				MarkdownDescription: "Type of the Secure Client Customization object.",
 				Computed:            true,
 			},
 			"language": schema.StringAttribute{
-				MarkdownDescription: "Language code. Applicable only when customization is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.",
+				MarkdownDescription: "Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.",
 				Computed:            true,
 			},
 			"script_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the script. Applicable only when customization is of type SCRIPT.",
+				MarkdownDescription: "Type of the script. Applicable only when `customization_type` is of type SCRIPT.",
 				Computed:            true,
 			},
 			"operating_system": schema.StringAttribute{
-				MarkdownDescription: "Operating System. Applicable only when customization is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.",
+				MarkdownDescription: "Operating System. Applicable only when `customization_type` is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.",
 				Computed:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: "Path to Secure Client Customization file",
+				MarkdownDescription: "Path to Secure Client Customization file.",
 				Computed:            true,
 			},
 		},

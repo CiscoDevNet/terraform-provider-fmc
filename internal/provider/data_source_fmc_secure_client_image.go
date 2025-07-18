@@ -72,12 +72,12 @@ func (d *SecureClientImageDataSource) Schema(ctx context.Context, req datasource
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User defined name of the Secure Client Image",
+				MarkdownDescription: "Name of the Secure Client Image object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"file_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Secure Client Image.",
+				MarkdownDescription: "Name of the Secure Client Image file.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,11 +85,11 @@ func (d *SecureClientImageDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client Image.",
+				MarkdownDescription: "Description of the Secure Client Image object.",
 				Computed:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: "Path to the *.pkg Secure Client Image file",
+				MarkdownDescription: "Path to the Secure Client Image file. Supported file type is .pkg.",
 				Computed:            true,
 			},
 		},

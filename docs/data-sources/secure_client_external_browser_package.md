@@ -25,11 +25,11 @@ data "fmc_secure_client_external_browser_package" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User defined name of the Secure Client External Browser Package
+- `name` (String) Name of the Secure Client External Browser Package object.
 
 ### Read-Only
 
-- `description` (String) Description of the Secure Client External Browser Package.
-- `file_name` (String) Name of the Secure Client External Browser Package.
-- `path` (String) Path to the Secure Client External Browser Package file. Accepted file types are .pkg and .zip.
+- `description` (String) Description of the Secure Client External Browser Package object.
+- `file_name` (String) Name of the Secure Client External Browser Package file.
+- `path` (String) Path to the Secure Client External Browser Package file. Supported file types are .pkg, .zip.
 - `type` (String) Type of the object; this value is always 'AnyConnectExternalBrowserPackage'.

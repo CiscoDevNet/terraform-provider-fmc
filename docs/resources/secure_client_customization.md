@@ -27,26 +27,26 @@ resource "fmc_secure_client_customization" "example" {
 
 ### Required
 
-- `name` (String) Name of the Secure Client Customization.
-- `path` (String) Path to Secure Client Customization file
+- `name` (String) Name of the Secure Client Customization object.
+- `path` (String) Path to Secure Client Customization file.
 
 ### Optional
 
-- `customization_type` (String) Type of the Secure Client Customization.
+- `customization_type` (String) Type of the Secure Client Customization object.
   - Choices: `LANGUAGE_LOCALIZATION`, `IMAGE`, `SCRIPT`, `BINARY`, `CUSTOMIZED_INSTALLER_TRANSFORM`, `LOCALIZED_INSTALLER_TRANSFORM`
-- `description` (String) Description of the Secure Client Customization.
+- `description` (String) Description of the Secure Client Customization object.
 - `domain` (String) Name of the FMC domain
-- `language` (String) Language code. Applicable only when customization is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.
-- `operating_system` (String) Operating System. Applicable only when customization is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.
+- `language` (String) Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.
+- `operating_system` (String) Operating System. Applicable only when `customization_type` is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.
   - Choices: `WINDOWS`, `MAC`, `LINUX`
-- `script_type` (String) Type of the script. Applicable only when customization is of type SCRIPT.
+- `script_type` (String) Type of the script. Applicable only when `customization_type` is of type SCRIPT.
   - Choices: `ON_CONNECT`, `ON_DISCONNECT`
 
 ### Read-Only
 
 - `file_name` (String) Name of the Secure Client Customization file.
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this value is always 'SecureClientCustomizationModel'.
+- `type` (String) Type of the object; this value is always 'SecureClientCustomization'.
 
 ## Import
 
