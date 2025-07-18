@@ -26,6 +26,7 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -143,8 +144,11 @@ func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"defer_update_prompt_dismiss_timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) for the prompt dismissal.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) for the prompt dismissal.").AddIntegerRangeDescription(1, 300).String,
 				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 300),
+				},
 			},
 		},
 	}

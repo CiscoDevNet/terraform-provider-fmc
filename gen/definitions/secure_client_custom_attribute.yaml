@@ -98,8 +98,8 @@ attributes:
     data_path: ["deferUpdate"]
     tf_name: defer_update_prompt_dismiss_timeout
     type: Int64
-    int_min: 1
-    int_max: 300
+    min_int: 1
+    max_int: 300
     description: Timeout (in seconds) for the prompt dismissal.
     exclude_example: true
     exclude_test: true

@@ -43,6 +43,7 @@ resource "fmc_secure_client_custom_attribute" "example" {
   - Choices: `DEFER`, `UPDATE`
 - `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.
 - `defer_update_prompt_dismiss_timeout` (Number) Timeout (in seconds) for the prompt dismissal.
+  - Range: `1`-`300`
 - `defer_update_prompt_type` (String) Prompt type.
   - Choices: `SHOW_UNTIL_USER_ACTION`, `SHOW_UNTIL_TIMEOUT`, `NO_PROMPT_AUTO_ACTION`
 - `description` (String) Description of the Secure Client Custom Attribute object.
