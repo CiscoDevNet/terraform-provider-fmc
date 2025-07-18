@@ -1,0 +1,33 @@
+---
+name: Countries
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/countries
+no_resource: true
+no_import: true
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Countries. The key of the map is the name of the individual Country.
+    map_key_example: Poland
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Country.
+        exclude_example: true
+        exclude_test: true        
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'Country'.
+        computed: true
+      - model_name: iso2
+        type: String
+        description: ISO2 country code.
+        example: pl
+      - model_name: iso3
+        type: String
+        description: ISO3 country code.
+        example: pol

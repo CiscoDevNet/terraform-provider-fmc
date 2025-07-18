@@ -1,0 +1,62 @@
+# Manual resource - adjustBody (generate seq number)
+---
+name: Service Access
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/serviceaccessobjects
+doc_category: Objects
+adjust_body: true
+minimum_version: "7.7"
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the object.
+    mandatory: true
+    example: my_service_access
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ServiceAccessObject'.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ServiceAccessObject'.
+    value: ServiceAccessObject
+  - model_name: defaultAction
+    type: String
+    description: Default action for the Service Access object.
+    enum_values: [ALLOW, DENY]
+    example: DENY
+    mandatory: true
+  - model_name: rules
+    type: List
+    description: Ordered list of Service Access rules.
+    ordered_list: true
+    attributes:
+      - model_name: action
+        type: String
+        enum_values: [ALLOW, DENY]
+        example: ALLOW
+        minimum_test_value: '"DENY"'
+        mandatory: true
+      - model_name: geoSources
+        tf_name: geolocation_sources
+        type: List
+        description: List of geolocation sources (Country, Continent or Geolocation source).
+        mandatory: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the geolocation source.
+            mandatory: true
+            test_value: 'data.fmc_countries.test.items["Poland"].id'
+          - model_name: type
+            type: String
+            description: Type of the geolocation source.
+            mandatory: true
+            test_value: 'data.fmc_countries.test.items["Poland"].type'
+
+test_prerequisites: |-
+  data "fmc_countries" "test" {
+    items = {
+      "Poland"  = {}
+    }
+  }
