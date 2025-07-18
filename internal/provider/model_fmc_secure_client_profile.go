@@ -35,13 +35,14 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type SecureClientImage struct {
+type SecureClientProfile struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
 	Name        types.String `tfsdk:"name"`
 	FileName    types.String `tfsdk:"file_name"`
 	Type        types.String `tfsdk:"type"`
 	Description types.String `tfsdk:"description"`
+	FileType    types.String `tfsdk:"file_type"`
 	Path        types.String `tfsdk:"path"`
 }
 
@@ -53,15 +54,15 @@ type SecureClientImage struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data SecureClientImage) getPath() string {
-	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectpackages"
+func (data SecureClientProfile) getPath() string {
+	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectprofiles"
 }
 
 // End of section. //template:end getPath
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data SecureClientImage) toBody(ctx context.Context, state SecureClientImage) string {
+func (data SecureClientProfile) toBody(ctx context.Context, state SecureClientProfile) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
@@ -71,6 +72,9 @@ func (data SecureClientImage) toBody(ctx context.Context, state SecureClientImag
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
+	}
+	if !data.FileType.IsNull() {
+		body, _ = sjson.Set(body, "fileType", data.FileType.ValueString())
 	}
 	if !data.Path.IsNull() {
 		body, _ = sjson.Set(body, "payloadFile", data.Path.ValueString())
@@ -82,7 +86,7 @@ func (data SecureClientImage) toBody(ctx context.Context, state SecureClientImag
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *SecureClientImage) fromBody(ctx context.Context, res gjson.Result) {
+func (data *SecureClientProfile) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -103,6 +107,11 @@ func (data *SecureClientImage) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("fileType"); value.Exists() {
+		data.FileType = types.StringValue(value.String())
+	} else {
+		data.FileType = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBody
@@ -113,7 +122,7 @@ func (data *SecureClientImage) fromBody(ctx context.Context, res gjson.Result) {
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *SecureClientImage) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *SecureClientProfile) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -134,6 +143,11 @@ func (data *SecureClientImage) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Description = types.StringNull()
 	}
+	if value := res.Get("fileType"); value.Exists() && !data.FileType.IsNull() {
+		data.FileType = types.StringValue(value.String())
+	} else {
+		data.FileType = types.StringNull()
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -142,7 +156,7 @@ func (data *SecureClientImage) fromBodyPartial(ctx context.Context, res gjson.Re
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *SecureClientImage) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *SecureClientProfile) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.FileName.IsUnknown() {
 		if value := res.Get("fileName"); value.Exists() {
 			data.FileName = types.StringValue(value.String())
@@ -164,7 +178,7 @@ func (data *SecureClientImage) fromBodyUnknowns(ctx context.Context, res gjson.R
 // toBodyMultiPartUpload opens a file located at the Path, formats the contents as a MIME multipart/form-data
 // body of a HTTP POST request (so, a file upload) and returns them as a stream.
 // The second return is the corresponding Content-Type header value, and the third an error.
-func (data *SecureClientImage) toBodyMultiPartUpload(ctx context.Context) (io.Reader, string, error) {
+func (data *SecureClientProfile) toBodyMultiPartUpload(ctx context.Context) (io.Reader, string, error) {
 	const dummyContentType = "application/octet-stream"
 
 	source, err := os.Open(data.Path.ValueString())
@@ -184,6 +198,11 @@ func (data *SecureClientImage) toBodyMultiPartUpload(ctx context.Context) (io.Re
 
 		// Create a form field for the user-defined name of the secure client image
 		if err := mw.WriteField("name", data.Name.ValueString()); err != nil {
+			panic(err)
+		}
+
+		// Create a form field for the file type
+		if err := mw.WriteField("fileType", data.FileType.ValueString()); err != nil {
 			panic(err)
 		}
 

@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &SecureClientImageDataSource{}
-	_ datasource.DataSourceWithConfigure = &SecureClientImageDataSource{}
+	_ datasource.DataSource              = &SecureClientProfileDataSource{}
+	_ datasource.DataSourceWithConfigure = &SecureClientProfileDataSource{}
 )
 
-func NewSecureClientImageDataSource() datasource.DataSource {
-	return &SecureClientImageDataSource{}
+func NewSecureClientProfileDataSource() datasource.DataSource {
+	return &SecureClientProfileDataSource{}
 }
 
-type SecureClientImageDataSource struct {
+type SecureClientProfileDataSource struct {
 	client *fmc.Client
 }
 
-func (d *SecureClientImageDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_secure_client_image"
+func (d *SecureClientProfileDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_secure_client_profile"
 }
 
-func (d *SecureClientImageDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *SecureClientProfileDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Secure Client Image.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Secure Client Profile.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,7 +72,7 @@ func (d *SecureClientImageDataSource) Schema(ctx context.Context, req datasource
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User defined name of the Secure Client Image",
+				MarkdownDescription: "User defined name of the Secure Client Profile",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,21 +81,25 @@ func (d *SecureClientImageDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'AnyConnectPackage'.",
+				MarkdownDescription: "Type of the object; this value is always 'AnyConnectProfile'.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Secure Client Image.",
+				MarkdownDescription: "Description of the Secure Client Profile.",
+				Computed:            true,
+			},
+			"file_type": schema.StringAttribute{
+				MarkdownDescription: "",
 				Computed:            true,
 			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: "Path to the *.pkg Secure Client Image file",
+				MarkdownDescription: "Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *SecureClientImageDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *SecureClientProfileDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -104,7 +108,7 @@ func (d *SecureClientImageDataSource) ConfigValidators(ctx context.Context) []da
 	}
 }
 
-func (d *SecureClientImageDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *SecureClientProfileDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -116,8 +120,8 @@ func (d *SecureClientImageDataSource) Configure(_ context.Context, req datasourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *SecureClientImageDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config SecureClientImage
+func (d *SecureClientProfileDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config SecureClientProfile
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

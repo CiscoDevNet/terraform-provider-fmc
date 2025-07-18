@@ -25,11 +25,13 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -41,26 +43,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &SecureClientImageResource{}
-	_ resource.ResourceWithImportState = &SecureClientImageResource{}
+	_ resource.Resource                = &SecureClientProfileResource{}
+	_ resource.ResourceWithImportState = &SecureClientProfileResource{}
 )
 
-func NewSecureClientImageResource() resource.Resource {
-	return &SecureClientImageResource{}
+func NewSecureClientProfileResource() resource.Resource {
+	return &SecureClientProfileResource{}
 }
 
-type SecureClientImageResource struct {
+type SecureClientProfileResource struct {
 	client *fmc.Client
 }
 
-func (r *SecureClientImageResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_secure_client_image"
+func (r *SecureClientProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_secure_client_profile"
 }
 
-func (r *SecureClientImageResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *SecureClientProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Secure Client Image.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Secure Client Profile.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -78,7 +80,7 @@ func (r *SecureClientImageResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client Image").String,
+				MarkdownDescription: helpers.NewAttributeDescription("User defined name of the Secure Client Profile").String,
 				Required:            true,
 			},
 			"file_name": schema.StringAttribute{
@@ -89,25 +91,32 @@ func (r *SecureClientImageResource) Schema(ctx context.Context, req resource.Sch
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'AnyConnectPackage'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'AnyConnectProfile'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Image.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Secure Client Profile.").String,
 				Optional:            true,
 			},
+			"file_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY"),
+				},
+			},
 			"path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path to the *.pkg Secure Client Image file").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.").String,
 				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *SecureClientImageResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *SecureClientProfileResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -117,8 +126,8 @@ func (r *SecureClientImageResource) Configure(_ context.Context, req resource.Co
 
 // End of section. //template:end model
 
-func (r *SecureClientImageResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan SecureClientImage
+func (r *SecureClientProfileResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan SecureClientProfile
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -171,8 +180,8 @@ func (r *SecureClientImageResource) Create(ctx context.Context, req resource.Cre
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *SecureClientImageResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state SecureClientImage
+func (r *SecureClientProfileResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state SecureClientProfile
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -221,8 +230,8 @@ func (r *SecureClientImageResource) Read(ctx context.Context, req resource.ReadR
 
 // End of section. //template:end read
 
-func (r *SecureClientImageResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state SecureClientImage
+func (r *SecureClientProfileResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state SecureClientProfile
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -278,8 +287,8 @@ func (r *SecureClientImageResource) Update(ctx context.Context, req resource.Upd
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *SecureClientImageResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state SecureClientImage
+func (r *SecureClientProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state SecureClientProfile
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -309,7 +318,7 @@ func (r *SecureClientImageResource) Delete(ctx context.Context, req resource.Del
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *SecureClientImageResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *SecureClientProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)

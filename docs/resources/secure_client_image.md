@@ -26,7 +26,7 @@ resource "fmc_secure_client_image" "example" {
 ### Required
 
 - `name` (String) User defined name of the Secure Client Image
-- `path` (String) Path to the file
+- `path` (String) Path to the *.pkg Secure Client Image file
 
 ### Optional
 

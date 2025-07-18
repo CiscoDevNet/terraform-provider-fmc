@@ -31,5 +31,5 @@ data "fmc_secure_client_image" "example" {
 
 - `description` (String) Description of the Secure Client Image.
 - `file_name` (String) Name of the Secure Client Image.
-- `path` (String) Path to the file
+- `path` (String) Path to the *.pkg Secure Client Image file
 - `type` (String) Type of the object; this value is always 'AnyConnectPackage'.

@@ -1,0 +1,37 @@
+# Manual resource - Resource (Create, Update), custom toBody
+---
+name: Secure Client Profile
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectprofiles
+doc_category: Objects
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: User defined name of the Secure Client Profile
+    example: my_secure_client_profile
+    data_source_query: true
+  - model_name: fileName
+    type: String
+    description: Name of the Secure Client Image.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectProfile'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Profile.
+    example: My Secure Client Profile
+  - model_name: fileType
+    type: String
+    enum_values: [ "ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY" ]
+    example: ANYCONNECT_VPN_PROFILE
+    mandatory: true
+  - model_name: payloadFile
+    tf_name: path
+    type: String
+    mandatory: true
+    description: Path to the file. Supported file types are .xml, .asp, .fsp, .isp, .nsp, .nvmsp, .json, .wsp, .wso.
+    example: ./package.xml
+    write_only: true
