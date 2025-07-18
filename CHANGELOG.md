@@ -1,3 +1,7 @@
+## 2.0.0-rc5 (Unreleased)
+
+- (Enhancement) Add support for `fmc_secure_client_*` resources and data sources
+
 ## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources

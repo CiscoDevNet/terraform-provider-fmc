@@ -1,0 +1,32 @@
+# Manual resource - Resource (Create, Update), custom toBody for Content-Type: multipart/form-data
+---
+name: Secure Client External Browser Package
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectexternalbrowserpackages
+doc_category: Objects
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Secure Client External Browser Package object.
+    example: my_secure_client_external_browser_package
+    data_source_query: true
+  - model_name: fileName
+    type: String
+    description: Name of the Secure Client External Browser Package file.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectExternalBrowserPackage'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Secure Client External Browser Package object.
+    example: My Secure Client External Browser Package
+  - model_name: payloadFile
+    tf_name: path
+    type: String
+    mandatory: true
+    description: Path to the Secure Client External Browser Package file. Supported file types are .pkg, .zip.
+    example: ./secure_client_external_browser_package.pkg
+    write_only: true

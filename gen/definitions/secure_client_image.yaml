@@ -1,0 +1,32 @@
+# Manual resource - Resource (Create, Update), custom toBody for Content-Type: multipart/form-data
+---
+name: Secure Client Image
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectpackages
+doc_category: Objects
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Secure Client Image object.
+    example: my_secure_client_image
+    data_source_query: true
+  - model_name: fileName
+    type: String
+    description: Name of the Secure Client Image file.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectPackage'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Image object.
+    example: My Secure Client Image
+  - model_name: payloadFile
+    tf_name: path
+    type: String
+    mandatory: true
+    description: Path to the Secure Client Image file. Supported file type is .pkg.
+    example: ./secure_client_image.pkg
+    write_only: true
