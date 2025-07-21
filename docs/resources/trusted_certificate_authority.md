@@ -28,7 +28,7 @@ resource "fmc_trusted_certificate_authority" "example" {
 
 ### Optional
 
-- `certificate` (String) PEM, DER, or PKCS#7 formatted certificate contents.
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

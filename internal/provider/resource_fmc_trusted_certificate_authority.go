@@ -80,6 +80,9 @@ func (r *TrustedCertificateAuthorityResource) Schema(ctx context.Context, req re
 			"name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the Trusted Certificate Authority (CA) object.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ExternalCACertificate'.").String,
@@ -89,7 +92,7 @@ func (r *TrustedCertificateAuthorityResource) Schema(ctx context.Context, req re
 				},
 			},
 			"certificate": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("PEM, DER, or PKCS#7 formatted certificate contents.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Certificate in PEM, DER, or PKCS#7 format.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

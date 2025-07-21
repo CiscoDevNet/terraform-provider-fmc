@@ -81,7 +81,7 @@ func (d *TrustedCertificateAuthorityDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"certificate": schema.StringAttribute{
-				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
+				MarkdownDescription: "Certificate in PEM, DER, or PKCS#7 format.",
 				Computed:            true,
 			},
 		},

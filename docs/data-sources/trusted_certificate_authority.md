@@ -29,5 +29,5 @@ data "fmc_trusted_certificate_authority" "example" {
 
 ### Read-Only
 
-- `certificate` (String) PEM, DER, or PKCS#7 formatted certificate contents.
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `type` (String) Type of the object; this value is always 'ExternalCACertificate'.

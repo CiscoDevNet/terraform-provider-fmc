@@ -11,6 +11,7 @@ attributes:
     description: Name of the Trusted Certificate Authority (CA) object.
     example: my_trusted_ca
     data_source_query: true
+    requires_replace: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'ExternalCACertificate'.
@@ -18,6 +19,6 @@ attributes:
   - model_name: cert
     tf_name: certificate
     type: String
-    description: PEM, DER, or PKCS#7 formatted certificate contents.
+    description: Certificate in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
     requires_replace: true
