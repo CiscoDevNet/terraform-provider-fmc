@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc5 (Unreleased)
+
+- (Enhancement) Add support for `fmc_realm_ad_ldap` resource and data source
+
 ## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources
