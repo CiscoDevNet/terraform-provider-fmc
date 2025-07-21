@@ -72,7 +72,7 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the certificate.",
+				MarkdownDescription: "Name of the Certificate Enrollment object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,89 +81,89 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the certificate.",
+				MarkdownDescription: "Description of the Certificate Enrollment object.",
 				Computed:            true,
 			},
 			"enrollment_type": schema.StringAttribute{
-				MarkdownDescription: "Type of enrollment for the certificate.",
+				MarkdownDescription: "Certificate enrollment type.",
 				Computed:            true,
 			},
-			"validate_ipsec_client": schema.BoolAttribute{
-				MarkdownDescription: "Whether the certificate is used for IPsec client validation.",
+			"validation_usage_ipsec_client": schema.BoolAttribute{
+				MarkdownDescription: "Validate an IPsec client certificate for a site-to-site VPN connection.",
 				Computed:            true,
 			},
-			"validate_ssl_server": schema.BoolAttribute{
-				MarkdownDescription: "Whether the certificate is used for SSL server validation.",
+			"validation_usage_ssl_server": schema.BoolAttribute{
+				MarkdownDescription: "Validate an SSL server certificate.",
 				Computed:            true,
 			},
-			"validate_ssl_client": schema.BoolAttribute{
-				MarkdownDescription: "Whether the certificate is used for SSL client validation.",
+			"validation_usage_ssl_client": schema.BoolAttribute{
+				MarkdownDescription: "Validate an SSL client certificate during a remote access VPN connection attempt.",
 				Computed:            true,
 			},
 			"skip_ca_flag_check": schema.BoolAttribute{
-				MarkdownDescription: "Whether to skip the CA flag check for the certificate.",
+				MarkdownDescription: "Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.",
 				Computed:            true,
 			},
 			"est_enrollment_url": schema.StringAttribute{
-				MarkdownDescription: "URL for the EST enrollment.",
+				MarkdownDescription: "EST enrollment CA server URL.",
 				Computed:            true,
 			},
 			"est_username": schema.StringAttribute{
-				MarkdownDescription: "Username for the EST enrollment.",
+				MarkdownDescription: "EST enrollment CA server username.",
 				Computed:            true,
 			},
 			"est_password": schema.StringAttribute{
-				MarkdownDescription: "Password for the EST enrollment.",
+				MarkdownDescription: "EST enrollment CA server password.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"est_fingerprint": schema.StringAttribute{
-				MarkdownDescription: "Fingerprint for the EST enrollment.",
+				MarkdownDescription: "EST enrollment CA server fingerprint.",
 				Computed:            true,
 			},
 			"est_source_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Source interface group or security zone for the EST enrollment.",
+				MarkdownDescription: "ID of interface group or security zone that interacts with the CA server.",
 				Computed:            true,
 			},
 			"est_source_interface_name": schema.StringAttribute{
-				MarkdownDescription: "Source interface group or security zone for the EST enrollment.",
+				MarkdownDescription: "Name of interface group or security zone that interacts with the CA server.",
 				Computed:            true,
 			},
 			"est_ignore_server_certificate_validation": schema.BoolAttribute{
-				MarkdownDescription: "Whether to ignore server certificate validations for the EST enrollment.",
+				MarkdownDescription: "Ignore EST server certificate validations.",
 				Computed:            true,
 			},
 			"scep_enrollment_url": schema.StringAttribute{
-				MarkdownDescription: "URL for the SCEP enrollment.",
+				MarkdownDescription: "SCEP enrollment CA server URL.",
 				Computed:            true,
 			},
 			"scep_challenge_password": schema.StringAttribute{
-				MarkdownDescription: "Challenge password for the SCEP enrollment.",
+				MarkdownDescription: "SCEP enrollment challenge password.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"scep_retry_period": schema.Int64Attribute{
-				MarkdownDescription: "Retry period in minutes for the SCEP enrollment.",
+				MarkdownDescription: "Interval (in minutes) between certificate request attempts.",
 				Computed:            true,
 			},
 			"scep_retry_count": schema.Int64Attribute{
-				MarkdownDescription: "Number of retries for the SCEP enrollment.",
+				MarkdownDescription: "Number of retries that should be made if no certificate is issued upon the first request.",
 				Computed:            true,
 			},
 			"scep_fingerprint": schema.StringAttribute{
-				MarkdownDescription: "Fingerprint for the SCEP enrollment.",
+				MarkdownDescription: "SCEP enrollment CA server fingerprint.",
 				Computed:            true,
 			},
 			"manual_ca_only": schema.BoolAttribute{
-				MarkdownDescription: "Whether the certificate is a CA only certificate.",
+				MarkdownDescription: "Create only the CA certificate from the selected CA. An identity certificate will not be created for this certificate. Must be set to `true`.",
 				Computed:            true,
 			},
 			"manual_ca_certificate": schema.StringAttribute{
-				MarkdownDescription: "Base64 encoded content of the CA certificate.",
+				MarkdownDescription: "Base64 encoded certificate in PEM format.",
 				Computed:            true,
 			},
 			"pkcs12_certificate": schema.StringAttribute{
-				MarkdownDescription: "Base64 encoded content of the PKCS12 certificate.",
+				MarkdownDescription: "Base64 encoded certificate in PKCS12 format.",
 				Computed:            true,
 			},
 			"pkcs12_certificate_passphrase": schema.StringAttribute{
@@ -172,11 +172,11 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Sensitive:           true,
 			},
 			"include_fqdn": schema.StringAttribute{
-				MarkdownDescription: "How the FQDN is included in the certificate.",
+				MarkdownDescription: "Include the device's fully qualified domain name (FQDN) in the certificate request",
 				Computed:            true,
 			},
 			"custom_fqdn": schema.StringAttribute{
-				MarkdownDescription: "Custom FQDN to be included in the certificate.",
+				MarkdownDescription: "Device's custom FQDN to be included in the certificate.",
 				Computed:            true,
 			},
 			"include_device_ip": schema.StringAttribute{
@@ -212,47 +212,35 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"include_device_serial_number": schema.BoolAttribute{
-				MarkdownDescription: "Whether to include the device serial in the certificate.",
+				MarkdownDescription: "Include the device serial in the certificate.",
 				Computed:            true,
 			},
 			"key_type": schema.StringAttribute{
-				MarkdownDescription: "Type of key used for the certificate.",
+				MarkdownDescription: "Type of key pair.",
 				Computed:            true,
 			},
 			"key_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the key used for the certificate.",
+				MarkdownDescription: "Name of the key pair used.",
 				Computed:            true,
 			},
 			"key_size": schema.StringAttribute{
-				MarkdownDescription: "Size of the key used for the certificate.",
+				MarkdownDescription: "Desired key size (modulus), in bits.",
 				Computed:            true,
 			},
 			"ignore_ipsec_key_usage": schema.BoolAttribute{
-				MarkdownDescription: "Whether to ignore IPsec key usage for the certificate.",
+				MarkdownDescription: "Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.",
 				Computed:            true,
 			},
-			"enable_certificate_revocation_list": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable certificate revocation list.",
+			"crl_use_distribution_point_from_the_certificate": schema.BoolAttribute{
+				MarkdownDescription: "Obtain the revocation lists distribution URL from the certificate.",
 				Computed:            true,
 			},
-			"use_crl_distribution_point_from_the_certificate": schema.BoolAttribute{
-				MarkdownDescription: "Whether to use CRL distribution point from the certificate.",
-				Computed:            true,
-			},
-			"enable_static_certificate_revocation_list": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable static certificate revocation list.",
-				Computed:            true,
-			},
-			"cert_revocation_static_url_list": schema.ListAttribute{
+			"crl_static_urls_list": schema.ListAttribute{
 				MarkdownDescription: "Static URL list for certificate revocation.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
-			"enable_online_certificate_status_protocol": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable Online Certificate Status Protocol (OCSP).",
-				Computed:            true,
-			},
-			"online_certificate_status_protocol_url": schema.StringAttribute{
+			"ocsp_url": schema.StringAttribute{
 				MarkdownDescription: "URL for the Online Certificate Status Protocol (OCSP).",
 				Computed:            true,
 			},
@@ -260,7 +248,7 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.",
 				Computed:            true,
 			},
-			"ignore_revocation": schema.BoolAttribute{
+			"consider_certificate_valid_if_revocation_information_not_reachable": schema.BoolAttribute{
 				MarkdownDescription: "Consider the certificate valid if revocation information can not be reached.",
 				Computed:            true,
 			},

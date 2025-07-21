@@ -8,7 +8,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the internal certificate authority.
+    description: Name of the Trusted Certificate Authority (CA) object.
     example: my_trusted_ca
     data_source_query: true
   - model_name: type

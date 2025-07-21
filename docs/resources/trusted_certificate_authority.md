@@ -24,7 +24,7 @@ resource "fmc_trusted_certificate_authority" "example" {
 
 ### Required
 
-- `name` (String) Name of the internal certificate authority.
+- `name` (String) Name of the Trusted Certificate Authority (CA) object.
 
 ### Optional
 

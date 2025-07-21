@@ -4,6 +4,7 @@ page_title: "fmc_certificate_enrollment Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This device manages Certificate Enrollment configuration.
+  Manual certificate creation is supported only with CA only option set.
   (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.
   (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
 ---
@@ -11,42 +12,39 @@ description: |-
 # fmc_certificate_enrollment (Resource)
 
 This device manages Certificate Enrollment configuration.
- (FMC 7.2) Only PKCS12 based certificate enrollment object is supported. 
+ Manual certificate creation is supported only with CA only option set.
+ (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.
  (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
 
 ## Example Usage
 
 ```terraform
 resource "fmc_certificate_enrollment" "example" {
-  name                                            = "my_certificate_enrollment"
-  description                                     = "My certificate enrollment"
-  enrollment_type                                 = "SELF_SIGNED_CERTFICATE"
-  validate_ipsec_client                           = true
-  validate_ssl_server                             = true
-  validate_ssl_client                             = true
-  skip_ca_flag_check                              = false
-  include_fqdn                                    = "NONE"
-  include_device_ip                               = "10.10.10.1"
-  common_name                                     = "ftd.example.com"
-  organizational_unit                             = "my_organizational_unit"
-  organization                                    = "my_organization"
-  locality                                        = "my_locality"
-  state                                           = "my_state"
-  country_code                                    = "PL"
-  email                                           = "me@example.com"
-  include_device_serial_number                    = true
-  key_type                                        = "RSA"
-  key_name                                        = "my_key"
-  key_size                                        = "CertKey_2048"
-  ignore_ipsec_key_usage                          = false
-  enable_certificate_revocation_list              = true
-  use_crl_distribution_point_from_the_certificate = true
-  enable_static_certificate_revocation_list       = true
-  cert_revocation_static_url_list                 = ["http://example.com/crl.pem"]
-  enable_online_certificate_status_protocol       = true
-  online_certificate_status_protocol_url          = "http://example.com/ocsp"
-  evaluation_priority                             = "CRL"
-  ignore_revocation                               = false
+  name                                                               = "my_certificate_enrollment"
+  description                                                        = "My certificate enrollment"
+  enrollment_type                                                    = "SELF_SIGNED_CERTFICATE"
+  validation_usage_ipsec_client                                      = true
+  validation_usage_ssl_server                                        = true
+  validation_usage_ssl_client                                        = true
+  skip_ca_flag_check                                                 = false
+  include_fqdn                                                       = "NONE"
+  common_name                                                        = "ftd.example.com"
+  organizational_unit                                                = "my_organizational_unit"
+  organization                                                       = "my_organization"
+  locality                                                           = "my_locality"
+  state                                                              = "my_state"
+  country_code                                                       = "PL"
+  email                                                              = "me@example.com"
+  include_device_serial_number                                       = true
+  key_type                                                           = "RSA"
+  key_name                                                           = "my_key"
+  key_size                                                           = "CertKey_2048"
+  ignore_ipsec_key_usage                                             = false
+  crl_use_distribution_point_from_the_certificate                    = true
+  crl_static_urls_list                                               = ["http://example.com/crl.pem"]
+  ocsp_url                                                           = "http://example.com/ocsp"
+  evaluation_priority                                                = "CRL"
+  consider_certificate_valid_if_revocation_information_not_reachable = false
 }
 ```
 
@@ -55,63 +53,60 @@ resource "fmc_certificate_enrollment" "example" {
 
 ### Required
 
-- `enrollment_type` (String) Type of enrollment for the certificate.
+- `enrollment_type` (String) Certificate enrollment type.
   - Choices: `SCEP`, `EST`, `MANUAL`, `SELF_SIGNED_CERTFICATE`, `PKCS12`
-- `name` (String) Name of the certificate.
+- `name` (String) Name of the Certificate Enrollment object.
 
 ### Optional
 
-- `cert_revocation_static_url_list` (List of String) Static URL list for certificate revocation.
 - `common_name` (String) Common Name for the certificate.
+- `consider_certificate_valid_if_revocation_information_not_reachable` (Boolean) Consider the certificate valid if revocation information can not be reached.
 - `country_code` (String) Country Code for the certificate.
-- `custom_fqdn` (String) Custom FQDN to be included in the certificate.
-- `description` (String) Description of the certificate.
+- `crl_static_urls_list` (List of String) Static URL list for certificate revocation.
+- `crl_use_distribution_point_from_the_certificate` (Boolean) Obtain the revocation lists distribution URL from the certificate.
+- `custom_fqdn` (String) Device's custom FQDN to be included in the certificate.
+- `description` (String) Description of the Certificate Enrollment object.
 - `domain` (String) Name of the FMC domain
 - `email` (String) Email for the certificate.
-- `enable_certificate_revocation_list` (Boolean) Whether to enable certificate revocation list.
-- `enable_online_certificate_status_protocol` (Boolean) Whether to enable Online Certificate Status Protocol (OCSP).
-- `enable_static_certificate_revocation_list` (Boolean) Whether to enable static certificate revocation list.
-- `est_enrollment_url` (String) URL for the EST enrollment.
-- `est_fingerprint` (String) Fingerprint for the EST enrollment.
-- `est_ignore_server_certificate_validation` (Boolean) Whether to ignore server certificate validations for the EST enrollment.
-- `est_password` (String, Sensitive) Password for the EST enrollment.
-- `est_source_interface_id` (String) Source interface group or security zone for the EST enrollment.
-- `est_source_interface_name` (String) Source interface group or security zone for the EST enrollment.
-- `est_username` (String) Username for the EST enrollment.
+- `est_enrollment_url` (String) EST enrollment CA server URL.
+- `est_fingerprint` (String) EST enrollment CA server fingerprint.
+- `est_ignore_server_certificate_validation` (Boolean) Ignore EST server certificate validations.
+- `est_password` (String, Sensitive) EST enrollment CA server password.
+- `est_source_interface_id` (String) ID of interface group or security zone that interacts with the CA server.
+- `est_source_interface_name` (String) Name of interface group or security zone that interacts with the CA server.
+- `est_username` (String) EST enrollment CA server username.
 - `evaluation_priority` (String) Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
   - Choices: `CRL`, `OCSP`, `NONE`
-- `ignore_ipsec_key_usage` (Boolean) Whether to ignore IPsec key usage for the certificate.
-- `ignore_revocation` (Boolean) Consider the certificate valid if revocation information can not be reached.
+- `ignore_ipsec_key_usage` (Boolean) Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.
 - `include_device_ip` (String) Device IP in the certificate.
-- `include_device_serial_number` (Boolean) Whether to include the device serial in the certificate.
-- `include_fqdn` (String) How the FQDN is included in the certificate.
+- `include_device_serial_number` (Boolean) Include the device serial in the certificate.
+- `include_fqdn` (String) Include the device's fully qualified domain name (FQDN) in the certificate request
   - Choices: `DEVICE_HOSTNAME`, `NONE`, `CUSTOM`, `DEFAULT`
-- `key_name` (String) Name of the key used for the certificate.
-- `key_size` (String) Size of the key used for the certificate.
+- `key_name` (String) Name of the key pair used.
+- `key_size` (String) Desired key size (modulus), in bits.
   - Choices: `CertKey_512`, `CertKey_768`, `CertKey_1024`, `CertKey_2048`, `CertKey_3072`, `CertKey_4096`, `CertKey_256`, `CertKey_384`, `CertKey_521`
-- `key_type` (String) Type of key used for the certificate.
+- `key_type` (String) Type of key pair.
   - Choices: `RSA`, `ECDSA`, `EdDSA`
 - `locality` (String) Locality for the certificate.
-- `manual_ca_certificate` (String) Base64 encoded content of the CA certificate.
-- `manual_ca_only` (Boolean) Whether the certificate is a CA only certificate.
-- `online_certificate_status_protocol_url` (String) URL for the Online Certificate Status Protocol (OCSP).
+- `manual_ca_certificate` (String) Base64 encoded certificate in PEM format.
+- `manual_ca_only` (Boolean) Create only the CA certificate from the selected CA. An identity certificate will not be created for this certificate. Must be set to `true`.
+- `ocsp_url` (String) URL for the Online Certificate Status Protocol (OCSP).
 - `organization` (String) Organization for the certificate.
 - `organizational_unit` (String) Organizational Unit for the certificate.
-- `pkcs12_certificate` (String) Base64 encoded content of the PKCS12 certificate.
+- `pkcs12_certificate` (String) Base64 encoded certificate in PKCS12 format.
 - `pkcs12_certificate_passphrase` (String, Sensitive) Passphrase for the PKCS12 certificate.
-- `scep_challenge_password` (String, Sensitive) Challenge password for the SCEP enrollment.
-- `scep_enrollment_url` (String) URL for the SCEP enrollment.
-- `scep_fingerprint` (String) Fingerprint for the SCEP enrollment.
-- `scep_retry_count` (Number) Number of retries for the SCEP enrollment.
+- `scep_challenge_password` (String, Sensitive) SCEP enrollment challenge password.
+- `scep_enrollment_url` (String) SCEP enrollment CA server URL.
+- `scep_fingerprint` (String) SCEP enrollment CA server fingerprint.
+- `scep_retry_count` (Number) Number of retries that should be made if no certificate is issued upon the first request.
   - Range: `0`-`100`
-- `scep_retry_period` (Number) Retry period in minutes for the SCEP enrollment.
+- `scep_retry_period` (Number) Interval (in minutes) between certificate request attempts.
   - Range: `1`-`60`
-- `skip_ca_flag_check` (Boolean) Whether to skip the CA flag check for the certificate.
+- `skip_ca_flag_check` (Boolean) Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.
 - `state` (String) State for the certificate.
-- `use_crl_distribution_point_from_the_certificate` (Boolean) Whether to use CRL distribution point from the certificate.
-- `validate_ipsec_client` (Boolean) Whether the certificate is used for IPsec client validation.
-- `validate_ssl_client` (Boolean) Whether the certificate is used for SSL client validation.
-- `validate_ssl_server` (Boolean) Whether the certificate is used for SSL server validation.
+- `validation_usage_ipsec_client` (Boolean) Validate an IPsec client certificate for a site-to-site VPN connection.
+- `validation_usage_ssl_client` (Boolean) Validate an SSL client certificate during a remote access VPN connection attempt.
+- `validation_usage_ssl_server` (Boolean) Validate an SSL server certificate.
 
 ### Read-Only
 

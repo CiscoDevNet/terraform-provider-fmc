@@ -17,7 +17,6 @@ resource "fmc_internal_certificate_authority" "example" {
   name        = "my_internal_ca"
   certificate = "-----BEGIN CERTIFICATE-----\nMII(...)\n-----END CERTIFICATE-----"
   private_key = "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: AES-128-CBC,D55(...)\n-----END RSA PRIVATE KEY-----"
-  password    = "my_secret_passphrase"
 }
 ```
 
@@ -26,14 +25,14 @@ resource "fmc_internal_certificate_authority" "example" {
 
 ### Required
 
-- `name` (String) Name of the internal certificate authority.
+- `name` (String) Name of the Internal Certificate Authority (CA) object.
 
 ### Optional
 
-- `certificate` (String) PEM, DER, or PKCS#7 formatted certificate contents.
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `domain` (String) Name of the FMC domain
-- `password` (String, Sensitive) Passphrase for the private key.
-- `private_key` (String, Sensitive) PEM, DER, or PKCS#7 formatted certificate contents.
+- `password` (String, Sensitive) Private key password.
+- `private_key` (String, Sensitive) Private key in PEM, DER, or PKCS#7 format.
 
 ### Read-Only
 

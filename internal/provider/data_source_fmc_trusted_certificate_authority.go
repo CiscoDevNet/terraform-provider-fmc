@@ -72,7 +72,7 @@ func (d *TrustedCertificateAuthorityDataSource) Schema(ctx context.Context, req 
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the internal certificate authority.",
+				MarkdownDescription: "Name of the Trusted Certificate Authority (CA) object.",
 				Optional:            true,
 				Computed:            true,
 			},

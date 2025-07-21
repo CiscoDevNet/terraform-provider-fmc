@@ -7,7 +7,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the internal certificate.
+    description: Name of the Internal Certificate object.
     example: my_internal_certificate
     data_source_query: true
   - model_name: type
@@ -17,12 +17,12 @@ attributes:
   - model_name: cert
     tf_name: certificate
     type: String
-    description: PEM, DER, or PKCS#7 formatted certificate contents.
+    description: Certificate in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
     requires_replace: true
   - model_name: privateKey
     type: String
-    description: PEM, DER, or PKCS#7 formatted certificate contents.
+    description: Private key in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-128-CBC,D55(...)\\n-----END RSA PRIVATE KEY-----"
     requires_replace: true
     sensitive: true
@@ -30,8 +30,8 @@ attributes:
   - model_name: passPhrase
     tf_name: password
     type: String
-    description: Passphrase for the private key.
-    example: my_secret_passphrase
+    description: Private key password.
+    exclude_example: true
     requires_replace: true
     sensitive: true
     write_only: true

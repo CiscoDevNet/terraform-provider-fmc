@@ -78,7 +78,7 @@ func (r *TrustedCertificateAuthorityResource) Schema(ctx context.Context, req re
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the internal certificate authority.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Trusted Certificate Authority (CA) object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{

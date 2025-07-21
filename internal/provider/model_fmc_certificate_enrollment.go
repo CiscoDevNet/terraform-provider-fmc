@@ -32,55 +32,52 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type CertificateEnrollment struct {
-	Id                                        types.String `tfsdk:"id"`
-	Domain                                    types.String `tfsdk:"domain"`
-	Name                                      types.String `tfsdk:"name"`
-	Type                                      types.String `tfsdk:"type"`
-	Description                               types.String `tfsdk:"description"`
-	EnrollmentType                            types.String `tfsdk:"enrollment_type"`
-	ValidateIpsecClient                       types.Bool   `tfsdk:"validate_ipsec_client"`
-	ValidateSslServer                         types.Bool   `tfsdk:"validate_ssl_server"`
-	ValidateSslClient                         types.Bool   `tfsdk:"validate_ssl_client"`
-	SkipCaFlagCheck                           types.Bool   `tfsdk:"skip_ca_flag_check"`
-	EstEnrollmentUrl                          types.String `tfsdk:"est_enrollment_url"`
-	EstUsername                               types.String `tfsdk:"est_username"`
-	EstPassword                               types.String `tfsdk:"est_password"`
-	EstFingerprint                            types.String `tfsdk:"est_fingerprint"`
-	EstSourceInterfaceId                      types.String `tfsdk:"est_source_interface_id"`
-	EstSourceInterfaceName                    types.String `tfsdk:"est_source_interface_name"`
-	EstIgnoreServerCertificateValidation      types.Bool   `tfsdk:"est_ignore_server_certificate_validation"`
-	ScepEnrollmentUrl                         types.String `tfsdk:"scep_enrollment_url"`
-	ScepChallengePassword                     types.String `tfsdk:"scep_challenge_password"`
-	ScepRetryPeriod                           types.Int64  `tfsdk:"scep_retry_period"`
-	ScepRetryCount                            types.Int64  `tfsdk:"scep_retry_count"`
-	ScepFingerprint                           types.String `tfsdk:"scep_fingerprint"`
-	ManualCaOnly                              types.Bool   `tfsdk:"manual_ca_only"`
-	ManualCaCertificate                       types.String `tfsdk:"manual_ca_certificate"`
-	Pkcs12Certificate                         types.String `tfsdk:"pkcs12_certificate"`
-	Pkcs12CertificatePassphrase               types.String `tfsdk:"pkcs12_certificate_passphrase"`
-	IncludeFqdn                               types.String `tfsdk:"include_fqdn"`
-	CustomFqdn                                types.String `tfsdk:"custom_fqdn"`
-	IncludeDeviceIp                           types.String `tfsdk:"include_device_ip"`
-	CommonName                                types.String `tfsdk:"common_name"`
-	OrganizationalUnit                        types.String `tfsdk:"organizational_unit"`
-	Organization                              types.String `tfsdk:"organization"`
-	Locality                                  types.String `tfsdk:"locality"`
-	State                                     types.String `tfsdk:"state"`
-	CountryCode                               types.String `tfsdk:"country_code"`
-	Email                                     types.String `tfsdk:"email"`
-	IncludeDeviceSerialNumber                 types.Bool   `tfsdk:"include_device_serial_number"`
-	KeyType                                   types.String `tfsdk:"key_type"`
-	KeyName                                   types.String `tfsdk:"key_name"`
-	KeySize                                   types.String `tfsdk:"key_size"`
-	IgnoreIpsecKeyUsage                       types.Bool   `tfsdk:"ignore_ipsec_key_usage"`
-	EnableCertificateRevocationList           types.Bool   `tfsdk:"enable_certificate_revocation_list"`
-	UseCrlDistributionPointFromTheCertificate types.Bool   `tfsdk:"use_crl_distribution_point_from_the_certificate"`
-	EnableStaticCertificateRevocationList     types.Bool   `tfsdk:"enable_static_certificate_revocation_list"`
-	CertRevocationStaticUrlList               types.List   `tfsdk:"cert_revocation_static_url_list"`
-	EnableOnlineCertificateStatusProtocol     types.Bool   `tfsdk:"enable_online_certificate_status_protocol"`
-	OnlineCertificateStatusProtocolUrl        types.String `tfsdk:"online_certificate_status_protocol_url"`
-	EvaluationPriority                        types.String `tfsdk:"evaluation_priority"`
-	IgnoreRevocation                          types.Bool   `tfsdk:"ignore_revocation"`
+	Id                                                          types.String `tfsdk:"id"`
+	Domain                                                      types.String `tfsdk:"domain"`
+	Name                                                        types.String `tfsdk:"name"`
+	Type                                                        types.String `tfsdk:"type"`
+	Description                                                 types.String `tfsdk:"description"`
+	EnrollmentType                                              types.String `tfsdk:"enrollment_type"`
+	ValidationUsageIpsecClient                                  types.Bool   `tfsdk:"validation_usage_ipsec_client"`
+	ValidationUsageSslServer                                    types.Bool   `tfsdk:"validation_usage_ssl_server"`
+	ValidationUsageSslClient                                    types.Bool   `tfsdk:"validation_usage_ssl_client"`
+	SkipCaFlagCheck                                             types.Bool   `tfsdk:"skip_ca_flag_check"`
+	EstEnrollmentUrl                                            types.String `tfsdk:"est_enrollment_url"`
+	EstUsername                                                 types.String `tfsdk:"est_username"`
+	EstPassword                                                 types.String `tfsdk:"est_password"`
+	EstFingerprint                                              types.String `tfsdk:"est_fingerprint"`
+	EstSourceInterfaceId                                        types.String `tfsdk:"est_source_interface_id"`
+	EstSourceInterfaceName                                      types.String `tfsdk:"est_source_interface_name"`
+	EstIgnoreServerCertificateValidation                        types.Bool   `tfsdk:"est_ignore_server_certificate_validation"`
+	ScepEnrollmentUrl                                           types.String `tfsdk:"scep_enrollment_url"`
+	ScepChallengePassword                                       types.String `tfsdk:"scep_challenge_password"`
+	ScepRetryPeriod                                             types.Int64  `tfsdk:"scep_retry_period"`
+	ScepRetryCount                                              types.Int64  `tfsdk:"scep_retry_count"`
+	ScepFingerprint                                             types.String `tfsdk:"scep_fingerprint"`
+	ManualCaOnly                                                types.Bool   `tfsdk:"manual_ca_only"`
+	ManualCaCertificate                                         types.String `tfsdk:"manual_ca_certificate"`
+	Pkcs12Certificate                                           types.String `tfsdk:"pkcs12_certificate"`
+	Pkcs12CertificatePassphrase                                 types.String `tfsdk:"pkcs12_certificate_passphrase"`
+	IncludeFqdn                                                 types.String `tfsdk:"include_fqdn"`
+	CustomFqdn                                                  types.String `tfsdk:"custom_fqdn"`
+	IncludeDeviceIp                                             types.String `tfsdk:"include_device_ip"`
+	CommonName                                                  types.String `tfsdk:"common_name"`
+	OrganizationalUnit                                          types.String `tfsdk:"organizational_unit"`
+	Organization                                                types.String `tfsdk:"organization"`
+	Locality                                                    types.String `tfsdk:"locality"`
+	State                                                       types.String `tfsdk:"state"`
+	CountryCode                                                 types.String `tfsdk:"country_code"`
+	Email                                                       types.String `tfsdk:"email"`
+	IncludeDeviceSerialNumber                                   types.Bool   `tfsdk:"include_device_serial_number"`
+	KeyType                                                     types.String `tfsdk:"key_type"`
+	KeyName                                                     types.String `tfsdk:"key_name"`
+	KeySize                                                     types.String `tfsdk:"key_size"`
+	IgnoreIpsecKeyUsage                                         types.Bool   `tfsdk:"ignore_ipsec_key_usage"`
+	CrlUseDistributionPointFromTheCertificate                   types.Bool   `tfsdk:"crl_use_distribution_point_from_the_certificate"`
+	CrlStaticUrlsList                                           types.List   `tfsdk:"crl_static_urls_list"`
+	OcspUrl                                                     types.String `tfsdk:"ocsp_url"`
+	EvaluationPriority                                          types.String `tfsdk:"evaluation_priority"`
+	ConsiderCertificateValidIfRevocationInformationNotReachable types.Bool   `tfsdk:"consider_certificate_valid_if_revocation_information_not_reachable"`
 }
 
 // End of section. //template:end types
@@ -113,14 +110,14 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.EnrollmentType.IsNull() {
 		body, _ = sjson.Set(body, "enrollmentType", data.EnrollmentType.ValueString())
 	}
-	if !data.ValidateIpsecClient.IsNull() {
-		body, _ = sjson.Set(body, "validationUsage.ipsecClient", data.ValidateIpsecClient.ValueBool())
+	if !data.ValidationUsageIpsecClient.IsNull() {
+		body, _ = sjson.Set(body, "validationUsage.ipsecClient", data.ValidationUsageIpsecClient.ValueBool())
 	}
-	if !data.ValidateSslServer.IsNull() {
-		body, _ = sjson.Set(body, "validationUsage.sslServer", data.ValidateSslServer.ValueBool())
+	if !data.ValidationUsageSslServer.IsNull() {
+		body, _ = sjson.Set(body, "validationUsage.sslServer", data.ValidationUsageSslServer.ValueBool())
 	}
-	if !data.ValidateSslClient.IsNull() {
-		body, _ = sjson.Set(body, "validationUsage.sslClient", data.ValidateSslClient.ValueBool())
+	if !data.ValidationUsageSslClient.IsNull() {
+		body, _ = sjson.Set(body, "validationUsage.sslClient", data.ValidationUsageSslClient.ValueBool())
 	}
 	if !data.SkipCaFlagCheck.IsNull() {
 		body, _ = sjson.Set(body, "skipCaFlagCheck", data.SkipCaFlagCheck.ValueBool())
@@ -218,31 +215,22 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.IgnoreIpsecKeyUsage.IsNull() {
 		body, _ = sjson.Set(body, "key.ignoreIpsecKeyusage", data.IgnoreIpsecKeyUsage.ValueBool())
 	}
-	if !data.EnableCertificateRevocationList.IsNull() {
-		body, _ = sjson.Set(body, "revocation.certRevocationListContent.enableCertRevocationList", data.EnableCertificateRevocationList.ValueBool())
+	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() {
+		body, _ = sjson.Set(body, "revocation.certRevocationListContent.enableCertRevocationListDistributionPoint", data.CrlUseDistributionPointFromTheCertificate.ValueBool())
 	}
-	if !data.UseCrlDistributionPointFromTheCertificate.IsNull() {
-		body, _ = sjson.Set(body, "revocation.certRevocationListContent.enableCertRevocationListDistributionPoint", data.UseCrlDistributionPointFromTheCertificate.ValueBool())
-	}
-	if !data.EnableStaticCertificateRevocationList.IsNull() {
-		body, _ = sjson.Set(body, "revocation.certRevocationListContent.enableStaticCertRevocationList", data.EnableStaticCertificateRevocationList.ValueBool())
-	}
-	if !data.CertRevocationStaticUrlList.IsNull() {
+	if !data.CrlStaticUrlsList.IsNull() {
 		var values []string
-		data.CertRevocationStaticUrlList.ElementsAs(ctx, &values, false)
+		data.CrlStaticUrlsList.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "revocation.certRevocationListContent.certRevocationStaticUrlList", values)
 	}
-	if !data.EnableOnlineCertificateStatusProtocol.IsNull() {
-		body, _ = sjson.Set(body, "revocation.onlineCertificateStatusProtocolContent.enableOnlineCertificateStatusProtocol", data.EnableOnlineCertificateStatusProtocol.ValueBool())
-	}
-	if !data.OnlineCertificateStatusProtocolUrl.IsNull() {
-		body, _ = sjson.Set(body, "revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl", data.OnlineCertificateStatusProtocolUrl.ValueString())
+	if !data.OcspUrl.IsNull() {
+		body, _ = sjson.Set(body, "revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl", data.OcspUrl.ValueString())
 	}
 	if !data.EvaluationPriority.IsNull() {
 		body, _ = sjson.Set(body, "revocation.evaluationPriority", data.EvaluationPriority.ValueString())
 	}
-	if !data.IgnoreRevocation.IsNull() {
-		body, _ = sjson.Set(body, "revocation.ignoreRevocation", data.IgnoreRevocation.ValueBool())
+	if !data.ConsiderCertificateValidIfRevocationInformationNotReachable.IsNull() {
+		body, _ = sjson.Set(body, "revocation.ignoreRevocation", data.ConsiderCertificateValidIfRevocationInformationNotReachable.ValueBool())
 	}
 	return body
 }
@@ -273,19 +261,19 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.EnrollmentType = types.StringNull()
 	}
 	if value := res.Get("validationUsage.ipsecClient"); value.Exists() {
-		data.ValidateIpsecClient = types.BoolValue(value.Bool())
+		data.ValidationUsageIpsecClient = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateIpsecClient = types.BoolNull()
+		data.ValidationUsageIpsecClient = types.BoolNull()
 	}
 	if value := res.Get("validationUsage.sslServer"); value.Exists() {
-		data.ValidateSslServer = types.BoolValue(value.Bool())
+		data.ValidationUsageSslServer = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateSslServer = types.BoolNull()
+		data.ValidationUsageSslServer = types.BoolNull()
 	}
 	if value := res.Get("validationUsage.sslClient"); value.Exists() {
-		data.ValidateSslClient = types.BoolValue(value.Bool())
+		data.ValidationUsageSslClient = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateSslClient = types.BoolNull()
+		data.ValidationUsageSslClient = types.BoolNull()
 	}
 	if value := res.Get("estContent.enrollmentUrl"); value.Exists() {
 		data.EstEnrollmentUrl = types.StringValue(value.String())
@@ -427,35 +415,20 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 	} else {
 		data.IgnoreIpsecKeyUsage = types.BoolNull()
 	}
-	if value := res.Get("revocation.certRevocationListContent.enableCertRevocationList"); value.Exists() {
-		data.EnableCertificateRevocationList = types.BoolValue(value.Bool())
-	} else {
-		data.EnableCertificateRevocationList = types.BoolNull()
-	}
 	if value := res.Get("revocation.certRevocationListContent.enableCertRevocationListDistributionPoint"); value.Exists() {
-		data.UseCrlDistributionPointFromTheCertificate = types.BoolValue(value.Bool())
+		data.CrlUseDistributionPointFromTheCertificate = types.BoolValue(value.Bool())
 	} else {
-		data.UseCrlDistributionPointFromTheCertificate = types.BoolNull()
-	}
-	if value := res.Get("revocation.certRevocationListContent.enableStaticCertRevocationList"); value.Exists() {
-		data.EnableStaticCertificateRevocationList = types.BoolValue(value.Bool())
-	} else {
-		data.EnableStaticCertificateRevocationList = types.BoolNull()
+		data.CrlUseDistributionPointFromTheCertificate = types.BoolNull()
 	}
 	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() {
-		data.CertRevocationStaticUrlList = helpers.GetStringList(value.Array())
+		data.CrlStaticUrlsList = helpers.GetStringList(value.Array())
 	} else {
-		data.CertRevocationStaticUrlList = types.ListNull(types.StringType)
-	}
-	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.enableOnlineCertificateStatusProtocol"); value.Exists() {
-		data.EnableOnlineCertificateStatusProtocol = types.BoolValue(value.Bool())
-	} else {
-		data.EnableOnlineCertificateStatusProtocol = types.BoolNull()
+		data.CrlStaticUrlsList = types.ListNull(types.StringType)
 	}
 	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl"); value.Exists() {
-		data.OnlineCertificateStatusProtocolUrl = types.StringValue(value.String())
+		data.OcspUrl = types.StringValue(value.String())
 	} else {
-		data.OnlineCertificateStatusProtocolUrl = types.StringNull()
+		data.OcspUrl = types.StringNull()
 	}
 	if value := res.Get("revocation.evaluationPriority"); value.Exists() {
 		data.EvaluationPriority = types.StringValue(value.String())
@@ -463,9 +436,9 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.EvaluationPriority = types.StringNull()
 	}
 	if value := res.Get("revocation.ignoreRevocation"); value.Exists() {
-		data.IgnoreRevocation = types.BoolValue(value.Bool())
+		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolValue(value.Bool())
 	} else {
-		data.IgnoreRevocation = types.BoolNull()
+		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolNull()
 	}
 }
 
@@ -498,20 +471,20 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.EnrollmentType = types.StringNull()
 	}
-	if value := res.Get("validationUsage.ipsecClient"); value.Exists() && !data.ValidateIpsecClient.IsNull() {
-		data.ValidateIpsecClient = types.BoolValue(value.Bool())
+	if value := res.Get("validationUsage.ipsecClient"); value.Exists() && !data.ValidationUsageIpsecClient.IsNull() {
+		data.ValidationUsageIpsecClient = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateIpsecClient = types.BoolNull()
+		data.ValidationUsageIpsecClient = types.BoolNull()
 	}
-	if value := res.Get("validationUsage.sslServer"); value.Exists() && !data.ValidateSslServer.IsNull() {
-		data.ValidateSslServer = types.BoolValue(value.Bool())
+	if value := res.Get("validationUsage.sslServer"); value.Exists() && !data.ValidationUsageSslServer.IsNull() {
+		data.ValidationUsageSslServer = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateSslServer = types.BoolNull()
+		data.ValidationUsageSslServer = types.BoolNull()
 	}
-	if value := res.Get("validationUsage.sslClient"); value.Exists() && !data.ValidateSslClient.IsNull() {
-		data.ValidateSslClient = types.BoolValue(value.Bool())
+	if value := res.Get("validationUsage.sslClient"); value.Exists() && !data.ValidationUsageSslClient.IsNull() {
+		data.ValidationUsageSslClient = types.BoolValue(value.Bool())
 	} else {
-		data.ValidateSslClient = types.BoolNull()
+		data.ValidationUsageSslClient = types.BoolNull()
 	}
 	if value := res.Get("estContent.enrollmentUrl"); value.Exists() && !data.EstEnrollmentUrl.IsNull() {
 		data.EstEnrollmentUrl = types.StringValue(value.String())
@@ -653,45 +626,30 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.IgnoreIpsecKeyUsage = types.BoolNull()
 	}
-	if value := res.Get("revocation.certRevocationListContent.enableCertRevocationList"); value.Exists() && !data.EnableCertificateRevocationList.IsNull() {
-		data.EnableCertificateRevocationList = types.BoolValue(value.Bool())
+	if value := res.Get("revocation.certRevocationListContent.enableCertRevocationListDistributionPoint"); value.Exists() && !data.CrlUseDistributionPointFromTheCertificate.IsNull() {
+		data.CrlUseDistributionPointFromTheCertificate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableCertificateRevocationList = types.BoolNull()
+		data.CrlUseDistributionPointFromTheCertificate = types.BoolNull()
 	}
-	if value := res.Get("revocation.certRevocationListContent.enableCertRevocationListDistributionPoint"); value.Exists() && !data.UseCrlDistributionPointFromTheCertificate.IsNull() {
-		data.UseCrlDistributionPointFromTheCertificate = types.BoolValue(value.Bool())
+	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() && !data.CrlStaticUrlsList.IsNull() {
+		data.CrlStaticUrlsList = helpers.GetStringList(value.Array())
 	} else {
-		data.UseCrlDistributionPointFromTheCertificate = types.BoolNull()
+		data.CrlStaticUrlsList = types.ListNull(types.StringType)
 	}
-	if value := res.Get("revocation.certRevocationListContent.enableStaticCertRevocationList"); value.Exists() && !data.EnableStaticCertificateRevocationList.IsNull() {
-		data.EnableStaticCertificateRevocationList = types.BoolValue(value.Bool())
+	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl"); value.Exists() && !data.OcspUrl.IsNull() {
+		data.OcspUrl = types.StringValue(value.String())
 	} else {
-		data.EnableStaticCertificateRevocationList = types.BoolNull()
-	}
-	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() && !data.CertRevocationStaticUrlList.IsNull() {
-		data.CertRevocationStaticUrlList = helpers.GetStringList(value.Array())
-	} else {
-		data.CertRevocationStaticUrlList = types.ListNull(types.StringType)
-	}
-	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.enableOnlineCertificateStatusProtocol"); value.Exists() && !data.EnableOnlineCertificateStatusProtocol.IsNull() {
-		data.EnableOnlineCertificateStatusProtocol = types.BoolValue(value.Bool())
-	} else {
-		data.EnableOnlineCertificateStatusProtocol = types.BoolNull()
-	}
-	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl"); value.Exists() && !data.OnlineCertificateStatusProtocolUrl.IsNull() {
-		data.OnlineCertificateStatusProtocolUrl = types.StringValue(value.String())
-	} else {
-		data.OnlineCertificateStatusProtocolUrl = types.StringNull()
+		data.OcspUrl = types.StringNull()
 	}
 	if value := res.Get("revocation.evaluationPriority"); value.Exists() && !data.EvaluationPriority.IsNull() {
 		data.EvaluationPriority = types.StringValue(value.String())
 	} else {
 		data.EvaluationPriority = types.StringNull()
 	}
-	if value := res.Get("revocation.ignoreRevocation"); value.Exists() && !data.IgnoreRevocation.IsNull() {
-		data.IgnoreRevocation = types.BoolValue(value.Bool())
+	if value := res.Get("revocation.ignoreRevocation"); value.Exists() && !data.ConsiderCertificateValidIfRevocationInformationNotReachable.IsNull() {
+		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolValue(value.Bool())
 	} else {
-		data.IgnoreRevocation = types.BoolNull()
+		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolNull()
 	}
 }
 
@@ -713,30 +671,22 @@ func (data *CertificateEnrollment) fromBodyUnknowns(ctx context.Context, res gjs
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+func (data CertificateEnrollment) adjustBody(ctx context.Context, req string) string {
 
-// End of section. //template:end Clone
+	// Enable CRL if either distribution point or static URLs are provided
+	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() || !!data.CrlStaticUrlsList.IsNull() {
+		req, _ = sjson.Set(req, "revocation.certRevocationListContent.enableCertRevocationList", "true")
+	}
 
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+	// If CRL static URLs are provided, enable static CRL
+	if !data.CrlStaticUrlsList.IsNull() {
+		req, _ = sjson.Set(req, "revocation.certRevocationListContent.enableStaticCertRevocationList", "true")
+	}
 
-// End of section. //template:end toBodyNonBulk
+	// If OSCP URL is provided, enable OCSP
+	if !data.OcspUrl.IsNull() {
+		req, _ = sjson.Set(req, "revocation.onlineCertificateStatusProtocolContent.enableOnlineCertificateStatusProtocol", "true")
+	}
 
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk
+	return req
+}

@@ -72,7 +72,7 @@ func (d *InternalCertificateAuthorityDataSource) Schema(ctx context.Context, req
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the internal certificate authority.",
+				MarkdownDescription: "Name of the Internal Certificate Authority (CA) object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,16 +81,16 @@ func (d *InternalCertificateAuthorityDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"certificate": schema.StringAttribute{
-				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
+				MarkdownDescription: "Certificate in PEM, DER, or PKCS#7 format.",
 				Computed:            true,
 			},
 			"private_key": schema.StringAttribute{
-				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
+				MarkdownDescription: "Private key in PEM, DER, or PKCS#7 format.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"password": schema.StringAttribute{
-				MarkdownDescription: "Passphrase for the private key.",
+				MarkdownDescription: "Private key password.",
 				Computed:            true,
 				Sensitive:           true,
 			},

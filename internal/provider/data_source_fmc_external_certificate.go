@@ -72,7 +72,7 @@ func (d *ExternalCertificateDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the external certificate.",
+				MarkdownDescription: "Name of the External Certificate object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *ExternalCertificateDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"certificate": schema.StringAttribute{
-				MarkdownDescription: "PEM, DER, or PKCS#7 formatted certificate contents.",
+				MarkdownDescription: "Certificate in PEM, DER, or PKCS#7 format.",
 				Computed:            true,
 			},
 		},

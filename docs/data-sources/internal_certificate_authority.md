@@ -25,11 +25,11 @@ data "fmc_internal_certificate_authority" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the internal certificate authority.
+- `name` (String) Name of the Internal Certificate Authority (CA) object.
 
 ### Read-Only
 
-- `certificate` (String) PEM, DER, or PKCS#7 formatted certificate contents.
-- `password` (String, Sensitive) Passphrase for the private key.
-- `private_key` (String, Sensitive) PEM, DER, or PKCS#7 formatted certificate contents.
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
+- `password` (String, Sensitive) Private key password.
+- `private_key` (String, Sensitive) Private key in PEM, DER, or PKCS#7 format.
 - `type` (String) Type of the object; this value is always 'InternalCA'.

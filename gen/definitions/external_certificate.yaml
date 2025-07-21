@@ -8,7 +8,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the external certificate.
+    description: Name of the External Certificate object.
     example: my_certificate_external
     data_source_query: true
     requires_replace: true
@@ -19,6 +19,6 @@ attributes:
   - model_name: cert
     tf_name: certificate
     type: String
-    description: PEM, DER, or PKCS#7 formatted certificate contents.
-    example: -----BEGIN CERTIFICATE-----\nMII(...)\n-----END CERTIFICATE-----
+    description: Certificate in PEM, DER, or PKCS#7 format.
+    example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
     requires_replace: true
