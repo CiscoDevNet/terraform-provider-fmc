@@ -1,3 +1,8 @@
+## 2.0.0-rc5 (Unreleased)
+
+- (Enhancement) Add support for `fmc_internal_certificate`, `fmc_internal_certificate_authority`, `fmc_external_certificate`, `fmc_trusted_certificate_authority` resources and data sources
+- (Enhancement) Add support for `fmc_certificate_enrollment` resource and data source
+
 ## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources
