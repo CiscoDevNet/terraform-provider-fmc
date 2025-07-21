@@ -25,27 +25,38 @@ data "fmc_realm_ad_ldap" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the realm.
+- `name` (String) Name of the Realm object.
 
 ### Read-Only
 
+- `ad_join_password` (String, Sensitive) Password for joining the AD domain.
+- `ad_join_username` (String) Username for joining the AD domain.
 - `ad_primary_domain` (String) Primary domain for AD realm.
 - `base_dn` (String) Base DN for the LDAP search.
 - `description` (String) Description of the realm.
-- `directory_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_configurations))
 - `directory_password` (String, Sensitive) Password for the AD domain user.
+- `directory_server_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username for joining the AD domain.
+- `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
 - `group_dn` (String) DN of the group to search for users.
 - `realm_type` (String) Type of the realm
+- `timeout_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_failed_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_guest_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_ise_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_terminal_server_agent_users` (Number) Timeout for the authentication session in seconds.
 - `type` (String) Type of the object; this value is always 'Realm'.
+- `update_hour` (Number) Hour where the sync (download) from the directory starts.
+- `update_interval` (String) Interval in hours for the sync (download) from the directory.
+- `version` (String)
 
-<a id="nestedatt--directory_configurations"></a>
-### Nested Schema for `directory_configurations`
+<a id="nestedatt--directory_server_configurations"></a>
+### Nested Schema for `directory_server_configurations`
 
 Read-Only:
 
-- `encryption` (String) Encryption method for the LDAP connection.
 - `encryption_certificate` (String) ID of the encryption certificate for LDAPS.
+- `encryption_protocol` (String) Encryption method for the LDAP connection.
 - `hostname` (String) Hostname or IP address of the LDAP server.
 - `interface_group_id` (String) ID of the interface group to use for LDAP communication.
 - `port` (Number) Port number for the LDAP server.

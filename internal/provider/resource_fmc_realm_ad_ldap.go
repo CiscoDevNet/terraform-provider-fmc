@@ -25,6 +25,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -80,11 +81,18 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Realm object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Realm'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
+			},
+			"version": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -111,6 +119,15 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
+			"ad_join_username": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Username for joining the AD domain.").String,
+				Optional:            true,
+			},
+			"ad_join_password": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Password for joining the AD domain.").String,
+				Optional:            true,
+				Sensitive:           true,
+			},
 			"directory_username": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Username for joining the AD domain.").String,
 				Optional:            true,
@@ -128,7 +145,60 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("DN of the group to search for users.").String,
 				Optional:            true,
 			},
-			"directory_configurations": schema.ListNestedAttribute{
+			"update_hour": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Hour where the sync (download) from the directory starts.").AddIntegerRangeDescription(0, 23).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 23),
+				},
+			},
+			"update_interval": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Interval in hours for the sync (download) from the directory.").AddStringEnumDescription("1", "2", "3", "4", "6", "8", "12", "24").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("1", "2", "3", "4", "6", "8", "12", "24"),
+				},
+			},
+			"group_attribute": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.").String,
+				Optional:            true,
+			},
+			"timeout_ise_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 35791394),
+				},
+			},
+			"timeout_terminal_server_agent_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 35791394),
+				},
+			},
+			"timeout_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 35791394),
+				},
+			},
+			"timeout_failed_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 35791394),
+				},
+			},
+			"timeout_guest_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 35791394),
+				},
+			},
+			"directory_server_configurations": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of directory configurations for the realm.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -141,7 +211,7 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 							MarkdownDescription: helpers.NewAttributeDescription("Port number for the LDAP server.").String,
 							Optional:            true,
 						},
-						"encryption": schema.StringAttribute{
+						"encryption_protocol": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Encryption method for the LDAP connection.").AddStringEnumDescription("NONE", "LDAPS", "STARTTLS").String,
 							Optional:            true,
 							Validators: []validator.String{
@@ -198,6 +268,7 @@ func (r *RealmADLDAPResource) Create(ctx context.Context, req resource.CreateReq
 
 	// Create object
 	body := plan.toBody(ctx, RealmADLDAP{})
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -294,6 +365,7 @@ func (r *RealmADLDAPResource) Update(ctx context.Context, req resource.UpdateReq
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))

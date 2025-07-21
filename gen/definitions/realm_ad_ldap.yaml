@@ -1,18 +1,25 @@
+# Manual resource - adjustBody
 ---
 name: Realm AD LDAP
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/realms
 doc_category: Integrations
+adjust_body: true
 attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the realm.
+    description: Name of the Realm object.
     example: my_ldap_realm
     data_source_query: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'Realm'.
     computed: true
+  - model_name: version
+    type: String
+    computed: true
+    computed_body_param: true
+
   - model_name: description
     type: String
     description: Description of the realm.
@@ -24,6 +31,8 @@ attributes:
     enum_values: ["AD", "LDAP", "LOCAL"]
     example: LDAP
     requires_replace: true
+
+  # AD configuration
   - model_name: adPrimaryDomain
     type: String
     description: Primary domain for AD realm.
@@ -31,7 +40,19 @@ attributes:
     requires_replace: true
   - model_name: adJoinUsername
     type: String
+    description: Username for joining the AD domain.
+    example: user@example.com
+  - model_name: adJoinPassword
+    type: String
+    description: Password for joining the AD domain.
+    example: my_password
+    sensitive: true
+    write_only: true
+  
+  # Directory settings
+  - model_name: dirUsername
     tf_name: directory_username
+    type: String
     description: Username for joining the AD domain.
     example: user@example.com
   - model_name: dirPassword
@@ -40,15 +61,71 @@ attributes:
     description: Password for the AD domain user.
     sensitive: true
     example: my_password
+    write_only: true
   - model_name: baseDn
     type: String
     description: Base DN for the LDAP search.
-    example: "dc=example,dc=com"
+    example: "DC=example,DC=com"
   - model_name: groupDn
     type: String
     description: DN of the group to search for users.
-    example: "ou=users,dc=example,dc=com"
+    example: "CN=users,DC=example,DC=com"
+  - model_name: updateHour
+    type: Int64
+    description: Hour where the sync (download) from the directory starts.
+    min_int: 0
+    max_int: 23
+    exclude_example: true
+  - model_name: updateInterval
+    type: String
+    description: Interval in hours for the sync (download) from the directory.
+    enum_values: [1, 2, 3, 4, 6, 8, 12, 24]
+    exclude_example: true
+  
+  # Realm configuration
+  - model_name: groupAttribute
+    type: String
+    description: Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
+    example: member
+  - model_name: authSessionTimeout
+    tf_name: timeout_ise_users
+    type: Int64
+    description: Timeout for the authentication session in seconds.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: tsAgentSessionTimeout
+    tf_name: timeout_terminal_server_agent_users
+    type: Int64
+    description: Timeout for the authentication session in seconds.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: activeAuthSessionTimeout
+    tf_name: timeout_captive_portal_users
+    type: Int64
+    description: Timeout for the authentication session in seconds.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: failedAuthSessionTimeout
+    tf_name: timeout_failed_captive_portal_users
+    type: Int64
+    description: Timeout for the authentication session in seconds.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: guestSessionTimeout
+    tf_name: timeout_guest_captive_portal_users
+    type: Int64
+    description: Timeout for the authentication session in seconds.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+
+  # Directory server configuration
   - model_name: directoryConfigurations
+    tf_name: directory_server_configurations
     type: List
     description: List of directory configurations for the realm.
     attributes:
@@ -56,11 +133,12 @@ attributes:
         type: String
         description: Hostname or IP address of the LDAP server.
         example: ldap.example.com
+        id: true
       - model_name: port
         type: Int64
         description: Port number for the LDAP server.
         example: 389
-      - model_name: encryption
+      - model_name: encryptionProtocol
         type: String
         description: Encryption method for the LDAP connection.
         enum_values: ["NONE", "LDAPS", "STARTTLS"]

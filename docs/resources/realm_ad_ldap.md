@@ -14,19 +14,27 @@ This resource manages a Realm AD LDAP.
 
 ```terraform
 resource "fmc_realm_ad_ldap" "example" {
-  name               = "my_ldap_realm"
-  description        = "My realm"
-  realm_type         = "LDAP"
-  ad_primary_domain  = "example.com"
-  directory_username = "user@example.com"
-  directory_password = "my_password"
-  base_dn            = "dc=example,dc=com"
-  group_dn           = "ou=users,dc=example,dc=com"
-  directory_configurations = [
+  name                                = "my_ldap_realm"
+  description                         = "My realm"
+  realm_type                          = "LDAP"
+  ad_primary_domain                   = "example.com"
+  ad_join_username                    = "user@example.com"
+  ad_join_password                    = "my_password"
+  directory_username                  = "user@example.com"
+  directory_password                  = "my_password"
+  base_dn                             = "DC=example,DC=com"
+  group_dn                            = "CN=users,DC=example,DC=com"
+  group_attribute                     = "member"
+  timeout_ise_users                   = 1440
+  timeout_terminal_server_agent_users = 1440
+  timeout_captive_portal_users        = 1440
+  timeout_failed_captive_portal_users = 1440
+  timeout_guest_captive_portal_users  = 1440
+  directory_server_configurations = [
     {
       hostname                        = "ldap.example.com"
       port                            = 389
-      encryption                      = "LDAPS"
+      encryption_protocol             = "LDAPS"
       encryption_certificate          = "1234-5678-90AB-CDEF12345678"
       use_routing_to_select_interface = true
       interface_group_id              = "1234-5678-90AB-CDEF12345678"
@@ -40,34 +48,52 @@ resource "fmc_realm_ad_ldap" "example" {
 
 ### Required
 
-- `name` (String) Name of the realm.
+- `name` (String) Name of the Realm object.
 - `realm_type` (String) Type of the realm
   - Choices: `AD`, `LDAP`, `LOCAL`
 
 ### Optional
 
+- `ad_join_password` (String, Sensitive) Password for joining the AD domain.
+- `ad_join_username` (String) Username for joining the AD domain.
 - `ad_primary_domain` (String) Primary domain for AD realm.
 - `base_dn` (String) Base DN for the LDAP search.
 - `description` (String) Description of the realm.
-- `directory_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_configurations))
 - `directory_password` (String, Sensitive) Password for the AD domain user.
+- `directory_server_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username for joining the AD domain.
 - `domain` (String) Name of the FMC domain
+- `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
 - `group_dn` (String) DN of the group to search for users.
+- `timeout_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+  - Range: `0`-`35791394`
+- `timeout_failed_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+  - Range: `0`-`35791394`
+- `timeout_guest_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+  - Range: `0`-`35791394`
+- `timeout_ise_users` (Number) Timeout for the authentication session in seconds.
+  - Range: `0`-`35791394`
+- `timeout_terminal_server_agent_users` (Number) Timeout for the authentication session in seconds.
+  - Range: `0`-`35791394`
+- `update_hour` (Number) Hour where the sync (download) from the directory starts.
+  - Range: `0`-`23`
+- `update_interval` (String) Interval in hours for the sync (download) from the directory.
+  - Choices: `1`, `2`, `3`, `4`, `6`, `8`, `12`, `24`
 
 ### Read-Only
 
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'Realm'.
+- `version` (String)
 
-<a id="nestedatt--directory_configurations"></a>
-### Nested Schema for `directory_configurations`
+<a id="nestedatt--directory_server_configurations"></a>
+### Nested Schema for `directory_server_configurations`
 
 Optional:
 
-- `encryption` (String) Encryption method for the LDAP connection.
-  - Choices: `NONE`, `LDAPS`, `STARTTLS`
 - `encryption_certificate` (String) ID of the encryption certificate for LDAPS.
+- `encryption_protocol` (String) Encryption method for the LDAP connection.
+  - Choices: `NONE`, `LDAPS`, `STARTTLS`
 - `hostname` (String) Hostname or IP address of the LDAP server.
 - `interface_group_id` (String) ID of the interface group to use for LDAP communication.
 - `port` (Number) Port number for the LDAP server.

@@ -72,12 +72,16 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the realm.",
+				MarkdownDescription: "Name of the Realm object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: "Type of the object; this value is always 'Realm'.",
+				Computed:            true,
+			},
+			"version": schema.StringAttribute{
+				MarkdownDescription: "",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -91,6 +95,15 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 			"ad_primary_domain": schema.StringAttribute{
 				MarkdownDescription: "Primary domain for AD realm.",
 				Computed:            true,
+			},
+			"ad_join_username": schema.StringAttribute{
+				MarkdownDescription: "Username for joining the AD domain.",
+				Computed:            true,
+			},
+			"ad_join_password": schema.StringAttribute{
+				MarkdownDescription: "Password for joining the AD domain.",
+				Computed:            true,
+				Sensitive:           true,
 			},
 			"directory_username": schema.StringAttribute{
 				MarkdownDescription: "Username for joining the AD domain.",
@@ -109,7 +122,39 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "DN of the group to search for users.",
 				Computed:            true,
 			},
-			"directory_configurations": schema.ListNestedAttribute{
+			"update_hour": schema.Int64Attribute{
+				MarkdownDescription: "Hour where the sync (download) from the directory starts.",
+				Computed:            true,
+			},
+			"update_interval": schema.StringAttribute{
+				MarkdownDescription: "Interval in hours for the sync (download) from the directory.",
+				Computed:            true,
+			},
+			"group_attribute": schema.StringAttribute{
+				MarkdownDescription: "Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.",
+				Computed:            true,
+			},
+			"timeout_ise_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				Computed:            true,
+			},
+			"timeout_terminal_server_agent_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				Computed:            true,
+			},
+			"timeout_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				Computed:            true,
+			},
+			"timeout_failed_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				Computed:            true,
+			},
+			"timeout_guest_captive_portal_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				Computed:            true,
+			},
+			"directory_server_configurations": schema.ListNestedAttribute{
 				MarkdownDescription: "List of directory configurations for the realm.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -122,7 +167,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 							MarkdownDescription: "Port number for the LDAP server.",
 							Computed:            true,
 						},
-						"encryption": schema.StringAttribute{
+						"encryption_protocol": schema.StringAttribute{
 							MarkdownDescription: "Encryption method for the LDAP connection.",
 							Computed:            true,
 						},

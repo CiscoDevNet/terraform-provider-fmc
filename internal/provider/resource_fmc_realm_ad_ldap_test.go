@@ -33,19 +33,28 @@ func TestAccFmcRealmADLDAP(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "name", "my_ldap_realm"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_realm_ad_ldap.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_realm_ad_ldap.test", "version"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "description", "My realm"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "realm_type", "LDAP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "ad_primary_domain", "example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "ad_join_username", "user@example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_username", "user@example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_password", "my_password"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "base_dn", "dc=example,dc=com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "group_dn", "ou=users,dc=example,dc=com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.hostname", "ldap.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.port", "389"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.encryption", "LDAPS"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.encryption_certificate", "1234-5678-90AB-CDEF12345678"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.use_routing_to_select_interface", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_configurations.0.interface_group_id", "1234-5678-90AB-CDEF12345678"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "base_dn", "DC=example,DC=com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "group_dn", "CN=users,DC=example,DC=com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "update_hour", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "update_interval", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "group_attribute", "member"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_ise_users", "1440"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_terminal_server_agent_users", "1440"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_captive_portal_users", "1440"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_failed_captive_portal_users", "1440"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_guest_captive_portal_users", "1440"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.hostname", "ldap.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.port", "389"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.encryption_protocol", "LDAPS"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.encryption_certificate", "1234-5678-90AB-CDEF12345678"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.use_routing_to_select_interface", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.interface_group_id", "1234-5678-90AB-CDEF12345678"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -95,14 +104,24 @@ func testAccFmcRealmADLDAPConfig_all() string {
 	config += `	description = "My realm"` + "\n"
 	config += `	realm_type = "LDAP"` + "\n"
 	config += `	ad_primary_domain = "example.com"` + "\n"
+	config += `	ad_join_username = "user@example.com"` + "\n"
+	config += `	ad_join_password = "my_password"` + "\n"
 	config += `	directory_username = "user@example.com"` + "\n"
 	config += `	directory_password = "my_password"` + "\n"
-	config += `	base_dn = "dc=example,dc=com"` + "\n"
-	config += `	group_dn = "ou=users,dc=example,dc=com"` + "\n"
-	config += `	directory_configurations = [{` + "\n"
+	config += `	base_dn = "DC=example,DC=com"` + "\n"
+	config += `	group_dn = "CN=users,DC=example,DC=com"` + "\n"
+	config += `	update_hour = ` + "\n"
+	config += `	update_interval = ""` + "\n"
+	config += `	group_attribute = "member"` + "\n"
+	config += `	timeout_ise_users = 1440` + "\n"
+	config += `	timeout_terminal_server_agent_users = 1440` + "\n"
+	config += `	timeout_captive_portal_users = 1440` + "\n"
+	config += `	timeout_failed_captive_portal_users = 1440` + "\n"
+	config += `	timeout_guest_captive_portal_users = 1440` + "\n"
+	config += `	directory_server_configurations = [{` + "\n"
 	config += `		hostname = "ldap.example.com"` + "\n"
 	config += `		port = 389` + "\n"
-	config += `		encryption = "LDAPS"` + "\n"
+	config += `		encryption_protocol = "LDAPS"` + "\n"
 	config += `		encryption_certificate = "1234-5678-90AB-CDEF12345678"` + "\n"
 	config += `		use_routing_to_select_interface = true` + "\n"
 	config += `		interface_group_id = "1234-5678-90AB-CDEF12345678"` + "\n"
