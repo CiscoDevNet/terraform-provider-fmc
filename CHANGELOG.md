@@ -1,4 +1,4 @@
-## 2.0.0-rc4 (Unreleased)
+## 2.0.0-rc4
 
 - (Fix) Corrected URL encoding for multiple resources
 - (Fix) `fmc_device`: add missing FTDv100 performance tier
