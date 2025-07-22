@@ -17,6 +17,7 @@ description: |-
 - (Enhancement) Add support for `fmc_geolocation` resource and data source
 - (Enhancement) Add support for `fmc_service_access` resource and data source
 - (Enhancement) Add support for `fmc_secure_client_*` resources and data sources
+- (Enhancement) Add support for `fmc_radius_server_group` resource and data source
 
 ## 2.0.0-rc4
 
