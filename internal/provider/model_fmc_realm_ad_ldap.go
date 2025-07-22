@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"slices"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -37,6 +38,7 @@ type RealmADLDAP struct {
 	Id                              types.String                               `tfsdk:"id"`
 	Domain                          types.String                               `tfsdk:"domain"`
 	Name                            types.String                               `tfsdk:"name"`
+	Enabled                         types.Bool                                 `tfsdk:"enabled"`
 	Type                            types.String                               `tfsdk:"type"`
 	Version                         types.String                               `tfsdk:"version"`
 	Description                     types.String                               `tfsdk:"description"`
@@ -47,6 +49,10 @@ type RealmADLDAP struct {
 	DirectoryUsername               types.String                               `tfsdk:"directory_username"`
 	DirectoryPassword               types.String                               `tfsdk:"directory_password"`
 	BaseDn                          types.String                               `tfsdk:"base_dn"`
+	IncludedUsers                   types.List                                 `tfsdk:"included_users"`
+	IncludedGroups                  types.List                                 `tfsdk:"included_groups"`
+	ExcludedUsers                   types.List                                 `tfsdk:"excluded_users"`
+	ExcludedGroups                  types.List                                 `tfsdk:"excluded_groups"`
 	GroupDn                         types.String                               `tfsdk:"group_dn"`
 	UpdateHour                      types.Int64                                `tfsdk:"update_hour"`
 	UpdateInterval                  types.String                               `tfsdk:"update_interval"`
@@ -92,6 +98,9 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	if !data.Enabled.IsNull() {
+		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
+	}
 	if !data.Version.IsNull() && !data.Version.IsUnknown() {
 		body, _ = sjson.Set(body, "version", data.Version.ValueString())
 	}
@@ -118,6 +127,26 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 	}
 	if !data.BaseDn.IsNull() {
 		body, _ = sjson.Set(body, "baseDn", data.BaseDn.ValueString())
+	}
+	if !data.IncludedUsers.IsNull() {
+		var values []string
+		data.IncludedUsers.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "includedUsers", values)
+	}
+	if !data.IncludedGroups.IsNull() {
+		var values []string
+		data.IncludedGroups.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "includedGroups", values)
+	}
+	if !data.ExcludedUsers.IsNull() {
+		var values []string
+		data.ExcludedUsers.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "excludedUsers", values)
+	}
+	if !data.ExcludedGroups.IsNull() {
+		var values []string
+		data.ExcludedGroups.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "excludedGroups", values)
 	}
 	if !data.GroupDn.IsNull() {
 		body, _ = sjson.Set(body, "groupDn", data.GroupDn.ValueString())
@@ -184,6 +213,11 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("enabled"); value.Exists() {
+		data.Enabled = types.BoolValue(value.Bool())
+	} else {
+		data.Enabled = types.BoolNull()
+	}
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
@@ -223,6 +257,26 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 		data.BaseDn = types.StringValue(value.String())
 	} else {
 		data.BaseDn = types.StringNull()
+	}
+	if value := res.Get("includedUsers"); value.Exists() {
+		data.IncludedUsers = helpers.GetStringList(value.Array())
+	} else {
+		data.IncludedUsers = types.ListNull(types.StringType)
+	}
+	if value := res.Get("includedGroups"); value.Exists() {
+		data.IncludedGroups = helpers.GetStringList(value.Array())
+	} else {
+		data.IncludedGroups = types.ListNull(types.StringType)
+	}
+	if value := res.Get("excludedUsers"); value.Exists() {
+		data.ExcludedUsers = helpers.GetStringList(value.Array())
+	} else {
+		data.ExcludedUsers = types.ListNull(types.StringType)
+	}
+	if value := res.Get("excludedGroups"); value.Exists() {
+		data.ExcludedGroups = helpers.GetStringList(value.Array())
+	} else {
+		data.ExcludedGroups = types.ListNull(types.StringType)
 	}
 	if value := res.Get("groupDn"); value.Exists() {
 		data.GroupDn = types.StringValue(value.String())
@@ -324,6 +378,11 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
+		data.Enabled = types.BoolValue(value.Bool())
+	} else {
+		data.Enabled = types.BoolNull()
+	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
 	} else {
@@ -363,6 +422,26 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		data.BaseDn = types.StringValue(value.String())
 	} else {
 		data.BaseDn = types.StringNull()
+	}
+	if value := res.Get("includedUsers"); value.Exists() && !data.IncludedUsers.IsNull() {
+		data.IncludedUsers = helpers.GetStringList(value.Array())
+	} else {
+		data.IncludedUsers = types.ListNull(types.StringType)
+	}
+	if value := res.Get("includedGroups"); value.Exists() && !data.IncludedGroups.IsNull() {
+		data.IncludedGroups = helpers.GetStringList(value.Array())
+	} else {
+		data.IncludedGroups = types.ListNull(types.StringType)
+	}
+	if value := res.Get("excludedUsers"); value.Exists() && !data.ExcludedUsers.IsNull() {
+		data.ExcludedUsers = helpers.GetStringList(value.Array())
+	} else {
+		data.ExcludedUsers = types.ListNull(types.StringType)
+	}
+	if value := res.Get("excludedGroups"); value.Exists() && !data.ExcludedGroups.IsNull() {
+		data.ExcludedGroups = helpers.GetStringList(value.Array())
+	} else {
+		data.ExcludedGroups = types.ListNull(types.StringType)
 	}
 	if value := res.Get("groupDn"); value.Exists() && !data.GroupDn.IsNull() {
 		data.GroupDn = types.StringValue(value.String())

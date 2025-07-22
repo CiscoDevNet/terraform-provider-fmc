@@ -84,6 +84,10 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the Realm object.").String,
 				Required:            true,
 			},
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable the Realm object, so it can be referenced in other objects.").String,
+				Optional:            true,
+			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Realm'.").String,
 				Computed:            true,
@@ -139,6 +143,26 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 			},
 			"base_dn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Base DN for the LDAP search.").String,
+				Optional:            true,
+			},
+			"included_users": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of users to include in the realm.").String,
+				ElementType:         types.StringType,
+				Optional:            true,
+			},
+			"included_groups": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of groups to include in the realm.").String,
+				ElementType:         types.StringType,
+				Optional:            true,
+			},
+			"excluded_users": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of users to exclude from the realm.").String,
+				ElementType:         types.StringType,
+				Optional:            true,
+			},
+			"excluded_groups": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of groups to exclude from the realm.").String,
+				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"group_dn": schema.StringAttribute{

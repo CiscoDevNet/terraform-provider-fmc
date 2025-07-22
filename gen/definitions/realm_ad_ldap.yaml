@@ -11,6 +11,10 @@ attributes:
     description: Name of the Realm object.
     example: my_ldap_realm
     data_source_query: true
+  - model_name: enabled
+    type: Bool
+    description: Enable the Realm object, so it can be referenced in other objects.
+    example: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'Realm'.
@@ -66,6 +70,26 @@ attributes:
     type: String
     description: Base DN for the LDAP search.
     example: "DC=example,DC=com"
+  - model_name: includedUsers
+    type: List
+    element_type: String
+    description: List of users to include in the realm.
+    example: "user1"
+  - model_name: includedGroups
+    type: List
+    element_type: String
+    description: List of groups to include in the realm.
+    example: "group1"
+  - model_name: excludedUsers
+    type: List
+    element_type: String
+    description: List of users to exclude from the realm.
+    example: "user2"
+  - model_name: excludedGroups
+    type: List
+    element_type: String
+    description: List of groups to exclude from the realm.
+    example: "group2"
   - model_name: groupDn
     type: String
     description: DN of the group to search for users.

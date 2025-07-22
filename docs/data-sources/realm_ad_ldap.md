@@ -37,8 +37,13 @@ data "fmc_realm_ad_ldap" "example" {
 - `directory_password` (String, Sensitive) Password for the AD domain user.
 - `directory_server_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username for joining the AD domain.
+- `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
+- `excluded_groups` (List of String) List of groups to exclude from the realm.
+- `excluded_users` (List of String) List of users to exclude from the realm.
 - `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
 - `group_dn` (String) DN of the group to search for users.
+- `included_groups` (List of String) List of groups to include in the realm.
+- `included_users` (List of String) List of users to include in the realm.
 - `realm_type` (String) Type of the realm
 - `timeout_captive_portal_users` (Number) Timeout for the authentication session in seconds.
 - `timeout_failed_captive_portal_users` (Number) Timeout for the authentication session in seconds.

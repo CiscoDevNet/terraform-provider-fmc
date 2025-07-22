@@ -15,6 +15,7 @@ This resource manages a Realm AD LDAP.
 ```terraform
 resource "fmc_realm_ad_ldap" "example" {
   name                                = "my_ldap_realm"
+  enabled                             = true
   description                         = "My realm"
   realm_type                          = "LDAP"
   ad_primary_domain                   = "example.com"
@@ -23,6 +24,10 @@ resource "fmc_realm_ad_ldap" "example" {
   directory_username                  = "user@example.com"
   directory_password                  = "my_password"
   base_dn                             = "DC=example,DC=com"
+  included_users                      = ["user1"]
+  included_groups                     = ["group1"]
+  excluded_users                      = ["user2"]
+  excluded_groups                     = ["group2"]
   group_dn                            = "CN=users,DC=example,DC=com"
   group_attribute                     = "member"
   timeout_ise_users                   = 1440
@@ -63,8 +68,13 @@ resource "fmc_realm_ad_ldap" "example" {
 - `directory_server_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username for joining the AD domain.
 - `domain` (String) Name of the FMC domain
+- `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
+- `excluded_groups` (List of String) List of groups to exclude from the realm.
+- `excluded_users` (List of String) List of users to exclude from the realm.
 - `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
 - `group_dn` (String) DN of the group to search for users.
+- `included_groups` (List of String) List of groups to include in the realm.
+- `included_users` (List of String) List of users to include in the realm.
 - `timeout_captive_portal_users` (Number) Timeout for the authentication session in seconds.
   - Range: `0`-`35791394`
 - `timeout_failed_captive_portal_users` (Number) Timeout for the authentication session in seconds.

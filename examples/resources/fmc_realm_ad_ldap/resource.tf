@@ -1,5 +1,6 @@
 resource "fmc_realm_ad_ldap" "example" {
   name                                = "my_ldap_realm"
+  enabled                             = true
   description                         = "My realm"
   realm_type                          = "LDAP"
   ad_primary_domain                   = "example.com"
@@ -8,6 +9,10 @@ resource "fmc_realm_ad_ldap" "example" {
   directory_username                  = "user@example.com"
   directory_password                  = "my_password"
   base_dn                             = "DC=example,DC=com"
+  included_users                      = ["user1"]
+  included_groups                     = ["group1"]
+  excluded_users                      = ["user2"]
+  excluded_groups                     = ["group2"]
   group_dn                            = "CN=users,DC=example,DC=com"
   group_attribute                     = "member"
   timeout_ise_users                   = 1440

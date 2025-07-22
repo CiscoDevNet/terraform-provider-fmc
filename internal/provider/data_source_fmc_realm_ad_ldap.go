@@ -76,6 +76,10 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 				Computed:            true,
 			},
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: "Enable the Realm object, so it can be referenced in other objects.",
+				Computed:            true,
+			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: "Type of the object; this value is always 'Realm'.",
 				Computed:            true,
@@ -116,6 +120,26 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 			},
 			"base_dn": schema.StringAttribute{
 				MarkdownDescription: "Base DN for the LDAP search.",
+				Computed:            true,
+			},
+			"included_users": schema.ListAttribute{
+				MarkdownDescription: "List of users to include in the realm.",
+				ElementType:         types.StringType,
+				Computed:            true,
+			},
+			"included_groups": schema.ListAttribute{
+				MarkdownDescription: "List of groups to include in the realm.",
+				ElementType:         types.StringType,
+				Computed:            true,
+			},
+			"excluded_users": schema.ListAttribute{
+				MarkdownDescription: "List of users to exclude from the realm.",
+				ElementType:         types.StringType,
+				Computed:            true,
+			},
+			"excluded_groups": schema.ListAttribute{
+				MarkdownDescription: "List of groups to exclude from the realm.",
+				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"group_dn": schema.StringAttribute{

@@ -32,6 +32,7 @@ import (
 func TestAccFmcRealmADLDAP(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "name", "my_ldap_realm"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_realm_ad_ldap.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_realm_ad_ldap.test", "version"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "description", "My realm"))
@@ -40,6 +41,10 @@ func TestAccFmcRealmADLDAP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "ad_join_username", "user@example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_username", "user@example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "base_dn", "DC=example,DC=com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "included_users.0", "user1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "included_groups.0", "group1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "excluded_users.0", "user2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "excluded_groups.0", "group2"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "group_dn", "CN=users,DC=example,DC=com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "update_hour", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "update_interval", ""))
@@ -101,6 +106,7 @@ func testAccFmcRealmADLDAPConfig_minimum() string {
 func testAccFmcRealmADLDAPConfig_all() string {
 	config := `resource "fmc_realm_ad_ldap" "test" {` + "\n"
 	config += `	name = "my_ldap_realm"` + "\n"
+	config += `	enabled = true` + "\n"
 	config += `	description = "My realm"` + "\n"
 	config += `	realm_type = "LDAP"` + "\n"
 	config += `	ad_primary_domain = "example.com"` + "\n"
@@ -109,6 +115,10 @@ func testAccFmcRealmADLDAPConfig_all() string {
 	config += `	directory_username = "user@example.com"` + "\n"
 	config += `	directory_password = "my_password"` + "\n"
 	config += `	base_dn = "DC=example,DC=com"` + "\n"
+	config += `	included_users = ["user1"]` + "\n"
+	config += `	included_groups = ["group1"]` + "\n"
+	config += `	excluded_users = ["user2"]` + "\n"
+	config += `	excluded_groups = ["group2"]` + "\n"
 	config += `	group_dn = "CN=users,DC=example,DC=com"` + "\n"
 	config += `	update_hour = ` + "\n"
 	config += `	update_interval = ""` + "\n"
