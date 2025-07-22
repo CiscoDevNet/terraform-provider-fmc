@@ -55,5 +55,5 @@ data "fmc_ftd_manual_nat_rule" "example" {
 - `translated_destination_port_id` (String) ID of translated destination port object
 - `translated_source_id` (String) ID of translated source network object (host, network or range)
 - `translated_source_port_id` (String) ID of translated source port object
-- `type` (String) Type of the object; this value is always ''.
+- `type` (String) Type of the object; this value is always 'FTDManualNatRule'.
 - `unidirectional` (Boolean) Whether the rule is unidirectional

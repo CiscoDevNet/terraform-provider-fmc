@@ -13,7 +13,7 @@ attributes:
     test_value: fmc_ftd_nat_policy.test.id
   - model_name: type
     type: String
-    description: Type of the object; this value is always ''.
+    description: Type of the object; this value is always 'FTDManualNatRule'.
     computed: true
   - model_name: description
     type: String

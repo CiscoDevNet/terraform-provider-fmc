@@ -36,26 +36,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &FTDManualNATRuleDataSource{}
-	_ datasource.DataSourceWithConfigure = &FTDManualNATRuleDataSource{}
+	_ datasource.DataSource              = &FTDAutoNATRuleDataSource{}
+	_ datasource.DataSourceWithConfigure = &FTDAutoNATRuleDataSource{}
 )
 
-func NewFTDManualNATRuleDataSource() datasource.DataSource {
-	return &FTDManualNATRuleDataSource{}
+func NewFTDAutoNATRuleDataSource() datasource.DataSource {
+	return &FTDAutoNATRuleDataSource{}
 }
 
-type FTDManualNATRuleDataSource struct {
+type FTDAutoNATRuleDataSource struct {
 	client *fmc.Client
 }
 
-func (d *FTDManualNATRuleDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_manual_nat_rule"
+func (d *FTDAutoNATRuleDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_auto_nat_rule"
 }
 
-func (d *FTDManualNATRuleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *FTDAutoNATRuleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Manual NAT Rule.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Auto NAT Rule.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -71,35 +71,19 @@ func (d *FTDManualNATRuleDataSource) Schema(ctx context.Context, req datasource.
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'FTDManualNatRule'.",
-				Computed:            true,
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of Manual NAT rule.",
-				Computed:            true,
-			},
-			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates if the rule is enabled.",
-				Computed:            true,
-			},
-			"section": schema.StringAttribute{
-				MarkdownDescription: "Name of section to which the rule belongs.",
+				MarkdownDescription: "Type of the object; this value is always 'FTDAutoNatRule'.",
 				Computed:            true,
 			},
 			"nat_type": schema.StringAttribute{
 				MarkdownDescription: "Type of the rule",
 				Computed:            true,
 			},
+			"destination_interface_id": schema.StringAttribute{
+				MarkdownDescription: "ID of destination security zone or interface group",
+				Computed:            true,
+			},
 			"fall_through": schema.BoolAttribute{
 				MarkdownDescription: "Fallthrough to Interface PAT (Destination Interface)",
-				Computed:            true,
-			},
-			"interface_in_original_destination": schema.BoolAttribute{
-				MarkdownDescription: "Use interface address as original destination",
-				Computed:            true,
-			},
-			"interface_in_translated_source": schema.BoolAttribute{
-				MarkdownDescription: "Translate source network to destination interface address",
 				Computed:            true,
 			},
 			"ipv6": schema.BoolAttribute{
@@ -114,63 +98,47 @@ func (d *FTDManualNATRuleDataSource) Schema(ctx context.Context, req datasource.
 				MarkdownDescription: "Do not proxy ARP on Destination Interface",
 				Computed:            true,
 			},
-			"unidirectional": schema.BoolAttribute{
-				MarkdownDescription: "Whether the rule is unidirectional",
+			"original_network_id": schema.StringAttribute{
+				MarkdownDescription: "ID of original network object (host, network or range)",
+				Computed:            true,
+			},
+			"original_port": schema.Int64Attribute{
+				MarkdownDescription: "Original port number",
+				Computed:            true,
+			},
+			"protocol": schema.StringAttribute{
+				MarkdownDescription: "Service protocol",
+				Computed:            true,
+			},
+			"perform_route_lookup": schema.BoolAttribute{
+				MarkdownDescription: "Perform Route Lookup for Destination Interface",
 				Computed:            true,
 			},
 			"source_interface_id": schema.StringAttribute{
 				MarkdownDescription: "ID of source security zone or interface group",
 				Computed:            true,
 			},
-			"original_source_id": schema.StringAttribute{
-				MarkdownDescription: "ID of original source network object (host, network or range)",
-				Computed:            true,
-			},
-			"original_source_port_id": schema.StringAttribute{
-				MarkdownDescription: "ID of original source port object",
-				Computed:            true,
-			},
-			"original_destination_id": schema.StringAttribute{
-				MarkdownDescription: "ID of original destination network object (host, network or range)",
-				Computed:            true,
-			},
-			"original_destination_port_id": schema.StringAttribute{
-				MarkdownDescription: "ID of original destination port object",
-				Computed:            true,
-			},
-			"route_lookup": schema.BoolAttribute{
-				MarkdownDescription: "Perform Route Lookup for Destination Interface",
-				Computed:            true,
-			},
-			"destination_interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of destination security zone or interface group",
-				Computed:            true,
-			},
-			"translated_source_id": schema.StringAttribute{
-				MarkdownDescription: "ID of translated source network object (host, network or range)",
-				Computed:            true,
-			},
-			"translated_source_port_id": schema.StringAttribute{
-				MarkdownDescription: "ID of translated source port object",
-				Computed:            true,
-			},
 			"translate_dns": schema.BoolAttribute{
 				MarkdownDescription: "Translate DNS replies that match this rule",
 				Computed:            true,
 			},
-			"translated_destination_id": schema.StringAttribute{
-				MarkdownDescription: "ID of translated destination network object (host, network or range)",
+			"translated_network_id": schema.StringAttribute{
+				MarkdownDescription: "ID of translated network object (host, network or range)",
 				Computed:            true,
 			},
-			"translated_destination_port_id": schema.StringAttribute{
-				MarkdownDescription: "ID of translated destination port object",
+			"translated_network_is_destination_interface": schema.BoolAttribute{
+				MarkdownDescription: "Translate source network to destination interface address",
+				Computed:            true,
+			},
+			"translated_port": schema.Int64Attribute{
+				MarkdownDescription: "Translated port number",
 				Computed:            true,
 			},
 		},
 	}
 }
 
-func (d *FTDManualNATRuleDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *FTDAutoNATRuleDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -182,8 +150,8 @@ func (d *FTDManualNATRuleDataSource) Configure(_ context.Context, req datasource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *FTDManualNATRuleDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config FTDManualNATRule
+func (d *FTDAutoNATRuleDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config FTDAutoNATRule
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

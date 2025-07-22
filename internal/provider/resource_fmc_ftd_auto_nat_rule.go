@@ -43,26 +43,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDManualNATRuleResource{}
-	_ resource.ResourceWithImportState = &FTDManualNATRuleResource{}
+	_ resource.Resource                = &FTDAutoNATRuleResource{}
+	_ resource.ResourceWithImportState = &FTDAutoNATRuleResource{}
 )
 
-func NewFTDManualNATRuleResource() resource.Resource {
-	return &FTDManualNATRuleResource{}
+func NewFTDAutoNATRuleResource() resource.Resource {
+	return &FTDAutoNATRuleResource{}
 }
 
-type FTDManualNATRuleResource struct {
+type FTDAutoNATRuleResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDManualNATRuleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_manual_nat_rule"
+func (r *FTDAutoNATRuleResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_auto_nat_rule"
 }
 
-func (r *FTDManualNATRuleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FTDAutoNATRuleResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FTD Manual NAT Rule.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FTD Auto NAT Rule.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -87,25 +87,10 @@ func (r *FTDManualNATRuleResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FTDManualNatRule'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FTDAutoNatRule'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
-				},
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of Manual NAT rule.").String,
-				Optional:            true,
-			},
-			"enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates if the rule is enabled.").String,
-				Optional:            true,
-			},
-			"section": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of section to which the rule belongs.").AddStringEnumDescription("BEFORE_AUTO", "AFTER_AUTO").String,
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("BEFORE_AUTO", "AFTER_AUTO"),
 				},
 			},
 			"nat_type": schema.StringAttribute{
@@ -115,16 +100,12 @@ func (r *FTDManualNATRuleResource) Schema(ctx context.Context, req resource.Sche
 					stringvalidator.OneOf("STATIC", "DYNAMIC"),
 				},
 			},
+			"destination_interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
+				Optional:            true,
+			},
 			"fall_through": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Fallthrough to Interface PAT (Destination Interface)").String,
-				Optional:            true,
-			},
-			"interface_in_original_destination": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use interface address as original destination").String,
-				Optional:            true,
-			},
-			"interface_in_translated_source": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address").String,
 				Optional:            true,
 			},
 			"ipv6": schema.BoolAttribute{
@@ -139,63 +120,50 @@ func (r *FTDManualNATRuleResource) Schema(ctx context.Context, req resource.Sche
 				MarkdownDescription: helpers.NewAttributeDescription("Do not proxy ARP on Destination Interface").String,
 				Optional:            true,
 			},
-			"unidirectional": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether the rule is unidirectional").String,
+			"original_network_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of original network object (host, network or range)").String,
+				Optional:            true,
+			},
+			"original_port": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Original port number").String,
+				Optional:            true,
+			},
+			"protocol": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Service protocol").AddStringEnumDescription("TCP", "UDP").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("TCP", "UDP"),
+				},
+			},
+			"perform_route_lookup": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface").String,
 				Optional:            true,
 			},
 			"source_interface_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group").String,
 				Optional:            true,
 			},
-			"original_source_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of original source network object (host, network or range)").String,
-				Optional:            true,
-			},
-			"original_source_port_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of original source port object").String,
-				Optional:            true,
-			},
-			"original_destination_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of original destination network object (host, network or range)").String,
-				Optional:            true,
-			},
-			"original_destination_port_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of original destination port object").String,
-				Optional:            true,
-			},
-			"route_lookup": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface").String,
-				Optional:            true,
-			},
-			"destination_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
-				Optional:            true,
-			},
-			"translated_source_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of translated source network object (host, network or range)").String,
-				Optional:            true,
-			},
-			"translated_source_port_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of translated source port object").String,
-				Optional:            true,
-			},
 			"translate_dns": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Translate DNS replies that match this rule").String,
 				Optional:            true,
 			},
-			"translated_destination_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination network object (host, network or range)").String,
+			"translated_network_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of translated network object (host, network or range)").String,
 				Optional:            true,
 			},
-			"translated_destination_port_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination port object").String,
+			"translated_network_is_destination_interface": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address").String,
+				Optional:            true,
+			},
+			"translated_port": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Translated port number").String,
 				Optional:            true,
 			},
 		},
 	}
 }
 
-func (r *FTDManualNATRuleResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FTDAutoNATRuleResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -205,8 +173,10 @@ func (r *FTDManualNATRuleResource) Configure(_ context.Context, req resource.Con
 
 // End of section. //template:end model
 
-func (r *FTDManualNATRuleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan FTDManualNATRule
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *FTDAutoNATRuleResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan FTDAutoNATRule
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -223,9 +193,8 @@ func (r *FTDManualNATRuleResource) Create(ctx context.Context, req resource.Crea
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDManualNATRule{})
-	body = plan.adjustBody(ctx, body)
-	res, err := r.client.Post(plan.getPath()+"?section="+strings.ToLower(plan.Section.ValueString()), body, reqMods...)
+	body := plan.toBody(ctx, FTDAutoNATRule{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -241,10 +210,12 @@ func (r *FTDManualNATRuleResource) Create(ctx context.Context, req resource.Crea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
+// End of section. //template:end create
+
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FTDManualNATRuleResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDManualNATRule
+func (r *FTDAutoNATRuleResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FTDAutoNATRule
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -295,8 +266,8 @@ func (r *FTDManualNATRuleResource) Read(ctx context.Context, req resource.ReadRe
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDManualNATRuleResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDManualNATRule
+func (r *FTDAutoNATRuleResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FTDAutoNATRule
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -319,7 +290,6 @@ func (r *FTDManualNATRuleResource) Update(ctx context.Context, req resource.Upda
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
@@ -336,8 +306,8 @@ func (r *FTDManualNATRuleResource) Update(ctx context.Context, req resource.Upda
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDManualNATRuleResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDManualNATRule
+func (r *FTDAutoNATRuleResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FTDAutoNATRule
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -367,7 +337,7 @@ func (r *FTDManualNATRuleResource) Delete(ctx context.Context, req resource.Dele
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *FTDManualNATRuleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *FTDAutoNATRuleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
