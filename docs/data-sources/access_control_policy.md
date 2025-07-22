@@ -25,6 +25,8 @@ data "fmc_access_control_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `manage_categories` (Boolean) Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).
+- `manage_rules` (Boolean) Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).
 - `name` (String) Name of the Access Control Policy.
 
 ### Read-Only

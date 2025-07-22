@@ -1,160 +1,41 @@
-# Manual resource - Data Source (Read), Resource (Read, Create, Update, Delete), ValidateConfig
+# Manual resource - Resource (Read, Create, Update, Delete), ValidateConfig
 ---
-name: Access Control Policy
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies
+name: Access Rules
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
 doc_category: Policies
-res_description: This resource manages Access Control Policy (ACP) with corresponding Access Rules and Categories.
+res_description:  >-
+ This is an early access resource and it's behaviour may change in future releases.\n
+ This resource manages Access Rules in Access Control Policies in bulk.\n
+ Order of the rules is meant to be preserved within the resource, however *not* between multiple `fmc_access_rules` resources that create rules within a single category/section.\n
+ Any change to the rule set will trigger recreation of all the rules. This is done to preserve the order of the rules. This usually means, that re-created rules will be placed at the end of the policy section/category.\n
+no_data_source: true
+no_import: true
 attributes:
-  - model_name: name
+  - model_name: access_control_policy_id
     type: String
-    mandatory: true
-    description: Name of the Access Control Policy.
-    example: my_access_control_policy
-    data_source_query: true
-  - model_name: type
-    type: String
-    description: Type of the object; this value is always 'AccessPolicy'.
-    computed: true
-  - model_name: description
-    type: String
-    description: Description of the Access Control Policy.
-    example: My Access Control Policy
-  - model_name: action
-    data_path: [defaultAction]
-    tf_name: default_action
-    type: String
-    mandatory: true
-    enum_values: [BLOCK, TRUST, PERMIT, NETWORK_DISCOVERY, INHERIT_FROM_PARENT]
-    description: Action to be taken, when traffic does not match any Access Rule.
-    example: BLOCK
-  - model_name: id
-    data_path: [defaultAction]
-    tf_name: default_action_id
-    type: String
-    resource_id: true
-    description: Id of the default action.
-  - model_name: logBegin
-    data_path: [defaultAction]
-    tf_name: default_action_log_begin
-    type: Bool
-    description: Log events at the beginning of the connection.
-    default_value: "false"
-    example: "true"
-  - model_name: logEnd
-    data_path: [defaultAction]
-    tf_name: default_action_log_end
-    type: Bool
-    description: Log events at the end of the connection.
-    default_value: "false"
-    example: "false"
-  - model_name: sendEventsToFMC
-    data_path: [defaultAction]
-    tf_name: default_action_send_events_to_fmc
-    type: Bool
-    description: Send events to the Firepower Management Center event viewer.
-    default_value: "false"
-    example: "true"
-  - model_name: enableSyslog
-    data_path: [defaultAction]
-    tf_name: default_action_send_syslog
-    type: Bool
-    description: Send events to a syslog server.
-    example: "true"
-    exclude_test: true
-  - model_name: id
-    data_path: [defaultAction, syslogConfig]
-    tf_name: default_action_syslog_config_id
-    type: String
-    description: >-
-      Id of the syslog config. Can be set only when default_action_send_syslog is true and either
-      default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration
-      in Access Control Logging applies.
-    example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
-    exclude_test: true
-  - model_name: id
-    data_path: [prefilterPolicySetting]
-    tf_name: prefilter_policy_id
-    type: String
-    description: >-
-      Id of the Prefilter Policy.
-    example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
-    exclude_test: true
-  - model_name: syslogSeverity
-    data_path: [defaultAction]
-    tf_name: default_action_syslog_severity
-    type: String
-    description: Override the Severity of syslog alerts.
-    enum_values:
-      - ALERT
-      - CRIT
-      - DEBUG
-      - EMERG
-      - ERR
-      - INFO
-      - NOTICE
-      - WARNING
-    example: "DEBUG"
-  - model_name: id
-    data_path: [defaultAction, snmpConfig]
-    tf_name: default_action_snmp_config_id
-    type: String
-    description: Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
+    description: Id of the Access Control Policy.
+    reference: true
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    exclude_test: true
-  - model_name: id
-    data_path: [defaultAction, intrusionPolicy]
-    tf_name: default_action_intrusion_policy_id
+    test_value: fmc_access_control_policy.test.id
+  - model_name: category
+    tf_name: category_name
     type: String
-    description: Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
+    description: Name of the category that owns this rule. Either 'section' or 'category_name' can be set.
+    example: category_1
+    exclude_test: true
+    requires_replace: true
+  - model_name: section
+    type: String
+    description: >-
+      The section of the policy to which the rule belongs. Either 'section' or 'category_name' can be set.
+    enum_values:
+      - default
+      - mandatory
     exclude_example: true
     exclude_test: true
-  - model_name: dummy_manage_categories
-    tf_name: manage_categories
-    type: Bool
-    description: Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).
-    data_source_optional_parameter: true
-    default_value: "true"
-    example: "true"
-  - model_name: dummy_categories
-    tf_name: categories
-    type: List
-    description: Ordered list of categories.
-    ordered_list: true
-    attributes:
-      - model_name: id
-        type: String
-        description: Id of the Category.
-        resource_id: true
-        exclude_example: true
-        exclude_test: true
-      - model_name: name
-        type: String
-        description: Name of the Category.
-        mandatory: true
-        example: category_1
-      - model_name: section
-        data_path: [metadata]
-        type: String
-        description: >-
-          The section of the policy to which the category belongs. Categories must be ordered so that entire section
-          'mandatory' comes above the section 'default'. If you use inheritance, the mandatory section applies before
-          child policy's own rules, while the default section applies after child policy's own rules.
-        default_value: default
-        enum_values:
-          - default
-          - mandatory
-        write_only: true # absent in GET
-        exclude_example: true
-        exclude_test: true
-  - model_name: dummy_manage_rules
-    tf_name: manage_rules
-    type: Bool
-    description: Should this resource manage Access Rules. For Data Sources this defaults to `false` (Access Rules are not read).
-    data_source_optional_parameter: true
-    default_value: "true"
-    example: "true"
-  - model_name: dummy_rules
-    tf_name: rules
+    requires_replace: true
+  - model_name: items
+    tf_name: items
     type: List
     ordered_list: true
     description: >-
@@ -185,26 +66,6 @@ attributes:
         description: Name of the Access Rule. This name needs to be uqique within the policy.
         mandatory: true
         example: rule_1
-      - model_name: category
-        data_path: [metadata]
-        tf_name: category_name
-        type: String
-        description: Name of the category that owns this rule (`name` from `categories` list).
-        exclude_example: true
-        test_value: '"category_1"'
-      - model_name: section
-        data_path: [metadata]
-        type: String
-        description: >-
-          The section of the policy to which the rule belongs. Can only be used when the `category_name` is null.
-          Rules must be ordered so that entire section 'mandatory' comes above the section 'default'. Null value means
-          'default'. If you use inheritance, the mandatory section applies before child policy's own rules, while the
-          default section applies after child policy's own rules.
-        enum_values:
-          - default
-          - mandatory
-        exclude_example: true
-        exclude_test: true
       - model_name: enabled
         type: Bool
         description: Indicates whether the access rule is in effect (true) or not (false).
@@ -797,24 +658,31 @@ attributes:
               mandatory: true
 
 test_prerequisites: |-
+  resource "fmc_access_control_policy" "test" {
+    name              = "access_rules"
+    default_action    = "BLOCK"
+    manage_rules      = false
+    manage_categories = false
+  }
+
   resource "fmc_network" "test" {
-    name   = "fmc_access_control_policy_network"
+    name   = "fmc_access_rules_network"
     prefix = "10.0.0.0/24"
   }
 
   resource "fmc_host" "test" {
-    name = "fmc_access_control_policy_host"
+    name = "fmc_access_rules_host"
     ip   = "10.1.1.1"
   }
 
   resource "fmc_port" "test" {
-    name     = "fmc_access_control_policy_port"
+    name     = "fmc_access_rules_port"
     protocol = "UDP"
     port     = "53"
   }
 
   resource "fmc_vlan_tag" "test" {
-    name      = "fmc_access_control_policy_vlan_tag"
+    name      = "fmc_access_rules_vlan_tag"
     start_tag = "10"
     end_tag   = "11"
   }
