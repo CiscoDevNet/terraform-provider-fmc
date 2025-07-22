@@ -1011,7 +1011,7 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 	}
 
 	// Recreate rules, if we manage the
-	if !plan.ManageCategories.IsNull() && plan.ManageRules.ValueBool() {
+	if !plan.ManageRules.IsUnknown() && plan.ManageRules.ValueBool() {
 		err := r.createRulesAt(ctx, plan, bodyRules.Array(), keptRules, &state, reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", err.Error())

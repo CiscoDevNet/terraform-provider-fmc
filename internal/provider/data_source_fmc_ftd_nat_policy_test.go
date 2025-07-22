@@ -33,6 +33,7 @@ func TestAccDataSourceFmcFTDNATPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "name", "my_ftd_nat_policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "description", "My nat policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_nat_policy.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manage_rules", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manual_nat_rules.0.description", "My manual nat rule 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manual_nat_rules.0.enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_nat_policy.test", "manual_nat_rules.0.section", "BEFORE_AUTO"))
@@ -87,6 +88,7 @@ func testAccDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
 	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
 	config += `		enabled = true` + "\n"
@@ -106,6 +108,7 @@ func testAccDataSourceFmcFTDNATPolicyConfig() string {
 	config += `
 		data "fmc_ftd_nat_policy" "test" {
 			id = fmc_ftd_nat_policy.test.id
+			manage_rules = true
 		}
 	`
 	return config
@@ -115,6 +118,7 @@ func testAccNamedDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
 	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
 	config += `		enabled = true` + "\n"
@@ -133,6 +137,7 @@ func testAccNamedDataSourceFmcFTDNATPolicyConfig() string {
 
 	config += `
 		data "fmc_ftd_nat_policy" "test" {
+			manage_rules = true
 			name = fmc_ftd_nat_policy.test.name
 		}
 	`

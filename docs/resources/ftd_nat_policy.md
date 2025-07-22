@@ -14,8 +14,9 @@ This resource manages FTD Network Address Translation (NAT) policy with correspo
 
 ```terraform
 resource "fmc_ftd_nat_policy" "example" {
-  name        = "my_ftd_nat_policy"
-  description = "My nat policy"
+  name         = "my_ftd_nat_policy"
+  description  = "My nat policy"
+  manage_rules = true
   manual_nat_rules = [
     {
       description          = "My manual nat rule 1"
@@ -49,6 +50,8 @@ resource "fmc_ftd_nat_policy" "example" {
 - `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
+- `manage_rules` (Boolean) Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
+  - Default value: `true`
 - `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 ### Read-Only

@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -99,6 +100,12 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
+			},
+			"manage_rules": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).").AddDefaultValueDescription("true").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of manual NAT rules.").String,
@@ -302,6 +309,28 @@ func (r *FTDNATPolicyResource) Configure(_ context.Context, req resource.Configu
 
 // End of section. //template:end model
 
+var _ resource.ResourceWithValidateConfig = &FTDNATPolicyResource{}
+
+func (p *FTDNATPolicyResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
+	var data FTDNATPolicy
+
+	diags := req.Config.Get(ctx, &data)
+	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+		return
+	}
+
+	// If manage_rules is not set, it defaults to true.
+	if !data.ManageRules.IsNull() && !data.ManageRules.ValueBool() && (len(data.AutoNatRules) > 0 || len(data.ManualNatRules) > 0) {
+		resp.Diagnostics.AddAttributeError(
+			path.Root("rules"),
+			"Conflicting Configuration",
+			"Neither Manual nor Auto NAT Rules can be defined when manage_rules is set to false",
+		)
+		return
+	}
+
+}
+
 func (r *FTDNATPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan FTDNATPolicy
 
@@ -323,6 +352,7 @@ func (r *FTDNATPolicyResource) Create(ctx context.Context, req resource.CreateRe
 
 	// Create object
 	body := planBody
+	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_manual_nat_rules")
 	body, _ = sjson.Delete(body, "dummy_auto_nat_rules")
 
@@ -389,31 +419,36 @@ func (r *FTDNATPolicyResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
-	resManualRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/manualnatrules?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resManualRules.String()))
-		return
-	}
-
-	resAutoRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/autonatrules?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resAutoRules.String()))
-		return
-	}
-
+	// Prepare json string to be filled in with rules, that come from separate endpoints.
 	s := resGet.String()
 
-	replaceManualRules := resManualRules.Get("items").String()
-	if replaceManualRules == "" {
-		replaceManualRules = "[]"
-	}
-	s, _ = sjson.SetRaw(s, "dummy_manual_nat_rules", replaceManualRules)
+	// Get rules, if we manage them
+	if !state.ManageRules.IsUnknown() && state.ManageRules.ValueBool() {
 
-	replaceAutoRules := resAutoRules.Get("items").String()
-	if replaceAutoRules == "" {
-		replaceAutoRules = "[]"
+		resManualRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/manualnatrules?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resManualRules.String()))
+			return
+		}
+
+		resAutoRules, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/autonatrules?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resAutoRules.String()))
+			return
+		}
+
+		replaceManualRules := resManualRules.Get("items").String()
+		if replaceManualRules == "" {
+			replaceManualRules = "[]"
+		}
+		s, _ = sjson.SetRaw(s, "dummy_manual_nat_rules", replaceManualRules)
+
+		replaceAutoRules := resAutoRules.Get("items").String()
+		if replaceAutoRules == "" {
+			replaceAutoRules = "[]"
+		}
+		s, _ = sjson.SetRaw(s, "dummy_auto_nat_rules", replaceAutoRules)
 	}
-	s, _ = sjson.SetRaw(s, "dummy_auto_nat_rules", replaceAutoRules)
 
 	res := gjson.Parse(s)
 
@@ -422,12 +457,16 @@ func (r *FTDNATPolicyResource) Read(ctx context.Context, req resource.ReadReques
 		return
 	}
 
+	manageRules := state.ManageRules
+
 	// After `terraform import` we switch to a full read.
 	if imp {
 		state.fromBody(ctx, res)
 	} else {
 		state.fromBodyPartial(ctx, res)
 	}
+
+	state.ManageRules = manageRules
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
@@ -462,6 +501,7 @@ func (r *FTDNATPolicyResource) Update(ctx context.Context, req resource.UpdateRe
 
 	planBody := plan.toBody(ctx, state)
 	body := planBody
+	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_manual_nat_rules")
 	body, _ = sjson.Delete(body, "dummy_auto_nat_rules")
 
@@ -488,6 +528,11 @@ func (r *FTDNATPolicyResource) Update(ctx context.Context, req resource.UpdateRe
 
 func (r *FTDNATPolicyResource) updateSubresources(ctx context.Context, tfsdkPlan tfsdk.Plan, plan FTDNATPolicy, planBody string, tfsdkState tfsdk.State, state FTDNATPolicy) (FTDNATPolicy, diag.Diagnostics) {
 	var diags diag.Diagnostics
+
+	if !plan.ManageRules.IsUnknown() && !plan.ManageRules.ValueBool() {
+		// If we don't manage rules - exit
+		return state, diags
+	}
 
 	p := gjson.Parse(planBody)
 	bodyManualNatRules := p.Get("dummy_manual_nat_rules").Array()
