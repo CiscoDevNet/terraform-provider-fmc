@@ -52,6 +52,6 @@ Read-Only:
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
 - `key` (String, Sensitive) Shared secret key for the RADIUS server.
 - `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
-- `redirect_acl_id` (String) ID of the redirect ACL.
+- `redirect_acl_id` (String) ID of the redirect extended ACL.
 - `timeout` (Number) Timeout, in seconds, for the RADIUS server.
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for the RADIUS server (true) or use specified interface (false).

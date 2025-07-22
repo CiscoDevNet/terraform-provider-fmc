@@ -18,8 +18,6 @@ resource "fmc_radius_server_group" "example" {
       accounting_port                             = 1813
       timeout                                     = 10
       use_routing_to_select_interface             = true
-      interface_id                                = ""
-      redirect_acl_id                             = ""
     }
   ]
 }

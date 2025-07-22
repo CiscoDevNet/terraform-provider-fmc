@@ -33,8 +33,6 @@ resource "fmc_radius_server_group" "example" {
       accounting_port                             = 1813
       timeout                                     = 10
       use_routing_to_select_interface             = true
-      interface_id                                = ""
-      redirect_acl_id                             = ""
     }
   ]
 }
@@ -92,7 +90,7 @@ Optional:
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
 - `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
   - Default value: `true`
-- `redirect_acl_id` (String) ID of the redirect ACL.
+- `redirect_acl_id` (String) ID of the redirect extended ACL.
 - `timeout` (Number) Timeout, in seconds, for the RADIUS server.
   - Range: `1`-`300`
   - Default value: `10`

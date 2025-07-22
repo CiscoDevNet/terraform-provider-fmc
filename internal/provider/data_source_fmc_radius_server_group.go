@@ -155,7 +155,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 							Computed:            true,
 						},
 						"redirect_acl_id": schema.StringAttribute{
-							MarkdownDescription: "ID of the redirect ACL.",
+							MarkdownDescription: "ID of the redirect extended ACL.",
 							Computed:            true,
 						},
 					},

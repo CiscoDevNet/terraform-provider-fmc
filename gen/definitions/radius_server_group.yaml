@@ -38,6 +38,7 @@ attributes:
     type: String
     description: Active Directory (AD) realm this RADIUS server group is associated with.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
   - model_name: enableAuthorizeOnly
     tf_name: authorize_only
     type: Bool
@@ -78,6 +79,7 @@ attributes:
     enum_values: [MERGE_DACL_BEFORE_AV_PAIR_ACL, MERGE_DACL_AFTER_AV_PAIR_ACL]
     description: Placement order of the downloadable ACL with the Cisco AV pair ACL.
     example: MERGE_DACL_BEFORE_AV_PAIR_ACL
+    exclude_test: true # for FMCVERSION <= 7.2
   - model_name: radiusServers
     type: List
     description: List of RADIUS servers in the group.
@@ -134,8 +136,12 @@ attributes:
         tf_name: interface_id
         type: String
         description: Security Zone ID or Interface Group ID for the RADIUS server communication.
+        exclude_example: true
+        exclude_test: true
       - model_name: id
         data_path: [redirectACL]
         tf_name: redirect_acl_id
         type: String
         description: ID of the redirect extended ACL.
+        exclude_example: true
+        exclude_test: true

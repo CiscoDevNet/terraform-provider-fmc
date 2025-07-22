@@ -205,7 +205,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Optional:            true,
 						},
 						"redirect_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the redirect ACL.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the redirect extended ACL.").String,
 							Optional:            true,
 						},
 					},
