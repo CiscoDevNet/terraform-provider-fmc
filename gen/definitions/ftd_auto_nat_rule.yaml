@@ -62,7 +62,8 @@ attributes:
     data_path: [originalNetwork]
     description: ID of original network object (host, network or range)
     example: 76d24097-41c4-4558-a4d0-a8c07ac08481
-    test_value: fmc_hosts.test.items.nat_host3.id
+    minimum_test_value: fmc_hosts.test.items.auto_nat_rule_host1.id
+    test_value: fmc_hosts.test.items.auto_nat_rule_host3.id
   - model_name: originalPort
     tf_name: original_port
     type: Int64
@@ -108,7 +109,8 @@ attributes:
     data_path: [translatedNetwork]
     description: ID of translated network object (host, network or range)
     example: 76d24097-41c4-4558-a4d0-a8c07ac08483
-    test_value: fmc_hosts.test.items.nat_host4.id
+    minimum_test_value: fmc_hosts.test.items.auto_nat_rule_host2.id
+    test_value: fmc_hosts.test.items.auto_nat_rule_host4.id
   - model_name: interfaceInTranslatedNetwork
     tf_name: translated_network_is_destination_interface
     type: Bool
@@ -128,4 +130,20 @@ test_prerequisites: |-
   resource "fmc_ftd_nat_policy" "test" {
     name         = "ftd_auto_nat_rule"
     manage_rules = false
+  }
+  resource "fmc_hosts" "test" {
+    items = {
+      "auto_nat_rule_host1" ={
+        ip = "10.0.0.1"
+      },
+      "auto_nat_rule_host2" ={
+        ip = "10.0.0.2"
+      }
+      "auto_nat_rule_host3" ={
+        ip = "10.0.0.3"
+      },
+      "auto_nat_rule_host4" ={
+        ip = "10.0.0.4"
+      }
+    }
   }

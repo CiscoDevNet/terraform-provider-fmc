@@ -99,7 +99,8 @@ attributes:
     data_path: [originalSource]
     description: ID of original source network object (host, network or range)
     example: 76d24097-41c4-4558-a4d0-a8c07ac08471
-    test_value: fmc_hosts.test.items.nat_host1.id
+    minimum_test_value: fmc_hosts.test.items.manual_nat_rule_host2.id
+    test_value: fmc_hosts.test.items.manual_nat_rule_host4.id
   - model_name: id
     tf_name: original_source_port_id
     type: String
@@ -145,7 +146,8 @@ attributes:
     data_path: [translatedSource]
     description: ID of translated source network object (host, network or range)
     example: 76d24097-41c4-4558-a4d0-a8c07ac08476
-    test_value: fmc_hosts.test.items.nat_host2.id
+    minimum_test_value: fmc_hosts.test.items.manual_nat_rule_host1.id
+    test_value: fmc_hosts.test.items.manual_nat_rule_host3.id
   - model_name: id
     tf_name: translated_source_port_id
     type: String
@@ -182,4 +184,20 @@ test_prerequisites: |-
   resource "fmc_ftd_nat_policy" "test" {
     name         = "ftd_manual_nat_rule"
     manage_rules = false
+  }
+  resource "fmc_hosts" "test" {
+    items = {
+      "manual_nat_rule_host1" ={
+        ip = "10.0.0.1"
+      },
+      "manual_nat_rule_host2" ={
+        ip = "10.0.0.2"
+      },
+      "manual_nat_rule_host3" ={
+        ip = "10.0.0.3"
+      },
+      "manual_nat_rule_host4" ={
+        ip = "10.0.0.4"
+      },
+    }
   }

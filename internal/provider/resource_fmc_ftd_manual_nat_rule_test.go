@@ -66,6 +66,22 @@ resource "fmc_ftd_nat_policy" "test" {
   name         = "ftd_manual_nat_rule"
   manage_rules = false
 }
+resource "fmc_hosts" "test" {
+  items = {
+    "manual_nat_rule_host1" ={
+      ip = "10.0.0.1"
+    },
+    "manual_nat_rule_host2" ={
+      ip = "10.0.0.2"
+    },
+    "manual_nat_rule_host3" ={
+      ip = "10.0.0.3"
+    },
+    "manual_nat_rule_host4" ={
+      ip = "10.0.0.4"
+    },
+  }
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -77,6 +93,8 @@ func testAccFmcFTDManualNATRuleConfig_minimum() string {
 	config += `	ftd_nat_policy_id = fmc_ftd_nat_policy.test.id` + "\n"
 	config += `	section = "BEFORE_AUTO"` + "\n"
 	config += `	nat_type = "STATIC"` + "\n"
+	config += `	original_source_id = fmc_hosts.test.items.manual_nat_rule_host2.id` + "\n"
+	config += `	translated_source_id = fmc_hosts.test.items.manual_nat_rule_host1.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -93,8 +111,8 @@ func testAccFmcFTDManualNATRuleConfig_all() string {
 	config += `	section = "BEFORE_AUTO"` + "\n"
 	config += `	nat_type = "STATIC"` + "\n"
 	config += `	fall_through = false` + "\n"
-	config += `	original_source_id = fmc_hosts.test.items.nat_host1.id` + "\n"
-	config += `	translated_source_id = fmc_hosts.test.items.nat_host2.id` + "\n"
+	config += `	original_source_id = fmc_hosts.test.items.manual_nat_rule_host4.id` + "\n"
+	config += `	translated_source_id = fmc_hosts.test.items.manual_nat_rule_host3.id` + "\n"
 	config += `}` + "\n"
 	return config
 }

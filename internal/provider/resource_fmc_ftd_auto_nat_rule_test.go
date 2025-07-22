@@ -62,6 +62,22 @@ resource "fmc_ftd_nat_policy" "test" {
   name         = "ftd_auto_nat_rule"
   manage_rules = false
 }
+resource "fmc_hosts" "test" {
+  items = {
+    "auto_nat_rule_host1" ={
+      ip = "10.0.0.1"
+    },
+    "auto_nat_rule_host2" ={
+      ip = "10.0.0.2"
+    }
+    "auto_nat_rule_host3" ={
+      ip = "10.0.0.3"
+    },
+    "auto_nat_rule_host4" ={
+      ip = "10.0.0.4"
+    }
+  }
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -72,6 +88,8 @@ func testAccFmcFTDAutoNATRuleConfig_minimum() string {
 	config := `resource "fmc_ftd_auto_nat_rule" "test" {` + "\n"
 	config += `	ftd_nat_policy_id = fmc_ftd_nat_policy.test.id` + "\n"
 	config += `	nat_type = "STATIC"` + "\n"
+	config += `	original_network_id = fmc_hosts.test.items.auto_nat_rule_host1.id` + "\n"
+	config += `	translated_network_id = fmc_hosts.test.items.auto_nat_rule_host2.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -84,8 +102,8 @@ func testAccFmcFTDAutoNATRuleConfig_all() string {
 	config := `resource "fmc_ftd_auto_nat_rule" "test" {` + "\n"
 	config += `	ftd_nat_policy_id = fmc_ftd_nat_policy.test.id` + "\n"
 	config += `	nat_type = "STATIC"` + "\n"
-	config += `	original_network_id = fmc_hosts.test.items.nat_host3.id` + "\n"
-	config += `	translated_network_id = fmc_hosts.test.items.nat_host4.id` + "\n"
+	config += `	original_network_id = fmc_hosts.test.items.auto_nat_rule_host3.id` + "\n"
+	config += `	translated_network_id = fmc_hosts.test.items.auto_nat_rule_host4.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
