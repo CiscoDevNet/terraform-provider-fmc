@@ -1,0 +1,30 @@
+---
+name: Access Category
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/categories
+doc_category: Policies
+adjust_body: true
+attributes:
+  - model_name: access_control_policy_id
+    type: String
+    description: Id of the Access Control Policy.
+    reference: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_access_control_policy.test.id
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the category object.
+    example: my_category
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Category'.
+    computed: true
+
+test_prerequisites: |-
+  resource "fmc_access_control_policy" "test" {
+    name              = "access_category"
+    default_action    = "BLOCK"
+    manage_rules      = false
+    manage_categories = false
+  }

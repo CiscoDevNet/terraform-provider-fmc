@@ -99,7 +99,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				{{- if .Reference}}
 				Required:            true,
 				{{- else}}
-				{{- if .DataSourceQuery }}
+				{{- if or .DataSourceQuery .DataSourceOptionalParameter }}
 				Optional:            true,
 				{{- end}}
 				{{- if isNestedMap .}}
