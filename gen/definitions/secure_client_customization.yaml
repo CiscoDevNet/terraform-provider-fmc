@@ -1,0 +1,52 @@
+# Manual resource - Resource (Create, Update), custom toBody for Content-Type: multipart/form-data
+---
+name: Secure Client Customization
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/secureclientcustomizations
+doc_category: Objects
+skip_test: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Secure Client Customization object.
+    example: my_secure_client_customization
+    data_source_query: true
+  - model_name: fileName
+    type: String
+    description: Name of the Secure Client Customization file.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SecureClientCustomization'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Customization object.
+    example: My Secure Client Customization
+  - model_name: customizationType
+    type: String
+    enum_values:  ["LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM"]
+    description: Type of the Secure Client Customization object.
+    mandatory: true
+    example: LANGUAGE_LOCALIZATION
+  - model_name: language
+    type: String
+    description: Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.
+    example: pl
+  - model_name: scriptType
+    type: String
+    enum_values: ["ON_CONNECT", "ON_DISCONNECT"]
+    description: Type of the script. Applicable only when `customization_type` is of type SCRIPT.
+    exclude_example: true
+  - model_name: operatingSystem
+    type: String
+    enum_values: ["WINDOWS", "MAC", "LINUX"]
+    description: Operating System. Applicable only when `customization_type` is of type IMAGE/SCRIPT/BINARY/CUSTOMIZED_INSTALLER_TRANSFORM.
+    exclude_example: true
+  - model_name: payloadFile
+    tf_name: path
+    type: String
+    mandatory: true
+    description: Path to Secure Client Customization file.
+    example: ./AnyConnect_pl-pl.po
+    write_only: true
