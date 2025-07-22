@@ -35,34 +35,34 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type RealmADLDAP struct {
-	Id                              types.String                               `tfsdk:"id"`
-	Domain                          types.String                               `tfsdk:"domain"`
-	Name                            types.String                               `tfsdk:"name"`
-	Enabled                         types.Bool                                 `tfsdk:"enabled"`
-	Type                            types.String                               `tfsdk:"type"`
-	Version                         types.String                               `tfsdk:"version"`
-	Description                     types.String                               `tfsdk:"description"`
-	RealmType                       types.String                               `tfsdk:"realm_type"`
-	AdPrimaryDomain                 types.String                               `tfsdk:"ad_primary_domain"`
-	AdJoinUsername                  types.String                               `tfsdk:"ad_join_username"`
-	AdJoinPassword                  types.String                               `tfsdk:"ad_join_password"`
-	DirectoryUsername               types.String                               `tfsdk:"directory_username"`
-	DirectoryPassword               types.String                               `tfsdk:"directory_password"`
-	BaseDn                          types.String                               `tfsdk:"base_dn"`
-	IncludedUsers                   types.List                                 `tfsdk:"included_users"`
-	IncludedGroups                  types.List                                 `tfsdk:"included_groups"`
-	ExcludedUsers                   types.List                                 `tfsdk:"excluded_users"`
-	ExcludedGroups                  types.List                                 `tfsdk:"excluded_groups"`
-	GroupDn                         types.String                               `tfsdk:"group_dn"`
-	UpdateHour                      types.Int64                                `tfsdk:"update_hour"`
-	UpdateInterval                  types.String                               `tfsdk:"update_interval"`
-	GroupAttribute                  types.String                               `tfsdk:"group_attribute"`
-	TimeoutIseUsers                 types.Int64                                `tfsdk:"timeout_ise_users"`
-	TimeoutTerminalServerAgentUsers types.Int64                                `tfsdk:"timeout_terminal_server_agent_users"`
-	TimeoutCaptivePortalUsers       types.Int64                                `tfsdk:"timeout_captive_portal_users"`
-	TimeoutFailedCaptivePortalUsers types.Int64                                `tfsdk:"timeout_failed_captive_portal_users"`
-	TimeoutGuestCaptivePortalUsers  types.Int64                                `tfsdk:"timeout_guest_captive_portal_users"`
-	DirectoryServerConfigurations   []RealmADLDAPDirectoryServerConfigurations `tfsdk:"directory_server_configurations"`
+	Id                                 types.String                               `tfsdk:"id"`
+	Domain                             types.String                               `tfsdk:"domain"`
+	Name                               types.String                               `tfsdk:"name"`
+	Enabled                            types.Bool                                 `tfsdk:"enabled"`
+	Type                               types.String                               `tfsdk:"type"`
+	Version                            types.String                               `tfsdk:"version"`
+	Description                        types.String                               `tfsdk:"description"`
+	RealmType                          types.String                               `tfsdk:"realm_type"`
+	AdPrimaryDomain                    types.String                               `tfsdk:"ad_primary_domain"`
+	AdJoinUsername                     types.String                               `tfsdk:"ad_join_username"`
+	AdJoinPassword                     types.String                               `tfsdk:"ad_join_password"`
+	DirectoryUsername                  types.String                               `tfsdk:"directory_username"`
+	DirectoryPassword                  types.String                               `tfsdk:"directory_password"`
+	BaseDn                             types.String                               `tfsdk:"base_dn"`
+	GroupDn                            types.String                               `tfsdk:"group_dn"`
+	IncludedUsers                      types.List                                 `tfsdk:"included_users"`
+	IncludedGroups                     types.List                                 `tfsdk:"included_groups"`
+	ExcludedUsers                      types.List                                 `tfsdk:"excluded_users"`
+	ExcludedGroups                     types.List                                 `tfsdk:"excluded_groups"`
+	UpdateHour                         types.Int64                                `tfsdk:"update_hour"`
+	UpdateInterval                     types.String                               `tfsdk:"update_interval"`
+	GroupAttribute                     types.String                               `tfsdk:"group_attribute"`
+	TimeoutIseAndPassiveIndentityUsers types.Int64                                `tfsdk:"timeout_ise_and_passive_indentity_users"`
+	TimeoutTerminalServerAgentUsers    types.Int64                                `tfsdk:"timeout_terminal_server_agent_users"`
+	TimeoutCaptivePortalUsers          types.Int64                                `tfsdk:"timeout_captive_portal_users"`
+	TimeoutFailedCaptivePortalUsers    types.Int64                                `tfsdk:"timeout_failed_captive_portal_users"`
+	TimeoutGuestCaptivePortalUsers     types.Int64                                `tfsdk:"timeout_guest_captive_portal_users"`
+	DirectoryServerConfigurations      []RealmADLDAPDirectoryServerConfigurations `tfsdk:"directory_server_configurations"`
 }
 
 type RealmADLDAPDirectoryServerConfigurations struct {
@@ -128,6 +128,9 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 	if !data.BaseDn.IsNull() {
 		body, _ = sjson.Set(body, "baseDn", data.BaseDn.ValueString())
 	}
+	if !data.GroupDn.IsNull() {
+		body, _ = sjson.Set(body, "groupDn", data.GroupDn.ValueString())
+	}
 	if !data.IncludedUsers.IsNull() {
 		var values []string
 		data.IncludedUsers.ElementsAs(ctx, &values, false)
@@ -148,9 +151,6 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 		data.ExcludedGroups.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "excludedGroups", values)
 	}
-	if !data.GroupDn.IsNull() {
-		body, _ = sjson.Set(body, "groupDn", data.GroupDn.ValueString())
-	}
 	if !data.UpdateHour.IsNull() {
 		body, _ = sjson.Set(body, "updateHour", data.UpdateHour.ValueInt64())
 	}
@@ -160,8 +160,8 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 	if !data.GroupAttribute.IsNull() {
 		body, _ = sjson.Set(body, "groupAttribute", data.GroupAttribute.ValueString())
 	}
-	if !data.TimeoutIseUsers.IsNull() {
-		body, _ = sjson.Set(body, "authSessionTimeout", data.TimeoutIseUsers.ValueInt64())
+	if !data.TimeoutIseAndPassiveIndentityUsers.IsNull() {
+		body, _ = sjson.Set(body, "authSessionTimeout", data.TimeoutIseAndPassiveIndentityUsers.ValueInt64())
 	}
 	if !data.TimeoutTerminalServerAgentUsers.IsNull() {
 		body, _ = sjson.Set(body, "tsAgentSessionTimeout", data.TimeoutTerminalServerAgentUsers.ValueInt64())
@@ -258,6 +258,11 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.BaseDn = types.StringNull()
 	}
+	if value := res.Get("groupDn"); value.Exists() {
+		data.GroupDn = types.StringValue(value.String())
+	} else {
+		data.GroupDn = types.StringNull()
+	}
 	if value := res.Get("includedUsers"); value.Exists() {
 		data.IncludedUsers = helpers.GetStringList(value.Array())
 	} else {
@@ -278,11 +283,6 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.ExcludedGroups = types.ListNull(types.StringType)
 	}
-	if value := res.Get("groupDn"); value.Exists() {
-		data.GroupDn = types.StringValue(value.String())
-	} else {
-		data.GroupDn = types.StringNull()
-	}
 	if value := res.Get("updateHour"); value.Exists() {
 		data.UpdateHour = types.Int64Value(value.Int())
 	} else {
@@ -299,9 +299,9 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 		data.GroupAttribute = types.StringNull()
 	}
 	if value := res.Get("authSessionTimeout"); value.Exists() {
-		data.TimeoutIseUsers = types.Int64Value(value.Int())
+		data.TimeoutIseAndPassiveIndentityUsers = types.Int64Value(value.Int())
 	} else {
-		data.TimeoutIseUsers = types.Int64Null()
+		data.TimeoutIseAndPassiveIndentityUsers = types.Int64Null()
 	}
 	if value := res.Get("tsAgentSessionTimeout"); value.Exists() {
 		data.TimeoutTerminalServerAgentUsers = types.Int64Value(value.Int())
@@ -423,6 +423,11 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.BaseDn = types.StringNull()
 	}
+	if value := res.Get("groupDn"); value.Exists() && !data.GroupDn.IsNull() {
+		data.GroupDn = types.StringValue(value.String())
+	} else {
+		data.GroupDn = types.StringNull()
+	}
 	if value := res.Get("includedUsers"); value.Exists() && !data.IncludedUsers.IsNull() {
 		data.IncludedUsers = helpers.GetStringList(value.Array())
 	} else {
@@ -443,11 +448,6 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.ExcludedGroups = types.ListNull(types.StringType)
 	}
-	if value := res.Get("groupDn"); value.Exists() && !data.GroupDn.IsNull() {
-		data.GroupDn = types.StringValue(value.String())
-	} else {
-		data.GroupDn = types.StringNull()
-	}
 	if value := res.Get("updateHour"); value.Exists() && !data.UpdateHour.IsNull() {
 		data.UpdateHour = types.Int64Value(value.Int())
 	} else {
@@ -463,10 +463,10 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.GroupAttribute = types.StringNull()
 	}
-	if value := res.Get("authSessionTimeout"); value.Exists() && !data.TimeoutIseUsers.IsNull() {
-		data.TimeoutIseUsers = types.Int64Value(value.Int())
+	if value := res.Get("authSessionTimeout"); value.Exists() && !data.TimeoutIseAndPassiveIndentityUsers.IsNull() {
+		data.TimeoutIseAndPassiveIndentityUsers = types.Int64Value(value.Int())
 	} else {
-		data.TimeoutIseUsers = types.Int64Null()
+		data.TimeoutIseAndPassiveIndentityUsers = types.Int64Null()
 	}
 	if value := res.Get("tsAgentSessionTimeout"); value.Exists() && !data.TimeoutTerminalServerAgentUsers.IsNull() {
 		data.TimeoutTerminalServerAgentUsers = types.Int64Value(value.Int())

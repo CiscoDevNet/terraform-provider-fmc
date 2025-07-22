@@ -96,77 +96,77 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Internal parameter of API.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the Realm object.").String,
 				Optional:            true,
 			},
 			"realm_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the realm").AddStringEnumDescription("AD", "LDAP", "LOCAL").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the Realm.").AddStringEnumDescription("AD", "LDAP").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("AD", "LDAP", "LOCAL"),
+					stringvalidator.OneOf("AD", "LDAP"),
 				},
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ad_primary_domain": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Primary domain for AD realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Domain for the Active Directory server where users should be authenticated.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ad_join_username": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Username for joining the AD domain.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.").String,
 				Optional:            true,
 			},
 			"ad_join_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for joining the AD domain.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Password for ad_join_username user.").String,
 				Optional:            true,
 				Sensitive:           true,
 			},
 			"directory_username": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Username for joining the AD domain.").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Username used to connect to the directory.").String,
+				Required:            true,
 			},
 			"directory_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for the AD domain user.").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Password for the directory user.").String,
+				Required:            true,
 				Sensitive:           true,
 			},
 			"base_dn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Base DN for the LDAP search.").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("The directory tree on the server where the management center should begin searching for user data.").String,
+				Required:            true,
+			},
+			"group_dn": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The directory tree on the server where the management center should begin searching for group data.").String,
+				Required:            true,
 			},
 			"included_users": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of users to include in the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Add users to Included Users.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"included_groups": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of groups to include in the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Add groups to Included Groups.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"excluded_users": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of users to exclude from the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Add users to Excluded Users.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"excluded_groups": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of groups to exclude from the realm.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Add groups to Excluded Groups.").String,
 				ElementType:         types.StringType,
-				Optional:            true,
-			},
-			"group_dn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DN of the group to search for users.").String,
 				Optional:            true,
 			},
 			"update_hour": schema.Int64Attribute{
@@ -184,74 +184,74 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"group_attribute": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.").String,
 				Optional:            true,
 			},
-			"timeout_ise_users": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+			"timeout_ise_and_passive_indentity_users": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in minutes) for ISE/ISE-PIC or Passive Identity Agent users.").AddIntegerRangeDescription(0, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 35791394),
 				},
 			},
 			"timeout_terminal_server_agent_users": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in minutes) for Terminal Server Agent users.").AddIntegerRangeDescription(0, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 35791394),
 				},
 			},
 			"timeout_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in minutes) for Captive Portal users.").AddIntegerRangeDescription(0, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 35791394),
 				},
 			},
 			"timeout_failed_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in minutes) for Failed Captive Portal users.").AddIntegerRangeDescription(0, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 35791394),
 				},
 			},
 			"timeout_guest_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Timeout for the authentication session in seconds.").AddIntegerRangeDescription(0, 35791394).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in minutes) for Guest Captive Portal Users.").AddIntegerRangeDescription(0, 35791394).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 35791394),
 				},
 			},
 			"directory_server_configurations": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of directory configurations for the realm.").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("List of directory servers.").String,
+				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"hostname": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the LDAP server.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address.").String,
+							Required:            true,
 						},
 						"port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Port number for the LDAP server.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
+							Required:            true,
 						},
 						"encryption_protocol": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Encryption method for the LDAP connection.").AddStringEnumDescription("NONE", "LDAPS", "STARTTLS").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Encryption method.").AddStringEnumDescription("NONE", "LDAPS", "STARTTLS").String,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("NONE", "LDAPS", "STARTTLS"),
 							},
 						},
 						"encryption_certificate": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the encryption certificate for LDAPS.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the encryption certificate for LDAPS/STARTTLS.").String,
 							Optional:            true,
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to use routing to select the interface for LDAP communication.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for directory communication.").String,
 							Optional:            true,
 						},
 						"interface_group_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the interface group to use for LDAP communication.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.").String,
 							Optional:            true,
 						},
 					},

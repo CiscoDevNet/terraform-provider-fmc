@@ -85,65 +85,65 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"version": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Internal parameter of API.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the realm.",
+				MarkdownDescription: "Description of the Realm object.",
 				Computed:            true,
 			},
 			"realm_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the realm",
+				MarkdownDescription: "Type of the Realm.",
 				Computed:            true,
 			},
 			"ad_primary_domain": schema.StringAttribute{
-				MarkdownDescription: "Primary domain for AD realm.",
+				MarkdownDescription: "Domain for the Active Directory server where users should be authenticated.",
 				Computed:            true,
 			},
 			"ad_join_username": schema.StringAttribute{
-				MarkdownDescription: "Username for joining the AD domain.",
+				MarkdownDescription: "Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.",
 				Computed:            true,
 			},
 			"ad_join_password": schema.StringAttribute{
-				MarkdownDescription: "Password for joining the AD domain.",
+				MarkdownDescription: "Password for ad_join_username user.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"directory_username": schema.StringAttribute{
-				MarkdownDescription: "Username for joining the AD domain.",
+				MarkdownDescription: "Username used to connect to the directory.",
 				Computed:            true,
 			},
 			"directory_password": schema.StringAttribute{
-				MarkdownDescription: "Password for the AD domain user.",
+				MarkdownDescription: "Password for the directory user.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"base_dn": schema.StringAttribute{
-				MarkdownDescription: "Base DN for the LDAP search.",
+				MarkdownDescription: "The directory tree on the server where the management center should begin searching for user data.",
+				Computed:            true,
+			},
+			"group_dn": schema.StringAttribute{
+				MarkdownDescription: "The directory tree on the server where the management center should begin searching for group data.",
 				Computed:            true,
 			},
 			"included_users": schema.ListAttribute{
-				MarkdownDescription: "List of users to include in the realm.",
+				MarkdownDescription: "Add users to Included Users.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"included_groups": schema.ListAttribute{
-				MarkdownDescription: "List of groups to include in the realm.",
+				MarkdownDescription: "Add groups to Included Groups.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"excluded_users": schema.ListAttribute{
-				MarkdownDescription: "List of users to exclude from the realm.",
+				MarkdownDescription: "Add users to Excluded Users.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"excluded_groups": schema.ListAttribute{
-				MarkdownDescription: "List of groups to exclude from the realm.",
+				MarkdownDescription: "Add groups to Excluded Groups.",
 				ElementType:         types.StringType,
-				Computed:            true,
-			},
-			"group_dn": schema.StringAttribute{
-				MarkdownDescription: "DN of the group to search for users.",
 				Computed:            true,
 			},
 			"update_hour": schema.Int64Attribute{
@@ -155,56 +155,56 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"group_attribute": schema.StringAttribute{
-				MarkdownDescription: "Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.",
+				MarkdownDescription: "Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.",
 				Computed:            true,
 			},
-			"timeout_ise_users": schema.Int64Attribute{
-				MarkdownDescription: "Timeout for the authentication session in seconds.",
+			"timeout_ise_and_passive_indentity_users": schema.Int64Attribute{
+				MarkdownDescription: "Timeout (in minutes) for ISE/ISE-PIC or Passive Identity Agent users.",
 				Computed:            true,
 			},
 			"timeout_terminal_server_agent_users": schema.Int64Attribute{
-				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				MarkdownDescription: "Timeout (in minutes) for Terminal Server Agent users.",
 				Computed:            true,
 			},
 			"timeout_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				MarkdownDescription: "Timeout (in minutes) for Captive Portal users.",
 				Computed:            true,
 			},
 			"timeout_failed_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				MarkdownDescription: "Timeout (in minutes) for Failed Captive Portal users.",
 				Computed:            true,
 			},
 			"timeout_guest_captive_portal_users": schema.Int64Attribute{
-				MarkdownDescription: "Timeout for the authentication session in seconds.",
+				MarkdownDescription: "Timeout (in minutes) for Guest Captive Portal Users.",
 				Computed:            true,
 			},
 			"directory_server_configurations": schema.ListNestedAttribute{
-				MarkdownDescription: "List of directory configurations for the realm.",
+				MarkdownDescription: "List of directory servers.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"hostname": schema.StringAttribute{
-							MarkdownDescription: "Hostname or IP address of the LDAP server.",
+							MarkdownDescription: "Hostname or IP address.",
 							Computed:            true,
 						},
 						"port": schema.Int64Attribute{
-							MarkdownDescription: "Port number for the LDAP server.",
+							MarkdownDescription: "Port number.",
 							Computed:            true,
 						},
 						"encryption_protocol": schema.StringAttribute{
-							MarkdownDescription: "Encryption method for the LDAP connection.",
+							MarkdownDescription: "Encryption method.",
 							Computed:            true,
 						},
 						"encryption_certificate": schema.StringAttribute{
-							MarkdownDescription: "ID of the encryption certificate for LDAPS.",
+							MarkdownDescription: "ID of the encryption certificate for LDAPS/STARTTLS.",
 							Computed:            true,
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
-							MarkdownDescription: "Whether to use routing to select the interface for LDAP communication.",
+							MarkdownDescription: "Use routing to select the interface for directory communication.",
 							Computed:            true,
 						},
 						"interface_group_id": schema.StringAttribute{
-							MarkdownDescription: "ID of the interface group to use for LDAP communication.",
+							MarkdownDescription: "ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.",
 							Computed:            true,
 						},
 					},

@@ -14,35 +14,32 @@ This resource manages a Realm AD LDAP.
 
 ```terraform
 resource "fmc_realm_ad_ldap" "example" {
-  name                                = "my_ldap_realm"
-  enabled                             = true
-  description                         = "My realm"
-  realm_type                          = "LDAP"
-  ad_primary_domain                   = "example.com"
-  ad_join_username                    = "user@example.com"
-  ad_join_password                    = "my_password"
-  directory_username                  = "user@example.com"
-  directory_password                  = "my_password"
-  base_dn                             = "DC=example,DC=com"
-  included_users                      = ["user1"]
-  included_groups                     = ["group1"]
-  excluded_users                      = ["user2"]
-  excluded_groups                     = ["group2"]
-  group_dn                            = "CN=users,DC=example,DC=com"
-  group_attribute                     = "member"
-  timeout_ise_users                   = 1440
-  timeout_terminal_server_agent_users = 1440
-  timeout_captive_portal_users        = 1440
-  timeout_failed_captive_portal_users = 1440
-  timeout_guest_captive_portal_users  = 1440
+  name                                    = "my_ldap_realm"
+  enabled                                 = true
+  description                             = "My realm"
+  realm_type                              = "LDAP"
+  directory_username                      = "user@example.com"
+  directory_password                      = "my_password"
+  base_dn                                 = "DC=example,DC=com"
+  group_dn                                = "CN=users,DC=example,DC=com"
+  included_users                          = ["user1"]
+  included_groups                         = ["group1"]
+  excluded_users                          = ["user2"]
+  excluded_groups                         = ["group2"]
+  update_hour                             = 2
+  update_interval                         = "4"
+  group_attribute                         = "member"
+  timeout_ise_and_passive_indentity_users = 1440
+  timeout_terminal_server_agent_users     = 1440
+  timeout_captive_portal_users            = 1440
+  timeout_failed_captive_portal_users     = 1440
+  timeout_guest_captive_portal_users      = 1440
   directory_server_configurations = [
     {
       hostname                        = "ldap.example.com"
       port                            = 389
-      encryption_protocol             = "LDAPS"
-      encryption_certificate          = "1234-5678-90AB-CDEF12345678"
+      encryption_protocol             = "NONE"
       use_routing_to_select_interface = true
-      interface_group_id              = "1234-5678-90AB-CDEF12345678"
     }
   ]
 }
@@ -53,37 +50,37 @@ resource "fmc_realm_ad_ldap" "example" {
 
 ### Required
 
+- `base_dn` (String) The directory tree on the server where the management center should begin searching for user data.
+- `directory_password` (String, Sensitive) Password for the directory user.
+- `directory_server_configurations` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_server_configurations))
+- `directory_username` (String) Username used to connect to the directory.
+- `group_dn` (String) The directory tree on the server where the management center should begin searching for group data.
 - `name` (String) Name of the Realm object.
-- `realm_type` (String) Type of the realm
-  - Choices: `AD`, `LDAP`, `LOCAL`
+- `realm_type` (String) Type of the Realm.
+  - Choices: `AD`, `LDAP`
 
 ### Optional
 
-- `ad_join_password` (String, Sensitive) Password for joining the AD domain.
-- `ad_join_username` (String) Username for joining the AD domain.
-- `ad_primary_domain` (String) Primary domain for AD realm.
-- `base_dn` (String) Base DN for the LDAP search.
-- `description` (String) Description of the realm.
-- `directory_password` (String, Sensitive) Password for the AD domain user.
-- `directory_server_configurations` (Attributes List) List of directory configurations for the realm. (see [below for nested schema](#nestedatt--directory_server_configurations))
-- `directory_username` (String) Username for joining the AD domain.
+- `ad_join_password` (String, Sensitive) Password for ad_join_username user.
+- `ad_join_username` (String) Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.
+- `ad_primary_domain` (String) Domain for the Active Directory server where users should be authenticated.
+- `description` (String) Description of the Realm object.
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
-- `excluded_groups` (List of String) List of groups to exclude from the realm.
-- `excluded_users` (List of String) List of users to exclude from the realm.
-- `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
-- `group_dn` (String) DN of the group to search for users.
-- `included_groups` (List of String) List of groups to include in the realm.
-- `included_users` (List of String) List of users to include in the realm.
-- `timeout_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `excluded_groups` (List of String) Add groups to Excluded Groups.
+- `excluded_users` (List of String) Add users to Excluded Users.
+- `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.
+- `included_groups` (List of String) Add groups to Included Groups.
+- `included_users` (List of String) Add users to Included Users.
+- `timeout_captive_portal_users` (Number) Timeout (in minutes) for Captive Portal users.
   - Range: `0`-`35791394`
-- `timeout_failed_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_failed_captive_portal_users` (Number) Timeout (in minutes) for Failed Captive Portal users.
   - Range: `0`-`35791394`
-- `timeout_guest_captive_portal_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_guest_captive_portal_users` (Number) Timeout (in minutes) for Guest Captive Portal Users.
   - Range: `0`-`35791394`
-- `timeout_ise_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_ise_and_passive_indentity_users` (Number) Timeout (in minutes) for ISE/ISE-PIC or Passive Identity Agent users.
   - Range: `0`-`35791394`
-- `timeout_terminal_server_agent_users` (Number) Timeout for the authentication session in seconds.
+- `timeout_terminal_server_agent_users` (Number) Timeout (in minutes) for Terminal Server Agent users.
   - Range: `0`-`35791394`
 - `update_hour` (Number) Hour where the sync (download) from the directory starts.
   - Range: `0`-`23`
@@ -94,20 +91,23 @@ resource "fmc_realm_ad_ldap" "example" {
 
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'Realm'.
-- `version` (String)
+- `version` (String) Internal parameter of API.
 
 <a id="nestedatt--directory_server_configurations"></a>
 ### Nested Schema for `directory_server_configurations`
 
+Required:
+
+- `encryption_protocol` (String) Encryption method.
+  - Choices: `NONE`, `LDAPS`, `STARTTLS`
+- `hostname` (String) Hostname or IP address.
+- `port` (Number) Port number.
+
 Optional:
 
-- `encryption_certificate` (String) ID of the encryption certificate for LDAPS.
-- `encryption_protocol` (String) Encryption method for the LDAP connection.
-  - Choices: `NONE`, `LDAPS`, `STARTTLS`
-- `hostname` (String) Hostname or IP address of the LDAP server.
-- `interface_group_id` (String) ID of the interface group to use for LDAP communication.
-- `port` (Number) Port number for the LDAP server.
-- `use_routing_to_select_interface` (Boolean) Whether to use routing to select the interface for LDAP communication.
+- `encryption_certificate` (String) ID of the encryption certificate for LDAPS/STARTTLS.
+- `interface_group_id` (String) ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.
+- `use_routing_to_select_interface` (Boolean) Use routing to select the interface for directory communication.
 
 ## Import
 

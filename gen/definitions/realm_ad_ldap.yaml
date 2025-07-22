@@ -21,35 +21,39 @@ attributes:
     computed: true
   - model_name: version
     type: String
+    description: Internal parameter of API.
     computed: true
     computed_body_param: true
 
   - model_name: description
     type: String
-    description: Description of the realm.
+    description: Description of the Realm object.
     example: My realm
   - model_name: realmType
     type: String
     mandatory: true
-    description: Type of the realm
-    enum_values: ["AD", "LDAP", "LOCAL"]
+    description: Type of the Realm.
+    enum_values: ["AD", "LDAP"]
     example: LDAP
     requires_replace: true
 
   # AD configuration
   - model_name: adPrimaryDomain
     type: String
-    description: Primary domain for AD realm.
-    example: example.com
+    description: Domain for the Active Directory server where users should be authenticated.
+    exclude_example: true
+    exclude_test: true
     requires_replace: true
   - model_name: adJoinUsername
     type: String
-    description: Username for joining the AD domain.
-    example: user@example.com
+    description: Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.
+    exclude_example: true
+    exclude_test: true
   - model_name: adJoinPassword
     type: String
-    description: Password for joining the AD domain.
-    example: my_password
+    description: Password for ad_join_username user.
+    exclude_example: true
+    exclude_test: true
     sensitive: true
     write_only: true
   
@@ -57,92 +61,96 @@ attributes:
   - model_name: dirUsername
     tf_name: directory_username
     type: String
-    description: Username for joining the AD domain.
+    description: Username used to connect to the directory.
     example: user@example.com
+    mandatory: true
   - model_name: dirPassword
     type: String
     tf_name: directory_password
-    description: Password for the AD domain user.
+    description: Password for the directory user.
+    mandatory: true
     sensitive: true
     example: my_password
     write_only: true
   - model_name: baseDn
     type: String
-    description: Base DN for the LDAP search.
+    description: The directory tree on the server where the management center should begin searching for user data.
     example: "DC=example,DC=com"
+    mandatory: true
+  - model_name: groupDn
+    type: String
+    description: The directory tree on the server where the management center should begin searching for group data.
+    example: "CN=users,DC=example,DC=com"
+    mandatory: true
   - model_name: includedUsers
     type: List
     element_type: String
-    description: List of users to include in the realm.
+    description: Add users to Included Users.
     example: "user1"
   - model_name: includedGroups
     type: List
     element_type: String
-    description: List of groups to include in the realm.
+    description: Add groups to Included Groups.
     example: "group1"
   - model_name: excludedUsers
     type: List
     element_type: String
-    description: List of users to exclude from the realm.
+    description: Add users to Excluded Users.
     example: "user2"
   - model_name: excludedGroups
     type: List
     element_type: String
-    description: List of groups to exclude from the realm.
+    description: Add groups to Excluded Groups.
     example: "group2"
-  - model_name: groupDn
-    type: String
-    description: DN of the group to search for users.
-    example: "CN=users,DC=example,DC=com"
   - model_name: updateHour
     type: Int64
     description: Hour where the sync (download) from the directory starts.
     min_int: 0
     max_int: 23
-    exclude_example: true
+    example: 2
   - model_name: updateInterval
     type: String
     description: Interval in hours for the sync (download) from the directory.
-    enum_values: [1, 2, 3, 4, 6, 8, 12, 24]
-    exclude_example: true
-  
+    enum_values: ["1", "2", "3", "4", "6", "8", "12", "24"]
+    example: "4"
+
   # Realm configuration
   - model_name: groupAttribute
     type: String
-    description: Attribute used to identify the group in the LDAP directory. Use uniqueMember, member or any custom attribute name.
+    description: Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.
     example: member
   - model_name: authSessionTimeout
-    tf_name: timeout_ise_users
+    tf_name: timeout_ise_and_passive_indentity_users
     type: Int64
-    description: Timeout for the authentication session in seconds.
+    description: Timeout (in minutes) for ISE/ISE-PIC or Passive Identity Agent users.
     example: 1440
     min_int: 0
     max_int: 35791394
   - model_name: tsAgentSessionTimeout
     tf_name: timeout_terminal_server_agent_users
     type: Int64
-    description: Timeout for the authentication session in seconds.
+    description: Timeout (in minutes) for Terminal Server Agent users.
     example: 1440
     min_int: 0
     max_int: 35791394
   - model_name: activeAuthSessionTimeout
     tf_name: timeout_captive_portal_users
     type: Int64
-    description: Timeout for the authentication session in seconds.
+    description: Timeout (in minutes) for Captive Portal users.
     example: 1440
     min_int: 0
     max_int: 35791394
   - model_name: failedAuthSessionTimeout
     tf_name: timeout_failed_captive_portal_users
     type: Int64
-    description: Timeout for the authentication session in seconds.
+    description: Timeout (in minutes) for Failed Captive Portal users.
     example: 1440
     min_int: 0
     max_int: 35791394
   - model_name: guestSessionTimeout
     tf_name: timeout_guest_captive_portal_users
     type: Int64
-    description: Timeout for the authentication session in seconds.
+    description: Timeout (in minutes) for Guest Captive Portal Users.
     example: 1440
     min_int: 0
     max_int: 35791394
@@ -151,35 +159,41 @@ attributes:
   - model_name: directoryConfigurations
     tf_name: directory_server_configurations
     type: List
-    description: List of directory configurations for the realm.
+    description: List of directory servers.
+    mandatory: true
     attributes:
       - model_name: hostname
         type: String
-        description: Hostname or IP address of the LDAP server.
+        description: Hostname or IP address.
         example: ldap.example.com
         id: true
+        mandatory: true
       - model_name: port
         type: Int64
-        description: Port number for the LDAP server.
+        description: Port number.
         example: 389
+        mandatory: true
       - model_name: encryptionProtocol
         type: String
-        description: Encryption method for the LDAP connection.
+        description: Encryption method.
         enum_values: ["NONE", "LDAPS", "STARTTLS"]
-        example: LDAPS
+        example: NONE
+        mandatory: true
       - model_name: id
         data_path: ["encryptionCert"]
         tf_name: encryption_certificate
         type: String
-        description: ID of the encryption certificate for LDAPS.
-        example: 1234-5678-90AB-CDEF12345678
+        description: ID of the encryption certificate for LDAPS/STARTTLS.
+        exclude_example: true
+        exclude_test: true
       - model_name: useRoutingToSelectInterface
         type: Bool
-        description: Whether to use routing to select the interface for LDAP communication.
-        example: true
+        description: Use routing to select the interface for directory communication.
+        example: "true"
       - model_name: id
         data_path: ["interface"]
         tf_name: interface_group_id
         type: String
-        description: ID of the interface group to use for LDAP communication.
-        example: 1234-5678-90AB-CDEF12345678
+        description: ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.
+        exclude_example: true
+        exclude_test: true
