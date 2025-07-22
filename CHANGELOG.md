@@ -1,5 +1,8 @@
 ## 2.0.0-rc5 (Unreleased)
 
+- (Enhancement) Add support for `fmc_countries` and `fmc_continents` data sources
+- (Enhancement) Add support for `fmc_geolocation` resource and data source
+- (Enhancement) Add support for `fmc_service_access` resource and data source
 - (Enhancement) Add support for `fmc_secure_client_*` resources and data sources
 
 ## 2.0.0-rc4

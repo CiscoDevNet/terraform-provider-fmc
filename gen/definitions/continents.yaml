@@ -1,0 +1,25 @@
+---
+name: Continents
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/continents
+no_resource: true
+no_import: true
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Continents. The key of the map is the name of the individual Continent.
+    map_key_example: Europe
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed Continent.
+        exclude_example: true
+        exclude_test: true        
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'Continent'.
+        computed: true
