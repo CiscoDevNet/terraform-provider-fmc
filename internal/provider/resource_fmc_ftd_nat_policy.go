@@ -530,7 +530,9 @@ func (r *FTDNATPolicyResource) updateSubresources(ctx context.Context, tfsdkPlan
 	var diags diag.Diagnostics
 
 	if !plan.ManageRules.IsUnknown() && !plan.ManageRules.ValueBool() {
-		// If we don't manage rules - exit
+		// If we don't manage rules, clear record and exit
+		state.ManualNatRules = nil
+		state.AutoNatRules = nil
 		return state, diags
 	}
 
