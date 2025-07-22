@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcSecureClientCustomAttribute(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_secure_client_custom_attribute.test", "name", "my_secure_client_image"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_secure_client_custom_attribute.test", "name", "my_secure_client_custom_attribute"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_secure_client_custom_attribute.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_secure_client_custom_attribute.test", "description", "My Secure Client Custom Attribute"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_secure_client_custom_attribute.test", "attribute_type", "USER_DEFINED_CUSTOM_ATTR"))
@@ -62,7 +62,7 @@ func TestAccDataSourceFmcSecureClientCustomAttribute(t *testing.T) {
 
 func testAccDataSourceFmcSecureClientCustomAttributeConfig() string {
 	config := `resource "fmc_secure_client_custom_attribute" "test" {` + "\n"
-	config += `	name = "my_secure_client_image"` + "\n"
+	config += `	name = "my_secure_client_custom_attribute"` + "\n"
 	config += `	description = "My Secure Client Custom Attribute"` + "\n"
 	config += `	attribute_type = "USER_DEFINED_CUSTOM_ATTR"` + "\n"
 	config += `	user_defined_attribute_name = "my_user_defined_attribute"` + "\n"
@@ -79,7 +79,7 @@ func testAccDataSourceFmcSecureClientCustomAttributeConfig() string {
 
 func testAccNamedDataSourceFmcSecureClientCustomAttributeConfig() string {
 	config := `resource "fmc_secure_client_custom_attribute" "test" {` + "\n"
-	config += `	name = "my_secure_client_image"` + "\n"
+	config += `	name = "my_secure_client_custom_attribute"` + "\n"
 	config += `	description = "My Secure Client Custom Attribute"` + "\n"
 	config += `	attribute_type = "USER_DEFINED_CUSTOM_ATTR"` + "\n"
 	config += `	user_defined_attribute_name = "my_user_defined_attribute"` + "\n"

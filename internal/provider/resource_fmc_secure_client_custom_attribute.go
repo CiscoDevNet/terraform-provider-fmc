@@ -140,7 +140,7 @@ func (r *SecureClientCustomAttributeResource) Schema(ctx context.Context, req re
 				},
 			},
 			"defer_update_minimum_secure_client_version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Minimum Secure Client version (in x.x.x format) to be present on the client system to allow or defer the update.").String,
 				Optional:            true,
 			},
 			"defer_update_prompt_dismiss_timeout": schema.Int64Attribute{

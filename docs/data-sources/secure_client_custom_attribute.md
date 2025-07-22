@@ -31,7 +31,7 @@ data "fmc_secure_client_custom_attribute" "example" {
 
 - `attribute_type` (String) Type of the attribute.
 - `defer_update_default_action` (String) Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.
-- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.
+- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version (in x.x.x format) to be present on the client system to allow or defer the update.
 - `defer_update_prompt_dismiss_timeout` (Number) Timeout (in seconds) for the prompt dismissal.
 - `defer_update_prompt_type` (String) Prompt type.
 - `description` (String) Description of the Secure Client Custom Attribute object.

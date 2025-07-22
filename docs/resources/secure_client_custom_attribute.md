@@ -20,7 +20,7 @@ The following restrictions apply:
 
 ```terraform
 resource "fmc_secure_client_custom_attribute" "example" {
-  name                         = "my_secure_client_image"
+  name                         = "my_secure_client_custom_attribute"
   description                  = "My Secure Client Custom Attribute"
   attribute_type               = "USER_DEFINED_CUSTOM_ATTR"
   user_defined_attribute_name  = "my_user_defined_attribute"
@@ -41,7 +41,7 @@ resource "fmc_secure_client_custom_attribute" "example" {
 
 - `defer_update_default_action` (String) Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.
   - Choices: `DEFER`, `UPDATE`
-- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.
+- `defer_update_minimum_secure_client_version` (String) Minimum Secure Client version (in x.x.x format) to be present on the client system to allow or defer the update.
 - `defer_update_prompt_dismiss_timeout` (Number) Timeout (in seconds) for the prompt dismissal.
   - Range: `1`-`300`
 - `defer_update_prompt_type` (String) Prompt type.

@@ -8,7 +8,7 @@ attributes:
     type: String
     mandatory: true
     description: Name of the Secure Client Custom Attribute object.
-    example: my_secure_client_image
+    example: my_secure_client_custom_attribute
     data_source_query: true
   - model_name: type
     type: String
@@ -91,7 +91,7 @@ attributes:
     data_path: ["deferUpdate"]
     tf_name: defer_update_minimum_secure_client_version
     type: String
-    description: Minimum Secure Client version to be present on the client system to allow or defer the update in x.x.x format.
+    description: Minimum Secure Client version (in x.x.x format) to be present on the client system to allow or defer the update.
     exclude_example: true
     exclude_test: true
   - model_name: promptDismissTimeout

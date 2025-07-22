@@ -27,13 +27,13 @@ resource "fmc_secure_client_customization" "example" {
 
 ### Required
 
+- `customization_type` (String) Type of the Secure Client Customization object.
+  - Choices: `LANGUAGE_LOCALIZATION`, `IMAGE`, `SCRIPT`, `BINARY`, `CUSTOMIZED_INSTALLER_TRANSFORM`, `LOCALIZED_INSTALLER_TRANSFORM`
 - `name` (String) Name of the Secure Client Customization object.
 - `path` (String) Path to Secure Client Customization file.
 
 ### Optional
 
-- `customization_type` (String) Type of the Secure Client Customization object.
-  - Choices: `LANGUAGE_LOCALIZATION`, `IMAGE`, `SCRIPT`, `BINARY`, `CUSTOMIZED_INSTALLER_TRANSFORM`, `LOCALIZED_INSTALLER_TRANSFORM`
 - `description` (String) Description of the Secure Client Customization object.
 - `domain` (String) Name of the FMC domain
 - `language` (String) Language code. Applicable only when `customization_type` is of type LANGUAGE_LOCALIZATION/LOCALIZED_INSTALLER_TRANSFORM.

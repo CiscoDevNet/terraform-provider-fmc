@@ -103,7 +103,7 @@ func (r *SecureClientCustomizationResource) Schema(ctx context.Context, req reso
 			},
 			"customization_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the Secure Client Customization object.").AddStringEnumDescription("LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM").String,
-				Optional:            true,
+				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM"),
 				},
