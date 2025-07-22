@@ -1,0 +1,72 @@
+---
+name: Single Sign On Server
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ssoservers
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Single Sign-On Server object.
+    example: my_sso_server
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SSOServer'.
+    computed: true
+  - model_name: idpEntityId
+    tf_name: identity_provider_entity_id
+    type: String
+    mandatory: true
+    description: URL that is defined in SAML IdP to identify a service provider uniquely.
+    example: "https://idp.example.com/saml"
+  - model_name: ssoURL
+    tf_name: sso_url
+    type: String
+    mandatory: true
+    description: URL for signing into the SAML identity provider server.
+    example: "https://idp.example.com/sso"
+  - model_name: logoutURL
+    tf_name: logout_url
+    type: String
+    description: URL for signing out of the SAML identity provider server.
+    example: "https://idp.example.com/logout"
+  - model_name: baseUrl
+    type: String
+    description: URL that will redirect the user back to Threat Defense once the identity provider authentication is done.
+    example: "https://vpn.example.com/callback"
+  - model_name: id
+    data_path: ["identityProviderCert"]
+    tf_name: identity_provider_certificate_id
+    type: String
+    mandatory: true
+    description: Certificate of the IdP enrolled into the Threat Defense to verify the messages signed by the IdP.
+    example: 123e4567-e89b-12d3-a456-426614174000
+  - model_name: id
+    data_path: ["serviceProviderCert"]
+    tf_name: service_provider_certificate_id
+    type: String
+    description: Certificate, which will be used to sign the requests and build circle of trust with IdP.
+    example: 123e4567-e89b-12d3-a456-426614174001
+  - model_name: requestSignatureType
+    tf_name: request_signature_type
+    type: String
+    enum_values: [NO_SIGNATURE, RSA_SHA1, RSA_SHA256, RSA_SHA384, RSA_SHA512]
+    description: Encryption algorithm to sign the SAML single sign-on requests.
+    example: RSA_SHA256
+  - model_name: requestTimeout
+    type: Int64
+    min_int: 1
+    max_int: 7200
+    default_value: 300
+    example: 300
+    description: Specify the SAML assertion validity duration (in seconds) for the users to complete the single sign-on request.
+  - model_name: serverOnInternalNetwork
+    tf_name: identity_provider_accessible_only_on_internal_network
+    type: Bool
+    description: SAML IdP resides on the internal network.
+    example: "false"
+  - model_name: reAuthAtLogin
+    tf_name: request_identity_provider_reauthentication_at_each_login
+    type: Bool
+    description: Authenticate user at each login even if the previous IdP session is valid.
+    example: "false"
