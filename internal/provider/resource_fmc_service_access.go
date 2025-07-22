@@ -92,26 +92,26 @@ func (r *ServiceAccessResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"default_action": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default action for the Service Access object.").AddStringEnumDescription("ALLOW", "DENY").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Default action.").AddStringEnumDescription("ALLOW", "DENY").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ALLOW", "DENY"),
 				},
 			},
 			"rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of Service Access rules.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ALLOW", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Action to be taken by the rule.").AddStringEnumDescription("ALLOW", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("ALLOW", "DENY"),
 							},
 						},
 						"geolocation_sources": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of geolocation sources (Country, Continent or Geolocation source).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of geolocation sources (Country, Continent or Geolocation).").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

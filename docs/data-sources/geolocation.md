@@ -29,8 +29,8 @@ data "fmc_geolocation" "example" {
 
 ### Read-Only
 
-- `continents` (Attributes List) List of continents associated with the geolocation. (see [below for nested schema](#nestedatt--continents))
-- `countries` (Attributes List) List of countries associated with the geolocation. (see [below for nested schema](#nestedatt--countries))
+- `continents` (Attributes List) List of continents. (see [below for nested schema](#nestedatt--continents))
+- `countries` (Attributes List) List of countries. (see [below for nested schema](#nestedatt--countries))
 - `type` (String) Type of the object; this value is always 'Geolocation'.
 
 <a id="nestedatt--continents"></a>

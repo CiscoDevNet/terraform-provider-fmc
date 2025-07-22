@@ -83,20 +83,20 @@ func (d *ServiceAccessDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed:            true,
 			},
 			"default_action": schema.StringAttribute{
-				MarkdownDescription: "Default action for the Service Access object.",
+				MarkdownDescription: "Default action.",
 				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
-				MarkdownDescription: "Ordered list of Service Access rules.",
+				MarkdownDescription: "Ordered list of rules.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Action to be taken by the rule.",
 							Computed:            true,
 						},
 						"geolocation_sources": schema.ListNestedAttribute{
-							MarkdownDescription: "List of geolocation sources (Country, Continent or Geolocation source).",
+							MarkdownDescription: "List of geolocation sources (Country, Continent or Geolocation).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

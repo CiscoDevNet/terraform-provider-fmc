@@ -37,8 +37,8 @@ resource "fmc_geolocation" "example" {
 
 ### Optional
 
-- `continents` (Attributes List) List of continents associated with the geolocation. (see [below for nested schema](#nestedatt--continents))
-- `countries` (Attributes List) List of countries associated with the geolocation. (see [below for nested schema](#nestedatt--countries))
+- `continents` (Attributes List) List of continents. (see [below for nested schema](#nestedatt--continents))
+- `countries` (Attributes List) List of countries. (see [below for nested schema](#nestedatt--countries))
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

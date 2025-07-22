@@ -6,8 +6,8 @@ resource "fmc_service_access" "example" {
       action = "ALLOW"
       geolocation_sources = [
         {
-          id   = ""
-          type = ""
+          id   = "616"
+          type = "Country"
         }
       ]
     }

@@ -22,17 +22,18 @@ attributes:
     value: ServiceAccessObject
   - model_name: defaultAction
     type: String
-    description: Default action for the Service Access object.
+    description: Default action.
     enum_values: [ALLOW, DENY]
     example: DENY
     mandatory: true
   - model_name: rules
     type: List
-    description: Ordered list of Service Access rules.
+    description: Ordered list of rules.
     ordered_list: true
     attributes:
       - model_name: action
         type: String
+        description: Action to be taken by the rule.
         enum_values: [ALLOW, DENY]
         example: ALLOW
         minimum_test_value: '"DENY"'
@@ -40,18 +41,20 @@ attributes:
       - model_name: geoSources
         tf_name: geolocation_sources
         type: List
-        description: List of geolocation sources (Country, Continent or Geolocation source).
+        description: List of geolocation sources (Country, Continent or Geolocation).
         mandatory: true
         attributes:
           - model_name: id
             type: String
             description: Id of the geolocation source.
             mandatory: true
+            example: 616
             test_value: 'data.fmc_countries.test.items["Poland"].id'
           - model_name: type
             type: String
             description: Type of the geolocation source.
             mandatory: true
+            example: Country
             test_value: 'data.fmc_countries.test.items["Poland"].type'
 
 test_prerequisites: |-

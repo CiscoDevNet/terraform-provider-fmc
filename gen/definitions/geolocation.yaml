@@ -15,7 +15,7 @@ attributes:
     computed: true
   - model_name: continents
     type: List
-    description: List of continents associated with the geolocation.
+    description: List of continents.
     attributes:
       - model_name: id
         type: Int64
@@ -24,7 +24,7 @@ attributes:
         test_value: 'data.fmc_continents.test.items["North America"].id'
   - model_name: countries
     type: List
-    description: List of countries associated with the geolocation.
+    description: List of countries.
     attributes:
       - model_name: id
         type: Int64

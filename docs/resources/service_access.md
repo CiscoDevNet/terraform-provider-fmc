@@ -26,8 +26,8 @@ resource "fmc_service_access" "example" {
       action = "ALLOW"
       geolocation_sources = [
         {
-          id   = ""
-          type = ""
+          id   = "616"
+          type = "Country"
         }
       ]
     }
@@ -40,14 +40,14 @@ resource "fmc_service_access" "example" {
 
 ### Required
 
-- `default_action` (String) Default action for the Service Access object.
+- `default_action` (String) Default action.
   - Choices: `ALLOW`, `DENY`
 - `name` (String) Name of the object.
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `rules` (Attributes List) Ordered list of Service Access rules. (see [below for nested schema](#nestedatt--rules))
+- `rules` (Attributes List) Ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 
 ### Read-Only
 
@@ -59,8 +59,9 @@ resource "fmc_service_access" "example" {
 
 Required:
 
-- `action` (String) - Choices: `ALLOW`, `DENY`
-- `geolocation_sources` (Attributes List) List of geolocation sources (Country, Continent or Geolocation source). (see [below for nested schema](#nestedatt--rules--geolocation_sources))
+- `action` (String) Action to be taken by the rule.
+  - Choices: `ALLOW`, `DENY`
+- `geolocation_sources` (Attributes List) List of geolocation sources (Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--geolocation_sources))
 
 <a id="nestedatt--rules--geolocation_sources"></a>
 ### Nested Schema for `rules.geolocation_sources`

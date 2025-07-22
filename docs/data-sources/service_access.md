@@ -34,8 +34,8 @@ data "fmc_service_access" "example" {
 
 ### Read-Only
 
-- `default_action` (String) Default action for the Service Access object.
-- `rules` (Attributes List) Ordered list of Service Access rules. (see [below for nested schema](#nestedatt--rules))
+- `default_action` (String) Default action.
+- `rules` (Attributes List) Ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 - `type` (String) Type of the object; this value is always 'ServiceAccessObject'.
 
 <a id="nestedatt--rules"></a>
@@ -43,8 +43,8 @@ data "fmc_service_access" "example" {
 
 Read-Only:
 
-- `action` (String)
-- `geolocation_sources` (Attributes List) List of geolocation sources (Country, Continent or Geolocation source). (see [below for nested schema](#nestedatt--rules--geolocation_sources))
+- `action` (String) Action to be taken by the rule.
+- `geolocation_sources` (Attributes List) List of geolocation sources (Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--geolocation_sources))
 
 <a id="nestedatt--rules--geolocation_sources"></a>
 ### Nested Schema for `rules.geolocation_sources`
