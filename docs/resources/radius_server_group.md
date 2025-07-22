@@ -20,15 +20,13 @@ resource "fmc_radius_server_group" "example" {
   retry_interval                  = 10
   realm_id                        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   authorize_only                  = true
-  interim_account_update          = true
   interim_account_update_interval = 24
   dynamic_authorization           = true
   dynamic_authorization_port      = 1700
-  merge_downloadable_acl          = true
   merge_downloadable_acl_order    = "MERGE_DACL_BEFORE_AV_PAIR_ACL"
   radius_servers = [
     {
-      host                                        = "10.10.10.10"
+      hostname                                    = "10.10.10.10"
       radius_server_enabled_message_authenticator = true
       authentication_port                         = 1812
       key                                         = "my_secret_key"
@@ -48,8 +46,7 @@ resource "fmc_radius_server_group" "example" {
 ### Required
 
 - `name` (String) Name of the RADIUS Server Group object.
-- `retry_interval` (Number) Retry interval, in seconds, for the request
-  - Range: `1`-`10`
+- `radius_servers` (Attributes List) List of RADIUS servers in the group. (see [below for nested schema](#nestedatt--radius_servers))
 
 ### Optional
 
@@ -62,14 +59,14 @@ resource "fmc_radius_server_group" "example" {
 - `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).
   - Choices: `SINGLE`, `MULTIPLE`
   - Default value: `SINGLE`
-- `interim_account_update` (Boolean) This RADIUS server group is being used for interim accounting updates.
 - `interim_account_update_interval` (Number) Interval, in hours, for interim accounting updates.
   - Range: `1`-`120`
-- `merge_downloadable_acl` (Boolean) Enables the merge of the downloadable ACL with the Cisco AV pair ACL.
 - `merge_downloadable_acl_order` (String) Placement order of the downloadable ACL with the Cisco AV pair ACL.
   - Choices: `MERGE_DACL_BEFORE_AV_PAIR_ACL`, `MERGE_DACL_AFTER_AV_PAIR_ACL`
-- `radius_servers` (Attributes List) List of RADIUS servers in the group. (see [below for nested schema](#nestedatt--radius_servers))
 - `realm_id` (String) Active Directory (AD) realm this RADIUS server group is associated with.
+- `retry_interval` (Number) Retry interval, in seconds, for the request
+  - Range: `1`-`10`
+  - Default value: `10`
 
 ### Read-Only
 
@@ -79,22 +76,27 @@ resource "fmc_radius_server_group" "example" {
 <a id="nestedatt--radius_servers"></a>
 ### Nested Schema for `radius_servers`
 
+Required:
+
+- `hostname` (String) IP Address or hostname of the RADIUS server.
+- `key` (String, Sensitive) Shared secret key for the RADIUS server.
+
 Optional:
 
 - `accounting_port` (Number) Port number for the RADIUS accounting services.
   - Range: `1`-`65535`
+  - Default value: `1813`
 - `authentication_port` (Number) Port number for the RADIUS authentication services.
   - Range: `1`-`65535`
-- `host` (String) IP Address or hostname of the RADIUS server.
+  - Default value: `1812`
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
-- `key` (String) Shared secret key for the RADIUS server.
 - `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
   - Default value: `true`
 - `redirect_acl_id` (String) ID of the redirect ACL.
 - `timeout` (Number) Timeout, in seconds, for the RADIUS server.
   - Range: `1`-`300`
+  - Default value: `10`
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
-  - Default value: `true`
 
 ## Import
 

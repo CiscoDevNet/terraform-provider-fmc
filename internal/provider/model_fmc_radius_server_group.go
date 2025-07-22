@@ -43,17 +43,15 @@ type RadiusServerGroup struct {
 	RetryInterval                types.Int64                      `tfsdk:"retry_interval"`
 	RealmId                      types.String                     `tfsdk:"realm_id"`
 	AuthorizeOnly                types.Bool                       `tfsdk:"authorize_only"`
-	InterimAccountUpdate         types.Bool                       `tfsdk:"interim_account_update"`
 	InterimAccountUpdateInterval types.Int64                      `tfsdk:"interim_account_update_interval"`
 	DynamicAuthorization         types.Bool                       `tfsdk:"dynamic_authorization"`
 	DynamicAuthorizationPort     types.Int64                      `tfsdk:"dynamic_authorization_port"`
-	MergeDownloadableAcl         types.Bool                       `tfsdk:"merge_downloadable_acl"`
 	MergeDownloadableAclOrder    types.String                     `tfsdk:"merge_downloadable_acl_order"`
 	RadiusServers                []RadiusServerGroupRadiusServers `tfsdk:"radius_servers"`
 }
 
 type RadiusServerGroupRadiusServers struct {
-	Host                                    types.String `tfsdk:"host"`
+	Hostname                                types.String `tfsdk:"hostname"`
 	RadiusServerEnabledMessageAuthenticator types.Bool   `tfsdk:"radius_server_enabled_message_authenticator"`
 	AuthenticationPort                      types.Int64  `tfsdk:"authentication_port"`
 	Key                                     types.String `tfsdk:"key"`
@@ -103,9 +101,6 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 	if !data.AuthorizeOnly.IsNull() {
 		body, _ = sjson.Set(body, "enableAuthorizeOnly", data.AuthorizeOnly.ValueBool())
 	}
-	if !data.InterimAccountUpdate.IsNull() {
-		body, _ = sjson.Set(body, "enableInterimAccountUpdate", data.InterimAccountUpdate.ValueBool())
-	}
 	if !data.InterimAccountUpdateInterval.IsNull() {
 		body, _ = sjson.Set(body, "interimAccountUpdateInterval", data.InterimAccountUpdateInterval.ValueInt64())
 	}
@@ -115,9 +110,6 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 	if !data.DynamicAuthorizationPort.IsNull() {
 		body, _ = sjson.Set(body, "dynamicAuthorizationPort", data.DynamicAuthorizationPort.ValueInt64())
 	}
-	if !data.MergeDownloadableAcl.IsNull() {
-		body, _ = sjson.Set(body, "enableMergeDacl", data.MergeDownloadableAcl.ValueBool())
-	}
 	if !data.MergeDownloadableAclOrder.IsNull() {
 		body, _ = sjson.Set(body, "mergeDaclPlacementOrder", data.MergeDownloadableAclOrder.ValueString())
 	}
@@ -125,8 +117,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 		body, _ = sjson.Set(body, "radiusServers", []interface{}{})
 		for _, item := range data.RadiusServers {
 			itemBody := ""
-			if !item.Host.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "host", item.Host.ValueString())
+			if !item.Hostname.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "host", item.Hostname.ValueString())
 			}
 			if !item.RadiusServerEnabledMessageAuthenticator.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableMessageAuthenticator", item.RadiusServerEnabledMessageAuthenticator.ValueBool())
@@ -186,7 +178,7 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("retryInterval"); value.Exists() {
 		data.RetryInterval = types.Int64Value(value.Int())
 	} else {
-		data.RetryInterval = types.Int64Null()
+		data.RetryInterval = types.Int64Value(10)
 	}
 	if value := res.Get("realm.id"); value.Exists() {
 		data.RealmId = types.StringValue(value.String())
@@ -197,11 +189,6 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.AuthorizeOnly = types.BoolValue(value.Bool())
 	} else {
 		data.AuthorizeOnly = types.BoolNull()
-	}
-	if value := res.Get("enableInterimAccountUpdate"); value.Exists() {
-		data.InterimAccountUpdate = types.BoolValue(value.Bool())
-	} else {
-		data.InterimAccountUpdate = types.BoolNull()
 	}
 	if value := res.Get("interimAccountUpdateInterval"); value.Exists() {
 		data.InterimAccountUpdateInterval = types.Int64Value(value.Int())
@@ -218,11 +205,6 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.DynamicAuthorizationPort = types.Int64Null()
 	}
-	if value := res.Get("enableMergeDacl"); value.Exists() {
-		data.MergeDownloadableAcl = types.BoolValue(value.Bool())
-	} else {
-		data.MergeDownloadableAcl = types.BoolNull()
-	}
 	if value := res.Get("mergeDaclPlacementOrder"); value.Exists() {
 		data.MergeDownloadableAclOrder = types.StringValue(value.String())
 	} else {
@@ -234,9 +216,9 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 			parent := &data
 			data := RadiusServerGroupRadiusServers{}
 			if value := res.Get("host"); value.Exists() {
-				data.Host = types.StringValue(value.String())
+				data.Hostname = types.StringValue(value.String())
 			} else {
-				data.Host = types.StringNull()
+				data.Hostname = types.StringNull()
 			}
 			if value := res.Get("enableMessageAuthenticator"); value.Exists() {
 				data.RadiusServerEnabledMessageAuthenticator = types.BoolValue(value.Bool())
@@ -246,22 +228,22 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 			if value := res.Get("authenticationPort"); value.Exists() {
 				data.AuthenticationPort = types.Int64Value(value.Int())
 			} else {
-				data.AuthenticationPort = types.Int64Null()
+				data.AuthenticationPort = types.Int64Value(1812)
 			}
 			if value := res.Get("accountingPort"); value.Exists() {
 				data.AccountingPort = types.Int64Value(value.Int())
 			} else {
-				data.AccountingPort = types.Int64Null()
+				data.AccountingPort = types.Int64Value(1813)
 			}
 			if value := res.Get("timeout"); value.Exists() {
 				data.Timeout = types.Int64Value(value.Int())
 			} else {
-				data.Timeout = types.Int64Null()
+				data.Timeout = types.Int64Value(10)
 			}
 			if value := res.Get("useRoutingToSelectInterface"); value.Exists() {
 				data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
 			} else {
-				data.UseRoutingToSelectInterface = types.BoolValue(true)
+				data.UseRoutingToSelectInterface = types.BoolNull()
 			}
 			if value := res.Get("interface.id"); value.Exists() {
 				data.InterfaceId = types.StringValue(value.String())
@@ -310,7 +292,7 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	}
 	if value := res.Get("retryInterval"); value.Exists() && !data.RetryInterval.IsNull() {
 		data.RetryInterval = types.Int64Value(value.Int())
-	} else {
+	} else if data.RetryInterval.ValueInt64() != 10 {
 		data.RetryInterval = types.Int64Null()
 	}
 	if value := res.Get("realm.id"); value.Exists() && !data.RealmId.IsNull() {
@@ -322,11 +304,6 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 		data.AuthorizeOnly = types.BoolValue(value.Bool())
 	} else {
 		data.AuthorizeOnly = types.BoolNull()
-	}
-	if value := res.Get("enableInterimAccountUpdate"); value.Exists() && !data.InterimAccountUpdate.IsNull() {
-		data.InterimAccountUpdate = types.BoolValue(value.Bool())
-	} else {
-		data.InterimAccountUpdate = types.BoolNull()
 	}
 	if value := res.Get("interimAccountUpdateInterval"); value.Exists() && !data.InterimAccountUpdateInterval.IsNull() {
 		data.InterimAccountUpdateInterval = types.Int64Value(value.Int())
@@ -343,11 +320,6 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.DynamicAuthorizationPort = types.Int64Null()
 	}
-	if value := res.Get("enableMergeDacl"); value.Exists() && !data.MergeDownloadableAcl.IsNull() {
-		data.MergeDownloadableAcl = types.BoolValue(value.Bool())
-	} else {
-		data.MergeDownloadableAcl = types.BoolNull()
-	}
 	if value := res.Get("mergeDaclPlacementOrder"); value.Exists() && !data.MergeDownloadableAclOrder.IsNull() {
 		data.MergeDownloadableAclOrder = types.StringValue(value.String())
 	} else {
@@ -355,7 +327,7 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	}
 	for i := 0; i < len(data.RadiusServers); i++ {
 		keys := [...]string{"host"}
-		keyValues := [...]string{data.RadiusServers[i].Host.ValueString()}
+		keyValues := [...]string{data.RadiusServers[i].Hostname.ValueString()}
 
 		parent := &data
 		data := (*parent).RadiusServers[i]
@@ -389,10 +361,10 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 
 			continue
 		}
-		if value := res.Get("host"); value.Exists() && !data.Host.IsNull() {
-			data.Host = types.StringValue(value.String())
+		if value := res.Get("host"); value.Exists() && !data.Hostname.IsNull() {
+			data.Hostname = types.StringValue(value.String())
 		} else {
-			data.Host = types.StringNull()
+			data.Hostname = types.StringNull()
 		}
 		if value := res.Get("enableMessageAuthenticator"); value.Exists() && !data.RadiusServerEnabledMessageAuthenticator.IsNull() {
 			data.RadiusServerEnabledMessageAuthenticator = types.BoolValue(value.Bool())
@@ -401,22 +373,22 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 		}
 		if value := res.Get("authenticationPort"); value.Exists() && !data.AuthenticationPort.IsNull() {
 			data.AuthenticationPort = types.Int64Value(value.Int())
-		} else {
+		} else if data.AuthenticationPort.ValueInt64() != 1812 {
 			data.AuthenticationPort = types.Int64Null()
 		}
 		if value := res.Get("accountingPort"); value.Exists() && !data.AccountingPort.IsNull() {
 			data.AccountingPort = types.Int64Value(value.Int())
-		} else {
+		} else if data.AccountingPort.ValueInt64() != 1813 {
 			data.AccountingPort = types.Int64Null()
 		}
 		if value := res.Get("timeout"); value.Exists() && !data.Timeout.IsNull() {
 			data.Timeout = types.Int64Value(value.Int())
-		} else {
+		} else if data.Timeout.ValueInt64() != 10 {
 			data.Timeout = types.Int64Null()
 		}
 		if value := res.Get("useRoutingToSelectInterface"); value.Exists() && !data.UseRoutingToSelectInterface.IsNull() {
 			data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
-		} else if data.UseRoutingToSelectInterface.ValueBool() != true {
+		} else {
 			data.UseRoutingToSelectInterface = types.BoolNull()
 		}
 		if value := res.Get("interface.id"); value.Exists() && !data.InterfaceId.IsNull() {
@@ -451,30 +423,24 @@ func (data *RadiusServerGroup) fromBodyUnknowns(ctx context.Context, res gjson.R
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+func (data RadiusServerGroup) adjustBody(ctx context.Context, req string) string {
 
-// End of section. //template:end Clone
+	if !data.InterimAccountUpdateInterval.IsNull() {
+		req, _ = sjson.Set(req, "enableInterimAccountUpdate", "true")
+	}
 
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+	// API would still return port, even if the dynamic authorization is not enabled.
+	// if !data.DynamicAuthorizationPort.IsNull() {
+	// 	req, _ = sjson.Set(req, "enableDynamicAuthorization", "true")
+	// }
 
-// End of section. //template:end toBodyNonBulk
+	if !data.DynamicAuthorization.IsUnknown() && !data.DynamicAuthorization.ValueBool() {
+		req, _ = sjson.Delete(req, "dynamicAuthorizationPort")
+	}
 
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
+	if !data.MergeDownloadableAclOrder.IsNull() {
+		req, _ = sjson.Set(req, "enableMergeDacl", "true")
+	}
 
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk
+	return req
+}

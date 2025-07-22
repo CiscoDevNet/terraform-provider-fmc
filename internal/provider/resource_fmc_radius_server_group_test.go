@@ -38,13 +38,11 @@ func TestAccFmcRadiusServerGroup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "retry_interval", "10"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "realm_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "authorize_only", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "interim_account_update", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "interim_account_update_interval", "24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "dynamic_authorization", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "dynamic_authorization_port", "1700"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "merge_downloadable_acl", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "merge_downloadable_acl_order", "MERGE_DACL_BEFORE_AV_PAIR_ACL"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "radius_servers.0.host", "10.10.10.10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "radius_servers.0.hostname", "10.10.10.10"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "radius_servers.0.radius_server_enabled_message_authenticator", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "radius_servers.0.authentication_port", "1812"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_radius_server_group.test", "radius_servers.0.accounting_port", "1813"))
@@ -86,7 +84,10 @@ func TestAccFmcRadiusServerGroup(t *testing.T) {
 func testAccFmcRadiusServerGroupConfig_minimum() string {
 	config := `resource "fmc_radius_server_group" "test" {` + "\n"
 	config += `	name = "my_radius_server_group"` + "\n"
-	config += `	retry_interval = 10` + "\n"
+	config += `	radius_servers = [{` + "\n"
+	config += `		hostname = "10.10.10.10"` + "\n"
+	config += `		key = "my_secret_key"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -103,14 +104,12 @@ func testAccFmcRadiusServerGroupConfig_all() string {
 	config += `	retry_interval = 10` + "\n"
 	config += `	realm_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	authorize_only = true` + "\n"
-	config += `	interim_account_update = true` + "\n"
 	config += `	interim_account_update_interval = 24` + "\n"
 	config += `	dynamic_authorization = true` + "\n"
 	config += `	dynamic_authorization_port = 1700` + "\n"
-	config += `	merge_downloadable_acl = true` + "\n"
 	config += `	merge_downloadable_acl_order = "MERGE_DACL_BEFORE_AV_PAIR_ACL"` + "\n"
 	config += `	radius_servers = [{` + "\n"
-	config += `		host = "10.10.10.10"` + "\n"
+	config += `		hostname = "10.10.10.10"` + "\n"
 	config += `		radius_server_enabled_message_authenticator = true` + "\n"
 	config += `		authentication_port = 1812` + "\n"
 	config += `		key = "my_secret_key"` + "\n"

@@ -1,7 +1,9 @@
+# Manual resource - adjustBody
 ---
 name: Radius Server Group
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/radiusservergroups
 doc_category: Objects
+adjust_body: true
 attributes:
   - model_name: name
     type: String
@@ -25,11 +27,11 @@ attributes:
     default_value: SINGLE
   - model_name: retryInterval
     type: Int64
-    mandatory: true
     description: Retry interval, in seconds, for the request
     min_int: 1
     max_int: 10
     example: 10
+    default_value: 10
   - model_name: id
     data_path: [realm]
     tf_name: realm_id
@@ -41,11 +43,11 @@ attributes:
     type: Bool
     description: This RADIUS server group is being used for authorization or accounting only.
     example: true
-  - model_name: enableInterimAccountUpdate
-    tf_name: interim_account_update
-    type: Bool
-    description: This RADIUS server group is being used for interim accounting updates.
-    example: true
+  # - model_name: enableInterimAccountUpdate
+  #   tf_name: interim_account_update
+  #   type: Bool
+  #   description: This RADIUS server group is being used for interim accounting updates.
+  #   example: true
   - model_name: interimAccountUpdateInterval
     tf_name: interim_account_update_interval
     type: Int64
@@ -65,11 +67,11 @@ attributes:
     min_int: 1024
     max_int: 65535
     example: 1700
-  - model_name: enableMergeDacl
-    tf_name: merge_downloadable_acl
-    type: Bool
-    description: Enables the merge of the downloadable ACL with the Cisco AV pair ACL.
-    example: true
+  # - model_name: enableMergeDacl
+  #   tf_name: merge_downloadable_acl
+  #   type: Bool
+  #   description: Enables the merge of the downloadable ACL with the Cisco AV pair ACL.
+  #   example: true
   - model_name: mergeDaclPlacementOrder
     tf_name: merge_downloadable_acl_order
     type: String
@@ -79,11 +81,14 @@ attributes:
   - model_name: radiusServers
     type: List
     description: List of RADIUS servers in the group.
+    mandatory: true
     attributes:
       - model_name: host
+        tf_name: hostname
         type: String
         description: IP Address or hostname of the RADIUS server.
         example: 10.10.10.10
+        mandatory: true
         id: true
       - model_name: enableMessageAuthenticator
         tf_name: radius_server_enabled_message_authenticator
@@ -97,29 +102,33 @@ attributes:
         min_int: 1
         max_int: 65535
         example: 1812
+        default_value: 1812
       - model_name: secretKey
         tf_name: key
         type: String
         description: Shared secret key for the RADIUS server.
         example: my_secret_key
         write_only: true
+        sensitive: true
+        mandatory: true
       - model_name: accountingPort
         type: Int64
         description: Port number for the RADIUS accounting services.
         min_int: 1
         max_int: 65535
         example: 1813
+        default_value: 1813
       - model_name: timeout
         type: Int64
         description: Timeout, in seconds, for the RADIUS server.
         min_int: 1
         max_int: 300
         example: 10
+        default_value: 10
       - model_name: useRoutingToSelectInterface
         type: Bool
         description: Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
         example: true
-        default_value: true
       - model_name: id
         data_path: [interface]
         tf_name: interface_id
@@ -129,5 +138,4 @@ attributes:
         data_path: [redirectACL]
         tf_name: redirect_acl_id
         type: String
-        description: ID of the redirect ACL.
-        
+        description: ID of the redirect extended ACL.

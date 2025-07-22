@@ -100,10 +100,6 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				MarkdownDescription: "This RADIUS server group is being used for authorization or accounting only.",
 				Computed:            true,
 			},
-			"interim_account_update": schema.BoolAttribute{
-				MarkdownDescription: "This RADIUS server group is being used for interim accounting updates.",
-				Computed:            true,
-			},
 			"interim_account_update_interval": schema.Int64Attribute{
 				MarkdownDescription: "Interval, in hours, for interim accounting updates.",
 				Computed:            true,
@@ -116,10 +112,6 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				MarkdownDescription: "Port number for the RADIUS dynamic authorization services.",
 				Computed:            true,
 			},
-			"merge_downloadable_acl": schema.BoolAttribute{
-				MarkdownDescription: "Enables the merge of the downloadable ACL with the Cisco AV pair ACL.",
-				Computed:            true,
-			},
 			"merge_downloadable_acl_order": schema.StringAttribute{
 				MarkdownDescription: "Placement order of the downloadable ACL with the Cisco AV pair ACL.",
 				Computed:            true,
@@ -129,7 +121,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"host": schema.StringAttribute{
+						"hostname": schema.StringAttribute{
 							MarkdownDescription: "IP Address or hostname of the RADIUS server.",
 							Computed:            true,
 						},
@@ -144,6 +136,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 						"key": schema.StringAttribute{
 							MarkdownDescription: "Shared secret key for the RADIUS server.",
 							Computed:            true,
+							Sensitive:           true,
 						},
 						"accounting_port": schema.Int64Attribute{
 							MarkdownDescription: "Port number for the RADIUS accounting services.",

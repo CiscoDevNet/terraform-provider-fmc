@@ -34,9 +34,7 @@ data "fmc_radius_server_group" "example" {
 - `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.
 - `dynamic_authorization_port` (Number) Port number for the RADIUS dynamic authorization services.
 - `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).
-- `interim_account_update` (Boolean) This RADIUS server group is being used for interim accounting updates.
 - `interim_account_update_interval` (Number) Interval, in hours, for interim accounting updates.
-- `merge_downloadable_acl` (Boolean) Enables the merge of the downloadable ACL with the Cisco AV pair ACL.
 - `merge_downloadable_acl_order` (String) Placement order of the downloadable ACL with the Cisco AV pair ACL.
 - `radius_servers` (Attributes List) List of RADIUS servers in the group. (see [below for nested schema](#nestedatt--radius_servers))
 - `realm_id` (String) Active Directory (AD) realm this RADIUS server group is associated with.
@@ -50,9 +48,9 @@ Read-Only:
 
 - `accounting_port` (Number) Port number for the RADIUS accounting services.
 - `authentication_port` (Number) Port number for the RADIUS authentication services.
-- `host` (String) IP Address or hostname of the RADIUS server.
+- `hostname` (String) IP Address or hostname of the RADIUS server.
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
-- `key` (String) Shared secret key for the RADIUS server.
+- `key` (String, Sensitive) Shared secret key for the RADIUS server.
 - `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
 - `redirect_acl_id` (String) ID of the redirect ACL.
 - `timeout` (Number) Timeout, in seconds, for the RADIUS server.

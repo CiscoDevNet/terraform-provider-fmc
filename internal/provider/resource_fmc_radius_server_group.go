@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -107,11 +108,13 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 				Default: stringdefault.StaticString("SINGLE"),
 			},
 			"retry_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Retry interval, in seconds, for the request").AddIntegerRangeDescription(1, 10).String,
-				Required:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Retry interval, in seconds, for the request").AddIntegerRangeDescription(1, 10).AddDefaultValueDescription("10").String,
+				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 10),
 				},
+				Default: int64default.StaticInt64(10),
 			},
 			"realm_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Active Directory (AD) realm this RADIUS server group is associated with.").String,
@@ -119,10 +122,6 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"authorize_only": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("This RADIUS server group is being used for authorization or accounting only.").String,
-				Optional:            true,
-			},
-			"interim_account_update": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("This RADIUS server group is being used for interim accounting updates.").String,
 				Optional:            true,
 			},
 			"interim_account_update_interval": schema.Int64Attribute{
@@ -143,10 +142,6 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 					int64validator.Between(1024, 65535),
 				},
 			},
-			"merge_downloadable_acl": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables the merge of the downloadable ACL with the Cisco AV pair ACL.").String,
-				Optional:            true,
-			},
 			"merge_downloadable_acl_order": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Placement order of the downloadable ACL with the Cisco AV pair ACL.").AddStringEnumDescription("MERGE_DACL_BEFORE_AV_PAIR_ACL", "MERGE_DACL_AFTER_AV_PAIR_ACL").String,
 				Optional:            true,
@@ -156,12 +151,12 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 			},
 			"radius_servers": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of RADIUS servers in the group.").String,
-				Optional:            true,
+				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"host": schema.StringAttribute{
+						"hostname": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP Address or hostname of the RADIUS server.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"radius_server_enabled_message_authenticator": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enables RADIUS Server-Enabled Message Authenticator.").AddDefaultValueDescription("true").String,
@@ -170,35 +165,40 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Default:             booldefault.StaticBool(true),
 						},
 						"authentication_port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Port number for the RADIUS authentication services.").AddIntegerRangeDescription(1, 65535).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Port number for the RADIUS authentication services.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("1812").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 65535),
 							},
+							Default: int64default.StaticInt64(1812),
 						},
 						"key": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Shared secret key for the RADIUS server.").String,
-							Optional:            true,
+							Required:            true,
+							Sensitive:           true,
 						},
 						"accounting_port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Port number for the RADIUS accounting services.").AddIntegerRangeDescription(1, 65535).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Port number for the RADIUS accounting services.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("1813").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 65535),
 							},
+							Default: int64default.StaticInt64(1813),
 						},
 						"timeout": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Timeout, in seconds, for the RADIUS server.").AddIntegerRangeDescription(1, 300).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Timeout, in seconds, for the RADIUS server.").AddIntegerRangeDescription(1, 300).AddDefaultValueDescription("10").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 300),
 							},
+							Default: int64default.StaticInt64(10),
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for the RADIUS server (true) or use specified interface (false).").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for the RADIUS server (true) or use specified interface (false).").String,
 							Optional:            true,
-							Computed:            true,
-							Default:             booldefault.StaticBool(true),
 						},
 						"interface_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Security Zone ID or Interface Group ID for the RADIUS server communication.").String,
@@ -246,6 +246,7 @@ func (r *RadiusServerGroupResource) Create(ctx context.Context, req resource.Cre
 
 	// Create object
 	body := plan.toBody(ctx, RadiusServerGroup{})
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -342,6 +343,7 @@ func (r *RadiusServerGroupResource) Update(ctx context.Context, req resource.Upd
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
+	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
