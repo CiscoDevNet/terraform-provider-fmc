@@ -738,7 +738,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 	if !config.ManageCategories.IsUnknown() && config.ManageCategories.ValueBool() {
 
 		// Get Access Control Policy Categories
-		resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true&offset=0&limit=1000", reqMods...)
+		resCats, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/categories?expanded=true", reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 			return
@@ -757,7 +757,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 	if !config.ManageRules.IsUnknown() && config.ManageRules.ValueBool() {
 
 		// Get Access Control Policy Rules
-		resRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/accessrules?expanded=true&offset=0&limit=1000", reqMods...)
+		resRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/accessrules?expanded=true", reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 			return
