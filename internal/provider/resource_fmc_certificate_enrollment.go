@@ -63,7 +63,7 @@ func (r *CertificateEnrollmentResource) Metadata(ctx context.Context, req resour
 func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Certificate Enrollment configuration.\n Manual certificate creation is supported only with CA only option set.\n (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.\n (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages Certificate Enrollment configuration.\n Manual certificate creation is supported only with `manual_ca_only` set to `true`.\n (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.\n (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
