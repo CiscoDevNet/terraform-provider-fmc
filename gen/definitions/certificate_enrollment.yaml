@@ -1,0 +1,345 @@
+# Manual resource - Resource (Read), adjustBody
+---
+name: Certificate Enrollment
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/certenrollments
+doc_category: Objects
+res_description: >-
+  This device manages Certificate Enrollment configuration.\n
+  Manual certificate creation is supported only with CA only option set.\n
+  (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.\n
+  (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
+skip_test: true
+adjust_body: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Certificate Enrollment object.
+    example: my_certificate_enrollment
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'CertEnrollment'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Certificate Enrollment object.
+    example: My certificate enrollment
+
+  # CA Information - Common
+  - model_name: enrollmentType
+    type: String
+    mandatory: true
+    enum_values: ["SCEP", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"]
+    description: Certificate enrollment type.
+    example: SELF_SIGNED_CERTFICATE
+  - model_name: ipsecClient
+    data_path: ["validationUsage"]
+    tf_name: validation_usage_ipsec_client
+    type: Bool
+    description: Validate an IPsec client certificate for a site-to-site VPN connection.
+    example: "true"
+  - model_name: sslServer
+    data_path: ["validationUsage"]
+    tf_name: validation_usage_ssl_server
+    type: Bool
+    description: Validate an SSL server certificate.
+    example: "true"
+  - model_name: sslClient
+    data_path: ["validationUsage"]
+    tf_name: validation_usage_ssl_client
+    type: Bool
+    description: Validate an SSL client certificate during a remote access VPN connection attempt.
+    example: "true"
+  - model_name: skipCaFlagCheck
+    tf_name: skip_ca_flag_check
+    type: Bool
+    description: Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.
+    example: "false"
+    # FMCBUG
+    write_only: true
+  
+  # CA Information - EST
+  - model_name: enrollmentUrl
+    data_path: ["estContent"]
+    tf_name: est_enrollment_url
+    type: String
+    description: EST enrollment CA server URL.
+    exclude_example: true
+    exclude_test: true
+  - model_name: username
+    data_path: ["estContent"]
+    tf_name: est_username
+    type: String
+    description: EST enrollment CA server username.
+    exclude_example: true
+    exclude_test: true
+  - model_name: password
+    data_path: ["estContent"]
+    tf_name: est_password
+    type: String
+    description: EST enrollment CA server password.
+    sensitive: true
+    write_only: true
+    exclude_example: true
+    exclude_test: true
+  - model_name: fingerprint
+    data_path: ["estContent"]
+    tf_name: est_fingerprint
+    type: String
+    description: EST enrollment CA server fingerprint.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: ["estContent", "sourceInterface"]
+    tf_name: est_source_interface_id
+    type: String
+    description: ID of interface group or security zone that interacts with the CA server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: name
+    data_path: ["estContent", "sourceInterface"]
+    tf_name: est_source_interface_name
+    type: String
+    description: Name of interface group or security zone that interacts with the CA server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: ignoreServerCertificateValidations
+    data_path: ["estContent"]
+    tf_name: est_ignore_server_certificate_validation
+    type: Bool
+    description: Ignore EST server certificate validations.
+    exclude_example: true
+    exclude_test: true
+
+  # CA Information - SCEP
+  - model_name: enrollmentUrl
+    data_path: ["scepContent"]
+    tf_name: scep_enrollment_url
+    type: String
+    description: SCEP enrollment CA server URL.
+    exclude_example: true
+    exclude_test: true
+  - model_name: challengePassword
+    data_path: ["scepContent"]
+    tf_name: scep_challenge_password
+    type: String
+    description: SCEP enrollment challenge password.
+    sensitive: true
+    write_only: true
+    exclude_example: true
+    exclude_test: true
+  - model_name: retryPeriodInMins
+    data_path: ["scepContent"]
+    tf_name: scep_retry_period
+    type: Int64
+    min_int: 1
+    max_int: 60
+    description: Interval (in minutes) between certificate request attempts.
+    exclude_example: true
+    exclude_test: true
+  - model_name: retryCount
+    data_path: ["scepContent"]
+    tf_name: scep_retry_count
+    type: Int64
+    min_int: 0
+    max_int: 100
+    description: Number of retries that should be made if no certificate is issued upon the first request.
+    exclude_example: true
+    exclude_test: true
+  - model_name: fingerprint
+    data_path: ["scepContent"]
+    tf_name: scep_fingerprint
+    type: String
+    description: SCEP enrollment CA server fingerprint.
+    exclude_example: true
+    exclude_test: true
+
+  # CA Information - Manual
+  - model_name: caOnly
+    data_path: ["caCertificate"]
+    tf_name: manual_ca_only
+    type: Bool
+    description: Create only the CA certificate from the selected CA. An identity certificate will not be created for this certificate. Must be set to `true`.
+    exclude_example: true
+    exclude_test: true
+  - model_name: base64Content
+    data_path: ["caCertificate"]
+    tf_name: manual_ca_certificate
+    type: String
+    description: Base64 encoded certificate in PEM format.
+    exclude_example: true
+    exclude_test: true
+  
+  # CA Information - PKCS12
+  - model_name: base64Certificate
+    data_path: ["pkcs12Content"]
+    tf_name: pkcs12_certificate
+    type: String
+    description: Base64 encoded certificate in PKCS12 format.
+    exclude_example: true
+    exclude_test: true
+  - model_name: passPhrase
+    data_path: ["pkcs12Content"]
+    tf_name: pkcs12_certificate_passphrase
+    type: String
+    description: Passphrase for the PKCS12 certificate.
+    exclude_example: true
+    exclude_test: true
+    sensitive: true
+    write_only: true
+  
+  # Certificate Parameters
+  - model_name: includeFQDN
+    data_path: ["certificateParameters"]
+    tf_name: certificate_include_fqdn
+    type: String
+    enum_values: [ "DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT" ]
+    description: Include the device's fully qualified domain name (FQDN) in the certificate request
+    example: NONE
+  - model_name: customFqdn
+    data_path: ["certificateParameters"]
+    tf_name: certificate_custom_fqdn
+    type: String
+    description: Device's custom FQDN to be included in the certificate.
+    exclude_example: true
+    exclude_test: true
+  - model_name: includeDeviceIp
+    data_path: ["certificateParameters"]
+    tf_name: certificate_include_device_ip
+    type: String
+    description: Device IP in the certificate.
+    exclude_example: true
+  - model_name: commonName
+    data_path: ["certificateParameters"]
+    tf_name: certificate_common_name
+    type: String
+    description: Common Name (CN) for the certificate.
+    example: ftd.example.com
+    minimum_test_value: '"ftd.example.com"'
+  - model_name: organizationalUnit
+    data_path: ["certificateParameters"]
+    tf_name: certificate_organizational_unit
+    type: String
+    description: Organizational Unit (OU) for the certificate.
+    example: my_organizational_unit
+  - model_name: organization
+    data_path: ["certificateParameters"]
+    tf_name: certificate_organization
+    type: String
+    description: Organization (O) for the certificate.
+    example: my_organization
+  - model_name: locality
+    data_path: ["certificateParameters"]
+    tf_name: certificate_locality
+    type: String
+    description: Locality (L) for the certificate.
+    example: my_locality
+  - model_name: state
+    data_path: ["certificateParameters"]
+    tf_name: certificate_state
+    type: String
+    description: State (ST) for the certificate.
+    example: my_state
+  - model_name: countryCode
+    data_path: ["certificateParameters"]
+    tf_name: certificate_country_code
+    type: String
+    description: Country Code (C) for the certificate.
+    example: PL
+  - model_name: email
+    data_path: ["certificateParameters"]
+    tf_name: certificate_email
+    type: String
+    description: Email (E) for the certificate.
+    example: me@example.com
+  - model_name: includeDeviceSerial
+    data_path: ["certificateParameters"]
+    tf_name: certificate_include_device_serial_number
+    type: Bool
+    description: Include the device serial in the certificate.
+    example: true
+  
+  # Key
+  - model_name: keyType
+    data_path: ["key"]
+    tf_name: key_type
+    type: String
+    enum_values: [ "RSA", "ECDSA", "EdDSA" ]
+    description: Type of key pair.
+    example: RSA
+  - model_name: keyName
+    data_path: ["key"]
+    tf_name: key_name
+    type: String
+    description: Name of the key pair used.
+    example: my_key
+  - model_name: keySize
+    data_path: ["key"]
+    tf_name: key_size
+    type: String
+    enum_values: [ "CertKey_512", "CertKey_768", "CertKey_1024", "CertKey_2048", "CertKey_3072", "CertKey_4096", "CertKey_256", "CertKey_384", "CertKey_521" ]
+    description: Desired key size (modulus), in bits.
+    example: CertKey_2048
+  - model_name: ignoreIpsecKeyusage
+    data_path: ["key"]
+    tf_name: ignore_ipsec_key_usage
+    type: Bool
+    description: Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.
+    example: "false"
+  
+  # Revocation
+  # Set implicilty using adjustBody
+  # - model_name: enableCertRevocationList
+  #   data_path: ["revocation", "certRevocationListContent"]
+  #   tf_name: crl
+  #   type: Bool
+  #   description: Enable certificate revocation list (CRL).
+  #   example: true
+  - model_name: enableCertRevocationListDistributionPoint
+    data_path: ["revocation", "certRevocationListContent"]
+    tf_name: crl_use_distribution_point_from_the_certificate
+    type: Bool
+    description: Obtain the revocation lists distribution URL from the certificate.
+    example: true
+  # Set implicilty using adjustBody
+  # - model_name: enableStaticCertRevocationList
+  #   data_path: ["revocation", "certRevocationListContent"]
+  #   tf_name: crl_use_static_list
+  #   type: Bool
+  #   description: Use static, pre-defined distribution URL.
+  #   example: true
+  - model_name: certRevocationStaticUrlList
+    data_path: ["revocation", "certRevocationListContent"]
+    tf_name: crl_static_urls_list
+    type: List
+    element_type: String
+    description: Static URL list for certificate revocation.
+    example: http://example.com/crl.pem
+  # Set implicilty using adjustBody
+  # - model_name: enableOnlineCertificateStatusProtocol
+  #   data_path: ["revocation", "onlineCertificateStatusProtocolContent"]
+  #   tf_name: ocsp
+  #   type: Bool
+  #   description: Enable Online Certificate Status Protocol (OCSP).
+  #   example: true
+  - model_name: onlineCertificateStatusProtocolUrl
+    data_path: ["revocation", "onlineCertificateStatusProtocolContent"]
+    tf_name: ocsp_url
+    type: String
+    description: URL for the Online Certificate Status Protocol (OCSP).
+    example: http://example.com/ocsp
+  
+  - model_name: evaluationPriority
+    data_path: ["revocation"]
+    tf_name: revocation_evaluation_priority
+    type: String
+    enum_values: [ CRL, OCSP, NONE ]
+    description: Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
+    example: CRL
+  - model_name: ignoreRevocation
+    data_path: ["revocation"]
+    tf_name: consider_certificate_valid_if_revocation_information_not_reachable
+    type: Bool
+    description: Consider the certificate valid if revocation information can not be reached.
+    example: "false"
