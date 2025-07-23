@@ -1,0 +1,105 @@
+---
+name: Secure Client Custom Attribute
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/anyconnectcustomattributes
+doc_category: Objects
+minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Secure Client Custom Attribute object.
+    example: my_secure_client_custom_attribute
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AnyConnectCustomAttribute'.
+    computed: true
+  - model_name: type
+    type: String
+    value: AnyConnectCustomAttribute
+  - model_name: description
+    type: String
+    description: Description of the Secure Client Custom Attribute object.
+    example: My Secure Client Custom Attribute
+  - model_name: attributeType
+    type: String
+    mandatory: true
+    description: Type of the attribute.
+    enum_values: ['ALLOW_DEFER_UPDATE', 'PER_APP_VPN', 'DYNAMIC_SPLIT_TUNNELING', 'USER_DEFINED_CUSTOM_ATTR']
+    example: USER_DEFINED_CUSTOM_ATTR
+  
+  # User Defined Custom Attribute
+  - model_name: name
+    data_path: ["userDefinedAttribute"]
+    tf_name: user_defined_attribute_name
+    type: String
+    description: Name of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.
+    example: my_user_defined_attribute
+    minimum_test_value: '"my_user_defined_attribute"'
+  - model_name: value
+    data_path: ["userDefinedAttribute"]
+    tf_name: user_defined_attribute_value
+    type: String
+    description: Value of the user-defined attribute. Applicable only when `attribute_type` is USER_DEFINED_CUSTOM_ATTR.
+    example: my_value
+    minimum_test_value: '"my_value"'
+
+  # Per App VPN
+  - model_name: perAppVpnBase64EncodedValue
+    tf_name: per_app_vpn_value
+    type: String
+    description: Base64 encoded value for Per App VPN. Applicable only when `attribute_type` is PER_APP_VPN.
+    exclude_example: true
+    exclude_test: true
+  
+  # Dynamic Split Tunneling
+  - model_name: includeDomains
+    data_path: ["dynamicSplitTunnel"]
+    tf_name: dynamic_split_tunnel_included_domains
+    type: List
+    element_type: String
+    description: Domain names that will be included in the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.
+    exclude_example: true
+    exclude_test: true
+  - model_name: excludeDomains
+    data_path: ["dynamicSplitTunnel"]
+    tf_name: dynamic_split_tunnel_excluded_domains
+    type: List
+    element_type: String
+    description: Domain names that will be excluded from the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.
+    exclude_example: true
+    exclude_test: true
+  
+  # Allow Defer Update
+  - model_name: promptType
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_prompt_type
+    type: String
+    description: Prompt type.
+    enum_values: ["SHOW_UNTIL_USER_ACTION", "SHOW_UNTIL_TIMEOUT", "NO_PROMPT_AUTO_ACTION"]
+    exclude_example: true
+    exclude_test: true
+  - model_name: defaultAction
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_default_action
+    type: String
+    description: Default action to be taken when the user does not respond, or when you want to configure an automatic action without the user's intervention.
+    enum_values: ["DEFER", "UPDATE"]
+    exclude_example: true
+    exclude_test: true
+  - model_name: minimumAnyConnectVersion
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_minimum_secure_client_version
+    type: String
+    description: Minimum Secure Client version (in x.x.x format) to be present on the client system to allow or defer the update.
+    exclude_example: true
+    exclude_test: true
+  - model_name: promptDismissTimeout
+    data_path: ["deferUpdate"]
+    tf_name: defer_update_prompt_dismiss_timeout
+    type: Int64
+    min_int: 1
+    max_int: 300
+    description: Timeout (in seconds) for the prompt dismissal.
+    exclude_example: true
+    exclude_test: true

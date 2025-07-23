@@ -1,0 +1,46 @@
+---
+name: Geolocation
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/geolocations
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the geolocation object.
+    example: my_geolocation
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Geolocation'.
+    computed: true
+  - model_name: continents
+    type: List
+    description: List of continents.
+    attributes:
+      - model_name: id
+        type: Int64
+        description: Id of the managed continent.
+        example: 6
+        test_value: 'data.fmc_continents.test.items["North America"].id'
+  - model_name: countries
+    type: List
+    description: List of countries.
+    attributes:
+      - model_name: id
+        type: Int64
+        description: Id of the managed country.
+        example: 616
+        test_value: 'data.fmc_countries.test.items["Poland"].id'
+
+test_prerequisites: |-
+  data "fmc_countries" "test" {
+    items = {
+      "Poland"  = {}
+    }
+  }
+
+  data "fmc_continents" "test" {
+    items = {
+      "North America" = {}
+    }
+  }
