@@ -58,17 +58,17 @@ type CertificateEnrollment struct {
 	ManualCaCertificate                                         types.String `tfsdk:"manual_ca_certificate"`
 	Pkcs12Certificate                                           types.String `tfsdk:"pkcs12_certificate"`
 	Pkcs12CertificatePassphrase                                 types.String `tfsdk:"pkcs12_certificate_passphrase"`
-	IncludeFqdn                                                 types.String `tfsdk:"include_fqdn"`
-	CustomFqdn                                                  types.String `tfsdk:"custom_fqdn"`
-	IncludeDeviceIp                                             types.String `tfsdk:"include_device_ip"`
-	CommonName                                                  types.String `tfsdk:"common_name"`
-	OrganizationalUnit                                          types.String `tfsdk:"organizational_unit"`
-	Organization                                                types.String `tfsdk:"organization"`
-	Locality                                                    types.String `tfsdk:"locality"`
-	State                                                       types.String `tfsdk:"state"`
-	CountryCode                                                 types.String `tfsdk:"country_code"`
-	Email                                                       types.String `tfsdk:"email"`
-	IncludeDeviceSerialNumber                                   types.Bool   `tfsdk:"include_device_serial_number"`
+	CertificateIncludeFqdn                                      types.String `tfsdk:"certificate_include_fqdn"`
+	CertificateCustomFqdn                                       types.String `tfsdk:"certificate_custom_fqdn"`
+	CertificateIncludeDeviceIp                                  types.String `tfsdk:"certificate_include_device_ip"`
+	CertificateCommonName                                       types.String `tfsdk:"certificate_common_name"`
+	CertificateOrganizationalUnit                               types.String `tfsdk:"certificate_organizational_unit"`
+	CertificateOrganization                                     types.String `tfsdk:"certificate_organization"`
+	CertificateLocality                                         types.String `tfsdk:"certificate_locality"`
+	CertificateState                                            types.String `tfsdk:"certificate_state"`
+	CertificateCountryCode                                      types.String `tfsdk:"certificate_country_code"`
+	CertificateEmail                                            types.String `tfsdk:"certificate_email"`
+	CertificateIncludeDeviceSerialNumber                        types.Bool   `tfsdk:"certificate_include_device_serial_number"`
 	KeyType                                                     types.String `tfsdk:"key_type"`
 	KeyName                                                     types.String `tfsdk:"key_name"`
 	KeySize                                                     types.String `tfsdk:"key_size"`
@@ -76,7 +76,7 @@ type CertificateEnrollment struct {
 	CrlUseDistributionPointFromTheCertificate                   types.Bool   `tfsdk:"crl_use_distribution_point_from_the_certificate"`
 	CrlStaticUrlsList                                           types.List   `tfsdk:"crl_static_urls_list"`
 	OcspUrl                                                     types.String `tfsdk:"ocsp_url"`
-	EvaluationPriority                                          types.String `tfsdk:"evaluation_priority"`
+	RevocationEvaluationPriority                                types.String `tfsdk:"revocation_evaluation_priority"`
 	ConsiderCertificateValidIfRevocationInformationNotReachable types.Bool   `tfsdk:"consider_certificate_valid_if_revocation_information_not_reachable"`
 }
 
@@ -170,38 +170,38 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.Pkcs12CertificatePassphrase.IsNull() {
 		body, _ = sjson.Set(body, "pkcs12Content.passPhrase", data.Pkcs12CertificatePassphrase.ValueString())
 	}
-	if !data.IncludeFqdn.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.includeFQDN", data.IncludeFqdn.ValueString())
+	if !data.CertificateIncludeFqdn.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.includeFQDN", data.CertificateIncludeFqdn.ValueString())
 	}
-	if !data.CustomFqdn.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.customFqdn", data.CustomFqdn.ValueString())
+	if !data.CertificateCustomFqdn.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.customFqdn", data.CertificateCustomFqdn.ValueString())
 	}
-	if !data.IncludeDeviceIp.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.includeDeviceIp", data.IncludeDeviceIp.ValueString())
+	if !data.CertificateIncludeDeviceIp.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.includeDeviceIp", data.CertificateIncludeDeviceIp.ValueString())
 	}
-	if !data.CommonName.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.commonName", data.CommonName.ValueString())
+	if !data.CertificateCommonName.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.commonName", data.CertificateCommonName.ValueString())
 	}
-	if !data.OrganizationalUnit.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.organizationalUnit", data.OrganizationalUnit.ValueString())
+	if !data.CertificateOrganizationalUnit.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.organizationalUnit", data.CertificateOrganizationalUnit.ValueString())
 	}
-	if !data.Organization.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.organization", data.Organization.ValueString())
+	if !data.CertificateOrganization.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.organization", data.CertificateOrganization.ValueString())
 	}
-	if !data.Locality.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.locality", data.Locality.ValueString())
+	if !data.CertificateLocality.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.locality", data.CertificateLocality.ValueString())
 	}
-	if !data.State.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.state", data.State.ValueString())
+	if !data.CertificateState.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.state", data.CertificateState.ValueString())
 	}
-	if !data.CountryCode.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.countryCode", data.CountryCode.ValueString())
+	if !data.CertificateCountryCode.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.countryCode", data.CertificateCountryCode.ValueString())
 	}
-	if !data.Email.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.email", data.Email.ValueString())
+	if !data.CertificateEmail.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.email", data.CertificateEmail.ValueString())
 	}
-	if !data.IncludeDeviceSerialNumber.IsNull() {
-		body, _ = sjson.Set(body, "certificateParameters.includeDeviceSerial", data.IncludeDeviceSerialNumber.ValueBool())
+	if !data.CertificateIncludeDeviceSerialNumber.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.includeDeviceSerial", data.CertificateIncludeDeviceSerialNumber.ValueBool())
 	}
 	if !data.KeyType.IsNull() {
 		body, _ = sjson.Set(body, "key.keyType", data.KeyType.ValueString())
@@ -226,8 +226,8 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.OcspUrl.IsNull() {
 		body, _ = sjson.Set(body, "revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl", data.OcspUrl.ValueString())
 	}
-	if !data.EvaluationPriority.IsNull() {
-		body, _ = sjson.Set(body, "revocation.evaluationPriority", data.EvaluationPriority.ValueString())
+	if !data.RevocationEvaluationPriority.IsNull() {
+		body, _ = sjson.Set(body, "revocation.evaluationPriority", data.RevocationEvaluationPriority.ValueString())
 	}
 	if !data.ConsiderCertificateValidIfRevocationInformationNotReachable.IsNull() {
 		body, _ = sjson.Set(body, "revocation.ignoreRevocation", data.ConsiderCertificateValidIfRevocationInformationNotReachable.ValueBool())
@@ -341,59 +341,59 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.Pkcs12Certificate = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.includeFQDN"); value.Exists() {
-		data.IncludeFqdn = types.StringValue(value.String())
+		data.CertificateIncludeFqdn = types.StringValue(value.String())
 	} else {
-		data.IncludeFqdn = types.StringNull()
+		data.CertificateIncludeFqdn = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.customFqdn"); value.Exists() {
-		data.CustomFqdn = types.StringValue(value.String())
+		data.CertificateCustomFqdn = types.StringValue(value.String())
 	} else {
-		data.CustomFqdn = types.StringNull()
+		data.CertificateCustomFqdn = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.includeDeviceIp"); value.Exists() {
-		data.IncludeDeviceIp = types.StringValue(value.String())
+		data.CertificateIncludeDeviceIp = types.StringValue(value.String())
 	} else {
-		data.IncludeDeviceIp = types.StringNull()
+		data.CertificateIncludeDeviceIp = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.commonName"); value.Exists() {
-		data.CommonName = types.StringValue(value.String())
+		data.CertificateCommonName = types.StringValue(value.String())
 	} else {
-		data.CommonName = types.StringNull()
+		data.CertificateCommonName = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.organizationalUnit"); value.Exists() {
-		data.OrganizationalUnit = types.StringValue(value.String())
+		data.CertificateOrganizationalUnit = types.StringValue(value.String())
 	} else {
-		data.OrganizationalUnit = types.StringNull()
+		data.CertificateOrganizationalUnit = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.organization"); value.Exists() {
-		data.Organization = types.StringValue(value.String())
+		data.CertificateOrganization = types.StringValue(value.String())
 	} else {
-		data.Organization = types.StringNull()
+		data.CertificateOrganization = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.locality"); value.Exists() {
-		data.Locality = types.StringValue(value.String())
+		data.CertificateLocality = types.StringValue(value.String())
 	} else {
-		data.Locality = types.StringNull()
+		data.CertificateLocality = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.state"); value.Exists() {
-		data.State = types.StringValue(value.String())
+		data.CertificateState = types.StringValue(value.String())
 	} else {
-		data.State = types.StringNull()
+		data.CertificateState = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.countryCode"); value.Exists() {
-		data.CountryCode = types.StringValue(value.String())
+		data.CertificateCountryCode = types.StringValue(value.String())
 	} else {
-		data.CountryCode = types.StringNull()
+		data.CertificateCountryCode = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.email"); value.Exists() {
-		data.Email = types.StringValue(value.String())
+		data.CertificateEmail = types.StringValue(value.String())
 	} else {
-		data.Email = types.StringNull()
+		data.CertificateEmail = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.includeDeviceSerial"); value.Exists() {
-		data.IncludeDeviceSerialNumber = types.BoolValue(value.Bool())
+		data.CertificateIncludeDeviceSerialNumber = types.BoolValue(value.Bool())
 	} else {
-		data.IncludeDeviceSerialNumber = types.BoolNull()
+		data.CertificateIncludeDeviceSerialNumber = types.BoolNull()
 	}
 	if value := res.Get("key.keyType"); value.Exists() {
 		data.KeyType = types.StringValue(value.String())
@@ -431,9 +431,9 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.OcspUrl = types.StringNull()
 	}
 	if value := res.Get("revocation.evaluationPriority"); value.Exists() {
-		data.EvaluationPriority = types.StringValue(value.String())
+		data.RevocationEvaluationPriority = types.StringValue(value.String())
 	} else {
-		data.EvaluationPriority = types.StringNull()
+		data.RevocationEvaluationPriority = types.StringNull()
 	}
 	if value := res.Get("revocation.ignoreRevocation"); value.Exists() {
 		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolValue(value.Bool())
@@ -551,60 +551,60 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Pkcs12Certificate = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.includeFQDN"); value.Exists() && !data.IncludeFqdn.IsNull() {
-		data.IncludeFqdn = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.includeFQDN"); value.Exists() && !data.CertificateIncludeFqdn.IsNull() {
+		data.CertificateIncludeFqdn = types.StringValue(value.String())
 	} else {
-		data.IncludeFqdn = types.StringNull()
+		data.CertificateIncludeFqdn = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.customFqdn"); value.Exists() && !data.CustomFqdn.IsNull() {
-		data.CustomFqdn = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.customFqdn"); value.Exists() && !data.CertificateCustomFqdn.IsNull() {
+		data.CertificateCustomFqdn = types.StringValue(value.String())
 	} else {
-		data.CustomFqdn = types.StringNull()
+		data.CertificateCustomFqdn = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.includeDeviceIp"); value.Exists() && !data.IncludeDeviceIp.IsNull() {
-		data.IncludeDeviceIp = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.includeDeviceIp"); value.Exists() && !data.CertificateIncludeDeviceIp.IsNull() {
+		data.CertificateIncludeDeviceIp = types.StringValue(value.String())
 	} else {
-		data.IncludeDeviceIp = types.StringNull()
+		data.CertificateIncludeDeviceIp = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.commonName"); value.Exists() && !data.CommonName.IsNull() {
-		data.CommonName = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.commonName"); value.Exists() && !data.CertificateCommonName.IsNull() {
+		data.CertificateCommonName = types.StringValue(value.String())
 	} else {
-		data.CommonName = types.StringNull()
+		data.CertificateCommonName = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.organizationalUnit"); value.Exists() && !data.OrganizationalUnit.IsNull() {
-		data.OrganizationalUnit = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.organizationalUnit"); value.Exists() && !data.CertificateOrganizationalUnit.IsNull() {
+		data.CertificateOrganizationalUnit = types.StringValue(value.String())
 	} else {
-		data.OrganizationalUnit = types.StringNull()
+		data.CertificateOrganizationalUnit = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.organization"); value.Exists() && !data.Organization.IsNull() {
-		data.Organization = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.organization"); value.Exists() && !data.CertificateOrganization.IsNull() {
+		data.CertificateOrganization = types.StringValue(value.String())
 	} else {
-		data.Organization = types.StringNull()
+		data.CertificateOrganization = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.locality"); value.Exists() && !data.Locality.IsNull() {
-		data.Locality = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.locality"); value.Exists() && !data.CertificateLocality.IsNull() {
+		data.CertificateLocality = types.StringValue(value.String())
 	} else {
-		data.Locality = types.StringNull()
+		data.CertificateLocality = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.state"); value.Exists() && !data.State.IsNull() {
-		data.State = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.state"); value.Exists() && !data.CertificateState.IsNull() {
+		data.CertificateState = types.StringValue(value.String())
 	} else {
-		data.State = types.StringNull()
+		data.CertificateState = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.countryCode"); value.Exists() && !data.CountryCode.IsNull() {
-		data.CountryCode = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.countryCode"); value.Exists() && !data.CertificateCountryCode.IsNull() {
+		data.CertificateCountryCode = types.StringValue(value.String())
 	} else {
-		data.CountryCode = types.StringNull()
+		data.CertificateCountryCode = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.email"); value.Exists() && !data.Email.IsNull() {
-		data.Email = types.StringValue(value.String())
+	if value := res.Get("certificateParameters.email"); value.Exists() && !data.CertificateEmail.IsNull() {
+		data.CertificateEmail = types.StringValue(value.String())
 	} else {
-		data.Email = types.StringNull()
+		data.CertificateEmail = types.StringNull()
 	}
-	if value := res.Get("certificateParameters.includeDeviceSerial"); value.Exists() && !data.IncludeDeviceSerialNumber.IsNull() {
-		data.IncludeDeviceSerialNumber = types.BoolValue(value.Bool())
+	if value := res.Get("certificateParameters.includeDeviceSerial"); value.Exists() && !data.CertificateIncludeDeviceSerialNumber.IsNull() {
+		data.CertificateIncludeDeviceSerialNumber = types.BoolValue(value.Bool())
 	} else {
-		data.IncludeDeviceSerialNumber = types.BoolNull()
+		data.CertificateIncludeDeviceSerialNumber = types.BoolNull()
 	}
 	if value := res.Get("key.keyType"); value.Exists() && !data.KeyType.IsNull() {
 		data.KeyType = types.StringValue(value.String())
@@ -641,10 +641,10 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.OcspUrl = types.StringNull()
 	}
-	if value := res.Get("revocation.evaluationPriority"); value.Exists() && !data.EvaluationPriority.IsNull() {
-		data.EvaluationPriority = types.StringValue(value.String())
+	if value := res.Get("revocation.evaluationPriority"); value.Exists() && !data.RevocationEvaluationPriority.IsNull() {
+		data.RevocationEvaluationPriority = types.StringValue(value.String())
 	} else {
-		data.EvaluationPriority = types.StringNull()
+		data.RevocationEvaluationPriority = types.StringNull()
 	}
 	if value := res.Get("revocation.ignoreRevocation"); value.Exists() && !data.ConsiderCertificateValidIfRevocationInformationNotReachable.IsNull() {
 		data.ConsiderCertificateValidIfRevocationInformationNotReachable = types.BoolValue(value.Bool())

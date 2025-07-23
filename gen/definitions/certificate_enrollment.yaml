@@ -192,70 +192,70 @@ attributes:
   # Certificate Parameters
   - model_name: includeFQDN
     data_path: ["certificateParameters"]
-    tf_name: include_fqdn
+    tf_name: certificate_include_fqdn
     type: String
     enum_values: [ "DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT" ]
     description: Include the device's fully qualified domain name (FQDN) in the certificate request
     example: NONE
   - model_name: customFqdn
     data_path: ["certificateParameters"]
-    tf_name: custom_fqdn
+    tf_name: certificate_custom_fqdn
     type: String
     description: Device's custom FQDN to be included in the certificate.
     exclude_example: true
     exclude_test: true
   - model_name: includeDeviceIp
     data_path: ["certificateParameters"]
-    tf_name: include_device_ip
+    tf_name: certificate_include_device_ip
     type: String
     description: Device IP in the certificate.
     exclude_example: true
   - model_name: commonName
     data_path: ["certificateParameters"]
-    tf_name: common_name
+    tf_name: certificate_common_name
     type: String
-    description: Common Name for the certificate.
+    description: Common Name (CN) for the certificate.
     example: ftd.example.com
     minimum_test_value: '"ftd.example.com"'
   - model_name: organizationalUnit
     data_path: ["certificateParameters"]
-    tf_name: organizational_unit
+    tf_name: certificate_organizational_unit
     type: String
-    description: Organizational Unit for the certificate.
+    description: Organizational Unit (OU) for the certificate.
     example: my_organizational_unit
   - model_name: organization
     data_path: ["certificateParameters"]
-    tf_name: organization
+    tf_name: certificate_organization
     type: String
-    description: Organization for the certificate.
+    description: Organization (O) for the certificate.
     example: my_organization
   - model_name: locality
     data_path: ["certificateParameters"]
-    tf_name: locality
+    tf_name: certificate_locality
     type: String
-    description: Locality for the certificate.
+    description: Locality (L) for the certificate.
     example: my_locality
   - model_name: state
     data_path: ["certificateParameters"]
-    tf_name: state
+    tf_name: certificate_state
     type: String
-    description: State for the certificate.
+    description: State (ST) for the certificate.
     example: my_state
   - model_name: countryCode
     data_path: ["certificateParameters"]
-    tf_name: country_code
+    tf_name: certificate_country_code
     type: String
-    description: Country Code for the certificate.
+    description: Country Code (C) for the certificate.
     example: PL
   - model_name: email
     data_path: ["certificateParameters"]
-    tf_name: email
+    tf_name: certificate_email
     type: String
-    description: Email for the certificate.
+    description: Email (E) for the certificate.
     example: me@example.com
   - model_name: includeDeviceSerial
     data_path: ["certificateParameters"]
-    tf_name: include_device_serial_number
+    tf_name: certificate_include_device_serial_number
     type: Bool
     description: Include the device serial in the certificate.
     example: true
@@ -332,7 +332,7 @@ attributes:
   
   - model_name: evaluationPriority
     data_path: ["revocation"]
-    tf_name: evaluation_priority
+    tf_name: revocation_evaluation_priority
     type: String
     enum_values: [ CRL, OCSP, NONE ]
     description: Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.

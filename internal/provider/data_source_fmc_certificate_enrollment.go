@@ -171,47 +171,47 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"include_fqdn": schema.StringAttribute{
+			"certificate_include_fqdn": schema.StringAttribute{
 				MarkdownDescription: "Include the device's fully qualified domain name (FQDN) in the certificate request",
 				Computed:            true,
 			},
-			"custom_fqdn": schema.StringAttribute{
+			"certificate_custom_fqdn": schema.StringAttribute{
 				MarkdownDescription: "Device's custom FQDN to be included in the certificate.",
 				Computed:            true,
 			},
-			"include_device_ip": schema.StringAttribute{
+			"certificate_include_device_ip": schema.StringAttribute{
 				MarkdownDescription: "Device IP in the certificate.",
 				Computed:            true,
 			},
-			"common_name": schema.StringAttribute{
-				MarkdownDescription: "Common Name for the certificate.",
+			"certificate_common_name": schema.StringAttribute{
+				MarkdownDescription: "Common Name (CN) for the certificate.",
 				Computed:            true,
 			},
-			"organizational_unit": schema.StringAttribute{
-				MarkdownDescription: "Organizational Unit for the certificate.",
+			"certificate_organizational_unit": schema.StringAttribute{
+				MarkdownDescription: "Organizational Unit (OU) for the certificate.",
 				Computed:            true,
 			},
-			"organization": schema.StringAttribute{
-				MarkdownDescription: "Organization for the certificate.",
+			"certificate_organization": schema.StringAttribute{
+				MarkdownDescription: "Organization (O) for the certificate.",
 				Computed:            true,
 			},
-			"locality": schema.StringAttribute{
-				MarkdownDescription: "Locality for the certificate.",
+			"certificate_locality": schema.StringAttribute{
+				MarkdownDescription: "Locality (L) for the certificate.",
 				Computed:            true,
 			},
-			"state": schema.StringAttribute{
-				MarkdownDescription: "State for the certificate.",
+			"certificate_state": schema.StringAttribute{
+				MarkdownDescription: "State (ST) for the certificate.",
 				Computed:            true,
 			},
-			"country_code": schema.StringAttribute{
-				MarkdownDescription: "Country Code for the certificate.",
+			"certificate_country_code": schema.StringAttribute{
+				MarkdownDescription: "Country Code (C) for the certificate.",
 				Computed:            true,
 			},
-			"email": schema.StringAttribute{
-				MarkdownDescription: "Email for the certificate.",
+			"certificate_email": schema.StringAttribute{
+				MarkdownDescription: "Email (E) for the certificate.",
 				Computed:            true,
 			},
-			"include_device_serial_number": schema.BoolAttribute{
+			"certificate_include_device_serial_number": schema.BoolAttribute{
 				MarkdownDescription: "Include the device serial in the certificate.",
 				Computed:            true,
 			},
@@ -244,7 +244,7 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "URL for the Online Certificate Status Protocol (OCSP).",
 				Computed:            true,
 			},
-			"evaluation_priority": schema.StringAttribute{
+			"revocation_evaluation_priority": schema.StringAttribute{
 				MarkdownDescription: "Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.",
 				Computed:            true,
 			},

@@ -29,14 +29,21 @@ data "fmc_certificate_enrollment" "example" {
 
 ### Read-Only
 
-- `common_name` (String) Common Name for the certificate.
+- `certificate_common_name` (String) Common Name (CN) for the certificate.
+- `certificate_country_code` (String) Country Code (C) for the certificate.
+- `certificate_custom_fqdn` (String) Device's custom FQDN to be included in the certificate.
+- `certificate_email` (String) Email (E) for the certificate.
+- `certificate_include_device_ip` (String) Device IP in the certificate.
+- `certificate_include_device_serial_number` (Boolean) Include the device serial in the certificate.
+- `certificate_include_fqdn` (String) Include the device's fully qualified domain name (FQDN) in the certificate request
+- `certificate_locality` (String) Locality (L) for the certificate.
+- `certificate_organization` (String) Organization (O) for the certificate.
+- `certificate_organizational_unit` (String) Organizational Unit (OU) for the certificate.
+- `certificate_state` (String) State (ST) for the certificate.
 - `consider_certificate_valid_if_revocation_information_not_reachable` (Boolean) Consider the certificate valid if revocation information can not be reached.
-- `country_code` (String) Country Code for the certificate.
 - `crl_static_urls_list` (List of String) Static URL list for certificate revocation.
 - `crl_use_distribution_point_from_the_certificate` (Boolean) Obtain the revocation lists distribution URL from the certificate.
-- `custom_fqdn` (String) Device's custom FQDN to be included in the certificate.
 - `description` (String) Description of the Certificate Enrollment object.
-- `email` (String) Email for the certificate.
 - `enrollment_type` (String) Certificate enrollment type.
 - `est_enrollment_url` (String) EST enrollment CA server URL.
 - `est_fingerprint` (String) EST enrollment CA server fingerprint.
@@ -45,29 +52,22 @@ data "fmc_certificate_enrollment" "example" {
 - `est_source_interface_id` (String) ID of interface group or security zone that interacts with the CA server.
 - `est_source_interface_name` (String) Name of interface group or security zone that interacts with the CA server.
 - `est_username` (String) EST enrollment CA server username.
-- `evaluation_priority` (String) Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
 - `ignore_ipsec_key_usage` (Boolean) Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.
-- `include_device_ip` (String) Device IP in the certificate.
-- `include_device_serial_number` (Boolean) Include the device serial in the certificate.
-- `include_fqdn` (String) Include the device's fully qualified domain name (FQDN) in the certificate request
 - `key_name` (String) Name of the key pair used.
 - `key_size` (String) Desired key size (modulus), in bits.
 - `key_type` (String) Type of key pair.
-- `locality` (String) Locality for the certificate.
 - `manual_ca_certificate` (String) Base64 encoded certificate in PEM format.
 - `manual_ca_only` (Boolean) Create only the CA certificate from the selected CA. An identity certificate will not be created for this certificate. Must be set to `true`.
 - `ocsp_url` (String) URL for the Online Certificate Status Protocol (OCSP).
-- `organization` (String) Organization for the certificate.
-- `organizational_unit` (String) Organizational Unit for the certificate.
 - `pkcs12_certificate` (String) Base64 encoded certificate in PKCS12 format.
 - `pkcs12_certificate_passphrase` (String, Sensitive) Passphrase for the PKCS12 certificate.
+- `revocation_evaluation_priority` (String) Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
 - `scep_challenge_password` (String, Sensitive) SCEP enrollment challenge password.
 - `scep_enrollment_url` (String) SCEP enrollment CA server URL.
 - `scep_fingerprint` (String) SCEP enrollment CA server fingerprint.
 - `scep_retry_count` (Number) Number of retries that should be made if no certificate is issued upon the first request.
 - `scep_retry_period` (Number) Interval (in minutes) between certificate request attempts.
 - `skip_ca_flag_check` (Boolean) Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.
-- `state` (String) State for the certificate.
 - `type` (String) Type of the object; this value is always 'CertEnrollment'.
 - `validation_usage_ipsec_client` (Boolean) Validate an IPsec client certificate for a site-to-site VPN connection.
 - `validation_usage_ssl_client` (Boolean) Validate an SSL client certificate during a remote access VPN connection attempt.

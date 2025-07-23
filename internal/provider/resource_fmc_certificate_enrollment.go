@@ -191,50 +191,50 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 				Optional:            true,
 				Sensitive:           true,
 			},
-			"include_fqdn": schema.StringAttribute{
+			"certificate_include_fqdn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Include the device's fully qualified domain name (FQDN) in the certificate request").AddStringEnumDescription("DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT"),
 				},
 			},
-			"custom_fqdn": schema.StringAttribute{
+			"certificate_custom_fqdn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Device's custom FQDN to be included in the certificate.").String,
 				Optional:            true,
 			},
-			"include_device_ip": schema.StringAttribute{
+			"certificate_include_device_ip": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Device IP in the certificate.").String,
 				Optional:            true,
 			},
-			"common_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Common Name for the certificate.").String,
+			"certificate_common_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Common Name (CN) for the certificate.").String,
 				Optional:            true,
 			},
-			"organizational_unit": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Organizational Unit for the certificate.").String,
+			"certificate_organizational_unit": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Organizational Unit (OU) for the certificate.").String,
 				Optional:            true,
 			},
-			"organization": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Organization for the certificate.").String,
+			"certificate_organization": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Organization (O) for the certificate.").String,
 				Optional:            true,
 			},
-			"locality": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Locality for the certificate.").String,
+			"certificate_locality": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Locality (L) for the certificate.").String,
 				Optional:            true,
 			},
-			"state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("State for the certificate.").String,
+			"certificate_state": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("State (ST) for the certificate.").String,
 				Optional:            true,
 			},
-			"country_code": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Country Code for the certificate.").String,
+			"certificate_country_code": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Country Code (C) for the certificate.").String,
 				Optional:            true,
 			},
-			"email": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Email for the certificate.").String,
+			"certificate_email": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Email (E) for the certificate.").String,
 				Optional:            true,
 			},
-			"include_device_serial_number": schema.BoolAttribute{
+			"certificate_include_device_serial_number": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Include the device serial in the certificate.").String,
 				Optional:            true,
 			},
@@ -273,7 +273,7 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 				MarkdownDescription: helpers.NewAttributeDescription("URL for the Online Certificate Status Protocol (OCSP).").String,
 				Optional:            true,
 			},
-			"evaluation_priority": schema.StringAttribute{
+			"revocation_evaluation_priority": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.").AddStringEnumDescription("CRL", "OCSP", "NONE").String,
 				Optional:            true,
 				Validators: []validator.String{
