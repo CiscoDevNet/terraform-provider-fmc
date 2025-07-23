@@ -93,15 +93,19 @@ func (d *SingleSignOnServerDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"base_url": schema.StringAttribute{
-				MarkdownDescription: "URL that will redirect the user back to Threat Defense once the identity provider authentication is done.",
+				MarkdownDescription: "URL that will redirect the user back to FTD once the identity provider authentication is done.",
 				Computed:            true,
 			},
 			"identity_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Certificate of the IdP enrolled into the Threat Defense to verify the messages signed by the IdP.",
+				MarkdownDescription: "Certificate Id of the IdP enrolled into the FTD to verify the messages signed by the IdP.",
+				Computed:            true,
+			},
+			"identity_provider_certificate_name": schema.StringAttribute{
+				MarkdownDescription: "Certificate Name of the IdP enrolled into the FTD to verify the messages signed by the IdP.",
 				Computed:            true,
 			},
 			"service_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Certificate, which will be used to sign the requests and build circle of trust with IdP.",
+				MarkdownDescription: "Certificate Id, which will be used to sign the requests and build circle of trust with IdP.",
 				Computed:            true,
 			},
 			"request_signature_type": schema.StringAttribute{

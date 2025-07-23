@@ -104,6 +104,7 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	body, _ = sjson.Set(body, "type", "CertEnrollment")
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
@@ -674,7 +675,7 @@ func (data *CertificateEnrollment) fromBodyUnknowns(ctx context.Context, res gjs
 func (data CertificateEnrollment) adjustBody(ctx context.Context, req string) string {
 
 	// Enable CRL if either distribution point or static URLs are provided
-	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() || !!data.CrlStaticUrlsList.IsNull() {
+	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() || !data.CrlStaticUrlsList.IsNull() {
 		req, _ = sjson.Set(req, "revocation.certRevocationListContent.enableCertRevocationList", "true")
 	}
 

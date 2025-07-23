@@ -21,6 +21,9 @@ attributes:
     type: String
     description: Type of the object; this value is always 'CertEnrollment'.
     computed: true
+  - model_name: type
+    type: String
+    value: CertEnrollment
   - model_name: description
     type: String
     description: Description of the Certificate Enrollment object.

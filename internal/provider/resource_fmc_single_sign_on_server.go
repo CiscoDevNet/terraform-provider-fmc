@@ -105,22 +105,26 @@ func (r *SingleSignOnServerResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"base_url": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("URL that will redirect the user back to Threat Defense once the identity provider authentication is done.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("URL that will redirect the user back to FTD once the identity provider authentication is done.").String,
 				Optional:            true,
 			},
 			"identity_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Certificate of the IdP enrolled into the Threat Defense to verify the messages signed by the IdP.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Certificate Id of the IdP enrolled into the FTD to verify the messages signed by the IdP.").String,
+				Required:            true,
+			},
+			"identity_provider_certificate_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Certificate Name of the IdP enrolled into the FTD to verify the messages signed by the IdP.").String,
 				Required:            true,
 			},
 			"service_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Certificate, which will be used to sign the requests and build circle of trust with IdP.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Certificate Id, which will be used to sign the requests and build circle of trust with IdP.").String,
 				Optional:            true,
 			},
 			"request_signature_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Encryption algorithm to sign the SAML single sign-on requests.").AddStringEnumDescription("NO_SIGNATURE", "RSA_SHA1", "RSA_SHA256", "RSA_SHA384", "RSA_SHA512").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Encryption algorithm to sign the SAML single sign-on requests.").AddStringEnumDescription("NO_SIGNATURE", "RSA-SHA1", "RSA-SHA256", "RSA-SHA384", "RSA-SHA512").String,
 				Optional:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("NO_SIGNATURE", "RSA_SHA1", "RSA_SHA256", "RSA_SHA384", "RSA_SHA512"),
+					stringvalidator.OneOf("NO_SIGNATURE", "RSA-SHA1", "RSA-SHA256", "RSA-SHA384", "RSA-SHA512"),
 				},
 			},
 			"request_timeout": schema.Int64Attribute{

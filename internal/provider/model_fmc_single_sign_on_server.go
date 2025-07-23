@@ -40,6 +40,7 @@ type SingleSignOnServer struct {
 	LogoutUrl                                          types.String `tfsdk:"logout_url"`
 	BaseUrl                                            types.String `tfsdk:"base_url"`
 	IdentityProviderCertificateId                      types.String `tfsdk:"identity_provider_certificate_id"`
+	IdentityProviderCertificateName                    types.String `tfsdk:"identity_provider_certificate_name"`
 	ServiceProviderCertificateId                       types.String `tfsdk:"service_provider_certificate_id"`
 	RequestSignatureType                               types.String `tfsdk:"request_signature_type"`
 	RequestTimeout                                     types.Int64  `tfsdk:"request_timeout"`
@@ -71,6 +72,7 @@ func (data SingleSignOnServer) toBody(ctx context.Context, state SingleSignOnSer
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	body, _ = sjson.Set(body, "type", "SSOServer")
 	if !data.IdentityProviderEntityId.IsNull() {
 		body, _ = sjson.Set(body, "idpEntityId", data.IdentityProviderEntityId.ValueString())
 	}
@@ -85,6 +87,9 @@ func (data SingleSignOnServer) toBody(ctx context.Context, state SingleSignOnSer
 	}
 	if !data.IdentityProviderCertificateId.IsNull() {
 		body, _ = sjson.Set(body, "identityProviderCert.id", data.IdentityProviderCertificateId.ValueString())
+	}
+	if !data.IdentityProviderCertificateName.IsNull() {
+		body, _ = sjson.Set(body, "identityProviderCert.name", data.IdentityProviderCertificateName.ValueString())
 	}
 	if !data.ServiceProviderCertificateId.IsNull() {
 		body, _ = sjson.Set(body, "serviceProviderCert.id", data.ServiceProviderCertificateId.ValueString())
@@ -143,6 +148,11 @@ func (data *SingleSignOnServer) fromBody(ctx context.Context, res gjson.Result) 
 		data.IdentityProviderCertificateId = types.StringValue(value.String())
 	} else {
 		data.IdentityProviderCertificateId = types.StringNull()
+	}
+	if value := res.Get("identityProviderCert.name"); value.Exists() {
+		data.IdentityProviderCertificateName = types.StringValue(value.String())
+	} else {
+		data.IdentityProviderCertificateName = types.StringNull()
 	}
 	if value := res.Get("serviceProviderCert.id"); value.Exists() {
 		data.ServiceProviderCertificateId = types.StringValue(value.String())
@@ -214,6 +224,11 @@ func (data *SingleSignOnServer) fromBodyPartial(ctx context.Context, res gjson.R
 		data.IdentityProviderCertificateId = types.StringValue(value.String())
 	} else {
 		data.IdentityProviderCertificateId = types.StringNull()
+	}
+	if value := res.Get("identityProviderCert.name"); value.Exists() && !data.IdentityProviderCertificateName.IsNull() {
+		data.IdentityProviderCertificateName = types.StringValue(value.String())
+	} else {
+		data.IdentityProviderCertificateName = types.StringNull()
 	}
 	if value := res.Get("serviceProviderCert.id"); value.Exists() && !data.ServiceProviderCertificateId.IsNull() {
 		data.ServiceProviderCertificateId = types.StringValue(value.String())

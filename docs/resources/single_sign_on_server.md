@@ -18,10 +18,11 @@ resource "fmc_single_sign_on_server" "example" {
   identity_provider_entity_id                              = "https://idp.example.com/saml"
   sso_url                                                  = "https://idp.example.com/sso"
   logout_url                                               = "https://idp.example.com/logout"
-  base_url                                                 = "https://vpn.example.com/callback"
+  base_url                                                 = "https://fmc.example.com/sso"
   identity_provider_certificate_id                         = "123e4567-e89b-12d3-a456-426614174000"
+  identity_provider_certificate_name                       = "my_idp_certificate"
   service_provider_certificate_id                          = "123e4567-e89b-12d3-a456-426614174001"
-  request_signature_type                                   = "RSA_SHA256"
+  request_signature_type                                   = "RSA-SHA256"
   request_timeout                                          = 300
   identity_provider_accessible_only_on_internal_network    = false
   request_identity_provider_reauthentication_at_each_login = false
@@ -33,24 +34,25 @@ resource "fmc_single_sign_on_server" "example" {
 
 ### Required
 
-- `identity_provider_certificate_id` (String) Certificate of the IdP enrolled into the Threat Defense to verify the messages signed by the IdP.
+- `identity_provider_certificate_id` (String) Certificate Id of the IdP enrolled into the FTD to verify the messages signed by the IdP.
+- `identity_provider_certificate_name` (String) Certificate Name of the IdP enrolled into the FTD to verify the messages signed by the IdP.
 - `identity_provider_entity_id` (String) URL that is defined in SAML IdP to identify a service provider uniquely.
 - `name` (String) Name of the Single Sign-On Server object.
 - `sso_url` (String) URL for signing into the SAML identity provider server.
 
 ### Optional
 
-- `base_url` (String) URL that will redirect the user back to Threat Defense once the identity provider authentication is done.
+- `base_url` (String) URL that will redirect the user back to FTD once the identity provider authentication is done.
 - `domain` (String) Name of the FMC domain
 - `identity_provider_accessible_only_on_internal_network` (Boolean) SAML IdP resides on the internal network.
 - `logout_url` (String) URL for signing out of the SAML identity provider server.
 - `request_identity_provider_reauthentication_at_each_login` (Boolean) Authenticate user at each login even if the previous IdP session is valid.
 - `request_signature_type` (String) Encryption algorithm to sign the SAML single sign-on requests.
-  - Choices: `NO_SIGNATURE`, `RSA_SHA1`, `RSA_SHA256`, `RSA_SHA384`, `RSA_SHA512`
+  - Choices: `NO_SIGNATURE`, `RSA-SHA1`, `RSA-SHA256`, `RSA-SHA384`, `RSA-SHA512`
 - `request_timeout` (Number) Specify the SAML assertion validity duration (in seconds) for the users to complete the single sign-on request.
   - Range: `1`-`7200`
   - Default value: `300`
-- `service_provider_certificate_id` (String) Certificate, which will be used to sign the requests and build circle of trust with IdP.
+- `service_provider_certificate_id` (String) Certificate Id, which will be used to sign the requests and build circle of trust with IdP.
 
 ### Read-Only
 
