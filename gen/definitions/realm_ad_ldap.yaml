@@ -21,10 +21,9 @@ attributes:
     computed: true
   - model_name: version
     type: String
-    description: Internal parameter of API.
+    description: Internal API parameter.
     computed: true
     computed_body_param: true
-
   - model_name: description
     type: String
     description: Description of the Realm object.
@@ -67,7 +66,7 @@ attributes:
   - model_name: dirPassword
     type: String
     tf_name: directory_password
-    description: Password for the directory user.
+    description: Password for the `directory_username`.
     mandatory: true
     sensitive: true
     example: my_password
@@ -177,23 +176,25 @@ attributes:
         type: String
         description: Encryption method.
         enum_values: ["NONE", "LDAPS", "STARTTLS"]
-        example: NONE
+        example: LDAPS
+        test_value: '"NONE"'
         mandatory: true
       - model_name: id
         data_path: ["encryptionCert"]
-        tf_name: encryption_certificate
+        tf_name: ca_certificate_id
         type: String
-        description: ID of the encryption certificate for LDAPS/STARTTLS.
-        exclude_example: true
+        description: CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.
+        example: 12345678-1234-1234-1234-123456789012
         exclude_test: true
       - model_name: useRoutingToSelectInterface
         type: Bool
         description: Use routing to select the interface for directory communication.
-        example: "true"
+        example: "false"
+        default_value: "false"
       - model_name: id
         data_path: ["interface"]
         tf_name: interface_group_id
         type: String
-        description: ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.
+        description: ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.
         exclude_example: true
         exclude_test: true

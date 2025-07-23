@@ -23,8 +23,9 @@ resource "fmc_realm_ad_ldap" "example" {
     {
       hostname                        = "ldap.example.com"
       port                            = 389
-      encryption_protocol             = "NONE"
-      use_routing_to_select_interface = true
+      encryption_protocol             = "LDAPS"
+      ca_certificate_id               = "12345678-1234-1234-1234-123456789012"
+      use_routing_to_select_interface = false
     }
   ]
 }

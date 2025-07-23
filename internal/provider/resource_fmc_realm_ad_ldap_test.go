@@ -54,8 +54,7 @@ func TestAccFmcRealmADLDAP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_guest_captive_portal_users", "1440"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.hostname", "ldap.example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.port", "389"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.encryption_protocol", "NONE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.use_routing_to_select_interface", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.use_routing_to_select_interface", "false"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -134,7 +133,7 @@ func testAccFmcRealmADLDAPConfig_all() string {
 	config += `		hostname = "ldap.example.com"` + "\n"
 	config += `		port = 389` + "\n"
 	config += `		encryption_protocol = "NONE"` + "\n"
-	config += `		use_routing_to_select_interface = true` + "\n"
+	config += `		use_routing_to_select_interface = false` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

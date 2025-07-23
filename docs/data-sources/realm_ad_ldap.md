@@ -34,7 +34,7 @@ data "fmc_realm_ad_ldap" "example" {
 - `ad_primary_domain` (String) Domain for the Active Directory server where users should be authenticated.
 - `base_dn` (String) The directory tree on the server where the management center should begin searching for user data.
 - `description` (String) Description of the Realm object.
-- `directory_password` (String, Sensitive) Password for the directory user.
+- `directory_password` (String, Sensitive) Password for the `directory_username`.
 - `directory_server_configurations` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username used to connect to the directory.
 - `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
@@ -53,16 +53,16 @@ data "fmc_realm_ad_ldap" "example" {
 - `type` (String) Type of the object; this value is always 'Realm'.
 - `update_hour` (Number) Hour where the sync (download) from the directory starts.
 - `update_interval` (String) Interval in hours for the sync (download) from the directory.
-- `version` (String) Internal parameter of API.
+- `version` (String) Internal API parameter.
 
 <a id="nestedatt--directory_server_configurations"></a>
 ### Nested Schema for `directory_server_configurations`
 
 Read-Only:
 
-- `encryption_certificate` (String) ID of the encryption certificate for LDAPS/STARTTLS.
+- `ca_certificate_id` (String) CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.
 - `encryption_protocol` (String) Encryption method.
 - `hostname` (String) Hostname or IP address.
-- `interface_group_id` (String) ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.
+- `interface_group_id` (String) ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.
 - `port` (Number) Port number.
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for directory communication.

@@ -85,7 +85,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"version": schema.StringAttribute{
-				MarkdownDescription: "Internal parameter of API.",
+				MarkdownDescription: "Internal API parameter.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -114,7 +114,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"directory_password": schema.StringAttribute{
-				MarkdownDescription: "Password for the directory user.",
+				MarkdownDescription: "Password for the `directory_username`.",
 				Computed:            true,
 				Sensitive:           true,
 			},
@@ -195,8 +195,8 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 							MarkdownDescription: "Encryption method.",
 							Computed:            true,
 						},
-						"encryption_certificate": schema.StringAttribute{
-							MarkdownDescription: "ID of the encryption certificate for LDAPS/STARTTLS.",
+						"ca_certificate_id": schema.StringAttribute{
+							MarkdownDescription: "CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.",
 							Computed:            true,
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
@@ -204,7 +204,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"interface_group_id": schema.StringAttribute{
-							MarkdownDescription: "ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.",
+							MarkdownDescription: "ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.",
 							Computed:            true,
 						},
 					},

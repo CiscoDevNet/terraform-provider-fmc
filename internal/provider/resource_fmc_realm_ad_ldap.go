@@ -30,6 +30,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -96,7 +97,7 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"version": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Internal parameter of API.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Internal API parameter.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -137,7 +138,7 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				Required:            true,
 			},
 			"directory_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for the directory user.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Password for the `directory_username`.").String,
 				Required:            true,
 				Sensitive:           true,
 			},
@@ -242,16 +243,18 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 								stringvalidator.OneOf("NONE", "LDAPS", "STARTTLS"),
 							},
 						},
-						"encryption_certificate": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the encryption certificate for LDAPS/STARTTLS.").String,
+						"ca_certificate_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.").String,
 							Optional:            true,
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for directory communication.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for directory communication.").AddDefaultValueDescription("false").String,
 							Optional:            true,
+							Computed:            true,
+							Default:             booldefault.StaticBool(false),
 						},
 						"interface_group_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.").String,
 							Optional:            true,
 						},
 					},

@@ -38,8 +38,9 @@ resource "fmc_realm_ad_ldap" "example" {
     {
       hostname                        = "ldap.example.com"
       port                            = 389
-      encryption_protocol             = "NONE"
-      use_routing_to_select_interface = true
+      encryption_protocol             = "LDAPS"
+      ca_certificate_id               = "12345678-1234-1234-1234-123456789012"
+      use_routing_to_select_interface = false
     }
   ]
 }
@@ -51,7 +52,7 @@ resource "fmc_realm_ad_ldap" "example" {
 ### Required
 
 - `base_dn` (String) The directory tree on the server where the management center should begin searching for user data.
-- `directory_password` (String, Sensitive) Password for the directory user.
+- `directory_password` (String, Sensitive) Password for the `directory_username`.
 - `directory_server_configurations` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_server_configurations))
 - `directory_username` (String) Username used to connect to the directory.
 - `group_dn` (String) The directory tree on the server where the management center should begin searching for group data.
@@ -91,7 +92,7 @@ resource "fmc_realm_ad_ldap" "example" {
 
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'Realm'.
-- `version` (String) Internal parameter of API.
+- `version` (String) Internal API parameter.
 
 <a id="nestedatt--directory_server_configurations"></a>
 ### Nested Schema for `directory_server_configurations`
@@ -105,9 +106,10 @@ Required:
 
 Optional:
 
-- `encryption_certificate` (String) ID of the encryption certificate for LDAPS/STARTTLS.
-- `interface_group_id` (String) ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`.
+- `ca_certificate_id` (String) CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.
+- `interface_group_id` (String) ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for directory communication.
+  - Default value: `false`
 
 ## Import
 

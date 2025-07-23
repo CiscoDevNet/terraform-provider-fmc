@@ -69,7 +69,7 @@ type RealmADLDAPDirectoryServerConfigurations struct {
 	Hostname                    types.String `tfsdk:"hostname"`
 	Port                        types.Int64  `tfsdk:"port"`
 	EncryptionProtocol          types.String `tfsdk:"encryption_protocol"`
-	EncryptionCertificate       types.String `tfsdk:"encryption_certificate"`
+	CaCertificateId             types.String `tfsdk:"ca_certificate_id"`
 	UseRoutingToSelectInterface types.Bool   `tfsdk:"use_routing_to_select_interface"`
 	InterfaceGroupId            types.String `tfsdk:"interface_group_id"`
 }
@@ -188,8 +188,8 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 			if !item.EncryptionProtocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "encryptionProtocol", item.EncryptionProtocol.ValueString())
 			}
-			if !item.EncryptionCertificate.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "encryptionCert.id", item.EncryptionCertificate.ValueString())
+			if !item.CaCertificateId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "encryptionCert.id", item.CaCertificateId.ValueString())
 			}
 			if !item.UseRoutingToSelectInterface.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "useRoutingToSelectInterface", item.UseRoutingToSelectInterface.ValueBool())
@@ -344,14 +344,14 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 				data.EncryptionProtocol = types.StringNull()
 			}
 			if value := res.Get("encryptionCert.id"); value.Exists() {
-				data.EncryptionCertificate = types.StringValue(value.String())
+				data.CaCertificateId = types.StringValue(value.String())
 			} else {
-				data.EncryptionCertificate = types.StringNull()
+				data.CaCertificateId = types.StringNull()
 			}
 			if value := res.Get("useRoutingToSelectInterface"); value.Exists() {
 				data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
 			} else {
-				data.UseRoutingToSelectInterface = types.BoolNull()
+				data.UseRoutingToSelectInterface = types.BoolValue(false)
 			}
 			if value := res.Get("interface.id"); value.Exists() {
 				data.InterfaceGroupId = types.StringValue(value.String())
@@ -539,14 +539,14 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		} else {
 			data.EncryptionProtocol = types.StringNull()
 		}
-		if value := res.Get("encryptionCert.id"); value.Exists() && !data.EncryptionCertificate.IsNull() {
-			data.EncryptionCertificate = types.StringValue(value.String())
+		if value := res.Get("encryptionCert.id"); value.Exists() && !data.CaCertificateId.IsNull() {
+			data.CaCertificateId = types.StringValue(value.String())
 		} else {
-			data.EncryptionCertificate = types.StringNull()
+			data.CaCertificateId = types.StringNull()
 		}
 		if value := res.Get("useRoutingToSelectInterface"); value.Exists() && !data.UseRoutingToSelectInterface.IsNull() {
 			data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
-		} else {
+		} else if data.UseRoutingToSelectInterface.ValueBool() != false {
 			data.UseRoutingToSelectInterface = types.BoolNull()
 		}
 		if value := res.Get("interface.id"); value.Exists() && !data.InterfaceGroupId.IsNull() {
