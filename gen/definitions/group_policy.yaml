@@ -1,0 +1,323 @@
+---
+name: Group Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/grouppolicies
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Group Policy object.
+    example: my_group_policy
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always ''.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My Group Policy object
+
+  # General - VPN Protocols
+  - model_name: enableSSLProtocol
+    type: Bool
+    tf_name: enable_ssl_protocol
+    description: Whether the SSL protocol is enabled.
+    example: "true"
+  - model_name: enableIPsecIKEv2Protocol
+    type: Bool
+    tf_name: enable_ipsec_ikev2_protocol
+    description: Whether the IPsec IKEv2 protocol is enabled.
+    example: "true"
+  
+  # General - IP Address Pool
+  - model_name: ipv4LocalAddressPool
+    data_path: ["generalSettings", "addressAssignment"]
+    tf_name: ipv4_address_pools
+    type: List
+    description: List of IPv4 address pools for the Group Policy.
+    attributes:
+      - model_name: id
+        type: String
+        description: Unique identifier for the IPv4 address pool.
+        mandatory: true
+  
+  # General - Banner
+  - model_name: banner
+    data_path: ["generalSettings"]
+    type: String
+    description: Banner text to be displayed to users.
+    example: Welcome to the VPN Connection.
+  
+  # General - DNS/WINS
+  - model_name: id
+    data_path: ["generalSettings", "primaryDNSServer"]
+    tf_name: primary_dns_server
+    type: String
+    description: Primary DNS server for the Group Policy.
+  - model_name: id
+    data_path: ["generalSettings", "secondaryDNSServer"]
+    tf_name: secondary_dns_server
+    type: String
+    description: Secondary DNS server for the Group Policy.
+  - model_name: id
+    data_path: ["generalSettings", "primaryWINSServer"]
+    tf_name: primary_wins_server
+    type: String
+    description: Primary WINS server for the Group Policy.
+  - model_name: id
+    data_path: ["generalSettings", "secondaryWINSSserver"]
+    tf_name: secondary_wins_server
+    type: String
+    description: Secondary WINS server for the Group Policy.
+  - model_name: id
+    data_path: ["generalSettings", "addressAssignment", "dhcpScope"]
+    tf_name: dhcp_scope_network_id
+    type: String
+    description: Network ID for the DHCP scope.
+  - model_name: defaultDomainName
+    data_path: ["generalSettings", "addressAssignment"]
+    tf_name: default_domain
+    type: String
+    description: Default domain name for the Group Policy.
+  
+  # General - Split Tunnel
+  - model_name: ipv4SplitTunnelPolicy
+    data_path: ["generalSettings", "splitTunnelSettings"]
+    type: String
+    enum_values: [TUNNEL_ALL, TUNNEL_SPECIFIED, EXCLUDE_SPECIFIED_OVER_TUNNEL]
+    example: TUNNEL_ALL
+  - model_name: ipv6SplitTunnelPolicy
+    data_path: ["generalSettings", "splitTunnelSettings"]
+    type: String
+    enum_values: [TUNNEL_ALL, TUNNEL_SPECIFIED, EXCLUDE_SPECIFIED_OVER_TUNNEL]
+    example: TUNNEL_ALL
+  - model_name: splitTunnelACL
+    data_path: ["generalSettings", "splitTunnelSettings"]
+    tf_name: split_tunnel_acl_id
+    type: String
+    description: ACL ID for the split tunnel configuration.
+    example: 12345678-1234-1234-1234-123456
+  - model_name: splitDNSRequestPolicy
+    data_path: ["generalSettings", "splitTunnelSettings"]
+    type: String
+    enum_values: [USE_SPLIT_TUNNEL_SETTING, TUNNEL_ALL, TUNNEL_SPECIFIED_DOMAINS]
+    example: TUNNEL_ALL
+  - model_name: splitDNSDomainList
+    data_path: ["generalSettings", "splitTunnelSettings"]
+    type: String
+    description: List of domains for split DNS requests.
+  
+  # Secure Client - Profile
+  - model_name: id
+    data_path: ["anyConnectSettings", "vpnClientProfile"]
+    tf_name: secure_client_client_profile_id
+    type: String
+    description: ID of the Secure Client profile.
+    example: 12345678-1234-1234-1234-123456
+
+  # Secure Client - Management Profile
+  - model_name: id
+    data_path: ["anyConnectSettings", "managementProfile"]
+    tf_name: secure_client_management_profile_id
+    type: String
+    description: ID of the Secure Client management profile.
+    example: 12345678-1234-1234-1234-123456
+  
+  # Secure Client - Client Modules
+  # TODO
+
+  # Secure Client - SSL Settings
+  - model_name: sslCompression
+    data_path: ["anyConnectSettings", "sslSettings"]
+    type: String
+    tf_name: ssl_compression
+    enum_values: [DISABLED, DEFLATE, LZS]
+  - model_name: dtlsCompression
+    data_path: ["anyConnectSettings", "sslSettings"]
+    type: String
+    tf_name: dtls_compression
+    enum_values: [DISABLED, DEFLATE, LZS]
+  - model_name: mtuSize
+    data_path: ["anyConnectSettings", "sslSettings"]
+    type: Int64
+    tf_name: mtu_size
+    description: Maximum Transmission Unit size for SSL connections.
+    default_value: 1406
+    example: 1406
+    min_int: 576
+    max_int: 1462
+  - model_name: ignoreDFBit
+    data_path: ["anyConnectSettings", "sslSettings"]
+    type: Bool
+    tf_name: ignore_df_bit
+    description: Whether to ignore the Don't Fragment bit in packets.
+    example: "true"
+  
+  # Secure Client - Connection Settings
+  - model_name: enableKeepAliveMessages
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Bool
+    tf_name: enable_keep_alive_messages
+    description: Whether to enable keep-alive messages for the connection.
+    example: "true"
+  - model_name: keepAliveMessageInterval
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Int64
+    tf_name: keep_alive_message_interval
+    description: Interval for keep-alive messages in seconds.
+    example: 20
+    min_int: 15
+    max_int: 600
+  - model_name: enableGatewayDPD
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Bool
+    tf_name: enable_gateway_dpd
+    description: Whether to enable Dead Peer Detection (DPD) for the connection.
+    example: "true"
+  - model_name: gatewayDPDInterval
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Int64
+    tf_name: gateway_dpd_interval
+    description: Interval for Dead Peer Detection (DPD) messages in seconds.
+    example: 30
+    min_int: 5
+    max_int: 3600
+  - model_name: enableClientDPD
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Bool
+    tf_name: enable_client_dpd
+    description: Whether to enable Dead Peer Detection (DPD) for the connection.
+    example: "true"
+  - model_name: clientDPDInterval
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Int64
+    tf_name: client_dpd_interval
+    description: Interval for Dead Peer Detection (DPD) messages in seconds.
+    example: 30
+    min_int: 5
+    max_int: 3600
+  - model_name: bypassUnsupportProtocol
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Bool
+    tf_name: client_bypass_protocol
+    example: "false"
+  - model_name: enableSSLRekey
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Bool
+    tf_name: enable_ssl_rekey
+    description: Whether to enable SSL rekeying.
+    example: "true"
+  - model_name: rekeyMethod
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: String
+    tf_name: rekey_method
+    enum_values: [NEW_TUNNEL, EXISTING_TUNNEL]
+    description: Method to use for SSL rekeying.
+    example: NEW_TUNNEL
+  - model_name: rekeyInterval
+    data_path: ["anyConnectSettings", "connectionSettings"]
+    type: Int64
+    tf_name: rekey_interval
+    description: Interval for SSL rekeying in minutes.
+    example: 60
+    min_int: 4
+    max_int: 10080
+  - model_name: id
+    data_path: ["anyConnectSettings", "connectionSettings", "clientFirewallPrivateNetworkRules"]
+    tf_name: client_firewall_private_network_rules_id
+    type: String
+    description: ID of the client firewall private network rules.
+    example: 12345678-1234-1234-1234-123456
+  - model_name: id
+    data_path: ["anyConnectSettings", "connectionSettings", "clientFirewallPublicNetworkRules"]
+    tf_name: client_firewall_public_network_rules_id
+    type: String
+    description: ID of the client firewall public network rules.
+    example: 12345678-1234-1234-1234-123456
+    
+  # Secure Client - Custom Attributes
+  - model_name: customAttributes
+    data_path: ["anyConnectSettings"]
+    type: List
+    description: List of custom attributes for the Group Policy.
+    attributes:
+      - model_name: id
+        data_path: ["customAttributeObject"]
+        tf_name: id
+        type: String
+        mandatory: true
+        description: ID of the custom attribute.
+        example: 12345678-1234-1234-1234-123456
+      - model_name: anyConnectAttribute
+        data_path: ["customAttributeObject"]
+        tf_name: type
+        type: String
+        mandatory: true
+        enum_values: [PER_APP_VPN, ALLOW_DEFER_UPDATE, DYNAMIC_SPLIT_TUNNELING, CUSTOM_TYPE]
+        description: AnyConnect specific custom attribute.
+        example: myAnyConnectAttribute
+  
+  # Advanced - Traffic filter
+  - model_name: id
+    data_path: ["advancedSettings", "vpnTrafficFilterACL"]
+    tf_name: traffic_filter_acl_id
+    type: String
+    description: ACL ID for the traffic filter.
+    example: 12345678-1234-1234-1234-123456
+  - model_name: restrictVPNToVLANId
+    data_path: ["advancedSettings"]
+    type: Int64
+    tf_name: restrict_vpn_to_vlan_id
+    description: VLAN ID to restrict VPN access.
+    example: 100
+    min_int: 1
+    max_int: 4094
+  
+  # Advanced - Session Settings
+  - model_name: id
+    data_path: ["advancedSettings", "sessionSettings", "accessHours"]
+    tf_name: access_hours_id
+    type: String
+    description: ID of the access hours settings.
+    example: 12345678-1234-1234-1234-123456
+  - model_name: simultaneousLoginPerUser
+    data_path: ["advancedSettings", "sessionSettings"]
+    type: Int64
+    tf_name: simultaneous_login_per_user
+    description: Maximum number of simultaneous logins allowed per user.
+    example: 3
+    min_int: 0
+    max_int: 2147483647
+  - model_name: maxConnectionTimeout
+    data_path: ["advancedSettings", "sessionSettings"]
+    type: Int64
+    tf_name: max_connection_time
+    description: Maximum connection timeout in minutes.
+    example: 3600
+    min_int: 1
+    max_int: 4473924
+  - model_name: maxConnectionTimeAlertInterval
+    data_path: ["advancedSettings", "sessionSettings"]
+    type: Int64
+    tf_name: max_connection_time_alert_interval
+    description: Alert interval for maximum connection time in minutes.
+    example: 1
+    min_int: 1
+    max_int: 30
+  - model_name: vpnIdleTimeout
+    data_path: ["advancedSettings", "sessionSettings"]
+    type: Int64
+    tf_name: vpn_idle_timeout
+    description: VPN idle timeout in minutes.
+    example: 3600
+    min_int: 1
+    max_int: 4473924
+  - model_name: vpnIdleTimeoutAlertInterval
+    data_path: ["advancedSettings", "sessionSettings"]
+    type: Int64
+    tf_name: vpn_idle_timeout_alert_interval
+    description: Alert interval for VPN idle timeout in minutes.
+    example: 1
+    min_int: 1
+    max_int: 30
