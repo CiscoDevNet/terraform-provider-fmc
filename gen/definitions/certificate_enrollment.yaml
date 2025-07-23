@@ -63,7 +63,7 @@ attributes:
     description: Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.
     example: "false"
     exclude_test: true # FMCVERSION <= 7.2
-    # FMCBUG
+    # FMCBUG CSCwq44417 FMC API: Endpoint /object/certenrollments does not set skipCaFlagCheck flag correctly
     write_only: true
   
   # CA Information - EST

@@ -378,7 +378,7 @@ func (r *CertificateEnrollmentResource) Read(ctx context.Context, req resource.R
 		state.fromBodyPartial(ctx, res)
 	}
 
-	// FMCBUG
+	// FMCBUG CSCwq44439
 	// FMC API adds '\r\n' to the end of PKCS12 certificate, so we need to remove it.
 	if !state.Pkcs12Certificate.IsNull() && state.Pkcs12Certificate.ValueString() != "" {
 		state.Pkcs12Certificate = types.StringValue(strings.TrimSuffix(state.Pkcs12Certificate.ValueString(), "\r\n"))
