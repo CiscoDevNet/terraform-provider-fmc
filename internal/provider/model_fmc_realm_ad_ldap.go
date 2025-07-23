@@ -35,37 +35,37 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type RealmADLDAP struct {
-	Id                                 types.String                               `tfsdk:"id"`
-	Domain                             types.String                               `tfsdk:"domain"`
-	Name                               types.String                               `tfsdk:"name"`
-	Enabled                            types.Bool                                 `tfsdk:"enabled"`
-	Type                               types.String                               `tfsdk:"type"`
-	Version                            types.String                               `tfsdk:"version"`
-	Description                        types.String                               `tfsdk:"description"`
-	RealmType                          types.String                               `tfsdk:"realm_type"`
-	AdPrimaryDomain                    types.String                               `tfsdk:"ad_primary_domain"`
-	AdJoinUsername                     types.String                               `tfsdk:"ad_join_username"`
-	AdJoinPassword                     types.String                               `tfsdk:"ad_join_password"`
-	DirectoryUsername                  types.String                               `tfsdk:"directory_username"`
-	DirectoryPassword                  types.String                               `tfsdk:"directory_password"`
-	BaseDn                             types.String                               `tfsdk:"base_dn"`
-	GroupDn                            types.String                               `tfsdk:"group_dn"`
-	IncludedUsers                      types.List                                 `tfsdk:"included_users"`
-	IncludedGroups                     types.List                                 `tfsdk:"included_groups"`
-	ExcludedUsers                      types.List                                 `tfsdk:"excluded_users"`
-	ExcludedGroups                     types.List                                 `tfsdk:"excluded_groups"`
-	UpdateHour                         types.Int64                                `tfsdk:"update_hour"`
-	UpdateInterval                     types.String                               `tfsdk:"update_interval"`
-	GroupAttribute                     types.String                               `tfsdk:"group_attribute"`
-	TimeoutIseAndPassiveIndentityUsers types.Int64                                `tfsdk:"timeout_ise_and_passive_indentity_users"`
-	TimeoutTerminalServerAgentUsers    types.Int64                                `tfsdk:"timeout_terminal_server_agent_users"`
-	TimeoutCaptivePortalUsers          types.Int64                                `tfsdk:"timeout_captive_portal_users"`
-	TimeoutFailedCaptivePortalUsers    types.Int64                                `tfsdk:"timeout_failed_captive_portal_users"`
-	TimeoutGuestCaptivePortalUsers     types.Int64                                `tfsdk:"timeout_guest_captive_portal_users"`
-	DirectoryServerConfigurations      []RealmADLDAPDirectoryServerConfigurations `tfsdk:"directory_server_configurations"`
+	Id                                 types.String                  `tfsdk:"id"`
+	Domain                             types.String                  `tfsdk:"domain"`
+	Name                               types.String                  `tfsdk:"name"`
+	Enabled                            types.Bool                    `tfsdk:"enabled"`
+	Type                               types.String                  `tfsdk:"type"`
+	Version                            types.String                  `tfsdk:"version"`
+	Description                        types.String                  `tfsdk:"description"`
+	RealmType                          types.String                  `tfsdk:"realm_type"`
+	AdPrimaryDomain                    types.String                  `tfsdk:"ad_primary_domain"`
+	AdJoinUsername                     types.String                  `tfsdk:"ad_join_username"`
+	AdJoinPassword                     types.String                  `tfsdk:"ad_join_password"`
+	DirectoryUsername                  types.String                  `tfsdk:"directory_username"`
+	DirectoryPassword                  types.String                  `tfsdk:"directory_password"`
+	BaseDn                             types.String                  `tfsdk:"base_dn"`
+	GroupDn                            types.String                  `tfsdk:"group_dn"`
+	IncludedUsers                      types.List                    `tfsdk:"included_users"`
+	IncludedGroups                     types.List                    `tfsdk:"included_groups"`
+	ExcludedUsers                      types.List                    `tfsdk:"excluded_users"`
+	ExcludedGroups                     types.List                    `tfsdk:"excluded_groups"`
+	UpdateHour                         types.Int64                   `tfsdk:"update_hour"`
+	UpdateInterval                     types.String                  `tfsdk:"update_interval"`
+	GroupAttribute                     types.String                  `tfsdk:"group_attribute"`
+	TimeoutIseAndPassiveIndentityUsers types.Int64                   `tfsdk:"timeout_ise_and_passive_indentity_users"`
+	TimeoutTerminalServerAgentUsers    types.Int64                   `tfsdk:"timeout_terminal_server_agent_users"`
+	TimeoutCaptivePortalUsers          types.Int64                   `tfsdk:"timeout_captive_portal_users"`
+	TimeoutFailedCaptivePortalUsers    types.Int64                   `tfsdk:"timeout_failed_captive_portal_users"`
+	TimeoutGuestCaptivePortalUsers     types.Int64                   `tfsdk:"timeout_guest_captive_portal_users"`
+	DirectoryServers                   []RealmADLDAPDirectoryServers `tfsdk:"directory_servers"`
 }
 
-type RealmADLDAPDirectoryServerConfigurations struct {
+type RealmADLDAPDirectoryServers struct {
 	Hostname                    types.String `tfsdk:"hostname"`
 	Port                        types.Int64  `tfsdk:"port"`
 	EncryptionProtocol          types.String `tfsdk:"encryption_protocol"`
@@ -175,9 +175,9 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 	if !data.TimeoutGuestCaptivePortalUsers.IsNull() {
 		body, _ = sjson.Set(body, "guestSessionTimeout", data.TimeoutGuestCaptivePortalUsers.ValueInt64())
 	}
-	if len(data.DirectoryServerConfigurations) > 0 {
+	if len(data.DirectoryServers) > 0 {
 		body, _ = sjson.Set(body, "directoryConfigurations", []interface{}{})
-		for _, item := range data.DirectoryServerConfigurations {
+		for _, item := range data.DirectoryServers {
 			itemBody := ""
 			if !item.Hostname.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "hostname", item.Hostname.ValueString())
@@ -324,10 +324,10 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 		data.TimeoutGuestCaptivePortalUsers = types.Int64Null()
 	}
 	if value := res.Get("directoryConfigurations"); value.Exists() {
-		data.DirectoryServerConfigurations = make([]RealmADLDAPDirectoryServerConfigurations, 0)
+		data.DirectoryServers = make([]RealmADLDAPDirectoryServers, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := RealmADLDAPDirectoryServerConfigurations{}
+			data := RealmADLDAPDirectoryServers{}
 			if value := res.Get("hostname"); value.Exists() {
 				data.Hostname = types.StringValue(value.String())
 			} else {
@@ -358,7 +358,7 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 			} else {
 				data.InterfaceGroupId = types.StringNull()
 			}
-			(*parent).DirectoryServerConfigurations = append((*parent).DirectoryServerConfigurations, data)
+			(*parent).DirectoryServers = append((*parent).DirectoryServers, data)
 			return true
 		})
 	}
@@ -488,12 +488,12 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.TimeoutGuestCaptivePortalUsers = types.Int64Null()
 	}
-	for i := 0; i < len(data.DirectoryServerConfigurations); i++ {
+	for i := 0; i < len(data.DirectoryServers); i++ {
 		keys := [...]string{"hostname"}
-		keyValues := [...]string{data.DirectoryServerConfigurations[i].Hostname.ValueString()}
+		keyValues := [...]string{data.DirectoryServers[i].Hostname.ValueString()}
 
 		parent := &data
-		data := (*parent).DirectoryServerConfigurations[i]
+		data := (*parent).DirectoryServers[i]
 		parentRes := &res
 		var res gjson.Result
 
@@ -515,11 +515,11 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing DirectoryServerConfigurations[%d] = %+v",
+			tflog.Debug(ctx, fmt.Sprintf("removing DirectoryServers[%d] = %+v",
 				i,
-				(*parent).DirectoryServerConfigurations[i],
+				(*parent).DirectoryServers[i],
 			))
-			(*parent).DirectoryServerConfigurations = slices.Delete((*parent).DirectoryServerConfigurations, i, i+1)
+			(*parent).DirectoryServers = slices.Delete((*parent).DirectoryServers, i, i+1)
 			i--
 
 			continue
@@ -554,7 +554,7 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		} else {
 			data.InterfaceGroupId = types.StringNull()
 		}
-		(*parent).DirectoryServerConfigurations[i] = data
+		(*parent).DirectoryServers[i] = data
 	}
 }
 
@@ -585,7 +585,7 @@ func (data *RealmADLDAP) fromBodyUnknowns(ctx context.Context, res gjson.Result)
 
 func (data RealmADLDAP) adjustBody(ctx context.Context, req string) string {
 	// Add sequence numbers to the entities
-	for i := range len(data.DirectoryServerConfigurations) {
+	for i := range len(data.DirectoryServers) {
 		req, _ = sjson.Set(req, fmt.Sprintf("directoryConfigurations.%d.id", i), i+1)
 	}
 

@@ -34,7 +34,7 @@ resource "fmc_realm_ad_ldap" "example" {
   timeout_captive_portal_users            = 1440
   timeout_failed_captive_portal_users     = 1440
   timeout_guest_captive_portal_users      = 1440
-  directory_server_configurations = [
+  directory_servers = [
     {
       hostname                        = "ldap.example.com"
       port                            = 389
@@ -51,18 +51,18 @@ resource "fmc_realm_ad_ldap" "example" {
 
 ### Required
 
-- `base_dn` (String) The directory tree on the server where the management center should begin searching for user data.
+- `base_dn` (String) Directory tree on the server where the search for user data should begin.
 - `directory_password` (String, Sensitive) Password for the `directory_username`.
-- `directory_server_configurations` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_server_configurations))
+- `directory_servers` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_servers))
 - `directory_username` (String) Username used to connect to the directory.
-- `group_dn` (String) The directory tree on the server where the management center should begin searching for group data.
+- `group_dn` (String) Directory tree on the server where the search for group data should begin.
 - `name` (String) Name of the Realm object.
 - `realm_type` (String) Type of the Realm.
   - Choices: `AD`, `LDAP`
 
 ### Optional
 
-- `ad_join_password` (String, Sensitive) Password for ad_join_username user.
+- `ad_join_password` (String, Sensitive) Password for `ad_join_username` user.
 - `ad_join_username` (String) Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.
 - `ad_primary_domain` (String) Domain for the Active Directory server where users should be authenticated.
 - `description` (String) Description of the Realm object.
@@ -94,8 +94,8 @@ resource "fmc_realm_ad_ldap" "example" {
 - `type` (String) Type of the object; this value is always 'Realm'.
 - `version` (String) Internal API parameter.
 
-<a id="nestedatt--directory_server_configurations"></a>
-### Nested Schema for `directory_server_configurations`
+<a id="nestedatt--directory_servers"></a>
+### Nested Schema for `directory_servers`
 
 Required:
 

@@ -19,7 +19,7 @@ resource "fmc_realm_ad_ldap" "example" {
   timeout_captive_portal_users            = 1440
   timeout_failed_captive_portal_users     = 1440
   timeout_guest_captive_portal_users      = 1440
-  directory_server_configurations = [
+  directory_servers = [
     {
       hostname                        = "ldap.example.com"
       port                            = 389

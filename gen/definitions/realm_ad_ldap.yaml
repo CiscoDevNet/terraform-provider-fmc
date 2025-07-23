@@ -50,7 +50,7 @@ attributes:
     exclude_test: true
   - model_name: adJoinPassword
     type: String
-    description: Password for ad_join_username user.
+    description: Password for `ad_join_username` user.
     exclude_example: true
     exclude_test: true
     sensitive: true
@@ -73,12 +73,12 @@ attributes:
     write_only: true
   - model_name: baseDn
     type: String
-    description: The directory tree on the server where the management center should begin searching for user data.
+    description: Directory tree on the server where the search for user data should begin.
     example: "DC=example,DC=com"
     mandatory: true
   - model_name: groupDn
     type: String
-    description: The directory tree on the server where the management center should begin searching for group data.
+    description: Directory tree on the server where the search for group data should begin.
     example: "CN=users,DC=example,DC=com"
     mandatory: true
   - model_name: includedUsers
@@ -156,7 +156,7 @@ attributes:
 
   # Directory server configuration
   - model_name: directoryConfigurations
-    tf_name: directory_server_configurations
+    tf_name: directory_servers
     type: List
     description: List of directory servers.
     mandatory: true

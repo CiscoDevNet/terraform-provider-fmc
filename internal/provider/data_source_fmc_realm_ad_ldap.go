@@ -105,7 +105,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"ad_join_password": schema.StringAttribute{
-				MarkdownDescription: "Password for ad_join_username user.",
+				MarkdownDescription: "Password for `ad_join_username` user.",
 				Computed:            true,
 				Sensitive:           true,
 			},
@@ -119,11 +119,11 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Sensitive:           true,
 			},
 			"base_dn": schema.StringAttribute{
-				MarkdownDescription: "The directory tree on the server where the management center should begin searching for user data.",
+				MarkdownDescription: "Directory tree on the server where the search for user data should begin.",
 				Computed:            true,
 			},
 			"group_dn": schema.StringAttribute{
-				MarkdownDescription: "The directory tree on the server where the management center should begin searching for group data.",
+				MarkdownDescription: "Directory tree on the server where the search for group data should begin.",
 				Computed:            true,
 			},
 			"included_users": schema.ListAttribute{
@@ -178,7 +178,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Timeout (in minutes) for Guest Captive Portal Users.",
 				Computed:            true,
 			},
-			"directory_server_configurations": schema.ListNestedAttribute{
+			"directory_servers": schema.ListNestedAttribute{
 				MarkdownDescription: "List of directory servers.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

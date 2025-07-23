@@ -129,7 +129,7 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				Optional:            true,
 			},
 			"ad_join_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for ad_join_username user.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Password for `ad_join_username` user.").String,
 				Optional:            true,
 				Sensitive:           true,
 			},
@@ -143,11 +143,11 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 				Sensitive:           true,
 			},
 			"base_dn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The directory tree on the server where the management center should begin searching for user data.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Directory tree on the server where the search for user data should begin.").String,
 				Required:            true,
 			},
 			"group_dn": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The directory tree on the server where the management center should begin searching for group data.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Directory tree on the server where the search for group data should begin.").String,
 				Required:            true,
 			},
 			"included_users": schema.ListAttribute{
@@ -223,7 +223,7 @@ func (r *RealmADLDAPResource) Schema(ctx context.Context, req resource.SchemaReq
 					int64validator.Between(0, 35791394),
 				},
 			},
-			"directory_server_configurations": schema.ListNestedAttribute{
+			"directory_servers": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of directory servers.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{

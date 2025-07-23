@@ -52,9 +52,9 @@ func TestAccFmcRealmADLDAP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_captive_portal_users", "1440"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_failed_captive_portal_users", "1440"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "timeout_guest_captive_portal_users", "1440"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.hostname", "ldap.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.port", "389"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_server_configurations.0.use_routing_to_select_interface", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_servers.0.hostname", "ldap.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_servers.0.port", "389"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_realm_ad_ldap.test", "directory_servers.0.use_routing_to_select_interface", "false"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -94,7 +94,7 @@ func testAccFmcRealmADLDAPConfig_minimum() string {
 	config += `	directory_password = "my_password"` + "\n"
 	config += `	base_dn = "DC=example,DC=com"` + "\n"
 	config += `	group_dn = "CN=users,DC=example,DC=com"` + "\n"
-	config += `	directory_server_configurations = [{` + "\n"
+	config += `	directory_servers = [{` + "\n"
 	config += `		hostname = "ldap.example.com"` + "\n"
 	config += `		port = 389` + "\n"
 	config += `		encryption_protocol = "NONE"` + "\n"
@@ -129,7 +129,7 @@ func testAccFmcRealmADLDAPConfig_all() string {
 	config += `	timeout_captive_portal_users = 1440` + "\n"
 	config += `	timeout_failed_captive_portal_users = 1440` + "\n"
 	config += `	timeout_guest_captive_portal_users = 1440` + "\n"
-	config += `	directory_server_configurations = [{` + "\n"
+	config += `	directory_servers = [{` + "\n"
 	config += `		hostname = "ldap.example.com"` + "\n"
 	config += `		port = 389` + "\n"
 	config += `		encryption_protocol = "NONE"` + "\n"

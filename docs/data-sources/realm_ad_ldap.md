@@ -29,19 +29,19 @@ data "fmc_realm_ad_ldap" "example" {
 
 ### Read-Only
 
-- `ad_join_password` (String, Sensitive) Password for ad_join_username user.
+- `ad_join_password` (String, Sensitive) Password for `ad_join_username` user.
 - `ad_join_username` (String) Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.
 - `ad_primary_domain` (String) Domain for the Active Directory server where users should be authenticated.
-- `base_dn` (String) The directory tree on the server where the management center should begin searching for user data.
+- `base_dn` (String) Directory tree on the server where the search for user data should begin.
 - `description` (String) Description of the Realm object.
 - `directory_password` (String, Sensitive) Password for the `directory_username`.
-- `directory_server_configurations` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_server_configurations))
+- `directory_servers` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_servers))
 - `directory_username` (String) Username used to connect to the directory.
 - `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
 - `excluded_groups` (List of String) Add groups to Excluded Groups.
 - `excluded_users` (List of String) Add users to Excluded Users.
 - `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.
-- `group_dn` (String) The directory tree on the server where the management center should begin searching for group data.
+- `group_dn` (String) Directory tree on the server where the search for group data should begin.
 - `included_groups` (List of String) Add groups to Included Groups.
 - `included_users` (List of String) Add users to Included Users.
 - `realm_type` (String) Type of the Realm.
@@ -55,8 +55,8 @@ data "fmc_realm_ad_ldap" "example" {
 - `update_interval` (String) Interval in hours for the sync (download) from the directory.
 - `version` (String) Internal API parameter.
 
-<a id="nestedatt--directory_server_configurations"></a>
-### Nested Schema for `directory_server_configurations`
+<a id="nestedatt--directory_servers"></a>
+### Nested Schema for `directory_servers`
 
 Read-Only:
 
