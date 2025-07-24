@@ -13,7 +13,7 @@ attributes:
     data_source_query: true
   - model_name: enabled
     type: Bool
-    description: Enable the Realm object, so it can be referenced in other objects.
+    description: Enable Realm object.
     example: true
   - model_name: type
     type: String
@@ -73,12 +73,12 @@ attributes:
     write_only: true
   - model_name: baseDn
     type: String
-    description: Directory tree on the server where the search for user data should begin.
+    description: Directory tree where the search for user data should begin.
     example: "DC=example,DC=com"
     mandatory: true
   - model_name: groupDn
     type: String
-    description: Directory tree on the server where the search for group data should begin.
+    description: Directory tree where the search for group data should begin.
     example: "CN=users,DC=example,DC=com"
     mandatory: true
   - model_name: includedUsers

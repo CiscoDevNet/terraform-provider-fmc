@@ -77,7 +77,7 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Enable the Realm object, so it can be referenced in other objects.",
+				MarkdownDescription: "Enable Realm object.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -119,11 +119,11 @@ func (d *RealmADLDAPDataSource) Schema(ctx context.Context, req datasource.Schem
 				Sensitive:           true,
 			},
 			"base_dn": schema.StringAttribute{
-				MarkdownDescription: "Directory tree on the server where the search for user data should begin.",
+				MarkdownDescription: "Directory tree where the search for user data should begin.",
 				Computed:            true,
 			},
 			"group_dn": schema.StringAttribute{
-				MarkdownDescription: "Directory tree on the server where the search for group data should begin.",
+				MarkdownDescription: "Directory tree where the search for group data should begin.",
 				Computed:            true,
 			},
 			"included_users": schema.ListAttribute{

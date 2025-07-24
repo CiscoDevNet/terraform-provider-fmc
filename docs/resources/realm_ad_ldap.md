@@ -51,11 +51,11 @@ resource "fmc_realm_ad_ldap" "example" {
 
 ### Required
 
-- `base_dn` (String) Directory tree on the server where the search for user data should begin.
+- `base_dn` (String) Directory tree where the search for user data should begin.
 - `directory_password` (String, Sensitive) Password for the `directory_username`.
 - `directory_servers` (Attributes List) List of directory servers. (see [below for nested schema](#nestedatt--directory_servers))
 - `directory_username` (String) Username used to connect to the directory.
-- `group_dn` (String) Directory tree on the server where the search for group data should begin.
+- `group_dn` (String) Directory tree where the search for group data should begin.
 - `name` (String) Name of the Realm object.
 - `realm_type` (String) Type of the Realm.
   - Choices: `AD`, `LDAP`
@@ -67,7 +67,7 @@ resource "fmc_realm_ad_ldap" "example" {
 - `ad_primary_domain` (String) Domain for the Active Directory server where users should be authenticated.
 - `description` (String) Description of the Realm object.
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Enable the Realm object, so it can be referenced in other objects.
+- `enabled` (Boolean) Enable Realm object.
 - `excluded_groups` (List of String) Add groups to Excluded Groups.
 - `excluded_users` (List of String) Add users to Excluded Users.
 - `group_attribute` (String) Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.
