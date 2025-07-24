@@ -41,7 +41,7 @@ type RadiusServerGroup struct {
 	Description                  types.String                     `tfsdk:"description"`
 	GroupAccountingMode          types.String                     `tfsdk:"group_accounting_mode"`
 	RetryInterval                types.Int64                      `tfsdk:"retry_interval"`
-	RealmId                      types.String                     `tfsdk:"realm_id"`
+	AdRealmId                    types.String                     `tfsdk:"ad_realm_id"`
 	AuthorizeOnly                types.Bool                       `tfsdk:"authorize_only"`
 	InterimAccountUpdateInterval types.Int64                      `tfsdk:"interim_account_update_interval"`
 	DynamicAuthorization         types.Bool                       `tfsdk:"dynamic_authorization"`
@@ -51,15 +51,15 @@ type RadiusServerGroup struct {
 }
 
 type RadiusServerGroupRadiusServers struct {
-	Hostname                                types.String `tfsdk:"hostname"`
-	RadiusServerEnabledMessageAuthenticator types.Bool   `tfsdk:"radius_server_enabled_message_authenticator"`
-	AuthenticationPort                      types.Int64  `tfsdk:"authentication_port"`
-	Key                                     types.String `tfsdk:"key"`
-	AccountingPort                          types.Int64  `tfsdk:"accounting_port"`
-	Timeout                                 types.Int64  `tfsdk:"timeout"`
-	UseRoutingToSelectInterface             types.Bool   `tfsdk:"use_routing_to_select_interface"`
-	InterfaceId                             types.String `tfsdk:"interface_id"`
-	RedirectAclId                           types.String `tfsdk:"redirect_acl_id"`
+	Hostname                    types.String `tfsdk:"hostname"`
+	MessageAuthenticator        types.Bool   `tfsdk:"message_authenticator"`
+	AuthenticationPort          types.Int64  `tfsdk:"authentication_port"`
+	Key                         types.String `tfsdk:"key"`
+	AccountingPort              types.Int64  `tfsdk:"accounting_port"`
+	Timeout                     types.Int64  `tfsdk:"timeout"`
+	UseRoutingToSelectInterface types.Bool   `tfsdk:"use_routing_to_select_interface"`
+	InterfaceId                 types.String `tfsdk:"interface_id"`
+	RedirectAclId               types.String `tfsdk:"redirect_acl_id"`
 }
 
 // End of section. //template:end types
@@ -95,8 +95,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 	if !data.RetryInterval.IsNull() {
 		body, _ = sjson.Set(body, "retryInterval", data.RetryInterval.ValueInt64())
 	}
-	if !data.RealmId.IsNull() {
-		body, _ = sjson.Set(body, "realm.id", data.RealmId.ValueString())
+	if !data.AdRealmId.IsNull() {
+		body, _ = sjson.Set(body, "realm.id", data.AdRealmId.ValueString())
 	}
 	if !data.AuthorizeOnly.IsNull() {
 		body, _ = sjson.Set(body, "enableAuthorizeOnly", data.AuthorizeOnly.ValueBool())
@@ -120,8 +120,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 			if !item.Hostname.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "host", item.Hostname.ValueString())
 			}
-			if !item.RadiusServerEnabledMessageAuthenticator.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enableMessageAuthenticator", item.RadiusServerEnabledMessageAuthenticator.ValueBool())
+			if !item.MessageAuthenticator.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableMessageAuthenticator", item.MessageAuthenticator.ValueBool())
 			}
 			if !item.AuthenticationPort.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "authenticationPort", item.AuthenticationPort.ValueInt64())
@@ -181,9 +181,9 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.RetryInterval = types.Int64Value(10)
 	}
 	if value := res.Get("realm.id"); value.Exists() {
-		data.RealmId = types.StringValue(value.String())
+		data.AdRealmId = types.StringValue(value.String())
 	} else {
-		data.RealmId = types.StringNull()
+		data.AdRealmId = types.StringNull()
 	}
 	if value := res.Get("enableAuthorizeOnly"); value.Exists() {
 		data.AuthorizeOnly = types.BoolValue(value.Bool())
@@ -221,9 +221,9 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 				data.Hostname = types.StringNull()
 			}
 			if value := res.Get("enableMessageAuthenticator"); value.Exists() {
-				data.RadiusServerEnabledMessageAuthenticator = types.BoolValue(value.Bool())
+				data.MessageAuthenticator = types.BoolValue(value.Bool())
 			} else {
-				data.RadiusServerEnabledMessageAuthenticator = types.BoolValue(true)
+				data.MessageAuthenticator = types.BoolValue(true)
 			}
 			if value := res.Get("authenticationPort"); value.Exists() {
 				data.AuthenticationPort = types.Int64Value(value.Int())
@@ -243,7 +243,7 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 			if value := res.Get("useRoutingToSelectInterface"); value.Exists() {
 				data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
 			} else {
-				data.UseRoutingToSelectInterface = types.BoolNull()
+				data.UseRoutingToSelectInterface = types.BoolValue(true)
 			}
 			if value := res.Get("interface.id"); value.Exists() {
 				data.InterfaceId = types.StringValue(value.String())
@@ -295,10 +295,10 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else if data.RetryInterval.ValueInt64() != 10 {
 		data.RetryInterval = types.Int64Null()
 	}
-	if value := res.Get("realm.id"); value.Exists() && !data.RealmId.IsNull() {
-		data.RealmId = types.StringValue(value.String())
+	if value := res.Get("realm.id"); value.Exists() && !data.AdRealmId.IsNull() {
+		data.AdRealmId = types.StringValue(value.String())
 	} else {
-		data.RealmId = types.StringNull()
+		data.AdRealmId = types.StringNull()
 	}
 	if value := res.Get("enableAuthorizeOnly"); value.Exists() && !data.AuthorizeOnly.IsNull() {
 		data.AuthorizeOnly = types.BoolValue(value.Bool())
@@ -366,10 +366,10 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 		} else {
 			data.Hostname = types.StringNull()
 		}
-		if value := res.Get("enableMessageAuthenticator"); value.Exists() && !data.RadiusServerEnabledMessageAuthenticator.IsNull() {
-			data.RadiusServerEnabledMessageAuthenticator = types.BoolValue(value.Bool())
-		} else if data.RadiusServerEnabledMessageAuthenticator.ValueBool() != true {
-			data.RadiusServerEnabledMessageAuthenticator = types.BoolNull()
+		if value := res.Get("enableMessageAuthenticator"); value.Exists() && !data.MessageAuthenticator.IsNull() {
+			data.MessageAuthenticator = types.BoolValue(value.Bool())
+		} else if data.MessageAuthenticator.ValueBool() != true {
+			data.MessageAuthenticator = types.BoolNull()
 		}
 		if value := res.Get("authenticationPort"); value.Exists() && !data.AuthenticationPort.IsNull() {
 			data.AuthenticationPort = types.Int64Value(value.Int())
@@ -388,7 +388,7 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 		}
 		if value := res.Get("useRoutingToSelectInterface"); value.Exists() && !data.UseRoutingToSelectInterface.IsNull() {
 			data.UseRoutingToSelectInterface = types.BoolValue(value.Bool())
-		} else {
+		} else if data.UseRoutingToSelectInterface.ValueBool() != true {
 			data.UseRoutingToSelectInterface = types.BoolNull()
 		}
 		if value := res.Get("interface.id"); value.Exists() && !data.InterfaceId.IsNull() {

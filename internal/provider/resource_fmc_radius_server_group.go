@@ -99,7 +99,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 				Optional:            true,
 			},
 			"group_accounting_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).").AddStringEnumDescription("SINGLE", "MULTIPLE").AddDefaultValueDescription("SINGLE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).").AddStringEnumDescription("SINGLE", "MULTIPLE").AddDefaultValueDescription("SINGLE").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -108,7 +108,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 				Default: stringdefault.StaticString("SINGLE"),
 			},
 			"retry_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Retry interval, in seconds, for the request").AddIntegerRangeDescription(1, 10).AddDefaultValueDescription("10").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Retry interval (in seconds) for the request.").AddIntegerRangeDescription(1, 10).AddDefaultValueDescription("10").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -116,23 +116,23 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 				},
 				Default: int64default.StaticInt64(10),
 			},
-			"realm_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Active Directory (AD) realm this RADIUS server group is associated with.").String,
+			"ad_realm_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Active Directory (AD) realm this RADIUS server group is associated with.").String,
 				Optional:            true,
 			},
 			"authorize_only": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("This RADIUS server group is being used for authorization or accounting only.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("This RADIUS server group is not being used for authentication, but for authorization or accounting only.").String,
 				Optional:            true,
 			},
 			"interim_account_update_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval, in hours, for interim accounting updates.").AddIntegerRangeDescription(1, 120).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interval (in hours) for interim accounting updates.").AddIntegerRangeDescription(1, 120).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 120),
 				},
 			},
 			"dynamic_authorization": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.").String,
 				Optional:            true,
 			},
 			"dynamic_authorization_port": schema.Int64Attribute{
@@ -158,7 +158,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							MarkdownDescription: helpers.NewAttributeDescription("IP Address or hostname of the RADIUS server.").String,
 							Required:            true,
 						},
-						"radius_server_enabled_message_authenticator": schema.BoolAttribute{
+						"message_authenticator": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enables RADIUS Server-Enabled Message Authenticator.").AddDefaultValueDescription("true").String,
 							Optional:            true,
 							Computed:            true,
@@ -174,7 +174,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Default: int64default.StaticInt64(1812),
 						},
 						"key": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Shared secret key for the RADIUS server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Shared secret that is used for data encryption.").String,
 							Required:            true,
 							Sensitive:           true,
 						},
@@ -188,7 +188,7 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Default: int64default.StaticInt64(1813),
 						},
 						"timeout": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Timeout, in seconds, for the RADIUS server.").AddIntegerRangeDescription(1, 300).AddDefaultValueDescription("10").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) for the RADIUS server.").AddIntegerRangeDescription(1, 300).AddDefaultValueDescription("10").String,
 							Optional:            true,
 							Computed:            true,
 							Validators: []validator.Int64{
@@ -197,8 +197,10 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Default: int64default.StaticInt64(10),
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for the RADIUS server (true) or use specified interface (false).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Use routing to select the interface for the RADIUS server (true) or use specified interface (false).").AddDefaultValueDescription("true").String,
 							Optional:            true,
+							Computed:            true,
+							Default:             booldefault.StaticBool(true),
 						},
 						"interface_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Security Zone ID or Interface Group ID for the RADIUS server communication.").String,

@@ -85,27 +85,27 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 			},
 			"group_accounting_mode": schema.StringAttribute{
-				MarkdownDescription: "Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).",
+				MarkdownDescription: "Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).",
 				Computed:            true,
 			},
 			"retry_interval": schema.Int64Attribute{
-				MarkdownDescription: "Retry interval, in seconds, for the request",
+				MarkdownDescription: "Retry interval (in seconds) for the request.",
 				Computed:            true,
 			},
-			"realm_id": schema.StringAttribute{
-				MarkdownDescription: "Active Directory (AD) realm this RADIUS server group is associated with.",
+			"ad_realm_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Active Directory (AD) realm this RADIUS server group is associated with.",
 				Computed:            true,
 			},
 			"authorize_only": schema.BoolAttribute{
-				MarkdownDescription: "This RADIUS server group is being used for authorization or accounting only.",
+				MarkdownDescription: "This RADIUS server group is not being used for authentication, but for authorization or accounting only.",
 				Computed:            true,
 			},
 			"interim_account_update_interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval, in hours, for interim accounting updates.",
+				MarkdownDescription: "Interval (in hours) for interim accounting updates.",
 				Computed:            true,
 			},
 			"dynamic_authorization": schema.BoolAttribute{
-				MarkdownDescription: "Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.",
+				MarkdownDescription: "Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.",
 				Computed:            true,
 			},
 			"dynamic_authorization_port": schema.Int64Attribute{
@@ -125,7 +125,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 							MarkdownDescription: "IP Address or hostname of the RADIUS server.",
 							Computed:            true,
 						},
-						"radius_server_enabled_message_authenticator": schema.BoolAttribute{
+						"message_authenticator": schema.BoolAttribute{
 							MarkdownDescription: "Enables RADIUS Server-Enabled Message Authenticator.",
 							Computed:            true,
 						},
@@ -134,7 +134,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 							Computed:            true,
 						},
 						"key": schema.StringAttribute{
-							MarkdownDescription: "Shared secret key for the RADIUS server.",
+							MarkdownDescription: "Shared secret that is used for data encryption.",
 							Computed:            true,
 							Sensitive:           true,
 						},
@@ -143,7 +143,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 							Computed:            true,
 						},
 						"timeout": schema.Int64Attribute{
-							MarkdownDescription: "Timeout, in seconds, for the RADIUS server.",
+							MarkdownDescription: "Timeout (in seconds) for the RADIUS server.",
 							Computed:            true,
 						},
 						"use_routing_to_select_interface": schema.BoolAttribute{

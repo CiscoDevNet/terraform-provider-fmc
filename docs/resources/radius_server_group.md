@@ -18,7 +18,7 @@ resource "fmc_radius_server_group" "example" {
   description                     = "My RADIUS Server Group object"
   group_accounting_mode           = "SINGLE"
   retry_interval                  = 10
-  realm_id                        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  ad_realm_id                     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   authorize_only                  = true
   interim_account_update_interval = 24
   dynamic_authorization           = true
@@ -26,13 +26,13 @@ resource "fmc_radius_server_group" "example" {
   merge_downloadable_acl_order    = "MERGE_DACL_BEFORE_AV_PAIR_ACL"
   radius_servers = [
     {
-      hostname                                    = "10.10.10.10"
-      radius_server_enabled_message_authenticator = true
-      authentication_port                         = 1812
-      key                                         = "my_secret_key"
-      accounting_port                             = 1813
-      timeout                                     = 10
-      use_routing_to_select_interface             = true
+      hostname                        = "10.10.10.10"
+      message_authenticator           = true
+      authentication_port             = 1812
+      key                             = "my_secret_key"
+      accounting_port                 = 1813
+      timeout                         = 10
+      use_routing_to_select_interface = true
     }
   ]
 }
@@ -48,21 +48,21 @@ resource "fmc_radius_server_group" "example" {
 
 ### Optional
 
-- `authorize_only` (Boolean) This RADIUS server group is being used for authorization or accounting only.
+- `ad_realm_id` (String) Id of Active Directory (AD) realm this RADIUS server group is associated with.
+- `authorize_only` (Boolean) This RADIUS server group is not being used for authentication, but for authorization or accounting only.
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.
+- `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.
 - `dynamic_authorization_port` (Number) Port number for the RADIUS dynamic authorization services.
   - Range: `1024`-`65535`
-- `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).
+- `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).
   - Choices: `SINGLE`, `MULTIPLE`
   - Default value: `SINGLE`
-- `interim_account_update_interval` (Number) Interval, in hours, for interim accounting updates.
+- `interim_account_update_interval` (Number) Interval (in hours) for interim accounting updates.
   - Range: `1`-`120`
 - `merge_downloadable_acl_order` (String) Placement order of the downloadable ACL with the Cisco AV pair ACL.
   - Choices: `MERGE_DACL_BEFORE_AV_PAIR_ACL`, `MERGE_DACL_AFTER_AV_PAIR_ACL`
-- `realm_id` (String) Active Directory (AD) realm this RADIUS server group is associated with.
-- `retry_interval` (Number) Retry interval, in seconds, for the request
+- `retry_interval` (Number) Retry interval (in seconds) for the request.
   - Range: `1`-`10`
   - Default value: `10`
 
@@ -77,7 +77,7 @@ resource "fmc_radius_server_group" "example" {
 Required:
 
 - `hostname` (String) IP Address or hostname of the RADIUS server.
-- `key` (String, Sensitive) Shared secret key for the RADIUS server.
+- `key` (String, Sensitive) Shared secret that is used for data encryption.
 
 Optional:
 
@@ -88,13 +88,14 @@ Optional:
   - Range: `1`-`65535`
   - Default value: `1812`
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
-- `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
+- `message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
   - Default value: `true`
 - `redirect_acl_id` (String) ID of the redirect extended ACL.
-- `timeout` (Number) Timeout, in seconds, for the RADIUS server.
+- `timeout` (Number) Timeout (in seconds) for the RADIUS server.
   - Range: `1`-`300`
   - Default value: `10`
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
+  - Default value: `true`
 
 ## Import
 

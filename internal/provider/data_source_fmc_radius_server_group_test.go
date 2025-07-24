@@ -40,7 +40,7 @@ func TestAccDataSourceFmcRadiusServerGroup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "dynamic_authorization", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "dynamic_authorization_port", "1700"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.hostname", "10.10.10.10"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.radius_server_enabled_message_authenticator", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.message_authenticator", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.authentication_port", "1812"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.accounting_port", "1813"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_radius_server_group.test", "radius_servers.0.timeout", "10"))
@@ -81,7 +81,7 @@ func testAccDataSourceFmcRadiusServerGroupConfig() string {
 	config += `	dynamic_authorization_port = 1700` + "\n"
 	config += `	radius_servers = [{` + "\n"
 	config += `		hostname = "10.10.10.10"` + "\n"
-	config += `		radius_server_enabled_message_authenticator = true` + "\n"
+	config += `		message_authenticator = true` + "\n"
 	config += `		authentication_port = 1812` + "\n"
 	config += `		key = "my_secret_key"` + "\n"
 	config += `		accounting_port = 1813` + "\n"
@@ -110,7 +110,7 @@ func testAccNamedDataSourceFmcRadiusServerGroupConfig() string {
 	config += `	dynamic_authorization_port = 1700` + "\n"
 	config += `	radius_servers = [{` + "\n"
 	config += `		hostname = "10.10.10.10"` + "\n"
-	config += `		radius_server_enabled_message_authenticator = true` + "\n"
+	config += `		message_authenticator = true` + "\n"
 	config += `		authentication_port = 1812` + "\n"
 	config += `		key = "my_secret_key"` + "\n"
 	config += `		accounting_port = 1813` + "\n"

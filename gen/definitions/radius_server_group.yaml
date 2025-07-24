@@ -21,28 +21,28 @@ attributes:
     example: My RADIUS Server Group object
   - model_name: groupAccountingMode
     type: String
-    description: Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).
+    description: Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).
     enum_values: [SINGLE, MULTIPLE]
     example: SINGLE
     default_value: SINGLE
   - model_name: retryInterval
     type: Int64
-    description: Retry interval, in seconds, for the request
+    description: Retry interval (in seconds) for the request.
     min_int: 1
     max_int: 10
     example: 10
     default_value: 10
   - model_name: id
     data_path: [realm]
-    tf_name: realm_id
+    tf_name: ad_realm_id
     type: String
-    description: Active Directory (AD) realm this RADIUS server group is associated with.
+    description: Id of Active Directory (AD) realm this RADIUS server group is associated with.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
   - model_name: enableAuthorizeOnly
     tf_name: authorize_only
     type: Bool
-    description: This RADIUS server group is being used for authorization or accounting only.
+    description: This RADIUS server group is not being used for authentication, but for authorization or accounting only.
     example: true
   # - model_name: enableInterimAccountUpdate
   #   tf_name: interim_account_update
@@ -52,14 +52,14 @@ attributes:
   - model_name: interimAccountUpdateInterval
     tf_name: interim_account_update_interval
     type: Int64
-    description: Interval, in hours, for interim accounting updates.
+    description: Interval (in hours) for interim accounting updates.
     min_int: 1
     max_int: 120
     example: 24
   - model_name: enableDynamicAuthorization
     tf_name: dynamic_authorization
     type: Bool
-    description: Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.
+    description: Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.
     example: true
   - model_name: dynamicAuthorizationPort
     tf_name: dynamic_authorization_port
@@ -93,7 +93,7 @@ attributes:
         mandatory: true
         id: true
       - model_name: enableMessageAuthenticator
-        tf_name: radius_server_enabled_message_authenticator
+        tf_name: message_authenticator
         type: Bool
         description: Enables RADIUS Server-Enabled Message Authenticator.
         example: true
@@ -108,7 +108,7 @@ attributes:
       - model_name: secretKey
         tf_name: key
         type: String
-        description: Shared secret key for the RADIUS server.
+        description: Shared secret that is used for data encryption.
         example: my_secret_key
         write_only: true
         sensitive: true
@@ -122,7 +122,7 @@ attributes:
         default_value: 1813
       - model_name: timeout
         type: Int64
-        description: Timeout, in seconds, for the RADIUS server.
+        description: Timeout (in seconds) for the RADIUS server.
         min_int: 1
         max_int: 300
         example: 10
@@ -131,6 +131,7 @@ attributes:
         type: Bool
         description: Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
         example: true
+        default_value: true
       - model_name: id
         data_path: [interface]
         tf_name: interface_id

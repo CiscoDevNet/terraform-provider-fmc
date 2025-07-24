@@ -29,16 +29,16 @@ data "fmc_radius_server_group" "example" {
 
 ### Read-Only
 
-- `authorize_only` (Boolean) This RADIUS server group is being used for authorization or accounting only.
+- `ad_realm_id` (String) Id of Active Directory (AD) realm this RADIUS server group is associated with.
+- `authorize_only` (Boolean) This RADIUS server group is not being used for authentication, but for authorization or accounting only.
 - `description` (String) Description of the object.
-- `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or change of authorization (CoA) services for this RADIUS server group.
+- `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.
 - `dynamic_authorization_port` (Number) Port number for the RADIUS dynamic authorization services.
-- `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (single mode) or sent to all servers in the group (simultaneous mode).
-- `interim_account_update_interval` (Number) Interval, in hours, for interim accounting updates.
+- `group_accounting_mode` (String) Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).
+- `interim_account_update_interval` (Number) Interval (in hours) for interim accounting updates.
 - `merge_downloadable_acl_order` (String) Placement order of the downloadable ACL with the Cisco AV pair ACL.
 - `radius_servers` (Attributes List) List of RADIUS servers in the group. (see [below for nested schema](#nestedatt--radius_servers))
-- `realm_id` (String) Active Directory (AD) realm this RADIUS server group is associated with.
-- `retry_interval` (Number) Retry interval, in seconds, for the request
+- `retry_interval` (Number) Retry interval (in seconds) for the request.
 - `type` (String) Type of the object; this value is always 'RadiusServerGroup'.
 
 <a id="nestedatt--radius_servers"></a>
@@ -50,8 +50,8 @@ Read-Only:
 - `authentication_port` (Number) Port number for the RADIUS authentication services.
 - `hostname` (String) IP Address or hostname of the RADIUS server.
 - `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
-- `key` (String, Sensitive) Shared secret key for the RADIUS server.
-- `radius_server_enabled_message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
+- `key` (String, Sensitive) Shared secret that is used for data encryption.
+- `message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
 - `redirect_acl_id` (String) ID of the redirect extended ACL.
-- `timeout` (Number) Timeout, in seconds, for the RADIUS server.
+- `timeout` (Number) Timeout (in seconds) for the RADIUS server.
 - `use_routing_to_select_interface` (Boolean) Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
