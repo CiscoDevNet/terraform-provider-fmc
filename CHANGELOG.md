@@ -1,9 +1,13 @@
 ## 2.0.0-rc5 (Unreleased)
 
+- (Enhancement) Add support for `fmc_realm_ad_ldap` resource and data source
+- (Enhancement) Add support for `fmc_internal_certificate`, `fmc_internal_certificate_authority`, `fmc_external_certificate`, `fmc_trusted_certificate_authority` resources and data sources
+- (Enhancement) Add support for `fmc_certificate_enrollment` resource and data source
 - (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
 - (Enhancement) Add support for `fmc_access_rule` resource and data source
 - (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
 - (Enhancement) Add support for `fmc_access_category` resource and data source
+- (Enhancement) Add support for `fmc_single_sign_on_server` resource and data source
 - (Enhancement) Add support for `fmc_countries` and `fmc_continents` data sources
 - (Enhancement) Add support for `fmc_geolocation` resource and data source
 - (Enhancement) Add support for `fmc_service_access` resource and data source
