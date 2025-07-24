@@ -1,375 +1,89 @@
-# Manual resource - Resource (Read), adjustBody
 ---
-name: Certificate Enrollment
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/certenrollments
+name: Single Sign On Server
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ssoservers
 doc_category: Objects
-res_description: >-
-  This device manages Certificate Enrollment configuration.\n
-  Manual certificate creation is supported only with `manual_ca_only` set to `true`.\n
-  (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.\n
-  (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
-adjust_body: true
 attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the Certificate Enrollment object.
-    example: my_certificate_enrollment
+    description: Name of the Single Sign-On Server object.
+    example: my_sso_server
     data_source_query: true
   - model_name: type
     type: String
-    description: Type of the object; this value is always 'CertEnrollment'.
+    description: Type of the object; this value is always 'SSOServer'.
     computed: true
   - model_name: type
     type: String
-    value: CertEnrollment
-  - model_name: description
-    type: String
-    description: Description of the Certificate Enrollment object.
-    example: My certificate enrollment
-
-  # CA Information - Common
-  - model_name: enrollmentType
+    value: SSOServer
+  - model_name: idpEntityId
+    tf_name: identity_provider_entity_id_url
     type: String
     mandatory: true
-    enum_values: ["SCEP", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"]
-    description: Certificate enrollment type.
-    example: SELF_SIGNED_CERTFICATE
-    test_value: '"PKCS12"'
-  - model_name: ipsecClient
-    data_path: ["validationUsage"]
-    tf_name: validation_usage_ipsec_client
-    type: Bool
-    description: Validate an IPsec client certificate for a site-to-site VPN connection.
-    example: "true"
-    exclude_test: true # FMCVERSION <= 7.6
-  - model_name: sslServer
-    data_path: ["validationUsage"]
-    tf_name: validation_usage_ssl_server
-    type: Bool
-    description: Validate an SSL server certificate.
-    example: "true"
-    exclude_test: true # FMCVERSION <= 7.6
-  - model_name: sslClient
-    data_path: ["validationUsage"]
-    tf_name: validation_usage_ssl_client
-    type: Bool
-    description: Validate an SSL client certificate during a remote access VPN connection attempt.
-    example: "true"
-    exclude_test: true # FMCVERSION <= 7.6
-  - model_name: skipCaFlagCheck
-    tf_name: skip_ca_flag_check
-    type: Bool
-    description: Skip checking the basic constraints extension and the CA flag in a trustpoint certificate.
-    example: "false"
-    exclude_test: true # FMCVERSION <= 7.2
-    # FMCBUG CSCwq44417 FMC API: Endpoint /object/certenrollments does not set skipCaFlagCheck flag correctly
-    write_only: true
-  
-  # CA Information - EST
-  - model_name: enrollmentUrl
-    data_path: ["estContent"]
-    tf_name: est_enrollment_url
+    description: URL that is defined in SAML Identity Provider (IdP) to identify a service provider uniquely.
+    example: "https://idp.example.com/saml"
+  - model_name: ssoURL
+    tf_name: sso_url
     type: String
-    description: EST enrollment CA server URL.
-    exclude_example: true
-    exclude_test: true
-  - model_name: username
-    data_path: ["estContent"]
-    tf_name: est_username
+    mandatory: true
+    description: URL for signing into the SAML Identity Provider (IdP) server.
+    example: "https://idp.example.com/sso"
+  - model_name: logoutURL
+    tf_name: logout_url
     type: String
-    description: EST enrollment CA server username.
-    exclude_example: true
-    exclude_test: true
-  - model_name: password
-    data_path: ["estContent"]
-    tf_name: est_password
+    description: URL for signing out of the SAML Identity Provider (IdP) server.
+    example: "https://idp.example.com/logout"
+  - model_name: baseUrl
     type: String
-    description: EST enrollment CA server password.
-    sensitive: true
-    write_only: true
-    exclude_example: true
-    exclude_test: true
-  - model_name: fingerprint
-    data_path: ["estContent"]
-    tf_name: est_fingerprint
-    type: String
-    description: EST enrollment CA server fingerprint.
-    exclude_example: true
-    exclude_test: true
+    description: URL that will redirect the user back to FTD once the Identity Provider (IdP) authentication is done.
+    example: "https://fmc.example.com/sso"
   - model_name: id
-    data_path: ["estContent", "sourceInterface"]
-    tf_name: est_source_interface_id
+    data_path: ["identityProviderCert"]
+    tf_name: identity_provider_certificate_id
     type: String
-    description: ID of interface group or security zone that interacts with the CA server.
-    exclude_example: true
-    exclude_test: true
+    mandatory: true
+    description: Id of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.
+    example: 123e4567-e89b-12d3-a456-426614174000
+    test_value: fmc_certificate_enrollment.test.id
   - model_name: name
-    data_path: ["estContent", "sourceInterface"]
-    tf_name: est_source_interface_name
+    data_path: ["identityProviderCert"]
+    tf_name: identity_provider_certificate_name
     type: String
-    description: Name of interface group or security zone that interacts with the CA server.
-    exclude_example: true
-    exclude_test: true
-  - model_name: ignoreServerCertificateValidations
-    data_path: ["estContent"]
-    tf_name: est_ignore_server_certificate_validation
-    type: Bool
-    description: Ignore EST server certificate validations.
-    exclude_example: true
-    exclude_test: true
-
-  # CA Information - SCEP
-  - model_name: enrollmentUrl
-    data_path: ["scepContent"]
-    tf_name: scep_enrollment_url
+    mandatory: true
+    description: Name of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.
+    example: my_idp_certificate
+    test_value: fmc_certificate_enrollment.test.name
+  - model_name: id
+    data_path: ["serviceProviderCert"]
+    tf_name: service_provider_certificate_id
     type: String
-    description: SCEP enrollment CA server URL.
-    exclude_example: true
+    description: Id of the certificate, which will be used to sign the requests and build circle of trust with IdP.
+    example: 123e4567-e89b-12d3-a456-426614174001
     exclude_test: true
-  - model_name: challengePassword
-    data_path: ["scepContent"]
-    tf_name: scep_challenge_password
+  - model_name: requestSignatureType
+    tf_name: request_signature_type
     type: String
-    description: SCEP enrollment challenge password.
-    sensitive: true
-    write_only: true
-    exclude_example: true
-    exclude_test: true
-  - model_name: retryPeriodInMins
-    data_path: ["scepContent"]
-    tf_name: scep_retry_period
+    enum_values: [NO_SIGNATURE, RSA-SHA1, RSA-SHA256, RSA-SHA384, RSA-SHA512]
+    description: Encryption algorithm to sign the SAML single sign-on requests.
+    example: RSA-SHA256
+  - model_name: requestTimeout
     type: Int64
     min_int: 1
-    max_int: 60
-    description: Interval (in minutes) between certificate request attempts.
-    exclude_example: true
-    exclude_test: true
-  - model_name: retryCount
-    data_path: ["scepContent"]
-    tf_name: scep_retry_count
-    type: Int64
-    min_int: 0
-    max_int: 100
-    description: Number of retries that should be made if no certificate is issued upon the first request.
-    exclude_example: true
-    exclude_test: true
-  - model_name: fingerprint
-    data_path: ["scepContent"]
-    tf_name: scep_fingerprint
-    type: String
-    description: SCEP enrollment CA server fingerprint.
-    exclude_example: true
-    exclude_test: true
+    max_int: 7200
+    default_value: 300
+    example: 300
+    description: Specify the SAML assertion validity duration (in seconds) for the users to complete the single sign-on request.
+  - model_name: serverOnInternalNetwork
+    tf_name: identity_provider_accessible_only_on_internal_network
+    type: Bool
+    description: SAML Identity Provider (IdP) resides on the internal network.
+    example: "false"
+  - model_name: reAuthAtLogin
+    tf_name: request_identity_provider_reauthentication_at_each_login
+    type: Bool
+    description: Authenticate user at each login even if the previous Identity Provider (IdP) session is valid.
+    example: "false"
 
-  # CA Information - Manual
-  - model_name: caOnly
-    data_path: ["caCertificate"]
-    tf_name: manual_ca_only
-    type: Bool
-    description: Create only the CA certificate from the selected CA. An identity certificate will not be created for this certificate. Must be set to `true`.
-    exclude_example: true
-    exclude_test: true
-  - model_name: base64Content
-    data_path: ["caCertificate"]
-    tf_name: manual_ca_certificate
-    type: String
-    description: Base64 encoded certificate in PEM format.
-    exclude_example: true
-    exclude_test: true
-  
-  # CA Information - PKCS12
-  - model_name: base64Certificate
-    data_path: ["pkcs12Content"]
-    tf_name: pkcs12_certificate
-    type: String
-    description: Base64 encoded certificate in PKCS12 format.
-    exclude_example: true
-    minimum_test_value: base64encode(local.certificate)
-    test_value: base64encode(local.certificate)
-  - model_name: passPhrase
-    data_path: ["pkcs12Content"]
-    tf_name: pkcs12_certificate_passphrase
-    type: String
-    description: Passphrase for the PKCS12 certificate.
-    exclude_example: true
-    minimum_test_value: '"cisco123"'
-    test_value: '"cisco123"'
-    sensitive: true
-    write_only: true
-  
-  # Certificate Parameters
-  - model_name: includeFQDN
-    data_path: ["certificateParameters"]
-    tf_name: certificate_include_fqdn
-    type: String
-    enum_values: [ "DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT" ]
-    description: Include the device's fully qualified domain name (FQDN) in the certificate request
-    example: NONE
-    exclude_test: true
-  - model_name: customFqdn
-    data_path: ["certificateParameters"]
-    tf_name: certificate_custom_fqdn
-    type: String
-    description: Device's custom FQDN to be included in the certificate.
-    exclude_example: true
-    exclude_test: true
-  - model_name: includeDeviceIp
-    data_path: ["certificateParameters"]
-    tf_name: certificate_include_device_ip
-    type: String
-    description: Device IP in the certificate.
-    exclude_example: true
-    exclude_test: true
-  - model_name: commonName
-    data_path: ["certificateParameters"]
-    tf_name: certificate_common_name
-    type: String
-    description: Common Name (CN) for the certificate.
-    example: ftd.example.com
-    exclude_test: true
-  - model_name: organizationalUnit
-    data_path: ["certificateParameters"]
-    tf_name: certificate_organizational_unit
-    type: String
-    description: Organizational Unit (OU) for the certificate.
-    example: my_organizational_unit
-    exclude_test: true
-  - model_name: organization
-    data_path: ["certificateParameters"]
-    tf_name: certificate_organization
-    type: String
-    description: Organization (O) for the certificate.
-    example: my_organization
-    exclude_test: true
-  - model_name: locality
-    data_path: ["certificateParameters"]
-    tf_name: certificate_locality
-    type: String
-    description: Locality (L) for the certificate.
-    example: my_locality
-    exclude_test: true
-  - model_name: state
-    data_path: ["certificateParameters"]
-    tf_name: certificate_state
-    type: String
-    description: State (ST) for the certificate.
-    example: my_state
-    exclude_test: true
-  - model_name: countryCode
-    data_path: ["certificateParameters"]
-    tf_name: certificate_country_code
-    type: String
-    description: Country Code (C) for the certificate.
-    example: PL
-    exclude_test: true
-  - model_name: email
-    data_path: ["certificateParameters"]
-    tf_name: certificate_email
-    type: String
-    description: Email (E) for the certificate.
-    example: me@example.com
-    exclude_test: true
-  - model_name: includeDeviceSerial
-    data_path: ["certificateParameters"]
-    tf_name: certificate_include_device_serial_number
-    type: Bool
-    description: Include the device serial in the certificate.
-    example: true
-    exclude_test: true
-  
-  # Key
-  - model_name: keyType
-    data_path: ["key"]
-    tf_name: key_type
-    type: String
-    enum_values: [ "RSA", "ECDSA", "EdDSA" ]
-    description: Type of key pair.
-    example: RSA
-    exclude_test: true
-  - model_name: keyName
-    data_path: ["key"]
-    tf_name: key_name
-    type: String
-    description: Name of the key pair used.
-    example: my_key
-    exclude_test: true
-  - model_name: keySize
-    data_path: ["key"]
-    tf_name: key_size
-    type: String
-    enum_values: [ "CertKey_512", "CertKey_768", "CertKey_1024", "CertKey_2048", "CertKey_3072", "CertKey_4096", "CertKey_256", "CertKey_384", "CertKey_521" ]
-    description: Desired key size (modulus), in bits.
-    example: CertKey_2048
-    exclude_test: true
-  - model_name: ignoreIpsecKeyusage
-    data_path: ["key"]
-    tf_name: ignore_ipsec_key_usage
-    type: Bool
-    description: Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.
-    example: "false"
-    exclude_test: true
-  
-  # Revocation
-  # Set implicilty using adjustBody
-  # - model_name: enableCertRevocationList
-  #   data_path: ["revocation", "certRevocationListContent"]
-  #   tf_name: crl
-  #   type: Bool
-  #   description: Enable certificate revocation list (CRL).
-  #   example: true
-  - model_name: enableCertRevocationListDistributionPoint
-    data_path: ["revocation", "certRevocationListContent"]
-    tf_name: crl_use_distribution_point_from_the_certificate
-    type: Bool
-    description: Obtain the revocation lists distribution URL from the certificate.
-    example: true
-    exclude_test: true # FMCVERSION <= 7.6
-  # Set implicilty using adjustBody
-  # - model_name: enableStaticCertRevocationList
-  #   data_path: ["revocation", "certRevocationListContent"]
-  #   tf_name: crl_use_static_list
-  #   type: Bool
-  #   description: Use static, pre-defined distribution URL.
-  #   example: true
-  - model_name: certRevocationStaticUrlList
-    data_path: ["revocation", "certRevocationListContent"]
-    tf_name: crl_static_urls_list
-    type: List
-    element_type: String
-    description: Static URL list for certificate revocation.
-    example: http://example.com/crl.pem
-    exclude_test: true # FMCVERSION <= 7.6
-  # Set implicilty using adjustBody
-  # - model_name: enableOnlineCertificateStatusProtocol
-  #   data_path: ["revocation", "onlineCertificateStatusProtocolContent"]
-  #   tf_name: ocsp
-  #   type: Bool
-  #   description: Enable Online Certificate Status Protocol (OCSP).
-  #   example: true
-  - model_name: onlineCertificateStatusProtocolUrl
-    data_path: ["revocation", "onlineCertificateStatusProtocolContent"]
-    tf_name: ocsp_url
-    type: String
-    description: URL for the Online Certificate Status Protocol (OCSP).
-    example: http://example.com/ocsp
-    exclude_test: true # FMCVERSION <= 7.6
-  
-  - model_name: evaluationPriority
-    data_path: ["revocation"]
-    tf_name: revocation_evaluation_priority
-    type: String
-    enum_values: [ CRL, OCSP, NONE ]
-    description: Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
-    example: CRL
-    exclude_test: true # FMCVERSION <= 7.6
-  - model_name: ignoreRevocation
-    data_path: ["revocation"]
-    tf_name: consider_certificate_valid_if_revocation_information_not_reachable
-    type: Bool
-    description: Consider the certificate valid if revocation information can not be reached.
-    example: "false"
-    exclude_test: true # FMCVERSION <= 7.6
 test_prerequisites: |-
   locals {
     certificate = <<EOT
@@ -646,3 +360,10 @@ test_prerequisites: |-
       0208 00
       EOT
     }
+  
+  resource "fmc_certificate_enrollment" "test" {
+    name                          = "sso_certificate_enrollment"
+    enrollment_type               = "PKCS12"
+    pkcs12_certificate            = base64encode(local.certificate)
+    pkcs12_certificate_passphrase = "cisco123"
+  }

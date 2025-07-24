@@ -4,7 +4,7 @@ page_title: "fmc_certificate_enrollment Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This device manages Certificate Enrollment configuration.
-  Manual certificate creation is supported only with CA only option set.
+  Manual certificate creation is supported only with manual_ca_only set to true.
   (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.
   (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
 ---
@@ -12,7 +12,7 @@ description: |-
 # fmc_certificate_enrollment (Resource)
 
 This device manages Certificate Enrollment configuration.
- Manual certificate creation is supported only with CA only option set.
+ Manual certificate creation is supported only with `manual_ca_only` set to `true`.
  (FMC 7.2) Only PKCS12 based certificate enrollment object is supported.
  (FMC 7.4 and FMC 7.6) Only PKCS12 and MANUAL with CA only based certificate enrollment object is supported.
 

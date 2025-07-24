@@ -16,6 +16,7 @@ description: |-
 - (Enhancement) Add support for `fmc_access_rule` resource and data source
 - (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
 - (Enhancement) Add support for `fmc_access_category` resource and data source
+- (Enhancement) Add support for `fmc_single_sign_on_server` resource and data source
 - (Enhancement) Add support for `fmc_countries` and `fmc_continents` data sources
 - (Enhancement) Add support for `fmc_geolocation` resource and data source
 - (Enhancement) Add support for `fmc_service_access` resource and data source
