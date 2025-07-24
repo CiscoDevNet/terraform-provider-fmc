@@ -80,32 +80,32 @@ func (d *SingleSignOnServerDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Type of the object; this value is always 'SSOServer'.",
 				Computed:            true,
 			},
-			"identity_provider_entity_id": schema.StringAttribute{
-				MarkdownDescription: "URL that is defined in SAML IdP to identify a service provider uniquely.",
+			"identity_provider_entity_id_url": schema.StringAttribute{
+				MarkdownDescription: "URL that is defined in SAML Identity Provider (IdP) to identify a service provider uniquely.",
 				Computed:            true,
 			},
 			"sso_url": schema.StringAttribute{
-				MarkdownDescription: "URL for signing into the SAML identity provider server.",
+				MarkdownDescription: "URL for signing into the SAML Identity Provider (IdP) server.",
 				Computed:            true,
 			},
 			"logout_url": schema.StringAttribute{
-				MarkdownDescription: "URL for signing out of the SAML identity provider server.",
+				MarkdownDescription: "URL for signing out of the SAML Identity Provider (IdP) server.",
 				Computed:            true,
 			},
 			"base_url": schema.StringAttribute{
-				MarkdownDescription: "URL that will redirect the user back to FTD once the identity provider authentication is done.",
+				MarkdownDescription: "URL that will redirect the user back to FTD once the Identity Provider (IdP) authentication is done.",
 				Computed:            true,
 			},
 			"identity_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Certificate Id of the IdP enrolled into the FTD to verify the messages signed by the IdP.",
+				MarkdownDescription: "Id of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.",
 				Computed:            true,
 			},
 			"identity_provider_certificate_name": schema.StringAttribute{
-				MarkdownDescription: "Certificate Name of the IdP enrolled into the FTD to verify the messages signed by the IdP.",
+				MarkdownDescription: "Name of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.",
 				Computed:            true,
 			},
 			"service_provider_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Certificate Id, which will be used to sign the requests and build circle of trust with IdP.",
+				MarkdownDescription: "Id of the certificate, which will be used to sign the requests and build circle of trust with IdP.",
 				Computed:            true,
 			},
 			"request_signature_type": schema.StringAttribute{
@@ -117,11 +117,11 @@ func (d *SingleSignOnServerDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"identity_provider_accessible_only_on_internal_network": schema.BoolAttribute{
-				MarkdownDescription: "SAML IdP resides on the internal network.",
+				MarkdownDescription: "SAML Identity Provider (IdP) resides on the internal network.",
 				Computed:            true,
 			},
 			"request_identity_provider_reauthentication_at_each_login": schema.BoolAttribute{
-				MarkdownDescription: "Authenticate user at each login even if the previous IdP session is valid.",
+				MarkdownDescription: "Authenticate user at each login even if the previous Identity Provider (IdP) session is valid.",
 				Computed:            true,
 			},
 		},

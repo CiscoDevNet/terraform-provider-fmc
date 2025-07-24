@@ -1,6 +1,6 @@
 resource "fmc_single_sign_on_server" "example" {
   name                                                     = "my_sso_server"
-  identity_provider_entity_id                              = "https://idp.example.com/saml"
+  identity_provider_entity_id_url                          = "https://idp.example.com/saml"
   sso_url                                                  = "https://idp.example.com/sso"
   logout_url                                               = "https://idp.example.com/logout"
   base_url                                                 = "https://fmc.example.com/sso"

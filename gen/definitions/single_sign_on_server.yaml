@@ -17,32 +17,32 @@ attributes:
     type: String
     value: SSOServer
   - model_name: idpEntityId
-    tf_name: identity_provider_entity_id
+    tf_name: identity_provider_entity_id_url
     type: String
     mandatory: true
-    description: URL that is defined in SAML IdP to identify a service provider uniquely.
+    description: URL that is defined in SAML Identity Provider (IdP) to identify a service provider uniquely.
     example: "https://idp.example.com/saml"
   - model_name: ssoURL
     tf_name: sso_url
     type: String
     mandatory: true
-    description: URL for signing into the SAML identity provider server.
+    description: URL for signing into the SAML Identity Provider (IdP) server.
     example: "https://idp.example.com/sso"
   - model_name: logoutURL
     tf_name: logout_url
     type: String
-    description: URL for signing out of the SAML identity provider server.
+    description: URL for signing out of the SAML Identity Provider (IdP) server.
     example: "https://idp.example.com/logout"
   - model_name: baseUrl
     type: String
-    description: URL that will redirect the user back to FTD once the identity provider authentication is done.
+    description: URL that will redirect the user back to FTD once the Identity Provider (IdP) authentication is done.
     example: "https://fmc.example.com/sso"
   - model_name: id
     data_path: ["identityProviderCert"]
     tf_name: identity_provider_certificate_id
     type: String
     mandatory: true
-    description: Certificate Id of the IdP enrolled into the FTD to verify the messages signed by the IdP.
+    description: Id of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.
     example: 123e4567-e89b-12d3-a456-426614174000
     test_value: fmc_certificate_enrollment.test.id
   - model_name: name
@@ -50,14 +50,14 @@ attributes:
     tf_name: identity_provider_certificate_name
     type: String
     mandatory: true
-    description: Certificate Name of the IdP enrolled into the FTD to verify the messages signed by the IdP.
+    description: Name of the Identity Provider (IdP) certificate utilized to verify messages signed by the IdP.
     example: my_idp_certificate
     test_value: fmc_certificate_enrollment.test.name
   - model_name: id
     data_path: ["serviceProviderCert"]
     tf_name: service_provider_certificate_id
     type: String
-    description: Certificate Id, which will be used to sign the requests and build circle of trust with IdP.
+    description: Id of the certificate, which will be used to sign the requests and build circle of trust with IdP.
     example: 123e4567-e89b-12d3-a456-426614174001
     exclude_test: true
   - model_name: requestSignatureType
@@ -76,12 +76,12 @@ attributes:
   - model_name: serverOnInternalNetwork
     tf_name: identity_provider_accessible_only_on_internal_network
     type: Bool
-    description: SAML IdP resides on the internal network.
+    description: SAML Identity Provider (IdP) resides on the internal network.
     example: "false"
   - model_name: reAuthAtLogin
     tf_name: request_identity_provider_reauthentication_at_each_login
     type: Bool
-    description: Authenticate user at each login even if the previous IdP session is valid.
+    description: Authenticate user at each login even if the previous Identity Provider (IdP) session is valid.
     example: "false"
 
 test_prerequisites: |-

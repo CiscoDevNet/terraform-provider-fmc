@@ -35,7 +35,7 @@ type SingleSignOnServer struct {
 	Domain                                             types.String `tfsdk:"domain"`
 	Name                                               types.String `tfsdk:"name"`
 	Type                                               types.String `tfsdk:"type"`
-	IdentityProviderEntityId                           types.String `tfsdk:"identity_provider_entity_id"`
+	IdentityProviderEntityIdUrl                        types.String `tfsdk:"identity_provider_entity_id_url"`
 	SsoUrl                                             types.String `tfsdk:"sso_url"`
 	LogoutUrl                                          types.String `tfsdk:"logout_url"`
 	BaseUrl                                            types.String `tfsdk:"base_url"`
@@ -73,8 +73,8 @@ func (data SingleSignOnServer) toBody(ctx context.Context, state SingleSignOnSer
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	body, _ = sjson.Set(body, "type", "SSOServer")
-	if !data.IdentityProviderEntityId.IsNull() {
-		body, _ = sjson.Set(body, "idpEntityId", data.IdentityProviderEntityId.ValueString())
+	if !data.IdentityProviderEntityIdUrl.IsNull() {
+		body, _ = sjson.Set(body, "idpEntityId", data.IdentityProviderEntityIdUrl.ValueString())
 	}
 	if !data.SsoUrl.IsNull() {
 		body, _ = sjson.Set(body, "ssoURL", data.SsoUrl.ValueString())
@@ -125,9 +125,9 @@ func (data *SingleSignOnServer) fromBody(ctx context.Context, res gjson.Result) 
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("idpEntityId"); value.Exists() {
-		data.IdentityProviderEntityId = types.StringValue(value.String())
+		data.IdentityProviderEntityIdUrl = types.StringValue(value.String())
 	} else {
-		data.IdentityProviderEntityId = types.StringNull()
+		data.IdentityProviderEntityIdUrl = types.StringNull()
 	}
 	if value := res.Get("ssoURL"); value.Exists() {
 		data.SsoUrl = types.StringValue(value.String())
@@ -200,10 +200,10 @@ func (data *SingleSignOnServer) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("idpEntityId"); value.Exists() && !data.IdentityProviderEntityId.IsNull() {
-		data.IdentityProviderEntityId = types.StringValue(value.String())
+	if value := res.Get("idpEntityId"); value.Exists() && !data.IdentityProviderEntityIdUrl.IsNull() {
+		data.IdentityProviderEntityIdUrl = types.StringValue(value.String())
 	} else {
-		data.IdentityProviderEntityId = types.StringNull()
+		data.IdentityProviderEntityIdUrl = types.StringNull()
 	}
 	if value := res.Get("ssoURL"); value.Exists() && !data.SsoUrl.IsNull() {
 		data.SsoUrl = types.StringValue(value.String())

@@ -33,7 +33,7 @@ func TestAccFmcSingleSignOnServer(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "name", "my_sso_server"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_single_sign_on_server.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "identity_provider_entity_id", "https://idp.example.com/saml"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "identity_provider_entity_id_url", "https://idp.example.com/saml"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "sso_url", "https://idp.example.com/sso"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "logout_url", "https://idp.example.com/logout"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_single_sign_on_server.test", "base_url", "https://fmc.example.com/sso"))
@@ -361,7 +361,7 @@ resource "fmc_certificate_enrollment" "test" {
 func testAccFmcSingleSignOnServerConfig_minimum() string {
 	config := `resource "fmc_single_sign_on_server" "test" {` + "\n"
 	config += `	name = "my_sso_server"` + "\n"
-	config += `	identity_provider_entity_id = "https://idp.example.com/saml"` + "\n"
+	config += `	identity_provider_entity_id_url = "https://idp.example.com/saml"` + "\n"
 	config += `	sso_url = "https://idp.example.com/sso"` + "\n"
 	config += `	identity_provider_certificate_id = fmc_certificate_enrollment.test.id` + "\n"
 	config += `	identity_provider_certificate_name = fmc_certificate_enrollment.test.name` + "\n"
@@ -376,7 +376,7 @@ func testAccFmcSingleSignOnServerConfig_minimum() string {
 func testAccFmcSingleSignOnServerConfig_all() string {
 	config := `resource "fmc_single_sign_on_server" "test" {` + "\n"
 	config += `	name = "my_sso_server"` + "\n"
-	config += `	identity_provider_entity_id = "https://idp.example.com/saml"` + "\n"
+	config += `	identity_provider_entity_id_url = "https://idp.example.com/saml"` + "\n"
 	config += `	sso_url = "https://idp.example.com/sso"` + "\n"
 	config += `	logout_url = "https://idp.example.com/logout"` + "\n"
 	config += `	base_url = "https://fmc.example.com/sso"` + "\n"
