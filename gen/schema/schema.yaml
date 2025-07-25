@@ -61,7 +61,7 @@ attribute:
   computed_body_param: bool(required=False) # Set to true if the computed value should be included in the PUT payload
   default_value: any(str(), int(), bool(), required=False) # Default value for the attribute
   value: any(str(), int(), bool(), required=False) # Hardcoded value for the attribute
-  test_value: str(required=False) # Value used for acceptance test
+  test_value: any(str(), bool(), required=False) # Value used for acceptance test
   minimum_test_value: str(required=False) # Value used for "minimum" resource acceptance test
   test_tags: list(str(), required=False) # List of test tags, attribute is only included in acceptance tests if an environment variable with one of these tags is configured
   data_source_query: bool(required=False) # Set to true if the attribute can be used in the data source query. This is supported only for top-level attributes.
