@@ -1,0 +1,200 @@
+# Manual resource - adjustBody
+---
+name: Realm AD LDAP
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/realms
+doc_category: Integrations
+adjust_body: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Realm object.
+    example: my_ldap_realm
+    data_source_query: true
+  - model_name: enabled
+    type: Bool
+    description: Enable Realm object.
+    example: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Realm'.
+    computed: true
+  - model_name: version
+    type: String
+    description: Internal API parameter.
+    computed: true
+    computed_body_param: true
+  - model_name: description
+    type: String
+    description: Description of the Realm object.
+    example: My realm
+  - model_name: realmType
+    type: String
+    mandatory: true
+    description: Type of the Realm.
+    enum_values: ["AD", "LDAP"]
+    example: LDAP
+    requires_replace: true
+
+  # AD configuration
+  - model_name: adPrimaryDomain
+    type: String
+    description: Domain for the Active Directory server where users should be authenticated.
+    exclude_example: true
+    exclude_test: true
+    requires_replace: true
+  - model_name: adJoinUsername
+    type: String
+    description: Username of any Active Directory user with rights to create a Domain Computer account in the Active Directory domain for Kerberos captive portal active authentication.
+    exclude_example: true
+    exclude_test: true
+  - model_name: adJoinPassword
+    type: String
+    description: Password for `ad_join_username` user.
+    exclude_example: true
+    exclude_test: true
+    sensitive: true
+    write_only: true
+  
+  # Directory settings
+  - model_name: dirUsername
+    tf_name: directory_username
+    type: String
+    description: Username used to connect to the directory.
+    example: user@example.com
+    mandatory: true
+  - model_name: dirPassword
+    type: String
+    tf_name: directory_password
+    description: Password for the `directory_username`.
+    mandatory: true
+    sensitive: true
+    example: my_password
+    write_only: true
+  - model_name: baseDn
+    type: String
+    description: Directory tree where the search for user data should begin.
+    example: "DC=example,DC=com"
+    mandatory: true
+  - model_name: groupDn
+    type: String
+    description: Directory tree where the search for group data should begin.
+    example: "CN=users,DC=example,DC=com"
+    mandatory: true
+  - model_name: includedUsers
+    type: List
+    element_type: String
+    description: Add users to Included Users.
+    example: "user1"
+  - model_name: includedGroups
+    type: List
+    element_type: String
+    description: Add groups to Included Groups.
+    example: "group1"
+  - model_name: excludedUsers
+    type: List
+    element_type: String
+    description: Add users to Excluded Users.
+    example: "user2"
+  - model_name: excludedGroups
+    type: List
+    element_type: String
+    description: Add groups to Excluded Groups.
+    example: "group2"
+  - model_name: updateHour
+    type: Int64
+    description: Hour where the sync (download) from the directory starts.
+    min_int: 0
+    max_int: 23
+    example: 2
+  - model_name: updateInterval
+    type: String
+    description: Interval in hours for the sync (download) from the directory.
+    enum_values: ["1", "2", "3", "4", "6", "8", "12", "24"]
+    example: "4"
+
+  # Realm configuration
+  - model_name: groupAttribute
+    type: String
+    description: Attribute used to identify the group in the LDAP directory. Use 'uniqueMember', 'member' or any custom attribute name.
+    example: member
+  - model_name: authSessionTimeout
+    tf_name: timeout_ise_and_passive_indentity_users
+    type: Int64
+    description: Timeout (in minutes) for ISE/ISE-PIC or Passive Identity Agent users.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: tsAgentSessionTimeout
+    tf_name: timeout_terminal_server_agent_users
+    type: Int64
+    description: Timeout (in minutes) for Terminal Server Agent users.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: activeAuthSessionTimeout
+    tf_name: timeout_captive_portal_users
+    type: Int64
+    description: Timeout (in minutes) for Captive Portal users.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: failedAuthSessionTimeout
+    tf_name: timeout_failed_captive_portal_users
+    type: Int64
+    description: Timeout (in minutes) for Failed Captive Portal users.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+  - model_name: guestSessionTimeout
+    tf_name: timeout_guest_captive_portal_users
+    type: Int64
+    description: Timeout (in minutes) for Guest Captive Portal Users.
+    example: 1440
+    min_int: 0
+    max_int: 35791394
+
+  # Directory server configuration
+  - model_name: directoryConfigurations
+    tf_name: directory_servers
+    type: List
+    description: List of directory servers.
+    mandatory: true
+    attributes:
+      - model_name: hostname
+        type: String
+        description: Hostname or IP address.
+        example: ldap.example.com
+        id: true
+        mandatory: true
+      - model_name: port
+        type: Int64
+        description: Port number.
+        example: 389
+        mandatory: true
+      - model_name: encryptionProtocol
+        type: String
+        description: Encryption method.
+        enum_values: ["NONE", "LDAPS", "STARTTLS"]
+        example: LDAPS
+        test_value: '"NONE"'
+        mandatory: true
+      - model_name: id
+        data_path: ["encryptionCert"]
+        tf_name: ca_certificate_id
+        type: String
+        description: CA certificate ID. Required if `encryption_protocol` is LDAPS/STARTTLS.
+        example: 12345678-1234-1234-1234-123456789012
+        exclude_test: true
+      - model_name: useRoutingToSelectInterface
+        type: Bool
+        description: Use routing to select the interface for directory communication.
+        example: "false"
+        default_value: "false"
+      - model_name: id
+        data_path: ["interface"]
+        tf_name: interface_group_id
+        type: String
+        description: ID of the interface group to use for LDAP communication, when `use_routing_to_select_interface` is set to `false`. If not configured, Management interface is used.
+        exclude_example: true
+        exclude_test: true
