@@ -25,7 +25,8 @@ attributes:
     description: Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
     data_source_optional_parameter: true
     default_value: "true"
-    example: "true"
+    exclude_example: true
+    test_value: true
   - model_name: dummy_manual_nat_rules
     tf_name: manual_nat_rules
     type: List
