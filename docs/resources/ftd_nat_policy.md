@@ -49,6 +49,8 @@ resource "fmc_ftd_nat_policy" "example" {
 - `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
+- `manage_rules` (Boolean) Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
+  - Default value: `true`
 - `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 ### Read-Only

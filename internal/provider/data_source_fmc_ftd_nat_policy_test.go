@@ -87,6 +87,7 @@ func testAccDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
 	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
 	config += `		enabled = true` + "\n"
@@ -106,6 +107,7 @@ func testAccDataSourceFmcFTDNATPolicyConfig() string {
 	config += `
 		data "fmc_ftd_nat_policy" "test" {
 			id = fmc_ftd_nat_policy.test.id
+			manage_rules = true
 		}
 	`
 	return config
@@ -115,6 +117,7 @@ func testAccNamedDataSourceFmcFTDNATPolicyConfig() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
 	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
 	config += `		enabled = true` + "\n"
@@ -133,6 +136,7 @@ func testAccNamedDataSourceFmcFTDNATPolicyConfig() string {
 
 	config += `
 		data "fmc_ftd_nat_policy" "test" {
+			manage_rules = true
 			name = fmc_ftd_nat_policy.test.name
 		}
 	`

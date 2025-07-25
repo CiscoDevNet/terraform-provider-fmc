@@ -1,0 +1,148 @@
+# Manual resource - adjustBody
+---
+name: Radius Server Group
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/radiusservergroups
+doc_category: Objects
+adjust_body: true
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the RADIUS Server Group object.
+    example: my_radius_server_group
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RadiusServerGroup'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: My RADIUS Server Group object
+  - model_name: groupAccountingMode
+    type: String
+    description: Indicates whether accounting messages are sent to a single server (SINGLE) or sent to all servers in the group simultaneously (MULTIPLE).
+    enum_values: [SINGLE, MULTIPLE]
+    example: SINGLE
+    default_value: SINGLE
+  - model_name: retryInterval
+    type: Int64
+    description: Retry interval (in seconds) for the request.
+    min_int: 1
+    max_int: 10
+    example: 10
+    default_value: 10
+  - model_name: id
+    data_path: [realm]
+    tf_name: ad_realm_id
+    type: String
+    description: Id of Active Directory (AD) realm this RADIUS server group is associated with.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+  - model_name: enableAuthorizeOnly
+    tf_name: authorize_only
+    type: Bool
+    description: This RADIUS server group is used for authorization or accounting only.
+    example: true
+  # - model_name: enableInterimAccountUpdate
+  #   tf_name: interim_account_update
+  #   type: Bool
+  #   description: This RADIUS server group is being used for interim accounting updates.
+  #   example: true
+  - model_name: interimAccountUpdateInterval
+    tf_name: interim_account_update_interval
+    type: Int64
+    description: Interval (in hours) for interim accounting updates.
+    min_int: 1
+    max_int: 120
+    example: 24
+  - model_name: enableDynamicAuthorization
+    tf_name: dynamic_authorization
+    type: Bool
+    description: Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.
+    example: true
+  - model_name: dynamicAuthorizationPort
+    tf_name: dynamic_authorization_port
+    type: Int64
+    description: Port number for the RADIUS dynamic authorization services.
+    min_int: 1024
+    max_int: 65535
+    example: 1700
+  # - model_name: enableMergeDacl
+  #   tf_name: merge_downloadable_acl
+  #   type: Bool
+  #   description: Enables the merge of the downloadable ACL with the Cisco AV pair ACL.
+  #   example: true
+  - model_name: mergeDaclPlacementOrder
+    tf_name: merge_downloadable_acl_order
+    type: String
+    enum_values: [MERGE_DACL_BEFORE_AV_PAIR_ACL, MERGE_DACL_AFTER_AV_PAIR_ACL]
+    description: Placement order of the downloadable ACL with the Cisco AV pair ACL.
+    example: MERGE_DACL_BEFORE_AV_PAIR_ACL
+    exclude_test: true # for FMCVERSION <= 7.2
+  - model_name: radiusServers
+    type: List
+    description: List of RADIUS servers in the group.
+    mandatory: true
+    attributes:
+      - model_name: host
+        tf_name: hostname
+        type: String
+        description: IP Address or hostname of the RADIUS server.
+        example: 10.10.10.10
+        mandatory: true
+        id: true
+      - model_name: enableMessageAuthenticator
+        tf_name: message_authenticator
+        type: Bool
+        description: Enables RADIUS Server-Enabled Message Authenticator.
+        example: true
+        default_value: true
+      - model_name: authenticationPort
+        type: Int64
+        description: Port number for the RADIUS authentication services.
+        min_int: 1
+        max_int: 65535
+        example: 1812
+        default_value: 1812
+      - model_name: secretKey
+        tf_name: key
+        type: String
+        description: Shared secret that is used for data encryption.
+        example: my_secret_key
+        write_only: true
+        sensitive: true
+        mandatory: true
+      - model_name: accountingPort
+        type: Int64
+        description: Port number for the RADIUS accounting services.
+        min_int: 1
+        max_int: 65535
+        example: 1813
+        default_value: 1813
+      - model_name: timeout
+        type: Int64
+        description: Timeout (in seconds) for the RADIUS server.
+        min_int: 1
+        max_int: 300
+        example: 10
+        default_value: 10
+      - model_name: useRoutingToSelectInterface
+        type: Bool
+        description: Use routing to select the interface for the RADIUS server (true) or use specified interface (false).
+        example: true
+        default_value: true
+      - model_name: id
+        data_path: [interface]
+        tf_name: interface_id
+        type: String
+        description: Security Zone ID or Interface Group ID for the RADIUS server communication.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: [redirectACL]
+        tf_name: redirect_acl_id
+        type: String
+        description: ID of the redirect extended ACL.
+        exclude_example: true
+        exclude_test: true

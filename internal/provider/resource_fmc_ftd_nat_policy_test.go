@@ -106,6 +106,7 @@ func testAccFmcFTDNATPolicyConfig_all() string {
 	config := `resource "fmc_ftd_nat_policy" "test" {` + "\n"
 	config += `	name = "my_ftd_nat_policy"` + "\n"
 	config += `	description = "My nat policy"` + "\n"
+	config += `	manage_rules = true` + "\n"
 	config += `	manual_nat_rules = [{` + "\n"
 	config += `		description = "My manual nat rule 1"` + "\n"
 	config += `		enabled = true` + "\n"

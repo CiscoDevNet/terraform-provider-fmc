@@ -25,6 +25,7 @@ data "fmc_ftd_nat_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `manage_rules` (Boolean) Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
 - `name` (String) Name of the FTD Network Address Translation (NAT) policy.
 
 ### Read-Only
