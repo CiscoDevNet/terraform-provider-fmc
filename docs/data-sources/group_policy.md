@@ -29,63 +29,74 @@ data "fmc_group_policy" "example" {
 
 ### Read-Only
 
-- `access_hours_id` (String) ID of the access hours settings.
+- `access_hours_time_range_id` (String) ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.
 - `banner` (String) Banner text to be displayed to users.
-- `client_bypass_protocol` (Boolean)
-- `client_dpd_interval` (Number) Interval for Dead Peer Detection (DPD) messages in seconds.
-- `client_firewall_private_network_rules_id` (String) ID of the client firewall private network rules.
-- `client_firewall_public_network_rules_id` (String) ID of the client firewall public network rules.
-- `custom_attributes` (Attributes List) List of custom attributes for the Group Policy. (see [below for nested schema](#nestedatt--custom_attributes))
-- `default_domain` (String) Default domain name for the Group Policy.
+- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.
+- `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
+- `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
+- `client_firewall_private_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `client_firewall_public_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
-- `dhcp_scope_network_id` (String) Network ID for the DHCP scope.
-- `dtls_compression` (String)
-- `enable_client_dpd` (Boolean) Whether to enable Dead Peer Detection (DPD) for the connection.
-- `enable_gateway_dpd` (Boolean) Whether to enable Dead Peer Detection (DPD) for the connection.
-- `enable_ipsec_ikev2_protocol` (Boolean) Whether the IPsec IKEv2 protocol is enabled.
-- `enable_keep_alive_messages` (Boolean) Whether to enable keep-alive messages for the connection.
-- `enable_ssl_protocol` (Boolean) Whether the SSL protocol is enabled.
-- `enable_ssl_rekey` (Boolean) Whether to enable SSL rekeying.
-- `gateway_dpd_interval` (Number) Interval for Dead Peer Detection (DPD) messages in seconds.
+- `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
+- `dns_request_split_tunnel_policy` (String)
+- `dtls_compression` (String) DTLS compression method for the connection.
+- `gateway_dpd` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
+- `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
-- `ipv4_address_pools` (Attributes List) List of IPv4 address pools for the Group Policy. (see [below for nested schema](#nestedatt--ipv4_address_pools))
-- `ipv4_split_tunnel_policy` (String)
-- `ipv6_split_tunnel_policy` (String)
-- `keep_alive_message_interval` (Number) Interval for keep-alive messages in seconds.
-- `max_connection_time` (Number) Maximum connection timeout in minutes.
-- `max_connection_time_alert_interval` (Number) Alert interval for maximum connection time in minutes.
-- `mtu_size` (Number) Maximum Transmission Unit size for SSL connections.
-- `primary_dns_server` (String) Primary DNS server for the Group Policy.
-- `primary_wins_server` (String) Primary WINS server for the Group Policy.
-- `rekey_interval` (Number) Interval for SSL rekeying in minutes.
-- `rekey_method` (String) Method to use for SSL rekeying.
-- `restrict_vpn_to_vlan_id` (Number) VLAN ID to restrict VPN access.
-- `secondary_dns_server` (String) Secondary DNS server for the Group Policy.
-- `secondary_wins_server` (String) Secondary WINS server for the Group Policy.
-- `secure_client_client_profile_id` (String) ID of the Secure Client profile.
-- `secure_client_management_profile_id` (String) ID of the Secure Client management profile.
-- `simultaneous_login_per_user` (Number) Maximum number of simultaneous logins allowed per user.
-- `split_d_n_s_domain_list` (String) List of domains for split DNS requests.
-- `split_d_n_s_request_policy` (String)
-- `split_tunnel_acl_id` (String) ACL ID for the split tunnel configuration.
-- `ssl_compression` (String)
-- `traffic_filter_acl_id` (String) ACL ID for the traffic filter.
-- `type` (String) Type of the object; this value is always ''.
+- `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
+- `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
+- `ipv6_split_tunnel_policy` (String) IPv6 split tunnel policy.
+- `keep_alive_messages` (Boolean) Enable Keepalive Messages between Secure Client and VPN gateway.
+- `keep_alive_messages_interval` (Number) Keepalive message interval in seconds.
+- `maximum_connection_time` (Number) Maximum user connection time in minutes.
+- `maximum_connection_time_alert_interval` (Number) Specifies the interval of time before maximum connection time is reached to display a message to the user.
+- `mtu_size` (Number) Maximum Transmission Unit (MTU) size for SSL connections.
+- `primary_dns_server_host_id` (String) Id of host object that represents primary DNS server.
+- `primary_wins_server_host_id` (String) Id of host object that represents primary WINS server.
+- `restrict_vpn_to_vlan` (Number) Specifies the egress VLAN ID for sessions to which this Group Policy applies.
+- `secondary_dns_server_host_id` (String) Id of host object that represents secondary DNS server.
+- `secondary_wins_server_host_id` (String) Id of host object that represents secondary WINS server.
+- `secure_client_custom_attributes` (Attributes List) Secure Client Custom Attributes that are used by the Secure Client to configure features. (see [below for nested schema](#nestedatt--secure_client_custom_attributes))
+- `secure_client_management_profile_id` (String) ID of the Secure Client Management Profile.
+- `secure_client_modules` (Attributes List) List of Secure Client Modules to be enabled. (see [below for nested schema](#nestedatt--secure_client_modules))
+- `secure_client_profile_id` (String) ID of the Secure Client Profile.
+- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user
+- `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
+- `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
+- `split_tunnel_acl_type` (String) Type of standard or extended ACL used for split tunnel configuration.
+- `ssl_compression` (String) SSL compression method for the connection.
+- `ssl_rekey` (Boolean) Enables the client to rekey the connection.
+- `ssl_rekey_interval` (Number) Interval for SSL rekeying in minutes.
+- `ssl_rekey_method` (String) Method to use for SSL rekeying.
+- `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
+- `type` (String) Type of the object; this value is always 'GroupPolicy'.
 - `vpn_idle_timeout` (Number) VPN idle timeout in minutes.
-- `vpn_idle_timeout_alert_interval` (Number) Alert interval for VPN idle timeout in minutes.
-
-<a id="nestedatt--custom_attributes"></a>
-### Nested Schema for `custom_attributes`
-
-Read-Only:
-
-- `id` (String) ID of the custom attribute.
-- `type` (String) AnyConnect specific custom attribute.
-
+- `vpn_idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
+- `vpn_protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
+- `vpn_protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
 
 <a id="nestedatt--ipv4_address_pools"></a>
 ### Nested Schema for `ipv4_address_pools`
 
 Read-Only:
 
-- `id` (String) Unique identifier for the IPv4 address pool.
+- `id` (String) Pool Id.
+
+
+<a id="nestedatt--secure_client_custom_attributes"></a>
+### Nested Schema for `secure_client_custom_attributes`
+
+Read-Only:
+
+- `id` (String) Id of the Custom Attribute.
+
+
+<a id="nestedatt--secure_client_modules"></a>
+### Nested Schema for `secure_client_modules`
+
+Read-Only:
+
+- `download_module` (Boolean) Enable module download.
+- `profile_id` (String) ID of the module profile.
+- `type` (String)

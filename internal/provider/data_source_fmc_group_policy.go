@@ -77,28 +77,28 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always ''.",
+				MarkdownDescription: "Type of the object; this value is always 'GroupPolicy'.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
-			"enable_ssl_protocol": schema.BoolAttribute{
-				MarkdownDescription: "Whether the SSL protocol is enabled.",
+			"vpn_protocol_ssl": schema.BoolAttribute{
+				MarkdownDescription: "Enable SSL protocol for VPN connections.",
 				Computed:            true,
 			},
-			"enable_ipsec_ikev2_protocol": schema.BoolAttribute{
-				MarkdownDescription: "Whether the IPsec IKEv2 protocol is enabled.",
+			"vpn_protocol_ipsec_ikev2": schema.BoolAttribute{
+				MarkdownDescription: "Enable IPsec IKEv2 protocol for VPN connections.",
 				Computed:            true,
 			},
 			"ipv4_address_pools": schema.ListNestedAttribute{
-				MarkdownDescription: "List of IPv4 address pools for the Group Policy.",
+				MarkdownDescription: "List of IPv4 Address Pools for address assignment.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Unique identifier for the IPv4 address pool.",
+							MarkdownDescription: "Pool Id.",
 							Computed:            true,
 						},
 					},
@@ -108,160 +108,180 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Banner text to be displayed to users.",
 				Computed:            true,
 			},
-			"primary_dns_server": schema.StringAttribute{
-				MarkdownDescription: "Primary DNS server for the Group Policy.",
+			"primary_dns_server_host_id": schema.StringAttribute{
+				MarkdownDescription: "Id of host object that represents primary DNS server.",
 				Computed:            true,
 			},
-			"secondary_dns_server": schema.StringAttribute{
-				MarkdownDescription: "Secondary DNS server for the Group Policy.",
+			"secondary_dns_server_host_id": schema.StringAttribute{
+				MarkdownDescription: "Id of host object that represents secondary DNS server.",
 				Computed:            true,
 			},
-			"primary_wins_server": schema.StringAttribute{
-				MarkdownDescription: "Primary WINS server for the Group Policy.",
+			"primary_wins_server_host_id": schema.StringAttribute{
+				MarkdownDescription: "Id of host object that represents primary WINS server.",
 				Computed:            true,
 			},
-			"secondary_wins_server": schema.StringAttribute{
-				MarkdownDescription: "Secondary WINS server for the Group Policy.",
+			"secondary_wins_server_host_id": schema.StringAttribute{
+				MarkdownDescription: "Id of host object that represents secondary WINS server.",
 				Computed:            true,
 			},
-			"dhcp_scope_network_id": schema.StringAttribute{
-				MarkdownDescription: "Network ID for the DHCP scope.",
+			"dhcp_network_scope_network_object_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the Network Object used to determine the DHCP scope.",
 				Computed:            true,
 			},
 			"default_domain": schema.StringAttribute{
-				MarkdownDescription: "Default domain name for the Group Policy.",
+				MarkdownDescription: "Name of the default domain.",
 				Computed:            true,
 			},
 			"ipv4_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "IPv4 split tunnel policy.",
 				Computed:            true,
 			},
 			"ipv6_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "IPv6 split tunnel policy.",
 				Computed:            true,
 			},
 			"split_tunnel_acl_id": schema.StringAttribute{
-				MarkdownDescription: "ACL ID for the split tunnel configuration.",
+				MarkdownDescription: "Id of standard or extended ACL used for split tunnel configuration.",
 				Computed:            true,
 			},
-			"split_d_n_s_request_policy": schema.StringAttribute{
+			"split_tunnel_acl_type": schema.StringAttribute{
+				MarkdownDescription: "Type of standard or extended ACL used for split tunnel configuration.",
+				Computed:            true,
+			},
+			"dns_request_split_tunnel_policy": schema.StringAttribute{
 				MarkdownDescription: "",
 				Computed:            true,
 			},
-			"split_d_n_s_domain_list": schema.StringAttribute{
-				MarkdownDescription: "List of domains for split DNS requests.",
+			"split_dns_domain_list": schema.StringAttribute{
+				MarkdownDescription: "Up to 10, comma separated domains for split DNS requests.",
 				Computed:            true,
 			},
-			"secure_client_client_profile_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the Secure Client profile.",
+			"secure_client_profile_id": schema.StringAttribute{
+				MarkdownDescription: "ID of the Secure Client Profile.",
 				Computed:            true,
 			},
 			"secure_client_management_profile_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the Secure Client management profile.",
+				MarkdownDescription: "ID of the Secure Client Management Profile.",
 				Computed:            true,
 			},
+			"secure_client_modules": schema.ListNestedAttribute{
+				MarkdownDescription: "List of Secure Client Modules to be enabled.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"type": schema.StringAttribute{
+							MarkdownDescription: "",
+							Computed:            true,
+						},
+						"profile_id": schema.StringAttribute{
+							MarkdownDescription: "ID of the module profile.",
+							Computed:            true,
+						},
+						"download_module": schema.BoolAttribute{
+							MarkdownDescription: "Enable module download.",
+							Computed:            true,
+						},
+					},
+				},
+			},
 			"ssl_compression": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "SSL compression method for the connection.",
 				Computed:            true,
 			},
 			"dtls_compression": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "DTLS compression method for the connection.",
 				Computed:            true,
 			},
 			"mtu_size": schema.Int64Attribute{
-				MarkdownDescription: "Maximum Transmission Unit size for SSL connections.",
+				MarkdownDescription: "Maximum Transmission Unit (MTU) size for SSL connections.",
 				Computed:            true,
 			},
 			"ignore_df_bit": schema.BoolAttribute{
 				MarkdownDescription: "Whether to ignore the Don't Fragment bit in packets.",
 				Computed:            true,
 			},
-			"enable_keep_alive_messages": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable keep-alive messages for the connection.",
+			"keep_alive_messages": schema.BoolAttribute{
+				MarkdownDescription: "Enable Keepalive Messages between Secure Client and VPN gateway.",
 				Computed:            true,
 			},
-			"keep_alive_message_interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval for keep-alive messages in seconds.",
+			"keep_alive_messages_interval": schema.Int64Attribute{
+				MarkdownDescription: "Keepalive message interval in seconds.",
 				Computed:            true,
 			},
-			"enable_gateway_dpd": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable Dead Peer Detection (DPD) for the connection.",
+			"gateway_dpd": schema.BoolAttribute{
+				MarkdownDescription: "Enable VPN secure gateway Dead Peer Detection (DPD).",
 				Computed:            true,
 			},
 			"gateway_dpd_interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval for Dead Peer Detection (DPD) messages in seconds.",
+				MarkdownDescription: "VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.",
 				Computed:            true,
 			},
-			"enable_client_dpd": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable Dead Peer Detection (DPD) for the connection.",
+			"client_dpd": schema.BoolAttribute{
+				MarkdownDescription: "Enable VPN client Dead Peer Detection (DPD).",
 				Computed:            true,
 			},
 			"client_dpd_interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval for Dead Peer Detection (DPD) messages in seconds.",
+				MarkdownDescription: "VPN client Dead Peer Detection (DPD) messages interval in seconds.",
 				Computed:            true,
 			},
 			"client_bypass_protocol": schema.BoolAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.",
 				Computed:            true,
 			},
-			"enable_ssl_rekey": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable SSL rekeying.",
+			"ssl_rekey": schema.BoolAttribute{
+				MarkdownDescription: "Enables the client to rekey the connection.",
 				Computed:            true,
 			},
-			"rekey_method": schema.StringAttribute{
+			"ssl_rekey_method": schema.StringAttribute{
 				MarkdownDescription: "Method to use for SSL rekeying.",
 				Computed:            true,
 			},
-			"rekey_interval": schema.Int64Attribute{
+			"ssl_rekey_interval": schema.Int64Attribute{
 				MarkdownDescription: "Interval for SSL rekeying in minutes.",
 				Computed:            true,
 			},
-			"client_firewall_private_network_rules_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the client firewall private network rules.",
+			"client_firewall_private_network_rules_acl_id": schema.StringAttribute{
+				MarkdownDescription: "Id of extended ACL to configure firewall settings for the VPN client's platform.",
 				Computed:            true,
 			},
-			"client_firewall_public_network_rules_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the client firewall public network rules.",
+			"client_firewall_public_network_rules_acl_id": schema.StringAttribute{
+				MarkdownDescription: "Id of extended ACL to configure firewall settings for the VPN client's platform.",
 				Computed:            true,
 			},
-			"custom_attributes": schema.ListNestedAttribute{
-				MarkdownDescription: "List of custom attributes for the Group Policy.",
+			"secure_client_custom_attributes": schema.ListNestedAttribute{
+				MarkdownDescription: "Secure Client Custom Attributes that are used by the Secure Client to configure features.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the custom attribute.",
-							Computed:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: "AnyConnect specific custom attribute.",
+							MarkdownDescription: "Id of the Custom Attribute.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"traffic_filter_acl_id": schema.StringAttribute{
-				MarkdownDescription: "ACL ID for the traffic filter.",
+				MarkdownDescription: "Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.",
 				Computed:            true,
 			},
-			"restrict_vpn_to_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: "VLAN ID to restrict VPN access.",
+			"restrict_vpn_to_vlan": schema.Int64Attribute{
+				MarkdownDescription: "Specifies the egress VLAN ID for sessions to which this Group Policy applies.",
 				Computed:            true,
 			},
-			"access_hours_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the access hours settings.",
+			"access_hours_time_range_id": schema.StringAttribute{
+				MarkdownDescription: "ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.",
 				Computed:            true,
 			},
-			"simultaneous_login_per_user": schema.Int64Attribute{
-				MarkdownDescription: "Maximum number of simultaneous logins allowed per user.",
+			"simultaneous_logins_per_user": schema.Int64Attribute{
+				MarkdownDescription: "Maximum number of simultaneous logins allowed for a user",
 				Computed:            true,
 			},
-			"max_connection_time": schema.Int64Attribute{
-				MarkdownDescription: "Maximum connection timeout in minutes.",
+			"maximum_connection_time": schema.Int64Attribute{
+				MarkdownDescription: "Maximum user connection time in minutes.",
 				Computed:            true,
 			},
-			"max_connection_time_alert_interval": schema.Int64Attribute{
-				MarkdownDescription: "Alert interval for maximum connection time in minutes.",
+			"maximum_connection_time_alert_interval": schema.Int64Attribute{
+				MarkdownDescription: "Specifies the interval of time before maximum connection time is reached to display a message to the user.",
 				Computed:            true,
 			},
 			"vpn_idle_timeout": schema.Int64Attribute{
@@ -269,7 +289,7 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"vpn_idle_timeout_alert_interval": schema.Int64Attribute{
-				MarkdownDescription: "Alert interval for VPN idle timeout in minutes.",
+				MarkdownDescription: "Interval of time before idle time is reached to display a message to the user.",
 				Computed:            true,
 			},
 		},

@@ -14,59 +14,66 @@ This resource manages a Group Policy.
 
 ```terraform
 resource "fmc_group_policy" "example" {
-  name                        = "my_group_policy"
-  description                 = "My Group Policy object"
-  enable_ssl_protocol         = true
-  enable_ipsec_ikev2_protocol = true
+  name                     = "my_group_policy"
+  description              = "My Group Policy object"
+  vpn_protocol_ssl         = true
+  vpn_protocol_ipsec_ikev2 = true
   ipv4_address_pools = [
     {
       id = ""
     }
   ]
-  banner                                   = "Welcome to the VPN Connection."
-  primary_dns_server                       = ""
-  secondary_dns_server                     = ""
-  primary_wins_server                      = ""
-  secondary_wins_server                    = ""
-  dhcp_scope_network_id                    = ""
-  default_domain                           = ""
-  ipv4_split_tunnel_policy                 = "TUNNEL_ALL"
-  ipv6_split_tunnel_policy                 = "TUNNEL_ALL"
-  split_tunnel_acl_id                      = "12345678-1234-1234-1234-123456"
-  split_d_n_s_request_policy               = "TUNNEL_ALL"
-  split_d_n_s_domain_list                  = ""
-  secure_client_client_profile_id          = "12345678-1234-1234-1234-123456"
-  secure_client_management_profile_id      = "12345678-1234-1234-1234-123456"
-  ssl_compression                          = ""
-  dtls_compression                         = ""
-  mtu_size                                 = 1406
-  ignore_df_bit                            = true
-  enable_keep_alive_messages               = true
-  keep_alive_message_interval              = 20
-  enable_gateway_dpd                       = true
-  gateway_dpd_interval                     = 30
-  enable_client_dpd                        = true
-  client_dpd_interval                      = 30
-  client_bypass_protocol                   = false
-  enable_ssl_rekey                         = true
-  rekey_method                             = "NEW_TUNNEL"
-  rekey_interval                           = 60
-  client_firewall_private_network_rules_id = "12345678-1234-1234-1234-123456"
-  client_firewall_public_network_rules_id  = "12345678-1234-1234-1234-123456"
-  custom_attributes = [
+  banner                               = "Welcome to the VPN Connection."
+  primary_dns_server_host_id           = ""
+  secondary_dns_server_host_id         = ""
+  primary_wins_server_host_id          = ""
+  secondary_wins_server_host_id        = ""
+  dhcp_network_scope_network_object_id = ""
+  default_domain                       = "example.com"
+  ipv4_split_tunnel_policy             = "TUNNEL_ALL"
+  ipv6_split_tunnel_policy             = "TUNNEL_ALL"
+  split_tunnel_acl_id                  = "12345678-1234-1234-1234-123456"
+  split_tunnel_acl_type                = "ExtendedAccessList"
+  dns_request_split_tunnel_policy      = "USE_SPLIT_TUNNEL_SETTING"
+  split_dns_domain_list                = "example.com,example.org"
+  secure_client_profile_id             = "12345678-1234-1234-1234-123456"
+  secure_client_management_profile_id  = "12345678-1234-1234-1234-123456"
+  secure_client_modules = [
     {
-      id   = "12345678-1234-1234-1234-123456"
-      type = "myAnyConnectAttribute"
+      type            = ""
+      profile_id      = "12345678-1234-1234-1234-123456"
+      download_module = true
     }
   ]
-  traffic_filter_acl_id              = "12345678-1234-1234-1234-123456"
-  restrict_vpn_to_vlan_id            = 100
-  access_hours_id                    = "12345678-1234-1234-1234-123456"
-  simultaneous_login_per_user        = 3
-  max_connection_time                = 3600
-  max_connection_time_alert_interval = 1
-  vpn_idle_timeout                   = 3600
-  vpn_idle_timeout_alert_interval    = 1
+  ssl_compression                              = ""
+  dtls_compression                             = ""
+  mtu_size                                     = 1406
+  ignore_df_bit                                = true
+  keep_alive_messages                          = true
+  keep_alive_messages_interval                 = 20
+  gateway_dpd                                  = true
+  gateway_dpd_interval                         = 30
+  client_dpd                                   = true
+  client_dpd_interval                          = 30
+  client_bypass_protocol                       = false
+  ssl_rekey                                    = true
+  ssl_rekey_method                             = "NEW_TUNNEL"
+  ssl_rekey_interval                           = 60
+  client_firewall_private_network_rules_acl_id = "12345678-1234-1234-1234-123456"
+  client_firewall_public_network_rules_acl_id  = "12345678-1234-1234-1234-123456"
+  secure_client_custom_attributes = [
+    {
+      id = "12345678-1234-1234-1234-123456"
+    }
+  ]
+  traffic_filter_acl_id                  = "12345678-1234-1234-1234-123456"
+  restrict_vpn_to_vlan                   = 100
+  access_hours_time_range_id             = "12345678-1234-1234-1234-123456"
+  simultaneous_logins_per_user           = 3
+  maximum_connection_time                = 3600
+  maximum_connection_time_alert_interval = 1
+  vpn_idle_timeout                       = 3600
+  vpn_idle_timeout_alert_interval        = 1
 }
 ```
 
@@ -79,85 +86,114 @@ resource "fmc_group_policy" "example" {
 
 ### Optional
 
-- `access_hours_id` (String) ID of the access hours settings.
+- `access_hours_time_range_id` (String) ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.
 - `banner` (String) Banner text to be displayed to users.
-- `client_bypass_protocol` (Boolean)
-- `client_dpd_interval` (Number) Interval for Dead Peer Detection (DPD) messages in seconds.
+- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.
+- `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
+  - Default value: `true`
+- `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
   - Range: `5`-`3600`
-- `client_firewall_private_network_rules_id` (String) ID of the client firewall private network rules.
-- `client_firewall_public_network_rules_id` (String) ID of the client firewall public network rules.
-- `custom_attributes` (Attributes List) List of custom attributes for the Group Policy. (see [below for nested schema](#nestedatt--custom_attributes))
-- `default_domain` (String) Default domain name for the Group Policy.
+  - Default value: `30`
+- `client_firewall_private_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `client_firewall_public_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
-- `dhcp_scope_network_id` (String) Network ID for the DHCP scope.
+- `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
+- `dns_request_split_tunnel_policy` (String) - Choices: `USE_SPLIT_TUNNEL_SETTING`, `TUNNEL_ALL`, `TUNNEL_SPECIFIED_DOMAINS`
+  - Default value: `USE_SPLIT_TUNNEL_SETTING`
 - `domain` (String) Name of the FMC domain
-- `dtls_compression` (String) - Choices: `DISABLED`, `DEFLATE`, `LZS`
-- `enable_client_dpd` (Boolean) Whether to enable Dead Peer Detection (DPD) for the connection.
-- `enable_gateway_dpd` (Boolean) Whether to enable Dead Peer Detection (DPD) for the connection.
-- `enable_ipsec_ikev2_protocol` (Boolean) Whether the IPsec IKEv2 protocol is enabled.
-- `enable_keep_alive_messages` (Boolean) Whether to enable keep-alive messages for the connection.
-- `enable_ssl_protocol` (Boolean) Whether the SSL protocol is enabled.
-- `enable_ssl_rekey` (Boolean) Whether to enable SSL rekeying.
-- `gateway_dpd_interval` (Number) Interval for Dead Peer Detection (DPD) messages in seconds.
+- `dtls_compression` (String) DTLS compression method for the connection.
+  - Choices: `DISABLED`, `LZS`
+- `gateway_dpd` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
+  - Default value: `true`
+- `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
   - Range: `5`-`3600`
+  - Default value: `30`
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
-- `ipv4_address_pools` (Attributes List) List of IPv4 address pools for the Group Policy. (see [below for nested schema](#nestedatt--ipv4_address_pools))
-- `ipv4_split_tunnel_policy` (String) - Choices: `TUNNEL_ALL`, `TUNNEL_SPECIFIED`, `EXCLUDE_SPECIFIED_OVER_TUNNEL`
-- `ipv6_split_tunnel_policy` (String) - Choices: `TUNNEL_ALL`, `TUNNEL_SPECIFIED`, `EXCLUDE_SPECIFIED_OVER_TUNNEL`
-- `keep_alive_message_interval` (Number) Interval for keep-alive messages in seconds.
+- `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
+- `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
+  - Choices: `TUNNEL_ALL`, `TUNNEL_SPECIFIED`, `EXCLUDE_SPECIFIED_OVER_TUNNEL`
+  - Default value: `TUNNEL_ALL`
+- `ipv6_split_tunnel_policy` (String) IPv6 split tunnel policy.
+  - Choices: `TUNNEL_ALL`, `TUNNEL_SPECIFIED`, `EXCLUDE_SPECIFIED_OVER_TUNNEL`
+  - Default value: `TUNNEL_ALL`
+- `keep_alive_messages` (Boolean) Enable Keepalive Messages between Secure Client and VPN gateway.
+  - Default value: `true`
+- `keep_alive_messages_interval` (Number) Keepalive message interval in seconds.
   - Range: `15`-`600`
-- `max_connection_time` (Number) Maximum connection timeout in minutes.
+  - Default value: `20`
+- `maximum_connection_time` (Number) Maximum user connection time in minutes.
   - Range: `1`-`4473924`
-- `max_connection_time_alert_interval` (Number) Alert interval for maximum connection time in minutes.
+- `maximum_connection_time_alert_interval` (Number) Specifies the interval of time before maximum connection time is reached to display a message to the user.
   - Range: `1`-`30`
-- `mtu_size` (Number) Maximum Transmission Unit size for SSL connections.
+- `mtu_size` (Number) Maximum Transmission Unit (MTU) size for SSL connections.
   - Range: `576`-`1462`
   - Default value: `1406`
-- `primary_dns_server` (String) Primary DNS server for the Group Policy.
-- `primary_wins_server` (String) Primary WINS server for the Group Policy.
-- `rekey_interval` (Number) Interval for SSL rekeying in minutes.
-  - Range: `4`-`10080`
-- `rekey_method` (String) Method to use for SSL rekeying.
-  - Choices: `NEW_TUNNEL`, `EXISTING_TUNNEL`
-- `restrict_vpn_to_vlan_id` (Number) VLAN ID to restrict VPN access.
+- `primary_dns_server_host_id` (String) Id of host object that represents primary DNS server.
+- `primary_wins_server_host_id` (String) Id of host object that represents primary WINS server.
+- `restrict_vpn_to_vlan` (Number) Specifies the egress VLAN ID for sessions to which this Group Policy applies.
   - Range: `1`-`4094`
-- `secondary_dns_server` (String) Secondary DNS server for the Group Policy.
-- `secondary_wins_server` (String) Secondary WINS server for the Group Policy.
-- `secure_client_client_profile_id` (String) ID of the Secure Client profile.
-- `secure_client_management_profile_id` (String) ID of the Secure Client management profile.
-- `simultaneous_login_per_user` (Number) Maximum number of simultaneous logins allowed per user.
+- `secondary_dns_server_host_id` (String) Id of host object that represents secondary DNS server.
+- `secondary_wins_server_host_id` (String) Id of host object that represents secondary WINS server.
+- `secure_client_custom_attributes` (Attributes List) Secure Client Custom Attributes that are used by the Secure Client to configure features. (see [below for nested schema](#nestedatt--secure_client_custom_attributes))
+- `secure_client_management_profile_id` (String) ID of the Secure Client Management Profile.
+- `secure_client_modules` (Attributes List) List of Secure Client Modules to be enabled. (see [below for nested schema](#nestedatt--secure_client_modules))
+- `secure_client_profile_id` (String) ID of the Secure Client Profile.
+- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user
   - Range: `0`-`2147483647`
-- `split_d_n_s_domain_list` (String) List of domains for split DNS requests.
-- `split_d_n_s_request_policy` (String) - Choices: `USE_SPLIT_TUNNEL_SETTING`, `TUNNEL_ALL`, `TUNNEL_SPECIFIED_DOMAINS`
-- `split_tunnel_acl_id` (String) ACL ID for the split tunnel configuration.
-- `ssl_compression` (String) - Choices: `DISABLED`, `DEFLATE`, `LZS`
-- `traffic_filter_acl_id` (String) ACL ID for the traffic filter.
+- `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
+- `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
+- `split_tunnel_acl_type` (String) Type of standard or extended ACL used for split tunnel configuration.
+- `ssl_compression` (String) SSL compression method for the connection.
+  - Choices: `DISABLED`, `DEFLATE`, `LZS`
+- `ssl_rekey` (Boolean) Enables the client to rekey the connection.
+- `ssl_rekey_interval` (Number) Interval for SSL rekeying in minutes.
+  - Range: `4`-`10080`
+- `ssl_rekey_method` (String) Method to use for SSL rekeying.
+  - Choices: `NEW_TUNNEL`, `EXISTING_TUNNEL`
+- `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
 - `vpn_idle_timeout` (Number) VPN idle timeout in minutes.
   - Range: `1`-`4473924`
-- `vpn_idle_timeout_alert_interval` (Number) Alert interval for VPN idle timeout in minutes.
+- `vpn_idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
   - Range: `1`-`30`
+- `vpn_protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
+  - Default value: `true`
+- `vpn_protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
+  - Default value: `true`
 
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this value is always ''.
-
-<a id="nestedatt--custom_attributes"></a>
-### Nested Schema for `custom_attributes`
-
-Required:
-
-- `id` (String) ID of the custom attribute.
-- `type` (String) AnyConnect specific custom attribute.
-  - Choices: `PER_APP_VPN`, `ALLOW_DEFER_UPDATE`, `DYNAMIC_SPLIT_TUNNELING`, `CUSTOM_TYPE`
-
+- `type` (String) Type of the object; this value is always 'GroupPolicy'.
 
 <a id="nestedatt--ipv4_address_pools"></a>
 ### Nested Schema for `ipv4_address_pools`
 
 Required:
 
-- `id` (String) Unique identifier for the IPv4 address pool.
+- `id` (String) Pool Id.
+
+
+<a id="nestedatt--secure_client_custom_attributes"></a>
+### Nested Schema for `secure_client_custom_attributes`
+
+Required:
+
+- `id` (String) Id of the Custom Attribute.
+
+
+<a id="nestedatt--secure_client_modules"></a>
+### Nested Schema for `secure_client_modules`
+
+Required:
+
+- `type` (String) - Choices: `AMP_ENABLER`, `FEEDBACK`, `ISE_POSTURE`, `NETWORK_ACCESS_MANAGER`, `NETWORK_VISIBILITY`, `UMBRELLA_ROAMING`, `WEB_SECURITY`, `START_BEFORE_LOGIN`, `DART`
+
+Optional:
+
+- `download_module` (Boolean) Enable module download.
+  - Default value: `true`
+- `profile_id` (String) ID of the module profile.
 
 ## Import
 

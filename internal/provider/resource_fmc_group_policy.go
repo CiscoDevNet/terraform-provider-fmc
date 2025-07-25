@@ -26,12 +26,15 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/listvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -86,7 +89,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always ''.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'GroupPolicy'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -96,107 +99,155 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
-			"enable_ssl_protocol": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether the SSL protocol is enabled.").String,
+			"vpn_protocol_ssl": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable SSL protocol for VPN connections.").AddDefaultValueDescription("true").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
-			"enable_ipsec_ikev2_protocol": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether the IPsec IKEv2 protocol is enabled.").String,
+			"vpn_protocol_ipsec_ikev2": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPsec IKEv2 protocol for VPN connections.").AddDefaultValueDescription("true").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
 			"ipv4_address_pools": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of IPv4 address pools for the Group Policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of IPv4 Address Pools for address assignment.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Unique identifier for the IPv4 address pool.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Pool Id.").String,
 							Required:            true,
 						},
 					},
+				},
+				Validators: []validator.List{
+					listvalidator.SizeAtMost(6),
 				},
 			},
 			"banner": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Banner text to be displayed to users.").String,
 				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.LengthBetween(0, 491),
+				},
 			},
-			"primary_dns_server": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Primary DNS server for the Group Policy.").String,
+			"primary_dns_server_host_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of host object that represents primary DNS server.").String,
 				Optional:            true,
 			},
-			"secondary_dns_server": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Secondary DNS server for the Group Policy.").String,
+			"secondary_dns_server_host_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of host object that represents secondary DNS server.").String,
 				Optional:            true,
 			},
-			"primary_wins_server": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Primary WINS server for the Group Policy.").String,
+			"primary_wins_server_host_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of host object that represents primary WINS server.").String,
 				Optional:            true,
 			},
-			"secondary_wins_server": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Secondary WINS server for the Group Policy.").String,
+			"secondary_wins_server_host_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of host object that represents secondary WINS server.").String,
 				Optional:            true,
 			},
-			"dhcp_scope_network_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Network ID for the DHCP scope.").String,
+			"dhcp_network_scope_network_object_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Network Object used to determine the DHCP scope.").String,
 				Optional:            true,
 			},
 			"default_domain": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default domain name for the Group Policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the default domain.").String,
 				Optional:            true,
 			},
 			"ipv4_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv4 split tunnel policy.").AddStringEnumDescription("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL").AddDefaultValueDescription("TUNNEL_ALL").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL"),
 				},
+				Default: stringdefault.StaticString("TUNNEL_ALL"),
 			},
 			"ipv6_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv6 split tunnel policy.").AddStringEnumDescription("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL").AddDefaultValueDescription("TUNNEL_ALL").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("TUNNEL_ALL", "TUNNEL_SPECIFIED", "EXCLUDE_SPECIFIED_OVER_TUNNEL"),
 				},
+				Default: stringdefault.StaticString("TUNNEL_ALL"),
 			},
 			"split_tunnel_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ACL ID for the split tunnel configuration.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of standard or extended ACL used for split tunnel configuration.").String,
 				Optional:            true,
 			},
-			"split_d_n_s_request_policy": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("USE_SPLIT_TUNNEL_SETTING", "TUNNEL_ALL", "TUNNEL_SPECIFIED_DOMAINS").String,
+			"split_tunnel_acl_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of standard or extended ACL used for split tunnel configuration.").String,
 				Optional:            true,
+			},
+			"dns_request_split_tunnel_policy": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("USE_SPLIT_TUNNEL_SETTING", "TUNNEL_ALL", "TUNNEL_SPECIFIED_DOMAINS").AddDefaultValueDescription("USE_SPLIT_TUNNEL_SETTING").String,
+				Optional:            true,
+				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("USE_SPLIT_TUNNEL_SETTING", "TUNNEL_ALL", "TUNNEL_SPECIFIED_DOMAINS"),
 				},
+				Default: stringdefault.StaticString("USE_SPLIT_TUNNEL_SETTING"),
 			},
-			"split_d_n_s_domain_list": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of domains for split DNS requests.").String,
+			"split_dns_domain_list": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Up to 10, comma separated domains for split DNS requests.").String,
 				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.LengthBetween(0, 255),
+				},
 			},
-			"secure_client_client_profile_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the Secure Client profile.").String,
+			"secure_client_profile_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of the Secure Client Profile.").String,
 				Optional:            true,
 			},
 			"secure_client_management_profile_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the Secure Client management profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of the Secure Client Management Profile.").String,
 				Optional:            true,
 			},
+			"secure_client_modules": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of Secure Client Modules to be enabled.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("AMP_ENABLER", "FEEDBACK", "ISE_POSTURE", "NETWORK_ACCESS_MANAGER", "NETWORK_VISIBILITY", "UMBRELLA_ROAMING", "WEB_SECURITY", "START_BEFORE_LOGIN", "DART").String,
+							Required:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("AMP_ENABLER", "FEEDBACK", "ISE_POSTURE", "NETWORK_ACCESS_MANAGER", "NETWORK_VISIBILITY", "UMBRELLA_ROAMING", "WEB_SECURITY", "START_BEFORE_LOGIN", "DART"),
+							},
+						},
+						"profile_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the module profile.").String,
+							Optional:            true,
+						},
+						"download_module": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable module download.").AddDefaultValueDescription("true").String,
+							Optional:            true,
+							Computed:            true,
+							Default:             booldefault.StaticBool(true),
+						},
+					},
+				},
+			},
 			"ssl_compression": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("DISABLED", "DEFLATE", "LZS").String,
+				MarkdownDescription: helpers.NewAttributeDescription("SSL compression method for the connection.").AddStringEnumDescription("DISABLED", "DEFLATE", "LZS").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DISABLED", "DEFLATE", "LZS"),
 				},
 			},
 			"dtls_compression": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("DISABLED", "DEFLATE", "LZS").String,
+				MarkdownDescription: helpers.NewAttributeDescription("DTLS compression method for the connection.").AddStringEnumDescription("DISABLED", "LZS").String,
 				Optional:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("DISABLED", "DEFLATE", "LZS"),
+					stringvalidator.OneOf("DISABLED", "LZS"),
 				},
 			},
 			"mtu_size": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum Transmission Unit size for SSL connections.").AddIntegerRangeDescription(576, 1462).AddDefaultValueDescription("1406").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum Transmission Unit (MTU) size for SSL connections.").AddIntegerRangeDescription(576, 1462).AddDefaultValueDescription("1406").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -208,119 +259,124 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("Whether to ignore the Don't Fragment bit in packets.").String,
 				Optional:            true,
 			},
-			"enable_keep_alive_messages": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable keep-alive messages for the connection.").String,
+			"keep_alive_messages": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Keepalive Messages between Secure Client and VPN gateway.").AddDefaultValueDescription("true").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
-			"keep_alive_message_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval for keep-alive messages in seconds.").AddIntegerRangeDescription(15, 600).String,
+			"keep_alive_messages_interval": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Keepalive message interval in seconds.").AddIntegerRangeDescription(15, 600).AddDefaultValueDescription("20").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(15, 600),
 				},
+				Default: int64default.StaticInt64(20),
 			},
-			"enable_gateway_dpd": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable Dead Peer Detection (DPD) for the connection.").String,
+			"gateway_dpd": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable VPN secure gateway Dead Peer Detection (DPD).").AddDefaultValueDescription("true").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
 			"gateway_dpd_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval for Dead Peer Detection (DPD) messages in seconds.").AddIntegerRangeDescription(5, 3600).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.").AddIntegerRangeDescription(5, 3600).AddDefaultValueDescription("30").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(5, 3600),
 				},
+				Default: int64default.StaticInt64(30),
 			},
-			"enable_client_dpd": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable Dead Peer Detection (DPD) for the connection.").String,
+			"client_dpd": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable VPN client Dead Peer Detection (DPD).").AddDefaultValueDescription("true").String,
 				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
 			},
 			"client_dpd_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval for Dead Peer Detection (DPD) messages in seconds.").AddIntegerRangeDescription(5, 3600).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VPN client Dead Peer Detection (DPD) messages interval in seconds.").AddIntegerRangeDescription(5, 3600).AddDefaultValueDescription("30").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(5, 3600),
 				},
+				Default: int64default.StaticInt64(30),
 			},
 			"client_bypass_protocol": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.").String,
 				Optional:            true,
 			},
-			"enable_ssl_rekey": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable SSL rekeying.").String,
+			"ssl_rekey": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enables the client to rekey the connection.").String,
 				Optional:            true,
 			},
-			"rekey_method": schema.StringAttribute{
+			"ssl_rekey_method": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Method to use for SSL rekeying.").AddStringEnumDescription("NEW_TUNNEL", "EXISTING_TUNNEL").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("NEW_TUNNEL", "EXISTING_TUNNEL"),
 				},
 			},
-			"rekey_interval": schema.Int64Attribute{
+			"ssl_rekey_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Interval for SSL rekeying in minutes.").AddIntegerRangeDescription(4, 10080).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(4, 10080),
 				},
 			},
-			"client_firewall_private_network_rules_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the client firewall private network rules.").String,
+			"client_firewall_private_network_rules_acl_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of extended ACL to configure firewall settings for the VPN client's platform.").String,
 				Optional:            true,
 			},
-			"client_firewall_public_network_rules_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the client firewall public network rules.").String,
+			"client_firewall_public_network_rules_acl_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of extended ACL to configure firewall settings for the VPN client's platform.").String,
 				Optional:            true,
 			},
-			"custom_attributes": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of custom attributes for the Group Policy.").String,
+			"secure_client_custom_attributes": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Secure Client Custom Attributes that are used by the Secure Client to configure features.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the custom attribute.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Custom Attribute.").String,
 							Required:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("AnyConnect specific custom attribute.").AddStringEnumDescription("PER_APP_VPN", "ALLOW_DEFER_UPDATE", "DYNAMIC_SPLIT_TUNNELING", "CUSTOM_TYPE").String,
-							Required:            true,
-							Validators: []validator.String{
-								stringvalidator.OneOf("PER_APP_VPN", "ALLOW_DEFER_UPDATE", "DYNAMIC_SPLIT_TUNNELING", "CUSTOM_TYPE"),
-							},
 						},
 					},
 				},
 			},
 			"traffic_filter_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ACL ID for the traffic filter.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.").String,
 				Optional:            true,
 			},
-			"restrict_vpn_to_vlan_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VLAN ID to restrict VPN access.").AddIntegerRangeDescription(1, 4094).String,
+			"restrict_vpn_to_vlan": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Specifies the egress VLAN ID for sessions to which this Group Policy applies.").AddIntegerRangeDescription(1, 4094).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4094),
 				},
 			},
-			"access_hours_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the access hours settings.").String,
+			"access_hours_time_range_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.").String,
 				Optional:            true,
 			},
-			"simultaneous_login_per_user": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of simultaneous logins allowed per user.").AddIntegerRangeDescription(0, 2147483647).String,
+			"simultaneous_logins_per_user": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of simultaneous logins allowed for a user").AddIntegerRangeDescription(0, 2147483647).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 2147483647),
 				},
 			},
-			"max_connection_time": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum connection timeout in minutes.").AddIntegerRangeDescription(1, 4473924).String,
+			"maximum_connection_time": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum user connection time in minutes.").AddIntegerRangeDescription(1, 4473924).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4473924),
 				},
 			},
-			"max_connection_time_alert_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Alert interval for maximum connection time in minutes.").AddIntegerRangeDescription(1, 30).String,
+			"maximum_connection_time_alert_interval": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Specifies the interval of time before maximum connection time is reached to display a message to the user.").AddIntegerRangeDescription(1, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 30),
@@ -334,7 +390,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"vpn_idle_timeout_alert_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Alert interval for VPN idle timeout in minutes.").AddIntegerRangeDescription(1, 30).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interval of time before idle time is reached to display a message to the user.").AddIntegerRangeDescription(1, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 30),
