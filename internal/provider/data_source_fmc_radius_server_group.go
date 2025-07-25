@@ -97,7 +97,7 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				Computed:            true,
 			},
 			"authorize_only": schema.BoolAttribute{
-				MarkdownDescription: "This RADIUS server group is not being used for authentication, but for authorization or accounting only.",
+				MarkdownDescription: "This RADIUS server group is used for authorization or accounting only.",
 				Computed:            true,
 			},
 			"interim_account_update_interval": schema.Int64Attribute{

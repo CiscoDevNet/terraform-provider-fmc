@@ -42,7 +42,7 @@ attributes:
   - model_name: enableAuthorizeOnly
     tf_name: authorize_only
     type: Bool
-    description: This RADIUS server group is not being used for authentication, but for authorization or accounting only.
+    description: This RADIUS server group is used for authorization or accounting only.
     example: true
   # - model_name: enableInterimAccountUpdate
   #   tf_name: interim_account_update

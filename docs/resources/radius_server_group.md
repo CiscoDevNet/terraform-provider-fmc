@@ -49,7 +49,7 @@ resource "fmc_radius_server_group" "example" {
 ### Optional
 
 - `ad_realm_id` (String) Id of Active Directory (AD) realm this RADIUS server group is associated with.
-- `authorize_only` (Boolean) This RADIUS server group is not being used for authentication, but for authorization or accounting only.
+- `authorize_only` (Boolean) This RADIUS server group is used for authorization or accounting only.
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `dynamic_authorization` (Boolean) Enables the RADIUS dynamic authorization or Change of Authorization (CoA) services for this RADIUS server group.
