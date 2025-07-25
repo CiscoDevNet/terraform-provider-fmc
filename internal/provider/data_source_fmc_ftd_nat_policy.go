@@ -85,6 +85,11 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Type of the object; this value is always 'FTDNatPolicy'.",
 				Computed:            true,
 			},
+			"manage_rules": schema.BoolAttribute{
+				MarkdownDescription: "Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).",
+				Optional:            true,
+				Computed:            true,
+			},
 			"manual_nat_rules": schema.ListNestedAttribute{
 				MarkdownDescription: "The ordered list of manual NAT rules.",
 				Computed:            true,
@@ -300,6 +305,8 @@ func (d *FTDNATPolicyDataSource) Read(ctx context.Context, req datasource.ReadRe
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+
+	// If the name is provided, we need to find the ID first.
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000
@@ -331,6 +338,8 @@ func (d *FTDNATPolicyDataSource) Read(ctx context.Context, req datasource.ReadRe
 			return
 		}
 	}
+
+	// Get FTD NAT Policy by ID
 	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
 	res, err := d.client.Get(urlPath, reqMods...)
 	if err != nil {
@@ -338,33 +347,48 @@ func (d *FTDNATPolicyDataSource) Read(ctx context.Context, req datasource.ReadRe
 		return
 	}
 
-	resManualNatRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/manualnatrules?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
+	// Set string that will have rules injected
+	replace := res.String()
+
+	// Save state of categories and rules management
+	manageRules := false
+
+	// if manage_rules is set to true, retrieve rules
+	if !config.ManageRules.IsUnknown() && config.ManageRules.ValueBool() {
+
+		resManualNatRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/manualnatrules?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		resAutoNatRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/autonatrules?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		replaceManualNatRules := resManualNatRules.Get("items").String()
+		if replaceManualNatRules == "" {
+			replaceManualNatRules = "[]"
+		}
+
+		replaceAutoNatRules := resAutoNatRules.Get("items").String()
+		if replaceAutoNatRules == "" {
+			replaceAutoNatRules = "[]"
+		}
+
+		replace, _ = sjson.SetRaw(res.String(), "dummy_manual_nat_rules", replaceManualNatRules)
+		replace, _ = sjson.SetRaw(replace, "dummy_auto_nat_rules", replaceAutoNatRules)
+		manageRules = true
 	}
 
-	resAutoNatRules, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/autonatrules?expanded=true", reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	replaceManualNatRules := resManualNatRules.Get("items").String()
-	if replaceManualNatRules == "" {
-		replaceManualNatRules = "[]"
-	}
-
-	replaceAutoNatRules := resAutoNatRules.Get("items").String()
-	if replaceAutoNatRules == "" {
-		replaceAutoNatRules = "[]"
-	}
-
-	replace, _ := sjson.SetRaw(res.String(), "dummy_manual_nat_rules", replaceManualNatRules)
-	replace, _ = sjson.SetRaw(replace, "dummy_auto_nat_rules", replaceAutoNatRules)
+	// Parse modified JSON with injected rules
 	res = gjson.Parse(replace)
 
 	config.fromBody(ctx, res)
+
+	config.ManageRules = types.BoolValue(manageRules)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 

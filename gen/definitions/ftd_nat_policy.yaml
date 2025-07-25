@@ -1,3 +1,4 @@
+# Manual resource - Data Source (Read), Resource (Read, Create, Update, Delete), ValidateConfig
 ---
 name: FTD NAT Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdnatpolicies
@@ -18,6 +19,14 @@ attributes:
     type: String
     description: Type of the object; this value is always 'FTDNatPolicy'.
     computed: true
+  - model_name: dummy_manage_rules
+    tf_name: manage_rules
+    type: Bool
+    description: Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
+    data_source_optional_parameter: true
+    default_value: "true"
+    exclude_example: true
+    test_value: true
   - model_name: dummy_manual_nat_rules
     tf_name: manual_nat_rules
     type: List

@@ -1,0 +1,149 @@
+---
+name: FTD Auto NAT Rule
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdnatpolicies/%v/autonatrules
+doc_category: Policies
+attributes:
+  - model_name: ftd_nat_policy_id
+    type: String
+    description: Id of the FTD NAT Policy.
+    reference: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_nat_policy.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'FTDAutoNatRule'.
+    computed: true
+  - model_name: natType
+    tf_name: nat_type
+    type: String
+    description: Type of the rule
+    enum_values: [STATIC, DYNAMIC]
+    example: STATIC
+    mandatory: true
+  - model_name: id
+    tf_name: destination_interface_id
+    type: String
+    data_path: [destinationInterface]
+    description: ID of destination security zone or interface group
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08480
+    exclude_example: true
+    exclude_test: true
+  - model_name: fallThrough
+    tf_name: fall_through
+    type: Bool
+    description: Fallthrough to Interface PAT (Destination Interface)
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: interfaceIpv6
+    tf_name: ipv6
+    type: Bool
+    description: Use the IPv6 address of the destination interface for interface PAT.
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: netToNet
+    tf_name: net_to_net
+    type: Bool
+    description: Net to Net Mapping
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: noProxyArp
+    tf_name: no_proxy_arp
+    type: Bool
+    description: Do not proxy ARP on Destination Interface
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    tf_name: original_network_id
+    type: String
+    data_path: [originalNetwork]
+    description: ID of original network object (host, network or range)
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08481
+    minimum_test_value: fmc_hosts.test.items.auto_nat_rule_host1.id
+    test_value: fmc_hosts.test.items.auto_nat_rule_host3.id
+  - model_name: originalPort
+    tf_name: original_port
+    type: Int64
+    description: Original port number
+    example: 8022
+    exclude_example: true
+    exclude_test: true
+  - model_name: serviceProtocol
+    tf_name: protocol
+    type: String
+    description: Service protocol
+    enum_values:
+      - TCP
+      - UDP
+    example: TCP
+    exclude_example: true
+    exclude_test: true
+  - model_name: routeLookup
+    tf_name: perform_route_lookup
+    type: Bool
+    description: Perform Route Lookup for Destination Interface
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    tf_name: source_interface_id
+    type: String
+    data_path: [sourceInterface]
+    description: ID of source security zone or interface group
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08482
+    exclude_example: true
+    exclude_test: true
+  - model_name: dns
+    tf_name: translate_dns
+    type: Bool
+    description: Translate DNS replies that match this rule
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    tf_name: translated_network_id
+    type: String
+    data_path: [translatedNetwork]
+    description: ID of translated network object (host, network or range)
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08483
+    minimum_test_value: fmc_hosts.test.items.auto_nat_rule_host2.id
+    test_value: fmc_hosts.test.items.auto_nat_rule_host4.id
+  - model_name: interfaceInTranslatedNetwork
+    tf_name: translated_network_is_destination_interface
+    type: Bool
+    description: Translate source network to destination interface address
+    example: false
+    exclude_example: true
+    exclude_test: true
+  - model_name: translatedPort
+    tf_name: translated_port
+    type: Int64
+    description: Translated port number
+    example: 22
+    exclude_example: true
+    exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_nat_policy" "test" {
+    name         = "ftd_auto_nat_rule"
+    manage_rules = false
+  }
+  resource "fmc_hosts" "test" {
+    items = {
+      "auto_nat_rule_host1" ={
+        ip = "10.0.0.1"
+      },
+      "auto_nat_rule_host2" ={
+        ip = "10.0.0.2"
+      }
+      "auto_nat_rule_host3" ={
+        ip = "10.0.0.3"
+      },
+      "auto_nat_rule_host4" ={
+        ip = "10.0.0.4"
+      }
+    }
+  }

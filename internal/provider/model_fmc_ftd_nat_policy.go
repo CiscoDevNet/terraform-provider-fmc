@@ -39,6 +39,7 @@ type FTDNATPolicy struct {
 	Name           types.String                 `tfsdk:"name"`
 	Description    types.String                 `tfsdk:"description"`
 	Type           types.String                 `tfsdk:"type"`
+	ManageRules    types.Bool                   `tfsdk:"manage_rules"`
 	ManualNatRules []FTDNATPolicyManualNatRules `tfsdk:"manual_nat_rules"`
 	AutoNatRules   []FTDNATPolicyAutoNatRules   `tfsdk:"auto_nat_rules"`
 }
@@ -115,6 +116,9 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
+	}
+	if !data.ManageRules.IsNull() {
+		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.ManualNatRules) > 0 {
 		body, _ = sjson.Set(body, "dummy_manual_nat_rules", []interface{}{})
@@ -272,6 +276,11 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("dummy_manage_rules"); value.Exists() {
+		data.ManageRules = types.BoolValue(value.Bool())
+	} else {
+		data.ManageRules = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_manual_nat_rules"); value.Exists() {
 		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0)
@@ -516,6 +525,11 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("dummy_manage_rules"); value.Exists() && !data.ManageRules.IsNull() {
+		data.ManageRules = types.BoolValue(value.Bool())
+	} else if data.ManageRules.ValueBool() != true {
+		data.ManageRules = types.BoolNull()
 	}
 	{
 		l := len(res.Get("dummy_manual_nat_rules").Array())

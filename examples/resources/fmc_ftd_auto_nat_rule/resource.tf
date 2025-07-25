@@ -1,0 +1,6 @@
+resource "fmc_ftd_auto_nat_rule" "example" {
+  ftd_nat_policy_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  nat_type              = "STATIC"
+  original_network_id   = "76d24097-41c4-4558-a4d0-a8c07ac08481"
+  translated_network_id = "76d24097-41c4-4558-a4d0-a8c07ac08483"
+}

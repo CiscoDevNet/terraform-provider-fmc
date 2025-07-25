@@ -7,6 +7,8 @@
 - (Enhancement) Add support for `fmc_access_rule` resource and data source
 - (Enhancement) (Early access) Add support for `fmc_access_rules` resource and data source
 - (Enhancement) Add support for `fmc_access_category` resource and data source
+- (Enhancement) `fmc_ftd_nat_policy` has new attribute `manage_rules`
+- (Enhancement) Add support for `fmc_ftd_auto_nat_rule` and `fmc_ftd_manual_nat_rule` resource and data source
 - (Enhancement) Add support for `fmc_single_sign_on_server` resource and data source
 - (Enhancement) Add support for `fmc_countries` and `fmc_continents` data sources
 - (Enhancement) Add support for `fmc_geolocation` resource and data source
