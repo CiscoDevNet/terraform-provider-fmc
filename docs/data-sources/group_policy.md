@@ -29,9 +29,9 @@ data "fmc_group_policy" "example" {
 
 ### Read-Only
 
-- `access_hours_time_range_id` (String) ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.
+- `access_hours_time_range_id` (String) ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.
 - `banner` (String) Banner text to be displayed to users.
-- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.
+- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.
 - `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
 - `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
 - `client_firewall_private_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
@@ -39,10 +39,12 @@ data "fmc_group_policy" "example" {
 - `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
 - `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
-- `dns_request_split_tunnel_policy` (String)
+- `dns_request_split_tunnel_policy` (String) Define if DNS requests should be send over the tunnel or not.
 - `dtls_compression` (String) DTLS compression method for the connection.
 - `gateway_dpd` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
 - `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
+- `idle_timeout` (Number) VPN idle timeout in minutes.
+- `idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
 - `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
 - `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
@@ -54,6 +56,8 @@ data "fmc_group_policy" "example" {
 - `mtu_size` (Number) Maximum Transmission Unit (MTU) size for SSL connections.
 - `primary_dns_server_host_id` (String) Id of host object that represents primary DNS server.
 - `primary_wins_server_host_id` (String) Id of host object that represents primary WINS server.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
+- `protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
 - `restrict_vpn_to_vlan` (Number) Specifies the egress VLAN ID for sessions to which this Group Policy applies.
 - `secondary_dns_server_host_id` (String) Id of host object that represents secondary DNS server.
 - `secondary_wins_server_host_id` (String) Id of host object that represents secondary WINS server.
@@ -61,20 +65,16 @@ data "fmc_group_policy" "example" {
 - `secure_client_management_profile_id` (String) ID of the Secure Client Management Profile.
 - `secure_client_modules` (Attributes List) List of Secure Client Modules to be enabled. (see [below for nested schema](#nestedatt--secure_client_modules))
 - `secure_client_profile_id` (String) ID of the Secure Client Profile.
-- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user
+- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user.
 - `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
 - `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
-- `split_tunnel_acl_type` (String) Type of standard or extended ACL used for split tunnel configuration.
+- `split_tunnel_acl_type` (String) Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
 - `ssl_compression` (String) SSL compression method for the connection.
 - `ssl_rekey` (Boolean) Enables the client to rekey the connection.
 - `ssl_rekey_interval` (Number) Interval for SSL rekeying in minutes.
 - `ssl_rekey_method` (String) Method to use for SSL rekeying.
 - `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
 - `type` (String) Type of the object; this value is always 'GroupPolicy'.
-- `vpn_idle_timeout` (Number) VPN idle timeout in minutes.
-- `vpn_idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
-- `vpn_protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
-- `vpn_protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
 
 <a id="nestedatt--ipv4_address_pools"></a>
 ### Nested Schema for `ipv4_address_pools`

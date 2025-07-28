@@ -1,37 +1,35 @@
 resource "fmc_group_policy" "example" {
-  name                     = "my_group_policy"
-  description              = "My Group Policy object"
-  vpn_protocol_ssl         = true
-  vpn_protocol_ipsec_ikev2 = true
+  name                 = "my_group_policy"
+  description          = "My Group Policy object"
+  protocol_ssl         = true
+  protocol_ipsec_ikev2 = true
   ipv4_address_pools = [
     {
-      id = ""
+      id = "12345678-1234-1234-1234-123456"
     }
   ]
   banner                               = "Welcome to the VPN Connection."
-  primary_dns_server_host_id           = ""
-  secondary_dns_server_host_id         = ""
-  primary_wins_server_host_id          = ""
-  secondary_wins_server_host_id        = ""
-  dhcp_network_scope_network_object_id = ""
+  primary_dns_server_host_id           = "12345678-1234-1234-1234-123456"
+  secondary_dns_server_host_id         = "12345678-1234-1234-1234-123457"
+  primary_wins_server_host_id          = "12345678-1234-1234-1234-123458"
+  secondary_wins_server_host_id        = "12345678-1234-1234-1234-123459"
+  dhcp_network_scope_network_object_id = "12345678-1234-1234-1234-123460"
   default_domain                       = "example.com"
   ipv4_split_tunnel_policy             = "TUNNEL_ALL"
   ipv6_split_tunnel_policy             = "TUNNEL_ALL"
-  split_tunnel_acl_id                  = "12345678-1234-1234-1234-123456"
-  split_tunnel_acl_type                = "ExtendedAccessList"
-  dns_request_split_tunnel_policy      = "USE_SPLIT_TUNNEL_SETTING"
+  dns_request_split_tunnel_policy      = "TUNNEL_SPECIFIED_DOMAINS"
   split_dns_domain_list                = "example.com,example.org"
   secure_client_profile_id             = "12345678-1234-1234-1234-123456"
   secure_client_management_profile_id  = "12345678-1234-1234-1234-123456"
   secure_client_modules = [
     {
-      type            = ""
+      type            = "UMBRELLA_ROAMING"
       profile_id      = "12345678-1234-1234-1234-123456"
       download_module = true
     }
   ]
-  ssl_compression                              = ""
-  dtls_compression                             = ""
+  ssl_compression                              = "DISABLED"
+  dtls_compression                             = "DISABLED"
   mtu_size                                     = 1406
   ignore_df_bit                                = true
   keep_alive_messages                          = true
@@ -57,6 +55,6 @@ resource "fmc_group_policy" "example" {
   simultaneous_logins_per_user           = 3
   maximum_connection_time                = 3600
   maximum_connection_time_alert_interval = 1
-  vpn_idle_timeout                       = 3600
-  vpn_idle_timeout_alert_interval        = 1
+  idle_timeout                           = 3600
+  idle_timeout_alert_interval            = 1
 }

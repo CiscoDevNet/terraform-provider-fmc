@@ -99,13 +99,13 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
-			"vpn_protocol_ssl": schema.BoolAttribute{
+			"protocol_ssl": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable SSL protocol for VPN connections.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"vpn_protocol_ipsec_ikev2": schema.BoolAttribute{
+			"protocol_ipsec_ikev2": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable IPsec IKEv2 protocol for VPN connections.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
@@ -180,11 +180,14 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				Optional:            true,
 			},
 			"split_tunnel_acl_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of standard or extended ACL used for split tunnel configuration.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.").AddStringEnumDescription("StandardAccessList", "ExtendedAccessList").String,
 				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("StandardAccessList", "ExtendedAccessList"),
+				},
 			},
 			"dns_request_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("USE_SPLIT_TUNNEL_SETTING", "TUNNEL_ALL", "TUNNEL_SPECIFIED_DOMAINS").AddDefaultValueDescription("USE_SPLIT_TUNNEL_SETTING").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Define if DNS requests should be send over the tunnel or not.").AddStringEnumDescription("USE_SPLIT_TUNNEL_SETTING", "TUNNEL_ALL", "TUNNEL_SPECIFIED_DOMAINS").AddDefaultValueDescription("USE_SPLIT_TUNNEL_SETTING").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -305,7 +308,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				Default: int64default.StaticInt64(30),
 			},
 			"client_bypass_protocol": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.").String,
 				Optional:            true,
 			},
 			"ssl_rekey": schema.BoolAttribute{
@@ -358,11 +361,11 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"access_hours_time_range_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.").String,
 				Optional:            true,
 			},
 			"simultaneous_logins_per_user": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of simultaneous logins allowed for a user").AddIntegerRangeDescription(0, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of simultaneous logins allowed for a user.").AddIntegerRangeDescription(0, 2147483647).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 2147483647),
@@ -382,14 +385,14 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 					int64validator.Between(1, 30),
 				},
 			},
-			"vpn_idle_timeout": schema.Int64Attribute{
+			"idle_timeout": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("VPN idle timeout in minutes.").AddIntegerRangeDescription(1, 4473924).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 4473924),
 				},
 			},
-			"vpn_idle_timeout_alert_interval": schema.Int64Attribute{
+			"idle_timeout_alert_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Interval of time before idle time is reached to display a message to the user.").AddIntegerRangeDescription(1, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{

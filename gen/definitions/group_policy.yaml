@@ -24,13 +24,13 @@ attributes:
   # General - VPN Protocols
   - model_name: enableSSLProtocol
     type: Bool
-    tf_name: vpn_protocol_ssl
+    tf_name: protocol_ssl
     description: Enable SSL protocol for VPN connections.
     example: "true"
     default_value: "true"
   - model_name: enableIPsecIKEv2Protocol
     type: Bool
-    tf_name: vpn_protocol_ipsec_ikev2
+    tf_name: protocol_ipsec_ikev2
     description: Enable IPsec IKEv2 protocol for VPN connections.
     example: "true"
     default_value: "true"
@@ -47,6 +47,8 @@ attributes:
         type: String
         description: Pool Id.
         mandatory: true
+        example: 12345678-1234-1234-1234-123456
+        test_value: fmc_ipv4_address_pool.test.id
   
   # General - Banner
   - model_name: banner
@@ -62,26 +64,36 @@ attributes:
     tf_name: primary_dns_server_host_id
     type: String
     description: Id of host object that represents primary DNS server.
+    example: 12345678-1234-1234-1234-123456
+    test_value: fmc_hosts.test.items["group_policy_host_1"].id
   - model_name: id
     data_path: ["generalSettings", "secondaryDNSServer"]
     tf_name: secondary_dns_server_host_id
     type: String
     description: Id of host object that represents secondary DNS server.
+    example: 12345678-1234-1234-1234-123457
+    test_value: fmc_hosts.test.items["group_policy_host_2"].id
   - model_name: id
     data_path: ["generalSettings", "primaryWINSServer"]
     tf_name: primary_wins_server_host_id
     type: String
     description: Id of host object that represents primary WINS server.
+    example: 12345678-1234-1234-1234-123458
+    test_value: fmc_hosts.test.items["group_policy_host_3"].id
   - model_name: id
     data_path: ["generalSettings", "secondaryWINSServer"]
     tf_name: secondary_wins_server_host_id
     type: String
     description: Id of host object that represents secondary WINS server.
+    example: 12345678-1234-1234-1234-123459
+    test_value: fmc_hosts.test.items["group_policy_host_4"].id
   - model_name: id
     data_path: ["generalSettings", "addressAssignment", "dhcpScope"]
     tf_name: dhcp_network_scope_network_object_id
     type: String
     description: Id of the Network Object used to determine the DHCP scope.
+    example: 12345678-1234-1234-1234-123460
+    test_value: fmc_networks.test.items["group_policy_network_1"].id
   - model_name: defaultDomainName
     data_path: ["generalSettings", "addressAssignment"]
     tf_name: default_domain
@@ -111,19 +123,23 @@ attributes:
     tf_name: split_tunnel_acl_id
     type: String
     description: Id of standard or extended ACL used for split tunnel configuration.
-    example: 12345678-1234-1234-1234-123456
+    exclude_example: true
+    exclude_test: true
   - model_name: type
     data_path: ["generalSettings", "splitTunnelSettings", "splitTunnelACL"]
     tf_name: split_tunnel_acl_type
     type: String
-    description: Type of standard or extended ACL used for split tunnel configuration.
-    example: ExtendedAccessList
+    description: Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
+    enum_values: [StandardAccessList, ExtendedAccessList]
+    exclude_example: true
+    exclude_test: true
   - model_name: splitDNSRequestPolicy
     data_path: ["generalSettings", "splitTunnelSettings"]
     tf_name: dns_request_split_tunnel_policy
     type: String
+    description: Define if DNS requests should be send over the tunnel or not.
     enum_values: [USE_SPLIT_TUNNEL_SETTING, TUNNEL_ALL, TUNNEL_SPECIFIED_DOMAINS]
-    example: USE_SPLIT_TUNNEL_SETTING
+    example: TUNNEL_SPECIFIED_DOMAINS
     default_value: USE_SPLIT_TUNNEL_SETTING
   - model_name: splitDNSDomainList
     data_path: ["generalSettings", "splitTunnelSettings"]
@@ -140,6 +156,7 @@ attributes:
     type: String
     description: ID of the Secure Client Profile.
     example: 12345678-1234-1234-1234-123456
+    exclude_test: true
 
   # Secure Client - Management Profile
   - model_name: id
@@ -148,13 +165,15 @@ attributes:
     type: String
     description: ID of the Secure Client Management Profile.
     example: 12345678-1234-1234-1234-123456
-  
+    exclude_test: true
+
   # Secure Client - Client Modules
   - model_name: clientModules
     data_path: ["anyConnectSettings"]
     tf_name: secure_client_modules
     type: List
     description: List of Secure Client Modules to be enabled.
+    exclude_test: true
     attributes:
       - model_name: moduleType
         tf_name: type
@@ -162,6 +181,7 @@ attributes:
         enum_values: [ AMP_ENABLER, FEEDBACK, ISE_POSTURE, NETWORK_ACCESS_MANAGER, NETWORK_VISIBILITY, UMBRELLA_ROAMING, WEB_SECURITY, START_BEFORE_LOGIN, DART ]
         mandatory: true
         id: true
+        example: UMBRELLA_ROAMING
       - model_name: id
         data_path: ["moduleProfile"]
         tf_name: profile_id
@@ -182,12 +202,14 @@ attributes:
     description: SSL compression method for the connection.
     tf_name: ssl_compression
     enum_values: [DISABLED, DEFLATE, LZS]
+    example: DISABLED
   - model_name: dtlsCompression
     data_path: ["anyConnectSettings", "sslSettings"]
     type: String
     description: DTLS compression method for the connection.
     tf_name: dtls_compression
     enum_values: [DISABLED, LZS]
+    example: DISABLED
   - model_name: mtuSize
     data_path: ["anyConnectSettings", "sslSettings"]
     type: Int64
@@ -256,7 +278,7 @@ attributes:
   - model_name: bypassUnsupportProtocol
     data_path: ["anyConnectSettings", "connectionSettings"]
     type: Bool
-    description: Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.
+    description: Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.
     tf_name: client_bypass_protocol
     example: "false"
   - model_name: enableSSLRekey
@@ -286,12 +308,14 @@ attributes:
     type: String
     description: Id of extended ACL to configure firewall settings for the VPN client's platform.
     example: 12345678-1234-1234-1234-123456
+    exclude_test: true
   - model_name: id
     data_path: ["anyConnectSettings", "connectionSettings", "clientFirewallPublicNetworkRules"]
     tf_name: client_firewall_public_network_rules_acl_id
     type: String
     description: Id of extended ACL to configure firewall settings for the VPN client's platform.
     example: 12345678-1234-1234-1234-123456
+    exclude_test: true
     
   # Secure Client - Custom Attributes
   - model_name: customAttributes
@@ -299,6 +323,7 @@ attributes:
     tf_name: secure_client_custom_attributes
     type: List
     description: Secure Client Custom Attributes that are used by the Secure Client to configure features.
+    exclude_test: true
     attributes:
       - model_name: id
         data_path: ["customAttributeObject"]
@@ -315,6 +340,7 @@ attributes:
     type: String
     description: Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
     example: 12345678-1234-1234-1234-123456
+    exclude_test: true
   - model_name: restrictVPNToVLANId
     data_path: ["advancedSettings"]
     type: Int64
@@ -329,13 +355,14 @@ attributes:
     data_path: ["advancedSettings", "sessionSettings", "accessHours"]
     tf_name: access_hours_time_range_id
     type: String
-    description: ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.
+    description: ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.
     example: 12345678-1234-1234-1234-123456
+    exclude_test: true
   - model_name: simultaneousLoginPerUser
     data_path: ["advancedSettings", "sessionSettings"]
     type: Int64
     tf_name: simultaneous_logins_per_user
-    description: Maximum number of simultaneous logins allowed for a user
+    description: Maximum number of simultaneous logins allowed for a user.
     example: 3
     min_int: 0
     max_int: 2147483647
@@ -358,7 +385,7 @@ attributes:
   - model_name: vpnIdleTimeout
     data_path: ["advancedSettings", "sessionSettings"]
     type: Int64
-    tf_name: vpn_idle_timeout
+    tf_name: idle_timeout
     description: VPN idle timeout in minutes.
     example: 3600
     min_int: 1
@@ -366,8 +393,30 @@ attributes:
   - model_name: vpnIdleTimeoutAlertInterval
     data_path: ["advancedSettings", "sessionSettings"]
     type: Int64
-    tf_name: vpn_idle_timeout_alert_interval
+    tf_name: idle_timeout_alert_interval
     description: Interval of time before idle time is reached to display a message to the user.
     example: 1
     min_int: 1
     max_int: 30
+
+test_prerequisites: |-
+  resource "fmc_ipv4_address_pool" "test" {
+    name    = "group_policy_ipv4_address_pool1"
+    range   = "10.10.10.0-10.10.10.240"
+    netmask = "255.255.255.0"
+  }
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "group_policy_host_1" = { ip = "192.168.10.1" }
+      "group_policy_host_2" = { ip = "192.168.10.2" }
+      "group_policy_host_3" = { ip = "192.168.10.3" }
+      "group_policy_host_4" = { ip = "192.168.10.4" }
+    }
+  }
+
+  resource "fmc_networks" "test" {
+    items = {
+      "group_policy_network_1" = { prefix = "192.168.20.0/24" }
+    }
+  }

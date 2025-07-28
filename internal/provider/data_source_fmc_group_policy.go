@@ -84,11 +84,11 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
-			"vpn_protocol_ssl": schema.BoolAttribute{
+			"protocol_ssl": schema.BoolAttribute{
 				MarkdownDescription: "Enable SSL protocol for VPN connections.",
 				Computed:            true,
 			},
-			"vpn_protocol_ipsec_ikev2": schema.BoolAttribute{
+			"protocol_ipsec_ikev2": schema.BoolAttribute{
 				MarkdownDescription: "Enable IPsec IKEv2 protocol for VPN connections.",
 				Computed:            true,
 			},
@@ -145,11 +145,11 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"split_tunnel_acl_type": schema.StringAttribute{
-				MarkdownDescription: "Type of standard or extended ACL used for split tunnel configuration.",
+				MarkdownDescription: "Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.",
 				Computed:            true,
 			},
 			"dns_request_split_tunnel_policy": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Define if DNS requests should be send over the tunnel or not.",
 				Computed:            true,
 			},
 			"split_dns_domain_list": schema.StringAttribute{
@@ -225,7 +225,7 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"client_bypass_protocol": schema.BoolAttribute{
-				MarkdownDescription: "Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.",
+				MarkdownDescription: "Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.",
 				Computed:            true,
 			},
 			"ssl_rekey": schema.BoolAttribute{
@@ -269,11 +269,11 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"access_hours_time_range_id": schema.StringAttribute{
-				MarkdownDescription: "ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.",
+				MarkdownDescription: "ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.",
 				Computed:            true,
 			},
 			"simultaneous_logins_per_user": schema.Int64Attribute{
-				MarkdownDescription: "Maximum number of simultaneous logins allowed for a user",
+				MarkdownDescription: "Maximum number of simultaneous logins allowed for a user.",
 				Computed:            true,
 			},
 			"maximum_connection_time": schema.Int64Attribute{
@@ -284,11 +284,11 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Specifies the interval of time before maximum connection time is reached to display a message to the user.",
 				Computed:            true,
 			},
-			"vpn_idle_timeout": schema.Int64Attribute{
+			"idle_timeout": schema.Int64Attribute{
 				MarkdownDescription: "VPN idle timeout in minutes.",
 				Computed:            true,
 			},
-			"vpn_idle_timeout_alert_interval": schema.Int64Attribute{
+			"idle_timeout_alert_interval": schema.Int64Attribute{
 				MarkdownDescription: "Interval of time before idle time is reached to display a message to the user.",
 				Computed:            true,
 			},

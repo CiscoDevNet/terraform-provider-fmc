@@ -39,8 +39,8 @@ type GroupPolicy struct {
 	Name                                   types.String                              `tfsdk:"name"`
 	Type                                   types.String                              `tfsdk:"type"`
 	Description                            types.String                              `tfsdk:"description"`
-	VpnProtocolSsl                         types.Bool                                `tfsdk:"vpn_protocol_ssl"`
-	VpnProtocolIpsecIkev2                  types.Bool                                `tfsdk:"vpn_protocol_ipsec_ikev2"`
+	ProtocolSsl                            types.Bool                                `tfsdk:"protocol_ssl"`
+	ProtocolIpsecIkev2                     types.Bool                                `tfsdk:"protocol_ipsec_ikev2"`
 	Ipv4AddressPools                       []GroupPolicyIpv4AddressPools             `tfsdk:"ipv4_address_pools"`
 	Banner                                 types.String                              `tfsdk:"banner"`
 	PrimaryDnsServerHostId                 types.String                              `tfsdk:"primary_dns_server_host_id"`
@@ -81,8 +81,8 @@ type GroupPolicy struct {
 	SimultaneousLoginsPerUser              types.Int64                               `tfsdk:"simultaneous_logins_per_user"`
 	MaximumConnectionTime                  types.Int64                               `tfsdk:"maximum_connection_time"`
 	MaximumConnectionTimeAlertInterval     types.Int64                               `tfsdk:"maximum_connection_time_alert_interval"`
-	VpnIdleTimeout                         types.Int64                               `tfsdk:"vpn_idle_timeout"`
-	VpnIdleTimeoutAlertInterval            types.Int64                               `tfsdk:"vpn_idle_timeout_alert_interval"`
+	IdleTimeout                            types.Int64                               `tfsdk:"idle_timeout"`
+	IdleTimeoutAlertInterval               types.Int64                               `tfsdk:"idle_timeout_alert_interval"`
 }
 
 type GroupPolicyIpv4AddressPools struct {
@@ -127,11 +127,11 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
-	if !data.VpnProtocolSsl.IsNull() {
-		body, _ = sjson.Set(body, "enableSSLProtocol", data.VpnProtocolSsl.ValueBool())
+	if !data.ProtocolSsl.IsNull() {
+		body, _ = sjson.Set(body, "enableSSLProtocol", data.ProtocolSsl.ValueBool())
 	}
-	if !data.VpnProtocolIpsecIkev2.IsNull() {
-		body, _ = sjson.Set(body, "enableIPsecIKEv2Protocol", data.VpnProtocolIpsecIkev2.ValueBool())
+	if !data.ProtocolIpsecIkev2.IsNull() {
+		body, _ = sjson.Set(body, "enableIPsecIKEv2Protocol", data.ProtocolIpsecIkev2.ValueBool())
 	}
 	if len(data.Ipv4AddressPools) > 0 {
 		body, _ = sjson.Set(body, "generalSettings.addressAssignment.ipv4LocalAddressPool", []interface{}{})
@@ -280,11 +280,11 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.MaximumConnectionTimeAlertInterval.IsNull() {
 		body, _ = sjson.Set(body, "advancedSettings.sessionSettings.maxConnectionTimeAlertInterval", data.MaximumConnectionTimeAlertInterval.ValueInt64())
 	}
-	if !data.VpnIdleTimeout.IsNull() {
-		body, _ = sjson.Set(body, "advancedSettings.sessionSettings.vpnIdleTimeout", data.VpnIdleTimeout.ValueInt64())
+	if !data.IdleTimeout.IsNull() {
+		body, _ = sjson.Set(body, "advancedSettings.sessionSettings.vpnIdleTimeout", data.IdleTimeout.ValueInt64())
 	}
-	if !data.VpnIdleTimeoutAlertInterval.IsNull() {
-		body, _ = sjson.Set(body, "advancedSettings.sessionSettings.vpnIdleTimeoutAlertInterval", data.VpnIdleTimeoutAlertInterval.ValueInt64())
+	if !data.IdleTimeoutAlertInterval.IsNull() {
+		body, _ = sjson.Set(body, "advancedSettings.sessionSettings.vpnIdleTimeoutAlertInterval", data.IdleTimeoutAlertInterval.ValueInt64())
 	}
 	return body
 }
@@ -310,14 +310,14 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("enableSSLProtocol"); value.Exists() {
-		data.VpnProtocolSsl = types.BoolValue(value.Bool())
+		data.ProtocolSsl = types.BoolValue(value.Bool())
 	} else {
-		data.VpnProtocolSsl = types.BoolValue(true)
+		data.ProtocolSsl = types.BoolValue(true)
 	}
 	if value := res.Get("enableIPsecIKEv2Protocol"); value.Exists() {
-		data.VpnProtocolIpsecIkev2 = types.BoolValue(value.Bool())
+		data.ProtocolIpsecIkev2 = types.BoolValue(value.Bool())
 	} else {
-		data.VpnProtocolIpsecIkev2 = types.BoolValue(true)
+		data.ProtocolIpsecIkev2 = types.BoolValue(true)
 	}
 	if value := res.Get("generalSettings.addressAssignment.ipv4LocalAddressPool"); value.Exists() {
 		data.Ipv4AddressPools = make([]GroupPolicyIpv4AddressPools, 0)
@@ -557,14 +557,14 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.MaximumConnectionTimeAlertInterval = types.Int64Null()
 	}
 	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeout"); value.Exists() {
-		data.VpnIdleTimeout = types.Int64Value(value.Int())
+		data.IdleTimeout = types.Int64Value(value.Int())
 	} else {
-		data.VpnIdleTimeout = types.Int64Null()
+		data.IdleTimeout = types.Int64Null()
 	}
 	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeoutAlertInterval"); value.Exists() {
-		data.VpnIdleTimeoutAlertInterval = types.Int64Value(value.Int())
+		data.IdleTimeoutAlertInterval = types.Int64Value(value.Int())
 	} else {
-		data.VpnIdleTimeoutAlertInterval = types.Int64Null()
+		data.IdleTimeoutAlertInterval = types.Int64Null()
 	}
 }
 
@@ -592,15 +592,15 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.Description = types.StringNull()
 	}
-	if value := res.Get("enableSSLProtocol"); value.Exists() && !data.VpnProtocolSsl.IsNull() {
-		data.VpnProtocolSsl = types.BoolValue(value.Bool())
-	} else if data.VpnProtocolSsl.ValueBool() != true {
-		data.VpnProtocolSsl = types.BoolNull()
+	if value := res.Get("enableSSLProtocol"); value.Exists() && !data.ProtocolSsl.IsNull() {
+		data.ProtocolSsl = types.BoolValue(value.Bool())
+	} else if data.ProtocolSsl.ValueBool() != true {
+		data.ProtocolSsl = types.BoolNull()
 	}
-	if value := res.Get("enableIPsecIKEv2Protocol"); value.Exists() && !data.VpnProtocolIpsecIkev2.IsNull() {
-		data.VpnProtocolIpsecIkev2 = types.BoolValue(value.Bool())
-	} else if data.VpnProtocolIpsecIkev2.ValueBool() != true {
-		data.VpnProtocolIpsecIkev2 = types.BoolNull()
+	if value := res.Get("enableIPsecIKEv2Protocol"); value.Exists() && !data.ProtocolIpsecIkev2.IsNull() {
+		data.ProtocolIpsecIkev2 = types.BoolValue(value.Bool())
+	} else if data.ProtocolIpsecIkev2.ValueBool() != true {
+		data.ProtocolIpsecIkev2 = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ipv4AddressPools); i++ {
 		keys := [...]string{"id"}
@@ -926,15 +926,15 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.MaximumConnectionTimeAlertInterval = types.Int64Null()
 	}
-	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeout"); value.Exists() && !data.VpnIdleTimeout.IsNull() {
-		data.VpnIdleTimeout = types.Int64Value(value.Int())
+	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeout"); value.Exists() && !data.IdleTimeout.IsNull() {
+		data.IdleTimeout = types.Int64Value(value.Int())
 	} else {
-		data.VpnIdleTimeout = types.Int64Null()
+		data.IdleTimeout = types.Int64Null()
 	}
-	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeoutAlertInterval"); value.Exists() && !data.VpnIdleTimeoutAlertInterval.IsNull() {
-		data.VpnIdleTimeoutAlertInterval = types.Int64Value(value.Int())
+	if value := res.Get("advancedSettings.sessionSettings.vpnIdleTimeoutAlertInterval"); value.Exists() && !data.IdleTimeoutAlertInterval.IsNull() {
+		data.IdleTimeoutAlertInterval = types.Int64Value(value.Int())
 	} else {
-		data.VpnIdleTimeoutAlertInterval = types.Int64Null()
+		data.IdleTimeoutAlertInterval = types.Int64Null()
 	}
 }
 

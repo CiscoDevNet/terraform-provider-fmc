@@ -14,39 +14,37 @@ This resource manages a Group Policy.
 
 ```terraform
 resource "fmc_group_policy" "example" {
-  name                     = "my_group_policy"
-  description              = "My Group Policy object"
-  vpn_protocol_ssl         = true
-  vpn_protocol_ipsec_ikev2 = true
+  name                 = "my_group_policy"
+  description          = "My Group Policy object"
+  protocol_ssl         = true
+  protocol_ipsec_ikev2 = true
   ipv4_address_pools = [
     {
-      id = ""
+      id = "12345678-1234-1234-1234-123456"
     }
   ]
   banner                               = "Welcome to the VPN Connection."
-  primary_dns_server_host_id           = ""
-  secondary_dns_server_host_id         = ""
-  primary_wins_server_host_id          = ""
-  secondary_wins_server_host_id        = ""
-  dhcp_network_scope_network_object_id = ""
+  primary_dns_server_host_id           = "12345678-1234-1234-1234-123456"
+  secondary_dns_server_host_id         = "12345678-1234-1234-1234-123457"
+  primary_wins_server_host_id          = "12345678-1234-1234-1234-123458"
+  secondary_wins_server_host_id        = "12345678-1234-1234-1234-123459"
+  dhcp_network_scope_network_object_id = "12345678-1234-1234-1234-123460"
   default_domain                       = "example.com"
   ipv4_split_tunnel_policy             = "TUNNEL_ALL"
   ipv6_split_tunnel_policy             = "TUNNEL_ALL"
-  split_tunnel_acl_id                  = "12345678-1234-1234-1234-123456"
-  split_tunnel_acl_type                = "ExtendedAccessList"
-  dns_request_split_tunnel_policy      = "USE_SPLIT_TUNNEL_SETTING"
+  dns_request_split_tunnel_policy      = "TUNNEL_SPECIFIED_DOMAINS"
   split_dns_domain_list                = "example.com,example.org"
   secure_client_profile_id             = "12345678-1234-1234-1234-123456"
   secure_client_management_profile_id  = "12345678-1234-1234-1234-123456"
   secure_client_modules = [
     {
-      type            = ""
+      type            = "UMBRELLA_ROAMING"
       profile_id      = "12345678-1234-1234-1234-123456"
       download_module = true
     }
   ]
-  ssl_compression                              = ""
-  dtls_compression                             = ""
+  ssl_compression                              = "DISABLED"
+  dtls_compression                             = "DISABLED"
   mtu_size                                     = 1406
   ignore_df_bit                                = true
   keep_alive_messages                          = true
@@ -72,8 +70,8 @@ resource "fmc_group_policy" "example" {
   simultaneous_logins_per_user           = 3
   maximum_connection_time                = 3600
   maximum_connection_time_alert_interval = 1
-  vpn_idle_timeout                       = 3600
-  vpn_idle_timeout_alert_interval        = 1
+  idle_timeout                           = 3600
+  idle_timeout_alert_interval            = 1
 }
 ```
 
@@ -86,9 +84,9 @@ resource "fmc_group_policy" "example" {
 
 ### Optional
 
-- `access_hours_time_range_id` (String) ID of Time Range object that specifies the range of time this group policy is available to be applied to a remote access user.
+- `access_hours_time_range_id` (String) ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.
 - `banner` (String) Banner text to be displayed to users.
-- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable only if the headend assigned only IPv4 or only IPv6 address.
+- `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.
 - `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
   - Default value: `true`
 - `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
@@ -99,7 +97,8 @@ resource "fmc_group_policy" "example" {
 - `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
 - `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
-- `dns_request_split_tunnel_policy` (String) - Choices: `USE_SPLIT_TUNNEL_SETTING`, `TUNNEL_ALL`, `TUNNEL_SPECIFIED_DOMAINS`
+- `dns_request_split_tunnel_policy` (String) Define if DNS requests should be send over the tunnel or not.
+  - Choices: `USE_SPLIT_TUNNEL_SETTING`, `TUNNEL_ALL`, `TUNNEL_SPECIFIED_DOMAINS`
   - Default value: `USE_SPLIT_TUNNEL_SETTING`
 - `domain` (String) Name of the FMC domain
 - `dtls_compression` (String) DTLS compression method for the connection.
@@ -109,6 +108,10 @@ resource "fmc_group_policy" "example" {
 - `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
   - Range: `5`-`3600`
   - Default value: `30`
+- `idle_timeout` (Number) VPN idle timeout in minutes.
+  - Range: `1`-`4473924`
+- `idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
+  - Range: `1`-`30`
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
 - `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
 - `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
@@ -131,6 +134,10 @@ resource "fmc_group_policy" "example" {
   - Default value: `1406`
 - `primary_dns_server_host_id` (String) Id of host object that represents primary DNS server.
 - `primary_wins_server_host_id` (String) Id of host object that represents primary WINS server.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
+  - Default value: `true`
+- `protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
+  - Default value: `true`
 - `restrict_vpn_to_vlan` (Number) Specifies the egress VLAN ID for sessions to which this Group Policy applies.
   - Range: `1`-`4094`
 - `secondary_dns_server_host_id` (String) Id of host object that represents secondary DNS server.
@@ -139,11 +146,12 @@ resource "fmc_group_policy" "example" {
 - `secure_client_management_profile_id` (String) ID of the Secure Client Management Profile.
 - `secure_client_modules` (Attributes List) List of Secure Client Modules to be enabled. (see [below for nested schema](#nestedatt--secure_client_modules))
 - `secure_client_profile_id` (String) ID of the Secure Client Profile.
-- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user
+- `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user.
   - Range: `0`-`2147483647`
 - `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
 - `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
-- `split_tunnel_acl_type` (String) Type of standard or extended ACL used for split tunnel configuration.
+- `split_tunnel_acl_type` (String) Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
+  - Choices: `StandardAccessList`, `ExtendedAccessList`
 - `ssl_compression` (String) SSL compression method for the connection.
   - Choices: `DISABLED`, `DEFLATE`, `LZS`
 - `ssl_rekey` (Boolean) Enables the client to rekey the connection.
@@ -152,14 +160,6 @@ resource "fmc_group_policy" "example" {
 - `ssl_rekey_method` (String) Method to use for SSL rekeying.
   - Choices: `NEW_TUNNEL`, `EXISTING_TUNNEL`
 - `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
-- `vpn_idle_timeout` (Number) VPN idle timeout in minutes.
-  - Range: `1`-`4473924`
-- `vpn_idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
-  - Range: `1`-`30`
-- `vpn_protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for VPN connections.
-  - Default value: `true`
-- `vpn_protocol_ssl` (Boolean) Enable SSL protocol for VPN connections.
-  - Default value: `true`
 
 ### Read-Only
 
