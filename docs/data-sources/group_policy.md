@@ -25,7 +25,7 @@ data "fmc_group_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the Group Policy object.
+- `name` (String) Name of the Group Policy object. Use `DfltGrpPolicy` to manage the default group policy.
 
 ### Read-Only
 

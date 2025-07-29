@@ -80,7 +80,7 @@ resource "fmc_group_policy" "example" {
 
 ### Required
 
-- `name` (String) Name of the Group Policy object.
+- `name` (String) Name of the Group Policy object. Use `DfltGrpPolicy` to manage the default group policy.
 
 ### Optional
 
