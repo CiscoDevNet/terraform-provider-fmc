@@ -85,7 +85,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Group Policy object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Group Policy object. Use `DfltGrpPolicy` to manage the default group policy.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -413,8 +413,6 @@ func (r *GroupPolicyResource) Configure(_ context.Context, req resource.Configur
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *GroupPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan GroupPolicy
 
@@ -432,14 +430,40 @@ func (r *GroupPolicyResource) Create(ctx context.Context, req resource.CreateReq
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
-	// Create object
-	body := plan.toBody(ctx, GroupPolicy{})
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
-		return
+	var res fmc.Res
+	var err error
+
+	if plan.Name.ValueString() == "DfltGrpPolicy" {
+		// This is a default group policy, we will update it instead of creating a new one.
+		tflog.Debug(ctx, fmt.Sprintf("%s: Detected DfltGrpPolicy, updating instead of creating", plan.Id.ValueString()))
+		// Get id of the default group policy
+		resTmp, err := r.client.Get(plan.getPath()+"?filter=nameOrValue:DfltGrpPolicy", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve DfltGrpPolicy (GET), got error: %s, %s", err, resTmp.String()))
+			return
+		}
+		if len(resTmp.Get("items").Array()) != 1 {
+			resp.Diagnostics.AddError("Error", fmt.Sprintf("Got %d items for DfltGrpPolicy, expected 1", len(resTmp.Get("items").Array())))
+			return
+		}
+		plan.Id = types.StringValue(resTmp.Get("items").Array()[0].Get("id").String())
+		// Update object
+		body := plan.toBody(ctx, GroupPolicy{})
+		res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure DfltGrpPolicy (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+	} else {
+		// Create object
+		body := plan.toBody(ctx, GroupPolicy{})
+		res, err = r.client.Post(plan.getPath(), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+		plan.Id = types.StringValue(res.Get("id").String())
 	}
-	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
@@ -449,8 +473,6 @@ func (r *GroupPolicyResource) Create(ctx context.Context, req resource.CreateReq
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
@@ -544,8 +566,6 @@ func (r *GroupPolicyResource) Update(ctx context.Context, req resource.UpdateReq
 
 // End of section. //template:end update
 
-// Section below is generated&owned by "gen/generator.go". //template:begin delete
-
 func (r *GroupPolicyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
 	var state GroupPolicy
 
@@ -562,18 +582,26 @@ func (r *GroupPolicyResource) Delete(ctx context.Context, req resource.DeleteReq
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
+	if state.Name.ValueString() == "DfltGrpPolicy" {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Detected DfltGrpPolicy, clearing configuration", state.Id.ValueString()))
+		body := state.toBodyPutDelete(ctx)
+		res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to clear DfltGrpPolicy (PUT), got error: %s, %s", err, res.String()))
+			return
+		}
+	} else {
+		res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete finished successfully", state.Id.ValueString()))
 
 	resp.State.RemoveResource(ctx)
 }
-
-// End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
@@ -584,15 +612,3 @@ func (r *GroupPolicyResource) ImportState(ctx context.Context, req resource.Impo
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources
