@@ -961,8 +961,6 @@ func (data GroupPolicy) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	body, _ = sjson.Set(body, "type", "GroupPolicy")
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	return body
 }
