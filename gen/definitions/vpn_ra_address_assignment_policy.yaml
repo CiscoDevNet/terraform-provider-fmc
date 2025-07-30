@@ -1,0 +1,60 @@
+---
+name: VPN RA Address Assignment Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/addressassignmentsettings
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Address Assignment Policies.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_ra.test.id
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the VPN Remote Access (RA) Topology. ?????????????????
+    example: my_ftd_ra_vpn_secure_client_customization
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnAddressAssignmentSetting'.
+    computed: true
+
+  # Settings
+  - model_name: useAuthorizationServerForIPv4
+    tf_name: ipv4_use_authorization_server
+    type: Bool
+    description: Use authorization server (Only for RADIUS or Realm)
+    default_value: true
+  - model_name: useDHCP
+    tf_name: ipv4_use_dhcp
+    type: Bool
+    description: Use DHCP for IPv4 address assignment.
+    default_value: true
+  - model_name: useInternalAddressPoolForIPv4
+    tf_name: ipv4_internal_address_pool
+    type: Bool
+    description: Use internal address pool for IPv4 address assignment.
+    default_value: true
+  - model_name: ipAddressReuseInterval
+    tf_name: ipv4_internal_address_pool_reuse_interval
+    type: Int64
+    description: Interval in seconds for reusing IPv4 addresses.
+    example: 0
+    default_value: 0
+    min_int: 0
+    max_int: 480
+  - model_name: useAuthorizationServerForIPv6
+    tf_name: ipv6_use_authorization_server
+    type: Bool
+    description: Use authorization server (Only for RADIUS or Realm)
+    default_value: true
+  - model_name: useInternalAddressPoolForIPv6
+    tf_name: ipv6_internal_address_pool
+    type: Bool
+    description: Use internal address pool for IPv6 address assignment.
+    default_value: true
