@@ -1,0 +1,78 @@
+---
+name: VPN RA Secure Client Customization
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/secureclientcustomizationsettings
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Secure Client Customizations.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_ra.test.id
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the VPN Remote Access (RA) Topology. ?????????????????
+    example: my_ftd_ra_vpn_secure_client_customization
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnSecureClientCustomization'.
+    computed: true
+
+  # Customizations
+  - model_name: languageTranslations
+    tf_name: gui_and_text_messages
+    type: List
+    description: Configure language translation tables.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Language Translation.
+        example: 12345678-1234-1234-1234-123456789012
+  - model_name: imagesAndIcons
+    tf_name: icons_and_images
+    type: List
+    description: Configure icons and images for the secure client customization.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Icon/Image.
+        example: 12345678-1234-1234-1234-123456789012
+  - model_name: scripts
+    type: List
+    description: Import Secure Client customization scripts.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Script.
+        example: 12345678-1234-1234-1234-123456789012
+  - model_name: binaries
+    type: List
+    description: Configure Secure Client Binary executable modules on device.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Binary.
+        example: 12345678-1234-1234-1234-123456789012
+  - model_name: customizedInstallerTransforms
+    tf_name: custom_installer_transforms
+    type: List
+    description: Configure Secure Client customized installer transforms on device.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Custom Installer Transform.
+        example: 12345678-1234-1234-1234-123456789012
+  - model_name: localizedInstallerTransforms
+    type: List
+    description: Configure Secure Client localized installer transforms on device.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of Secure Client Customization - Localized Installer Transform.
+        example: 12345678-1234-1234-1234-123456789012
