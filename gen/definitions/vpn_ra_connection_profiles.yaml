@@ -1,0 +1,266 @@
+# Manual resource - ConfigValidators
+---
+name: VPN RA Connection Profiles
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/connectionprofiles
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Connection Profiles.
+is_bulk: true
+doc_category: VPN
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+skip_minimum_test: true
+test_tags: [TF_VAR_device_id]
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_ra.test.id
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Connection Profiles. The key of the map is the name of the Connection Profile.
+      `DefaultWEBVPNGroup` Connection Profile must be defined. //// ??????
+    map_key_example: my_connection_profile
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the Connection Profile.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'RaVpnConnectionProfile'.
+        computed: true
+      - model_name: id
+        data_path: [groupPolicy]
+        tf_name: group_policy_id
+        type: String
+        description: Id of the Group Policy.
+        example: 12345678-1234-1234-1234-123456
+      
+      # Client Address Assignment
+      - model_name: ipv4AddressPool
+        tf_name: ipv4_address_pools
+        type: List
+        description: IPv4 Address Pools for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the IPv4 Address Pool.
+            example: 12345678-1234-1234-1234-123456
+      - model_name: ipv6AddressPool
+        tf_name: ipv6_address_pools
+        type: List
+        description: IPv6 Address Pools for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the IPv6 Address Pool.
+            example: 12345678-1234-1234-1234-123456
+      - model_name: dhcpServersForAddressAssignment
+        tf_name: dhcp_servers
+        type: List
+        description: List of DHCP Servers for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of host representing the DHCP Server.
+            example: 12345678-1234-1234-1234-123456
+      
+      # AAA - Authentication
+      - model_name: authenticationMethod
+        tf_name: authentication_method
+        type: String
+        mandatory: true
+        description: User authentication method.
+        enum_values: [ AAA_ONLY, SAML, CLIENT_CERTIFICATE_ONLY, AAA_AND_CLIENT_CERTIFICATE, SAML_AND_CLIENT_CERTIFICATE ]
+        example: AAA_ONLY
+      
+      # AAA - Authentication - Primary
+      - model_name: useLocalAsPrimaryAuthServer
+        tf_name: primary_authentication_server_use_local
+        type: Bool
+        description: Use LOCAL FMC as primary authentication server.
+      - model_name: id
+        data_path: [primaryAuthenticationServer]
+        tf_name: primary_authentication_server_id
+        type: String
+        description: Id of the primary authentication server.
+        example: 12345678-1234-1234-1234-123456
+      - model_name: enablePrimaryAuthFallbackToLocal
+        tf_name: primary_authentication_fallback_to_local
+        type: Bool
+        description: Fallback to LOCAL FMC if primary authentication server is not reachable.
+        example: true
+      - model_name: enableMultipleCertificateAuthentication
+        tf_name: multiple_certificate_authentication
+        type: Bool
+        description: Enable multiple certificate authentication.
+        example: true
+
+      # AAA - Authentication - Secondary
+      - model_name: useLocalAsSecondaryAuthServer
+        tf_name: secondary_authentication_server_use_local
+        type: Bool
+        description: Use LOCAL FMC as secondary authentication server.
+      - model_name: id
+        data_path: [secondaryAuthenticationServer]
+        tf_name: secondary_authentication_server_id
+        type: String
+        description: Id of the secondary authentication server.
+        example: 12345678-1234-1234-1234-123456
+      - model_name: enableSecondaryAuthFallbackToLocal
+        tf_name: secondary_authentication_fallback_to_local
+        type: Bool
+        description: Fallback to LOCAL FMC if secondary authentication server is not reachable.
+        example: true
+      - model_name: promptUsername
+        data_path: [secondaryAuthenticationSettings]
+        tf_name: secondary_authentication_prompt_for_username
+        type: Bool
+        description: Prompt for username during secondary authentication.
+      - model_name: usePrimaryUsername
+        data_path: [secondaryAuthenticationSettings]
+        tf_name: secondary_authentication_use_primary_authentication_username
+        type: Bool
+        description: Use primary username for secondary authentication.
+        example: true
+      - model_name: matchCertificateAndSamlUsername
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_match_certificate_and_saml_username
+        type: Bool
+        description: Match certificate and SAML username for SAML.
+        example: true
+      - model_name: prefillUsernameFromCertificate
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_prefill_username_from_certificate
+        type: Bool
+        description: Prefill username from certificate.
+        example: true
+      - model_name: mapPrimaryField
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_prefill_username_from_certificate_primary_field
+        type: String
+        description: Map primary field for username.
+        enum_values: [ CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE ]
+        example: CN_COMMMON_NAME
+      - model_name: mapSecondaryField
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_prefill_username_from_certificate_secondary_field
+        type: String
+        description: Map secondary field for username.
+        enum_values: [ CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE ]
+      - model_name: mapEntireDNAsUsername
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_prefill_username_from_certificate_map_entire_dn
+        type: Bool
+        description: Map entire Distinguished Name (DN) as username.
+        example: true
+      - model_name: hideUsername
+        data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
+        tf_name: secondary_authentication_prefill_username_from_certificate_hide_username_in_login_window
+        type: Bool
+        description: Secondary username is pre-filled from the client certificate, but hidden to the user
+        example: true
+      - model_name: useSecondaryUsernameforSession
+        data_path: [secondaryAuthenticationSettings]
+        tf_name: use_secondary_authentication_username_for_reporting
+        type: Bool
+        description: Secondary username is used for reporting user activity during a VPN session.
+      # TODO: Certificate to choose:
+
+      # AAA - Authentication - SAML
+      - model_name: id
+        data_path: [idpCertOverrideForConnProfile]
+        tf_name: saml_idp_certificate_id
+        type: String
+        description: Override the primary Identity Provider (IdP) certificate of the SAML provider.
+      - model_name: enableExternalBrowserForSAML
+        tf_name: saml_use_external_browser
+        type: Bool
+        description: Use default OS browser (`true`) or embedded browser (`false`) for SAML authentication.
+        example: true
+      
+      # AAA - Authorization
+      - model_name: id
+        data_path: [authorizationServer]
+        tf_name: authorization_server_id
+        type: String
+        description: Id of the authorization server.
+        example: 12345678-1234-1234-1234-123456
+        ## TODO: Allow connection only if user exists in authorization database
+      
+      # AAA - Accounting
+      - model_name: id
+        data_path: [accountingServer]
+        tf_name: accounting_server_id
+        type: String
+        description: Id of the RADIUS accounting server.
+        example: 12345678-1234-1234-1234-123456
+      
+      # Advanced Settings
+      - model_name: stripRealmFromUsername
+        tf_name: strip_realm_from_username
+        type: Bool
+        description: Remove the realm from the username before passing the username on to the AAA server.
+        example: true
+      - model_name: stripGroupFromUsername
+        tf_name: strip_group_from_username
+        type: Bool
+        description: Remove the group name from the username before passing the username on to the AAA server
+        example: true
+      - model_name: enablePasswordManagement
+        tf_name: password_management
+        type: Bool
+        description: Enable managing the password for the remote access VPN users
+        example: true
+      - model_name: notifyUserOnPasswordExpiryDay
+        tf_name: password_management_notify_user_on_password_expiry_day
+        type: Bool
+        description: Notify user on the day the password expires.
+        example: true
+      - model_name: passwordExpirationNotificationPeriod
+        tf_name: password_management_advance_password_expiration_notification
+        type: Int64
+        description: Notify user on the number of days before password expiration.
+        min_int: 1
+        max_int: 180
+      
+      # Aliases
+      - model_name: groupAlias
+        tf_name: alias_names
+        type: List
+        description: List of Alias Names.
+        attributes:
+          - model_name: aliasName
+            tf_name: name
+            type: String
+            id: true
+            description: Name of the Alias.
+            example: my_group_alias
+            mandatory: true
+          - model_name: enabled
+            tf_name: enabled
+            type: Bool
+            description: Enable the Alias.
+            example: true
+      - model_name: groupURL
+        tf_name: alias_urls
+        type: List
+        description: List of Alias URLs.
+        attributes:
+          - model_name: aliasUrl
+            tf_name: url
+            type: String
+            id: true
+            description: URL of the alias.
+            example: https://example.com/group
+            mandatory: true
+          - model_name: enabled
+            tf_name: enabled
+            type: Bool
+            description: Enable the group URL.
+            example: true
