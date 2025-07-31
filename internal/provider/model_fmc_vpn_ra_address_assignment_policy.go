@@ -210,18 +210,19 @@ func (data *VPNRAAddressAssignmentPolicy) fromBodyUnknowns(ctx context.Context, 
 
 // End of section. //template:end clearItemIds
 
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
 func (data VPNRAAddressAssignmentPolicy) toBodyPutDelete(ctx context.Context) string {
 	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	body, _ = sjson.Set(body, "type", "RaVpnAddressAssignmentSetting")
+	body, _ = sjson.Set(body, "useAuthorizationServerForIPv4", "true")
+	body, _ = sjson.Set(body, "useDHCP", "true")
+	body, _ = sjson.Set(body, "useInternalAddressPoolForIPv4", "true")
+	body, _ = sjson.Set(body, "ipAddressReuseInterval", "0")
+	body, _ = sjson.Set(body, "useAuthorizationServerForIPv6", "true")
+	body, _ = sjson.Set(body, "useInternalAddressPoolForIPv6", "true")
 	return body
 }
-
-// End of section. //template:end toBodyPutDelete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
 

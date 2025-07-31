@@ -560,18 +560,12 @@ func (data *VPNRASecureClientCustomization) fromBodyUnknowns(ctx context.Context
 
 // End of section. //template:end clearItemIds
 
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
 func (data VPNRASecureClientCustomization) toBodyPutDelete(ctx context.Context) string {
 	body := ""
-	if data.Id.ValueString() != "" {
-		body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	}
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	body, _ = sjson.Set(body, "type", "RaVpnSecureClientCustomization")
 	return body
 }
-
-// End of section. //template:end toBodyPutDelete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
 
