@@ -474,11 +474,6 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 		} else {
 			data.UseSecondaryAuthenticationUsernameForReporting = types.BoolNull()
 		}
-		if value := res.Get("enableExternalBrowserForSAML"); value.Exists() {
-			data.SamlUseExternalBrowser = types.BoolValue(value.Bool())
-		} else {
-			data.SamlUseExternalBrowser = types.BoolNull()
-		}
 		if value := res.Get("authorizationServer.id"); value.Exists() {
 			data.AuthorizationServerId = types.StringValue(value.String())
 		} else {
@@ -838,11 +833,6 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 			data.UseSecondaryAuthenticationUsernameForReporting = types.BoolValue(value.Bool())
 		} else {
 			data.UseSecondaryAuthenticationUsernameForReporting = types.BoolNull()
-		}
-		if value := res.Get("enableExternalBrowserForSAML"); value.Exists() && !data.SamlUseExternalBrowser.IsNull() {
-			data.SamlUseExternalBrowser = types.BoolValue(value.Bool())
-		} else {
-			data.SamlUseExternalBrowser = types.BoolNull()
 		}
 		if value := res.Get("authorizationServer.id"); value.Exists() && !data.AuthorizationServerId.IsNull() {
 			data.AuthorizationServerId = types.StringValue(value.String())

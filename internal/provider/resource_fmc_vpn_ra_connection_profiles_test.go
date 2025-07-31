@@ -60,7 +60,6 @@ func TestAccFmcVPNRAConnectionProfiles(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.secondary_authentication_prompt_for_username", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.secondary_authentication_use_primary_authentication_username", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.use_secondary_authentication_username_for_reporting", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.saml_use_external_browser", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.authorization_server_id", "12345678-1234-1234-1234-123456"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.authorization_server_type", "RadiusServerGroup"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra_connection_profiles.test", "items.my_connection_profile.allow_connection_only_if_user_exists_in_authorization_database", "false"))

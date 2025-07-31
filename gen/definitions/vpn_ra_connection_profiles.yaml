@@ -267,6 +267,8 @@ attributes:
         type: Bool
         description: Use default OS browser (`true`) or embedded browser (`false`) for SAML authentication.
         exclude_example: true
+        # FMC BUG
+        write_only: true
       
       # AAA - Authorization
       - model_name: id
