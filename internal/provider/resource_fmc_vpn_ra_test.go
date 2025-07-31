@@ -36,16 +36,14 @@ func TestAccFmcVPNRA(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "protocol_ssl", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "protocol_ipsec_ikev2", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "local_realm_server", "my_local_realm_server"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "local_realm_id", "12345678-1234-1234-1234-123456789012"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "dap_policy_id", "12345678-1234-1234-1234-123456"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.id", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.protocol_ipsec_ikev2", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.protocol_ssl", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.protocol_ssl_dtls", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.interface_specific_certificate", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "access_interfaces.0.interface_specific_certificate_id", "12345678-1234-1234-1234-123456"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "allow_users_to_select_connection_profile", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "http_only_vpn_cookie", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "web_port", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "dtls_port", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "ssl_global_identity_certificate_id", "12345678-1234-1234-1234-123456"))
@@ -97,6 +95,9 @@ func TestAccFmcVPNRA(t *testing.T) {
 func testAccFmcVPNRAConfig_minimum() string {
 	config := `resource "fmc_vpn_ra" "test" {` + "\n"
 	config += `	name = "my_ftd_ra_vpn"` + "\n"
+	config += `	group_policies = [{` + "\n"
+	config += `		id = "12345678-1234-1234-1234-123456"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -111,18 +112,16 @@ func testAccFmcVPNRAConfig_all() string {
 	config += `	description = "description of my_fmc_ra_vpn"` + "\n"
 	config += `	protocol_ssl = true` + "\n"
 	config += `	protocol_ipsec_ikev2 = true` + "\n"
-	config += `	local_realm_server = "my_local_realm_server"` + "\n"
+	config += `	local_realm_id = "12345678-1234-1234-1234-123456789012"` + "\n"
 	config += `	dap_policy_id = "12345678-1234-1234-1234-123456"` + "\n"
 	config += `	access_interfaces = [{` + "\n"
 	config += `		id = ""` + "\n"
 	config += `		protocol_ipsec_ikev2 = true` + "\n"
 	config += `		protocol_ssl = true` + "\n"
 	config += `		protocol_ssl_dtls = true` + "\n"
-	config += `		interface_specific_certificate = true` + "\n"
 	config += `		interface_specific_certificate_id = "12345678-1234-1234-1234-123456"` + "\n"
 	config += `	}]` + "\n"
 	config += `	allow_users_to_select_connection_profile = true` + "\n"
-	config += `	http_only_vpn_cookie = true` + "\n"
 	config += `	web_port = 443` + "\n"
 	config += `	dtls_port = 443` + "\n"
 	config += `	ssl_global_identity_certificate_id = "12345678-1234-1234-1234-123456"` + "\n"

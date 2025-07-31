@@ -92,7 +92,7 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				MarkdownDescription: "Enable IPsec IKEv2 protocol for the VPN.",
 				Computed:            true,
 			},
-			"local_realm_server": schema.StringAttribute{
+			"local_realm_id": schema.StringAttribute{
 				MarkdownDescription: "Local realm server for the VPN.",
 				Computed:            true,
 			},
@@ -121,10 +121,6 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							MarkdownDescription: "Enable DTLS for the VPN.",
 							Computed:            true,
 						},
-						"interface_specific_certificate": schema.BoolAttribute{
-							MarkdownDescription: "Configure Interface ID Certificate for the VPN.",
-							Computed:            true,
-						},
 						"interface_specific_certificate_id": schema.StringAttribute{
 							MarkdownDescription: "Identifier for the ID certificate used for the VPN.",
 							Computed:            true,
@@ -134,10 +130,6 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 			},
 			"allow_users_to_select_connection_profile": schema.BoolAttribute{
 				MarkdownDescription: "Allow users to select a connection profile.",
-				Computed:            true,
-			},
-			"http_only_vpn_cookie": schema.BoolAttribute{
-				MarkdownDescription: "Use HTTP-only cookies for the VPN.",
 				Computed:            true,
 			},
 			"web_port": schema.Int64Attribute{
@@ -197,7 +189,7 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"group_policies": schema.ListNestedAttribute{
-				MarkdownDescription: "List of group policies associated with the VPN.",
+				MarkdownDescription: "List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

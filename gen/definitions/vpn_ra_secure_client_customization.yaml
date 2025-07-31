@@ -13,16 +13,13 @@ attributes:
     description: Id of the parent VPN RA Topology.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_vpn_ra.test.id
-  - model_name: name
-    type: String
-    mandatory: true
-    description: Name of the VPN Remote Access (RA) Topology. ?????????????????
-    example: my_ftd_ra_vpn_secure_client_customization
-    data_source_query: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnSecureClientCustomization'.
     computed: true
+  - model_name: type
+    type: String
+    value: RaVpnSecureClientCustomization
 
   # Customizations
   - model_name: languageTranslations

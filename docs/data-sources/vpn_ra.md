@@ -38,14 +38,13 @@ data "fmc_vpn_ra" "example" {
 - `description` (String) Description of the object.
 - `dtls_port` (Number) Port number for the web access of the VPN.
 - `external_browser_package_id` (String) Identifier for the external browser package used for the VPN.
-- `group_policies` (Attributes List) List of group policies associated with the VPN. (see [below for nested schema](#nestedatt--group_policies))
-- `http_only_vpn_cookie` (Boolean) Use HTTP-only cookies for the VPN.
+- `group_policies` (Attributes List) List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
 - `ikev2_policies` (Attributes List) List of IKEv2 policies associated with the VPN. (see [below for nested schema](#nestedatt--ikev2_policies))
 - `ipsec_advanced_settings_id` (String) Identifier for the IPsec/IKEv2 advanced settings used for the VPN.
 - `ipsec_global_identity_certificate_id` (String) Identifier for the IPsec certificate used for enrollment.
 - `ldap_attribute_map_id` (String) Identifier for the LDAP attribute mapping used for the VPN.
 - `load_balance_id` (String) Identifier for the load balancing settings used for the VPN.
-- `local_realm_server` (String) Local realm server for the VPN.
+- `local_realm_id` (String) Local realm server for the VPN.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for the VPN.
 - `protocol_ssl` (Boolean) Enable SSL protocol for the VPN.
 - `secure_client_customization_id` (String)
@@ -61,7 +60,6 @@ data "fmc_vpn_ra" "example" {
 Read-Only:
 
 - `id` (String) Id of interface group or security zone.
-- `interface_specific_certificate` (Boolean) Configure Interface ID Certificate for the VPN.
 - `interface_specific_certificate_id` (String) Identifier for the ID certificate used for the VPN.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 for the VPN.
 - `protocol_ssl` (Boolean) Enable SSL for the VPN.

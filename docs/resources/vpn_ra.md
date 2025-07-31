@@ -18,7 +18,7 @@ resource "fmc_vpn_ra" "example" {
   description          = "description of my_fmc_ra_vpn"
   protocol_ssl         = true
   protocol_ipsec_ikev2 = true
-  local_realm_server   = "my_local_realm_server"
+  local_realm_id       = "12345678-1234-1234-1234-123456789012"
   dap_policy_id        = "12345678-1234-1234-1234-123456"
   access_interfaces = [
     {
@@ -26,12 +26,10 @@ resource "fmc_vpn_ra" "example" {
       protocol_ipsec_ikev2              = true
       protocol_ssl                      = true
       protocol_ssl_dtls                 = true
-      interface_specific_certificate    = true
       interface_specific_certificate_id = "12345678-1234-1234-1234-123456"
     }
   ]
   allow_users_to_select_connection_profile           = true
-  http_only_vpn_cookie                               = true
   web_port                                           = 443
   dtls_port                                          = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"
@@ -63,6 +61,7 @@ resource "fmc_vpn_ra" "example" {
 
 ### Required
 
+- `group_policies` (Attributes List) List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
 - `name` (String) Name of the VPN Remote Access (RA) Topology.
 
 ### Optional
@@ -77,11 +76,9 @@ resource "fmc_vpn_ra" "example" {
 - `dtls_port` (Number) Port number for the web access of the VPN.
   - Default value: `443`
 - `external_browser_package_id` (String) Identifier for the external browser package used for the VPN.
-- `group_policies` (Attributes List) List of group policies associated with the VPN. (see [below for nested schema](#nestedatt--group_policies))
-- `http_only_vpn_cookie` (Boolean) Use HTTP-only cookies for the VPN.
 - `ikev2_policies` (Attributes List) List of IKEv2 policies associated with the VPN. (see [below for nested schema](#nestedatt--ikev2_policies))
 - `ipsec_global_identity_certificate_id` (String) Identifier for the IPsec certificate used for enrollment.
-- `local_realm_server` (String) Local realm server for the VPN.
+- `local_realm_id` (String) Local realm server for the VPN.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for the VPN.
   - Default value: `true`
 - `protocol_ssl` (Boolean) Enable SSL protocol for the VPN.
@@ -103,13 +100,20 @@ resource "fmc_vpn_ra" "example" {
 - `secure_client_customization_id` (String)
 - `type` (String) Type of the object; this value is always 'RAVpn'.
 
+<a id="nestedatt--group_policies"></a>
+### Nested Schema for `group_policies`
+
+Required:
+
+- `id` (String) Unique identifier of the group policy.
+
+
 <a id="nestedatt--access_interfaces"></a>
 ### Nested Schema for `access_interfaces`
 
 Optional:
 
 - `id` (String) Id of interface group or security zone.
-- `interface_specific_certificate` (Boolean) Configure Interface ID Certificate for the VPN.
 - `interface_specific_certificate_id` (String) Identifier for the ID certificate used for the VPN.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 for the VPN.
   - Default value: `true`
@@ -119,18 +123,10 @@ Optional:
   - Default value: `true`
 
 
-<a id="nestedatt--group_policies"></a>
-### Nested Schema for `group_policies`
-
-Optional:
-
-- `id` (String) Unique identifier of the group policy.
-
-
 <a id="nestedatt--ikev2_policies"></a>
 ### Nested Schema for `ikev2_policies`
 
-Optional:
+Required:
 
 - `id` (String) Unique identifier of the IKEv2 policy.
 

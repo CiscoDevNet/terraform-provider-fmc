@@ -35,9 +35,9 @@ attributes:
   - model_name: id
     data_path: [localRealmServer]
     type: String
-    tf_name: local_realm_server
+    tf_name: local_realm_id
     description: Local realm server for the VPN.
-    example: my_local_realm_server
+    example: 12345678-1234-1234-1234-123456789012
   - model_name: id
     data_path: [dapPolicy]
     tf_name: dap_policy_id
@@ -63,6 +63,7 @@ attributes:
         type: String
         data_path: [accessInterface]
         tf_name: id
+        id: true
         description: Id of interface group or security zone.
       - model_name: enableIPSecIkev2
         type: Bool
@@ -82,11 +83,11 @@ attributes:
         description: Enable DTLS for the VPN.
         example: true
         default_value: true
-      - model_name: configureInterfaceIDCertificate
-        tf_name: interface_specific_certificate
-        type: Bool
-        description: Configure Interface ID Certificate for the VPN.
-        example: true
+      # - model_name: configureInterfaceIDCertificate
+      #   tf_name: interface_specific_certificate
+      #   type: Bool
+      #   description: Configure Interface ID Certificate for the VPN.
+      #   example: true
       - model_name: id
         data_path: [idCertificate]
         tf_name: interface_specific_certificate_id
@@ -99,12 +100,13 @@ attributes:
     type: Bool
     description: Allow users to select a connection profile.
     example: true
-  - model_name: httpOnlyVpnCookie
-    data_path: [accessInterfaceSettings]
-    tf_name: http_only_vpn_cookie
-    type: Bool
-    description: Use HTTP-only cookies for the VPN.
-    example: true
+  # FMCBUG : Field does not exist in FMC API, despite being documented
+  # - model_name: httpOnlyVpnCookie
+  #   data_path: [accessInterfaceSettings]
+  #   tf_name: http_only_vpn_cookies
+  #   type: Bool
+  #   description: Use HTTP-only cookies for the VPN.
+  #   example: true
   - model_name: webPort
     data_path: [accessInterfaceSettings]
     tf_name: web_port

@@ -1,0 +1,28 @@
+---
+name: Realm Local
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/realms
+doc_category: Integrations
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Realm object.
+    example: my_ldap_realm
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Realm'.
+    computed: true
+  - model_name: version
+    type: String
+    description: Internal API parameter.
+    computed: true
+    computed_body_param: true
+  - model_name: description
+    type: String
+    description: Description of the Realm object.
+    example: My realm
+  - model_name: realmType
+    type: String
+    description: Type of the Realm.
+    value: LOCAL

@@ -22,7 +22,6 @@ import (
 	"context"
 	"fmt"
 	"slices"
-	"strconv"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -42,11 +41,10 @@ type VPNRA struct {
 	Type                                         types.String              `tfsdk:"type"`
 	ProtocolSsl                                  types.Bool                `tfsdk:"protocol_ssl"`
 	ProtocolIpsecIkev2                           types.Bool                `tfsdk:"protocol_ipsec_ikev2"`
-	LocalRealmServer                             types.String              `tfsdk:"local_realm_server"`
+	LocalRealmId                                 types.String              `tfsdk:"local_realm_id"`
 	DapPolicyId                                  types.String              `tfsdk:"dap_policy_id"`
 	AccessInterfaces                             []VPNRAAccessInterfaces   `tfsdk:"access_interfaces"`
 	AllowUsersToSelectConnectionProfile          types.Bool                `tfsdk:"allow_users_to_select_connection_profile"`
-	HttpOnlyVpnCookie                            types.Bool                `tfsdk:"http_only_vpn_cookie"`
 	WebPort                                      types.Int64               `tfsdk:"web_port"`
 	DtlsPort                                     types.Int64               `tfsdk:"dtls_port"`
 	SslGlobalIdentityCertificateId               types.String              `tfsdk:"ssl_global_identity_certificate_id"`
@@ -70,7 +68,6 @@ type VPNRAAccessInterfaces struct {
 	ProtocolIpsecIkev2             types.Bool   `tfsdk:"protocol_ipsec_ikev2"`
 	ProtocolSsl                    types.Bool   `tfsdk:"protocol_ssl"`
 	ProtocolSslDtls                types.Bool   `tfsdk:"protocol_ssl_dtls"`
-	InterfaceSpecificCertificate   types.Bool   `tfsdk:"interface_specific_certificate"`
 	InterfaceSpecificCertificateId types.String `tfsdk:"interface_specific_certificate_id"`
 }
 
@@ -120,8 +117,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 	if !data.ProtocolIpsecIkev2.IsNull() {
 		body, _ = sjson.Set(body, "configureIpsec", data.ProtocolIpsecIkev2.ValueBool())
 	}
-	if !data.LocalRealmServer.IsNull() {
-		body, _ = sjson.Set(body, "localRealmServer.id", data.LocalRealmServer.ValueString())
+	if !data.LocalRealmId.IsNull() {
+		body, _ = sjson.Set(body, "localRealmServer.id", data.LocalRealmId.ValueString())
 	}
 	if !data.DapPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "dapPolicy.id", data.DapPolicyId.ValueString())
@@ -142,9 +139,6 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 			if !item.ProtocolSslDtls.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableDTLS", item.ProtocolSslDtls.ValueBool())
 			}
-			if !item.InterfaceSpecificCertificate.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "configureInterfaceIDCertificate", item.InterfaceSpecificCertificate.ValueBool())
-			}
 			if !item.InterfaceSpecificCertificateId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "idCertificate.id", item.InterfaceSpecificCertificateId.ValueString())
 			}
@@ -153,9 +147,6 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 	}
 	if !data.AllowUsersToSelectConnectionProfile.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.allowConnectionProfileSelection", data.AllowUsersToSelectConnectionProfile.ValueBool())
-	}
-	if !data.HttpOnlyVpnCookie.IsNull() {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.httpOnlyVpnCookie", data.HttpOnlyVpnCookie.ValueBool())
 	}
 	if !data.WebPort.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.webPort", data.WebPort.ValueInt64())
@@ -245,9 +236,9 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.ProtocolIpsecIkev2 = types.BoolValue(true)
 	}
 	if value := res.Get("localRealmServer.id"); value.Exists() {
-		data.LocalRealmServer = types.StringValue(value.String())
+		data.LocalRealmId = types.StringValue(value.String())
 	} else {
-		data.LocalRealmServer = types.StringNull()
+		data.LocalRealmId = types.StringNull()
 	}
 	if value := res.Get("dapPolicy.id"); value.Exists() {
 		data.DapPolicyId = types.StringValue(value.String())
@@ -279,11 +270,6 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 			} else {
 				data.ProtocolSslDtls = types.BoolValue(true)
 			}
-			if value := res.Get("configureInterfaceIDCertificate"); value.Exists() {
-				data.InterfaceSpecificCertificate = types.BoolValue(value.Bool())
-			} else {
-				data.InterfaceSpecificCertificate = types.BoolNull()
-			}
 			if value := res.Get("idCertificate.id"); value.Exists() {
 				data.InterfaceSpecificCertificateId = types.StringValue(value.String())
 			} else {
@@ -297,11 +283,6 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.AllowUsersToSelectConnectionProfile = types.BoolValue(value.Bool())
 	} else {
 		data.AllowUsersToSelectConnectionProfile = types.BoolNull()
-	}
-	if value := res.Get("accessInterfaceSettings.httpOnlyVpnCookie"); value.Exists() {
-		data.HttpOnlyVpnCookie = types.BoolValue(value.Bool())
-	} else {
-		data.HttpOnlyVpnCookie = types.BoolNull()
 	}
 	if value := res.Get("accessInterfaceSettings.webPort"); value.Exists() {
 		data.WebPort = types.Int64Value(value.Int())
@@ -451,10 +432,10 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else if data.ProtocolIpsecIkev2.ValueBool() != true {
 		data.ProtocolIpsecIkev2 = types.BoolNull()
 	}
-	if value := res.Get("localRealmServer.id"); value.Exists() && !data.LocalRealmServer.IsNull() {
-		data.LocalRealmServer = types.StringValue(value.String())
+	if value := res.Get("localRealmServer.id"); value.Exists() && !data.LocalRealmId.IsNull() {
+		data.LocalRealmId = types.StringValue(value.String())
 	} else {
-		data.LocalRealmServer = types.StringNull()
+		data.LocalRealmId = types.StringNull()
 	}
 	if value := res.Get("dapPolicy.id"); value.Exists() && !data.DapPolicyId.IsNull() {
 		data.DapPolicyId = types.StringValue(value.String())
@@ -462,8 +443,8 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.DapPolicyId = types.StringNull()
 	}
 	for i := 0; i < len(data.AccessInterfaces); i++ {
-		keys := [...]string{"accessInterface.id", "enableIPSecIkev2", "enableSSL", "enableDTLS", "configureInterfaceIDCertificate", "idCertificate.id"}
-		keyValues := [...]string{data.AccessInterfaces[i].Id.ValueString(), strconv.FormatBool(data.AccessInterfaces[i].ProtocolIpsecIkev2.ValueBool()), strconv.FormatBool(data.AccessInterfaces[i].ProtocolSsl.ValueBool()), strconv.FormatBool(data.AccessInterfaces[i].ProtocolSslDtls.ValueBool()), strconv.FormatBool(data.AccessInterfaces[i].InterfaceSpecificCertificate.ValueBool()), data.AccessInterfaces[i].InterfaceSpecificCertificateId.ValueString()}
+		keys := [...]string{"accessInterface.id"}
+		keyValues := [...]string{data.AccessInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AccessInterfaces[i]
@@ -517,11 +498,6 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else if data.ProtocolSslDtls.ValueBool() != true {
 			data.ProtocolSslDtls = types.BoolNull()
 		}
-		if value := res.Get("configureInterfaceIDCertificate"); value.Exists() && !data.InterfaceSpecificCertificate.IsNull() {
-			data.InterfaceSpecificCertificate = types.BoolValue(value.Bool())
-		} else {
-			data.InterfaceSpecificCertificate = types.BoolNull()
-		}
 		if value := res.Get("idCertificate.id"); value.Exists() && !data.InterfaceSpecificCertificateId.IsNull() {
 			data.InterfaceSpecificCertificateId = types.StringValue(value.String())
 		} else {
@@ -533,11 +509,6 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.AllowUsersToSelectConnectionProfile = types.BoolValue(value.Bool())
 	} else {
 		data.AllowUsersToSelectConnectionProfile = types.BoolNull()
-	}
-	if value := res.Get("accessInterfaceSettings.httpOnlyVpnCookie"); value.Exists() && !data.HttpOnlyVpnCookie.IsNull() {
-		data.HttpOnlyVpnCookie = types.BoolValue(value.Bool())
-	} else {
-		data.HttpOnlyVpnCookie = types.BoolNull()
 	}
 	if value := res.Get("accessInterfaceSettings.webPort"); value.Exists() && !data.WebPort.IsNull() {
 		data.WebPort = types.Int64Value(value.Int())

@@ -3,7 +3,7 @@ resource "fmc_vpn_ra" "example" {
   description          = "description of my_fmc_ra_vpn"
   protocol_ssl         = true
   protocol_ipsec_ikev2 = true
-  local_realm_server   = "my_local_realm_server"
+  local_realm_id       = "12345678-1234-1234-1234-123456789012"
   dap_policy_id        = "12345678-1234-1234-1234-123456"
   access_interfaces = [
     {
@@ -11,12 +11,10 @@ resource "fmc_vpn_ra" "example" {
       protocol_ipsec_ikev2              = true
       protocol_ssl                      = true
       protocol_ssl_dtls                 = true
-      interface_specific_certificate    = true
       interface_specific_certificate_id = "12345678-1234-1234-1234-123456"
     }
   ]
   allow_users_to_select_connection_profile           = true
-  http_only_vpn_cookie                               = true
   web_port                                           = 443
   dtls_port                                          = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"

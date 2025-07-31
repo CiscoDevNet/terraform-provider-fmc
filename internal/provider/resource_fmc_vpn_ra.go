@@ -108,7 +108,7 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"local_realm_server": schema.StringAttribute{
+			"local_realm_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Local realm server for the VPN.").String,
 				Optional:            true,
 			},
@@ -143,10 +143,6 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Computed:            true,
 							Default:             booldefault.StaticBool(true),
 						},
-						"interface_specific_certificate": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Configure Interface ID Certificate for the VPN.").String,
-							Optional:            true,
-						},
 						"interface_specific_certificate_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Identifier for the ID certificate used for the VPN.").String,
 							Optional:            true,
@@ -156,10 +152,6 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 			},
 			"allow_users_to_select_connection_profile": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Allow users to select a connection profile.").String,
-				Optional:            true,
-			},
-			"http_only_vpn_cookie": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use HTTP-only cookies for the VPN.").String,
 				Optional:            true,
 			},
 			"web_port": schema.Int64Attribute{
@@ -237,13 +229,13 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"group_policies": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of group policies associated with the VPN.").String,
-				Optional:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list.").String,
+				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Unique identifier of the group policy.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -269,7 +261,7 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Unique identifier of the IKEv2 policy.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
