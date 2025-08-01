@@ -564,7 +564,7 @@ func (r *TimeRangesResource) deleteSubresources(ctx context.Context, state, plan
 
 			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 			res, err := r.client.Delete(urlPath, reqMods...)
-			if err != nil {
+			if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
 				return state, diag.Diagnostics{
 					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
 				}
