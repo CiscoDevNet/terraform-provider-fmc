@@ -727,37 +727,6 @@ func (r *AccessControlPolicyResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-var _ resource.ResourceWithValidateConfig = &AccessControlPolicyResource{}
-
-func (p *AccessControlPolicyResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
-	var data AccessControlPolicy
-
-	diags := req.Config.Get(ctx, &data)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
-		return
-	}
-
-	// If manage_rules is not set, it defaults to true.
-	if !data.ManageRules.IsNull() && !data.ManageRules.ValueBool() && len(data.Rules) > 0 {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("rules"),
-			"Conflicting Configuration",
-			"Rules cannot be defined when manage_rules is set to false",
-		)
-		return
-	}
-
-	// If manage_categories is not set, it defaults to true.
-	if !data.ManageCategories.IsNull() && !data.ManageCategories.ValueBool() && len(data.Categories) > 0 {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("categories"),
-			"Conflicting Configuration",
-			"Categories cannot be defined when manage_categories is set to false",
-		)
-		return
-	}
-}
-
 func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan AccessControlPolicy
 
