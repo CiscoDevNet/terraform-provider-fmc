@@ -1,0 +1,64 @@
+---
+name: VPN RA LDAP Attribute Map
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/ldapattributemaps
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) LDAP Attribute Maps.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_ra.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnLdapAttributeMap'.
+    computed: true
+  - model_name: type
+    type: String
+    value: RaVpnLdapAttributeMap
+
+  # Settings
+  - model_name: ldapAttributeMapList
+    tf_name: realms
+    type: List
+    description: List of LDAP attribute maps.
+    mandatory: true
+    attributes:
+      - model_name: id
+        data_path: [ldapServer]
+        tf_name: realm_ad_ldap_id
+        mandatory: true
+        id: true
+        description: Id of the LDAP server.
+        type: String
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+      - model_name: ldapAttributeMaps
+        tf_name: attribute_maps
+        type: List
+        description: List of LDAP attribute mappings.
+        attributes:
+          - model_name: ldapName
+            tf_name: ldap_attribute_name
+            type: String
+            description: Name of the LDAP attribute.
+          - model_name: ciscoName
+            tf_name: cisco_attribute_name
+            type: String
+            description: Name of the Cisco attribute.
+          - model_name: valueMappings
+            tf_name: value_maps
+            type: List
+            description: List of value mappings for the LDAP attribute.
+            attributes:
+              - model_name: ldapValue
+                tf_name: ldap_value
+                type: String
+                description: Value of the LDAP attribute.
+              - model_name: ciscoValue
+                tf_name: cisco_value
+                type: String
+                description: Value of the Cisco attribute.
