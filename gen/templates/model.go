@@ -659,6 +659,9 @@ func (data {{camelCase .Name}}) toBodyPutDelete(ctx context.Context) string {
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
+	if data.Type.ValueString() != "" {
+		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	}
 	return body
 }
 {{- end}}

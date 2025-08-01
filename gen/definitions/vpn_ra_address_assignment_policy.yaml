@@ -1,3 +1,4 @@
+# Manual resource - toBodyPutDelete
 ---
 name: VPN RA Address Assignment Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/addressassignmentsettings

@@ -194,22 +194,6 @@ func (data *VPNRAAddressAssignmentPolicy) fromBodyUnknowns(ctx context.Context, 
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
 func (data VPNRAAddressAssignmentPolicy) toBodyPutDelete(ctx context.Context) string {
 	body := ""
@@ -227,7 +211,3 @@ func (data VPNRAAddressAssignmentPolicy) toBodyPutDelete(ctx context.Context) st
 // Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
 
 // End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk

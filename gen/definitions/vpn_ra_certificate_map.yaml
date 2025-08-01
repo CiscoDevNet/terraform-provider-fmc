@@ -1,0 +1,53 @@
+# FMCBUG - Default connection profile is not supported by API
+---
+name: VPN RA Certificate Map
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/certificatemapsettings
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Certificate Maps.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Topology.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_vpn_ra.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnCertificateMapSetting'.
+    computed: true
+  - model_name: type
+    type: String
+    value: RaVpnCertificateMapSetting
+
+  # Settings
+  - model_name: useGroupURL
+    tf_name: use_group_url
+    type: Bool
+    description: Use group URL if group URL and Certificate Map match different Connection Profiles
+    example: "false"
+  - model_name: enableCertificateToConnectionProfileMapping
+    tf_name: use_certificate_to_connection_profile_mappings
+    type: Bool
+    description: Use the configured rules to match a certificate to a Connection Profile
+    example: "false"
+  - model_name: certificateToConnectionProfileMap
+    tf_name: certificate_to_connection_profile_mappings
+    type: List
+    description: Mapping of certificates to connection profiles.
+    attributes:
+      - model_name: id
+        data_path: [certificateMap]
+        tf_name: certificate_map_id
+        id: true
+        type: String
+        description: Id of the certificate map.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+      - model_name: id
+        data_path: [connectionProfile]
+        tf_name: connection_profile_id
+        type: String
+        description: Id of the connection profile.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470

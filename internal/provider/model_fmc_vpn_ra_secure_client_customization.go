@@ -544,33 +544,18 @@ func (data *VPNRASecureClientCustomization) fromBodyUnknowns(ctx context.Context
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
 
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
+// toBodyPutDelete is used to create the body for PUT requests to clear the resource state
 func (data VPNRASecureClientCustomization) toBodyPutDelete(ctx context.Context) string {
 	body := ""
-	body, _ = sjson.Set(body, "id", data.Id.ValueString())
-	body, _ = sjson.Set(body, "type", "RaVpnSecureClientCustomization")
+	if data.Id.ValueString() != "" {
+		body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	}
+	if data.Type.ValueString() != "" {
+		body, _ = sjson.Set(body, "type", data.Type.ValueString())
+	}
 	return body
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk
+// End of section. //template:end toBodyPutDelete
