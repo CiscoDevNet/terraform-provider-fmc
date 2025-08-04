@@ -67,7 +67,7 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -79,7 +79,7 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{
-				MarkdownDescription: "Use the configured rules to match a certificate to a Connection Profile",
+				MarkdownDescription: "Use the configured rules to match Certificate to Connection Profile",
 				Computed:            true,
 			},
 			"certificate_to_connection_profile_mappings": schema.ListNestedAttribute{
@@ -88,11 +88,11 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"certificate_map_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the certificate map.",
+							MarkdownDescription: "Id of the Certificate Map.",
 							Computed:            true,
 						},
 						"connection_profile_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the connection profile.",
+							MarkdownDescription: "Id of the Connection Profile.",
 							Computed:            true,
 						},
 					},

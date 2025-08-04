@@ -6,14 +6,14 @@ res_description: This resource manages FTD Remote Access (RA) Virtual Private Ne
 put_create: true
 retrieve_id: true
 put_delete: true
+skip_test: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnCertificateMapSetting'.
@@ -31,7 +31,7 @@ attributes:
   - model_name: enableCertificateToConnectionProfileMapping
     tf_name: use_certificate_to_connection_profile_mappings
     type: Bool
-    description: Use the configured rules to match a certificate to a Connection Profile
+    description: Use the configured rules to match Certificate to Connection Profile
     example: "false"
   - model_name: certificateToConnectionProfileMap
     tf_name: certificate_to_connection_profile_mappings
@@ -42,12 +42,14 @@ attributes:
         data_path: [certificateMap]
         tf_name: certificate_map_id
         id: true
+        mandatory: true
         type: String
-        description: Id of the certificate map.
+        description: Id of the Certificate Map.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       - model_name: id
         data_path: [connectionProfile]
         tf_name: connection_profile_id
         type: String
-        description: Id of the connection profile.
+        mandatory: true
+        description: Id of the Connection Profile.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470

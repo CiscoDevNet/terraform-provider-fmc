@@ -78,7 +78,7 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -96,7 +96,7 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use the configured rules to match a certificate to a Connection Profile").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use the configured rules to match Certificate to Connection Profile").String,
 				Optional:            true,
 			},
 			"certificate_to_connection_profile_mappings": schema.ListNestedAttribute{
@@ -105,12 +105,12 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"certificate_map_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the certificate map.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Certificate Map.").String,
+							Required:            true,
 						},
 						"connection_profile_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the connection profile.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Connection Profile.").String,
+							Required:            true,
 						},
 					},
 				},

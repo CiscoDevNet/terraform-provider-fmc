@@ -31,13 +31,13 @@ resource "fmc_vpn_ra_certificate_map" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
 - `certificate_to_connection_profile_mappings` (Attributes List) Mapping of certificates to connection profiles. (see [below for nested schema](#nestedatt--certificate_to_connection_profile_mappings))
 - `domain` (String) Name of the FMC domain
-- `use_certificate_to_connection_profile_mappings` (Boolean) Use the configured rules to match a certificate to a Connection Profile
+- `use_certificate_to_connection_profile_mappings` (Boolean) Use the configured rules to match Certificate to Connection Profile
 - `use_group_url` (Boolean) Use group URL if group URL and Certificate Map match different Connection Profiles
 
 ### Read-Only
@@ -48,10 +48,10 @@ resource "fmc_vpn_ra_certificate_map" "example" {
 <a id="nestedatt--certificate_to_connection_profile_mappings"></a>
 ### Nested Schema for `certificate_to_connection_profile_mappings`
 
-Optional:
+Required:
 
-- `certificate_map_id` (String) Id of the certificate map.
-- `connection_profile_id` (String) Id of the connection profile.
+- `certificate_map_id` (String) Id of the Certificate Map.
+- `connection_profile_id` (String) Id of the Connection Profile.
 
 ## Import
 
