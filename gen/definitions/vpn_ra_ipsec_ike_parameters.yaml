@@ -6,14 +6,14 @@ put_create: true
 retrieve_id: true
 no_delete: true
 adjust_body: true
+skip_test: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnIPsecAdvancedSetting'.
@@ -40,7 +40,7 @@ attributes:
     data_path: [ikev2settings]
     tf_name: ikev2_do_not_reboot_until_all_sessions_are_terminated
     type: Bool
-    description: Do not reboot until all sessions are terminated.
+    description: Wait for all active sessions to voluntarily terminate before the system reboots.
     example: "false"
   
   # IKEv2 Security Association
@@ -49,13 +49,13 @@ attributes:
     tf_name: ikev2_cookie_challenge
     type: String
     enum_values: [CUSTOM, ALWAYS, NEVER]
-    description: 
+    description: Whether to send cookie challenges to peer devices in response to SA initiated packets.
     example: "true"
   - model_name: thresholdToChallengeIncomingCookies
     data_path: [ikev2settings]
     tf_name: ikev2_threshold_to_challenge_incoming_cookies
     type: Int64
-    description: Threshold to challenge incoming cookies.
+    description: Percentage of the total allowed SAs that are in-negotiation.
     min_int: 1
     max_int: 1000
     example: 50

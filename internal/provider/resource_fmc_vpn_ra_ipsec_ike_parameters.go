@@ -81,7 +81,7 @@ func (r *VPNRAIPSecIKEParametersResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -106,18 +106,18 @@ func (r *VPNRAIPSecIKEParametersResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ikev2_do_not_reboot_until_all_sessions_are_terminated": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Do not reboot until all sessions are terminated.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Wait for all active sessions to voluntarily terminate before the system reboots.").String,
 				Optional:            true,
 			},
 			"ikev2_cookie_challenge": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("CUSTOM", "ALWAYS", "NEVER").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to send cookie challenges to peer devices in response to SA initiated packets.").AddStringEnumDescription("CUSTOM", "ALWAYS", "NEVER").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("CUSTOM", "ALWAYS", "NEVER"),
 				},
 			},
 			"ikev2_threshold_to_challenge_incoming_cookies": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Threshold to challenge incoming cookies.").AddIntegerRangeDescription(1, 1000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Percentage of the total allowed SAs that are in-negotiation.").AddIntegerRangeDescription(1, 1000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 1000),

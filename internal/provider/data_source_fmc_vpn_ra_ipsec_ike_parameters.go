@@ -67,7 +67,7 @@ func (d *VPNRAIPSecIKEParametersDataSource) Schema(ctx context.Context, req data
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -83,15 +83,15 @@ func (d *VPNRAIPSecIKEParametersDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ikev2_do_not_reboot_until_all_sessions_are_terminated": schema.BoolAttribute{
-				MarkdownDescription: "Do not reboot until all sessions are terminated.",
+				MarkdownDescription: "Wait for all active sessions to voluntarily terminate before the system reboots.",
 				Computed:            true,
 			},
 			"ikev2_cookie_challenge": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Whether to send cookie challenges to peer devices in response to SA initiated packets.",
 				Computed:            true,
 			},
 			"ikev2_threshold_to_challenge_incoming_cookies": schema.Int64Attribute{
-				MarkdownDescription: "Threshold to challenge incoming cookies.",
+				MarkdownDescription: "Percentage of the total allowed SAs that are in-negotiation.",
 				Computed:            true,
 			},
 			"ikev2_number_of_sas_allowed_in_negotiation": schema.Int64Attribute{

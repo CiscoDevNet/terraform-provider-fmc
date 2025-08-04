@@ -33,20 +33,21 @@ resource "fmc_vpn_ra_ipsec_ike_parameters" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ikev2_cookie_challenge` (String) - Choices: `CUSTOM`, `ALWAYS`, `NEVER`
-- `ikev2_do_not_reboot_until_all_sessions_are_terminated` (Boolean) Do not reboot until all sessions are terminated.
+- `ikev2_cookie_challenge` (String) Whether to send cookie challenges to peer devices in response to SA initiated packets.
+  - Choices: `CUSTOM`, `ALWAYS`, `NEVER`
+- `ikev2_do_not_reboot_until_all_sessions_are_terminated` (Boolean) Wait for all active sessions to voluntarily terminate before the system reboots.
 - `ikev2_identity_sent_to_peer` (String) Identity sent to the peer during IKEv2 session establishment.
   - Choices: `IP_ADDRESS`, `HOST_NAME`, `AUTO_OR_DN`
 - `ikev2_maximum_number_of_sas_allowed` (Number) Maximum number of Security Associations (SAs) allowed.
 - `ikev2_notification_on_tunnel_disconnect` (Boolean) Enable notification on tunnel disconnect.
 - `ikev2_number_of_sas_allowed_in_negotiation` (Number) Limits the maximum number of SAs that can be in negotiation at any time.
   - Range: `1`-`100`
-- `ikev2_threshold_to_challenge_incoming_cookies` (Number) Threshold to challenge incoming cookies.
+- `ikev2_threshold_to_challenge_incoming_cookies` (Number) Percentage of the total allowed SAs that are in-negotiation.
   - Range: `1`-`1000`
 - `ipsec_path_maximum_transmission_unit_aging_reset_interval` (Number) Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.
   - Range: `10`-`30`
