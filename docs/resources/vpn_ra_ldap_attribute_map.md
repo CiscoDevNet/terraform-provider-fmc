@@ -40,8 +40,8 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
 
 ### Required
 
-- `realms` (Attributes List) List of LDAP attribute maps. (see [below for nested schema](#nestedatt--realms))
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `realms` (Attributes List) List of Realms with their LDAP attribute mappings. (see [below for nested schema](#nestedatt--realms))
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
@@ -57,7 +57,7 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
 
 Required:
 
-- `realm_ad_ldap_id` (String) Id of the LDAP server.
+- `realm_ad_ldap_id` (String) Id of the AD/LDAP realm.
 
 Optional:
 
@@ -70,7 +70,7 @@ Optional:
 
 - `cisco_attribute_name` (String) Name of the Cisco attribute.
 - `ldap_attribute_name` (String) Name of the LDAP attribute.
-- `value_maps` (Attributes List) List of value mappings for the LDAP attribute. (see [below for nested schema](#nestedatt--realms--attribute_maps--value_maps))
+- `value_maps` (Attributes List) Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping. (see [below for nested schema](#nestedatt--realms--attribute_maps--value_maps))
 
 <a id="nestedatt--realms--attribute_maps--value_maps"></a>
 ### Nested Schema for `realms.attribute_maps.value_maps`

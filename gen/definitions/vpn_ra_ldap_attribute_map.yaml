@@ -6,13 +6,13 @@ put_create: true
 retrieve_id: true
 put_delete: true
 doc_category: VPN
+skip_test: true
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnLdapAttributeMap'.
@@ -25,7 +25,7 @@ attributes:
   - model_name: ldapAttributeMapList
     tf_name: realms
     type: List
-    description: List of LDAP attribute maps.
+    description: List of Realms with their LDAP attribute mappings.
     mandatory: true
     attributes:
       - model_name: id
@@ -33,7 +33,7 @@ attributes:
         tf_name: realm_ad_ldap_id
         mandatory: true
         id: true
-        description: Id of the LDAP server.
+        description: Id of the AD/LDAP realm.
         type: String
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
       - model_name: ldapAttributeMaps
@@ -52,7 +52,7 @@ attributes:
           - model_name: valueMappings
             tf_name: value_maps
             type: List
-            description: List of value mappings for the LDAP attribute.
+            description: Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping.
             attributes:
               - model_name: ldapValue
                 tf_name: ldap_value

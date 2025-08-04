@@ -78,7 +78,7 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -92,12 +92,12 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"realms": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of LDAP attribute maps.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Realms with their LDAP attribute mappings.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"realm_ad_ldap_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the LDAP server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the AD/LDAP realm.").String,
 							Required:            true,
 						},
 						"attribute_maps": schema.ListNestedAttribute{
@@ -114,7 +114,7 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 										Optional:            true,
 									},
 									"value_maps": schema.ListNestedAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("List of value mappings for the LDAP attribute.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping.").String,
 										Optional:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
