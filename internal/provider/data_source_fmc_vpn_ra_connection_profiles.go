@@ -66,7 +66,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"items": schema.MapNestedAttribute{
@@ -117,7 +117,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "Id of host representing the DHCP Server.",
+										MarkdownDescription: "Id of Host representing the DHCP Server.",
 										Computed:            true,
 									},
 								},
@@ -132,23 +132,23 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"primary_authentication_server_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the primary authentication server.",
+							MarkdownDescription: "Id of the primary authentication RADIUS Server Group or Realm. Use if `primary_authentication_server_use_local` is not set to `true`.",
 							Computed:            true,
 						},
 						"primary_authentication_server_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the primary authentication server.",
+							MarkdownDescription: "Type of the primary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.",
 							Computed:            true,
 						},
 						"primary_authentication_fallback_to_local": schema.BoolAttribute{
-							MarkdownDescription: "Fallback to LOCAL FMC if primary authentication server is not reachable.",
+							MarkdownDescription: "Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.",
 							Computed:            true,
 						},
 						"multiple_certificate_authentication": schema.BoolAttribute{
-							MarkdownDescription: "Enable multiple certificate authentication.",
+							MarkdownDescription: "Authenticate the VPN client using the machine and user certificates.",
 							Computed:            true,
 						},
 						"saml_and_certificate_username_must_match": schema.BoolAttribute{
-							MarkdownDescription: "Match certificate and SAML username for SAML.",
+							MarkdownDescription: "Allow VPN connection only if the username from the certificate matches the SAML single sign-on username.",
 							Computed:            true,
 						},
 						"primary_authentication_prefill_username_from_certificate": schema.BoolAttribute{
@@ -168,7 +168,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"primary_authentication_hide_username_in_login_window": schema.BoolAttribute{
-							MarkdownDescription: "Username is pre-filled from the client certificate, but hidden to the user",
+							MarkdownDescription: "Username is pre-filled from the client certificate, but hidden to the user.",
 							Computed:            true,
 						},
 						"secondary_authentication": schema.BoolAttribute{
@@ -180,15 +180,15 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"secondary_authentication_server_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the secondary authentication server.",
+							MarkdownDescription: "Id of the secondary authentication RADIUS Server Group or Realm. Use if `secondary_authentication_server_use_local` is not set to `true`.",
 							Computed:            true,
 						},
 						"secondary_authentication_server_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the secondary authentication server.",
+							MarkdownDescription: "Type of the secondary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.",
 							Computed:            true,
 						},
 						"secondary_authentication_fallback_to_local": schema.BoolAttribute{
-							MarkdownDescription: "Fallback to LOCAL FMC if secondary authentication server is not reachable.",
+							MarkdownDescription: "Fallback to LOCAL FMC if secondary authentication Server/Realm is not reachable.",
 							Computed:            true,
 						},
 						"secondary_authentication_prompt_for_username": schema.BoolAttribute{
@@ -208,15 +208,15 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"authorization_server_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the authorization server.",
+							MarkdownDescription: "Id of the authorization RADIUS Server Group or Realm.",
 							Computed:            true,
 						},
 						"authorization_server_type": schema.StringAttribute{
-							MarkdownDescription: "Id of the authorization server.",
+							MarkdownDescription: "Type of the authorization RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.",
 							Computed:            true,
 						},
 						"allow_connection_only_if_user_exists_in_authorization_database": schema.BoolAttribute{
-							MarkdownDescription: "Allow connection only if the user is authorized.",
+							MarkdownDescription: "Allow connection only if the username of client exists in the authorization database.",
 							Computed:            true,
 						},
 						"accounting_server_id": schema.StringAttribute{
@@ -224,7 +224,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"accounting_server_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the RADIUS accounting server.",
+							MarkdownDescription: "Type of the RADIUS accounting server (`RadiusServerGroup`).",
 							Computed:            true,
 						},
 						"strip_realm_from_username": schema.BoolAttribute{
@@ -232,11 +232,11 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 						},
 						"strip_group_from_username": schema.BoolAttribute{
-							MarkdownDescription: "Remove the group name from the username before passing the username on to the AAA server",
+							MarkdownDescription: "Remove the group name from the username before passing the username on to the AAA server.",
 							Computed:            true,
 						},
 						"password_management": schema.BoolAttribute{
-							MarkdownDescription: "Enable managing the password for the remote access VPN users",
+							MarkdownDescription: "Enable managing the password for the remote access VPN users.",
 							Computed:            true,
 						},
 						"password_management_notify_user_on_password_expiry_day": schema.BoolAttribute{

@@ -87,7 +87,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -123,7 +123,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the IPv4 Address Pool.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -135,7 +135,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the IPv6 Address Pool.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -146,8 +146,8 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Id of host representing the DHCP Server.").String,
-										Optional:            true,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of Host representing the DHCP Server.").String,
+										Required:            true,
 									},
 								},
 							},
@@ -164,23 +164,23 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"primary_authentication_server_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary authentication server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the primary authentication RADIUS Server Group or Realm. Use if `primary_authentication_server_use_local` is not set to `true`.").String,
 							Optional:            true,
 						},
 						"primary_authentication_server_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the primary authentication server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the primary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.").String,
 							Optional:            true,
 						},
 						"primary_authentication_fallback_to_local": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Fallback to LOCAL FMC if primary authentication server is not reachable.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.").String,
 							Optional:            true,
 						},
 						"multiple_certificate_authentication": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable multiple certificate authentication.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Authenticate the VPN client using the machine and user certificates.").String,
 							Optional:            true,
 						},
 						"saml_and_certificate_username_must_match": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Match certificate and SAML username for SAML.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Allow VPN connection only if the username from the certificate matches the SAML single sign-on username.").String,
 							Optional:            true,
 						},
 						"primary_authentication_prefill_username_from_certificate": schema.BoolAttribute{
@@ -206,7 +206,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"primary_authentication_hide_username_in_login_window": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Username is pre-filled from the client certificate, but hidden to the user").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Username is pre-filled from the client certificate, but hidden to the user.").String,
 							Optional:            true,
 						},
 						"secondary_authentication": schema.BoolAttribute{
@@ -218,15 +218,15 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"secondary_authentication_server_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the secondary authentication server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the secondary authentication RADIUS Server Group or Realm. Use if `secondary_authentication_server_use_local` is not set to `true`.").String,
 							Optional:            true,
 						},
 						"secondary_authentication_server_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the secondary authentication server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the secondary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.").String,
 							Optional:            true,
 						},
 						"secondary_authentication_fallback_to_local": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Fallback to LOCAL FMC if secondary authentication server is not reachable.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Fallback to LOCAL FMC if secondary authentication Server/Realm is not reachable.").String,
 							Optional:            true,
 						},
 						"secondary_authentication_prompt_for_username": schema.BoolAttribute{
@@ -246,15 +246,15 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"authorization_server_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the authorization server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the authorization RADIUS Server Group or Realm.").String,
 							Optional:            true,
 						},
 						"authorization_server_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the authorization server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the authorization RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.").String,
 							Optional:            true,
 						},
 						"allow_connection_only_if_user_exists_in_authorization_database": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Allow connection only if the user is authorized.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Allow connection only if the username of client exists in the authorization database.").String,
 							Optional:            true,
 						},
 						"accounting_server_id": schema.StringAttribute{
@@ -262,7 +262,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"accounting_server_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the RADIUS accounting server.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the RADIUS accounting server (`RadiusServerGroup`).").String,
 							Optional:            true,
 						},
 						"strip_realm_from_username": schema.BoolAttribute{
@@ -270,11 +270,11 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"strip_group_from_username": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Remove the group name from the username before passing the username on to the AAA server").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Remove the group name from the username before passing the username on to the AAA server.").String,
 							Optional:            true,
 						},
 						"password_management": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable managing the password for the remote access VPN users").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable managing the password for the remote access VPN users.").String,
 							Optional:            true,
 						},
 						"password_management_notify_user_on_password_expiry_day": schema.BoolAttribute{

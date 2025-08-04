@@ -27,7 +27,7 @@ data "fmc_vpn_ra_connection_profiles" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
@@ -44,41 +44,41 @@ data "fmc_vpn_ra_connection_profiles" "example" {
 Read-Only:
 
 - `accounting_server_id` (String) Id of the RADIUS accounting server.
-- `accounting_server_type` (String) Type of the RADIUS accounting server.
+- `accounting_server_type` (String) Type of the RADIUS accounting server (`RadiusServerGroup`).
 - `alias_names` (Attributes List) List of Alias Names. (see [below for nested schema](#nestedatt--items--alias_names))
 - `alias_urls` (Attributes List) List of Alias URLs. (see [below for nested schema](#nestedatt--items--alias_urls))
-- `allow_connection_only_if_user_exists_in_authorization_database` (Boolean) Allow connection only if the user is authorized.
+- `allow_connection_only_if_user_exists_in_authorization_database` (Boolean) Allow connection only if the username of client exists in the authorization database.
 - `authentication_method` (String) User authentication method.
-- `authorization_server_id` (String) Id of the authorization server.
-- `authorization_server_type` (String) Id of the authorization server.
+- `authorization_server_id` (String) Id of the authorization RADIUS Server Group or Realm.
+- `authorization_server_type` (String) Type of the authorization RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.
 - `dhcp_servers` (Attributes List) List of DHCP Servers for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified. (see [below for nested schema](#nestedatt--items--dhcp_servers))
 - `group_policy_id` (String) Id of the Group Policy.
 - `id` (String) Id of the Connection Profile.
 - `ipv4_address_pools` (Attributes List) IPv4 Address Pools for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified. (see [below for nested schema](#nestedatt--items--ipv4_address_pools))
 - `ipv6_address_pools` (Attributes List) IPv6 Address Pools for client address assignment. Either `ipv4_address_pools` or `ipv6_address_pools` or `dhcp_servers` must be specified. (see [below for nested schema](#nestedatt--items--ipv6_address_pools))
-- `multiple_certificate_authentication` (Boolean) Enable multiple certificate authentication.
-- `password_management` (Boolean) Enable managing the password for the remote access VPN users
+- `multiple_certificate_authentication` (Boolean) Authenticate the VPN client using the machine and user certificates.
+- `password_management` (Boolean) Enable managing the password for the remote access VPN users.
 - `password_management_advance_password_expiration_notification` (Number) Notify user on the number of days before password expiration.
 - `password_management_notify_user_on_password_expiry_day` (Boolean) Notify user on the day the password expires.
-- `primary_authentication_fallback_to_local` (Boolean) Fallback to LOCAL FMC if primary authentication server is not reachable.
-- `primary_authentication_hide_username_in_login_window` (Boolean) Username is pre-filled from the client certificate, but hidden to the user
+- `primary_authentication_fallback_to_local` (Boolean) Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.
+- `primary_authentication_hide_username_in_login_window` (Boolean) Username is pre-filled from the client certificate, but hidden to the user.
 - `primary_authentication_prefill_username_from_certificate` (Boolean) Prefill username from certificate.
 - `primary_authentication_prefill_username_from_certificate_map_entire_dn` (Boolean) Map entire Distinguished Name (DN) as username.
 - `primary_authentication_prefill_username_from_certificate_map_primary_field` (String) Map primary field for username.
 - `primary_authentication_prefill_username_from_certificate_map_secondary_field` (String) Map secondary field for username.
-- `primary_authentication_server_id` (String) Id of the primary authentication server.
-- `primary_authentication_server_type` (String) Type of the primary authentication server.
+- `primary_authentication_server_id` (String) Id of the primary authentication RADIUS Server Group or Realm. Use if `primary_authentication_server_use_local` is not set to `true`.
+- `primary_authentication_server_type` (String) Type of the primary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.
 - `primary_authentication_server_use_local` (Boolean) Use LOCAL FMC as primary authentication server.
-- `saml_and_certificate_username_must_match` (Boolean) Match certificate and SAML username for SAML.
+- `saml_and_certificate_username_must_match` (Boolean) Allow VPN connection only if the username from the certificate matches the SAML single sign-on username.
 - `saml_use_external_browser` (Boolean) Use default OS browser (`true`) or embedded browser (`false`) for SAML authentication.
 - `secondary_authentication` (Boolean) Enable secondary authentication.
-- `secondary_authentication_fallback_to_local` (Boolean) Fallback to LOCAL FMC if secondary authentication server is not reachable.
+- `secondary_authentication_fallback_to_local` (Boolean) Fallback to LOCAL FMC if secondary authentication Server/Realm is not reachable.
 - `secondary_authentication_prompt_for_username` (Boolean) Prompt for username during secondary authentication.
-- `secondary_authentication_server_id` (String) Id of the secondary authentication server.
-- `secondary_authentication_server_type` (String) Type of the secondary authentication server.
+- `secondary_authentication_server_id` (String) Id of the secondary authentication RADIUS Server Group or Realm. Use if `secondary_authentication_server_use_local` is not set to `true`.
+- `secondary_authentication_server_type` (String) Type of the secondary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.
 - `secondary_authentication_server_use_local` (Boolean) Use LOCAL FMC as secondary authentication server.
 - `secondary_authentication_use_primary_authentication_username` (Boolean) Use primary username for secondary authentication.
-- `strip_group_from_username` (Boolean) Remove the group name from the username before passing the username on to the AAA server
+- `strip_group_from_username` (Boolean) Remove the group name from the username before passing the username on to the AAA server.
 - `strip_realm_from_username` (Boolean) Remove the realm from the username before passing the username on to the AAA server.
 - `type` (String) Type of the object; this value is always 'RaVpnConnectionProfile'.
 - `use_secondary_authentication_username_for_reporting` (Boolean) Secondary username is used for reporting user activity during a VPN session.
@@ -106,7 +106,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Id of host representing the DHCP Server.
+- `id` (String) Id of Host representing the DHCP Server.
 
 
 <a id="nestedatt--items--ipv4_address_pools"></a>

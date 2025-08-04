@@ -21,7 +21,7 @@ resource "fmc_vpn_ra_connection_profiles" "example" {
       authentication_method                                                      = "AAA_ONLY"
       primary_authentication_server_use_local                                    = false
       primary_authentication_server_id                                           = "12345678-1234-1234-1234-123456"
-      primary_authentication_server_type                                         = "TBD"
+      primary_authentication_server_type                                         = "RadiusServerGroup"
       primary_authentication_fallback_to_local                                   = true
       multiple_certificate_authentication                                        = true
       saml_and_certificate_username_must_match                                   = true
