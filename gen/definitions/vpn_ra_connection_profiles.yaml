@@ -1,5 +1,5 @@
 # Manual resource - ValidateConfig
-# FMCBUG - No API to set 'Map username from certificate' > 'Certificate to choose'
+# FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
 ---
 name: VPN RA Connection Profiles
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/connectionprofiles
@@ -193,6 +193,7 @@ attributes:
         type: Bool
         description: Use primary username for secondary authentication.
         example: true
+      #  FMCBUG CSCwq59124
       # - model_name: mapUsernameFromCertificate
       #   data_path: [secondaryAuthenticationSettings]
       #   tf_name: secondary_authentication_map_username_from_certificate
@@ -206,7 +207,7 @@ attributes:
         description: Secondary username is used for reporting user activity during a VPN session.
         exclude_example: true
 
-      # FMCBUG - certificateUsernameSettings are not mapped under secondaryAuthenticationSettings on FMC side
+      # FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
       # Secondary Authentication - Certificate Username Settings
       # - model_name: prefillUsernameFromCertificate
       #   data_path: [secondaryAuthenticationSettings, certificateUsernameSettings]
@@ -243,7 +244,7 @@ attributes:
       
 
       # AAA - Authentication - SAML
-      # FMCBUG: Endpoint does not set idp certificate override
+      # FMCBUG CSCwq59124: Endpoint does not set idp certificate override
       # - model_name: id
       #   data_path: [idpCertOverrideForConnProfile]
       #   tf_name: saml_idp_certificate_id
@@ -267,7 +268,7 @@ attributes:
         type: Bool
         description: Use default OS browser (`true`) or embedded browser (`false`) for SAML authentication.
         exclude_example: true
-        # FMC BUG
+        # FMCBUG CSCwq59124
         write_only: true
       
       # AAA - Authorization

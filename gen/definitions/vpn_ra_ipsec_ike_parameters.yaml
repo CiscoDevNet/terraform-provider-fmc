@@ -75,7 +75,7 @@ attributes:
     example: 50
   
   # IPSec Settings
-  # FMCBUG - Chaning value of this field over API does not have any effect.
+  # FMCBUG CSCwq59104 FMC API: /policy/ravpns/{id}/ipsecadvancedsettings endpoint does not set enableFragmentationBeforeEncryption value
   # - model_name: enableFragmentationBeforeEncryption
   #   data_path: [ipsecsettings]
   #   tf_name: ipsec_fragmentation_before_encryption

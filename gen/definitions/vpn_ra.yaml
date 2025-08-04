@@ -1,4 +1,5 @@
 # Manual resource - Create
+# FMCBUG CSCwq59962 FMC API: RA VPN local realm cannot be set until connection profiles are configured
 ---
 name: VPN RA
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns
@@ -53,7 +54,6 @@ attributes:
   #   tf_name: connection_profile_id
   #   type: List
   
-
   # Access Interfaces
   - model_name: interfaceSettings
     data_path: [accessInterfaceSettings]
@@ -101,7 +101,7 @@ attributes:
     type: Bool
     description: Allow users to select a connection profile.
     example: true
-  # FMCBUG : Field does not exist in FMC API, despite being documented
+  # FMCBUG CSCwq59114 FMC API: Missing httpOnlyVpnCookie field in /policy/ravpns endpoint
   # - model_name: httpOnlyVpnCookie
   #   data_path: [accessInterfaceSettings]
   #   tf_name: http_only_vpn_cookies
