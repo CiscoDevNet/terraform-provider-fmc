@@ -956,30 +956,11 @@ func (data *GroupPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result)
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk
+// toBodyPutDelete generates minimal required body to reset the resource to its default state.
+func (data GroupPolicy) toBodyPutDelete(ctx context.Context) string {
+	body := ""
+	body, _ = sjson.Set(body, "name", data.Name.ValueString())
+	body, _ = sjson.Set(body, "type", "GroupPolicy")
+	body, _ = sjson.Set(body, "id", data.Id.ValueString())
+	return body
+}

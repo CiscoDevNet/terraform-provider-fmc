@@ -72,7 +72,7 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Group Policy object.",
+				MarkdownDescription: "Name of the Group Policy object. Use `DfltGrpPolicy` to manage the default group policy.",
 				Optional:            true,
 				Computed:            true,
 			},
