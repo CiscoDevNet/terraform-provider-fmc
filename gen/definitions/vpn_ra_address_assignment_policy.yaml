@@ -2,18 +2,18 @@
 ---
 name: VPN RA Address Assignment Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/addressassignmentsettings
-res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Address Assignment Policies.
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.
 put_create: true
 retrieve_id: true
 put_delete: true
+skip_test: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnAddressAssignmentSetting'.
@@ -26,7 +26,7 @@ attributes:
   - model_name: useAuthorizationServerForIPv4
     tf_name: ipv4_use_authorization_server
     type: Bool
-    description: Use authorization server (Only for RADIUS or Realm)
+    description: Use authorization server (Only for RADIUS or Realm).
     default_value: true
     example: true
   - model_name: useDHCP
@@ -52,7 +52,7 @@ attributes:
   - model_name: useAuthorizationServerForIPv6
     tf_name: ipv6_use_authorization_server
     type: Bool
-    description: Use authorization server (Only for RADIUS or Realm)
+    description: Use authorization server (Only for RADIUS or Realm).
     default_value: true
     example: true
   - model_name: useInternalAddressPoolForIPv6

@@ -67,7 +67,7 @@ func (d *VPNRAAddressAssignmentPolicyDataSource) Schema(ctx context.Context, req
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -75,7 +75,7 @@ func (d *VPNRAAddressAssignmentPolicyDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"ipv4_use_authorization_server": schema.BoolAttribute{
-				MarkdownDescription: "Use authorization server (Only for RADIUS or Realm)",
+				MarkdownDescription: "Use authorization server (Only for RADIUS or Realm).",
 				Computed:            true,
 			},
 			"ipv4_use_dhcp": schema.BoolAttribute{
@@ -91,7 +91,7 @@ func (d *VPNRAAddressAssignmentPolicyDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"ipv6_use_authorization_server": schema.BoolAttribute{
-				MarkdownDescription: "Use authorization server (Only for RADIUS or Realm)",
+				MarkdownDescription: "Use authorization server (Only for RADIUS or Realm).",
 				Computed:            true,
 			},
 			"ipv6_internal_address_pool": schema.BoolAttribute{

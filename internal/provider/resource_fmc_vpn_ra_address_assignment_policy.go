@@ -64,7 +64,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Metadata(ctx context.Context, req
 func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Address Assignment Policies.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -82,7 +82,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req r
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -96,7 +96,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req r
 				},
 			},
 			"ipv4_use_authorization_server": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use authorization server (Only for RADIUS or Realm)").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use authorization server (Only for RADIUS or Realm).").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
@@ -123,7 +123,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req r
 				Default: int64default.StaticInt64(0),
 			},
 			"ipv6_use_authorization_server": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use authorization server (Only for RADIUS or Realm)").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use authorization server (Only for RADIUS or Realm).").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),

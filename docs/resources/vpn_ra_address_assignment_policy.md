@@ -3,12 +3,12 @@
 page_title: "fmc_vpn_ra_address_assignment_policy Resource - terraform-provider-fmc"
 subcategory: "VPN"
 description: |-
-  This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Address Assignment Policies.
+  This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.
 ---
 
 # fmc_vpn_ra_address_assignment_policy (Resource)
 
-This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Address Assignment Policies.
+This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.
 
 ## Example Usage
 
@@ -29,7 +29,7 @@ resource "fmc_vpn_ra_address_assignment_policy" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
@@ -39,13 +39,13 @@ resource "fmc_vpn_ra_address_assignment_policy" "example" {
 - `ipv4_internal_address_pool_reuse_interval` (Number) Interval in seconds for reusing IPv4 addresses.
   - Range: `0`-`480`
   - Default value: `0`
-- `ipv4_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm)
+- `ipv4_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm).
   - Default value: `true`
 - `ipv4_use_dhcp` (Boolean) Use DHCP for IPv4 address assignment.
   - Default value: `true`
 - `ipv6_internal_address_pool` (Boolean) Use internal address pool for IPv6 address assignment.
   - Default value: `true`
-- `ipv6_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm)
+- `ipv6_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm).
   - Default value: `true`
 
 ### Read-Only
