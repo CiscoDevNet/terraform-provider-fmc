@@ -24,20 +24,20 @@ data "fmc_vpn_ra_ipsec_crypto_map" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `interface_id` (String) Id of the interface object.
+- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
 
 ### Read-Only
 
 - `client_services` (Boolean) Enable Client Services.
 - `client_services_port` (Number) Port for Client Services.
 - `do_not_fragment_policy` (String) Policy for handling Do Not Fragment (DNF) packets.
-- `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
+- `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals. (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
 - `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
 - `lifetime_size` (Number) Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.
 - `perfect_forward_secrecy` (Boolean) Enable IPSEC Perfect Forward Secrecy (PFS).
@@ -55,4 +55,4 @@ data "fmc_vpn_ra_ipsec_crypto_map" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the IKEv2 IPSec proposal.
+- `id` (String) Id of the proposal.

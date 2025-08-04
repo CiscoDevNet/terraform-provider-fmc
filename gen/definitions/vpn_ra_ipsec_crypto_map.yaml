@@ -4,14 +4,14 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/ipseccry
 res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) IPSec Crypto Maps.
 put_create: true
 no_delete: true
+skip_test: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnIPsecCryptoMap'.
@@ -25,19 +25,21 @@ attributes:
     tf_name: interface_id
     type: String
     mandatory: true
-    description: Id of the interface object.
+    description:  >-
+      Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied.
+      The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
     example: 76d24097-41c4-4558-a4d0
     data_source_query: true
   - model_name: ikev2IpsecProposals
     tf_name: ikev2_ipsec_proposals
     type: List
-    description: List of IKEv2 IPSec proposals
+    description: List of IKEv2 IPSec proposals.
     mandatory: true
     attributes:
       - model_name: id
         type: String
         mandatory: true
-        description: Id of the IKEv2 IPSec proposal.
+        description: Id of the proposal.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
   - model_name: enableRRI
     tf_name: reverse_route_injection

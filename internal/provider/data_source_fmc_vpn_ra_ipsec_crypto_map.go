@@ -72,7 +72,7 @@ func (d *VPNRAIPSecCryptoMapDataSource) Schema(ctx context.Context, req datasour
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -80,17 +80,17 @@ func (d *VPNRAIPSecCryptoMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the interface object.",
+				MarkdownDescription: "Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"ikev2_ipsec_proposals": schema.ListNestedAttribute{
-				MarkdownDescription: "List of IKEv2 IPSec proposals",
+				MarkdownDescription: "List of IKEv2 IPSec proposals.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the IKEv2 IPSec proposal.",
+							MarkdownDescription: "Id of the proposal.",
 							Computed:            true,
 						},
 					},

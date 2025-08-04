@@ -82,7 +82,7 @@ func (r *VPNRAIPSecCryptoMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -96,16 +96,16 @@ func (r *VPNRAIPSecCryptoMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.").String,
 				Required:            true,
 			},
 			"ikev2_ipsec_proposals": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of IKEv2 IPSec proposals").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of IKEv2 IPSec proposals.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the IKEv2 IPSec proposal.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the proposal.").String,
 							Required:            true,
 						},
 					},

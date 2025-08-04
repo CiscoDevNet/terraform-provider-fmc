@@ -41,11 +41,11 @@ resource "fmc_vpn_ra_ipsec_crypto_map" "example" {
 
 ### Required
 
-- `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
-- `interface_id` (String) Id of the interface object.
+- `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals. (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
+- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
 - `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
   - Range: `120`-`2147483647`
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
@@ -80,7 +80,7 @@ resource "fmc_vpn_ra_ipsec_crypto_map" "example" {
 
 Required:
 
-- `id` (String) Id of the IKEv2 IPSec proposal.
+- `id` (String) Id of the proposal.
 
 ## Import
 
