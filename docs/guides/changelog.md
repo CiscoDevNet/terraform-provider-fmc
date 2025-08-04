@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc6 (Unreleased)
+
+- (Enhancement) Add support for Remote Access VPN - `fmc_vpn_ra_*` resources and data sources
+
 ## 2.0.0-rc5
 
 - (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
