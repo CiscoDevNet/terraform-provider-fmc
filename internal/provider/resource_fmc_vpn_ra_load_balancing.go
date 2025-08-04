@@ -99,26 +99,26 @@ func (r *VPNRALoadBalancingResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"ipv4_group_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address of the load balancing group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Group Address.").String,
 				Required:            true,
 			},
 			"ipv6_group_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IPv6 address of the load balancing group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IPv6 Group Address.").String,
 				Optional:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the communication interface for the load balancing group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the communication interface which the director and members use to communicate.").String,
 				Required:            true,
 			},
 			"udp_port_number": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("UDP port number for communication with the load balancing group.").AddIntegerRangeDescription(1, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("UDP Port for communication between the director and members in a group. The default port is 9023.").AddIntegerRangeDescription(1, 65535).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 65535),
 				},
 			},
 			"ipsec": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable IPsec encryption for the load balancing group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable encryption between the director and members.").String,
 				Optional:            true,
 			},
 			"ipsec_encryption_key": schema.StringAttribute{
@@ -129,12 +129,12 @@ func (r *VPNRALoadBalancingResource) Schema(ctx context.Context, req resource.Sc
 					stringvalidator.LengthBetween(4, 16),
 				},
 			},
-			"redirect_using_fqdn": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Redirect using FQDN for load balancing.").String,
+			"send_fqdn_to_peer_devices_instead_of_ip": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable redirection using a Fully Qualified Domain Name (FQDN) instead of an IP address.").String,
 				Optional:            true,
 			},
 			"ikev2_redirect_phase": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("DURING_SA_AUTHENTICATION", "DURING_SA_INITIALIZATION").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Phase during which the redirection occurs in IKEv2.").AddStringEnumDescription("DURING_SA_AUTHENTICATION", "DURING_SA_INITIALIZATION").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DURING_SA_AUTHENTICATION", "DURING_SA_INITIALIZATION"),

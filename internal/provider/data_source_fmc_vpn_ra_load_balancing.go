@@ -79,23 +79,23 @@ func (d *VPNRALoadBalancingDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv4_group_address": schema.StringAttribute{
-				MarkdownDescription: "IPv4 address of the load balancing group.",
+				MarkdownDescription: "IPv4 Group Address.",
 				Computed:            true,
 			},
 			"ipv6_group_address": schema.StringAttribute{
-				MarkdownDescription: "IPv6 address of the load balancing group.",
+				MarkdownDescription: "IPv6 Group Address.",
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the communication interface for the load balancing group.",
+				MarkdownDescription: "Id of the communication interface which the director and members use to communicate.",
 				Computed:            true,
 			},
 			"udp_port_number": schema.Int64Attribute{
-				MarkdownDescription: "UDP port number for communication with the load balancing group.",
+				MarkdownDescription: "UDP Port for communication between the director and members in a group. The default port is 9023.",
 				Computed:            true,
 			},
 			"ipsec": schema.BoolAttribute{
-				MarkdownDescription: "Enable IPsec encryption for the load balancing group.",
+				MarkdownDescription: "Enable encryption between the director and members.",
 				Computed:            true,
 			},
 			"ipsec_encryption_key": schema.StringAttribute{
@@ -103,12 +103,12 @@ func (d *VPNRALoadBalancingDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"redirect_using_fqdn": schema.BoolAttribute{
-				MarkdownDescription: "Redirect using FQDN for load balancing.",
+			"send_fqdn_to_peer_devices_instead_of_ip": schema.BoolAttribute{
+				MarkdownDescription: "Enable redirection using a Fully Qualified Domain Name (FQDN) instead of an IP address.",
 				Computed:            true,
 			},
 			"ikev2_redirect_phase": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Phase during which the redirection occurs in IKEv2.",
 				Computed:            true,
 			},
 		},

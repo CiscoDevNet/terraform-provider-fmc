@@ -6,6 +6,7 @@ put_create: true
 retrieve_id: true
 put_delete: true
 doc_category: VPN
+skip_test: true
 attributes:
   - tf_name: vpn_ra_id
     type: String
@@ -32,26 +33,26 @@ attributes:
     tf_name: ipv4_group_address
     type: String
     mandatory: true
-    description: IPv4 address of the load balancing group.
+    description: IPv4 Group Address.
     example: "192.168.1.1"
   - model_name: groupIPv6Address
     data_path: [groupSettings]
     tf_name: ipv6_group_address
     type: String
-    description: IPv6 address of the load balancing group.
+    description: IPv6 Group Address.
     example: "2001:db8::1"
   - model_name: id
     data_path: [groupSettings, communicationInterface]
     tf_name: interface_id
     type: String
     mandatory: true
-    description: Id of the communication interface for the load balancing group.
+    description: Id of the communication interface which the director and members use to communicate.
     example: 76d24097-41c4-4558-a4d0
   - model_name: communicationUdpPort
     data_path: [groupSettings]
     tf_name: udp_port_number
     type: Int64
-    description: UDP port number for communication with the load balancing group.
+    description: UDP Port for communication between the director and members in a group. The default port is 9023.
     example: 9023
     min_int: 1
     max_int: 65535
@@ -60,7 +61,7 @@ attributes:
     data_path: [groupSettings, ipsecEncryption]
     tf_name: ipsec
     type: Bool
-    description: Enable IPsec encryption for the load balancing group.
+    description: Enable encryption between the director and members.
     example: "true"
   - model_name: encryptionKey
     data_path: [groupSettings, ipsecEncryption]
@@ -76,13 +77,14 @@ attributes:
   # Settings
   - model_name: redirectUsingFqdn
     data_path: [redirectSettings]
-    tf_name: redirect_using_fqdn
+    tf_name: send_fqdn_to_peer_devices_instead_of_ip
     type: Bool
-    description: Redirect using FQDN for load balancing.
+    description: Enable redirection using a Fully Qualified Domain Name (FQDN) instead of an IP address.
     example: "false"
   - model_name: ikev2RedirectPhase
     data_path: [redirectSettings]
     tf_name: ikev2_redirect_phase
     type: String
+    description: Phase during which the redirection occurs in IKEv2.
     enum_values: [DURING_SA_AUTHENTICATION, DURING_SA_INITIALIZATION]
     example: DURING_SA_AUTHENTICATION

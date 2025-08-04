@@ -33,19 +33,19 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type VPNRALoadBalancing struct {
-	Id                 types.String `tfsdk:"id"`
-	Domain             types.String `tfsdk:"domain"`
-	VpnRaId            types.String `tfsdk:"vpn_ra_id"`
-	Type               types.String `tfsdk:"type"`
-	Enabled            types.Bool   `tfsdk:"enabled"`
-	Ipv4GroupAddress   types.String `tfsdk:"ipv4_group_address"`
-	Ipv6GroupAddress   types.String `tfsdk:"ipv6_group_address"`
-	InterfaceId        types.String `tfsdk:"interface_id"`
-	UdpPortNumber      types.Int64  `tfsdk:"udp_port_number"`
-	Ipsec              types.Bool   `tfsdk:"ipsec"`
-	IpsecEncryptionKey types.String `tfsdk:"ipsec_encryption_key"`
-	RedirectUsingFqdn  types.Bool   `tfsdk:"redirect_using_fqdn"`
-	Ikev2RedirectPhase types.String `tfsdk:"ikev2_redirect_phase"`
+	Id                               types.String `tfsdk:"id"`
+	Domain                           types.String `tfsdk:"domain"`
+	VpnRaId                          types.String `tfsdk:"vpn_ra_id"`
+	Type                             types.String `tfsdk:"type"`
+	Enabled                          types.Bool   `tfsdk:"enabled"`
+	Ipv4GroupAddress                 types.String `tfsdk:"ipv4_group_address"`
+	Ipv6GroupAddress                 types.String `tfsdk:"ipv6_group_address"`
+	InterfaceId                      types.String `tfsdk:"interface_id"`
+	UdpPortNumber                    types.Int64  `tfsdk:"udp_port_number"`
+	Ipsec                            types.Bool   `tfsdk:"ipsec"`
+	IpsecEncryptionKey               types.String `tfsdk:"ipsec_encryption_key"`
+	SendFqdnToPeerDevicesInsteadOfIp types.Bool   `tfsdk:"send_fqdn_to_peer_devices_instead_of_ip"`
+	Ikev2RedirectPhase               types.String `tfsdk:"ikev2_redirect_phase"`
 }
 
 // End of section. //template:end types
@@ -91,8 +91,8 @@ func (data VPNRALoadBalancing) toBody(ctx context.Context, state VPNRALoadBalanc
 	if !data.IpsecEncryptionKey.IsNull() {
 		body, _ = sjson.Set(body, "groupSettings.ipsecEncryption.encryptionKey", data.IpsecEncryptionKey.ValueString())
 	}
-	if !data.RedirectUsingFqdn.IsNull() {
-		body, _ = sjson.Set(body, "redirectSettings.redirectUsingFqdn", data.RedirectUsingFqdn.ValueBool())
+	if !data.SendFqdnToPeerDevicesInsteadOfIp.IsNull() {
+		body, _ = sjson.Set(body, "redirectSettings.redirectUsingFqdn", data.SendFqdnToPeerDevicesInsteadOfIp.ValueBool())
 	}
 	if !data.Ikev2RedirectPhase.IsNull() {
 		body, _ = sjson.Set(body, "redirectSettings.ikev2RedirectPhase", data.Ikev2RedirectPhase.ValueString())
@@ -141,9 +141,9 @@ func (data *VPNRALoadBalancing) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipsec = types.BoolNull()
 	}
 	if value := res.Get("redirectSettings.redirectUsingFqdn"); value.Exists() {
-		data.RedirectUsingFqdn = types.BoolValue(value.Bool())
+		data.SendFqdnToPeerDevicesInsteadOfIp = types.BoolValue(value.Bool())
 	} else {
-		data.RedirectUsingFqdn = types.BoolNull()
+		data.SendFqdnToPeerDevicesInsteadOfIp = types.BoolNull()
 	}
 	if value := res.Get("redirectSettings.ikev2RedirectPhase"); value.Exists() {
 		data.Ikev2RedirectPhase = types.StringValue(value.String())
@@ -196,10 +196,10 @@ func (data *VPNRALoadBalancing) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipsec = types.BoolNull()
 	}
-	if value := res.Get("redirectSettings.redirectUsingFqdn"); value.Exists() && !data.RedirectUsingFqdn.IsNull() {
-		data.RedirectUsingFqdn = types.BoolValue(value.Bool())
+	if value := res.Get("redirectSettings.redirectUsingFqdn"); value.Exists() && !data.SendFqdnToPeerDevicesInsteadOfIp.IsNull() {
+		data.SendFqdnToPeerDevicesInsteadOfIp = types.BoolValue(value.Bool())
 	} else {
-		data.RedirectUsingFqdn = types.BoolNull()
+		data.SendFqdnToPeerDevicesInsteadOfIp = types.BoolNull()
 	}
 	if value := res.Get("redirectSettings.ikev2RedirectPhase"); value.Exists() && !data.Ikev2RedirectPhase.IsNull() {
 		data.Ikev2RedirectPhase = types.StringValue(value.String())

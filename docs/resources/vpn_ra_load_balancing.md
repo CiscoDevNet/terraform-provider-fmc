@@ -14,16 +14,16 @@ This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Loa
 
 ```terraform
 resource "fmc_vpn_ra_load_balancing" "example" {
-  vpn_ra_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  enabled              = true
-  ipv4_group_address   = "192.168.1.1"
-  ipv6_group_address   = "2001:db8::1"
-  interface_id         = "76d24097-41c4-4558-a4d0"
-  udp_port_number      = 9023
-  ipsec                = true
-  ipsec_encryption_key = "my-secret-key"
-  redirect_using_fqdn  = false
-  ikev2_redirect_phase = "DURING_SA_AUTHENTICATION"
+  vpn_ra_id                               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  enabled                                 = true
+  ipv4_group_address                      = "192.168.1.1"
+  ipv6_group_address                      = "2001:db8::1"
+  interface_id                            = "76d24097-41c4-4558-a4d0"
+  udp_port_number                         = 9023
+  ipsec                                   = true
+  ipsec_encryption_key                    = "my-secret-key"
+  send_fqdn_to_peer_devices_instead_of_ip = false
+  ikev2_redirect_phase                    = "DURING_SA_AUTHENTICATION"
 }
 ```
 
@@ -32,9 +32,9 @@ resource "fmc_vpn_ra_load_balancing" "example" {
 
 ### Required
 
-- `interface_id` (String) Id of the communication interface for the load balancing group.
-- `ipv4_group_address` (String) IPv4 address of the load balancing group.
-- `udp_port_number` (Number) UDP port number for communication with the load balancing group.
+- `interface_id` (String) Id of the communication interface which the director and members use to communicate.
+- `ipv4_group_address` (String) IPv4 Group Address.
+- `udp_port_number` (Number) UDP Port for communication between the director and members in a group. The default port is 9023.
   - Range: `1`-`65535`
 - `vpn_ra_id` (String) Id of the parent VPN RA Topology.
 
@@ -42,11 +42,12 @@ resource "fmc_vpn_ra_load_balancing" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Enable load balancing for VPN RA.
-- `ikev2_redirect_phase` (String) - Choices: `DURING_SA_AUTHENTICATION`, `DURING_SA_INITIALIZATION`
-- `ipsec` (Boolean) Enable IPsec encryption for the load balancing group.
+- `ikev2_redirect_phase` (String) Phase during which the redirection occurs in IKEv2.
+  - Choices: `DURING_SA_AUTHENTICATION`, `DURING_SA_INITIALIZATION`
+- `ipsec` (Boolean) Enable encryption between the director and members.
 - `ipsec_encryption_key` (String, Sensitive) Encryption key for the IPsec tunnel.
-- `ipv6_group_address` (String) IPv6 address of the load balancing group.
-- `redirect_using_fqdn` (Boolean) Redirect using FQDN for load balancing.
+- `ipv6_group_address` (String) IPv6 Group Address.
+- `send_fqdn_to_peer_devices_instead_of_ip` (Boolean) Enable redirection using a Fully Qualified Domain Name (FQDN) instead of an IP address.
 
 ### Read-Only
 
