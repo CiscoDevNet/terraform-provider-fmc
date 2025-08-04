@@ -93,16 +93,20 @@ func (d *PolicyAssignmentDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 			},
 			"targets": schema.SetNestedAttribute{
-				MarkdownDescription: "List of devices to which policy should be attached",
+				MarkdownDescription: "List of devices to which the policy should be attached",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the device to which policy should be attached",
+							MarkdownDescription: "Id of the device",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the device to which policy should be attached",
+							MarkdownDescription: "Type of the device",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the device",
 							Computed:            true,
 						},
 					},

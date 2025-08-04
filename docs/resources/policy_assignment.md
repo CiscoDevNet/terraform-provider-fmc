@@ -21,6 +21,7 @@ resource "fmc_policy_assignment" "example" {
     {
       id   = "9862719c-8d5f-11ef-99a6-aef0794da1c1"
       type = "Device"
+      name = "Device"
     }
   ]
 }
@@ -33,8 +34,8 @@ resource "fmc_policy_assignment" "example" {
 
 - `policy_id` (String) Id of the policy to be assigned.
 - `policy_type` (String) Type of the policy to be assigned.
-  - Choices: `FTDNatPolicy`, `HealthPolicy`, `AccessPolicy`
-- `targets` (Attributes Set) List of devices to which policy should be attached (see [below for nested schema](#nestedatt--targets))
+  - Choices: `FTDNatPolicy`, `HealthPolicy`, `AccessPolicy`, `RAVpn`
+- `targets` (Attributes Set) List of devices to which the policy should be attached (see [below for nested schema](#nestedatt--targets))
 
 ### Optional
 
@@ -52,8 +53,9 @@ resource "fmc_policy_assignment" "example" {
 
 Required:
 
-- `id` (String) Id of the device to which policy should be attached
-- `type` (String) Type of the device to which policy should be attached
+- `id` (String) Id of the device
+- `name` (String) Name of the device
+- `type` (String) Type of the device
   - Choices: `Device`, `DeviceHAPair`, `DeviceGroup`
 
 ## Import

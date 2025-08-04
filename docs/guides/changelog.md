@@ -9,6 +9,7 @@ description: |-
 
 ## 2.0.0-rc6 (Unreleased)
 
+- (BREAKING CHANGE) `fmc_policy_assignment`: `name` is now mandatory attribute in `targets`
 - (Enhancement) Add support for Remote Access VPN - `fmc_vpn_ra_*` resources and data sources
 
 ## 2.0.0-rc5

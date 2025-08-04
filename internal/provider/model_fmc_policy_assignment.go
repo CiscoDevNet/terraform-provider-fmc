@@ -47,6 +47,7 @@ type PolicyAssignment struct {
 type PolicyAssignmentTargets struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
+	Name types.String `tfsdk:"name"`
 }
 
 // End of section. //template:end types
@@ -88,6 +89,9 @@ func (data PolicyAssignment) toBody(ctx context.Context, state PolicyAssignment)
 			}
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
+			}
+			if !item.Name.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "targets.-1", itemBody)
 		}
@@ -134,6 +138,11 @@ func (data *PolicyAssignment) fromBody(ctx context.Context, res gjson.Result) {
 				data.Type = types.StringValue(value.String())
 			} else {
 				data.Type = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
 			}
 			(*parent).Targets = append((*parent).Targets, data)
 			return true
@@ -215,6 +224,11 @@ func (data *PolicyAssignment) fromBodyPartial(ctx context.Context, res gjson.Res
 			data.Type = types.StringValue(value.String())
 		} else {
 			data.Type = types.StringNull()
+		}
+		if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
 		}
 		(*parent).Targets[i] = data
 	}
