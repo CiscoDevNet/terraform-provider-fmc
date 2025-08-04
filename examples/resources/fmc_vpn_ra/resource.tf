@@ -1,13 +1,13 @@
 resource "fmc_vpn_ra" "example" {
   name                 = "my_ftd_ra_vpn"
-  description          = "description of my_fmc_ra_vpn"
+  description          = "My Remote Access VPN Configuration"
   protocol_ssl         = true
   protocol_ipsec_ikev2 = true
   local_realm_id       = "12345678-1234-1234-1234-123456789012"
   dap_policy_id        = "12345678-1234-1234-1234-123456"
   access_interfaces = [
     {
-      id                                = ""
+      id                                = "12345678-1234-1234-1234-123456789012"
       protocol_ipsec_ikev2              = true
       protocol_ssl                      = true
       protocol_ssl_dtls                 = true
@@ -15,12 +15,12 @@ resource "fmc_vpn_ra" "example" {
     }
   ]
   allow_users_to_select_connection_profile           = true
-  web_port                                           = 443
-  dtls_port                                          = 443
+  web_access_port_number                             = 443
+  dtls_port_number                                   = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"
-  ipsec_global_identity_certificate_id               = "12345678-1234-1234-1234-123456"
-  service_access_id                                  = "12345678-1234-1234-1234-123456"
-  bypass_access_control_policy_for_decrypted_traffic = true
+  ipsec_ikev2_identity_certificate_id                = "12345678-1234-1234-1234-123456"
+  service_access_object_id                           = "12345678-1234-1234-1234-123456"
+  bypass_access_control_policy_for_decrypted_traffic = false
   secure_client_images = [
     {
       id               = "12345678-1234-1234-1234-123456789012"

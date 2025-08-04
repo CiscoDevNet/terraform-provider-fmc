@@ -25,44 +25,44 @@ data "fmc_vpn_ra" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the VPN Remote Access (RA) Topology.
+- `name` (String) Name of the VPN Remote Access (RA) Configuration.
 
 ### Read-Only
 
-- `access_interfaces` (Attributes List) (see [below for nested schema](#nestedatt--access_interfaces))
-- `address_assignment_policy_id` (String)
-- `allow_users_to_select_connection_profile` (Boolean) Allow users to select a connection profile.
+- `access_interfaces` (Attributes List) List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
+- `address_assignment_policy_id` (String) Id of Address Assignment Policy.
+- `allow_users_to_select_connection_profile` (Boolean) Allow Users to select connection profile while logging in.
 - `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)
-- `certificate_map_id` (String)
-- `dap_policy_id` (String) Identifier for the DAP (Dynamic Access Policy) used for the VPN.
+- `certificate_map_id` (String) Id of Certificate Map.
+- `dap_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `description` (String) Description of the object.
-- `dtls_port` (Number) Port number for the web access of the VPN.
-- `external_browser_package_id` (String) Identifier for the external browser package used for the VPN.
-- `group_policies` (Attributes List) List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
-- `ikev2_policies` (Attributes List) List of IKEv2 policies associated with the VPN. (see [below for nested schema](#nestedatt--ikev2_policies))
-- `ipsec_advanced_settings_id` (String) Identifier for the IPsec/IKEv2 advanced settings used for the VPN.
-- `ipsec_global_identity_certificate_id` (String) Identifier for the IPsec certificate used for enrollment.
-- `ldap_attribute_map_id` (String) Identifier for the LDAP attribute mapping used for the VPN.
-- `load_balance_id` (String) Identifier for the load balancing settings used for the VPN.
-- `local_realm_id` (String) Local realm server for the VPN.
-- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for the VPN.
-- `protocol_ssl` (Boolean) Enable SSL protocol for the VPN.
-- `secure_client_customization_id` (String)
-- `secure_client_images` (Attributes List) List of Secure Client images to be used for the VPN. (see [below for nested schema](#nestedatt--secure_client_images))
-- `service_access_id` (String) Identifier for the service access object.
-- `ssl_global_identity_certificate_id` (String) Identifier for the SSL certificate used for enrollment.
+- `dtls_port_number` (Number) DTLS Port Number.
+- `external_browser_package_id` (String) Id of Secure Client External Browser Package.
+- `group_policies` (Attributes List) List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
+- `ikev2_policies` (Attributes List) List of IKEv2 policies. (see [below for nested schema](#nestedatt--ikev2_policies))
+- `ipsec_ike_parameters_id` (String) Id of IPsec/IKEv2 parameters.
+- `ipsec_ikev2_identity_certificate_id` (String) Id of IPsec IKEv2 Identity Certificate.
+- `ldap_attribute_map_id` (String) Id of LDAP Attribute Mapping.
+- `load_balancing_id` (String) Id of Load Balancing settings.
+- `local_realm_id` (String) Id of local realm server. This can be set only after relevant connection profiles are configured.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol.
+- `protocol_ssl` (Boolean) Enable SSL protocol.
+- `secure_client_customization_id` (String) Id of Secure Client Customization.
+- `secure_client_images` (Attributes List) List of Secure Client images. (see [below for nested schema](#nestedatt--secure_client_images))
+- `service_access_object_id` (String) Id of the Service Access object.
+- `ssl_global_identity_certificate_id` (String) Id of SSL Global Identity Certificate.
 - `type` (String) Type of the object; this value is always 'RAVpn'.
-- `web_port` (Number) Port number for the web access of the VPN.
+- `web_access_port_number` (Number) Web Access Port Number.
 
 <a id="nestedatt--access_interfaces"></a>
 ### Nested Schema for `access_interfaces`
 
 Read-Only:
 
-- `id` (String) Id of interface group or security zone.
-- `interface_specific_certificate_id` (String) Identifier for the ID certificate used for the VPN.
-- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 for the VPN.
-- `protocol_ssl` (Boolean) Enable SSL for the VPN.
+- `id` (String) Id of Interface Group or Security Zone.
+- `interface_specific_certificate_id` (String) Id of interface specific identity certificate.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2.
+- `protocol_ssl` (Boolean) Enable SSL.
 - `protocol_ssl_dtls` (Boolean) Enable DTLS for the VPN.
 
 
@@ -71,7 +71,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Unique identifier of the group policy.
+- `id` (String) Id of group policy.
 
 
 <a id="nestedatt--ikev2_policies"></a>
@@ -79,7 +79,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Unique identifier of the IKEv2 policy.
+- `id` (String) Id of IKEv2 policy.
 
 
 <a id="nestedatt--secure_client_images"></a>
@@ -87,5 +87,5 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Unique identifier of the Secure Client image.
-- `operating_system` (String) Operating system of the Secure Client image.
+- `id` (String) Id of Secure Client image.
+- `operating_system` (String) Operating system for which the Secure Client image is intended.

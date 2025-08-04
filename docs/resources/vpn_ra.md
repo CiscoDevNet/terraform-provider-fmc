@@ -15,14 +15,14 @@ This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs).
 ```terraform
 resource "fmc_vpn_ra" "example" {
   name                 = "my_ftd_ra_vpn"
-  description          = "description of my_fmc_ra_vpn"
+  description          = "My Remote Access VPN Configuration"
   protocol_ssl         = true
   protocol_ipsec_ikev2 = true
   local_realm_id       = "12345678-1234-1234-1234-123456789012"
   dap_policy_id        = "12345678-1234-1234-1234-123456"
   access_interfaces = [
     {
-      id                                = ""
+      id                                = "12345678-1234-1234-1234-123456789012"
       protocol_ipsec_ikev2              = true
       protocol_ssl                      = true
       protocol_ssl_dtls                 = true
@@ -30,12 +30,12 @@ resource "fmc_vpn_ra" "example" {
     }
   ]
   allow_users_to_select_connection_profile           = true
-  web_port                                           = 443
-  dtls_port                                          = 443
+  web_access_port_number                             = 443
+  dtls_port_number                                   = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"
-  ipsec_global_identity_certificate_id               = "12345678-1234-1234-1234-123456"
-  service_access_id                                  = "12345678-1234-1234-1234-123456"
-  bypass_access_control_policy_for_decrypted_traffic = true
+  ipsec_ikev2_identity_certificate_id                = "12345678-1234-1234-1234-123456"
+  service_access_object_id                           = "12345678-1234-1234-1234-123456"
+  bypass_access_control_policy_for_decrypted_traffic = false
   secure_client_images = [
     {
       id               = "12345678-1234-1234-1234-123456789012"
@@ -61,66 +61,69 @@ resource "fmc_vpn_ra" "example" {
 
 ### Required
 
-- `group_policies` (Attributes List) List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
-- `name` (String) Name of the VPN Remote Access (RA) Topology.
+- `access_interfaces` (Attributes List) List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
+- `group_policies` (Attributes List) List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
+- `name` (String) Name of the VPN Remote Access (RA) Configuration.
 
 ### Optional
 
-- `access_interfaces` (Attributes List) (see [below for nested schema](#nestedatt--access_interfaces))
-- `allow_users_to_select_connection_profile` (Boolean) Allow users to select a connection profile.
+- `allow_users_to_select_connection_profile` (Boolean) Allow Users to select connection profile while logging in.
 - `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)
   - Default value: `false`
-- `dap_policy_id` (String) Identifier for the DAP (Dynamic Access Policy) used for the VPN.
+- `dap_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `dtls_port` (Number) Port number for the web access of the VPN.
+- `dtls_port_number` (Number) DTLS Port Number.
   - Default value: `443`
-- `external_browser_package_id` (String) Identifier for the external browser package used for the VPN.
-- `ikev2_policies` (Attributes List) List of IKEv2 policies associated with the VPN. (see [below for nested schema](#nestedatt--ikev2_policies))
-- `ipsec_global_identity_certificate_id` (String) Identifier for the IPsec certificate used for enrollment.
-- `local_realm_id` (String) Local realm server for the VPN.
-- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol for the VPN.
+- `external_browser_package_id` (String) Id of Secure Client External Browser Package.
+- `ikev2_policies` (Attributes List) List of IKEv2 policies. (see [below for nested schema](#nestedatt--ikev2_policies))
+- `ipsec_ikev2_identity_certificate_id` (String) Id of IPsec IKEv2 Identity Certificate.
+- `local_realm_id` (String) Id of local realm server. This can be set only after relevant connection profiles are configured.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol.
   - Default value: `true`
-- `protocol_ssl` (Boolean) Enable SSL protocol for the VPN.
+- `protocol_ssl` (Boolean) Enable SSL protocol.
   - Default value: `true`
-- `secure_client_images` (Attributes List) List of Secure Client images to be used for the VPN. (see [below for nested schema](#nestedatt--secure_client_images))
-- `service_access_id` (String) Identifier for the service access object.
-- `ssl_global_identity_certificate_id` (String) Identifier for the SSL certificate used for enrollment.
-- `web_port` (Number) Port number for the web access of the VPN.
+- `secure_client_images` (Attributes List) List of Secure Client images. (see [below for nested schema](#nestedatt--secure_client_images))
+- `service_access_object_id` (String) Id of the Service Access object.
+- `ssl_global_identity_certificate_id` (String) Id of SSL Global Identity Certificate.
+- `web_access_port_number` (Number) Web Access Port Number.
   - Default value: `443`
 
 ### Read-Only
 
-- `address_assignment_policy_id` (String)
-- `certificate_map_id` (String)
+- `address_assignment_policy_id` (String) Id of Address Assignment Policy.
+- `certificate_map_id` (String) Id of Certificate Map.
 - `id` (String) Id of the object
-- `ipsec_advanced_settings_id` (String) Identifier for the IPsec/IKEv2 advanced settings used for the VPN.
-- `ldap_attribute_map_id` (String) Identifier for the LDAP attribute mapping used for the VPN.
-- `load_balance_id` (String) Identifier for the load balancing settings used for the VPN.
-- `secure_client_customization_id` (String)
+- `ipsec_ike_parameters_id` (String) Id of IPsec/IKEv2 parameters.
+- `ldap_attribute_map_id` (String) Id of LDAP Attribute Mapping.
+- `load_balancing_id` (String) Id of Load Balancing settings.
+- `secure_client_customization_id` (String) Id of Secure Client Customization.
 - `type` (String) Type of the object; this value is always 'RAVpn'.
+
+<a id="nestedatt--access_interfaces"></a>
+### Nested Schema for `access_interfaces`
+
+Required:
+
+- `id` (String) Id of Interface Group or Security Zone.
+
+Optional:
+
+- `interface_specific_certificate_id` (String) Id of interface specific identity certificate.
+- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2.
+  - Default value: `true`
+- `protocol_ssl` (Boolean) Enable SSL.
+  - Default value: `true`
+- `protocol_ssl_dtls` (Boolean) Enable DTLS for the VPN.
+  - Default value: `true`
+
 
 <a id="nestedatt--group_policies"></a>
 ### Nested Schema for `group_policies`
 
 Required:
 
-- `id` (String) Unique identifier of the group policy.
-
-
-<a id="nestedatt--access_interfaces"></a>
-### Nested Schema for `access_interfaces`
-
-Optional:
-
-- `id` (String) Id of interface group or security zone.
-- `interface_specific_certificate_id` (String) Identifier for the ID certificate used for the VPN.
-- `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 for the VPN.
-  - Default value: `true`
-- `protocol_ssl` (Boolean) Enable SSL for the VPN.
-  - Default value: `true`
-- `protocol_ssl_dtls` (Boolean) Enable DTLS for the VPN.
-  - Default value: `true`
+- `id` (String) Id of group policy.
 
 
 <a id="nestedatt--ikev2_policies"></a>
@@ -128,7 +131,7 @@ Optional:
 
 Required:
 
-- `id` (String) Unique identifier of the IKEv2 policy.
+- `id` (String) Id of IKEv2 policy.
 
 
 <a id="nestedatt--secure_client_images"></a>
@@ -136,8 +139,8 @@ Required:
 
 Required:
 
-- `id` (String) Unique identifier of the Secure Client image.
-- `operating_system` (String) Operating system of the Secure Client image.
+- `id` (String) Id of Secure Client image.
+- `operating_system` (String) Operating system for which the Secure Client image is intended.
   - Choices: `WINDOWS`, `LINUX`, `MAC`
 
 ## Import

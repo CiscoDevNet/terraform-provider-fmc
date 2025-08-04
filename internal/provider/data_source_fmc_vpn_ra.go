@@ -72,7 +72,7 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the VPN Remote Access (RA) Topology.",
+				MarkdownDescription: "Name of the VPN Remote Access (RA) Configuration.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -85,36 +85,36 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"protocol_ssl": schema.BoolAttribute{
-				MarkdownDescription: "Enable SSL protocol for the VPN.",
+				MarkdownDescription: "Enable SSL protocol.",
 				Computed:            true,
 			},
 			"protocol_ipsec_ikev2": schema.BoolAttribute{
-				MarkdownDescription: "Enable IPsec IKEv2 protocol for the VPN.",
+				MarkdownDescription: "Enable IPsec IKEv2 protocol.",
 				Computed:            true,
 			},
 			"local_realm_id": schema.StringAttribute{
-				MarkdownDescription: "Local realm server for the VPN.",
+				MarkdownDescription: "Id of local realm server. This can be set only after relevant connection profiles are configured.",
 				Computed:            true,
 			},
 			"dap_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the DAP (Dynamic Access Policy) used for the VPN.",
+				MarkdownDescription: "Id of Dynamic Access Policy (DAP).",
 				Computed:            true,
 			},
 			"access_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of interface group or security zone.",
+							MarkdownDescription: "Id of Interface Group or Security Zone.",
 							Computed:            true,
 						},
 						"protocol_ipsec_ikev2": schema.BoolAttribute{
-							MarkdownDescription: "Enable IPsec IKEv2 for the VPN.",
+							MarkdownDescription: "Enable IPsec IKEv2.",
 							Computed:            true,
 						},
 						"protocol_ssl": schema.BoolAttribute{
-							MarkdownDescription: "Enable SSL for the VPN.",
+							MarkdownDescription: "Enable SSL.",
 							Computed:            true,
 						},
 						"protocol_ssl_dtls": schema.BoolAttribute{
@@ -122,34 +122,34 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 							Computed:            true,
 						},
 						"interface_specific_certificate_id": schema.StringAttribute{
-							MarkdownDescription: "Identifier for the ID certificate used for the VPN.",
+							MarkdownDescription: "Id of interface specific identity certificate.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"allow_users_to_select_connection_profile": schema.BoolAttribute{
-				MarkdownDescription: "Allow users to select a connection profile.",
+				MarkdownDescription: "Allow Users to select connection profile while logging in.",
 				Computed:            true,
 			},
-			"web_port": schema.Int64Attribute{
-				MarkdownDescription: "Port number for the web access of the VPN.",
+			"web_access_port_number": schema.Int64Attribute{
+				MarkdownDescription: "Web Access Port Number.",
 				Computed:            true,
 			},
-			"dtls_port": schema.Int64Attribute{
-				MarkdownDescription: "Port number for the web access of the VPN.",
+			"dtls_port_number": schema.Int64Attribute{
+				MarkdownDescription: "DTLS Port Number.",
 				Computed:            true,
 			},
 			"ssl_global_identity_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the SSL certificate used for enrollment.",
+				MarkdownDescription: "Id of SSL Global Identity Certificate.",
 				Computed:            true,
 			},
-			"ipsec_global_identity_certificate_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the IPsec certificate used for enrollment.",
+			"ipsec_ikev2_identity_certificate_id": schema.StringAttribute{
+				MarkdownDescription: "Id of IPsec IKEv2 Identity Certificate.",
 				Computed:            true,
 			},
-			"service_access_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the service access object.",
+			"service_access_object_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the Service Access object.",
 				Computed:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
@@ -157,71 +157,71 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"secure_client_images": schema.ListNestedAttribute{
-				MarkdownDescription: "List of Secure Client images to be used for the VPN.",
+				MarkdownDescription: "List of Secure Client images.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Unique identifier of the Secure Client image.",
+							MarkdownDescription: "Id of Secure Client image.",
 							Computed:            true,
 						},
 						"operating_system": schema.StringAttribute{
-							MarkdownDescription: "Operating system of the Secure Client image.",
+							MarkdownDescription: "Operating system for which the Secure Client image is intended.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"external_browser_package_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the external browser package used for the VPN.",
+				MarkdownDescription: "Id of Secure Client External Browser Package.",
 				Computed:            true,
 			},
 			"secure_client_customization_id": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Id of Secure Client Customization.",
 				Computed:            true,
 			},
 			"address_assignment_policy_id": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Id of Address Assignment Policy.",
 				Computed:            true,
 			},
 			"certificate_map_id": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Id of Certificate Map.",
 				Computed:            true,
 			},
 			"group_policies": schema.ListNestedAttribute{
-				MarkdownDescription: "List of group policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list.",
+				MarkdownDescription: "List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Unique identifier of the group policy.",
+							MarkdownDescription: "Id of group policy.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"ldap_attribute_map_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the LDAP attribute mapping used for the VPN.",
+				MarkdownDescription: "Id of LDAP Attribute Mapping.",
 				Computed:            true,
 			},
-			"load_balance_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the load balancing settings used for the VPN.",
+			"load_balancing_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Load Balancing settings.",
 				Computed:            true,
 			},
 			"ikev2_policies": schema.ListNestedAttribute{
-				MarkdownDescription: "List of IKEv2 policies associated with the VPN.",
+				MarkdownDescription: "List of IKEv2 policies.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Unique identifier of the IKEv2 policy.",
+							MarkdownDescription: "Id of IKEv2 policy.",
 							Computed:            true,
 						},
 					},
 				},
 			},
-			"ipsec_advanced_settings_id": schema.StringAttribute{
-				MarkdownDescription: "Identifier for the IPsec/IKEv2 advanced settings used for the VPN.",
+			"ipsec_ike_parameters_id": schema.StringAttribute{
+				MarkdownDescription: "Id of IPsec/IKEv2 parameters.",
 				Computed:            true,
 			},
 		},
