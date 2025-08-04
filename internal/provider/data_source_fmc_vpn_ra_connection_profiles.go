@@ -70,7 +70,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 				Required:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of Connection Profiles. The key of the map is the name of the Connection Profile.",
+				MarkdownDescription: "Map of Connection Profiles. The key of the map is the name of the Connection Profile. Use `DefaultWEBVPNGroup` to manage the default connection profile. On destruction, the default connection profile will not be deleted and its configuration will not be erased.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

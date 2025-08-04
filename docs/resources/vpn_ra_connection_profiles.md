@@ -76,7 +76,7 @@ resource "fmc_vpn_ra_connection_profiles" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of Connection Profiles. The key of the map is the name of the Connection Profile. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Connection Profiles. The key of the map is the name of the Connection Profile. Use `DefaultWEBVPNGroup` to manage the default connection profile. On destruction, the default connection profile will not be deleted and its configuration will not be erased. (see [below for nested schema](#nestedatt--items))
 - `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional

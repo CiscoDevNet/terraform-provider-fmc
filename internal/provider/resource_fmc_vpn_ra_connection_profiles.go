@@ -27,7 +27,6 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -94,7 +93,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of Connection Profiles. The key of the map is the name of the Connection Profile.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Connection Profiles. The key of the map is the name of the Connection Profile. Use `DefaultWEBVPNGroup` to manage the default connection profile. On destruction, the default connection profile will not be deleted and its configuration will not be erased.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -705,169 +704,106 @@ func (r *VPNRAConnectionProfilesResource) ImportState(ctx context.Context, req r
 
 // End of section. //template:end import
 
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *VPNRAConnectionProfilesResource) createSubresources(ctx context.Context, state, plan VPNRAConnectionProfiles, reqMods ...func(*fmc.Req)) (VPNRAConnectionProfiles, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
-	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateVPNRAConnectionProfiles) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (VPN RA Connection Profiles)", state.Id.ValueString()))
-		var tmpObject VPNRAConnectionProfiles
-		tmpObject.Items = make(map[string]VPNRAConnectionProfilesItems, 1)
-		for k, v := range plan.Items {
+	var tmpObject VPNRAConnectionProfiles
+	tmpObject.Items = make(map[string]VPNRAConnectionProfilesItems, 1)
+	var res gjson.Result
+	for k, v := range plan.Items {
+
+		if k == "DefaultWEBVPNGroup" {
+			// This is a default connection profile, we will update it instead of creating a new one
+			tflog.Debug(ctx, fmt.Sprintf("%s: Default Connection Profile found, updating instead of creating", state.Id.ValueString()))
+			// Get id of the default connection profile
+			resTmp, err := r.client.Get(state.getPath(), reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to retrieve default object (GET), got error: %s, %s", state.Id.ValueString(), err, resTmp.String())),
+				}
+			}
+			query := "items.#(name==\"DefaultWEBVPNGroup\").id"
+			if defaultWebVPNGroupId := resTmp.Get(query); defaultWebVPNGroupId.Exists() {
+				// Set the ID of the default connection profile
+				v.Id = types.StringValue(defaultWebVPNGroupId.String())
+			} else {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed extract DefaultWEBVPNGroup object ID: %s", state.Id.ValueString(), resTmp.String())),
+				}
+			}
+
+			// Update object
 			tmpObject.Items[k] = v
-
 			body := tmpObject.toBodyNonBulk(ctx, state)
-			res, err := r.client.Post(state.getPath(), body, reqMods...)
+			res, err = r.client.Put(state.getPath()+"/"+url.QueryEscape(v.Id.ValueString()), body, reqMods...)
+			if err != nil {
+				return state, diag.Diagnostics{
+					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to update object (PUT) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
+				}
+			}
+
+		} else {
+			var err error
+			tmpObject.Items[k] = v
+			body := tmpObject.toBodyNonBulk(ctx, state)
+			res, err = r.client.Post(state.getPath(), body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
 					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to create object (POST) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
 				}
 			}
-
-			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
-			res = gjson.Parse(body)
-
-			// Read computed values
-			tmpObject.fromBodyUnknowns(ctx, res)
-
-			// Save object to plan
-			state.Items[k] = tmpObject.Items[k]
-
-			// Clear tmpObject.Items
-			delete(tmpObject.Items, k)
-
 		}
-	} else {
-		var idx = 0
-		var bulk VPNRAConnectionProfiles
-		bulk.Items = make(map[string]VPNRAConnectionProfilesItems, bulkSizeCreate)
 
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (VPN RA Connection Profiles)", state.Id.ValueString()))
+		// fromBodyUnknowns expect result to be listed under "items" key
+		body, _ := sjson.SetRaw("{items:[]}", "items.-1", res.String())
+		res = gjson.Parse(body)
 
-		// iterate over all items
-		for k, v := range plan.Items {
-			// count loops
-			idx++
+		// Read computed values
+		tmpObject.fromBodyUnknowns(ctx, res)
 
-			// add object to current bulk
-			bulk.Items[k] = v
+		// Save object to plan
+		state.Items[k] = tmpObject.Items[k]
 
-			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
-
-				// Parse body of the request to string
-				body := bulk.toBody(ctx, VPNRAConnectionProfiles{})
-
-				// Execute request
-				urlPath := state.getPath() + "?bulk=true"
-				res, err := r.client.Post(urlPath, body, reqMods...)
-				if err != nil {
-					return state, diag.Diagnostics{
-						diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("Failed to create a bulk (POST) id: %s, got error: %s, %s", state.Id.ValueString(), err, res.String())),
-					}
-				}
-
-				// Read result and save it to the state
-				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
-
-				// Clear bulk item for next run
-				bulk.Items = make(map[string]VPNRAConnectionProfilesItems, bulkSizeCreate)
-			}
-		}
+		// Clear tmpObject.Items
+		delete(tmpObject.Items, k)
 	}
 
 	return state, nil
 }
 
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
 func (r *VPNRAConnectionProfilesResource) deleteSubresources(ctx context.Context, state, plan VPNRAConnectionProfiles, reqMods ...func(*fmc.Req)) (VPNRAConnectionProfiles, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
-	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteVPNRAConnectionProfiles) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (VPN RA Connection Profiles)", state.Id.ValueString()))
-		for k, v := range objectsToRemove.Items {
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				delete(state.Items, k)
-				continue
-			}
-
-			urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
-			res, err := r.client.Delete(urlPath, reqMods...)
-			if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-				return state, diag.Diagnostics{
-					diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
-				}
-			}
-
-			// Remove deleted item from state
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (VPN RA Connection Profiles)", state.Id.ValueString()))
+	for k, v := range objectsToRemove.Items {
+		// Check if the object was not already deleted
+		if v.Id.IsNull() {
 			delete(state.Items, k)
+			continue
 		}
-	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (VPN RA Connection Profiles)", state.Id.ValueString()))
 
-		var idx = 0
-		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		// If this is default connection profile, we will not delete it
+		if k == "DefaultWEBVPNGroup" {
+			delete(state.Items, k)
+			continue
+		}
 
-		for k, v := range objectsToRemove.Items {
-			// Counter
-			idx++
-
-			// Check if the object was not already deleted
-			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
-				continue
-			}
-
-			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
-
-			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
-				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
-				res, err := r.client.Delete(urlPath, reqMods...)
-				if err != nil {
-					return state, diag.Diagnostics{
-						diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete subobject(s) (DELETE), got error: %s, %s", state.Id.ValueString(), err, res.String())),
-					}
-				}
-
-				// Read result and remove deleted items from state
-				deletedItems := res.Get("items.#.name").Array()
-				for _, name := range deletedItems {
-					delete(state.Items, name.String())
-				}
-
-				// Reset ID string
-				idsToRemove.Reset()
+		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
+		res, err := r.client.Delete(urlPath, reqMods...)
+		if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+			return state, diag.Diagnostics{
+				diag.NewErrorDiagnostic("Client Error", fmt.Sprintf("%s: Failed to delete object (DELETE) id %s, got error: %s, %s", state.Id.ValueString(), v.Id.ValueString(), err, res.String())),
 			}
 		}
 
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
-		}
+		// Remove deleted item from state
+		delete(state.Items, k)
 	}
 
 	return state, nil
 }
-
-// End of section. //template:end deleteSubresources
 
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 

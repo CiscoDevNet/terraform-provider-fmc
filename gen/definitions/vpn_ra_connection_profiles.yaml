@@ -1,4 +1,4 @@
-# Manual resource - ValidateConfig
+# Manual resource - ValidateConfig, createSubresources, deleteSubresources
 # FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
 ---
 name: VPN RA Connection Profiles
@@ -20,6 +20,8 @@ attributes:
     type: Map
     description: >-
       Map of Connection Profiles. The key of the map is the name of the Connection Profile.
+      Use `DefaultWEBVPNGroup` to manage the default connection profile.
+      On destruction, the default connection profile will not be deleted and its configuration will not be erased.
     map_key_example: my_connection_profile
     mandatory: true
     attributes:
