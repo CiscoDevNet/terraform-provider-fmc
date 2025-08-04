@@ -67,7 +67,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				Optional:            true,
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent VPN RA Topology.",
+				MarkdownDescription: "Id of the parent VPN RA Configuration.",
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -99,7 +99,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				},
 			},
 			"scripts": schema.ListNestedAttribute{
-				MarkdownDescription: "Import Secure Client customization scripts.",
+				MarkdownDescription: "Configure Secure Client customization scripts.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

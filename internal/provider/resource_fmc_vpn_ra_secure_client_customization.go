@@ -78,7 +78,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 				},
 			},
 			"vpn_ra_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Topology.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VPN RA Configuration.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -98,7 +98,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Language Translation.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -110,19 +110,19 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Icon/Image.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
 			"scripts": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Import Secure Client customization scripts.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client customization scripts.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Script.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -134,7 +134,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Binary.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -146,7 +146,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Custom Installer Transform.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -158,7 +158,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of Secure Client Customization - Localized Installer Transform.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},

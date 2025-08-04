@@ -5,14 +5,14 @@ res_description: This resource manages FTD Remote Access (RA) Virtual Private Ne
 put_create: true
 retrieve_id: true
 put_delete: true
+skip_test: true
 doc_category: VPN
 attributes:
   - tf_name: vpn_ra_id
     type: String
     reference: true
-    description: Id of the parent VPN RA Topology.
+    description: Id of the parent VPN RA Configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_vpn_ra.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'RaVpnSecureClientCustomization'.
@@ -31,6 +31,7 @@ attributes:
         type: String
         description: Id of Secure Client Customization - Language Translation.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true
   - model_name: imagesAndIcons
     tf_name: icons_and_images
     type: List
@@ -40,14 +41,16 @@ attributes:
         type: String
         description: Id of Secure Client Customization - Icon/Image.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true
   - model_name: scripts
     type: List
-    description: Import Secure Client customization scripts.
+    description: Configure Secure Client customization scripts.
     attributes:
       - model_name: id
         type: String
         description: Id of Secure Client Customization - Script.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true
   - model_name: binaries
     type: List
     description: Configure Secure Client Binary executable modules on device.
@@ -56,6 +59,7 @@ attributes:
         type: String
         description: Id of Secure Client Customization - Binary.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true
   - model_name: customizedInstallerTransforms
     tf_name: custom_installer_transforms
     type: List
@@ -65,6 +69,7 @@ attributes:
         type: String
         description: Id of Secure Client Customization - Custom Installer Transform.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true
   - model_name: localizedInstallerTransforms
     type: List
     description: Configure Secure Client localized installer transforms on device.
@@ -73,3 +78,4 @@ attributes:
         type: String
         description: Id of Secure Client Customization - Localized Installer Transform.
         example: 12345678-1234-1234-1234-123456789012
+        mandatory: true

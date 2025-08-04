@@ -53,7 +53,7 @@ resource "fmc_vpn_ra_secure_client_customization" "example" {
 
 ### Required
 
-- `vpn_ra_id` (String) Id of the parent VPN RA Topology.
+- `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
@@ -63,7 +63,7 @@ resource "fmc_vpn_ra_secure_client_customization" "example" {
 - `gui_and_text_messages` (Attributes List) Configure language translation tables. (see [below for nested schema](#nestedatt--gui_and_text_messages))
 - `icons_and_images` (Attributes List) Configure icons and images for the secure client customization. (see [below for nested schema](#nestedatt--icons_and_images))
 - `localized_installer_transforms` (Attributes List) Configure Secure Client localized installer transforms on device. (see [below for nested schema](#nestedatt--localized_installer_transforms))
-- `scripts` (Attributes List) Import Secure Client customization scripts. (see [below for nested schema](#nestedatt--scripts))
+- `scripts` (Attributes List) Configure Secure Client customization scripts. (see [below for nested schema](#nestedatt--scripts))
 
 ### Read-Only
 
@@ -73,7 +73,7 @@ resource "fmc_vpn_ra_secure_client_customization" "example" {
 <a id="nestedatt--binaries"></a>
 ### Nested Schema for `binaries`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Binary.
 
@@ -81,7 +81,7 @@ Optional:
 <a id="nestedatt--custom_installer_transforms"></a>
 ### Nested Schema for `custom_installer_transforms`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Custom Installer Transform.
 
@@ -89,7 +89,7 @@ Optional:
 <a id="nestedatt--gui_and_text_messages"></a>
 ### Nested Schema for `gui_and_text_messages`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Language Translation.
 
@@ -97,7 +97,7 @@ Optional:
 <a id="nestedatt--icons_and_images"></a>
 ### Nested Schema for `icons_and_images`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Icon/Image.
 
@@ -105,7 +105,7 @@ Optional:
 <a id="nestedatt--localized_installer_transforms"></a>
 ### Nested Schema for `localized_installer_transforms`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Localized Installer Transform.
 
@@ -113,7 +113,7 @@ Optional:
 <a id="nestedatt--scripts"></a>
 ### Nested Schema for `scripts`
 
-Optional:
+Required:
 
 - `id` (String) Id of Secure Client Customization - Script.
 
