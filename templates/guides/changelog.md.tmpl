@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc6 (Unreleased)
+
+- (Fix) Remove `ValidateConfig` for `fmc_access_control_policy` and `fmc_ftd_nat_policy`
+
 ## 2.0.0-rc5
 
 - (Enhancement) `fmc_access_control_policy` has new attributes `manage_rules` and `manage_categories` that disable managing (resource) or reading (data source) rules and categories
