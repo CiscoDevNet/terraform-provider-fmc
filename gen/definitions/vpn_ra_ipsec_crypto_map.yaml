@@ -28,7 +28,7 @@ attributes:
     description:  >-
       Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied.
       The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
-    example: 76d24097-41c4-4558-a4d0
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     data_source_query: true
   - model_name: ikev2IpsecProposals
     tf_name: ikev2_ipsec_proposals

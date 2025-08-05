@@ -1,6 +1,6 @@
 resource "fmc_vpn_ra_ipsec_crypto_map" "example" {
   vpn_ra_id    = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  interface_id = "76d24097-41c4-4558-a4d0"
+  interface_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ikev2_ipsec_proposals = [
     {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"

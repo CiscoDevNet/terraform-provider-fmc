@@ -42,7 +42,7 @@ type VPNRA struct {
 	ProtocolSsl                                  types.Bool                `tfsdk:"protocol_ssl"`
 	ProtocolIpsecIkev2                           types.Bool                `tfsdk:"protocol_ipsec_ikev2"`
 	LocalRealmId                                 types.String              `tfsdk:"local_realm_id"`
-	DapPolicyId                                  types.String              `tfsdk:"dap_policy_id"`
+	DynamicAccessPolicyId                        types.String              `tfsdk:"dynamic_access_policy_id"`
 	AccessInterfaces                             []VPNRAAccessInterfaces   `tfsdk:"access_interfaces"`
 	AllowUsersToSelectConnectionProfile          types.Bool                `tfsdk:"allow_users_to_select_connection_profile"`
 	WebAccessPortNumber                          types.Int64               `tfsdk:"web_access_port_number"`
@@ -120,8 +120,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 	if !data.LocalRealmId.IsNull() {
 		body, _ = sjson.Set(body, "localRealmServer.id", data.LocalRealmId.ValueString())
 	}
-	if !data.DapPolicyId.IsNull() {
-		body, _ = sjson.Set(body, "dapPolicy.id", data.DapPolicyId.ValueString())
+	if !data.DynamicAccessPolicyId.IsNull() {
+		body, _ = sjson.Set(body, "dapPolicy.id", data.DynamicAccessPolicyId.ValueString())
 	}
 	if len(data.AccessInterfaces) > 0 {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.interfaceSettings", []interface{}{})
@@ -241,9 +241,9 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.LocalRealmId = types.StringNull()
 	}
 	if value := res.Get("dapPolicy.id"); value.Exists() {
-		data.DapPolicyId = types.StringValue(value.String())
+		data.DynamicAccessPolicyId = types.StringValue(value.String())
 	} else {
-		data.DapPolicyId = types.StringNull()
+		data.DynamicAccessPolicyId = types.StringNull()
 	}
 	if value := res.Get("accessInterfaceSettings.interfaceSettings"); value.Exists() {
 		data.AccessInterfaces = make([]VPNRAAccessInterfaces, 0)
@@ -258,17 +258,17 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 			if value := res.Get("enableIPSecIkev2"); value.Exists() {
 				data.ProtocolIpsecIkev2 = types.BoolValue(value.Bool())
 			} else {
-				data.ProtocolIpsecIkev2 = types.BoolValue(true)
+				data.ProtocolIpsecIkev2 = types.BoolNull()
 			}
 			if value := res.Get("enableSSL"); value.Exists() {
 				data.ProtocolSsl = types.BoolValue(value.Bool())
 			} else {
-				data.ProtocolSsl = types.BoolValue(true)
+				data.ProtocolSsl = types.BoolNull()
 			}
 			if value := res.Get("enableDTLS"); value.Exists() {
 				data.ProtocolSslDtls = types.BoolValue(value.Bool())
 			} else {
-				data.ProtocolSslDtls = types.BoolValue(true)
+				data.ProtocolSslDtls = types.BoolNull()
 			}
 			if value := res.Get("idCertificate.id"); value.Exists() {
 				data.InterfaceSpecificCertificateId = types.StringValue(value.String())
@@ -437,10 +437,10 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.LocalRealmId = types.StringNull()
 	}
-	if value := res.Get("dapPolicy.id"); value.Exists() && !data.DapPolicyId.IsNull() {
-		data.DapPolicyId = types.StringValue(value.String())
+	if value := res.Get("dapPolicy.id"); value.Exists() && !data.DynamicAccessPolicyId.IsNull() {
+		data.DynamicAccessPolicyId = types.StringValue(value.String())
 	} else {
-		data.DapPolicyId = types.StringNull()
+		data.DynamicAccessPolicyId = types.StringNull()
 	}
 	for i := 0; i < len(data.AccessInterfaces); i++ {
 		keys := [...]string{"accessInterface.id"}
@@ -485,17 +485,17 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		if value := res.Get("enableIPSecIkev2"); value.Exists() && !data.ProtocolIpsecIkev2.IsNull() {
 			data.ProtocolIpsecIkev2 = types.BoolValue(value.Bool())
-		} else if data.ProtocolIpsecIkev2.ValueBool() != true {
+		} else {
 			data.ProtocolIpsecIkev2 = types.BoolNull()
 		}
 		if value := res.Get("enableSSL"); value.Exists() && !data.ProtocolSsl.IsNull() {
 			data.ProtocolSsl = types.BoolValue(value.Bool())
-		} else if data.ProtocolSsl.ValueBool() != true {
+		} else {
 			data.ProtocolSsl = types.BoolNull()
 		}
 		if value := res.Get("enableDTLS"); value.Exists() && !data.ProtocolSslDtls.IsNull() {
 			data.ProtocolSslDtls = types.BoolValue(value.Bool())
-		} else if data.ProtocolSslDtls.ValueBool() != true {
+		} else {
 			data.ProtocolSslDtls = types.BoolNull()
 		}
 		if value := res.Get("idCertificate.id"); value.Exists() && !data.InterfaceSpecificCertificateId.IsNull() {

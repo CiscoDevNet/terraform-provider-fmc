@@ -29,14 +29,14 @@ data "fmc_vpn_ra" "example" {
 
 ### Read-Only
 
-- `access_interfaces` (Attributes List) List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
+- `access_interfaces` (Attributes List) List of interfaces that will support incoming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
 - `address_assignment_policy_id` (String) Id of Address Assignment Policy.
 - `allow_users_to_select_connection_profile` (Boolean) Allow Users to select connection profile while logging in.
-- `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)
+- `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Bypass Access Control policy for decrypted traffic (sysopt permit-vpn).
 - `certificate_map_id` (String) Id of Certificate Map.
-- `dap_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `description` (String) Description of the object.
 - `dtls_port_number` (Number) DTLS Port Number.
+- `dynamic_access_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `external_browser_package_id` (String) Id of Secure Client External Browser Package.
 - `group_policies` (Attributes List) List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
 - `ikev2_policies` (Attributes List) List of IKEv2 policies. (see [below for nested schema](#nestedatt--ikev2_policies))

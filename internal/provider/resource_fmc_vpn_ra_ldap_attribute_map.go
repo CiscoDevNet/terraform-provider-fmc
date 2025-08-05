@@ -92,7 +92,7 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"realms": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of Realms with their LDAP attribute mappings.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Realms with their attribute mappings.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -102,16 +102,16 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 						},
 						"attribute_maps": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("List of LDAP attribute mappings.").String,
-							Optional:            true,
+							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"ldap_attribute_name": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Name of the LDAP attribute.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"cisco_attribute_name": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Name of the Cisco attribute.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"value_maps": schema.ListNestedAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping.").String,
@@ -120,11 +120,11 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 											Attributes: map[string]schema.Attribute{
 												"ldap_value": schema.StringAttribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Value of the LDAP attribute.").String,
-													Optional:            true,
+													Required:            true,
 												},
 												"cisco_value": schema.StringAttribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Value of the Cisco attribute.").String,
-													Optional:            true,
+													Required:            true,
 												},
 											},
 										},

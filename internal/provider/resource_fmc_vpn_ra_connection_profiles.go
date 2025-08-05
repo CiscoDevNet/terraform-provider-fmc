@@ -158,6 +158,10 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 								stringvalidator.OneOf("AAA_ONLY", "SAML", "CLIENT_CERTIFICATE_ONLY", "AAA_AND_CLIENT_CERTIFICATE", "SAML_AND_CLIENT_CERTIFICATE"),
 							},
 						},
+						"multiple_certificate_authentication": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Authenticate the VPN client using the machine and user certificates.").String,
+							Optional:            true,
+						},
 						"primary_authentication_server_use_local": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use LOCAL FMC as primary authentication server.").String,
 							Optional:            true,
@@ -172,10 +176,6 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 						},
 						"primary_authentication_fallback_to_local": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.").String,
-							Optional:            true,
-						},
-						"multiple_certificate_authentication": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Authenticate the VPN client using the machine and user certificates.").String,
 							Optional:            true,
 						},
 						"saml_and_certificate_username_must_match": schema.BoolAttribute{
@@ -297,14 +297,14 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 										Required:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Enable the Alias.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Enable the alias.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"alias_urls": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of Alias URLs.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of Alias URLs (group URLs).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -313,7 +313,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 										Required:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Enable the group URL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Enable the alias.").String,
 										Optional:            true,
 									},
 								},

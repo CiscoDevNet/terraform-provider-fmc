@@ -43,7 +43,7 @@ attributes:
     exclude_test: true
   - model_name: id
     data_path: [dapPolicy]
-    tf_name: dap_policy_id
+    tf_name: dynamic_access_policy_id
     type: String
     description: Id of Dynamic Access Policy (DAP).
     example: 12345678-1234-1234-1234-123456
@@ -60,7 +60,7 @@ attributes:
   - model_name: interfaceSettings
     data_path: [accessInterfaceSettings]
     tf_name: access_interfaces
-    description: List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections.
+    description: List of interfaces that will support incoming Remote Access VPN connections.
     mandatory: true
     type: List
     attributes:
@@ -78,19 +78,19 @@ attributes:
         tf_name: protocol_ipsec_ikev2
         description: Enable IPsec IKEv2.
         example: true
-        default_value: true
+        #default_value: true
       - model_name: enableSSL
         type: Bool
         tf_name: protocol_ssl
         description: Enable SSL.
         example: true
-        default_value: true
+        #default_value: true
       - model_name: enableDTLS
         type: Bool
         tf_name: protocol_ssl_dtls
         description: Enable DTLS for the VPN.
         example: true
-        default_value: true
+        #default_value: true
       # - model_name: configureInterfaceIDCertificate
       #   tf_name: interface_specific_certificate
       #   type: Bool
@@ -155,7 +155,7 @@ attributes:
     data_path: [accessInterfaceSettings]
     tf_name: bypass_access_control_policy_for_decrypted_traffic
     type: Bool
-    description: Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)
+    description: Bypass Access Control policy for decrypted traffic (sysopt permit-vpn).
     example: "false"
     default_value: false
 
@@ -224,7 +224,7 @@ attributes:
       - model_name: id
         type: String
         description: Id of group policy.
-        example: 12345678-1234-1234-1234-123456
+        example: 12345678-1234-1234-1234-1234567890aa
         mandatory: true
         test_value: data.fmc_group_policy.test.id
 

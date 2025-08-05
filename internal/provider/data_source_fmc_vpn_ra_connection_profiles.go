@@ -127,6 +127,10 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 							MarkdownDescription: "User authentication method.",
 							Computed:            true,
 						},
+						"multiple_certificate_authentication": schema.BoolAttribute{
+							MarkdownDescription: "Authenticate the VPN client using the machine and user certificates.",
+							Computed:            true,
+						},
 						"primary_authentication_server_use_local": schema.BoolAttribute{
 							MarkdownDescription: "Use LOCAL FMC as primary authentication server.",
 							Computed:            true,
@@ -141,10 +145,6 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 						},
 						"primary_authentication_fallback_to_local": schema.BoolAttribute{
 							MarkdownDescription: "Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.",
-							Computed:            true,
-						},
-						"multiple_certificate_authentication": schema.BoolAttribute{
-							MarkdownDescription: "Authenticate the VPN client using the machine and user certificates.",
 							Computed:            true,
 						},
 						"saml_and_certificate_username_must_match": schema.BoolAttribute{
@@ -257,14 +257,14 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 										Computed:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: "Enable the Alias.",
+										MarkdownDescription: "Enable the alias.",
 										Computed:            true,
 									},
 								},
 							},
 						},
 						"alias_urls": schema.ListNestedAttribute{
-							MarkdownDescription: "List of Alias URLs.",
+							MarkdownDescription: "List of Alias URLs (group URLs).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -273,7 +273,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 										Computed:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: "Enable the group URL.",
+										MarkdownDescription: "Enable the alias.",
 										Computed:            true,
 									},
 								},

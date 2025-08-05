@@ -25,7 +25,7 @@ attributes:
   - model_name: ldapAttributeMapList
     tf_name: realms
     type: List
-    description: List of Realms with their LDAP attribute mappings.
+    description: List of Realms with their attribute mappings.
     mandatory: true
     attributes:
       - model_name: id
@@ -39,16 +39,21 @@ attributes:
       - model_name: ldapAttributeMaps
         tf_name: attribute_maps
         type: List
+        mandatory: true
         description: List of LDAP attribute mappings.
         attributes:
           - model_name: ldapName
             tf_name: ldap_attribute_name
             type: String
             description: Name of the LDAP attribute.
+            mandatory: true
+            example: access_time
           - model_name: ciscoName
             tf_name: cisco_attribute_name
             type: String
             description: Name of the Cisco attribute.
+            mandatory: true
+            example: Access-Hours
           - model_name: valueMappings
             tf_name: value_maps
             type: List
@@ -58,7 +63,11 @@ attributes:
                 tf_name: ldap_value
                 type: String
                 description: Value of the LDAP attribute.
+                mandatory: true
+                example: ldap_value_example
               - model_name: ciscoValue
                 tf_name: cisco_value
                 type: String
                 description: Value of the Cisco attribute.
+                mandatory: true
+                example: cisco_value_example

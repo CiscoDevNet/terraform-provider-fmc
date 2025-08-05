@@ -20,12 +20,12 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
       realm_ad_ldap_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       attribute_maps = [
         {
-          ldap_attribute_name  = ""
-          cisco_attribute_name = ""
+          ldap_attribute_name  = "access_time"
+          cisco_attribute_name = "Access-Hours"
           value_maps = [
             {
-              ldap_value  = ""
-              cisco_value = ""
+              ldap_value  = "ldap_value_example"
+              cisco_value = "cisco_value_example"
             }
           ]
         }
@@ -40,7 +40,7 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
 
 ### Required
 
-- `realms` (Attributes List) List of Realms with their LDAP attribute mappings. (see [below for nested schema](#nestedatt--realms))
+- `realms` (Attributes List) List of Realms with their attribute mappings. (see [below for nested schema](#nestedatt--realms))
 - `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
@@ -57,25 +57,25 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
 
 Required:
 
-- `realm_ad_ldap_id` (String) Id of the AD/LDAP realm.
-
-Optional:
-
 - `attribute_maps` (Attributes List) List of LDAP attribute mappings. (see [below for nested schema](#nestedatt--realms--attribute_maps))
+- `realm_ad_ldap_id` (String) Id of the AD/LDAP realm.
 
 <a id="nestedatt--realms--attribute_maps"></a>
 ### Nested Schema for `realms.attribute_maps`
 
-Optional:
+Required:
 
 - `cisco_attribute_name` (String) Name of the Cisco attribute.
 - `ldap_attribute_name` (String) Name of the LDAP attribute.
+
+Optional:
+
 - `value_maps` (Attributes List) Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping. (see [below for nested schema](#nestedatt--realms--attribute_maps--value_maps))
 
 <a id="nestedatt--realms--attribute_maps--value_maps"></a>
 ### Nested Schema for `realms.attribute_maps.value_maps`
 
-Optional:
+Required:
 
 - `cisco_value` (String) Value of the Cisco attribute.
 - `ldap_value` (String) Value of the LDAP attribute.

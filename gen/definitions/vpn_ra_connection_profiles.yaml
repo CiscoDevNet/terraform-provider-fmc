@@ -84,7 +84,12 @@ attributes:
         mandatory: true
         description: User authentication method.
         enum_values: [ AAA_ONLY, SAML, CLIENT_CERTIFICATE_ONLY, AAA_AND_CLIENT_CERTIFICATE, SAML_AND_CLIENT_CERTIFICATE ]
-        example: AAA_ONLY
+        example: AAA_AND_CLIENT_CERTIFICATE
+      - model_name: enableMultipleCertificateAuthentication
+        tf_name: multiple_certificate_authentication
+        type: Bool
+        description: Authenticate the VPN client using the machine and user certificates.
+        example: true
       
       # AAA - Authentication - Primary
       - model_name: useLocalAsPrimaryAuthServer
@@ -92,7 +97,6 @@ attributes:
         type: Bool
         description: Use LOCAL FMC as primary authentication server.
         example: false
-        # default_value: false
       - model_name: id
         data_path: [primaryAuthenticationServer]
         tf_name: primary_authentication_server_id
@@ -109,12 +113,6 @@ attributes:
         tf_name: primary_authentication_fallback_to_local
         type: Bool
         description: Fallback to LOCAL FMC if primary authentication Server/Realm is not reachable.
-        example: true
-        # default_value: false
-      - model_name: enableMultipleCertificateAuthentication
-        tf_name: multiple_certificate_authentication
-        type: Bool
-        description: Authenticate the VPN client using the machine and user certificates.
         example: true
 
       # Primary Authentication - Certificate Username Settings
@@ -143,13 +141,13 @@ attributes:
         type: String
         description: Map secondary field for username.
         enum_values: [ CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE ]
-        exclude_example: true
+        example: NONE
       - model_name: mapEntireDNAsUsername
         data_path: [certificateUsernameSettings]
         tf_name: primary_authentication_prefill_username_from_certificate_map_entire_dn
         type: Bool
         description: Map entire Distinguished Name (DN) as username.
-        example: true
+        example: false
       - model_name: hideUsername
         data_path: [certificateUsernameSettings]
         tf_name: primary_authentication_hide_username_in_login_window
@@ -179,18 +177,18 @@ attributes:
         tf_name: secondary_authentication_server_type
         type: String
         description: Type of the secondary authentication RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.
-        example: TBD
+        example: Realm
       - model_name: enableSecondaryAuthFallbackToLocal
         tf_name: secondary_authentication_fallback_to_local
         type: Bool
         description: Fallback to LOCAL FMC if secondary authentication Server/Realm is not reachable.
-        example: true
+        example: false
       - model_name: promptUsername
         data_path: [secondaryAuthenticationSettings]
         tf_name: secondary_authentication_prompt_for_username
         type: Bool
         description: Prompt for username during secondary authentication.
-        exclude_example: true
+        example: false
       - model_name: usePrimaryUsername
         data_path: [secondaryAuthenticationSettings]
         tf_name: secondary_authentication_use_primary_authentication_username
@@ -324,8 +322,7 @@ attributes:
         tf_name: password_management
         type: Bool
         description: Enable managing the password for the remote access VPN users.
-        example: false
-        #default_value: false
+        example: true
       - model_name: notifyUserOnPasswordExpiryDay
         tf_name: password_management_notify_user_on_password_expiry_day
         type: Bool
@@ -356,12 +353,12 @@ attributes:
           - model_name: enabled
             tf_name: enabled
             type: Bool
-            description: Enable the Alias.
+            description: Enable the alias.
             example: true
       - model_name: groupUrl
         tf_name: alias_urls
         type: List
-        description: List of Alias URLs.
+        description: List of Alias URLs (group URLs).
         exclude_example: true
         attributes:
           - model_name: id
@@ -375,5 +372,5 @@ attributes:
           - model_name: enabled
             tf_name: enabled
             type: Bool
-            description: Enable the group URL.
+            description: Enable the alias.
             example: true

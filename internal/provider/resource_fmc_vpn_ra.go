@@ -113,12 +113,12 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				MarkdownDescription: helpers.NewAttributeDescription("Id of local realm server. This can be set only after relevant connection profiles are configured.").String,
 				Optional:            true,
 			},
-			"dap_policy_id": schema.StringAttribute{
+			"dynamic_access_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of Dynamic Access Policy (DAP).").String,
 				Optional:            true,
 			},
 			"access_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of interfaces that will support incoming Remote Access VPN connections.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -127,22 +127,16 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Required:            true,
 						},
 						"protocol_ipsec_ikev2": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable IPsec IKEv2.").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable IPsec IKEv2.").String,
 							Optional:            true,
-							Computed:            true,
-							Default:             booldefault.StaticBool(true),
 						},
 						"protocol_ssl": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable SSL.").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable SSL.").String,
 							Optional:            true,
-							Computed:            true,
-							Default:             booldefault.StaticBool(true),
 						},
 						"protocol_ssl_dtls": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable DTLS for the VPN.").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable DTLS for the VPN.").String,
 							Optional:            true,
-							Computed:            true,
-							Default:             booldefault.StaticBool(true),
 						},
 						"interface_specific_certificate_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of interface specific identity certificate.").String,
@@ -180,7 +174,7 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Optional:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Bypass Access Control policy for decrypted traffic (sysopt permit-vpn).").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),

@@ -75,7 +75,7 @@ func (d *VPNRALDAPAttributeMapDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"realms": schema.ListNestedAttribute{
-				MarkdownDescription: "List of Realms with their LDAP attribute mappings.",
+				MarkdownDescription: "List of Realms with their attribute mappings.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

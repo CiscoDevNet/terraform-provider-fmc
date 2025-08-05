@@ -64,7 +64,7 @@ attributes:
         type: String
         description: Name of the device
         mandatory: true
-        example: Device
+        example: my_ftd_device
         test_value: data.fmc_device.test.name
 
 test_prerequisites: |-

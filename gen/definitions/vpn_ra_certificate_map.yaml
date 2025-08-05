@@ -24,9 +24,9 @@ attributes:
 
   # Settings
   - model_name: useGroupURL
-    tf_name: use_group_url
+    tf_name: use_alias_url
     type: Bool
-    description: Use group URL if group URL and Certificate Map match different Connection Profiles
+    description: Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.
     example: "false"
   - model_name: enableCertificateToConnectionProfileMapping
     tf_name: use_certificate_to_connection_profile_mappings

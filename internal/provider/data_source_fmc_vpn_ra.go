@@ -96,12 +96,12 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				MarkdownDescription: "Id of local realm server. This can be set only after relevant connection profiles are configured.",
 				Computed:            true,
 			},
-			"dap_policy_id": schema.StringAttribute{
+			"dynamic_access_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of Dynamic Access Policy (DAP).",
 				Computed:            true,
 			},
 			"access_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: "List of Interface Groups or Security Zones that will support incomming Remote Access VPN connections.",
+				MarkdownDescription: "List of interfaces that will support incoming Remote Access VPN connections.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -153,7 +153,7 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
-				MarkdownDescription: "Bypass Access Control policy for decrypted traffic (sysopt permit-vpn)",
+				MarkdownDescription: "Bypass Access Control policy for decrypted traffic (sysopt permit-vpn).",
 				Computed:            true,
 			},
 			"secure_client_images": schema.ListNestedAttribute{

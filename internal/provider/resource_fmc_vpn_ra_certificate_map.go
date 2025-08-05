@@ -91,8 +91,8 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"use_group_url": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use group URL if group URL and Certificate Map match different Connection Profiles").String,
+			"use_alias_url": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.").String,
 				Optional:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{

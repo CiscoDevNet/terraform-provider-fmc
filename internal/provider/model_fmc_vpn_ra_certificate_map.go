@@ -39,7 +39,7 @@ type VPNRACertificateMap struct {
 	Domain                                    types.String                                                `tfsdk:"domain"`
 	VpnRaId                                   types.String                                                `tfsdk:"vpn_ra_id"`
 	Type                                      types.String                                                `tfsdk:"type"`
-	UseGroupUrl                               types.Bool                                                  `tfsdk:"use_group_url"`
+	UseAliasUrl                               types.Bool                                                  `tfsdk:"use_alias_url"`
 	UseCertificateToConnectionProfileMappings types.Bool                                                  `tfsdk:"use_certificate_to_connection_profile_mappings"`
 	CertificateToConnectionProfileMappings    []VPNRACertificateMapCertificateToConnectionProfileMappings `tfsdk:"certificate_to_connection_profile_mappings"`
 }
@@ -71,8 +71,8 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnCertificateMapSetting")
-	if !data.UseGroupUrl.IsNull() {
-		body, _ = sjson.Set(body, "useGroupURL", data.UseGroupUrl.ValueBool())
+	if !data.UseAliasUrl.IsNull() {
+		body, _ = sjson.Set(body, "useGroupURL", data.UseAliasUrl.ValueBool())
 	}
 	if !data.UseCertificateToConnectionProfileMappings.IsNull() {
 		body, _ = sjson.Set(body, "enableCertificateToConnectionProfileMapping", data.UseCertificateToConnectionProfileMappings.ValueBool())
@@ -104,9 +104,9 @@ func (data *VPNRACertificateMap) fromBody(ctx context.Context, res gjson.Result)
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("useGroupURL"); value.Exists() {
-		data.UseGroupUrl = types.BoolValue(value.Bool())
+		data.UseAliasUrl = types.BoolValue(value.Bool())
 	} else {
-		data.UseGroupUrl = types.BoolNull()
+		data.UseAliasUrl = types.BoolNull()
 	}
 	if value := res.Get("enableCertificateToConnectionProfileMapping"); value.Exists() {
 		data.UseCertificateToConnectionProfileMappings = types.BoolValue(value.Bool())
@@ -148,10 +148,10 @@ func (data *VPNRACertificateMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("useGroupURL"); value.Exists() && !data.UseGroupUrl.IsNull() {
-		data.UseGroupUrl = types.BoolValue(value.Bool())
+	if value := res.Get("useGroupURL"); value.Exists() && !data.UseAliasUrl.IsNull() {
+		data.UseAliasUrl = types.BoolValue(value.Bool())
 	} else {
-		data.UseGroupUrl = types.BoolNull()
+		data.UseAliasUrl = types.BoolNull()
 	}
 	if value := res.Get("enableCertificateToConnectionProfileMapping"); value.Exists() && !data.UseCertificateToConnectionProfileMappings.IsNull() {
 		data.UseCertificateToConnectionProfileMappings = types.BoolValue(value.Bool())

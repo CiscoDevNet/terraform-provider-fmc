@@ -51,11 +51,11 @@ type VPNRAConnectionProfilesItems struct {
 	Ipv6AddressPools                                                     []VPNRAConnectionProfilesItemsIpv6AddressPools `tfsdk:"ipv6_address_pools"`
 	DhcpServers                                                          []VPNRAConnectionProfilesItemsDhcpServers      `tfsdk:"dhcp_servers"`
 	AuthenticationMethod                                                 types.String                                   `tfsdk:"authentication_method"`
+	MultipleCertificateAuthentication                                    types.Bool                                     `tfsdk:"multiple_certificate_authentication"`
 	PrimaryAuthenticationServerUseLocal                                  types.Bool                                     `tfsdk:"primary_authentication_server_use_local"`
 	PrimaryAuthenticationServerId                                        types.String                                   `tfsdk:"primary_authentication_server_id"`
 	PrimaryAuthenticationServerType                                      types.String                                   `tfsdk:"primary_authentication_server_type"`
 	PrimaryAuthenticationFallbackToLocal                                 types.Bool                                     `tfsdk:"primary_authentication_fallback_to_local"`
-	MultipleCertificateAuthentication                                    types.Bool                                     `tfsdk:"multiple_certificate_authentication"`
 	SamlAndCertificateUsernameMustMatch                                  types.Bool                                     `tfsdk:"saml_and_certificate_username_must_match"`
 	PrimaryAuthenticationPrefillUsernameFromCertificate                  types.Bool                                     `tfsdk:"primary_authentication_prefill_username_from_certificate"`
 	PrimaryAuthenticationPrefillUsernameFromCertificateMapPrimaryField   types.String                                   `tfsdk:"primary_authentication_prefill_username_from_certificate_map_primary_field"`
@@ -170,6 +170,9 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 			if !item.AuthenticationMethod.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "authenticationMethod", item.AuthenticationMethod.ValueString())
 			}
+			if !item.MultipleCertificateAuthentication.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableMultipleCertificateAuthentication", item.MultipleCertificateAuthentication.ValueBool())
+			}
 			if !item.PrimaryAuthenticationServerUseLocal.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "useLocalAsPrimaryAuthServer", item.PrimaryAuthenticationServerUseLocal.ValueBool())
 			}
@@ -181,9 +184,6 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 			}
 			if !item.PrimaryAuthenticationFallbackToLocal.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enablePrimaryAuthFallbackToLocal", item.PrimaryAuthenticationFallbackToLocal.ValueBool())
-			}
-			if !item.MultipleCertificateAuthentication.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enableMultipleCertificateAuthentication", item.MultipleCertificateAuthentication.ValueBool())
 			}
 			if !item.SamlAndCertificateUsernameMustMatch.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "certificateUsernameSettings.matchCertificateAndSamlUsername", item.SamlAndCertificateUsernameMustMatch.ValueBool())
@@ -379,6 +379,11 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 		} else {
 			data.AuthenticationMethod = types.StringNull()
 		}
+		if value := res.Get("enableMultipleCertificateAuthentication"); value.Exists() {
+			data.MultipleCertificateAuthentication = types.BoolValue(value.Bool())
+		} else {
+			data.MultipleCertificateAuthentication = types.BoolNull()
+		}
 		if value := res.Get("useLocalAsPrimaryAuthServer"); value.Exists() {
 			data.PrimaryAuthenticationServerUseLocal = types.BoolValue(value.Bool())
 		} else {
@@ -398,11 +403,6 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			data.PrimaryAuthenticationFallbackToLocal = types.BoolValue(value.Bool())
 		} else {
 			data.PrimaryAuthenticationFallbackToLocal = types.BoolNull()
-		}
-		if value := res.Get("enableMultipleCertificateAuthentication"); value.Exists() {
-			data.MultipleCertificateAuthentication = types.BoolValue(value.Bool())
-		} else {
-			data.MultipleCertificateAuthentication = types.BoolNull()
 		}
 		if value := res.Get("certificateUsernameSettings.matchCertificateAndSamlUsername"); value.Exists() {
 			data.SamlAndCertificateUsernameMustMatch = types.BoolValue(value.Bool())
@@ -739,6 +739,11 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.AuthenticationMethod = types.StringNull()
 		}
+		if value := res.Get("enableMultipleCertificateAuthentication"); value.Exists() && !data.MultipleCertificateAuthentication.IsNull() {
+			data.MultipleCertificateAuthentication = types.BoolValue(value.Bool())
+		} else {
+			data.MultipleCertificateAuthentication = types.BoolNull()
+		}
 		if value := res.Get("useLocalAsPrimaryAuthServer"); value.Exists() && !data.PrimaryAuthenticationServerUseLocal.IsNull() {
 			data.PrimaryAuthenticationServerUseLocal = types.BoolValue(value.Bool())
 		} else {
@@ -758,11 +763,6 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 			data.PrimaryAuthenticationFallbackToLocal = types.BoolValue(value.Bool())
 		} else {
 			data.PrimaryAuthenticationFallbackToLocal = types.BoolNull()
-		}
-		if value := res.Get("enableMultipleCertificateAuthentication"); value.Exists() && !data.MultipleCertificateAuthentication.IsNull() {
-			data.MultipleCertificateAuthentication = types.BoolValue(value.Bool())
-		} else {
-			data.MultipleCertificateAuthentication = types.BoolNull()
 		}
 		if value := res.Get("certificateUsernameSettings.matchCertificateAndSamlUsername"); value.Exists() && !data.SamlAndCertificateUsernameMustMatch.IsNull() {
 			data.SamlAndCertificateUsernameMustMatch = types.BoolValue(value.Bool())

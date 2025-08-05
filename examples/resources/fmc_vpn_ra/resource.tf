@@ -1,10 +1,10 @@
 resource "fmc_vpn_ra" "example" {
-  name                 = "my_ftd_ra_vpn"
-  description          = "My Remote Access VPN Configuration"
-  protocol_ssl         = true
-  protocol_ipsec_ikev2 = true
-  local_realm_id       = "12345678-1234-1234-1234-123456789012"
-  dap_policy_id        = "12345678-1234-1234-1234-123456"
+  name                     = "my_ftd_ra_vpn"
+  description              = "My Remote Access VPN Configuration"
+  protocol_ssl             = true
+  protocol_ipsec_ikev2     = true
+  local_realm_id           = "12345678-1234-1234-1234-123456789012"
+  dynamic_access_policy_id = "12345678-1234-1234-1234-123456"
   access_interfaces = [
     {
       id                                = "12345678-1234-1234-1234-123456789012"
@@ -30,7 +30,7 @@ resource "fmc_vpn_ra" "example" {
   external_browser_package_id = "12345678-1234-1234-1234-123456789012"
   group_policies = [
     {
-      id = "12345678-1234-1234-1234-123456"
+      id = "12345678-1234-1234-1234-1234567890aa"
     }
   ]
   ikev2_policies = [

@@ -15,7 +15,7 @@ This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Cer
 ```terraform
 resource "fmc_vpn_ra_certificate_map" "example" {
   vpn_ra_id                                      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  use_group_url                                  = false
+  use_alias_url                                  = false
   use_certificate_to_connection_profile_mappings = false
   certificate_to_connection_profile_mappings = [
     {
@@ -37,8 +37,8 @@ resource "fmc_vpn_ra_certificate_map" "example" {
 
 - `certificate_to_connection_profile_mappings` (Attributes List) Mapping of certificates to connection profiles. (see [below for nested schema](#nestedatt--certificate_to_connection_profile_mappings))
 - `domain` (String) Name of the FMC domain
+- `use_alias_url` (Boolean) Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.
 - `use_certificate_to_connection_profile_mappings` (Boolean) Use the configured rules to match Certificate to Connection Profile
-- `use_group_url` (Boolean) Use group URL if group URL and Certificate Map match different Connection Profiles
 
 ### Read-Only
 

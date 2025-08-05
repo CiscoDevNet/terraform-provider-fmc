@@ -74,8 +74,8 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				MarkdownDescription: "Type of the object; this value is always 'RaVpnCertificateMapSetting'.",
 				Computed:            true,
 			},
-			"use_group_url": schema.BoolAttribute{
-				MarkdownDescription: "Use group URL if group URL and Certificate Map match different Connection Profiles",
+			"use_alias_url": schema.BoolAttribute{
+				MarkdownDescription: "Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.",
 				Computed:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{

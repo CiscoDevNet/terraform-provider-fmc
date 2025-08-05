@@ -33,7 +33,7 @@ data "fmc_vpn_ra_ldap_attribute_map" "example" {
 
 ### Read-Only
 
-- `realms` (Attributes List) List of Realms with their LDAP attribute mappings. (see [below for nested schema](#nestedatt--realms))
+- `realms` (Attributes List) List of Realms with their attribute mappings. (see [below for nested schema](#nestedatt--realms))
 - `type` (String) Type of the object; this value is always 'RaVpnLdapAttributeMap'.
 
 <a id="nestedatt--realms"></a>
