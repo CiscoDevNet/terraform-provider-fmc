@@ -27,11 +27,11 @@ attributes:
     description: VRF description
     example: My VRF instance
   - model_name: interfaces
-    description: Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...).
+    description: Interfaces that should belong to this VRF.
     type: Set
     attributes:
       - model_name: id
-        tf_name: interface_id
+        tf_name: id
         type: String
         description: Id of the member interface.
         id: true
@@ -39,14 +39,14 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_device_physical_interface.test.id
       - model_name: name
-        tf_name: interface_name
+        tf_name: name
         mandatory: true
         type: String
         description: Name of the member interface.
         example: GigabitEthernet0/0
         test_value: fmc_device_physical_interface.test.name
       - model_name: ifname
-        tf_name: interface_logical_name
+        tf_name: logical_name
         mandatory: true
         type: String
         description: Logical name of the member interface
