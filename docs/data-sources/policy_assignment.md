@@ -32,7 +32,7 @@ data "fmc_policy_assignment" "example" {
 - `after_destroy_policy_id` (String) Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
 - `policy_id` (String) Id of the policy to be assigned.
 - `policy_type` (String) Type of the policy to be assigned.
-- `targets` (Attributes Set) List of devices to which policy should be attached (see [below for nested schema](#nestedatt--targets))
+- `targets` (Attributes Set) List of devices to which the policy should be attached (see [below for nested schema](#nestedatt--targets))
 - `type` (String) Type of the object; this is always 'PolicyAssignment'
 
 <a id="nestedatt--targets"></a>
@@ -40,5 +40,6 @@ data "fmc_policy_assignment" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the device to which policy should be attached
-- `type` (String) Type of the device to which policy should be attached
+- `id` (String) Id of the device
+- `name` (String) Name of the device
+- `type` (String) Type of the device

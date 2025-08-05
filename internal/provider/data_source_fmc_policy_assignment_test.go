@@ -37,7 +37,6 @@ func TestAccDataSourceFmcPolicyAssignment(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_policy_assignment.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_policy_assignment.test", "policy_name"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_assignment.test", "policy_type", "FTDNatPolicy"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_assignment.test", "targets.0.type", "Device"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -61,10 +60,14 @@ func TestAccDataSourceFmcPolicyAssignment(t *testing.T) {
 
 const testAccDataSourceFmcPolicyAssignmentPrerequisitesConfig = `
 resource "fmc_ftd_nat_policy" "example" {
-  name = "fmc_policy_assignment_nat_policy"
+  name = "policy_assignment_nat_policy"
 }
 
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+data "fmc_device" "test" {
+  id = var.device_id
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -76,8 +79,9 @@ func testAccDataSourceFmcPolicyAssignmentConfig() string {
 	config += `	policy_id = fmc_ftd_nat_policy.example.id` + "\n"
 	config += `	policy_type = "FTDNatPolicy"` + "\n"
 	config += `	targets = [{` + "\n"
-	config += `		id = var.device_id` + "\n"
-	config += `		type = "Device"` + "\n"
+	config += `		id = data.fmc_device.test.id` + "\n"
+	config += `		type = data.fmc_device.test.type` + "\n"
+	config += `		name = data.fmc_device.test.name` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
@@ -94,8 +98,9 @@ func testAccNamedDataSourceFmcPolicyAssignmentConfig() string {
 	config += `	policy_id = fmc_ftd_nat_policy.example.id` + "\n"
 	config += `	policy_type = "FTDNatPolicy"` + "\n"
 	config += `	targets = [{` + "\n"
-	config += `		id = var.device_id` + "\n"
-	config += `		type = "Device"` + "\n"
+	config += `		id = data.fmc_device.test.id` + "\n"
+	config += `		type = data.fmc_device.test.type` + "\n"
+	config += `		name = data.fmc_device.test.name` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

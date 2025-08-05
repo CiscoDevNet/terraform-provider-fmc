@@ -1,0 +1,73 @@
+---
+name: VPN RA LDAP Attribute Map
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/ldapattributemaps
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) LDAP Attribute Maps.
+put_create: true
+retrieve_id: true
+put_delete: true
+doc_category: VPN
+skip_test: true
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Configuration.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnLdapAttributeMap'.
+    computed: true
+  - model_name: type
+    type: String
+    value: RaVpnLdapAttributeMap
+
+  # Settings
+  - model_name: ldapAttributeMapList
+    tf_name: realms
+    type: List
+    description: List of Realms with their attribute mappings.
+    mandatory: true
+    attributes:
+      - model_name: id
+        data_path: [ldapServer]
+        tf_name: realm_ad_ldap_id
+        mandatory: true
+        id: true
+        description: Id of the AD/LDAP realm.
+        type: String
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+      - model_name: ldapAttributeMaps
+        tf_name: attribute_maps
+        type: List
+        mandatory: true
+        description: List of LDAP attribute mappings.
+        attributes:
+          - model_name: ldapName
+            tf_name: ldap_attribute_name
+            type: String
+            description: Name of the LDAP attribute.
+            mandatory: true
+            example: access_time
+          - model_name: ciscoName
+            tf_name: cisco_attribute_name
+            type: String
+            description: Name of the Cisco attribute.
+            mandatory: true
+            example: Access-Hours
+          - model_name: valueMappings
+            tf_name: value_maps
+            type: List
+            description: Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping.
+            attributes:
+              - model_name: ldapValue
+                tf_name: ldap_value
+                type: String
+                description: Value of the LDAP attribute.
+                mandatory: true
+                example: ldap_value_example
+              - model_name: ciscoValue
+                tf_name: cisco_value
+                type: String
+                description: Value of the Cisco attribute.
+                mandatory: true
+                example: cisco_value_example

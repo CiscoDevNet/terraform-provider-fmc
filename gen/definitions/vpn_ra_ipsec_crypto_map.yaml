@@ -1,0 +1,133 @@
+---
+name: VPN RA IPSec Crypto Map
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/ipseccryptomaps
+res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) IPSec Crypto Maps.
+put_create: true
+no_delete: true
+skip_test: true
+doc_category: VPN
+attributes:
+  - tf_name: vpn_ra_id
+    type: String
+    reference: true
+    description: Id of the parent VPN RA Configuration.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RaVpnIPsecCryptoMap'.
+    computed: true
+  - model_name: type
+    type: String
+    value: RaVpnIPsecCryptoMap
+
+  - model_name: id
+    data_path: [interfaceObject]
+    tf_name: interface_id
+    type: String
+    mandatory: true
+    description:  >-
+      Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied.
+      The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    data_source_query: true
+  - model_name: ikev2IpsecProposals
+    tf_name: ikev2_ipsec_proposals
+    type: List
+    description: List of IKEv2 IPSec proposals.
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        mandatory: true
+        description: Id of the proposal.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+  - model_name: enableRRI
+    tf_name: reverse_route_injection
+    type: Bool
+    description: Enable Reverse Route Injection (RRI).
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableClientServices
+    tf_name: client_services
+    type: Bool
+    description: Enable Client Services.
+    example: "true"
+  - model_name: clientServicesPort
+    tf_name: client_services_port
+    type: Int64
+    description: Port for Client Services.
+    min_int: 1
+    max_int: 65535
+    example: 443
+  - model_name: enabled
+    data_path: [perfectForwardSecracy]
+    tf_name: perfect_forward_secrecy
+    type: Bool
+    description: Enable IPSEC Perfect Forward Secrecy (PFS).
+    example: "true"
+  - model_name: modulusGroup
+    data_path: [perfectForwardSecracy]
+    tf_name: perfect_forward_secrecy_modulus_group
+    type: String
+    enum_values: ["1", "2", "5", "14", "15", "16", "19", "20", "21", "24", "31"]
+    description: Modulus group for IPSEC Perfect Forward Secrecy (PFS).
+    example: "14"
+  - model_name: lifeTimeSeconds
+    tf_name: lifetime_duration
+    type: Int64
+    description: Number of seconds a security association exists before expiring.
+    mandatory: true
+    min_int: 120
+    max_int: 2147483647
+    example: 28800
+  - model_name: lifeTimeKilobytes
+    tf_name: lifetime_size
+    type: Int64
+    description: >-
+      Volume of traffic (in kilobytes) that can pass between IPsec peers
+      using a given security association before it expires.
+    min_int: 10
+    max_int: 2147483647
+    example: 4608000
+
+  # ESPv3 settings
+  - model_name: validateIncomingIcmpErrorMessage
+    tf_name: validate_incoming_icmp_error_messages
+    type: Bool
+    description: Enable incoming ICMP error messages validation.
+    example: "false"
+  - model_name: doNotFragmentPolicy
+    type: String
+    description: Policy for handling Do Not Fragment (DNF) packets.
+    enum_values: [SET, COPY, CLEAR, NONE]
+    example: NONE
+  - model_name: enabled
+    data_path: [tfcPackets]
+    tf_name: tfc
+    type: Bool
+    description: Enable Traffic Flow Confidentiality (TFC) packets.
+    example: "true"
+  - model_name: burstBytes
+    data_path: [tfcPackets]
+    tf_name: tfc_burst_bytes
+    type: Int64
+    description: Burst size in bytes for TFC packets. Set 0 for `auto` or value in range 1-16.
+    min_int: 0
+    max_int: 16
+    example: 0
+  - model_name: payloadBytes
+    data_path: [tfcPackets]
+    tf_name: tfc_payload_bytes
+    type: Int64
+    description: Payload size in bytes for TFC packets. Set 0 for `auto` or value in range 64-1024.
+    min_int: 0
+    max_int: 1024
+    example: 0
+  - model_name: timeoutSeconds
+    data_path: [tfcPackets]
+    tf_name: tfc_timeout
+    type: Int64
+    description: Timeout duration in seconds for TFC packets. Set 0 for `auto` or value in range 10-60.
+    min_int: 0
+    max_int: 60
+    example: 0

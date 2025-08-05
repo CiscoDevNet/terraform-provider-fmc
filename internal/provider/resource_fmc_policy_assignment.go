@@ -111,10 +111,10 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"policy_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the policy to be assigned.").AddStringEnumDescription("FTDNatPolicy", "HealthPolicy", "AccessPolicy").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the policy to be assigned.").AddStringEnumDescription("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("FTDNatPolicy", "HealthPolicy", "AccessPolicy"),
+					stringvalidator.OneOf("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn"),
 				},
 			},
 			"after_destroy_policy_id": schema.StringAttribute{
@@ -122,20 +122,24 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				Optional:            true,
 			},
 			"targets": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of devices to which policy should be attached").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of devices to which the policy should be attached").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the device to which policy should be attached").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the device").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the device to which policy should be attached").AddStringEnumDescription("Device", "DeviceHAPair", "DeviceGroup").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the device").AddStringEnumDescription("Device", "DeviceHAPair", "DeviceGroup").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("Device", "DeviceHAPair", "DeviceGroup"),
 							},
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the device").String,
+							Required:            true,
 						},
 					},
 				},
@@ -516,6 +520,7 @@ func (r *PolicyAssignmentResource) updatePolicyAssignment(ctx context.Context, r
 				updateBody, _ = sjson.Set(updateBody, "targets.-1", map[string]string{
 					"id":   target.Get("id").String(),
 					"type": target.Get("type").String(),
+					"name": target.Get("name").String(),
 				})
 			}
 		}
@@ -528,6 +533,7 @@ func (r *PolicyAssignmentResource) updatePolicyAssignment(ctx context.Context, r
 				updateBody, _ = sjson.Set(updateBody, "targets.-1", map[string]string{
 					"id":   target.Id.ValueString(),
 					"type": target.Type.ValueString(),
+					"name": target.Name.ValueString(),
 				})
 			}
 		}

@@ -6,6 +6,7 @@ resource "fmc_policy_assignment" "example" {
     {
       id   = "9862719c-8d5f-11ef-99a6-aef0794da1c1"
       type = "Device"
+      name = "my_ftd_device"
     }
   ]
 }
