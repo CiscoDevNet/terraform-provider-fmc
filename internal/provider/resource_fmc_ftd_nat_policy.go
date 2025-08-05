@@ -309,28 +309,6 @@ func (r *FTDNATPolicyResource) Configure(_ context.Context, req resource.Configu
 
 // End of section. //template:end model
 
-var _ resource.ResourceWithValidateConfig = &FTDNATPolicyResource{}
-
-func (p *FTDNATPolicyResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
-	var data FTDNATPolicy
-
-	diags := req.Config.Get(ctx, &data)
-	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
-		return
-	}
-
-	// If manage_rules is not set, it defaults to true.
-	if !data.ManageRules.IsNull() && !data.ManageRules.ValueBool() && (len(data.AutoNatRules) > 0 || len(data.ManualNatRules) > 0) {
-		resp.Diagnostics.AddAttributeError(
-			path.Root("rules"),
-			"Conflicting Configuration",
-			"Neither Manual nor Auto NAT Rules can be defined when manage_rules is set to false",
-		)
-		return
-	}
-
-}
-
 func (r *FTDNATPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan FTDNATPolicy
 

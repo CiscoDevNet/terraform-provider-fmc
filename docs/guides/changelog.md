@@ -12,6 +12,7 @@ description: |-
 - (BREAKING CHANGE) `fmc_policy_assignment`: `name` is now mandatory attribute in `targets`
 - (Enhancement) Add support for Remote Access VPN - `fmc_vpn_ra_*` resources and data sources
 - (Enhancement) Add support for `fmc_realm_local` resource and data source
+- (Fix) Remove `ValidateConfig` for `fmc_access_control_policy` and `fmc_ftd_nat_policy`
 
 ## 2.0.0-rc5
 
