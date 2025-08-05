@@ -57,7 +57,6 @@ type FilePolicyFileRules struct {
 	Type                types.String                        `tfsdk:"type"`
 	ApplicationProtocol types.String                        `tfsdk:"application_protocol"`
 	Action              types.String                        `tfsdk:"action"`
-	Analysis            types.Set                           `tfsdk:"analysis"`
 	StoreFiles          types.Set                           `tfsdk:"store_files"`
 	DirectionOfTransfer types.String                        `tfsdk:"direction_of_transfer"`
 	FileCategories      []FilePolicyFileRulesFileCategories `tfsdk:"file_categories"`
@@ -139,11 +138,6 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 			}
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
-			}
-			if !item.Analysis.IsNull() {
-				var values []string
-				item.Analysis.ElementsAs(ctx, &values, false)
-				itemBody, _ = sjson.Set(itemBody, "analysis", values)
 			}
 			if !item.StoreFiles.IsNull() {
 				var values []string
@@ -275,11 +269,6 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.Action = types.StringValue(value.String())
 			} else {
 				data.Action = types.StringNull()
-			}
-			if value := res.Get("analysis"); value.Exists() {
-				data.Analysis = helpers.GetStringSet(value.Array())
-			} else {
-				data.Analysis = types.SetNull(types.StringType)
 			}
 			if value := res.Get("storeFiles"); value.Exists() {
 				data.StoreFiles = helpers.GetStringSet(value.Array())
@@ -443,11 +432,6 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			data.Action = types.StringValue(value.String())
 		} else {
 			data.Action = types.StringNull()
-		}
-		if value := res.Get("analysis"); value.Exists() && !data.Analysis.IsNull() {
-			data.Analysis = helpers.GetStringSet(value.Array())
-		} else {
-			data.Analysis = types.SetNull(types.StringType)
 		}
 		if value := res.Get("storeFiles"); value.Exists() && !data.StoreFiles.IsNull() {
 			data.StoreFiles = helpers.GetStringSet(value.Array())

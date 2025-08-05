@@ -138,13 +138,8 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 							MarkdownDescription: "Action to be performed on a file.",
 							Computed:            true,
 						},
-						"analysis": schema.SetAttribute{
-							MarkdownDescription: "List of analysis applied to the files.",
-							ElementType:         types.StringType,
-							Computed:            true,
-						},
 						"store_files": schema.SetAttribute{
-							MarkdownDescription: "List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).",
+							MarkdownDescription: "List of file dispositions that should be stored.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},

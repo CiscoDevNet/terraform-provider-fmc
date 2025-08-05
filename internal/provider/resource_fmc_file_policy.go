@@ -171,18 +171,8 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 								stringvalidator.OneOf("DETECT", "BLOCK_WITH_RESET", "DETECT_MALWARE", "BLOCK_MALWARE_WITH_RESET"),
 							},
 						},
-						"analysis": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of analysis applied to the files.").AddStringEnumDescription("capacity", "spero", "sandbox", "clamscan").String,
-							ElementType:         types.StringType,
-							Optional:            true,
-							Validators: []validator.Set{
-								setvalidator.ValueStringsAre(
-									stringvalidator.OneOf("capacity", "spero", "sandbox", "clamscan"),
-								),
-							},
-						},
 						"store_files": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).").AddStringEnumDescription("MALWARE", "CUSTOM", "CLEAN", "UNKNOWN", "ALL").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of file dispositions that should be stored.").AddStringEnumDescription("MALWARE", "CUSTOM", "CLEAN", "UNKNOWN", "ALL").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 							Validators: []validator.Set{
