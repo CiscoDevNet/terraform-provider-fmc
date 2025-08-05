@@ -47,6 +47,7 @@ data "fmc_file_policy" "example" {
 Read-Only:
 
 - `action` (String) Action to be performed on a file.
+- `analysis` (Set of String) List of analysis applied to the files.
 - `application_protocol` (String) Defines a protocol for file inspection.
 - `direction_of_transfer` (String) Direction of file transfer.
 - `file_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_categories))

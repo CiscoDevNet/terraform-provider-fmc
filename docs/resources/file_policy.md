@@ -94,9 +94,12 @@ Required:
 
 Optional:
 
+- `analysis` (Set of String) List of analysis applied to the files.
+  - Choices: `capacity`, `spero`, `sandbox`, `clamscan`
 - `file_categories` (Attributes Set) Defines a list of file categories for inspection. (see [below for nested schema](#nestedatt--file_rules--file_categories))
 - `file_types` (Attributes Set) Defines a list of file types for inspection. (see [below for nested schema](#nestedatt--file_rules--file_types))
 - `store_files` (Set of String) List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
+  - Choices: `MALWARE`, `CUSTOM`, `CLEAN`, `UNKNOWN`, `ALL`
 
 Read-Only:
 

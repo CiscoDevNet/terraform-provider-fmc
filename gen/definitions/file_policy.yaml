@@ -99,10 +99,18 @@ attributes:
         mandatory: true
         description: Action to be performed on a file.
         example: DETECT
+      - model_name: analysis
+        type: Set
+        element_type: String
+        description: List of analysis applied to the files.
+        enum_values: [capacity, spero, sandbox, clamscan]
+        exclude_example: true
+        exclude_test: true
       - model_name: storeFiles
         type: Set
         element_type: String
-        description: List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
+        description: List of file dispositions that should be stored.
+        enum_values: [MALWARE, CUSTOM, CLEAN, UNKNOWN, ALL]
         exclude_example: true
         exclude_test: true
       - model_name: direction
