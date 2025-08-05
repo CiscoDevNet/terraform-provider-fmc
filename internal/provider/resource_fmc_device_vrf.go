@@ -103,19 +103,19 @@ func (r *DeviceVRFResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 			},
 			"interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interfaces that should belong to this VRF.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"interface_id": schema.StringAttribute{
+						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the member interface.").String,
 							Required:            true,
 						},
-						"interface_name": schema.StringAttribute{
+						"name": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Name of the member interface.").String,
 							Required:            true,
 						},
-						"interface_logical_name": schema.StringAttribute{
+						"logical_name": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Logical name of the member interface").String,
 							Required:            true,
 						},

@@ -19,9 +19,9 @@ resource "fmc_device_vrf" "example" {
   description = "My VRF instance"
   interfaces = [
     {
-      interface_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      interface_name         = "GigabitEthernet0/0"
-      interface_logical_name = "outside"
+      id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      name         = "GigabitEthernet0/0"
+      logical_name = "outside"
     }
   ]
 }
@@ -39,7 +39,7 @@ resource "fmc_device_vrf" "example" {
 
 - `description` (String) VRF description
 - `domain` (String) Name of the FMC domain
-- `interfaces` (Attributes Set) Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...). (see [below for nested schema](#nestedatt--interfaces))
+- `interfaces` (Attributes Set) Interfaces that should belong to this VRF. (see [below for nested schema](#nestedatt--interfaces))
 
 ### Read-Only
 
@@ -51,9 +51,9 @@ resource "fmc_device_vrf" "example" {
 
 Required:
 
-- `interface_id` (String) Id of the member interface.
-- `interface_logical_name` (String) Logical name of the member interface
-- `interface_name` (String) Name of the member interface.
+- `id` (String) Id of the member interface.
+- `logical_name` (String) Logical name of the member interface
+- `name` (String) Name of the member interface.
 
 ## Import
 

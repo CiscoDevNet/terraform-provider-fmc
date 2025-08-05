@@ -96,9 +96,9 @@ func testAccFmcDeviceVRFConfig_all() string {
 	config += `	name = "VRF_A"` + "\n"
 	config += `	description = "My VRF instance"` + "\n"
 	config += `	interfaces = [{` + "\n"
-	config += `		interface_id = fmc_device_physical_interface.test.id` + "\n"
-	config += `		interface_name = fmc_device_physical_interface.test.name` + "\n"
-	config += `		interface_logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
+	config += `		id = fmc_device_physical_interface.test.id` + "\n"
+	config += `		name = fmc_device_physical_interface.test.name` + "\n"
+	config += `		logical_name = fmc_device_physical_interface.test.logical_name` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

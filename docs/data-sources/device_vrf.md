@@ -35,7 +35,7 @@ data "fmc_device_vrf" "example" {
 ### Read-Only
 
 - `description` (String) VRF description
-- `interfaces` (Attributes Set) Set of interfaces (fmc_device_physical_interface, fmc_device_subinterface, ...). (see [below for nested schema](#nestedatt--interfaces))
+- `interfaces` (Attributes Set) Interfaces that should belong to this VRF. (see [below for nested schema](#nestedatt--interfaces))
 - `type` (String) Type of the object; this value is always 'VirtualRouter'.
 
 <a id="nestedatt--interfaces"></a>
@@ -43,6 +43,6 @@ data "fmc_device_vrf" "example" {
 
 Read-Only:
 
-- `interface_id` (String) Id of the member interface.
-- `interface_logical_name` (String) Logical name of the member interface
-- `interface_name` (String) Name of the member interface.
+- `id` (String) Id of the member interface.
+- `logical_name` (String) Logical name of the member interface
+- `name` (String) Name of the member interface.

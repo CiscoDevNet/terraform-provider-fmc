@@ -45,9 +45,9 @@ type DeviceVRF struct {
 }
 
 type DeviceVRFInterfaces struct {
-	InterfaceId          types.String `tfsdk:"interface_id"`
-	InterfaceName        types.String `tfsdk:"interface_name"`
-	InterfaceLogicalName types.String `tfsdk:"interface_logical_name"`
+	Id          types.String `tfsdk:"id"`
+	Name        types.String `tfsdk:"name"`
+	LogicalName types.String `tfsdk:"logical_name"`
 }
 
 // End of section. //template:end types
@@ -81,14 +81,14 @@ func (data DeviceVRF) toBody(ctx context.Context, state DeviceVRF) string {
 		body, _ = sjson.Set(body, "interfaces", []interface{}{})
 		for _, item := range data.Interfaces {
 			itemBody := ""
-			if !item.InterfaceId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "id", item.InterfaceId.ValueString())
+			if !item.Id.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			if !item.InterfaceName.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "name", item.InterfaceName.ValueString())
+			if !item.Name.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			if !item.InterfaceLogicalName.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ifname", item.InterfaceLogicalName.ValueString())
+			if !item.LogicalName.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ifname", item.LogicalName.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "interfaces.-1", itemBody)
 		}
@@ -122,19 +122,19 @@ func (data *DeviceVRF) fromBody(ctx context.Context, res gjson.Result) {
 			parent := &data
 			data := DeviceVRFInterfaces{}
 			if value := res.Get("id"); value.Exists() {
-				data.InterfaceId = types.StringValue(value.String())
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.InterfaceId = types.StringNull()
+				data.Id = types.StringNull()
 			}
 			if value := res.Get("name"); value.Exists() {
-				data.InterfaceName = types.StringValue(value.String())
+				data.Name = types.StringValue(value.String())
 			} else {
-				data.InterfaceName = types.StringNull()
+				data.Name = types.StringNull()
 			}
 			if value := res.Get("ifname"); value.Exists() {
-				data.InterfaceLogicalName = types.StringValue(value.String())
+				data.LogicalName = types.StringValue(value.String())
 			} else {
-				data.InterfaceLogicalName = types.StringNull()
+				data.LogicalName = types.StringNull()
 			}
 			(*parent).Interfaces = append((*parent).Interfaces, data)
 			return true
@@ -168,7 +168,7 @@ func (data *DeviceVRF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	for i := 0; i < len(data.Interfaces); i++ {
 		keys := [...]string{"id"}
-		keyValues := [...]string{data.Interfaces[i].InterfaceId.ValueString()}
+		keyValues := [...]string{data.Interfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Interfaces[i]
@@ -202,20 +202,20 @@ func (data *DeviceVRF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("id"); value.Exists() && !data.InterfaceId.IsNull() {
-			data.InterfaceId = types.StringValue(value.String())
+		if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+			data.Id = types.StringValue(value.String())
 		} else {
-			data.InterfaceId = types.StringNull()
+			data.Id = types.StringNull()
 		}
-		if value := res.Get("name"); value.Exists() && !data.InterfaceName.IsNull() {
-			data.InterfaceName = types.StringValue(value.String())
+		if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+			data.Name = types.StringValue(value.String())
 		} else {
-			data.InterfaceName = types.StringNull()
+			data.Name = types.StringNull()
 		}
-		if value := res.Get("ifname"); value.Exists() && !data.InterfaceLogicalName.IsNull() {
-			data.InterfaceLogicalName = types.StringValue(value.String())
+		if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
+			data.LogicalName = types.StringValue(value.String())
 		} else {
-			data.InterfaceLogicalName = types.StringNull()
+			data.LogicalName = types.StringNull()
 		}
 		(*parent).Interfaces[i] = data
 	}
