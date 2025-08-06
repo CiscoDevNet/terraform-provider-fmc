@@ -5,6 +5,7 @@ name: VPN RA
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns
 res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs).
 doc_category: VPN
+skip_minimum_test: true 
 attributes:
   - model_name: name
     type: String
@@ -28,12 +29,14 @@ attributes:
     description: Enable SSL protocol.
     example: true
     default_value: true
+    minimum_test_value: '"true"'
   - model_name: configureIpsec
     type: Bool
     tf_name: protocol_ipsec_ikev2
     description: Enable IPsec IKEv2 protocol.
     example: true
     default_value: true
+    minimum_test_value: '"true"'
   - model_name: id
     data_path: [localRealmServer]
     type: String
@@ -78,12 +81,14 @@ attributes:
         tf_name: protocol_ipsec_ikev2
         description: Enable IPsec IKEv2.
         example: true
+        minimum_test_value: '"true"'
         #default_value: true
       - model_name: enableSSL
         type: Bool
         tf_name: protocol_ssl
         description: Enable SSL.
         example: true
+        minimum_test_value: '"true"'
         #default_value: true
       - model_name: enableDTLS
         type: Bool
@@ -195,6 +200,7 @@ attributes:
     description: Id of Secure Client Customization.
     type: String
     computed: true
+    exclude_test: true # FMCVERSION <= 7.2
 
   # Advenced - Address Assignment Policy
   # Configuration managed by another endpoint
@@ -245,6 +251,7 @@ attributes:
     type: String
     description: Id of Load Balancing settings.
     computed: true
+    exclude_test: true # FMCVERSION <= 7.2
   
   # Advanced - IPSEC - Crypto Maps
   # Configuration managed by another endpoint

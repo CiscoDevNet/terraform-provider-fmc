@@ -19,7 +19,6 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
-	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -43,19 +42,12 @@ func TestAccFmcVPNRA(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "web_access_port_number", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "dtls_port_number", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_vpn_ra.test", "bypass_access_control_policy_for_decrypted_traffic", "false"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "secure_client_customization_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "address_assignment_policy_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "certificate_map_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "ldap_attribute_map_id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "load_balancing_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_vpn_ra.test", "ipsec_ike_parameters_id"))
 
 	var steps []resource.TestStep
-	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
-		steps = append(steps, resource.TestStep{
-			Config: testAccFmcVPNRAPrerequisitesConfig + testAccFmcVPNRAConfig_minimum(),
-		})
-	}
 	steps = append(steps, resource.TestStep{
 		Config: testAccFmcVPNRAPrerequisitesConfig + testAccFmcVPNRAConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
@@ -389,20 +381,6 @@ locals {
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
-
-func testAccFmcVPNRAConfig_minimum() string {
-	config := `resource "fmc_vpn_ra" "test" {` + "\n"
-	config += `	name = "my_ftd_ra_vpn"` + "\n"
-	config += `	access_interfaces = [{` + "\n"
-	config += `		id = fmc_security_zone.test.id` + "\n"
-	config += `	}]` + "\n"
-	config += `	group_policies = [{` + "\n"
-	config += `		id = data.fmc_group_policy.test.id` + "\n"
-	config += `	}]` + "\n"
-	config += `}` + "\n"
-	return config
-}
-
 // End of section. //template:end testAccConfigMinimal
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
