@@ -1,4 +1,4 @@
-## 2.0.0-rc6 (Unreleased)
+## 2.0.0-rc6
 
 - (BREAKING CHANGE) `fmc_policy_assignment`: `name` is now mandatory attribute in `targets`
 - (BREAKING CHANGE) `fmc_device_vrf`: `interface_` prefix is removed from attributes in `interfaces` set
