@@ -25,9 +25,10 @@ import (
 
 //
 // terraform-plugin-framework v1.15.1 changed behaviour of UseStateForUnknown plan modifier.
-// Before the change, if new nested map, that contains Computed/Unknown elements is added, those elements are treated as Unknown.
-// After the change, those elements are treated as Null. This breaks bulk operations, as the ID of newly created objects can never be set,
-// as Terraform would expects them to be Null.
+// Before the change, if new nested map, that contains Computed/Unknown elements is added to already created resource,
+// those elements are treated as Unknown.
+// After the change, those elements are treated as Null.
+// This breaks bulk operations, as the ID of newly created objects can never be set, as Terraform would expects them to be Null.
 // Ref: https://github.com/hashicorp/terraform-plugin-framework/issues/1197
 //
 
