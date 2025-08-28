@@ -107,7 +107,7 @@ func (r *SecurityZonesResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecurityZone'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 					},
@@ -257,7 +257,9 @@ func (r *SecurityZonesResource) Update(ctx context.Context, req resource.UpdateR
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete

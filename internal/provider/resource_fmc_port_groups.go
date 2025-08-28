@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -92,14 +93,14 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Port Groups.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'PortObjectGroup'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -275,7 +276,9 @@ func (r *PortGroupsResource) Update(ctx context.Context, req resource.UpdateRequ
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete
