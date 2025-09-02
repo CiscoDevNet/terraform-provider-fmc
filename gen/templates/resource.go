@@ -287,7 +287,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 								{{- end }}
 								{{- end}}
 								{{- else}}
+								{{- if $.IsBulk}}
+								planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+								{{- else}}
 								{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
+								{{- end}}
 								{{- end}}
 							},
 							{{- else if and .RequiresReplace (not $.IsBulk)}}
@@ -371,7 +375,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 											{{snakeCase .Type}}planmodifier.RequiresReplace(),
 											{{end}}
 											{{- if and .Computed (not .ComputedRefreshValue)}}
+											{{- if $.IsBulk}}
+											planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+											{{- else}}
 											{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
+											{{end}}
 											{{end}}
 										},
 										{{- end}}
@@ -457,7 +465,11 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 														{{snakeCase .Type}}planmodifier.RequiresReplace(),
 														{{end}}
 														{{- if and .Computed (not .ComputedRefreshValue)}}
+														{{- if $.IsBulk}}
+														planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+														{{- else}}
 														{{snakeCase .Type}}planmodifier.UseStateForUnknown(),
+														{{end}}
 														{{end}}
 													},
 													{{- end}}
@@ -836,7 +848,9 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete
