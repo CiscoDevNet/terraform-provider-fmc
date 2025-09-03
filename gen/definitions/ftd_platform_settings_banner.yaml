@@ -1,0 +1,32 @@
+---
+name: FTD Platform Settings Banner
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/bannersettings
+doc_category: Policies
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings Banner.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'BannerSetting'.
+    computed: true
+  - model_name: bannerText
+    type: List
+    element_type: String
+    description: Text to be displayed in the banner. Each element of the list is a separate line of text.
+    example: "Welcome to FTD"
+    mandatory: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_banner"
+  }
