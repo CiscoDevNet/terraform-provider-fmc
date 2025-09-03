@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -153,7 +154,7 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 							MarkdownDescription: helpers.NewAttributeDescription("Type of File Rule.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"application_protocol": schema.StringAttribute{
