@@ -1,0 +1,46 @@
+---
+name: DNS Server Group
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/dnsservergroups
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the DNS Server Group object.
+    example: my_dns_server_group
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DNSServerGroupObject'.
+    computed: true
+  - model_name: type
+    type: String
+    value: DNSServerGroupObject
+  - model_name: defaultdomain
+    tf_name: default_domain
+    type: String
+    description: Domain that will be used to append to the host names that are not fully-qualified.
+    example: example.com
+  - model_name: timeout
+    type: Int64
+    min_int: 1
+    max_int: 30
+    description: The number of seconds to wait before trying the next DNS server.
+    example: 2
+  - model_name: retries
+    type: Int64
+    min_int: 0
+    max_int: 10
+    description: The number of times to retry the list of DNS servers when the system does not receive a response.
+    example: 2
+  - model_name: dnsservers
+    tf_name: dns_servers
+    type: Set
+    description: Set of DNS servers that will be part of the group.
+    attributes:
+      - model_name: "name-server"
+        tf_name: ip
+        type: String
+        description: The IPv4/IPv6 address of the DNS server.
+        example: 10.10.10.1
+        mandatory: true
