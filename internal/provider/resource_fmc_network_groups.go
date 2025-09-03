@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -92,7 +93,7 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -103,7 +104,7 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'NetworkGroup'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"overridable": schema.BoolAttribute{
