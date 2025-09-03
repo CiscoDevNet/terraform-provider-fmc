@@ -2,6 +2,7 @@
 name: DNS Server Group
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/dnsservergroups
 doc_category: Objects
+minimum_version_create: "7.4"
 attributes:
   - model_name: name
     type: String

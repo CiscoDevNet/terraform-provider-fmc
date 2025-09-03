@@ -34,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -69,7 +70,7 @@ func (r *DNSServerGroupsResource) Metadata(ctx context.Context, req resource.Met
 func (r *DNSServerGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages DNS Server Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages DNS Server Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -110,18 +111,22 @@ func (r *DNSServerGroupsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"timeout": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The number of seconds to wait before trying the next DNS server.").AddIntegerRangeDescription(1, 30).String,
+							MarkdownDescription: helpers.NewAttributeDescription("The number of seconds to wait before trying the next DNS server.").AddIntegerRangeDescription(1, 30).AddDefaultValueDescription("2").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 30),
 							},
+							Default: int64default.StaticInt64(2),
 						},
 						"retries": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The number of times to retry the list of DNS servers when the system does not receive a response.").AddIntegerRangeDescription(0, 10).String,
+							MarkdownDescription: helpers.NewAttributeDescription("The number of times to retry the list of DNS servers when the system does not receive a response.").AddIntegerRangeDescription(0, 10).AddDefaultValueDescription("2").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 10),
 							},
+							Default: int64default.StaticInt64(2),
 						},
 						"dns_servers": schema.SetNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set of DNS servers that will be part of the group.").String,
@@ -155,6 +160,14 @@ func (r *DNSServerGroupsResource) Configure(_ context.Context, req resource.Conf
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DNSServerGroupsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionCreateDNSServerGroups) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support DNS Server Groups creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan DNSServerGroups
 
 	// Read plan

@@ -5,7 +5,7 @@ subcategory: "Objects"
 description: |-
   This resource manages DNS Server Groups through bulk operations.
   The following restrictions apply:
-  Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
+  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_dns_server_groups (Resource)
@@ -13,6 +13,8 @@ description: |-
 This resource manages DNS Server Groups through bulk operations.
 
 The following restrictions apply:
+  - Read operations are supported by any tested FMC version
+  - Minimum FMC version for object management (Create/Update/Delete): `7.4`
   - Bulk object creation is not supported by FMC, it will be handled one-by-one
   - Bulk object deletion is not supported by FMC, it will be handled one-by-one
   - Updates are always done one-by-one.
@@ -60,8 +62,10 @@ Optional:
 - `dns_servers` (Attributes Set) Set of DNS servers that will be part of the group. (see [below for nested schema](#nestedatt--items--dns_servers))
 - `retries` (Number) The number of times to retry the list of DNS servers when the system does not receive a response.
   - Range: `0`-`10`
+  - Default value: `2`
 - `timeout` (Number) The number of seconds to wait before trying the next DNS server.
   - Range: `1`-`30`
+  - Default value: `2`
 
 Read-Only:
 

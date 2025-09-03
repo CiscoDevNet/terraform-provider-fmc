@@ -57,6 +57,7 @@ type DNSServerGroupsItemsDnsServers struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionCreateDNSServerGroups = version.Must(version.NewVersion("7.4"))
 var minFMCVersionBulkCreateDNSServerGroups = version.Must(version.NewVersion("999"))
 var minFMCVersionBulkDeleteDNSServerGroups = version.Must(version.NewVersion("999"))
 
@@ -153,12 +154,12 @@ func (data *DNSServerGroups) fromBody(ctx context.Context, res gjson.Result) {
 		if value := res.Get("timeout"); value.Exists() {
 			data.Timeout = types.Int64Value(value.Int())
 		} else {
-			data.Timeout = types.Int64Null()
+			data.Timeout = types.Int64Value(2)
 		}
 		if value := res.Get("retries"); value.Exists() {
 			data.Retries = types.Int64Value(value.Int())
 		} else {
-			data.Retries = types.Int64Null()
+			data.Retries = types.Int64Value(2)
 		}
 		if value := res.Get("dnsservers"); value.Exists() {
 			data.DnsServers = make([]DNSServerGroupsItemsDnsServers, 0)
@@ -219,12 +220,12 @@ func (data *DNSServerGroups) fromBodyPartial(ctx context.Context, res gjson.Resu
 		}
 		if value := res.Get("timeout"); value.Exists() && !data.Timeout.IsNull() {
 			data.Timeout = types.Int64Value(value.Int())
-		} else {
+		} else if data.Timeout.ValueInt64() != 2 {
 			data.Timeout = types.Int64Null()
 		}
 		if value := res.Get("retries"); value.Exists() && !data.Retries.IsNull() {
 			data.Retries = types.Int64Value(value.Int())
-		} else {
+		} else if data.Retries.ValueInt64() != 2 {
 			data.Retries = types.Int64Null()
 		}
 		for i := 0; i < len(data.DnsServers); i++ {
