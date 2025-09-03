@@ -1,3 +1,8 @@
+## 2.0.0 (Unreleased)
+
+- (Enhancement) Add support for `fmc_secure_client_posture_package` resource and data source
+- (Enhancement) Add support for `fmc_dynamic_access_policy` resource and data source (no records support)
+
 ## 2.0.0-rc6
 
 - (BREAKING CHANGE) `fmc_policy_assignment`: `name` is now mandatory attribute in `targets`
