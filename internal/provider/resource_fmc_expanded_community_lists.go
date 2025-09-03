@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -94,14 +95,14 @@ func (r *ExpandedCommunityListsResource) Schema(ctx context.Context, req resourc
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Expanded Community List.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'CommunityListObject'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"entries": schema.ListNestedAttribute{
@@ -269,7 +270,9 @@ func (r *ExpandedCommunityListsResource) Update(ctx context.Context, req resourc
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete

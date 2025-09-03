@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
@@ -96,7 +97,7 @@ func (r *IKEv2PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the IKEv2 Policy object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -107,7 +108,7 @@ func (r *IKEv2PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IKEv2Policy'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"priority": schema.Int64Attribute{
@@ -310,7 +311,9 @@ func (r *IKEv2PoliciesResource) Update(ctx context.Context, req resource.UpdateR
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete
