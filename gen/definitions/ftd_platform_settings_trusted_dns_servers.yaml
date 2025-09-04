@@ -1,0 +1,70 @@
+---
+name: FTD Platform Settings Trusted DNS Servers
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/trusteddnssettings
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings - Trusted DNS Servers.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DNSSetting'.
+    computed: true
+  - model_name: trustAnyDNSServer
+    tf_name: trust_any_dns_server
+    type: Bool
+    description: Trust any DNS server.
+    example: false
+  - model_name: trustDhcpPool
+    type: Bool
+    description: DNS Servers discovered by dhcp-pool are considered trusted DNS servers.
+    example: true
+  - model_name: trustDhcpRelay
+    type: Bool
+    description: DNS Servers discovered by dhcp-relay are considered trusted DNS servers.
+    example: true
+  - model_name: trustDhcpClient
+    type: Bool
+    description: DNS Servers discovered by dhcp-client are considered trusted DNS servers.
+    example: true
+  - model_name: trustDNSServerGroup
+    tf_name: trust_dns_server_group
+    type: Bool
+    description: DNS Server Group are considered trusted DNS servers.
+    example: true
+  - model_name: literals
+    data_path: [dnsServers]
+    tf_name: trusted_dns_servers_literals
+    type: Set
+    element_type: String
+    description: Trusted DNS servers - literals.
+    example: 10.20.30.40
+  - model_name: objects
+    data_path: [dnsServers]
+    tf_name: trusted_dns_servers_objects
+    type: Set
+    description: Trusted DNS servers - host objects.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the host object.
+        example: 12345678-1234-1234-1234-123456
+        test_value: fmc_host.test.id
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_trusted_dns_server"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_settings_trusted_dns_server"
+    ip   = "10.0.2.1"
+  }
