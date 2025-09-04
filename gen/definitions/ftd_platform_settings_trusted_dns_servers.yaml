@@ -16,7 +16,7 @@ attributes:
     test_value: fmc_ftd_platform_settings.test.id
   - model_name: type
     type: String
-    description: Type of the object; this value is always 'DNSSetting'.
+    description: Type of the object; this value is always 'TrustedDNSSetting'.
     computed: true
   - model_name: trustAnyDNSServer
     tf_name: trust_any_dns_server

@@ -1,0 +1,40 @@
+# Manual resource - toBodyPutDelete
+---
+name: FTD Platform Settings Time Synchronization
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/ntpsettings
+doc_category: Policies
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings Time Synchronization.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'NTPSetting'.
+    computed: true
+  - model_name: ntpMode
+    type: String
+    description: Network Time Protocol (NTP) mode.
+    enum_values: [SYNC_VIA_MGMT_CENTER_NTP, SYNC_VIA_NTP_SERVER]
+    example: SYNC_VIA_MGMT_CENTER_NTP
+    mandatory: true
+  - model_name: ntpServerInfos
+    tf_name: ntp_servers
+    type: List
+    element_type: String
+    description: List of NTP servers.
+    exclude_example: true
+    exclude_test: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_time_synchronization"
+  }

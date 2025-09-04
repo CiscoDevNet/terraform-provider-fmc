@@ -28,18 +28,14 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcFTDPlatformSettingsTrustedDNSServers(t *testing.T) {
+func TestAccFmcFTDPlatformSettingsTimeSynchronization(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_trusted_dns_servers.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_trusted_dns_servers.test", "trust_any_dns_server", "false"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_trusted_dns_servers.test", "trust_dhcp_pool", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_trusted_dns_servers.test", "trust_dhcp_relay", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_trusted_dns_servers.test", "trust_dhcp_client", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_trusted_dns_servers.test", "trust_dns_server_group", "true"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_time_synchronization.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_time_synchronization.test", "ntp_mode", "SYNC_VIA_MGMT_CENTER_NTP"))
 
 	var steps []resource.TestStep
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcFTDPlatformSettingsTrustedDNSServersPrerequisitesConfig + testAccFmcFTDPlatformSettingsTrustedDNSServersConfig_all(),
+		Config: testAccFmcFTDPlatformSettingsTimeSynchronizationPrerequisitesConfig + testAccFmcFTDPlatformSettingsTimeSynchronizationConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -55,14 +51,9 @@ func TestAccFmcFTDPlatformSettingsTrustedDNSServers(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
-const testAccFmcFTDPlatformSettingsTrustedDNSServersPrerequisitesConfig = `
+const testAccFmcFTDPlatformSettingsTimeSynchronizationPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_trusted_dns_server"
-}
-
-resource "fmc_host" "test" {
-  name = "ftd_platform_settings_trusted_dns_server"
-  ip   = "10.0.2.1"
+  name        = "ftd_platform_settings_time_synchronization"
 }
 `
 
@@ -73,18 +64,10 @@ resource "fmc_host" "test" {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcFTDPlatformSettingsTrustedDNSServersConfig_all() string {
-	config := `resource "fmc_ftd_platform_settings_trusted_dns_servers" "test" {` + "\n"
+func testAccFmcFTDPlatformSettingsTimeSynchronizationConfig_all() string {
+	config := `resource "fmc_ftd_platform_settings_time_synchronization" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	trust_any_dns_server = false` + "\n"
-	config += `	trust_dhcp_pool = true` + "\n"
-	config += `	trust_dhcp_relay = true` + "\n"
-	config += `	trust_dhcp_client = true` + "\n"
-	config += `	trust_dns_server_group = true` + "\n"
-	config += `	trusted_dns_servers_literals = ["10.20.30.40"]` + "\n"
-	config += `	trusted_dns_servers_objects = [{` + "\n"
-	config += `		id = fmc_host.test.id` + "\n"
-	config += `	}]` + "\n"
+	config += `	ntp_mode = "SYNC_VIA_MGMT_CENTER_NTP"` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -37,26 +37,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &FTDPlatformSettingsTrustedDNSServersDataSource{}
-	_ datasource.DataSourceWithConfigure = &FTDPlatformSettingsTrustedDNSServersDataSource{}
+	_ datasource.DataSource              = &FTDPlatformSettingsTimeSynchronizationDataSource{}
+	_ datasource.DataSourceWithConfigure = &FTDPlatformSettingsTimeSynchronizationDataSource{}
 )
 
-func NewFTDPlatformSettingsTrustedDNSServersDataSource() datasource.DataSource {
-	return &FTDPlatformSettingsTrustedDNSServersDataSource{}
+func NewFTDPlatformSettingsTimeSynchronizationDataSource() datasource.DataSource {
+	return &FTDPlatformSettingsTimeSynchronizationDataSource{}
 }
 
-type FTDPlatformSettingsTrustedDNSServersDataSource struct {
+type FTDPlatformSettingsTimeSynchronizationDataSource struct {
 	client *fmc.Client
 }
 
-func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_trusted_dns_servers"
+func (d *FTDPlatformSettingsTimeSynchronizationDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_time_synchronization"
 }
 
-func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *FTDPlatformSettingsTimeSynchronizationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Trusted DNS Servers.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Time Synchronization.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,51 +72,23 @@ func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Schema(ctx context.Cont
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'TrustedDNSSetting'.",
+				MarkdownDescription: "Type of the object; this value is always 'NTPSetting'.",
 				Computed:            true,
 			},
-			"trust_any_dns_server": schema.BoolAttribute{
-				MarkdownDescription: "Trust any DNS server.",
+			"ntp_mode": schema.StringAttribute{
+				MarkdownDescription: "Network Time Protocol (NTP) mode.",
 				Computed:            true,
 			},
-			"trust_dhcp_pool": schema.BoolAttribute{
-				MarkdownDescription: "DNS Servers discovered by dhcp-pool are considered trusted DNS servers.",
-				Computed:            true,
-			},
-			"trust_dhcp_relay": schema.BoolAttribute{
-				MarkdownDescription: "DNS Servers discovered by dhcp-relay are considered trusted DNS servers.",
-				Computed:            true,
-			},
-			"trust_dhcp_client": schema.BoolAttribute{
-				MarkdownDescription: "DNS Servers discovered by dhcp-client are considered trusted DNS servers.",
-				Computed:            true,
-			},
-			"trust_dns_server_group": schema.BoolAttribute{
-				MarkdownDescription: "DNS Server Group are considered trusted DNS servers.",
-				Computed:            true,
-			},
-			"trusted_dns_servers_literals": schema.SetAttribute{
-				MarkdownDescription: "Trusted DNS servers - literals.",
+			"ntp_servers": schema.ListAttribute{
+				MarkdownDescription: "List of NTP servers.",
 				ElementType:         types.StringType,
 				Computed:            true,
-			},
-			"trusted_dns_servers_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "Trusted DNS servers - host objects.",
-				Computed:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the host object.",
-							Computed:            true,
-						},
-					},
-				},
 			},
 		},
 	}
 }
 
-func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *FTDPlatformSettingsTimeSynchronizationDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -128,8 +100,8 @@ func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Configure(_ context.Con
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config FTDPlatformSettingsTrustedDNSServers
+func (d *FTDPlatformSettingsTimeSynchronizationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config FTDPlatformSettingsTimeSynchronization
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

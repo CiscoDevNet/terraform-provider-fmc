@@ -56,7 +56,7 @@ resource "fmc_ftd_platform_settings_trusted_dns_servers" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this value is always 'DNSSetting'.
+- `type` (String) Type of the object; this value is always 'TrustedDNSSetting'.
 
 <a id="nestedatt--trusted_dns_servers_objects"></a>
 ### Nested Schema for `trusted_dns_servers_objects`

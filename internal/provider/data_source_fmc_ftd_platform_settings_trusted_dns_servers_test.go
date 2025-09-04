@@ -60,7 +60,7 @@ resource "fmc_ftd_platform_settings" "test" {
 
 resource "fmc_host" "test" {
   name = "ftd_platform_settings_trusted_dns_server"
-  ip   = "192.0.2.1"
+  ip   = "10.0.2.1"
 }
 `
 

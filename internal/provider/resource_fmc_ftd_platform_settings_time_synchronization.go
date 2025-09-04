@@ -26,11 +26,13 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -42,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDPlatformSettingsTrustedDNSServersResource{}
-	_ resource.ResourceWithImportState = &FTDPlatformSettingsTrustedDNSServersResource{}
+	_ resource.Resource                = &FTDPlatformSettingsTimeSynchronizationResource{}
+	_ resource.ResourceWithImportState = &FTDPlatformSettingsTimeSynchronizationResource{}
 )
 
-func NewFTDPlatformSettingsTrustedDNSServersResource() resource.Resource {
-	return &FTDPlatformSettingsTrustedDNSServersResource{}
+func NewFTDPlatformSettingsTimeSynchronizationResource() resource.Resource {
+	return &FTDPlatformSettingsTimeSynchronizationResource{}
 }
 
-type FTDPlatformSettingsTrustedDNSServersResource struct {
+type FTDPlatformSettingsTimeSynchronizationResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_trusted_dns_servers"
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_time_synchronization"
 }
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Trusted DNS Servers.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings Time Synchronization.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -86,54 +88,29 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Schema(ctx context.Contex
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'TrustedDNSSetting'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'NTPSetting'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"trust_any_dns_server": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Trust any DNS server.").String,
-				Optional:            true,
+			"ntp_mode": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Network Time Protocol (NTP) mode.").AddStringEnumDescription("SYNC_VIA_MGMT_CENTER_NTP", "SYNC_VIA_NTP_SERVER").String,
+				Required:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("SYNC_VIA_MGMT_CENTER_NTP", "SYNC_VIA_NTP_SERVER"),
+				},
 			},
-			"trust_dhcp_pool": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DNS Servers discovered by dhcp-pool are considered trusted DNS servers.").String,
-				Optional:            true,
-			},
-			"trust_dhcp_relay": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DNS Servers discovered by dhcp-relay are considered trusted DNS servers.").String,
-				Optional:            true,
-			},
-			"trust_dhcp_client": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DNS Servers discovered by dhcp-client are considered trusted DNS servers.").String,
-				Optional:            true,
-			},
-			"trust_dns_server_group": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("DNS Server Group are considered trusted DNS servers.").String,
-				Optional:            true,
-			},
-			"trusted_dns_servers_literals": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Trusted DNS servers - literals.").String,
+			"ntp_servers": schema.ListAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of NTP servers.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
-			},
-			"trusted_dns_servers_objects": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Trusted DNS servers - host objects.").String,
-				Optional:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the host object.").String,
-							Optional:            true,
-						},
-					},
-				},
 			},
 		},
 	}
 }
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -145,16 +122,16 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Configure(_ context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Get FMC version
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsTrustedDNSServers) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Trusted DNS Servers creation, minumum required version is 7.7", r.client.FMCVersion))
+	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsTimeSynchronization) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Time Synchronization creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
-	var plan FTDPlatformSettingsTrustedDNSServers
+	var plan FTDPlatformSettingsTimeSynchronization
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -193,7 +170,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Create(ctx context.Contex
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDPlatformSettingsTrustedDNSServers{})
+	body := plan.toBody(ctx, FTDPlatformSettingsTimeSynchronization{})
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -214,8 +191,8 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Create(ctx context.Contex
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDPlatformSettingsTrustedDNSServers
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FTDPlatformSettingsTimeSynchronization
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -266,8 +243,8 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Read(ctx context.Context,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDPlatformSettingsTrustedDNSServers
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FTDPlatformSettingsTimeSynchronization
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -306,8 +283,8 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Update(ctx context.Contex
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDPlatformSettingsTrustedDNSServers
+func (r *FTDPlatformSettingsTimeSynchronizationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FTDPlatformSettingsTimeSynchronization
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -338,7 +315,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Delete(ctx context.Contex
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *FTDPlatformSettingsTrustedDNSServersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *FTDPlatformSettingsTimeSynchronizationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
