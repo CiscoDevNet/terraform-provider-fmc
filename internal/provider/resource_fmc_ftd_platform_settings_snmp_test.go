@@ -95,7 +95,7 @@ resource "fmc_host" "test" {
 }
 
 resource "fmc_security_zone" "test" {
-  name           = "ftd_platform_settings_snmp_host1"
+  name           = "ftd_platform_settings_snmp_zone1"
   interface_type = "ROUTED"
 }
 `
