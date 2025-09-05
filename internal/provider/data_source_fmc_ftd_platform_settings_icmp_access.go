@@ -37,26 +37,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &FTDPlatformSettingsHTTPAccessDataSource{}
-	_ datasource.DataSourceWithConfigure = &FTDPlatformSettingsHTTPAccessDataSource{}
+	_ datasource.DataSource              = &FTDPlatformSettingsICMPAccessDataSource{}
+	_ datasource.DataSourceWithConfigure = &FTDPlatformSettingsICMPAccessDataSource{}
 )
 
-func NewFTDPlatformSettingsHTTPAccessDataSource() datasource.DataSource {
-	return &FTDPlatformSettingsHTTPAccessDataSource{}
+func NewFTDPlatformSettingsICMPAccessDataSource() datasource.DataSource {
+	return &FTDPlatformSettingsICMPAccessDataSource{}
 }
 
-type FTDPlatformSettingsHTTPAccessDataSource struct {
+type FTDPlatformSettingsICMPAccessDataSource struct {
 	client *fmc.Client
 }
 
-func (d *FTDPlatformSettingsHTTPAccessDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_http_access"
+func (d *FTDPlatformSettingsICMPAccessDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_icmp_access"
 }
 
-func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *FTDPlatformSettingsICMPAccessDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings HTTP Access.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings ICMP Access.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,24 +72,32 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, re
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'HttpAccessSetting'.",
+				MarkdownDescription: "Type of the object; this value is always 'ICMPSetting'.",
 				Computed:            true,
 			},
-			"enable_http_server": schema.BoolAttribute{
-				MarkdownDescription: "Enable HTTP server.",
+			"rate_limit": schema.Int64Attribute{
+				MarkdownDescription: "Rate limit on ICMPv4 Unreachable messages.",
 				Computed:            true,
 			},
-			"port": schema.Int64Attribute{
-				MarkdownDescription: "Port on which the HTTP server will listen. Please don't use 80 or 1443.",
+			"burst_size": schema.Int64Attribute{
+				MarkdownDescription: "Burst size on ICMPv4 Unreachable messages.",
 				Computed:            true,
 			},
-			"http_configurations": schema.ListNestedAttribute{
-				MarkdownDescription: "List of allowed HTTP connections.",
+			"icmp_configs": schema.ListNestedAttribute{
+				MarkdownDescription: "ICMP access rules.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"action": schema.StringAttribute{
+							MarkdownDescription: "Action to take on matching ICMP packets.",
+							Computed:            true,
+						},
+						"icmp_service_id": schema.StringAttribute{
+							MarkdownDescription: "ID of the ICMP Service.",
+							Computed:            true,
+						},
 						"source_network_object_id": schema.StringAttribute{
-							MarkdownDescription: "Id of network object (host, network, network group) defining the source IP addresses from which HTTP access is allowed.",
+							MarkdownDescription: "Id of network object (host, network, network group) defining the source IP addresses for ICMP access.",
 							Computed:            true,
 						},
 						"interface_literals": schema.SetAttribute{
@@ -124,7 +132,7 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, re
 	}
 }
 
-func (d *FTDPlatformSettingsHTTPAccessDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *FTDPlatformSettingsICMPAccessDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -136,8 +144,8 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Configure(_ context.Context, r
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *FTDPlatformSettingsHTTPAccessDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config FTDPlatformSettingsHTTPAccess
+func (d *FTDPlatformSettingsICMPAccessDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config FTDPlatformSettingsICMPAccess
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

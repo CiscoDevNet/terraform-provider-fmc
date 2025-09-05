@@ -64,7 +64,7 @@ resource "fmc_ftd_platform_settings_http_access" "example" {
 
 Required:
 
-- `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which SSH access is allowed.
+- `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which HTTP access is allowed.
 
 Optional:
 

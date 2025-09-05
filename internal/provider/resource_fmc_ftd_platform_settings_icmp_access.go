@@ -46,26 +46,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDPlatformSettingsHTTPAccessResource{}
-	_ resource.ResourceWithImportState = &FTDPlatformSettingsHTTPAccessResource{}
+	_ resource.Resource                = &FTDPlatformSettingsICMPAccessResource{}
+	_ resource.ResourceWithImportState = &FTDPlatformSettingsICMPAccessResource{}
 )
 
-func NewFTDPlatformSettingsHTTPAccessResource() resource.Resource {
-	return &FTDPlatformSettingsHTTPAccessResource{}
+func NewFTDPlatformSettingsICMPAccessResource() resource.Resource {
+	return &FTDPlatformSettingsICMPAccessResource{}
 }
 
-type FTDPlatformSettingsHTTPAccessResource struct {
+type FTDPlatformSettingsICMPAccessResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_http_access"
+func (r *FTDPlatformSettingsICMPAccessResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_icmp_access"
 }
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FTDPlatformSettingsICMPAccessResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - HTTP Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - ICMP Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -90,32 +90,48 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'HttpAccessSetting'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPSetting'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_http_server": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable HTTP server.").String,
-				Optional:            true,
-			},
-			"port": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Port on which the HTTP server will listen. Please don't use 80 or 1443.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("443").String,
+			"rate_limit": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Rate limit on ICMPv4 Unreachable messages.").AddIntegerRangeDescription(1, 100).AddDefaultValueDescription("1").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(1, 65535),
+					int64validator.Between(1, 100),
 				},
-				Default: int64default.StaticInt64(443),
+				Default: int64default.StaticInt64(1),
 			},
-			"http_configurations": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of allowed HTTP connections.").String,
+			"burst_size": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Burst size on ICMPv4 Unreachable messages.").AddIntegerRangeDescription(1, 10).AddDefaultValueDescription("1").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 10),
+				},
+				Default: int64default.StaticInt64(1),
+			},
+			"icmp_configs": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ICMP access rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
+						"action": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Action to take on matching ICMP packets.").AddStringEnumDescription("Permit", "Deny").String,
+							Required:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("Permit", "Deny"),
+							},
+						},
+						"icmp_service_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the ICMP Service.").String,
+							Required:            true,
+						},
 						"source_network_object_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of network object (host, network, network group) defining the source IP addresses from which HTTP access is allowed.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of network object (host, network, network group) defining the source IP addresses for ICMP access.").String,
 							Required:            true,
 						},
 						"interface_literals": schema.SetAttribute{
@@ -153,7 +169,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 	}
 }
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FTDPlatformSettingsICMPAccessResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -165,16 +181,16 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Configure(_ context.Context, req
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *FTDPlatformSettingsICMPAccessResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Get FMC version
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsHTTPAccess) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access creation, minumum required version is 7.7", r.client.FMCVersion))
+	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsICMPAccess) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings ICMP Access creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
-	var plan FTDPlatformSettingsHTTPAccess
+	var plan FTDPlatformSettingsICMPAccess
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -213,7 +229,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDPlatformSettingsHTTPAccess{})
+	body := plan.toBody(ctx, FTDPlatformSettingsICMPAccess{})
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -234,8 +250,8 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDPlatformSettingsHTTPAccess
+func (r *FTDPlatformSettingsICMPAccessResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FTDPlatformSettingsICMPAccess
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -286,8 +302,8 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Read(ctx context.Context, req re
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDPlatformSettingsHTTPAccess
+func (r *FTDPlatformSettingsICMPAccessResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FTDPlatformSettingsICMPAccess
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -326,8 +342,8 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Update(ctx context.Context, req 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDPlatformSettingsHTTPAccessResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDPlatformSettingsHTTPAccess
+func (r *FTDPlatformSettingsICMPAccessResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FTDPlatformSettingsICMPAccess
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -358,7 +374,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Delete(ctx context.Context, req 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *FTDPlatformSettingsHTTPAccessResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *FTDPlatformSettingsICMPAccessResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
