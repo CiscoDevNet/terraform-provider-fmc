@@ -771,6 +771,35 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 		return
 	}
 
+	// FMCBUG CSCwo61693 FMC API: Prefilter policies not assigned to newly created access policies
+	if !plan.PrefilterPolicyId.IsNull() &&
+		plan.PrefilterPolicyId.ValueString() != "" &&
+		read.Get("prefilterPolicySetting.id").Exists() &&
+		read.Get("prefilterPolicySetting.id").String() != plan.PrefilterPolicyId.ValueString() {
+
+		tflog.Debug(ctx, fmt.Sprintf("%s: Re-assigning prefilter policy due to FMCBUG CSCwo61693", plan.Id.ValueString()))
+		putBody, _ := sjson.Set(body, "id", plan.Id.ValueString())
+		putBody, _ = sjson.Set(putBody, "defaultAction.id", read.Get("defaultAction.id").String())
+
+		tflog.Debug(ctx, fmt.Sprintf("%s: PUT body: %s", plan.Id.ValueString(), putBody))
+		res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), putBody, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to update prefilter-policy (CSCwo61693), got error: %s, %s", err, res.String()))
+			return
+		}
+
+		read, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, read.String()))
+
+			res, err := r.client.Delete(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddWarning("Client Error", fmt.Sprintf("Also, cannot DELETE a hanging policy object, got error: %s, %s", err, res.String()))
+			}
+			return
+		}
+	}
+
 	plan.fromBodyUnknowns(ctx, read)
 
 	state := plan
