@@ -336,7 +336,7 @@ func (r *VPNRAConnectionProfilesResource) Configure(_ context.Context, req resou
 }
 
 // End of section. //template:end model
-
+/*
 var _ resource.ResourceWithValidateConfig = &VPNRAConnectionProfilesResource{}
 
 func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
@@ -393,7 +393,7 @@ func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, re
 		}
 	}
 }
-
+*/
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *VPNRAConnectionProfilesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
