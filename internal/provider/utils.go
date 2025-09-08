@@ -21,6 +21,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -93,7 +94,7 @@ Outerloop:
 
 		// If any of the devices from provided list is under deployment, wait
 		for _, deviceId := range deviceIds {
-			if helpers.Contains(devicesUnderDeploymentIds, deviceId) {
+			if slices.Contains(devicesUnderDeploymentIds, deviceId) {
 				tflog.Debug(ctx, fmt.Sprintf("Device %s is still under deployment. Waiting.", deviceId))
 				time.Sleep(atom)
 				continue Outerloop
@@ -174,7 +175,7 @@ func fmcDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 
 	// List of devices that actually need deployment
 	for _, device := range planDevices {
-		if helpers.Contains(deployableDeviceIds, device) {
+		if slices.Contains(deployableDeviceIds, device) {
 			devicesToBeDeployed = append(devicesToBeDeployed, device)
 		}
 	}
