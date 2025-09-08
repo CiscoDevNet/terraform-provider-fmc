@@ -781,7 +781,6 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 		putBody, _ := sjson.Set(body, "id", plan.Id.ValueString())
 		putBody, _ = sjson.Set(putBody, "defaultAction.id", read.Get("defaultAction.id").String())
 
-		tflog.Debug(ctx, fmt.Sprintf("%s: PUT body: %s", plan.Id.ValueString(), putBody))
 		res, err = r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), putBody, reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to update prefilter-policy (CSCwo61693), got error: %s, %s", err, res.String()))
