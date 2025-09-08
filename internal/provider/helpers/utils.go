@@ -31,15 +31,6 @@ import (
 	"github.com/tidwall/sjson"
 )
 
-func Contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
-}
-
 func GetStringList(result []gjson.Result) types.List {
 	v := make([]attr.Value, len(result))
 	for r := range result {

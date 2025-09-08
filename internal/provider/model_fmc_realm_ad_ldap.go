@@ -176,7 +176,7 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 		body, _ = sjson.Set(body, "guestSessionTimeout", data.TimeoutGuestCaptivePortalUsers.ValueInt64())
 	}
 	if len(data.DirectoryServers) > 0 {
-		body, _ = sjson.Set(body, "directoryConfigurations", []interface{}{})
+		body, _ = sjson.Set(body, "directoryConfigurations", []any{})
 		for _, item := range data.DirectoryServers {
 			itemBody := ""
 			if !item.Hostname.IsNull() {

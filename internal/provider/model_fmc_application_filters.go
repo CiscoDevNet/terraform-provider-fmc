@@ -100,14 +100,14 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Applications) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applications", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applications", []any{})
 				for _, childItem := range item.Applications {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -120,11 +120,11 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 				}
 			}
 			if len(item.Filters) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "appConditions", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "appConditions", []any{})
 				for _, childItem := range item.Filters {
 					itemChildBody := ""
 					if len(childItem.Types) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "applicationTypes", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "applicationTypes", []any{})
 						for _, childChildItem := range childItem.Types {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -134,7 +134,7 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 						}
 					}
 					if len(childItem.Risks) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "risks", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "risks", []any{})
 						for _, childChildItem := range childItem.Risks {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -144,7 +144,7 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 						}
 					}
 					if len(childItem.BusinessRelevances) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "productivities", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "productivities", []any{})
 						for _, childChildItem := range childItem.BusinessRelevances {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -154,7 +154,7 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 						}
 					}
 					if len(childItem.Categories) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "categories", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "categories", []any{})
 						for _, childChildItem := range childItem.Categories {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -164,7 +164,7 @@ func (data ApplicationFilters) toBody(ctx context.Context, state ApplicationFilt
 						}
 					}
 					if len(childItem.Tags) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "tags", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "tags", []any{})
 						for _, childChildItem := range childItem.Tags {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {

@@ -74,7 +74,7 @@ func (data ASPath) toBody(ctx context.Context, state ASPath) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []interface{}{})
+		body, _ = sjson.Set(body, "entries", []any{})
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {

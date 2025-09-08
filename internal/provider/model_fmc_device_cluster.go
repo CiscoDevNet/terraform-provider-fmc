@@ -108,7 +108,7 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 		body, _ = sjson.Set(body, "controlDevice.clusterNodeBootstrap.priority", data.ControlNodePriority.ValueInt64())
 	}
 	if len(data.DataDevices) > 0 {
-		body, _ = sjson.Set(body, "dataDevices", []interface{}{})
+		body, _ = sjson.Set(body, "dataDevices", []any{})
 		for _, item := range data.DataDevices {
 			itemBody := ""
 			if !item.DataNodeDeviceId.IsNull() {

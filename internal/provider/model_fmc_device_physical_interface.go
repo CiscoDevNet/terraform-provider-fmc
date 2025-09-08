@@ -234,7 +234,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6EnableAutoConfig.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -253,7 +253,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "ipv6.pool.id", data.Ipv6AddressPoolId.ValueString())
 	}
 	if len(data.Ipv6Prefixes) > 0 {
-		body, _ = sjson.Set(body, "ipv6.prefixes", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6.prefixes", []any{})
 		for _, item := range data.Ipv6Prefixes {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -347,7 +347,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "fmcAccessConfig.enableAccess", data.ManagementAccess.ValueBool())
 	}
 	if len(data.ManagementAccessNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "fmcAccessConfig.allowedNetworks", []interface{}{})
+		body, _ = sjson.Set(body, "fmcAccessConfig.allowedNetworks", []any{})
 		for _, item := range data.ManagementAccessNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -366,7 +366,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig.arpConfig", []interface{}{})
+		body, _ = sjson.Set(body, "arpConfig.arpConfig", []any{})
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {

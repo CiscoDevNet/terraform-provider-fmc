@@ -75,7 +75,7 @@ func (data ExtendedCommunityList) toBody(ctx context.Context, state ExtendedComm
 		body, _ = sjson.Set(body, "subType", data.SubType.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []interface{}{})
+		body, _ = sjson.Set(body, "entries", []any{})
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {

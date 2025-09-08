@@ -83,7 +83,7 @@ func (data URLGroup) toBody(ctx context.Context, state URLGroup) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Urls) > 0 {
-		body, _ = sjson.Set(body, "objects", []interface{}{})
+		body, _ = sjson.Set(body, "objects", []any{})
 		for _, item := range data.Urls {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -93,7 +93,7 @@ func (data URLGroup) toBody(ctx context.Context, state URLGroup) string {
 		}
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []interface{}{})
+		body, _ = sjson.Set(body, "literals", []any{})
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Url.IsNull() {

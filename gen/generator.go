@@ -173,9 +173,7 @@ type YamlConfigAttribute struct {
 func ToGoName(s string) string {
 	var g []string
 
-	p := strings.Split(s, "_")
-
-	for _, value := range p {
+	for value := range strings.SplitSeq(s, "_") {
 		g = append(g, strings.Title(value))
 	}
 	s = strings.Join(g, "")
@@ -187,9 +185,8 @@ func CamelCase(s string) string {
 	var g []string
 
 	s = strings.ReplaceAll(s, "-", " ")
-	p := strings.Fields(s)
 
-	for _, value := range p {
+	for value := range strings.FieldsSeq(s) {
 		g = append(g, strings.Title(value))
 	}
 	return strings.Join(g, "")
@@ -200,9 +197,8 @@ func SnakeCase(s string) string {
 	var g []string
 
 	s = strings.ReplaceAll(s, "-", " ")
-	p := strings.Fields(s)
 
-	for _, value := range p {
+	for value := range strings.FieldsSeq(s) {
 		g = append(g, strings.ToLower(value))
 	}
 	return strings.Join(g, "_")
@@ -216,15 +212,6 @@ func Errorf(s string, args ...any) (struct{}, error) {
 // Templating helper function to build a SJSON path
 func BuildPath(s []string) string {
 	return strings.Join(s, ".")
-}
-
-func contains(s []string, str string) bool {
-	for _, v := range s {
-		if v == str {
-			return true
-		}
-	}
-	return false
 }
 
 // Templating helper function to check if any of the attributes is a data source query
@@ -586,7 +573,7 @@ func getTemplateSection(content, name string) string {
 	return result
 }
 
-func renderTemplate(templatePath, outputPath string, config interface{}) {
+func renderTemplate(templatePath, outputPath string, config any) {
 	file, err := os.Open(templatePath)
 	if err != nil {
 		log.Fatalf("Error opening template: %v", err)

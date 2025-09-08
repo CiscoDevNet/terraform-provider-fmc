@@ -95,7 +95,7 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 		body, _ = sjson.Set(body, "ikeV2Mode", data.Ikev2Mode.ValueString())
 	}
 	if len(data.Ikev1IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikeV1IpsecProposal", []interface{}{})
+		body, _ = sjson.Set(body, "ikeV1IpsecProposal", []any{})
 		for _, item := range data.Ikev1IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -108,7 +108,7 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 		}
 	}
 	if len(data.Ikev2IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikeV2IpsecProposal", []interface{}{})
+		body, _ = sjson.Set(body, "ikeV2IpsecProposal", []any{})
 		for _, item := range data.Ikev2IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {

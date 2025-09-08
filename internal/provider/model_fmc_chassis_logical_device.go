@@ -149,7 +149,7 @@ func (data ChassisLogicalDevice) toBody(ctx context.Context, state ChassisLogica
 		body, _ = sjson.Set(body, "resourceProfile.name", data.ResourceProfileName.ValueString())
 	}
 	if len(data.AssignedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "externalPortLink", []interface{}{})
+		body, _ = sjson.Set(body, "externalPortLink", []any{})
 		for _, item := range data.AssignedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {

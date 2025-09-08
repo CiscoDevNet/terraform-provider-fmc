@@ -99,7 +99,7 @@ func (data DeviceLoopbackInterface) toBody(ctx context.Context, state DeviceLoop
 		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {

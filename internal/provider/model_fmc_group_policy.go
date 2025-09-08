@@ -134,7 +134,7 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "enableIPsecIKEv2Protocol", data.ProtocolIpsecIkev2.ValueBool())
 	}
 	if len(data.Ipv4AddressPools) > 0 {
-		body, _ = sjson.Set(body, "generalSettings.addressAssignment.ipv4LocalAddressPool", []interface{}{})
+		body, _ = sjson.Set(body, "generalSettings.addressAssignment.ipv4LocalAddressPool", []any{})
 		for _, item := range data.Ipv4AddressPools {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -189,7 +189,7 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "anyConnectSettings.managementProfile.id", data.SecureClientManagementProfileId.ValueString())
 	}
 	if len(data.SecureClientModules) > 0 {
-		body, _ = sjson.Set(body, "anyConnectSettings.clientModules", []interface{}{})
+		body, _ = sjson.Set(body, "anyConnectSettings.clientModules", []any{})
 		for _, item := range data.SecureClientModules {
 			itemBody := ""
 			if !item.Type.IsNull() {
@@ -253,7 +253,7 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id", data.ClientFirewallPublicNetworkRulesAclId.ValueString())
 	}
 	if len(data.SecureClientCustomAttributes) > 0 {
-		body, _ = sjson.Set(body, "anyConnectSettings.customAttributes", []interface{}{})
+		body, _ = sjson.Set(body, "anyConnectSettings.customAttributes", []any{})
 		for _, item := range data.SecureClientCustomAttributes {
 			itemBody := ""
 			if !item.Id.IsNull() {
