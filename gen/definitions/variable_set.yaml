@@ -20,4 +20,3 @@ attributes:
     type: String
     description: Type of the object; this value is always 'VariableSet'.
     computed: true
-

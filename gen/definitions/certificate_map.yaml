@@ -62,4 +62,3 @@ attributes:
         type: String
         description: Value to match in the rule.
         example: cisco.com
-      

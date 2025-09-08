@@ -56,14 +56,15 @@ func TestAccDataSourceFmcDeviceVTEPPolicy(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcDeviceVTEPPolicyPrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
   name         = "GigabitEthernet0/1"
   mode         = "NONE"
   logical_name = "myinterface-0-1"
 }
-
-variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 `
 
 // End of section. //template:end testPrerequisites

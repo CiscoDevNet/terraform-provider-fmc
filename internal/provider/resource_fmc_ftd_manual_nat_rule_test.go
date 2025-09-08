@@ -66,6 +66,7 @@ resource "fmc_ftd_nat_policy" "test" {
   name         = "ftd_manual_nat_rule"
   manage_rules = false
 }
+
 resource "fmc_hosts" "test" {
   items = {
     "manual_nat_rule_host1" ={

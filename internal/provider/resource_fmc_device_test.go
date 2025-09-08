@@ -74,14 +74,14 @@ func TestAccFmcDevice(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDevicePrerequisitesConfig = `
+variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
+variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
+variable "license_capabilities" { default = "BASE" } // tests will set $TF_VAR_license_capabilities
+
 resource "fmc_access_control_policy" "test" {
   name = "fmc_device_access_control_policy"
   default_action = "BLOCK"
 }
-
-variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
-variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
-variable "license_capabilities" { default = "BASE" } // tests will set $TF_VAR_license_capabilities
 `
 
 // End of section. //template:end testPrerequisites

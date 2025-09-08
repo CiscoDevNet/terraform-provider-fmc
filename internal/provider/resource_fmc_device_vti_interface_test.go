@@ -72,6 +72,9 @@ func TestAccFmcDeviceVTIInterface(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDeviceVTIInterfacePrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
 resource "fmc_device_physical_interface" "test" {
   device_id           = var.device_id
   name                = "GigabitEthernet0/1"
@@ -85,8 +88,6 @@ resource "fmc_security_zone" "test" {
   name           = "my_sec_zone_vti"
   interface_type = "ROUTED"
 }
-
-variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 `
 
 // End of section. //template:end testPrerequisites

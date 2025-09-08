@@ -42,6 +42,6 @@ attributes:
     description: Deployment note.
     example: Terraform initiated deployment
     exclude_test: true
-test_prerequisites: |-
 
+test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
