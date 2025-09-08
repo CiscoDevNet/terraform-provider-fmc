@@ -34,7 +34,7 @@ resource "fmc_policy_assignment" "example" {
 
 - `policy_id` (String) Id of the policy to be assigned.
 - `policy_type` (String) Type of the policy to be assigned.
-  - Choices: `FTDNatPolicy`, `HealthPolicy`, `AccessPolicy`, `RAVpn`
+  - Choices: `FTDNatPolicy`, `HealthPolicy`, `AccessPolicy`, `RAVpn`, `FTDPlatformSettingsPolicy`
 - `targets` (Attributes Set) List of devices to which the policy should be attached (see [below for nested schema](#nestedatt--targets))
 
 ### Optional

@@ -30,4 +30,4 @@ data "fmc_ftd_platform_settings" "example" {
 ### Read-Only
 
 - `description` (String) FTD platform settings description.
-- `type` (String) Type of the object
+- `type` (String) Type of the object ; this value is always 'FTDPlatformSettingsPolicy'

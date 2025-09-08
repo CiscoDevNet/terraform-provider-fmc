@@ -83,7 +83,7 @@ func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.S
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object ; this value is always 'FTDPlatformSettingsPolicy'").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -106,8 +106,6 @@ func (r *FTDPlatformSettingsResource) Configure(_ context.Context, req resource.
 }
 
 // End of section. //template:end model
-
-// Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Get FMC version
@@ -144,6 +142,9 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
 
+	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
+	plan.Type = types.StringValue("FTDPlatformSettingsPolicy")
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
@@ -151,10 +152,6 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
-
-// Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state FTDPlatformSettings
@@ -196,6 +193,9 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 		state.fromBodyPartial(ctx, res)
 	}
 
+	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
+	state.Type = types.StringValue("FTDPlatformSettingsPolicy")
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -203,8 +203,6 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 

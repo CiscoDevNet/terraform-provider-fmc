@@ -40,7 +40,7 @@ resource "fmc_ftd_platform_settings" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object
+- `type` (String) Type of the object ; this value is always 'FTDPlatformSettingsPolicy'
 
 ## Import
 
