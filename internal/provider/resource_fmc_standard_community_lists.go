@@ -489,7 +489,7 @@ func (r *StandardCommunityListsResource) createSubresources(ctx context.Context,
 			}
 
 			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
+			body, _ = sjson.SetRaw("{}", "items.-1", res.String())
 			res = gjson.Parse(body)
 
 			// Read computed values
