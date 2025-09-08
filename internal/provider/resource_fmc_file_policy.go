@@ -29,6 +29,7 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -172,9 +173,14 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 							},
 						},
 						"store_files": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of file dispositions that should be stored.").AddStringEnumDescription("MALWARE", "CUSTOM", "CLEAN", "UNKNOWN", "ALL").String,
 							ElementType:         types.StringType,
 							Optional:            true,
+							Validators: []validator.Set{
+								setvalidator.ValueStringsAre(
+									stringvalidator.OneOf("MALWARE", "CUSTOM", "CLEAN", "UNKNOWN", "ALL"),
+								),
+							},
 						},
 						"direction_of_transfer": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Direction of file transfer.").AddStringEnumDescription("ANY", "UPLOAD", "DOWNLOAD").String,
