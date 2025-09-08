@@ -113,6 +113,11 @@ resource "fmc_vlan_tag" "test" {
   start_tag = "10"
   end_tag   = "11"
 }
+
+resource "fmc_prefilter_policy" "test" {
+  name                              = "my_prefilter_policy"
+  default_action                    = "BLOCK_TUNNELS"
+}
 `
 
 // End of section. //template:end testPrerequisites
@@ -139,6 +144,7 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
+	config += `	prefilter_policy_id = fmc_prefilter_policy.test.id` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
 	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
@@ -210,7 +216,7 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 
 // End of section. //template:end testAccConfigAll
 
-func TestNewValidAccessControlPolicy(t *testing.T) {
+func TestAccFmcAccessControlPolicy_NewValid(t *testing.T) {
 
 	steps := []resource.TestStep{{
 		Config: `resource fmc_access_control_policy step1 {` + "\n" +
