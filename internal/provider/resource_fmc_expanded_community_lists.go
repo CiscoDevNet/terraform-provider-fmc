@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -522,9 +523,7 @@ func (r *ExpandedCommunityListsResource) createSubresources(ctx context.Context,
 
 				// Read result and save it to the state
 				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
+				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
 				bulk.Items = make(map[string]ExpandedCommunityListsItems, bulkSizeCreate)
