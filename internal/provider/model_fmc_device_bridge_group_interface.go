@@ -106,7 +106,7 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "bridgeGroupId", data.BridgeGroupId.ValueInt64())
 	}
 	if len(data.SelectedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "selectedInterfaces", []interface{}{})
+		body, _ = sjson.Set(body, "selectedInterfaces", []any{})
 		for _, item := range data.SelectedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -128,7 +128,7 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainRoute.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -153,7 +153,7 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 		body, _ = sjson.Set(body, "ipv6.reachableTime", data.Ipv6ReachableTime.ValueInt64())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig", []interface{}{})
+		body, _ = sjson.Set(body, "arpConfig", []any{})
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {

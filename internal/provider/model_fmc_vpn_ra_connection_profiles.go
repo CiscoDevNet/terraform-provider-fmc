@@ -127,7 +127,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -138,7 +138,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 				itemBody, _ = sjson.Set(itemBody, "groupPolicy.id", item.GroupPolicyId.ValueString())
 			}
 			if len(item.Ipv4AddressPools) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ipv4AddressPool", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "ipv4AddressPool", []any{})
 				for _, childItem := range item.Ipv4AddressPools {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -148,7 +148,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 				}
 			}
 			if len(item.Ipv6AddressPools) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ipv6AddressPool", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "ipv6AddressPool", []any{})
 				for _, childItem := range item.Ipv6AddressPools {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -158,7 +158,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 				}
 			}
 			if len(item.DhcpServers) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "dhcpServersForAddressAssignment", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "dhcpServersForAddressAssignment", []any{})
 				for _, childItem := range item.DhcpServers {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -261,7 +261,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 				itemBody, _ = sjson.Set(itemBody, "passwordExpirationNotificationPeriod", item.PasswordManagementAdvancePasswordExpirationNotification.ValueInt64())
 			}
 			if len(item.AliasNames) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "groupAlias", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "groupAlias", []any{})
 				for _, childItem := range item.AliasNames {
 					itemChildBody := ""
 					if !childItem.Name.IsNull() {
@@ -274,7 +274,7 @@ func (data VPNRAConnectionProfiles) toBody(ctx context.Context, state VPNRAConne
 				}
 			}
 			if len(item.AliasUrls) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "groupUrl", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "groupUrl", []any{})
 				for _, childItem := range item.AliasUrls {
 					itemChildBody := ""
 					if !childItem.UrlObjectId.IsNull() {

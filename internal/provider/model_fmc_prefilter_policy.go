@@ -171,7 +171,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpConfigId.ValueString())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "dummy_rules", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_rules", []any{})
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -200,7 +200,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				itemBody, _ = sjson.Set(itemBody, "timeRangeObjects.0.id", item.TimeRangeId.ValueString())
 			}
 			if len(item.SourceInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceInterfaces.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceInterfaces.objects", []any{})
 				for _, childItem := range item.SourceInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -213,7 +213,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.DestinationInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationInterfaces.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationInterfaces.objects", []any{})
 				for _, childItem := range item.DestinationInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -226,7 +226,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.SourceNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []any{})
 				for _, childItem := range item.SourceNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
@@ -237,7 +237,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.SourceNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []any{})
 				for _, childItem := range item.SourceNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -250,7 +250,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.DestinationNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []any{})
 				for _, childItem := range item.DestinationNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
@@ -261,7 +261,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.DestinationNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
 				for _, childItem := range item.DestinationNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -274,7 +274,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.VlanTagLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []any{})
 				for _, childItem := range item.VlanTagLiterals {
 					itemChildBody := ""
 					if !childItem.StartTag.IsNull() {
@@ -287,7 +287,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.VlanTagObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []any{})
 				for _, childItem := range item.VlanTagObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -297,7 +297,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.SourcePortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []any{})
 				for _, childItem := range item.SourcePortLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "PortLiteral")
@@ -311,7 +311,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.SourcePortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []any{})
 				for _, childItem := range item.SourcePortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -322,7 +322,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.DestinationPortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []any{})
 				for _, childItem := range item.DestinationPortLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "PortLiteral")
@@ -336,7 +336,7 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				}
 			}
 			if len(item.DestinationPortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []any{})
 				for _, childItem := range item.DestinationPortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

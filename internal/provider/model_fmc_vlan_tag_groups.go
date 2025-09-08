@@ -81,7 +81,7 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -94,7 +94,7 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.VlanTags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
 				for _, childItem := range item.VlanTags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -104,7 +104,7 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 				}
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.StartTag.IsNull() {

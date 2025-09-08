@@ -248,7 +248,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
 	}
 	if len(data.SourceNetworkLiterals) > 0 {
-		body, _ = sjson.Set(body, "sourceNetworks.literals", []interface{}{})
+		body, _ = sjson.Set(body, "sourceNetworks.literals", []any{})
 		for _, item := range data.SourceNetworkLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
@@ -259,7 +259,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationNetworkLiterals) > 0 {
-		body, _ = sjson.Set(body, "destinationNetworks.literals", []interface{}{})
+		body, _ = sjson.Set(body, "destinationNetworks.literals", []any{})
 		for _, item := range data.DestinationNetworkLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
@@ -270,7 +270,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.VlanTagLiterals) > 0 {
-		body, _ = sjson.Set(body, "vlanTags.literals", []interface{}{})
+		body, _ = sjson.Set(body, "vlanTags.literals", []any{})
 		for _, item := range data.VlanTagLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
@@ -284,7 +284,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.VlanTagObjects) > 0 {
-		body, _ = sjson.Set(body, "vlanTags.objects", []interface{}{})
+		body, _ = sjson.Set(body, "vlanTags.objects", []any{})
 		for _, item := range data.VlanTagObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -294,7 +294,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourceNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceNetworks.objects", []interface{}{})
+		body, _ = sjson.Set(body, "sourceNetworks.objects", []any{})
 		for _, item := range data.SourceNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -307,7 +307,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationNetworks.objects", []interface{}{})
+		body, _ = sjson.Set(body, "destinationNetworks.objects", []any{})
 		for _, item := range data.DestinationNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -320,7 +320,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourceDynamicObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceDynamicObjects.objects", []interface{}{})
+		body, _ = sjson.Set(body, "sourceDynamicObjects.objects", []any{})
 		for _, item := range data.SourceDynamicObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -331,7 +331,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationDynamicObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationDynamicObjects.objects", []interface{}{})
+		body, _ = sjson.Set(body, "destinationDynamicObjects.objects", []any{})
 		for _, item := range data.DestinationDynamicObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -342,7 +342,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourcePortLiterals) > 0 {
-		body, _ = sjson.Set(body, "sourcePorts.literals", []interface{}{})
+		body, _ = sjson.Set(body, "sourcePorts.literals", []any{})
 		for _, item := range data.SourcePortLiterals {
 			itemBody := ""
 			if !item.Type.IsNull() {
@@ -364,7 +364,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourcePortObjects) > 0 {
-		body, _ = sjson.Set(body, "sourcePorts.objects", []interface{}{})
+		body, _ = sjson.Set(body, "sourcePorts.objects", []any{})
 		for _, item := range data.SourcePortObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -375,7 +375,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationPortLiterals) > 0 {
-		body, _ = sjson.Set(body, "destinationPorts.literals", []interface{}{})
+		body, _ = sjson.Set(body, "destinationPorts.literals", []any{})
 		for _, item := range data.DestinationPortLiterals {
 			itemBody := ""
 			if !item.Type.IsNull() {
@@ -397,7 +397,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationPortObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationPorts.objects", []interface{}{})
+		body, _ = sjson.Set(body, "destinationPorts.objects", []any{})
 		for _, item := range data.DestinationPortObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -408,7 +408,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourceSgtObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceSecurityGroupTags.objects", []interface{}{})
+		body, _ = sjson.Set(body, "sourceSecurityGroupTags.objects", []any{})
 		for _, item := range data.SourceSgtObjects {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -424,7 +424,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.EndpointDeviceTypes) > 0 {
-		body, _ = sjson.Set(body, "endPointDeviceTypes", []interface{}{})
+		body, _ = sjson.Set(body, "endPointDeviceTypes", []any{})
 		for _, item := range data.EndpointDeviceTypes {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -440,7 +440,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationSgtObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationSecurityGroupTags.objects", []interface{}{})
+		body, _ = sjson.Set(body, "destinationSecurityGroupTags.objects", []any{})
 		for _, item := range data.DestinationSgtObjects {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -456,7 +456,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.SourceZones) > 0 {
-		body, _ = sjson.Set(body, "sourceZones.objects", []interface{}{})
+		body, _ = sjson.Set(body, "sourceZones.objects", []any{})
 		for _, item := range data.SourceZones {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -467,7 +467,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.DestinationZones) > 0 {
-		body, _ = sjson.Set(body, "destinationZones.objects", []interface{}{})
+		body, _ = sjson.Set(body, "destinationZones.objects", []any{})
 		for _, item := range data.DestinationZones {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -478,7 +478,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.UrlLiterals) > 0 {
-		body, _ = sjson.Set(body, "urls.literals", []interface{}{})
+		body, _ = sjson.Set(body, "urls.literals", []any{})
 		for _, item := range data.UrlLiterals {
 			itemBody := ""
 			if !item.Url.IsNull() {
@@ -488,7 +488,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.UrlObjects) > 0 {
-		body, _ = sjson.Set(body, "urls.objects", []interface{}{})
+		body, _ = sjson.Set(body, "urls.objects", []any{})
 		for _, item := range data.UrlObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -499,7 +499,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.UrlCategories) > 0 {
-		body, _ = sjson.Set(body, "urls.urlCategoriesWithReputation", []interface{}{})
+		body, _ = sjson.Set(body, "urls.urlCategoriesWithReputation", []any{})
 		for _, item := range data.UrlCategories {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -552,7 +552,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		body, _ = sjson.Set(body, "variableSet.id", data.VariableSetId.ValueString())
 	}
 	if len(data.Applications) > 0 {
-		body, _ = sjson.Set(body, "applications.applications", []interface{}{})
+		body, _ = sjson.Set(body, "applications.applications", []any{})
 		for _, item := range data.Applications {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -562,7 +562,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.ApplicationFilterObjects) > 0 {
-		body, _ = sjson.Set(body, "applications.applicationFilters", []interface{}{})
+		body, _ = sjson.Set(body, "applications.applicationFilters", []any{})
 		for _, item := range data.ApplicationFilterObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -572,11 +572,11 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		}
 	}
 	if len(data.ApplicationFilters) > 0 {
-		body, _ = sjson.Set(body, "applications.inlineApplicationFilters", []interface{}{})
+		body, _ = sjson.Set(body, "applications.inlineApplicationFilters", []any{})
 		for _, item := range data.ApplicationFilters {
 			itemBody := ""
 			if len(item.Types) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applicationTypes", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applicationTypes", []any{})
 				for _, childItem := range item.Types {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -586,7 +586,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 				}
 			}
 			if len(item.Risks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "risks", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "risks", []any{})
 				for _, childItem := range item.Risks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -596,7 +596,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 				}
 			}
 			if len(item.BusinessRelevances) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "productivities", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "productivities", []any{})
 				for _, childItem := range item.BusinessRelevances {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -606,7 +606,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 				}
 			}
 			if len(item.Categories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "categories", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "categories", []any{})
 				for _, childItem := range item.Categories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -616,7 +616,7 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 				}
 			}
 			if len(item.Tags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "tags", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "tags", []any{})
 				for _, childItem := range item.Tags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

@@ -124,7 +124,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		body, _ = sjson.Set(body, "action", data.Action.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []interface{}{})
+		body, _ = sjson.Set(body, "interfaces", []any{})
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -139,7 +139,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		body, _ = sjson.Set(body, "interfaceNames", values)
 	}
 	if len(data.AddressStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListAddresses", []interface{}{})
+		body, _ = sjson.Set(body, "standardAccessListAddresses", []any{})
 		for _, item := range data.AddressStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -149,7 +149,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.AddressIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListAddresses", []interface{}{})
+		body, _ = sjson.Set(body, "ipv4PrefixListAddresses", []any{})
 		for _, item := range data.AddressIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -159,7 +159,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.NextHopStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListNextHops", []interface{}{})
+		body, _ = sjson.Set(body, "standardAccessListNextHops", []any{})
 		for _, item := range data.NextHopStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -169,7 +169,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.NextHopIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListNexthops", []interface{}{})
+		body, _ = sjson.Set(body, "ipv4PrefixListNexthops", []any{})
 		for _, item := range data.NextHopIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -179,7 +179,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.RouteSourceStandardAccessLists) > 0 {
-		body, _ = sjson.Set(body, "standardAccessListRouteSources", []interface{}{})
+		body, _ = sjson.Set(body, "standardAccessListRouteSources", []any{})
 		for _, item := range data.RouteSourceStandardAccessLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -189,7 +189,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.RouteSourceIpv4PrefixLists) > 0 {
-		body, _ = sjson.Set(body, "ipv4PrefixListRouteSources", []interface{}{})
+		body, _ = sjson.Set(body, "ipv4PrefixListRouteSources", []any{})
 		for _, item := range data.RouteSourceIpv4PrefixLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -199,7 +199,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.AsPathLists) > 0 {
-		body, _ = sjson.Set(body, "asPathLists", []interface{}{})
+		body, _ = sjson.Set(body, "asPathLists", []any{})
 		for _, item := range data.AsPathLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -209,7 +209,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.CommunityLists) > 0 {
-		body, _ = sjson.Set(body, "communityLists", []interface{}{})
+		body, _ = sjson.Set(body, "communityLists", []any{})
 		for _, item := range data.CommunityLists {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -219,7 +219,7 @@ func (data PolicyList) toBody(ctx context.Context, state PolicyList) string {
 		}
 	}
 	if len(data.ExtendedCommunityLists) > 0 {
-		body, _ = sjson.Set(body, "extendedCommunityLists", []interface{}{})
+		body, _ = sjson.Set(body, "extendedCommunityLists", []any{})
 		for _, item := range data.ExtendedCommunityLists {
 			itemBody := ""
 			if !item.Id.IsNull() {

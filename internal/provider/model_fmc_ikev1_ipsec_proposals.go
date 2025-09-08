@@ -72,7 +72,7 @@ func (data IKEv1IPsecProposals) toBody(ctx context.Context, state IKEv1IPsecProp
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {

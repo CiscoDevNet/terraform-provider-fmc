@@ -79,7 +79,7 @@ func (data PortGroup) toBody(ctx context.Context, state PortGroup) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Objects) > 0 {
-		body, _ = sjson.Set(body, "objects", []interface{}{})
+		body, _ = sjson.Set(body, "objects", []any{})
 		for _, item := range data.Objects {
 			itemBody := ""
 			if !item.Id.IsNull() {

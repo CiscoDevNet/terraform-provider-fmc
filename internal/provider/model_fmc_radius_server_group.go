@@ -114,7 +114,7 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 		body, _ = sjson.Set(body, "mergeDaclPlacementOrder", data.MergeDownloadableAclOrder.ValueString())
 	}
 	if len(data.RadiusServers) > 0 {
-		body, _ = sjson.Set(body, "radiusServers", []interface{}{})
+		body, _ = sjson.Set(body, "radiusServers", []any{})
 		for _, item := range data.RadiusServers {
 			itemBody := ""
 			if !item.Hostname.IsNull() {

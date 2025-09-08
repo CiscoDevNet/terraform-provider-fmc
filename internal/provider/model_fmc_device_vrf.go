@@ -78,7 +78,7 @@ func (data DeviceVRF) toBody(ctx context.Context, state DeviceVRF) string {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []interface{}{})
+		body, _ = sjson.Set(body, "interfaces", []any{})
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {

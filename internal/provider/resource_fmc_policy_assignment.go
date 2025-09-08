@@ -515,7 +515,7 @@ func (r *PolicyAssignmentResource) updatePolicyAssignment(ctx context.Context, r
 		}
 
 		existingTargets := gjson.Get(updateBody, "targets").Array()
-		updateBody, _ = sjson.Set(updateBody, "targets", []interface{}{})
+		updateBody, _ = sjson.Set(updateBody, "targets", []any{})
 		for _, target := range existingTargets {
 			if !slices.Contains(stateTargets, target.Get("id").String()) {
 				updateBody, _ = sjson.Set(updateBody, "targets.-1", map[string]string{

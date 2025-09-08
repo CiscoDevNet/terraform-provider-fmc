@@ -99,7 +99,7 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -139,7 +139,7 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 				itemBody, _ = sjson.Set(itemBody, "sendTunnelInterfaceIpToPeer", item.SendVtiIpToPeer.ValueBool())
 			}
 			if len(item.ProtectedNetworks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.networks", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.networks", []any{})
 				for _, childItem := range item.ProtectedNetworks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

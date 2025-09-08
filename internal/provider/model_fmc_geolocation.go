@@ -76,7 +76,7 @@ func (data Geolocation) toBody(ctx context.Context, state Geolocation) string {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Continents) > 0 {
-		body, _ = sjson.Set(body, "continents", []interface{}{})
+		body, _ = sjson.Set(body, "continents", []any{})
 		for _, item := range data.Continents {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -86,7 +86,7 @@ func (data Geolocation) toBody(ctx context.Context, state Geolocation) string {
 		}
 	}
 	if len(data.Countries) > 0 {
-		body, _ = sjson.Set(body, "countries", []interface{}{})
+		body, _ = sjson.Set(body, "countries", []any{})
 		for _, item := range data.Countries {
 			itemBody := ""
 			if !item.Id.IsNull() {
