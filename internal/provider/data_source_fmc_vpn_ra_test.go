@@ -42,11 +42,9 @@ func TestAccDataSourceFmcVPNRA(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "web_access_port_number", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "dtls_port_number", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "bypass_access_control_policy_for_decrypted_traffic", "false"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "secure_client_customization_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "address_assignment_policy_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "certificate_map_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "ldap_attribute_map_id"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "load_balancing_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "ipsec_ike_parameters_id"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },

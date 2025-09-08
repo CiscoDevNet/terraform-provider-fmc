@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -101,14 +102,14 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the Connection Profile.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'RaVpnConnectionProfile'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseStateForUnknown(),
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
 						"group_policy_id": schema.StringAttribute{
@@ -335,7 +336,7 @@ func (r *VPNRAConnectionProfilesResource) Configure(_ context.Context, req resou
 }
 
 // End of section. //template:end model
-
+/*
 var _ resource.ResourceWithValidateConfig = &VPNRAConnectionProfilesResource{}
 
 func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
@@ -392,7 +393,7 @@ func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, re
 		}
 	}
 }
-
+*/
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *VPNRAConnectionProfilesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -522,7 +523,9 @@ func (r *VPNRAConnectionProfilesResource) Update(ctx context.Context, req resour
 
 	// Prepare list of ID that are in plan
 	for k, v := range plan.Items {
-		planOwnedIDs[v.Id.ValueString()] = k
+		if !v.Id.IsUnknown() && v.Id.ValueString() != "" {
+			planOwnedIDs[v.Id.ValueString()] = k
+		}
 	}
 
 	// Check if ID from state list is in plan as well. If not, mark it for delete

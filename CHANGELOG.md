@@ -1,6 +1,14 @@
-## 2.0.0-rc6 (Unreleased)
+## 2.0.0 (Unreleased)
+
+- (Fix) Prefilter policy is not assigned to Access Control Policy on creation
+- (Change) Remove `ValidateConfig` for `fmc_vpn_ra_connection_profiles`
+- (Enhancement) Add support for `fmc_secure_client_posture_package` resource and data source
+- (Enhancement) Add support for `fmc_dynamic_access_policy` resource and data source (no records support)
+
+## 2.0.0-rc6
 
 - (BREAKING CHANGE) `fmc_policy_assignment`: `name` is now mandatory attribute in `targets`
+- (BREAKING CHANGE) `fmc_device_vrf`: `interface_` prefix is removed from attributes in `interfaces` set
 - (Fix) Remove `ValidateConfig` for `fmc_access_control_policy` and `fmc_ftd_nat_policy`
 - (Enhancement) Add support for Remote Access VPN - `fmc_vpn_ra_*` resources and data sources
 - (Enhancement) Add support for `fmc_realm_local` resource and data source

@@ -1,0 +1,65 @@
+---
+name: Dynamic Access Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/dynamicaccesspolicies
+doc_category: Policies
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Dynamic Access Policy.
+    example: my_dynamic_access_policy
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DynamicAccessPolicy'.
+    computed: true
+  - model_name: description
+    type: String
+    description: Description of the Dynamic Access Policy.
+    example: My Dynamic Access Policy
+  - model_name: id
+    data_path: [hostscanPackage]
+    tf_name: secure_client_posture_package_id
+    type: String
+    description: ID of the Secure Client Posture Package object.
+    example: 12345678-1234-1234-1234-1234567890ab
+    exclude_test: true
+  # - model_name: authorizationAttributes
+  #   tf_name: records
+  #   type: List
+  #   description: List of authorization attributes for the Dynamic Access Policy.
+  #   attributes:
+  #     - model_name: dapRecordName
+  #       tf_name: name
+  #       type: String
+  #       description: Name of the record
+  #       mandatory: true
+  #     - model_name: priority
+  #       type: Int64
+  #       description: Priority of the DAP record.
+  #       mandatory: true
+  #       example: 1
+  #     - model_name: action
+  #       type: String
+  #       description: Action taken if the DAP record matches.
+  #       enum_values: [CONTINUE, TERMINATE, QUARANTINE]
+  #       mandatory: true
+  #       example: CONTINUE
+  #     - model_name: message
+  #       type: String
+  #       description: Message displayed to the VPN user if the DAP record matches.
+  #       example: Welcome
+  #     - model_name: id
+  #       data_path: [networkACL]
+  #       tf_name: extended_acl_id
+  #       type: String
+  #       description: ID of the Extended ACL object to be applied on traffic.
+  #       example: 87654321-4321-4321-4321-2109876543ba
+  #     - model_name: anyConnectAttributes
+  #       tf_name: secure_client_attributes
+  #       type: List
+  #       attributes:
+  #         - model_name: id
+  #           type: String
+  #           mandatory: true
+  #           description: ID of the Secure Client attribute object.
