@@ -78,7 +78,7 @@ attributes:
     description: >-
       Id of the Prefilter Policy.
     example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
-    exclude_test: true
+    test_value: fmc_prefilter_policy.test.id
   - model_name: syslogSeverity
     data_path: [defaultAction]
     tf_name: default_action_syslog_severity
@@ -817,4 +817,9 @@ test_prerequisites: |-
     name      = "fmc_access_control_policy_vlan_tag"
     start_tag = "10"
     end_tag   = "11"
+  }
+
+  resource "fmc_prefilter_policy" "test" {
+    name                              = "my_prefilter_policy"
+    default_action                    = "BLOCK_TUNNELS"
   }
