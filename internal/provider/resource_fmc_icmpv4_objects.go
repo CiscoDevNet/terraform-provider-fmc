@@ -533,7 +533,6 @@ func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, p
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (ICMPv4 Objects)", state.Id.ValueString()))
 
 		var idx = 0
-		var alreadyDeleted []string
 
 		estimatedIDLength := 37 // UUID length + comma
 		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
@@ -546,7 +545,7 @@ func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, p
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
@@ -555,7 +554,7 @@ func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, p
 			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -573,10 +572,6 @@ func (r *ICMPv4ObjectsResource) deleteSubresources(ctx context.Context, state, p
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 
