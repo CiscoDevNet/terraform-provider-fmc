@@ -92,7 +92,7 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Applications) > 0 {
-		body, _ = sjson.Set(body, "applications", []interface{}{})
+		body, _ = sjson.Set(body, "applications", []any{})
 		for _, item := range data.Applications {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -105,11 +105,11 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 		}
 	}
 	if len(data.Filters) > 0 {
-		body, _ = sjson.Set(body, "appConditions", []interface{}{})
+		body, _ = sjson.Set(body, "appConditions", []any{})
 		for _, item := range data.Filters {
 			itemBody := ""
 			if len(item.Types) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applicationTypes", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applicationTypes", []any{})
 				for _, childItem := range item.Types {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -119,7 +119,7 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 				}
 			}
 			if len(item.Risks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "risks", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "risks", []any{})
 				for _, childItem := range item.Risks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -129,7 +129,7 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 				}
 			}
 			if len(item.BusinessRelevances) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "productivities", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "productivities", []any{})
 				for _, childItem := range item.BusinessRelevances {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -139,7 +139,7 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 				}
 			}
 			if len(item.Categories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "categories", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "categories", []any{})
 				for _, childItem := range item.Categories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -149,7 +149,7 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 				}
 			}
 			if len(item.Tags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "tags", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "tags", []any{})
 				for _, childItem := range item.Tags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

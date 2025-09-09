@@ -127,7 +127,7 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 		body, _ = sjson.Set(body, "archiveDepth", data.MaxArchiveDepth.ValueInt64())
 	}
 	if len(data.FileRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_file_rules", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_file_rules", []any{})
 		for _, item := range data.FileRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -148,7 +148,7 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 				itemBody, _ = sjson.Set(itemBody, "direction", item.DirectionOfTransfer.ValueString())
 			}
 			if len(item.FileCategories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "fileCategories", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "fileCategories", []any{})
 				for _, childItem := range item.FileCategories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -164,7 +164,7 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 				}
 			}
 			if len(item.FileTypes) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "fileTypes", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "fileTypes", []any{})
 				for _, childItem := range item.FileTypes {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

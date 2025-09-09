@@ -81,7 +81,7 @@ func (data PolicyAssignment) toBody(ctx context.Context, state PolicyAssignment)
 		body, _ = sjson.Set(body, "dummy_after_destroy_policy_id", data.AfterDestroyPolicyId.ValueString())
 	}
 	if len(data.Targets) > 0 {
-		body, _ = sjson.Set(body, "targets", []interface{}{})
+		body, _ = sjson.Set(body, "targets", []any{})
 		for _, item := range data.Targets {
 			itemBody := ""
 			if !item.Id.IsNull() {

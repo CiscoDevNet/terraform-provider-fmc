@@ -96,7 +96,7 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 		body, _ = sjson.Set(body, "ikeV1Settings.certificateAuth.id", data.Ikev1CertificateId.ValueString())
 	}
 	if len(data.Ikev1Policies) > 0 {
-		body, _ = sjson.Set(body, "ikeV1Settings.policies", []interface{}{})
+		body, _ = sjson.Set(body, "ikeV1Settings.policies", []any{})
 		for _, item := range data.Ikev1Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -124,7 +124,7 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 		body, _ = sjson.Set(body, "ikeV2Settings.certificateAuth.id", data.Ikev2CertificateId.ValueString())
 	}
 	if len(data.Ikev2Policies) > 0 {
-		body, _ = sjson.Set(body, "ikeV2Settings.policies", []interface{}{})
+		body, _ = sjson.Set(body, "ikeV2Settings.policies", []any{})
 		for _, item := range data.Ikev2Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {

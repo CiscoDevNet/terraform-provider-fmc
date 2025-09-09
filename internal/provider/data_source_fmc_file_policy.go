@@ -139,7 +139,7 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"store_files": schema.SetAttribute{
-							MarkdownDescription: "List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).",
+							MarkdownDescription: "List of file dispositions that should be stored.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},

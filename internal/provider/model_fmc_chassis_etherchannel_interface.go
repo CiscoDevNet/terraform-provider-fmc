@@ -88,7 +88,7 @@ func (data ChassisEtherChannelInterface) toBody(ctx context.Context, state Chass
 		body, _ = sjson.Set(body, "adminState", data.AdminState.ValueString())
 	}
 	if len(data.SelectedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "selectedInterfaces", []interface{}{})
+		body, _ = sjson.Set(body, "selectedInterfaces", []any{})
 		for _, item := range data.SelectedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {

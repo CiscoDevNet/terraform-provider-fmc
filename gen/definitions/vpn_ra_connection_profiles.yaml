@@ -1,4 +1,4 @@
-# Manual resource - ValidateConfig, createSubresources, deleteSubresources
+# Manual resource - createSubresources, deleteSubresources
 # FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
 ---
 name: VPN RA Connection Profiles

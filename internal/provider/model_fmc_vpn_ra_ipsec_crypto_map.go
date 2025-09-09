@@ -86,7 +86,7 @@ func (data VPNRAIPSecCryptoMap) toBody(ctx context.Context, state VPNRAIPSecCryp
 		body, _ = sjson.Set(body, "interfaceObject.id", data.InterfaceId.ValueString())
 	}
 	if len(data.Ikev2IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikev2IpsecProposals", []interface{}{})
+		body, _ = sjson.Set(body, "ikev2IpsecProposals", []any{})
 		for _, item := range data.Ikev2IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {

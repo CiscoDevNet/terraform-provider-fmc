@@ -83,7 +83,7 @@ func (data DeviceHAPairMonitoring) toBody(ctx context.Context, state DeviceHAPai
 		body, _ = sjson.Set(body, "ipv4Configuration.standbyIPv4Address", data.Ipv4StandbyAddress.ValueString())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []any{})
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.ActiveAddress.IsNull() {
@@ -292,7 +292,7 @@ func (data DeviceHAPairMonitoring) toBodyPutDelete(ctx context.Context, state De
 	}
 	// There is no way of removing standby IPv6 via API now
 	//if len(data.Ipv6Addresses) > 0 {
-	//	body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []interface{}{})
+	//	body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []any{})
 	//	for _, item := range data.Ipv6Addresses {
 	//		itemBody := ""
 	//		if !item.ActiveAddress.IsNull() {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -367,7 +368,7 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 	toBeRemoved := plan
 	toBeRemoved.DataDevices = []DeviceClusterDataDevices{}
 	for _, v := range state.DataDevices {
-		if !helpers.Contains(planDevices, v.DataNodeDeviceId.ValueString()) {
+		if !slices.Contains(planDevices, v.DataNodeDeviceId.ValueString()) {
 			toBeRemoved.DataDevices = append(toBeRemoved.DataDevices, v)
 		}
 	}
@@ -397,7 +398,7 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 	toBeAdded := plan
 	toBeAdded.DataDevices = []DeviceClusterDataDevices{}
 	for _, v := range plan.DataDevices {
-		if !helpers.Contains(stateDevices, v.DataNodeDeviceId.ValueString()) {
+		if !slices.Contains(stateDevices, v.DataNodeDeviceId.ValueString()) {
 			toBeAdded.DataDevices = append(toBeAdded.DataDevices, v)
 		}
 	}

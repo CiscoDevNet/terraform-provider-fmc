@@ -83,7 +83,7 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Objects) > 0 {
-		body, _ = sjson.Set(body, "objects", []interface{}{})
+		body, _ = sjson.Set(body, "objects", []any{})
 		for _, item := range data.Objects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -94,7 +94,7 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 		}
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []interface{}{})
+		body, _ = sjson.Set(body, "literals", []any{})
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Value.IsNull() {

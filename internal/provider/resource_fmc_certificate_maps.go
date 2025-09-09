@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -489,7 +490,7 @@ func (r *CertificateMapsResource) createSubresources(ctx context.Context, state,
 			}
 
 			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
+			body, _ = sjson.SetRaw("{}", "items.-1", res.String())
 			res = gjson.Parse(body)
 
 			// Read computed values
@@ -534,9 +535,7 @@ func (r *CertificateMapsResource) createSubresources(ctx context.Context, state,
 
 				// Read result and save it to the state
 				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
+				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
 				bulk.Items = make(map[string]CertificateMapsItems, bulkSizeCreate)

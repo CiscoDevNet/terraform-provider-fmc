@@ -222,7 +222,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.ebgp", data.Ipv4NumberOfEbgpPaths.ValueInt64())
 	}
 	if len(data.Ipv4Neighbors) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.neighbors", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.neighbors", []any{})
 		for _, item := range data.Ipv4Neighbors {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -253,7 +253,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.description", item.Description.ValueString())
 			}
 			if len(item.FilterAccessLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDistributeLists", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDistributeLists", []any{})
 				for _, childItem := range item.FilterAccessLists {
 					itemChildBody := ""
 					if !childItem.AccessListId.IsNull() {
@@ -266,7 +266,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				}
 			}
 			if len(item.FilterRouteMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborRouteMap", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborRouteMap", []any{})
 				for _, childItem := range item.FilterRouteMaps {
 					itemChildBody := ""
 					if !childItem.RouteMapId.IsNull() {
@@ -279,7 +279,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				}
 			}
 			if len(item.FilterPrefixLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.ipv4PrefixListFilter", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.ipv4PrefixListFilter", []any{})
 				for _, childItem := range item.FilterPrefixLists {
 					itemChildBody := ""
 					if !childItem.PrefixListId.IsNull() {
@@ -292,7 +292,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				}
 			}
 			if len(item.FilterAsPaths) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborFilterList", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborFilterList", []any{})
 				for _, childItem := range item.FilterAsPaths {
 					itemChildBody := ""
 					if !childItem.AsPathId.IsNull() {
@@ -329,7 +329,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDefaultOriginate.routeMap.id", item.RoutesGenerateDefaultRouteMapId.ValueString())
 			}
 			if len(item.RoutesAdvertiseMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps", []any{})
 				for _, childItem := range item.RoutesAdvertiseMaps {
 					itemChildBody := ""
 					if !childItem.AdvertiseMapId.IsNull() {
@@ -396,7 +396,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		}
 	}
 	if len(data.Ipv4AggregateAddresses) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.aggregateAddressesIPv4s", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.aggregateAddressesIPv4s", []any{})
 		for _, item := range data.Ipv4AggregateAddresses {
 			itemBody := ""
 			if !item.GenerateAs.IsNull() {
@@ -421,7 +421,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		}
 	}
 	if len(data.Ipv4Filterings) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.distributeLists", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.distributeLists", []any{})
 		for _, item := range data.Ipv4Filterings {
 			itemBody := ""
 			if !item.AccessListId.IsNull() {
@@ -440,7 +440,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		}
 	}
 	if len(data.Ipv4Networks) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.networks", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.networks", []any{})
 		for _, item := range data.Ipv4Networks {
 			itemBody := ""
 			if !item.NetworkId.IsNull() {
@@ -453,7 +453,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		}
 	}
 	if len(data.Ipv4Redistributions) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.redistributeProtocols", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.redistributeProtocols", []any{})
 		for _, item := range data.Ipv4Redistributions {
 			itemBody := ""
 			if !item.SourceProtocol.IsNull() {
@@ -487,7 +487,7 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		}
 	}
 	if len(data.Ipv4RouteInjections) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.injectMaps", []interface{}{})
+		body, _ = sjson.Set(body, "addressFamilyIPv4.injectMaps", []any{})
 		for _, item := range data.Ipv4RouteInjections {
 			itemBody := ""
 			if !item.InjectRouteMapId.IsNull() {

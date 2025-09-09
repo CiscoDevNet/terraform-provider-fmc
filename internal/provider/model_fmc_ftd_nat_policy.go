@@ -121,7 +121,7 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.ManualNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_manual_nat_rules", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_manual_nat_rules", []any{})
 		for _, item := range data.ManualNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -200,7 +200,7 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 		}
 	}
 	if len(data.AutoNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_auto_nat_rules", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_auto_nat_rules", []any{})
 		for _, item := range data.AutoNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
