@@ -19,7 +19,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of Endpoints. The key of the map is the name of the Endpoint. 
+      Map of Endpoints. The key of the map is the name of the Endpoint.
       For FMC managed endpoints, please use the name under which the device is registered in FMC.
     map_key_example: my_ftd_01
     test_value: (data.fmc_device.test.name)

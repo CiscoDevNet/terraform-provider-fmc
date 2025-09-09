@@ -28,7 +28,7 @@ attributes:
         example: SUBJECT
       - model_name: component
         type: String
-        enum_values: 
+        enum_values:
           [
             WHOLE_FIELD,
             COUNTRY,

@@ -66,7 +66,7 @@ attributes:
     data_path: [securityZone]
     type: String
     value: SecurityZone
-    #test_value: SecurityZone
+    # test_value: SecurityZone
   - model_name: name
     type: String
     description: Name of the interface; it must already be present on the device.
@@ -101,7 +101,7 @@ attributes:
       For transparent firewall modes, the `nve_only` is automatically enabled.
     exclude_test: true
     exclude_example: true
-#IPv4 - Static
+  # IPv4 - Static
   - model_name: address
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
@@ -122,7 +122,7 @@ attributes:
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
-#IPv4 - DHCP
+  # IPv4 - DHCP
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
     tf_name: ipv4_dhcp_obtain_route
@@ -146,7 +146,7 @@ attributes:
     max_int: 255
     exclude_example: true
     exclude_test: true
-#IPv4 - PPPoE
+  # IPv4 - PPPoE
   - model_name: vpdnGroupName
     data_path: [ipv4, pppoe]
     tf_name: ipv4_pppoe_vpdn_group_name
@@ -199,7 +199,7 @@ attributes:
     description: PPPoE Configuration - PPPoE store username and password in Flash.
     exclude_example: true
     exclude_test: true
-#ipv6 - Basic
+  # IPv6 - Basic
   - model_name: enableIPV6
     data_path: [ipv6]
     tf_name: ipv6_enable
@@ -227,7 +227,7 @@ attributes:
     type: Bool
     exclude_example: true
     exclude_test: true
-# IPv6 address
+  # IPv6 address
   - model_name: addresses
     data_path: [ipv6]
     tf_name: ipv6_addresses
@@ -260,7 +260,7 @@ attributes:
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
-#IPv6 Prefixes
+  # IPv6 Prefixes
   - model_name: prefixes
     data_path: [ipv6]
     tf_name: ipv6_prefixes
@@ -285,7 +285,7 @@ attributes:
         example: true
         exclude_example: true
         exclude_test: true
-#IPv6 Settings:
+  # IPv6 Settings:
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_enable_dad
@@ -346,7 +346,7 @@ attributes:
     max_int: 1800
     exclude_example: true
     exclude_test: true
-#IPv6 DHCP
+  # IPv6 DHCP
   - model_name: enableDHCPClient
     data_path: [ipv6, DHCP]
     tf_name: ipv6_dhcp
@@ -362,7 +362,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: id
-    data_path: [ipv6,ipv6DHCPPool]
+    data_path: [ipv6, ipv6DHCPPool]
     tf_name: ipv6_dhcp_pool_id
     description: Id of the assigned DHCPv6 pool
     type: String
@@ -370,7 +370,7 @@ attributes:
     exclude_test: true
   - model_name: type
     tf_name: ipv6_dhcp_pool_type
-    data_path: [ipv6,ipv6DHCPPool]
+    data_path: [ipv6, ipv6DHCPPool]
     type: String
     description: Type of the object; this value is always 'IPv6AddressPool'.
     exclude_example: true
@@ -403,7 +403,7 @@ attributes:
     description: Hint Prefixes for Prefix Delegation (PD)
     exclude_example: true
     exclude_test: true
-# Path Monitoring
+  # Path Monitoring
   - model_name: enable
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring
@@ -426,7 +426,7 @@ attributes:
     description: IP address to monitor.
     exclude_example: true
     exclude_test: true
-#hardware
+  # Hardware
   - model_name: autoNegState
     data_path: [hardware]
     tf_name: auto_negotiation
@@ -445,7 +445,7 @@ attributes:
     data_path: [hardware]
     type: String
     description: Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
-    enum_values: [ AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP ]
+    enum_values: [AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP]
     exclude_example: true
     exclude_test: true
   - model_name: receive
@@ -466,17 +466,17 @@ attributes:
     data_path: [hardware]
     type: String
     description: Flow Control Send configuraion, can be one of ON, OFF.
-    enum_values: [ "ON", "OFF" ]
+    enum_values: ["ON", "OFF"]
     exclude_example: true
     exclude_test: true
   - model_name: fecMode
     data_path: [hardware]
     type: String
     description: Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
-    enum_values: [ AUTO, CL108RS, CL74FC, CL91RS, DISABLE ]
+    enum_values: [AUTO, CL108RS, CL74FC, CL91RS, DISABLE]
     exclude_example: true
     exclude_test: true
-# Manager Access
+  # Manager Access
   - model_name: enableAccess
     data_path: [fmcAccessConfig]
     tf_name: management_access
@@ -503,7 +503,7 @@ attributes:
         description: Type of the object
         exclude_example: true
         exclude_test: true
-# Advanced - Information
+  # Advanced - Information
   - model_name: activeMACAddress
     tf_name: active_mac_address
     type: String
@@ -516,7 +516,7 @@ attributes:
     description: MAC address for standby interface in format 0123.4567.89ab.
     exclude_example: true
     exclude_test: true
-# Advanced - Information
+  # Advanced - Information
   - model_name: arpConfig
     tf_name: arp_table_entries
     data_path: [arpConfig]
@@ -539,7 +539,7 @@ attributes:
         description: Enable Alias for custom ARP entry
         exclude_example: true
         exclude_test: true
-# Advanced - Security Configuration
+  # Advanced - Security Configuration
   - model_name: enableAntiSpoofing
     type: Bool
     description: Enable Anti Spoofing

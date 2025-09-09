@@ -58,7 +58,7 @@ attributes:
         example: GigabitEthernet0/0
         mandatory: true
         test_value: data.fmc_device_physical_interface.test.name
-  #IPv4 - Static
+  # IPv4 - Static
   - model_name: address
     data_path: [ipv4, static]
     tf_name: ipv4_static_address
@@ -71,7 +71,7 @@ attributes:
     type: String
     description: Netmask for ipv4_static_address.
     example: "24"
-  #IPv4 - DHCP
+  # IPv4 - DHCP
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
     tf_name: ipv4_dhcp_obtain_route
@@ -100,7 +100,7 @@ attributes:
         description: Prefix width for the IPv6 address.
         example: "64"
         mandatory: true
-  #IPv6 Settings:
+  # IPv6 Settings
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_enable_dad

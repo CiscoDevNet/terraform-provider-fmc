@@ -463,7 +463,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							Default: int64default.StaticInt64(0),
 						},
 						"version": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set BPG version: 0 - default, 4 - IPv4").AddStringEnumDescription("0", "4").AddDefaultValueDescription("0").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set BGP version: 0 - default, 4 - IPv4").AddStringEnumDescription("0", "4").AddDefaultValueDescription("0").String,
 							Optional:            true,
 							Computed:            true,
 							Validators: []validator.String{

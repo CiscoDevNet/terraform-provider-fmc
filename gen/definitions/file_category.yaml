@@ -17,4 +17,3 @@ attributes:
     type: String
     description: Type of the object; this value is always 'FileCategory'.
     computed: true
-
