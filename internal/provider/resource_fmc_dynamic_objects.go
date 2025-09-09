@@ -578,8 +578,12 @@ func (r *DynamicObjectsResource) deleteSubresources(ctx context.Context, state, 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Dynamic Objects)", state.Id.ValueString()))
 
 	var idx = 0
-	var idsToRemove strings.Builder
 	var alreadyDeleted []string
+
+	estimatedIDLength := 37 // UUID length + comma
+	estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+	var idsToRemove strings.Builder
+	idsToRemove.Grow(estimatedCapacity)
 
 	for k, v := range objectsToRemove.Items {
 		// Counter
@@ -592,7 +596,8 @@ func (r *DynamicObjectsResource) deleteSubresources(ctx context.Context, state, 
 		}
 
 		// Create list of IDs of items to delete
-		idsToRemove.WriteString(v.Id.ValueString() + ",")
+		idsToRemove.WriteString(v.Id.ValueString())
+		idsToRemove.WriteString(",")
 
 		// If bulk size was reached or all entries have been processed
 		if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

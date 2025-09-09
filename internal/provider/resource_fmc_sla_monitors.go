@@ -327,7 +327,7 @@ func (r *SLAMonitorsResource) Update(ctx context.Context, req resource.UpdateReq
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete SLAMonitors
-	toDelete.Items = make(map[string]SLAMonitorsItems)
+	toDelete.Items = make(map[string]SLAMonitorsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -359,7 +359,7 @@ func (r *SLAMonitorsResource) Update(ctx context.Context, req resource.UpdateReq
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate SLAMonitors
-	toCreate.Items = make(map[string]SLAMonitorsItems)
+	toCreate.Items = make(map[string]SLAMonitorsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -383,7 +383,7 @@ func (r *SLAMonitorsResource) Update(ctx context.Context, req resource.UpdateReq
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate SLAMonitors
-	toUpdate.Items = make(map[string]SLAMonitorsItems)
+	toUpdate.Items = make(map[string]SLAMonitorsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -593,8 +593,12 @@ func (r *SLAMonitorsResource) deleteSubresources(ctx context.Context, state, pla
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (SLA Monitors)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -607,7 +611,8 @@ func (r *SLAMonitorsResource) deleteSubresources(ctx context.Context, state, pla
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

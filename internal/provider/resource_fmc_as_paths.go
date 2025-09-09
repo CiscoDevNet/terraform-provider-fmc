@@ -270,7 +270,7 @@ func (r *ASPathsResource) Update(ctx context.Context, req resource.UpdateRequest
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete ASPaths
-	toDelete.Items = make(map[string]ASPathsItems)
+	toDelete.Items = make(map[string]ASPathsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -302,7 +302,7 @@ func (r *ASPathsResource) Update(ctx context.Context, req resource.UpdateRequest
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate ASPaths
-	toCreate.Items = make(map[string]ASPathsItems)
+	toCreate.Items = make(map[string]ASPathsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -326,7 +326,7 @@ func (r *ASPathsResource) Update(ctx context.Context, req resource.UpdateRequest
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate ASPaths
-	toUpdate.Items = make(map[string]ASPathsItems)
+	toUpdate.Items = make(map[string]ASPathsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -573,8 +573,12 @@ func (r *ASPathsResource) deleteSubresources(ctx context.Context, state, plan AS
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (AS Paths)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -587,7 +591,8 @@ func (r *ASPathsResource) deleteSubresources(ctx context.Context, state, plan AS
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

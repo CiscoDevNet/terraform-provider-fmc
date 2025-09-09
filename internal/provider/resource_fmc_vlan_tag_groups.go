@@ -279,7 +279,7 @@ func (r *VLANTagGroupsResource) Update(ctx context.Context, req resource.UpdateR
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete VLANTagGroups
-	toDelete.Items = make(map[string]VLANTagGroupsItems)
+	toDelete.Items = make(map[string]VLANTagGroupsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -311,7 +311,7 @@ func (r *VLANTagGroupsResource) Update(ctx context.Context, req resource.UpdateR
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate VLANTagGroups
-	toCreate.Items = make(map[string]VLANTagGroupsItems)
+	toCreate.Items = make(map[string]VLANTagGroupsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -335,7 +335,7 @@ func (r *VLANTagGroupsResource) Update(ctx context.Context, req resource.UpdateR
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate VLANTagGroups
-	toUpdate.Items = make(map[string]VLANTagGroupsItems)
+	toUpdate.Items = make(map[string]VLANTagGroupsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -545,8 +545,12 @@ func (r *VLANTagGroupsResource) deleteSubresources(ctx context.Context, state, p
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (VLAN Tag Groups)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -559,7 +563,8 @@ func (r *VLANTagGroupsResource) deleteSubresources(ctx context.Context, state, p
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

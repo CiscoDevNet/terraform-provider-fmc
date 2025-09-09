@@ -830,7 +830,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	toDelete := toBeReplaced.Clone()
 	{{- else}}
 	var toDelete {{camelCase .Name}}
-	toDelete.Items = make(map[string]{{camelCase .Name}}Items)
+	toDelete.Items = make(map[string]{{camelCase .Name}}Items, len(state.Items))
 	{{- end}}
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
@@ -867,7 +867,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	toCreate.clearItemsIds(ctx)
 	{{- else}}
 	var toCreate {{camelCase .Name}}
-	toCreate.Items = make(map[string]{{camelCase .Name}}Items)
+	toCreate.Items = make(map[string]{{camelCase .Name}}Items, len(plan.Items))
 	{{- end}}
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
@@ -892,7 +892,7 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate {{camelCase .Name}}
-	toUpdate.Items = make(map[string]{{camelCase .Name}}Items)
+	toUpdate.Items = make(map[string]{{camelCase .Name}}Items, len(plan.Items))
 
 	{{- if hasRequiresReplace $.Attributes}}
 
@@ -1238,8 +1238,12 @@ func (r *{{camelCase .Name}}Resource) deleteSubresources(ctx context.Context, st
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode ({{.Name}})", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -1252,7 +1256,8 @@ func (r *{{camelCase .Name}}Resource) deleteSubresources(ctx context.Context, st
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

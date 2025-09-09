@@ -334,7 +334,7 @@ func (r *ExtendedCommunityListsResource) Update(ctx context.Context, req resourc
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate ExtendedCommunityLists
-	toUpdate.Items = make(map[string]ExtendedCommunityListsItems)
+	toUpdate.Items = make(map[string]ExtendedCommunityListsItems, len(plan.Items))
 
 	for tmp, valueState := range state.Items {
 		// Check if the ID from state is on toBeReplaced list
@@ -586,8 +586,12 @@ func (r *ExtendedCommunityListsResource) deleteSubresources(ctx context.Context,
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Extended Community Lists)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -600,7 +604,8 @@ func (r *ExtendedCommunityListsResource) deleteSubresources(ctx context.Context,
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

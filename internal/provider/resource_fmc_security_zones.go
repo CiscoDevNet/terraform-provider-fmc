@@ -309,7 +309,7 @@ func (r *SecurityZonesResource) Update(ctx context.Context, req resource.UpdateR
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate SecurityZones
-	toUpdate.Items = make(map[string]SecurityZonesItems)
+	toUpdate.Items = make(map[string]SecurityZonesItems, len(plan.Items))
 
 	for tmp, valueState := range state.Items {
 		// Check if the ID from state is on toBeReplaced list
@@ -524,8 +524,12 @@ func (r *SecurityZonesResource) deleteSubresources(ctx context.Context, state, p
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Security Zones)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -538,7 +542,8 @@ func (r *SecurityZonesResource) deleteSubresources(ctx context.Context, state, p
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {

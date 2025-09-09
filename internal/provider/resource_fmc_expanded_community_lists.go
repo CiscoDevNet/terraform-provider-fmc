@@ -266,7 +266,7 @@ func (r *ExpandedCommunityListsResource) Update(ctx context.Context, req resourc
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete ExpandedCommunityLists
-	toDelete.Items = make(map[string]ExpandedCommunityListsItems)
+	toDelete.Items = make(map[string]ExpandedCommunityListsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -298,7 +298,7 @@ func (r *ExpandedCommunityListsResource) Update(ctx context.Context, req resourc
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate ExpandedCommunityLists
-	toCreate.Items = make(map[string]ExpandedCommunityListsItems)
+	toCreate.Items = make(map[string]ExpandedCommunityListsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -322,7 +322,7 @@ func (r *ExpandedCommunityListsResource) Update(ctx context.Context, req resourc
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate ExpandedCommunityLists
-	toUpdate.Items = make(map[string]ExpandedCommunityListsItems)
+	toUpdate.Items = make(map[string]ExpandedCommunityListsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -569,8 +569,12 @@ func (r *ExpandedCommunityListsResource) deleteSubresources(ctx context.Context,
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Expanded Community Lists)", state.Id.ValueString()))
 
 		var idx = 0
-		var idsToRemove strings.Builder
 		var alreadyDeleted []string
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
+		var idsToRemove strings.Builder
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -583,7 +587,8 @@ func (r *ExpandedCommunityListsResource) deleteSubresources(ctx context.Context,
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
 			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
