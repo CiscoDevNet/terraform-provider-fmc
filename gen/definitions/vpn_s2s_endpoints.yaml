@@ -1,5 +1,5 @@
+# FMCBUG CSCwp08491	Endpoint /policy/ftds2svpns/{id}/endpoint does not allow to configure certificate map
 ---
-# FMCBUG - CSCwp08491	Endpoint /policy/ftds2svpns/{id}/endpoint does not allow to configure certificate map
 name: VPN S2S Endpoints
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftds2svpns/%v/endpoints
 res_description: This resource manages FTD Site-to-Site (S2S) Virtual Private Networks (VPNs) Endpints
@@ -8,7 +8,7 @@ doc_category: VPN
 minimum_version_bulk_delete: "999"
 adjust_body: true
 skip_minimum_test: true
-test_tags: [TF_VAR_device_id]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
   - tf_name: vpn_s2s_id
     type: String
@@ -223,6 +223,7 @@ attributes:
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 
   data "fmc_device" "test" {
     id = var.device_id
@@ -234,7 +235,7 @@ test_prerequisites: |-
 
   resource "fmc_device_physical_interface" "test" {
     device_id = data.fmc_device.test.id
-    name      = "GigabitEthernet0/1"
+    name      = var.interface_name
     mode      = "NONE"
     logical_name = "my_phy_s2s_vpn_endpoints"
     ipv4_static_address = "10.198.21.1"

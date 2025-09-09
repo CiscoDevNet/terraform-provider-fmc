@@ -30,8 +30,8 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmcDeviceVTEPPolicy(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_vtep_policy.test", "type"))
@@ -61,7 +61,7 @@ variable "interface_name" {default = null} // tests will set $TF_VAR_interface_n
 
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
-  name         = "GigabitEthernet0/1"
+  name         = var.interface_name
   mode         = "NONE"
   logical_name = "myinterface-0-1"
 }

@@ -7,7 +7,7 @@ res_description: >-
   The following applies:\n
   - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
   - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
-test_tags: [TF_VAR_device_id]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
   - tf_name: device_id
     type: String
@@ -182,7 +182,7 @@ test_prerequisites: |-
 
   resource "fmc_device_physical_interface" "test" {
     device_id           = var.device_id
-    name                = "GigabitEthernet0/1"
+    name                = var.interface_name
     mode                = "NONE"
     logical_name        = "myinterface-0-1"
     ipv4_static_address = "10.12.1.1"

@@ -93,7 +93,7 @@ attributes:
     requires_replace: true
     description: Name of the parent interface. It has to already exist on the device.
     example: GigabitEthernet0/1
-    test_value: data.fmc_device_physical_interface.test.name
+    test_value: var.interface_name
   - model_name: subIntfId
     tf_name: sub_interface_id
     type: Int64
@@ -514,11 +514,6 @@ attributes:
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
   variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
-
-  data "fmc_device_physical_interface" "test" {
-    device_id = var.device_id
-    name        = var.interface_name
-  }
 
   resource "fmc_security_zone" "test" {
     name           = "routed1"

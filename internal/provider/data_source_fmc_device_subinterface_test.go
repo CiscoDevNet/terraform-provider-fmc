@@ -69,11 +69,6 @@ const testAccDataSourceFmcDeviceSubinterfacePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 
-data "fmc_device_physical_interface" "test" {
-  device_id = var.device_id
-  name        = var.interface_name
-}
-
 resource "fmc_security_zone" "test" {
   name           = "routed1"
   interface_type = "ROUTED"
@@ -92,7 +87,7 @@ func testAccDataSourceFmcDeviceSubinterfaceConfig() string {
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
 	config += `	mtu = 9000` + "\n"
-	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_name = var.interface_name` + "\n"
 	config += `	sub_interface_id = 7` + "\n"
 	config += `	vlan_id = 4094` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
@@ -117,7 +112,7 @@ func testAccNamedDataSourceFmcDeviceSubinterfaceConfig() string {
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
 	config += `	mtu = 9000` + "\n"
-	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	interface_name = var.interface_name` + "\n"
 	config += `	sub_interface_id = 7` + "\n"
 	config += `	vlan_id = 4094` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
