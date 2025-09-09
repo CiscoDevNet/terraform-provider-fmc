@@ -116,25 +116,25 @@ attributes:
             description: Id of the object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_sgt.test.id   
+            test_value: fmc_sgt.test.id
           - model_name: type
             type: String
             value: SecurityGroupTag
             exclude_example: true
       # Possible to configure SGT litterals via API but not via GUI
-      #- model_name: literals
-      #  data_path: [securityGroupTags]
-      #  tf_name: source_sgt_literals
-      #  description: Set of SGT that represent tag of source traffic (literally specified).
-      #  type: Set
-      #  attributes:
-      #    - model_name: tag
-      #      type: String
-      #      id: true
-      #      example: 11
-      #    - model_name: type
-      #      type: String
-      #      example: SecurityGroupTag          
+      # - model_name: literals
+      #   data_path: [securityGroupTags]
+      #   tf_name: source_sgt_literals
+      #   description: Set of SGT that represent tag of source traffic (literally specified).
+      #   type: Set
+      #   attributes:
+      #     - model_name: tag
+      #       type: String
+      #       id: true
+      #       example: 11
+      #     - model_name: type
+      #       type: String
+      #       example: SecurityGroupTag
       - model_name: objects
         data_path: [destinationNetworks]
         tf_name: destination_network_objects
@@ -179,7 +179,7 @@ attributes:
         attributes:
           - model_name: type
             type: String
-            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
             mandatory: true
             example: PortLiteral
             description: Type of the object.
@@ -211,7 +211,7 @@ attributes:
         attributes:
           - model_name: type
             type: String
-            enum_values: [ PortLiteral, ICMPv4PortLiteral ]
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
             mandatory: true
             example: PortLiteral
             description: Type of the object.

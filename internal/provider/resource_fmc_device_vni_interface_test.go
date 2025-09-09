@@ -30,8 +30,8 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDeviceVNIInterface(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vni_interface.test", "type"))
@@ -69,9 +69,12 @@ func TestAccFmcDeviceVNIInterface(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDeviceVNIInterfacePrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
-  name         = "GigabitEthernet0/1"
+  name         = var.interface_name
   mode         = "NONE"
   logical_name = "myinterface-0-1"
 }
@@ -90,8 +93,6 @@ resource "fmc_security_zone" "test" {
   name           = "routed1"
   interface_type = "ROUTED"
 }
-
-variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 `
 
 // End of section. //template:end testPrerequisites

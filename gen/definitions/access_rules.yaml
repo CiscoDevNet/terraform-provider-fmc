@@ -3,7 +3,7 @@
 name: Access Rules
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules
 doc_category: Policies
-res_description:  >-
+res_description: >-
  This is an early access resource and it's behaviour may change in future releases.\n
  This resource manages Access Rules in Access Control Policies in bulk.\n
  Order of the rules is meant to be preserved within the resource, however *not* between multiple `fmc_access_rules` resources that create rules within a single category/section.\n

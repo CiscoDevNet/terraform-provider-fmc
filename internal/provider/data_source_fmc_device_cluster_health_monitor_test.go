@@ -30,8 +30,8 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmcDeviceClusterHealthMonitor(t *testing.T) {
-	if os.Getenv("TF_VAR_cluster_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_cluster_id")
+	if os.Getenv("TF_VAR_cluster_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_cluster_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_cluster_health_monitor.test", "type"))
@@ -67,6 +67,7 @@ func TestAccDataSourceFmcDeviceClusterHealthMonitor(t *testing.T) {
 
 const testAccDataSourceFmcDeviceClusterHealthMonitorPrerequisitesConfig = `
 variable "cluster_id" { default = null } // tests will set $TF_VAR_cluster_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 `
 
 // End of section. //template:end testPrerequisites
@@ -88,7 +89,7 @@ func testAccDataSourceFmcDeviceClusterHealthMonitorConfig() string {
 	config += `	system_auto_rejoin_attempts = 3` + "\n"
 	config += `	system_auto_rejoin_interval = 5` + "\n"
 	config += `	system_auto_rejoin_interval_variation = 2` + "\n"
-	config += `	unmonitored_interfaces = ["GigabitEthernet0/1"]` + "\n"
+	config += `	unmonitored_interfaces = var.interface_name` + "\n"
 	config += `	service_application_monitoring = true` + "\n"
 	config += `}` + "\n"
 

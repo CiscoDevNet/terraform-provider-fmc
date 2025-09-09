@@ -176,7 +176,7 @@ Optional:
 - `tcp_transport_mode` (Boolean) True set it to active, False to passive.
   - Default value: `false`
 - `update_source_interface_id` (String) Interface ID for the update source
-- `version` (String) Set BPG version: 0 - default, 4 - IPv4
+- `version` (String) Set BGP version: 0 - default, 4 - IPv4
   - Choices: `0`, `4`
   - Default value: `0`
 - `weight` (Number) Weight of the neighbor

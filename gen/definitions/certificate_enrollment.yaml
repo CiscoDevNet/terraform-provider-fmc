@@ -65,7 +65,7 @@ attributes:
     exclude_test: true # FMCVERSION <= 7.2
     # FMCBUG CSCwq44417 FMC API: Endpoint /object/certenrollments does not set skipCaFlagCheck flag correctly
     write_only: true
-  
+
   # CA Information - EST
   - model_name: enrollmentUrl
     data_path: ["estContent"]
@@ -177,7 +177,7 @@ attributes:
     description: Base64 encoded certificate in PEM format.
     exclude_example: true
     exclude_test: true
-  
+
   # CA Information - PKCS12
   - model_name: base64Certificate
     data_path: ["pkcs12Content"]
@@ -197,13 +197,13 @@ attributes:
     test_value: '"cisco123"'
     sensitive: true
     write_only: true
-  
+
   # Certificate Parameters
   - model_name: includeFQDN
     data_path: ["certificateParameters"]
     tf_name: certificate_include_fqdn
     type: String
-    enum_values: [ "DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT" ]
+    enum_values: ["DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT"]
     description: Include the device's fully qualified domain name (FQDN) in the certificate request
     example: NONE
     exclude_test: true
@@ -277,13 +277,13 @@ attributes:
     description: Include the device serial in the certificate.
     example: true
     exclude_test: true
-  
+
   # Key
   - model_name: keyType
     data_path: ["key"]
     tf_name: key_type
     type: String
-    enum_values: [ "RSA", "ECDSA", "EdDSA" ]
+    enum_values: ["RSA", "ECDSA", "EdDSA"]
     description: Type of key pair.
     example: RSA
     exclude_test: true
@@ -298,7 +298,7 @@ attributes:
     data_path: ["key"]
     tf_name: key_size
     type: String
-    enum_values: [ "CertKey_512", "CertKey_768", "CertKey_1024", "CertKey_2048", "CertKey_3072", "CertKey_4096", "CertKey_256", "CertKey_384", "CertKey_521" ]
+    enum_values: ["CertKey_512", "CertKey_768", "CertKey_1024", "CertKey_2048", "CertKey_3072", "CertKey_4096", "CertKey_256", "CertKey_384", "CertKey_521"]
     description: Desired key size (modulus), in bits.
     example: CertKey_2048
     exclude_test: true
@@ -309,7 +309,7 @@ attributes:
     description: Do not validate values in the key usage and extended key usage extensions of IPsec remote client certificates.
     example: "false"
     exclude_test: true
-  
+
   # Revocation
   # Set implicilty using adjustBody
   # - model_name: enableCertRevocationList
@@ -354,12 +354,12 @@ attributes:
     description: URL for the Online Certificate Status Protocol (OCSP).
     example: http://example.com/ocsp
     exclude_test: true # FMCVERSION <= 7.6
-  
+
   - model_name: evaluationPriority
     data_path: ["revocation"]
     tf_name: revocation_evaluation_priority
     type: String
-    enum_values: [ CRL, OCSP, NONE ]
+    enum_values: [CRL, OCSP, NONE]
     description: Priority for certificate revocation evaluation. Needs to be set if both CRL and OCSP are enabled.
     example: CRL
     exclude_test: true # FMCVERSION <= 7.6

@@ -360,7 +360,7 @@ test_prerequisites: |-
       0208 00
       EOT
     }
-  
+
   resource "fmc_certificate_enrollment" "test" {
     name                          = "sso_certificate_enrollment"
     enrollment_type               = "PKCS12"

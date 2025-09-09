@@ -4,7 +4,7 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/deviceclusters/ftddevicec
 put_create: true
 no_delete: true
 doc_category: Devices
-test_tags: [TF_VAR_cluster_id]
+test_tags: [TF_VAR_cluster_id, TF_VAR_interface_name]
 attributes:
   - tf_name: cluster_id
     type: String
@@ -115,6 +115,7 @@ attributes:
     element_type: String
     description: List of interfaces excluded from monitoring.
     example: GigabitEthernet0/1
+    test_value: var.interface_name
   - model_name: isServiceApplicationEnabled
     data_path: [monitorInterface]
     tf_name: service_application_monitoring
@@ -124,3 +125,4 @@ attributes:
 
 test_prerequisites: |-
   variable "cluster_id" { default = null } // tests will set $TF_VAR_cluster_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name

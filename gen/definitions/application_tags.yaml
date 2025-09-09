@@ -18,7 +18,7 @@ attributes:
         resource_id: true
         description: Id of the managed Application Tag.
         exclude_example: true
-        exclude_test: true        
+        exclude_test: true
       - model_name: type
         type: String
         description: Type of the object; this value is always 'ApplicationTag'.

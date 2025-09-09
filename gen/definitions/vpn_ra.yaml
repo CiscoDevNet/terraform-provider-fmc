@@ -5,7 +5,7 @@ name: VPN RA
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns
 res_description: This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs).
 doc_category: VPN
-skip_minimum_test: true 
+skip_minimum_test: true
 attributes:
   - model_name: name
     type: String
@@ -58,7 +58,7 @@ attributes:
   # - data_path: [connectionProfiles]
   #   tf_name: connection_profile_id
   #   type: List
-  
+
   # Access Interfaces
   - model_name: interfaceSettings
     data_path: [accessInterfaceSettings]
@@ -82,20 +82,20 @@ attributes:
         description: Enable IPsec IKEv2.
         example: true
         minimum_test_value: '"true"'
-        #default_value: true
+        # default_value: true
       - model_name: enableSSL
         type: Bool
         tf_name: protocol_ssl
         description: Enable SSL.
         example: true
         minimum_test_value: '"true"'
-        #default_value: true
+        # default_value: true
       - model_name: enableDTLS
         type: Bool
         tf_name: protocol_ssl_dtls
         description: Enable DTLS for the VPN.
         example: true
-        #default_value: true
+        # default_value: true
       # - model_name: configureInterfaceIDCertificate
       #   tf_name: interface_specific_certificate
       #   type: Bool
@@ -191,9 +191,9 @@ attributes:
     description: Id of Secure Client External Browser Package.
     example: 12345678-1234-1234-1234-123456789012
     exclude_test: true
-  
+
   # Advenced - Secure Client Customization
-  # Configuration managed by another endpoint 
+  # Configuration managed by another endpoint
   - model_name: id
     data_path: [secureClientCustomizationSettings]
     tf_name: secure_client_customization_id
@@ -219,7 +219,7 @@ attributes:
     description: Id of Certificate Map.
     type: String
     computed: true
-  
+
   # Advanced - Group Policies
   - model_name: groupPolicies
     tf_name: group_policies
@@ -252,14 +252,14 @@ attributes:
     description: Id of Load Balancing settings.
     computed: true
     exclude_test: true # FMCVERSION <= 7.2
-  
+
   # Advanced - IPSEC - Crypto Maps
   # Configuration managed by another endpoint
   # No valid 'id', since this is a list
   # - data_path: [ipsecCryptoMaps]
   #   tf_name: ipsec_crypto_map_id
   #   type: List
-  
+
   # Advanced - IPSEC - IKEv2 Policies
   - model_name: ikev2Policies
     tf_name: ikev2_policies

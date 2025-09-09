@@ -2,7 +2,7 @@
 name: Device VNI Interface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/vniinterfaces
 doc_category: Devices
-test_tags: [TF_VAR_device_id]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
   - tf_name: device_id
     type: String
@@ -195,9 +195,12 @@ attributes:
     exclude_test: true
 
 test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
   resource "fmc_device_physical_interface" "test" {
     device_id    = var.device_id
-    name         = "GigabitEthernet0/1"
+    name         = var.interface_name
     mode         = "NONE"
     logical_name = "myinterface-0-1"
   }
@@ -216,5 +219,3 @@ test_prerequisites: |-
     name           = "routed1"
     interface_type = "ROUTED"
   }
-
-  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

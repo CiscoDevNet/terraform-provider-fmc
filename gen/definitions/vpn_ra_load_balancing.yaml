@@ -72,7 +72,7 @@ attributes:
     write_only: true
     string_min_length: 4
     string_max_length: 16
-  
+
   # Settings
   - model_name: redirectUsingFqdn
     data_path: [redirectSettings]

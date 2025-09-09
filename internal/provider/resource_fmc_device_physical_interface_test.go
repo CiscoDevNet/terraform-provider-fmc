@@ -30,15 +30,14 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDevicePhysicalInterface(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_physical_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "description", "my description"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mode", "NONE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "name", "GigabitEthernet0/1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mtu", "1400"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
@@ -68,6 +67,7 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 
 const testAccFmcDevicePhysicalInterfacePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 `
 
 // End of section. //template:end testPrerequisites
@@ -80,7 +80,7 @@ func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 	config += `	logical_name = "iface_minimum"` + "\n"
 	config += `	management_only = true` + "\n"
 	config += `	mode = "NONE"` + "\n"
-	config += `	name = "GigabitEthernet0/1"` + "\n"
+	config += `	name = var.interface_name` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -97,7 +97,7 @@ func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
 	config += `	mode = "NONE"` + "\n"
-	config += `	name = "GigabitEthernet0/1"` + "\n"
+	config += `	name = var.interface_name` + "\n"
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"

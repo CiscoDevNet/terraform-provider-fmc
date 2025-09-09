@@ -78,19 +78,19 @@ attributes:
     type: String
     data_path: [hardware]
     description: Interface speed.
-    enum_values: [ AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP ]
+    enum_values: [AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP]
     mandatory: true
     example: AUTO
     exclude_test: true
   - model_name: lacpMode
     type: String
     description: Link Aggregation Control Protocol (LACP) mode.
-    enum_values: [ ACTIVE, "ON", PASSIVE ]
+    enum_values: [ACTIVE, "ON", PASSIVE]
     example: ACTIVE
   - model_name: lacpRate
     type: String
     description: Link Aggregation Control Protocol (LACP) rate.
-    enum_values: [ DEFAULT, FAST, NORMAL]
+    enum_values: [DEFAULT, FAST, NORMAL]
     example: DEFAULT
 
 
@@ -102,4 +102,3 @@ test_prerequisites: |-
     chassis_id = var.chassis_id
     id = var.chassis_interface_id
   }
-

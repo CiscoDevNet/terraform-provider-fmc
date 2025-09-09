@@ -234,11 +234,11 @@ attributes:
             description: Id of the object.
             mandatory: true
       # FMCBUG: CSCwp73412  Route Map is missing attribute for Match the specified community exactly
-      #- model_name: ???
-      #  tf_name: match_bgp_match_community_exactly
-      #  type: Bool
-      #  description: Match BGP community exactly with the specified community.
-      #  example: "true"
+      # - model_name: ???
+      #   tf_name: match_bgp_match_community_exactly
+      #   type: Bool
+      #   description: Match BGP community exactly with the specified community.
+      #   example: "true"
       # Match clauses - Policy Lists
       - model_name: policyLists
         tf_name: match_bgp_policy_lists
@@ -345,12 +345,12 @@ attributes:
         tf_name: set_bgp_community_add_to_existing_communities
         type: Bool
         description: Add the community to the already existing communities.
-        example: "true" 
+        example: "true"
       - model_name: communityListSettingInternet
         tf_name: set_bgp_community_internet
         type: Bool
         description: Set Internet well-known community.
-        example: "true" 
+        example: "true"
       - model_name: communityListSettingNoAdvertise
         tf_name: set_bgp_community_no_advertise
         type: Bool

@@ -25,7 +25,7 @@ attributes:
     example: My Secure Client Customization
   - model_name: customizationType
     type: String
-    enum_values:  ["LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM"]
+    enum_values: ["LANGUAGE_LOCALIZATION", "IMAGE", "SCRIPT", "BINARY", "CUSTOMIZED_INSTALLER_TRANSFORM", "LOCALIZED_INSTALLER_TRANSFORM"]
     description: Type of the Secure Client Customization object.
     mandatory: true
     example: LANGUAGE_LOCALIZATION

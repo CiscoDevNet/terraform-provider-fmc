@@ -74,18 +74,18 @@ attributes:
         description: Type of File Rule.
         computed: true
       # Exist in schema but not in GUI
-      #- model_name: name
-      #  type: String
-      #  description: Name of the FileRule object.
-      #  example: file_rule_1
-      #  exclude_example: true
-      #  exclude_test: true
-      #- model_name: description
-      #  type: String
-      #  description: Description of the file rule.
-      #  example: My file policy rule.
-      #  exclude_example: true
-      #  exclude_test: true
+      # - model_name: name
+      #   type: String
+      #   description: Name of the FileRule object.
+      #   example: file_rule_1
+      #   exclude_example: true
+      #   exclude_test: true
+      # - model_name: description
+      #   type: String
+      #   description: Description of the file rule.
+      #   example: My file policy rule.
+      #   exclude_example: true
+      #   exclude_test: true
       - model_name: protocol
         tf_name: application_protocol
         type: String

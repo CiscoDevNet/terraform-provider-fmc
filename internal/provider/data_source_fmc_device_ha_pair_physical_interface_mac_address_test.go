@@ -59,13 +59,13 @@ func TestAccDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddress(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcDeviceHAPairPhysicalInterfaceMACAddressPrerequisitesConfig = `
+variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
 data "fmc_device_physical_interface" "test" {
   device_id = var.device_id
   name      = var.interface_name
 }
-
-variable "device_ha_id" { default = null } // tests will set $TF_VAR_device_ha_id
-variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 `
 
 // End of section. //template:end testPrerequisites

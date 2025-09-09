@@ -7,7 +7,7 @@ res_description: >-
   The following applies:\n
   - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
   - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
-test_tags: [TF_VAR_device_id]
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
   - tf_name: device_id
     type: String
@@ -160,7 +160,7 @@ attributes:
     tf_name: ip_based_monitoring_type
     type: String
     description: Peer IP address version.
-    enum_values: [ PEER_IPV4, PEER_IPV6 ]
+    enum_values: [PEER_IPV4, PEER_IPV6]
     example: PEER_IPV4
   - model_name: monitoredIp
     data_path: [pathMonitoring]
@@ -177,9 +177,12 @@ attributes:
     exclude_test: true
 
 test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
   resource "fmc_device_physical_interface" "test" {
     device_id           = var.device_id
-    name                = "GigabitEthernet0/1"
+    name                = var.interface_name
     mode                = "NONE"
     logical_name        = "myinterface-0-1"
     ipv4_static_address = "10.12.1.1"
@@ -190,5 +193,3 @@ test_prerequisites: |-
     name           = "my_sec_zone_vti"
     interface_type = "ROUTED"
   }
-
-  variable "device_id" { default = null } // tests will set $TF_VAR_device_id

@@ -61,11 +61,11 @@ func TestAccFmcPolicyAssignment(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcPolicyAssignmentPrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
 resource "fmc_ftd_nat_policy" "example" {
   name = "policy_assignment_nat_policy"
 }
-
-variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
 data "fmc_device" "test" {
   id = var.device_id

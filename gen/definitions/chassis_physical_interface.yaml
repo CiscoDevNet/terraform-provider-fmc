@@ -56,7 +56,7 @@ attributes:
     type: String
     data_path: [hardware]
     description: Interface speed.
-    enum_values: [ AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP ]
+    enum_values: [AUTO, TEN_MBPS, HUNDRED_MBPS, ONE_GBPS, TEN_GBPS, TWENTY_FIVE_GBPS, FORTY_GBPS, HUNDRED_GBPS, TWO_HUNDRED_GBPS, FOUR_HUNDRED_GBPS, DETECT_SFP]
     example: AUTO
     mandatory: true
     exclude_test: true
@@ -64,7 +64,7 @@ attributes:
     type: String
     data_path: [hardware]
     description: Forward Error Correction (FEC) mode.
-    enum_values: [ AUTO, CL108RS, CL74FC, CL91RS, DISABLE ]
+    enum_values: [AUTO, CL108RS, CL74FC, CL91RS, DISABLE]
     exclude_example: true
     exclude_test: true
 
