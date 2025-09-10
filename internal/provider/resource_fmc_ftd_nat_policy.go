@@ -569,8 +569,11 @@ func (r *FTDNATPolicyResource) truncateManualNatRulesAt(ctx context.Context, sta
 	var counts []int
 	count := 0
 
+	b.Grow(maxUrlParamLength + 100)
+
 	for i := kept; i < len(state.ManualNatRules); i++ {
-		b.WriteString(state.ManualNatRules[i].Id.ValueString() + ",")
+		b.WriteString(state.ManualNatRules[i].Id.ValueString())
+		b.WriteString(",")
 		count++
 		if b.Len() >= maxUrlParamLength {
 			bulks = append(bulks, b.String())
@@ -608,8 +611,11 @@ func (r *FTDNATPolicyResource) truncateAutoNatRulesAt(ctx context.Context, state
 	var counts []int
 	count := 0
 
+	b.Grow(maxUrlParamLength + 100)
+
 	for i := kept; i < len(state.AutoNatRules); i++ {
-		b.WriteString(state.AutoNatRules[i].Id.ValueString() + ",")
+		b.WriteString(state.AutoNatRules[i].Id.ValueString())
+		b.WriteString(",")
 		count++
 		if b.Len() >= maxUrlParamLength {
 			bulks = append(bulks, b.String())

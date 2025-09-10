@@ -1,4 +1,5 @@
 # Manual resource - Resource (Read, Create, Update, Delete)
+# Early access - use with caution
 ---
 name: Access Rules
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/accessrules

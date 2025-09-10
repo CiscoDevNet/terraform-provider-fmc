@@ -669,6 +669,8 @@ func (r *PrefilterPolicyResource) truncateRulesAt(ctx context.Context, state *Pr
 	var counts []int
 	count := 0
 
+	b.Grow(maxUrlParamLength + 100)
+
 	for i := kept; i < len(state.Rules); i++ {
 		if b.Len() != 0 {
 			b.WriteString(",")

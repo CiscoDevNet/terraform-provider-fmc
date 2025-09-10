@@ -255,7 +255,7 @@ func (r *RangesResource) Update(ctx context.Context, req resource.UpdateRequest,
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete Ranges
-	toDelete.Items = make(map[string]RangesItems)
+	toDelete.Items = make(map[string]RangesItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -287,7 +287,7 @@ func (r *RangesResource) Update(ctx context.Context, req resource.UpdateRequest,
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate Ranges
-	toCreate.Items = make(map[string]RangesItems)
+	toCreate.Items = make(map[string]RangesItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -311,7 +311,7 @@ func (r *RangesResource) Update(ctx context.Context, req resource.UpdateRequest,
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate Ranges
-	toUpdate.Items = make(map[string]RangesItems)
+	toUpdate.Items = make(map[string]RangesItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -521,8 +521,11 @@ func (r *RangesResource) deleteSubresources(ctx context.Context, state, plan Ran
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Ranges)", state.Id.ValueString()))
 
 		var idx = 0
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
 		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -530,15 +533,16 @@ func (r *RangesResource) deleteSubresources(ctx context.Context, state, plan Ran
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -556,10 +560,6 @@ func (r *RangesResource) deleteSubresources(ctx context.Context, state, plan Ran
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 

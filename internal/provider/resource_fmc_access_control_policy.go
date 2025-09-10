@@ -1038,6 +1038,8 @@ func (r *AccessControlPolicyResource) truncateRulesAt(ctx context.Context, state
 	var counts []int
 	count := 0
 
+	b.Grow(maxUrlParamLength)
+
 	for i := kept; i < len(state.Rules); i++ {
 		if b.Len() != 0 {
 			b.WriteString(",")

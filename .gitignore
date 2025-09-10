@@ -38,3 +38,6 @@ running.sh
 
 # Keep windows files with windows line endings
 *.winfile eol=crlf
+
+CLAUDE.md
+.claude/
