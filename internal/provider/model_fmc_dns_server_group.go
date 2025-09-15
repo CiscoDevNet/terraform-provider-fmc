@@ -85,7 +85,7 @@ func (data DNSServerGroup) toBody(ctx context.Context, state DNSServerGroup) str
 		body, _ = sjson.Set(body, "retries", data.Retries.ValueInt64())
 	}
 	if len(data.DnsServers) > 0 {
-		body, _ = sjson.Set(body, "dnsservers", []interface{}{})
+		body, _ = sjson.Set(body, "dnsservers", []any{})
 		for _, item := range data.DnsServers {
 			itemBody := ""
 			if !item.Ip.IsNull() {

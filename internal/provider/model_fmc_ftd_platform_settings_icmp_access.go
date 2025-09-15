@@ -89,7 +89,7 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 		body, _ = sjson.Set(body, "burstSize", data.BurstSize.ValueInt64())
 	}
 	if len(data.IcmpConfigs) > 0 {
-		body, _ = sjson.Set(body, "icmpConfigs", []interface{}{})
+		body, _ = sjson.Set(body, "icmpConfigs", []any{})
 		for _, item := range data.IcmpConfigs {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -107,7 +107,7 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 				itemBody, _ = sjson.Set(itemBody, "interfaces.literals", values)
 			}
 			if len(item.InterfaceObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []any{})
 				for _, childItem := range item.InterfaceObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

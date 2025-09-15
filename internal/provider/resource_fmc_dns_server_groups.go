@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -289,7 +290,7 @@ func (r *DNSServerGroupsResource) Update(ctx context.Context, req resource.Updat
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete DNSServerGroups
-	toDelete.Items = make(map[string]DNSServerGroupsItems)
+	toDelete.Items = make(map[string]DNSServerGroupsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -321,7 +322,7 @@ func (r *DNSServerGroupsResource) Update(ctx context.Context, req resource.Updat
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate DNSServerGroups
-	toCreate.Items = make(map[string]DNSServerGroupsItems)
+	toCreate.Items = make(map[string]DNSServerGroupsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -345,7 +346,7 @@ func (r *DNSServerGroupsResource) Update(ctx context.Context, req resource.Updat
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate DNSServerGroups
-	toUpdate.Items = make(map[string]DNSServerGroupsItems)
+	toUpdate.Items = make(map[string]DNSServerGroupsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -499,7 +500,7 @@ func (r *DNSServerGroupsResource) createSubresources(ctx context.Context, state,
 			}
 
 			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
+			body, _ = sjson.SetRaw("{}", "items.-1", res.String())
 			res = gjson.Parse(body)
 
 			// Read computed values
@@ -544,9 +545,7 @@ func (r *DNSServerGroupsResource) createSubresources(ctx context.Context, state,
 
 				// Read result and save it to the state
 				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
+				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
 				bulk.Items = make(map[string]DNSServerGroupsItems, bulkSizeCreate)
@@ -592,8 +591,11 @@ func (r *DNSServerGroupsResource) deleteSubresources(ctx context.Context, state,
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (DNS Server Groups)", state.Id.ValueString()))
 
 		var idx = 0
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
 		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -601,15 +603,16 @@ func (r *DNSServerGroupsResource) deleteSubresources(ctx context.Context, state,
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -627,10 +630,6 @@ func (r *DNSServerGroupsResource) deleteSubresources(ctx context.Context, state,
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 

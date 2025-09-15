@@ -97,7 +97,7 @@ func (data FTDPlatformSettingsTrustedDNSServers) toBody(ctx context.Context, sta
 		body, _ = sjson.Set(body, "dnsServers.literals", values)
 	}
 	if len(data.TrustedDnsServersObjects) > 0 {
-		body, _ = sjson.Set(body, "dnsServers.objects", []interface{}{})
+		body, _ = sjson.Set(body, "dnsServers.objects", []any{})
 		for _, item := range data.TrustedDnsServersObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {

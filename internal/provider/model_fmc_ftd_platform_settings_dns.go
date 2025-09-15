@@ -82,7 +82,7 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.ServerGroups) > 0 {
-		body, _ = sjson.Set(body, "dnsServerGroups", []interface{}{})
+		body, _ = sjson.Set(body, "dnsServerGroups", []any{})
 		for _, item := range data.ServerGroups {
 			itemBody := ""
 			if !item.ServerGroupId.IsNull() {
@@ -106,7 +106,7 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 		body, _ = sjson.Set(body, "pollTimerInMins", data.PollTimer.ValueInt64())
 	}
 	if len(data.InterfaceObjects) > 0 {
-		body, _ = sjson.Set(body, "interfaceObjects", []interface{}{})
+		body, _ = sjson.Set(body, "interfaceObjects", []any{})
 		for _, item := range data.InterfaceObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {

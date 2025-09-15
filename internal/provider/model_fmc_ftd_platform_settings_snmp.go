@@ -136,7 +136,7 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 		body, _ = sjson.Set(body, "port", data.ListenPort.ValueInt64())
 	}
 	if len(data.SnmpManagementHosts) > 0 {
-		body, _ = sjson.Set(body, "snmpMgmtHosts", []interface{}{})
+		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
 		for _, item := range data.SnmpManagementHosts {
 			itemBody := ""
 			if !item.ManagementHostIpObjectId.IsNull() {
@@ -169,7 +169,7 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 				itemBody, _ = sjson.Set(itemBody, "interfaces.literals", values)
 			}
 			if len(item.InterfaceObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []any{})
 				for _, childItem := range item.InterfaceObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -188,7 +188,7 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 		}
 	}
 	if len(data.Snmpv3Users) > 0 {
-		body, _ = sjson.Set(body, "snmpv3Users", []interface{}{})
+		body, _ = sjson.Set(body, "snmpv3Users", []any{})
 		for _, item := range data.Snmpv3Users {
 			itemBody := ""
 			if !item.SecurityLevel.IsNull() {

@@ -87,7 +87,7 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 		body, _ = sjson.Set(body, "port", data.Port.ValueInt64())
 	}
 	if len(data.HttpConfigurations) > 0 {
-		body, _ = sjson.Set(body, "httpConfiguration", []interface{}{})
+		body, _ = sjson.Set(body, "httpConfiguration", []any{})
 		for _, item := range data.HttpConfigurations {
 			itemBody := ""
 			if !item.SourceNetworkObjectId.IsNull() {
@@ -99,7 +99,7 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 				itemBody, _ = sjson.Set(itemBody, "interfaces.literals", values)
 			}
 			if len(item.InterfaceObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []any{})
 				for _, childItem := range item.InterfaceObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

@@ -83,7 +83,7 @@ func (data FTDPlatformSettingsSSHAccess) toBody(ctx context.Context, state FTDPl
 		body, _ = sjson.Set(body, "interfaces.literals", values)
 	}
 	if len(data.InterfaceObjects) > 0 {
-		body, _ = sjson.Set(body, "interfaces.objects", []interface{}{})
+		body, _ = sjson.Set(body, "interfaces.objects", []any{})
 		for _, item := range data.InterfaceObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
