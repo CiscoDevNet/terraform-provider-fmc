@@ -1,0 +1,132 @@
+---
+name: FTD Platform Settings Syslog Logging Setup
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/basicloggingsetups
+doc_category: Devices
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SyslogSetting'.
+    computed: true
+
+  # Basic Logging Settings
+  - model_name: enableLogging
+    type: Bool
+    description: Turns on the data plane system logging for the threat defense device.
+    example: true
+  - model_name: enableLoggingFailover
+    tf_name: enable_logging_on_the_failover_standby_unit
+    type: Bool
+    description: Turns on logging for the standby for the threat defense device, if available.
+    example: false
+  - model_name: enableEMBLEMFormat
+    tf_name: emblem_format
+    type: Bool
+    description: Enables EMBLEM format logging.
+    example: false
+  - model_name: enableDebugMesgAsSyslog
+    tf_name: send_debug_messages_as_syslog
+    type: Bool
+    description: Redirects all the debug trace output to the syslog.
+    example: false
+  - model_name: internalBuffMemSizeInBytes
+    tf_name: internal_buffer_memory_size
+    type: Int64
+    description: Size of the internal buffer to which syslog messages are saved if the logging buffer is enabled.
+    min_int: 4096
+    max_int: 52428800
+    default_value: 4096
+    example: 4096
+
+  # Logging to Secure Firewall Management Center
+  - model_name: loggingToFMCType
+    tf_name: fmc_logging_type
+    type: String
+    description: Syslog message logging to the Firewall Management Center (FMC).
+    enum_values: ["OFF", "ALL", "VPN"]
+    example: "VPN"
+    default_value: "VPN"
+  - model_name: loggingToFMCLogLevel
+    tf_name: fmc_logging_level
+    type: String
+    description: Syslog message logging level to the Firewall Management Center (FMC).
+    enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
+    example: "ERR"
+    default_value: "ERR"
+
+  # FTP Server Information
+  - model_name: id
+    data_path: [ftpServerInfo, ipAddress]
+    tf_name: ftp_server_host_id
+    type: String
+    description: Id of host object representing the FTP server.
+    example: "d3f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"
+  - model_name: userName
+    data_path: [ftpServerInfo]
+    tf_name: ftp_server_username
+    type: String
+    description: User name to log in to the FTP server.
+    example: "ftpuser"
+  - model_name: password
+    data_path: [ftpServerInfo]
+    tf_name: ftp_server_password
+    type: String
+    description: Password to log in to the FTP server.
+    example: "ftppassword"
+    sensitive: true
+    write_only: true
+  - model_name: path
+    data_path: [ftpServerInfo]
+    tf_name: ftp_server_path
+    type: String
+    description: Path on the FTP server to which the logs are uploaded.
+    example: "/logs"
+  - model_name: interfaceGroups
+    data_path: [ftpServerInfo]
+    tf_name: ftp_server_interface_groups
+    type: List
+    description: Interface groups through which the FTP server is reachable.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the interface group.
+        example: "e7f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"
+
+  # Flash size
+  - model_name: enableFlash
+    tf_name: flash
+    type: Bool
+    description: Save the buffer contents to the flash memory before it is overwritten
+    example: false
+  - model_name: maxFlashForLoggingInKB
+    tf_name: flash_maximum_space
+    type: Int64
+    description: Maximum space to be used in the flash memory for logging (in kilobytes).
+    min_int: 4
+    max_int: 8044176
+    default_value: 3076
+    example: 3076
+  - model_name: minFreePreservedSpaceInKB
+    tf_name: flash_minimum_free_space
+    type: Int64
+    description: Minimum free space to be preserved in flash memory (in kilobytes)
+    min_int: 0
+    max_int: 8044176
+    default_value: 1024
+    example: 1024
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_banner"
+  }
