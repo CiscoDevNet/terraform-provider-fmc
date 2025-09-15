@@ -1,0 +1,46 @@
+---
+name: FTD Platform Settings Syslog Rate Limit
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/ratelimits
+doc_category: Devices
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Rate Limits.
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RateLimit'.
+    computed: true
+  
+  - model_name: rateLimitType
+    type: String
+    description: The rate limit type.
+    enum_values: [LOG_LEVEL, SYSLOG_ID]
+    example: LOG_LEVEL
+    mandatory: true
+  - model_name: value
+    tf_name: rate_limit_value
+    type: String
+    description: Value for the `rate_limit_type`.
+    mandatory: true
+    example: "ERR"
+  - model_name: numberOfMessages
+    type: Int64
+    description: Number of messages.
+    mandatory: true
+    example: 100
+  - model_name: intervalInSeconds
+    tf_name: interval
+    type: Int64
+    description: Interval in seconds.
+    example: 60
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_banner"
+  }
