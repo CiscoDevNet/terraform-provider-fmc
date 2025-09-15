@@ -94,7 +94,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnSecureClientCustomization")
 	if len(data.GuiAndTextMessages) > 0 {
-		body, _ = sjson.Set(body, "languageTranslations", []interface{}{})
+		body, _ = sjson.Set(body, "languageTranslations", []any{})
 		for _, item := range data.GuiAndTextMessages {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -104,7 +104,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 		}
 	}
 	if len(data.IconsAndImages) > 0 {
-		body, _ = sjson.Set(body, "imagesAndIcons", []interface{}{})
+		body, _ = sjson.Set(body, "imagesAndIcons", []any{})
 		for _, item := range data.IconsAndImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -114,7 +114,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 		}
 	}
 	if len(data.Scripts) > 0 {
-		body, _ = sjson.Set(body, "scripts", []interface{}{})
+		body, _ = sjson.Set(body, "scripts", []any{})
 		for _, item := range data.Scripts {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -124,7 +124,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 		}
 	}
 	if len(data.Binaries) > 0 {
-		body, _ = sjson.Set(body, "binaries", []interface{}{})
+		body, _ = sjson.Set(body, "binaries", []any{})
 		for _, item := range data.Binaries {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -134,7 +134,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 		}
 	}
 	if len(data.CustomInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "customizedInstallerTransforms", []interface{}{})
+		body, _ = sjson.Set(body, "customizedInstallerTransforms", []any{})
 		for _, item := range data.CustomInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -144,7 +144,7 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 		}
 	}
 	if len(data.LocalizedInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "localizedInstallerTransforms", []interface{}{})
+		body, _ = sjson.Set(body, "localizedInstallerTransforms", []any{})
 		for _, item := range data.LocalizedInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {

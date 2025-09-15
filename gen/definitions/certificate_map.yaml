@@ -28,7 +28,7 @@ attributes:
         example: SUBJECT
       - model_name: component
         type: String
-        enum_values: 
+        enum_values:
           [
             WHOLE_FIELD,
             COUNTRY,
@@ -62,4 +62,3 @@ attributes:
         type: String
         description: Value to match in the rule.
         example: cisco.com
-      

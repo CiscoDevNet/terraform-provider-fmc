@@ -19,10 +19,10 @@ attributes:
     exclude_example: true
     exclude_test: true
   # Force deploy requires different way of obraining version, as no devices may be in deployable state
-  #- model_name: forceDeploy
-  #  type: Bool
-  #  description: Force deployment (deploy even if there are no configuration changes).
-  #  example: "false"
+  # - model_name: forceDeploy
+  #   type: Bool
+  #   description: Force deployment (deploy even if there are no configuration changes).
+  #   example: "false"
   - model_name: ignoreWarning
     type: Bool
     description: Ignore warnings during deployment.
@@ -42,6 +42,6 @@ attributes:
     description: Deployment note.
     example: Terraform initiated deployment
     exclude_test: true
-test_prerequisites: |-
 
+test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

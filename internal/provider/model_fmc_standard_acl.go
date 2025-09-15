@@ -86,14 +86,14 @@ func (data StandardACL) toBody(ctx context.Context, state StandardACL) string {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []interface{}{})
+		body, _ = sjson.Set(body, "entries", []any{})
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "networks.objects", []any{})
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -106,7 +106,7 @@ func (data StandardACL) toBody(ctx context.Context, state StandardACL) string {
 				}
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "networks.literals", []any{})
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {

@@ -37,4 +37,3 @@ attributes:
         element_type: String
         description: List of mappings.
         example: "10.0.0.1"
-

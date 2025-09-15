@@ -57,7 +57,6 @@ func TestAccFmcDeviceDeploy(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcDeviceDeployPrerequisitesConfig = `
-
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 `
 

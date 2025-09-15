@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -333,7 +334,7 @@ func (r *ExtendedCommunityListsResource) Update(ctx context.Context, req resourc
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate ExtendedCommunityLists
-	toUpdate.Items = make(map[string]ExtendedCommunityListsItems)
+	toUpdate.Items = make(map[string]ExtendedCommunityListsItems, len(plan.Items))
 
 	for tmp, valueState := range state.Items {
 		// Check if the ID from state is on toBeReplaced list
@@ -493,7 +494,7 @@ func (r *ExtendedCommunityListsResource) createSubresources(ctx context.Context,
 			}
 
 			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
+			body, _ = sjson.SetRaw("{}", "items.-1", res.String())
 			res = gjson.Parse(body)
 
 			// Read computed values
@@ -539,9 +540,7 @@ func (r *ExtendedCommunityListsResource) createSubresources(ctx context.Context,
 
 				// Read result and save it to the state
 				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
+				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
 				bulk.Items = make(map[string]ExtendedCommunityListsItems, bulkSizeCreate)
@@ -587,8 +586,11 @@ func (r *ExtendedCommunityListsResource) deleteSubresources(ctx context.Context,
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (Extended Community Lists)", state.Id.ValueString()))
 
 		var idx = 0
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
 		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -596,15 +598,16 @@ func (r *ExtendedCommunityListsResource) deleteSubresources(ctx context.Context,
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -622,10 +625,6 @@ func (r *ExtendedCommunityListsResource) deleteSubresources(ctx context.Context,
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 

@@ -27,7 +27,7 @@ attributes:
     description: Type of the attribute.
     enum_values: ['ALLOW_DEFER_UPDATE', 'PER_APP_VPN', 'DYNAMIC_SPLIT_TUNNELING', 'USER_DEFINED_CUSTOM_ATTR']
     example: USER_DEFINED_CUSTOM_ATTR
-  
+
   # User Defined Custom Attribute
   - model_name: name
     data_path: ["userDefinedAttribute"]
@@ -51,7 +51,7 @@ attributes:
     description: Base64 encoded value for Per App VPN. Applicable only when `attribute_type` is PER_APP_VPN.
     exclude_example: true
     exclude_test: true
-  
+
   # Dynamic Split Tunneling
   - model_name: includeDomains
     data_path: ["dynamicSplitTunnel"]
@@ -69,7 +69,7 @@ attributes:
     description: Domain names that will be excluded from the remote access VPN tunnel. Applicable only when `attribute_type` is DYNAMIC_SPLIT_TUNNELING.
     exclude_example: true
     exclude_test: true
-  
+
   # Allow Defer Update
   - model_name: promptType
     data_path: ["deferUpdate"]

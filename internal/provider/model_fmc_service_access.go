@@ -83,14 +83,14 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 		body, _ = sjson.Set(body, "defaultAction", data.DefaultAction.ValueString())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "rules", []interface{}{})
+		body, _ = sjson.Set(body, "rules", []any{})
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.GeolocationSources) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "geoSources", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "geoSources", []any{})
 				for _, childItem := range item.GeolocationSources {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {

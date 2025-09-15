@@ -29,7 +29,7 @@ attributes:
         mandatory: true
         ordered_list: true
         description: List of entries
-        attributes:      
+        attributes:
           - model_name: type
             type: String
             description: Type of the entry.

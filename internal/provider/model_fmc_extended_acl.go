@@ -126,7 +126,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []interface{}{})
+		body, _ = sjson.Set(body, "entries", []any{})
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -142,7 +142,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				itemBody, _ = sjson.Set(itemBody, "logInterval", item.LogIntervalSeconds.ValueInt64())
 			}
 			if len(item.SourceNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []any{})
 				for _, childItem := range item.SourceNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
@@ -155,7 +155,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.DestinationNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []any{})
 				for _, childItem := range item.DestinationNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
@@ -168,7 +168,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.SourceNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []any{})
 				for _, childItem := range item.SourceNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -178,7 +178,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.SourceSgtObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "securityGroupTags.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "securityGroupTags.objects", []any{})
 				for _, childItem := range item.SourceSgtObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -189,7 +189,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.DestinationNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
 				for _, childItem := range item.DestinationNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -199,7 +199,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.SourcePortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []any{})
 				for _, childItem := range item.SourcePortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -209,7 +209,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.DestinationPortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []any{})
 				for _, childItem := range item.DestinationPortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -219,7 +219,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.DestinationPortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []any{})
 				for _, childItem := range item.DestinationPortLiterals {
 					itemChildBody := ""
 					if !childItem.Type.IsNull() {
@@ -241,7 +241,7 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 				}
 			}
 			if len(item.SourcePortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []any{})
 				for _, childItem := range item.SourcePortLiterals {
 					itemChildBody := ""
 					if !childItem.Type.IsNull() {

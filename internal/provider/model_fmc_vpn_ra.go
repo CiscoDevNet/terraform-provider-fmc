@@ -124,7 +124,7 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "dapPolicy.id", data.DynamicAccessPolicyId.ValueString())
 	}
 	if len(data.AccessInterfaces) > 0 {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.interfaceSettings", []interface{}{})
+		body, _ = sjson.Set(body, "accessInterfaceSettings.interfaceSettings", []any{})
 		for _, item := range data.AccessInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -167,7 +167,7 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.bypassACPolicyForDecryptTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
 	}
 	if len(data.SecureClientImages) > 0 {
-		body, _ = sjson.Set(body, "anyConnectClientImages", []interface{}{})
+		body, _ = sjson.Set(body, "anyConnectClientImages", []any{})
 		for _, item := range data.SecureClientImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -183,7 +183,7 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "externalBrowserPackage.id", data.ExternalBrowserPackageId.ValueString())
 	}
 	if len(data.GroupPolicies) > 0 {
-		body, _ = sjson.Set(body, "groupPolicies", []interface{}{})
+		body, _ = sjson.Set(body, "groupPolicies", []any{})
 		for _, item := range data.GroupPolicies {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -193,7 +193,7 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		}
 	}
 	if len(data.Ikev2Policies) > 0 {
-		body, _ = sjson.Set(body, "ikev2Policies", []interface{}{})
+		body, _ = sjson.Set(body, "ikev2Policies", []any{})
 		for _, item := range data.Ikev2Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {

@@ -1,3 +1,4 @@
+# FMCBUG CSCwq61825 FMC API: /policy/filepolicies/{ID}/filerules does not set analysis field
 ---
 name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
@@ -73,18 +74,18 @@ attributes:
         description: Type of File Rule.
         computed: true
       # Exist in schema but not in GUI
-      #- model_name: name
-      #  type: String
-      #  description: Name of the FileRule object.
-      #  example: file_rule_1
-      #  exclude_example: true
-      #  exclude_test: true
-      #- model_name: description
-      #  type: String
-      #  description: Description of the file rule.
-      #  example: My file policy rule.
-      #  exclude_example: true
-      #  exclude_test: true
+      # - model_name: name
+      #   type: String
+      #   description: Name of the FileRule object.
+      #   example: file_rule_1
+      #   exclude_example: true
+      #   exclude_test: true
+      # - model_name: description
+      #   type: String
+      #   description: Description of the file rule.
+      #   example: My file policy rule.
+      #   exclude_example: true
+      #   exclude_test: true
       - model_name: protocol
         tf_name: application_protocol
         type: String
@@ -99,10 +100,18 @@ attributes:
         mandatory: true
         description: Action to be performed on a file.
         example: DETECT
+      # - model_name: analysis
+      #   type: Set
+      #   element_type: String
+      #   description: List of analysis applied to the files.
+      #   enum_values: [capacity, spero, sandbox, clamscan]
+      #   exclude_example: true
+      #   exclude_test: true
       - model_name: storeFiles
         type: Set
         element_type: String
-        description: List of file dispositions that should be stored (MALWARE, CUSTOM, CLEAN, UNKNOWN).
+        description: List of file dispositions that should be stored.
+        enum_values: [MALWARE, CUSTOM, CLEAN, UNKNOWN, ALL]
         exclude_example: true
         exclude_test: true
       - model_name: direction

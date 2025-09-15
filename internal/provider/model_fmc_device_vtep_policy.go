@@ -78,7 +78,7 @@ func (data DeviceVTEPPolicy) toBody(ctx context.Context, state DeviceVTEPPolicy)
 		body, _ = sjson.Set(body, "nveEnable", data.NveEnabled.ValueBool())
 	}
 	if len(data.Vteps) > 0 {
-		body, _ = sjson.Set(body, "vtepEntries", []interface{}{})
+		body, _ = sjson.Set(body, "vtepEntries", []any{})
 		for _, item := range data.Vteps {
 			itemBody := ""
 			if !item.SourceInterfaceId.IsNull() {

@@ -63,8 +63,7 @@ type FmcProviderData struct {
 
 // Define provider constants
 const (
-	// Define maximum elements in single bulk request for delete & create
-	bulkSizeDelete int = 200
+	// maximum elements in single create bulk request
 	bulkSizeCreate int = 1000
 	// maximum payload size in bytes
 	maxPayloadSize int = 2048000
@@ -354,7 +353,6 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 		NewDeviceHAPairResource,
 		NewDeviceHAPairFailoverInterfaceMACAddressResource,
 		NewDeviceHAPairMonitoringResource,
-		NewDeviceHAPairPhysicalInterfaceMACAddressResource,
 		NewDeviceIPv4StaticRouteResource,
 		NewDeviceIPv6StaticRouteResource,
 		NewDeviceLoopbackInterfaceResource,
@@ -529,7 +527,6 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewDeviceHAPairDataSource,
 		NewDeviceHAPairFailoverInterfaceMACAddressDataSource,
 		NewDeviceHAPairMonitoringDataSource,
-		NewDeviceHAPairPhysicalInterfaceMACAddressDataSource,
 		NewDeviceIPv4StaticRouteDataSource,
 		NewDeviceIPv6StaticRouteDataSource,
 		NewDeviceLoopbackInterfaceDataSource,

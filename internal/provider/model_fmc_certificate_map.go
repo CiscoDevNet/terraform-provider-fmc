@@ -74,7 +74,7 @@ func (data CertificateMap) toBody(ctx context.Context, state CertificateMap) str
 	}
 	body, _ = sjson.Set(body, "type", "CertificateMap")
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "rules", []interface{}{})
+		body, _ = sjson.Set(body, "rules", []any{})
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Field.IsNull() {

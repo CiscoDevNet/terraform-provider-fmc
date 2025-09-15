@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -514,9 +515,9 @@ func (r *PolicyAssignmentResource) updatePolicyAssignment(ctx context.Context, r
 		}
 
 		existingTargets := gjson.Get(updateBody, "targets").Array()
-		updateBody, _ = sjson.Set(updateBody, "targets", []interface{}{})
+		updateBody, _ = sjson.Set(updateBody, "targets", []any{})
 		for _, target := range existingTargets {
-			if !helpers.Contains(stateTargets, target.Get("id").String()) {
+			if !slices.Contains(stateTargets, target.Get("id").String()) {
 				updateBody, _ = sjson.Set(updateBody, "targets.-1", map[string]string{
 					"id":   target.Get("id").String(),
 					"type": target.Get("type").String(),

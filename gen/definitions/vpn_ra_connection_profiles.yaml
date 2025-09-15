@@ -1,4 +1,4 @@
-# Manual resource - ValidateConfig, createSubresources, deleteSubresources
+# Manual resource - createSubresources, deleteSubresources
 # FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
 ---
 name: VPN RA Connection Profiles
@@ -44,7 +44,7 @@ attributes:
         type: String
         description: Id of the Group Policy.
         example: 12345678-1234-1234-1234-123456
-      
+
       # Client Address Assignment
       - model_name: ipv4AddressPool
         tf_name: ipv4_address_pools
@@ -76,21 +76,21 @@ attributes:
             description: Id of Host representing the DHCP Server.
             mandatory: true
             example: 12345678-1234-1234-1234-123456
-      
+
       # AAA - Authentication
       - model_name: authenticationMethod
         tf_name: authentication_method
         type: String
         mandatory: true
         description: User authentication method.
-        enum_values: [ AAA_ONLY, SAML, CLIENT_CERTIFICATE_ONLY, AAA_AND_CLIENT_CERTIFICATE, SAML_AND_CLIENT_CERTIFICATE ]
+        enum_values: [AAA_ONLY, SAML, CLIENT_CERTIFICATE_ONLY, AAA_AND_CLIENT_CERTIFICATE, SAML_AND_CLIENT_CERTIFICATE]
         example: AAA_AND_CLIENT_CERTIFICATE
       - model_name: enableMultipleCertificateAuthentication
         tf_name: multiple_certificate_authentication
         type: Bool
         description: Authenticate the VPN client using the machine and user certificates.
         example: true
-      
+
       # AAA - Authentication - Primary
       - model_name: useLocalAsPrimaryAuthServer
         tf_name: primary_authentication_server_use_local
@@ -133,14 +133,14 @@ attributes:
         tf_name: primary_authentication_prefill_username_from_certificate_map_primary_field
         type: String
         description: Map primary field for username.
-        enum_values: [ CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE ]
+        enum_values: [CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE]
         example: CN_COMMMON_NAME
       - model_name: mapSecondaryField
         data_path: [certificateUsernameSettings]
         tf_name: primary_authentication_prefill_username_from_certificate_map_secondary_field
         type: String
         description: Map secondary field for username.
-        enum_values: [ CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE ]
+        enum_values: [CN_COMMMON_NAME, C_COUNTRY, DNQ_DN_QUALIFIER, EA_EMAIL_ADDRESS, GENQ_GENERATIONAL_QUALIFIER, GN_GIVEN_NAME, I_INITIAL, L_LOCALITY, N_NAME, O_ORGANISATION, OU_ORGANISATIONAL_UNIT, SER_SERIAL_NUMBER, SN_SURNAME, SP_STATE_PROVINCE, T_TITLE, UID_USER_ID, UPN_USER_PRINCIPAL_NAME, NONE]
         example: NONE
       - model_name: mapEntireDNAsUsername
         data_path: [certificateUsernameSettings]
@@ -243,7 +243,6 @@ attributes:
       #   type: Bool
       #   description: Username is pre-filled from the client certificate, but hidden to the user
       #   example: true
-      
 
       # AAA - Authentication - SAML
       # FMCBUG CSCwq59124: Endpoint does not set idp certificate override
@@ -272,7 +271,7 @@ attributes:
         exclude_example: true
         # FMCBUG CSCwq59124
         write_only: true
-      
+
       # AAA - Authorization
       - model_name: id
         data_path: [authorizationServer]
@@ -292,7 +291,7 @@ attributes:
         description: Allow connection only if the username of client exists in the authorization database.
         # default_value: false
         example: false
-      
+
       # AAA - Accounting
       - model_name: id
         data_path: [accountingServer]
@@ -306,7 +305,7 @@ attributes:
         type: String
         description: Type of the RADIUS accounting server (`RadiusServerGroup`).
         example: RadiusServerGroup
-      
+
       # Advanced Settings
       - model_name: stripRealmFromUsername
         tf_name: strip_realm_from_username
@@ -335,7 +334,7 @@ attributes:
         min_int: 1
         max_int: 180
         exclude_example: true
-      
+
       # Aliases
       - model_name: groupAlias
         tf_name: alias_names

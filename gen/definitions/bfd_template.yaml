@@ -23,18 +23,18 @@ attributes:
     type: String
     mandatory: true
     description: Hop type.
-    enum_values: [ SINGLE_HOP, MULTI_HOP ]
+    enum_values: [SINGLE_HOP, MULTI_HOP]
     example: "SINGLE_HOP"
   - model_name: echo
     type: String
     description: BFD echo status.
-    enum_values: [ ENABLED, DISABLED ]
+    enum_values: [ENABLED, DISABLED]
     example: "ENABLED"
   - model_name: txRxInterval
     tf_name: interval_time
     type: String
     description: Interval unit of measurement of time.
-    enum_values: [ MILLISECONDS, MICROSECONDS, NONE ]
+    enum_values: [MILLISECONDS, MICROSECONDS, NONE]
     example: MILLISECONDS
   - model_name: minTransmit
     type: Int64

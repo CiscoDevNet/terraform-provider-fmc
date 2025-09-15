@@ -94,7 +94,7 @@ resource "fmc_port" "test" {
 resource "fmc_vlan_tag" "test" {
   name      = "fmc_prefilter_policy_vlan_tag"
   start_tag = "10"
-  end_tag   = "11" 
+  end_tag   = "11"
 }
 
 resource "fmc_security_zone" "test" {

@@ -89,7 +89,7 @@ func (data TimeRange) toBody(ctx context.Context, state TimeRange) string {
 		body, _ = sjson.Set(body, "effectiveEndDateTime", data.EndTime.ValueString())
 	}
 	if len(data.RecurrenceList) > 0 {
-		body, _ = sjson.Set(body, "recurrenceList", []interface{}{})
+		body, _ = sjson.Set(body, "recurrenceList", []any{})
 		for _, item := range data.RecurrenceList {
 			itemBody := ""
 			if !item.RecurrenceType.IsNull() {

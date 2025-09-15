@@ -26,7 +26,7 @@ attributes:
   - model_name: fileType
     type: String
     description: Type of the Secure Client Profile file.
-    enum_values: [ "ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY" ]
+    enum_values: ["ANYCONNECT_MANAGEMENT_VPN_PROFILE", "AMP_ENABLER", "FEEDBACK", "WEB_SECURITY", "ANYCONNECT_VPN_PROFILE", "UMBRELLA_ROAMING", "NETWORK_ACCESS_MANAGER", "ISE_POSTURE", "NETWORK_VISIBILITY"]
     example: ANYCONNECT_VPN_PROFILE
     mandatory: true
   - model_name: payloadFile

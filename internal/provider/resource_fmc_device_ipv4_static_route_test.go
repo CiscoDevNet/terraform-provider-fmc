@@ -30,8 +30,8 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_ipv4_static_route.test", "type"))
@@ -62,6 +62,7 @@ func TestAccFmcDeviceIPv4StaticRoute(t *testing.T) {
 
 const testAccFmcDeviceIPv4StaticRoutePrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 
 data "fmc_network" "test" {
   name = "any-ipv4"
@@ -69,7 +70,7 @@ data "fmc_network" "test" {
 
 resource "fmc_device_physical_interface" "test" {
   device_id    = var.device_id
-  name         = "GigabitEthernet0/1"
+  name         = var.interface_name
   logical_name = "myinterface-0-1"
   mode         = "NONE"
   enabled      = true

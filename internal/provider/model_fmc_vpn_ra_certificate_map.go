@@ -78,7 +78,7 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 		body, _ = sjson.Set(body, "enableCertificateToConnectionProfileMapping", data.UseCertificateToConnectionProfileMappings.ValueBool())
 	}
 	if len(data.CertificateToConnectionProfileMappings) > 0 {
-		body, _ = sjson.Set(body, "certificateToConnectionProfileMap", []interface{}{})
+		body, _ = sjson.Set(body, "certificateToConnectionProfileMap", []any{})
 		for _, item := range data.CertificateToConnectionProfileMappings {
 			itemBody := ""
 			if !item.CertificateMapId.IsNull() {

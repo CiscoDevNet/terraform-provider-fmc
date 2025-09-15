@@ -35,7 +35,7 @@ attributes:
     description: Enable IPsec IKEv2 protocol for VPN connections.
     example: "true"
     default_value: "true"
-  
+
   # General - IP Address Pool
   - model_name: ipv4LocalAddressPool
     data_path: ["generalSettings", "addressAssignment"]
@@ -50,7 +50,7 @@ attributes:
         mandatory: true
         example: 12345678-1234-1234-1234-123456
         test_value: fmc_ipv4_address_pool.test.id
-  
+
   # General - Banner
   - model_name: banner
     data_path: ["generalSettings"]
@@ -58,7 +58,7 @@ attributes:
     string_max_length: 491
     description: Banner text to be displayed to users.
     example: Welcome to the VPN Connection.
-  
+
   # General - DNS/WINS
   - model_name: id
     data_path: ["generalSettings", "primaryDNSServer"]
@@ -101,7 +101,7 @@ attributes:
     type: String
     description: Name of the default domain.
     example: example.com
-  
+
   # General - Split Tunnel
   - model_name: ipv4SplitTunnelPolicy
     data_path: ["generalSettings", "splitTunnelSettings"]
@@ -179,7 +179,7 @@ attributes:
       - model_name: moduleType
         tf_name: type
         type: String
-        enum_values: [ AMP_ENABLER, FEEDBACK, ISE_POSTURE, NETWORK_ACCESS_MANAGER, NETWORK_VISIBILITY, UMBRELLA_ROAMING, WEB_SECURITY, START_BEFORE_LOGIN, DART ]
+        enum_values: [AMP_ENABLER, FEEDBACK, ISE_POSTURE, NETWORK_ACCESS_MANAGER, NETWORK_VISIBILITY, UMBRELLA_ROAMING, WEB_SECURITY, START_BEFORE_LOGIN, DART]
         mandatory: true
         id: true
         example: UMBRELLA_ROAMING
@@ -226,7 +226,7 @@ attributes:
     tf_name: ignore_df_bit
     description: Whether to ignore the Don't Fragment bit in packets.
     example: "true"
-  
+
   # Secure Client - Connection Settings
   - model_name: enableKeepAliveMessages
     data_path: ["anyConnectSettings", "connectionSettings"]
@@ -317,7 +317,7 @@ attributes:
     description: Id of extended ACL to configure firewall settings for the VPN client's platform.
     example: 12345678-1234-1234-1234-123456
     exclude_test: true
-    
+
   # Secure Client - Custom Attributes
   - model_name: customAttributes
     data_path: ["anyConnectSettings"]
@@ -333,7 +333,7 @@ attributes:
         mandatory: true
         description: Id of the Custom Attribute.
         example: 12345678-1234-1234-1234-123456
-  
+
   # Advanced - Traffic filter
   - model_name: id
     data_path: ["advancedSettings", "vpnTrafficFilterACL"]
@@ -350,7 +350,7 @@ attributes:
     example: 100
     min_int: 1
     max_int: 4094
-  
+
   # Advanced - Session Settings
   - model_name: id
     data_path: ["advancedSettings", "sessionSettings", "accessHours"]

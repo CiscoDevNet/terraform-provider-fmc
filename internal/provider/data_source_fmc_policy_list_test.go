@@ -19,6 +19,7 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -29,11 +30,13 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmcPolicyList(t *testing.T) {
+	if os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_interface_name")
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "name", "my_policy_list"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_policy_list.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "interface_names.0", "GigabitEthernet0/1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "match_community_exactly", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "metric", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_policy_list.test", "tag", "100"))
@@ -59,6 +62,8 @@ func TestAccDataSourceFmcPolicyList(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcPolicyListPrerequisitesConfig = `
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
 resource "fmc_security_zone" "test" {
   name           = "my_policy_list_security_zone"
   interface_type = "ROUTED"
@@ -100,7 +105,7 @@ func testAccDataSourceFmcPolicyListConfig() string {
 	config += `	interfaces = [{` + "\n"
 	config += `		id = fmc_security_zone.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	interface_names = ["GigabitEthernet0/1"]` + "\n"
+	config += `	interface_names = [var.interface_name]` + "\n"
 	config += `	address_standard_access_lists = [{` + "\n"
 	config += `		id = fmc_standard_acl.test.id` + "\n"
 	config += `	}]` + "\n"
@@ -136,7 +141,7 @@ func testAccNamedDataSourceFmcPolicyListConfig() string {
 	config += `	interfaces = [{` + "\n"
 	config += `		id = fmc_security_zone.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	interface_names = ["GigabitEthernet0/1"]` + "\n"
+	config += `	interface_names = [var.interface_name]` + "\n"
 	config += `	address_standard_access_lists = [{` + "\n"
 	config += `		id = fmc_standard_acl.test.id` + "\n"
 	config += `	}]` + "\n"

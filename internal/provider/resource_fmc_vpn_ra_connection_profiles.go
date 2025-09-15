@@ -336,7 +336,7 @@ func (r *VPNRAConnectionProfilesResource) Configure(_ context.Context, req resou
 }
 
 // End of section. //template:end model
-
+/*
 var _ resource.ResourceWithValidateConfig = &VPNRAConnectionProfilesResource{}
 
 func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, req resource.ValidateConfigRequest, resp *resource.ValidateConfigResponse) {
@@ -393,7 +393,7 @@ func (p *VPNRAConnectionProfilesResource) ValidateConfig(ctx context.Context, re
 		}
 	}
 }
-
+*/
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *VPNRAConnectionProfilesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -518,7 +518,7 @@ func (r *VPNRAConnectionProfilesResource) Update(ctx context.Context, req resour
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete VPNRAConnectionProfiles
-	toDelete.Items = make(map[string]VPNRAConnectionProfilesItems)
+	toDelete.Items = make(map[string]VPNRAConnectionProfilesItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -550,7 +550,7 @@ func (r *VPNRAConnectionProfilesResource) Update(ctx context.Context, req resour
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate VPNRAConnectionProfiles
-	toCreate.Items = make(map[string]VPNRAConnectionProfilesItems)
+	toCreate.Items = make(map[string]VPNRAConnectionProfilesItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -574,7 +574,7 @@ func (r *VPNRAConnectionProfilesResource) Update(ctx context.Context, req resour
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate VPNRAConnectionProfiles
-	toUpdate.Items = make(map[string]VPNRAConnectionProfilesItems)
+	toUpdate.Items = make(map[string]VPNRAConnectionProfilesItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 

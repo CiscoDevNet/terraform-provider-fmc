@@ -85,7 +85,7 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []interface{}{})
+		body, _ = sjson.Set(body, "items", []any{})
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -101,7 +101,7 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 				itemBody, _ = sjson.Set(itemBody, "effectiveEndDateTime", item.EndTime.ValueString())
 			}
 			if len(item.RecurrenceList) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "recurrenceList", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "recurrenceList", []any{})
 				for _, childItem := range item.RecurrenceList {
 					itemChildBody := ""
 					if !childItem.RecurrenceType.IsNull() {

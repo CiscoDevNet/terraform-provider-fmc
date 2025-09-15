@@ -30,8 +30,8 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcVPNS2SEndpoints(t *testing.T) {
-	if os.Getenv("TF_VAR_device_id") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_device_id")
+	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
+		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 
@@ -55,6 +55,7 @@ func TestAccFmcVPNS2SEndpoints(t *testing.T) {
 
 const testAccFmcVPNS2SEndpointsPrerequisitesConfig = `
 variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
 
 data "fmc_device" "test" {
   id = var.device_id
@@ -66,7 +67,7 @@ data "fmc_network" "test" {
 
 resource "fmc_device_physical_interface" "test" {
   device_id = data.fmc_device.test.id
-  name      = "GigabitEthernet0/1"
+  name      = var.interface_name
   mode      = "NONE"
   logical_name = "my_phy_s2s_vpn_endpoints"
   ipv4_static_address = "10.198.21.1"

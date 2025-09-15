@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -266,7 +267,7 @@ func (r *ICMPv6ObjectsResource) Update(ctx context.Context, req resource.UpdateR
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete ICMPv6Objects
-	toDelete.Items = make(map[string]ICMPv6ObjectsItems)
+	toDelete.Items = make(map[string]ICMPv6ObjectsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -298,7 +299,7 @@ func (r *ICMPv6ObjectsResource) Update(ctx context.Context, req resource.UpdateR
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate ICMPv6Objects
-	toCreate.Items = make(map[string]ICMPv6ObjectsItems)
+	toCreate.Items = make(map[string]ICMPv6ObjectsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -322,7 +323,7 @@ func (r *ICMPv6ObjectsResource) Update(ctx context.Context, req resource.UpdateR
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate ICMPv6Objects
-	toUpdate.Items = make(map[string]ICMPv6ObjectsItems)
+	toUpdate.Items = make(map[string]ICMPv6ObjectsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -487,9 +488,7 @@ func (r *ICMPv6ObjectsResource) createSubresources(ctx context.Context, state, p
 
 			// Read result and save it to the state
 			bulk.fromBodyUnknowns(ctx, res)
-			for k, v := range bulk.Items {
-				state.Items[k] = v
-			}
+			maps.Copy(state.Items, bulk.Items)
 
 			// Clear bulk item for next run
 			bulk.Items = make(map[string]ICMPv6ObjectsItems, bulkSizeCreate)
@@ -534,8 +533,11 @@ func (r *ICMPv6ObjectsResource) deleteSubresources(ctx context.Context, state, p
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (ICMPv6 Objects)", state.Id.ValueString()))
 
 		var idx = 0
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
 		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -543,15 +545,16 @@ func (r *ICMPv6ObjectsResource) deleteSubresources(ctx context.Context, state, p
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -569,10 +572,6 @@ func (r *ICMPv6ObjectsResource) deleteSubresources(ctx context.Context, state, p
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 

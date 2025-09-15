@@ -81,7 +81,7 @@ func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4St
 		body, _ = sjson.Set(body, "links.parent", data.InterfaceId.ValueString())
 	}
 	if len(data.DestinationNetworks) > 0 {
-		body, _ = sjson.Set(body, "selectedNetworks", []interface{}{})
+		body, _ = sjson.Set(body, "selectedNetworks", []any{})
 		for _, item := range data.DestinationNetworks {
 			itemBody := ""
 			if !item.Id.IsNull() {

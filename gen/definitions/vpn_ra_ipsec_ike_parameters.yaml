@@ -21,7 +21,7 @@ attributes:
   - model_name: type
     type: String
     value: RaVpnIPsecAdvancedSetting
-  
+
   # IKEv2 Session Settings
   - model_name: identitySentToPeer
     data_path: [ikev2settings]
@@ -42,7 +42,7 @@ attributes:
     type: Bool
     description: Wait for all active sessions to voluntarily terminate before the system reboots.
     example: "false"
-  
+
   # IKEv2 Security Association
   - model_name: cookieChallenge
     data_path: [ikev2settings]
@@ -73,7 +73,7 @@ attributes:
     type: Int64
     description: Maximum number of Security Associations (SAs) allowed.
     example: 50
-  
+
   # IPSec Settings
   # FMCBUG CSCwq59104 FMC API: /policy/ravpns/{id}/ipsecadvancedsettings endpoint does not set enableFragmentationBeforeEncryption value
   # - model_name: enableFragmentationBeforeEncryption
@@ -98,7 +98,7 @@ attributes:
     min_int: 10
     max_int: 30
     example: 30
-  
+
   # NAT Transparency Settings
   - model_name: enabled
     data_path: [natKeepaliveMessageTraversal]

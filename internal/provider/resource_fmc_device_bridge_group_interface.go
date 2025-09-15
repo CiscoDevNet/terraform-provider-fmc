@@ -63,7 +63,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Metadata(ctx context.Context, req r
 func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Device Bridge Group Interface, known as BVI interfaces.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Device Bridge Group Interface, known also as BVI interfaces.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

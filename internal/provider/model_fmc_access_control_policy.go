@@ -312,7 +312,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 		body, _ = sjson.Set(body, "dummy_manage_categories", data.ManageCategories.ValueBool())
 	}
 	if len(data.Categories) > 0 {
-		body, _ = sjson.Set(body, "dummy_categories", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_categories", []any{})
 		for _, item := range data.Categories {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -331,7 +331,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "dummy_rules", []interface{}{})
+		body, _ = sjson.Set(body, "dummy_rules", []any{})
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -353,7 +353,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				itemBody, _ = sjson.Set(itemBody, "enabled", item.Enabled.ValueBool())
 			}
 			if len(item.SourceNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []any{})
 				for _, childItem := range item.SourceNetworkLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
@@ -364,7 +364,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []any{})
 				for _, childItem := range item.DestinationNetworkLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
@@ -375,7 +375,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.VlanTagLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []any{})
 				for _, childItem := range item.VlanTagLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
@@ -389,7 +389,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.VlanTagObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []any{})
 				for _, childItem := range item.VlanTagObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -399,7 +399,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourceNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []any{})
 				for _, childItem := range item.SourceNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -412,7 +412,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
 				for _, childItem := range item.DestinationNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -425,7 +425,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourceDynamicObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceDynamicObjects.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceDynamicObjects.objects", []any{})
 				for _, childItem := range item.SourceDynamicObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -436,7 +436,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationDynamicObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationDynamicObjects.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationDynamicObjects.objects", []any{})
 				for _, childItem := range item.DestinationDynamicObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -447,7 +447,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourcePortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []any{})
 				for _, childItem := range item.SourcePortLiterals {
 					itemChildBody := ""
 					if !childItem.Type.IsNull() {
@@ -469,7 +469,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourcePortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []any{})
 				for _, childItem := range item.SourcePortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -480,7 +480,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationPortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []any{})
 				for _, childItem := range item.DestinationPortLiterals {
 					itemChildBody := ""
 					if !childItem.Type.IsNull() {
@@ -502,7 +502,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationPortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []any{})
 				for _, childItem := range item.DestinationPortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -513,7 +513,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourceSgtObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceSecurityGroupTags.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceSecurityGroupTags.objects", []any{})
 				for _, childItem := range item.SourceSgtObjects {
 					itemChildBody := ""
 					if !childItem.Name.IsNull() {
@@ -529,7 +529,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.EndpointDeviceTypes) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "endPointDeviceTypes", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "endPointDeviceTypes", []any{})
 				for _, childItem := range item.EndpointDeviceTypes {
 					itemChildBody := ""
 					if !childItem.Name.IsNull() {
@@ -545,7 +545,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationSgtObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationSecurityGroupTags.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationSecurityGroupTags.objects", []any{})
 				for _, childItem := range item.DestinationSgtObjects {
 					itemChildBody := ""
 					if !childItem.Name.IsNull() {
@@ -561,7 +561,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.SourceZones) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceZones.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "sourceZones.objects", []any{})
 				for _, childItem := range item.SourceZones {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -572,7 +572,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.DestinationZones) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationZones.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "destinationZones.objects", []any{})
 				for _, childItem := range item.DestinationZones {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -583,7 +583,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.UrlLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "urls.literals", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "urls.literals", []any{})
 				for _, childItem := range item.UrlLiterals {
 					itemChildBody := ""
 					if !childItem.Url.IsNull() {
@@ -593,7 +593,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.UrlObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "urls.objects", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "urls.objects", []any{})
 				for _, childItem := range item.UrlObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -604,7 +604,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.UrlCategories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "urls.urlCategoriesWithReputation", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "urls.urlCategoriesWithReputation", []any{})
 				for _, childItem := range item.UrlCategories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -657,7 +657,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				itemBody, _ = sjson.Set(itemBody, "variableSet.id", item.VariableSetId.ValueString())
 			}
 			if len(item.Applications) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applications.applications", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applications.applications", []any{})
 				for _, childItem := range item.Applications {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -667,7 +667,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.ApplicationFilterObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applications.applicationFilters", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applications.applicationFilters", []any{})
 				for _, childItem := range item.ApplicationFilterObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -677,11 +677,11 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 				}
 			}
 			if len(item.ApplicationFilters) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applications.inlineApplicationFilters", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "applications.inlineApplicationFilters", []any{})
 				for _, childItem := range item.ApplicationFilters {
 					itemChildBody := ""
 					if len(childItem.Types) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "applicationTypes", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "applicationTypes", []any{})
 						for _, childChildItem := range childItem.Types {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -691,7 +691,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						}
 					}
 					if len(childItem.Risks) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "risks", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "risks", []any{})
 						for _, childChildItem := range childItem.Risks {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -701,7 +701,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						}
 					}
 					if len(childItem.BusinessRelevances) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "productivities", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "productivities", []any{})
 						for _, childChildItem := range childItem.BusinessRelevances {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -711,7 +711,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						}
 					}
 					if len(childItem.Categories) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "categories", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "categories", []any{})
 						for _, childChildItem := range childItem.Categories {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -721,7 +721,7 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 						}
 					}
 					if len(childItem.Tags) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "tags", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "tags", []any{})
 						for _, childChildItem := range childItem.Tags {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {

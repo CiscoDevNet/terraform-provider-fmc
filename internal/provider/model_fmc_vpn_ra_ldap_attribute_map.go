@@ -81,14 +81,14 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnLdapAttributeMap")
 	if len(data.Realms) > 0 {
-		body, _ = sjson.Set(body, "ldapAttributeMapList", []interface{}{})
+		body, _ = sjson.Set(body, "ldapAttributeMapList", []any{})
 		for _, item := range data.Realms {
 			itemBody := ""
 			if !item.RealmAdLdapId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ldapServer.id", item.RealmAdLdapId.ValueString())
 			}
 			if len(item.AttributeMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ldapAttributeMaps", []interface{}{})
+				itemBody, _ = sjson.Set(itemBody, "ldapAttributeMaps", []any{})
 				for _, childItem := range item.AttributeMaps {
 					itemChildBody := ""
 					if !childItem.LdapAttributeName.IsNull() {
@@ -98,7 +98,7 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 						itemChildBody, _ = sjson.Set(itemChildBody, "ciscoName", childItem.CiscoAttributeName.ValueString())
 					}
 					if len(childItem.ValueMaps) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "valueMappings", []interface{}{})
+						itemChildBody, _ = sjson.Set(itemChildBody, "valueMappings", []any{})
 						for _, childChildItem := range childItem.ValueMaps {
 							itemChildChildBody := ""
 							if !childChildItem.LdapValue.IsNull() {

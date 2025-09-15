@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"regexp"
 	"strings"
@@ -264,7 +265,7 @@ func (r *IKEv1IPsecProposalsResource) Update(ctx context.Context, req resource.U
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
 	var toDelete IKEv1IPsecProposals
-	toDelete.Items = make(map[string]IKEv1IPsecProposalsItems)
+	toDelete.Items = make(map[string]IKEv1IPsecProposalsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -296,7 +297,7 @@ func (r *IKEv1IPsecProposalsResource) Update(ctx context.Context, req resource.U
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
 	var toCreate IKEv1IPsecProposals
-	toCreate.Items = make(map[string]IKEv1IPsecProposalsItems)
+	toCreate.Items = make(map[string]IKEv1IPsecProposalsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -320,7 +321,7 @@ func (r *IKEv1IPsecProposalsResource) Update(ctx context.Context, req resource.U
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
 	var toUpdate IKEv1IPsecProposals
-	toUpdate.Items = make(map[string]IKEv1IPsecProposalsItems)
+	toUpdate.Items = make(map[string]IKEv1IPsecProposalsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -474,7 +475,7 @@ func (r *IKEv1IPsecProposalsResource) createSubresources(ctx context.Context, st
 			}
 
 			// fromBodyUnknowns expect result to be listed under "items" key
-			body, _ = sjson.SetRaw("{items:[]}", "items.-1", res.String())
+			body, _ = sjson.SetRaw("{}", "items.-1", res.String())
 			res = gjson.Parse(body)
 
 			// Read computed values
@@ -519,9 +520,7 @@ func (r *IKEv1IPsecProposalsResource) createSubresources(ctx context.Context, st
 
 				// Read result and save it to the state
 				bulk.fromBodyUnknowns(ctx, res)
-				for k, v := range bulk.Items {
-					state.Items[k] = v
-				}
+				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
 				bulk.Items = make(map[string]IKEv1IPsecProposalsItems, bulkSizeCreate)
@@ -567,8 +566,11 @@ func (r *IKEv1IPsecProposalsResource) deleteSubresources(ctx context.Context, st
 		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (IKEv1 IPsec Proposals)", state.Id.ValueString()))
 
 		var idx = 0
+
+		estimatedIDLength := 37 // UUID length + comma
+		estimatedCapacity := min(len(objectsToRemove.Items)*estimatedIDLength, maxUrlParamLength)
 		var idsToRemove strings.Builder
-		var alreadyDeleted []string
+		idsToRemove.Grow(estimatedCapacity)
 
 		for k, v := range objectsToRemove.Items {
 			// Counter
@@ -576,15 +578,16 @@ func (r *IKEv1IPsecProposalsResource) deleteSubresources(ctx context.Context, st
 
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
-				alreadyDeleted = append(alreadyDeleted, k)
+				delete(state.Items, k)
 				continue
 			}
 
 			// Create list of IDs of items to delete
-			idsToRemove.WriteString(v.Id.ValueString() + ",")
+			idsToRemove.WriteString(v.Id.ValueString())
+			idsToRemove.WriteString(",")
 
 			// If bulk size was reached or all entries have been processed
-			if idx%bulkSizeDelete == 0 || idx == len(objectsToRemove.Items) {
+			if idsToRemove.Len() >= maxUrlParamLength || idx == len(objectsToRemove.Items) {
 				urlPath := state.getPath() + "?bulk=true&filter=ids:" + url.QueryEscape(idsToRemove.String())
 				res, err := r.client.Delete(urlPath, reqMods...)
 				if err != nil {
@@ -602,10 +605,6 @@ func (r *IKEv1IPsecProposalsResource) deleteSubresources(ctx context.Context, st
 				// Reset ID string
 				idsToRemove.Reset()
 			}
-		}
-
-		for _, v := range alreadyDeleted {
-			delete(state.Items, v)
 		}
 	}
 

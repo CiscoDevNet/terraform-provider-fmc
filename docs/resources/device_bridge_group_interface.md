@@ -3,12 +3,12 @@
 page_title: "fmc_device_bridge_group_interface Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages Device Bridge Group Interface, known as BVI interfaces.
+  This resource manages Device Bridge Group Interface, known also as BVI interfaces.
 ---
 
 # fmc_device_bridge_group_interface (Resource)
 
-This resource manages Device Bridge Group Interface, known as BVI interfaces.
+This resource manages Device Bridge Group Interface, known also as BVI interfaces.
 
 ## Example Usage
 

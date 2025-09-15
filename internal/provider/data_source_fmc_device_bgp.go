@@ -343,7 +343,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:            true,
 						},
 						"version": schema.StringAttribute{
-							MarkdownDescription: "Set BPG version: 0 - default, 4 - IPv4",
+							MarkdownDescription: "Set BGP version: 0 - default, 4 - IPv4",
 							Computed:            true,
 						},
 						"customized_local_as_number": schema.StringAttribute{

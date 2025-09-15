@@ -152,7 +152,7 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6EnableRa.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []interface{}{})
+		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {

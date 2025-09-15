@@ -44,7 +44,7 @@ attributes:
         - model_name: type
           type: String
           mandatory: true
-          enum_values: [ProtocolPortObject,ICMPV6Object,ICMPV4Object]
+          enum_values: [ProtocolPortObject, ICMPV6Object, ICMPV4Object]
           example: ProtocolPortObject
 
 test_prerequisites: |-

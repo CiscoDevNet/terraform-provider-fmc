@@ -123,10 +123,10 @@ attributes:
         description: Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
         example: 0050568A-7F57-0ed3-0000-004294975576
         exclude_test: true
-      #- model_name: type
-      #  data_path: [tunnelZone, objects.0]
-      #  type: String
-      #  value: TunnelTag
+      # - model_name: type
+      #   data_path: [tunnelZone, objects.0]
+      #   type: String
+      #   value: TunnelTag
       - model_name: id
         data_path: [timeRangeObjects.0]
         tf_name: time_range_id
@@ -134,10 +134,10 @@ attributes:
         description: Id of Time Range object applied to the rule.
         example: 0050568A-7F57-0ed3-0000-004294975576
         exclude_test: true
-      #- model_name: type
-      #  data_path: [timeRangeObjects.0]
-      #  type: String
-      #  value: TimeRange
+      # - model_name: type
+      #   data_path: [timeRangeObjects.0]
+      #   type: String
+      #   value: TimeRange
       # Interface objects
       - model_name: objects
         data_path: [sourceInterfaces]
@@ -406,7 +406,7 @@ test_prerequisites: |-
   resource "fmc_vlan_tag" "test" {
     name      = "fmc_prefilter_policy_vlan_tag"
     start_tag = "10"
-    end_tag   = "11" 
+    end_tag   = "11"
   }
 
   resource "fmc_security_zone" "test" {
