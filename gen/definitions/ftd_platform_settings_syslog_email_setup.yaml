@@ -1,0 +1,51 @@
+---
+name: FTD Platform Settings Syslog Email Setup
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/loggingemailsetups
+doc_category: Devices
+minimum_version_create: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Email Setup.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'LoggingEmailSetup'.
+    computed: true
+
+  - model_name: sourceEmail
+    tf_name: source_email_address
+    type: String
+    description: Email address used to send messages.
+    example: "test@example.com"
+    mandatory: true
+  - model_name: destinationEmails
+    tf_name: destinations
+    type: List
+    description: List of destination email addresses to which messages are sent.
+    attributes:
+      - model_name: emailIds
+        tf_name: email_addresses
+        type: List
+        element_type: String
+        mandatory: true
+        description: Destination email address.
+        example: "recipient@example.com"
+      - model_name: logLevel
+        type: String
+        mandatory: true
+        description: Log level.
+        enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
+        example: "ERR"
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_banner"
+  }

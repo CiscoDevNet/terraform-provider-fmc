@@ -371,8 +371,6 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBodyUnknowns(ctx context.
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
 // toBodyPutDelete is used to create the body for PUT requests to clear the resource state
 func (data FTDPlatformSettingsSyslogLoggingSetup) toBodyPutDelete(ctx context.Context) string {
 	body := ""
@@ -382,7 +380,7 @@ func (data FTDPlatformSettingsSyslogLoggingSetup) toBodyPutDelete(ctx context.Co
 	if data.Type.ValueString() != "" {
 		body, _ = sjson.Set(body, "type", data.Type.ValueString())
 	}
+	body, _ = sjson.Set(body, "loggingToFMCType", "VPN")
+	body, _ = sjson.Set(body, "loggingToFMCLogLevel", "ERR")
 	return body
 }
-
-// End of section. //template:end toBodyPutDelete
