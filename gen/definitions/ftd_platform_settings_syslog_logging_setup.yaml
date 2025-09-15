@@ -3,7 +3,7 @@ name: FTD Platform Settings Syslog Logging Setup
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/basicloggingsetups
 doc_category: Devices
 minimum_version_create: "7.7"
-res_description: This resource manages FTD Platform Settings - Syslog.
+res_description: This resource manages FTD Platform Settings - Syslog - Logging Setup.
 put_create: true
 retrieve_id: true
 put_delete: true

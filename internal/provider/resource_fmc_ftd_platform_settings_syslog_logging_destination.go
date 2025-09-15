@@ -26,12 +26,10 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
@@ -47,26 +45,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDPlatformSettingsSyslogLoggingSetupResource{}
-	_ resource.ResourceWithImportState = &FTDPlatformSettingsSyslogLoggingSetupResource{}
+	_ resource.Resource                = &FTDPlatformSettingsSyslogLoggingDestinationResource{}
+	_ resource.ResourceWithImportState = &FTDPlatformSettingsSyslogLoggingDestinationResource{}
 )
 
-func NewFTDPlatformSettingsSyslogLoggingSetupResource() resource.Resource {
-	return &FTDPlatformSettingsSyslogLoggingSetupResource{}
+func NewFTDPlatformSettingsSyslogLoggingDestinationResource() resource.Resource {
+	return &FTDPlatformSettingsSyslogLoggingDestinationResource{}
 }
 
-type FTDPlatformSettingsSyslogLoggingSetupResource struct {
+type FTDPlatformSettingsSyslogLoggingDestinationResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_syslog_logging_setup"
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings_syslog_logging_destination"
 }
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Setup.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Destinations.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -91,111 +89,59 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SyslogSetting'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'LoggingDestination'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_logging": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Turns on the data plane system logging for the threat defense device.").String,
-				Optional:            true,
-			},
-			"enable_logging_on_the_failover_standby_unit": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Turns on logging for the standby for the threat defense device, if available.").String,
-				Optional:            true,
-			},
-			"emblem_format": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables EMBLEM format logging.").String,
-				Optional:            true,
-			},
-			"send_debug_messages_as_syslog": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Redirects all the debug trace output to the syslog.").String,
-				Optional:            true,
-			},
-			"internal_buffer_memory_size": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Size of the internal buffer to which syslog messages are saved if the logging buffer is enabled.").AddIntegerRangeDescription(4096, 52428800).AddDefaultValueDescription("4096").String,
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(4096, 52428800),
-				},
-				Default: int64default.StaticInt64(4096),
-			},
-			"fmc_logging_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Syslog message logging to the Firewall Management Center (FMC).").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("VPN").String,
+			"logging_destination": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The logging destination.").AddStringEnumDescription("INTERNAL_BUFFER", "CONSOLE", "SYSLOG_SERVERS", "SNMP_TRAP", "EMAIL", "SSH_SESSION").AddDefaultValueDescription("INTERNAL_BUFFER").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("OFF", "ALL", "VPN"),
+					stringvalidator.OneOf("INTERNAL_BUFFER", "CONSOLE", "SYSLOG_SERVERS", "SNMP_TRAP", "EMAIL", "SSH_SESSION"),
 				},
-				Default: stringdefault.StaticString("VPN"),
+				Default: stringdefault.StaticString("INTERNAL_BUFFER"),
 			},
-			"fmc_logging_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Syslog message logging level to the Firewall Management Center (FMC).").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").AddDefaultValueDescription("ERR").String,
-				Optional:            true,
-				Computed:            true,
+			"event_class_filter_criteria": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Filter that will apply to all classes not listed in `event_configurations`.").AddStringEnumDescription("SEVERITY", "EVENT_LIST", "DISABLE").String,
+				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),
+					stringvalidator.OneOf("SEVERITY", "EVENT_LIST", "DISABLE"),
 				},
-				Default: stringdefault.StaticString("ERR"),
 			},
-			"ftp_server_host_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of host object representing the FTP server.").String,
+			"event_class_filter_value": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Value for the `event_class_filter_criteria`. This is mandatory if `event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.").String,
 				Optional:            true,
 			},
-			"ftp_server_username": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User name to log in to the FTP server.").String,
-				Optional:            true,
-			},
-			"ftp_server_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password to log in to the FTP server.").String,
-				Optional:            true,
-				Sensitive:           true,
-			},
-			"ftp_server_path": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path on the FTP server to which the logs are uploaded.").String,
-				Optional:            true,
-			},
-			"ftp_server_interface_groups": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface groups through which the FTP server is reachable.").String,
+			"event_class_filters": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Filters per event class.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface group.").String,
-							Optional:            true,
+						"class": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Event class.").AddStringEnumDescription("AUTH", "BRIDGE", "CA", "CONFIG", "CSD", "DAP", "EAPOUDP", "EIGRP", "HA", "IDS", "IP", "IPAA", "IPS", "NP", "OSPF", "RM", "RULE_ENGINE", "SESSION", "SNMP", "SSL", "SVC", "SYS", "TAG_SWITCHING", "VM", "VPDN", "VPN", "VPNC", "VPNFO", "VPNLB", "WEBFO", "WEBVPN").String,
+							Required:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("AUTH", "BRIDGE", "CA", "CONFIG", "CSD", "DAP", "EAPOUDP", "EIGRP", "HA", "IDS", "IP", "IPAA", "IPS", "NP", "OSPF", "RM", "RULE_ENGINE", "SESSION", "SNMP", "SSL", "SVC", "SYS", "TAG_SWITCHING", "VM", "VPDN", "VPN", "VPNC", "VPNFO", "VPNLB", "WEBFO", "WEBVPN"),
+							},
+						},
+						"severity": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Severity level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
+							Required:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),
+							},
 						},
 					},
 				},
-			},
-			"flash": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Save the buffer contents to the flash memory before it is overwritten").String,
-				Optional:            true,
-			},
-			"flash_maximum_space": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum space to be used in the flash memory for logging (in kilobytes).").AddIntegerRangeDescription(4, 8044176).AddDefaultValueDescription("3076").String,
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(4, 8044176),
-				},
-				Default: int64default.StaticInt64(3076),
-			},
-			"flash_minimum_free_space": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Minimum free space to be preserved in flash memory (in kilobytes)").AddIntegerRangeDescription(0, 8044176).AddDefaultValueDescription("1024").String,
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(0, 8044176),
-				},
-				Default: int64default.StaticInt64(1024),
 			},
 		},
 	}
 }
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -207,16 +153,16 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Configure(_ context.Cont
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	// Get FMC version
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogLoggingSetup) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Setup creation, minumum required version is 7.7", r.client.FMCVersion))
+	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogLoggingDestination) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Destination creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
-	var plan FTDPlatformSettingsSyslogLoggingSetup
+	var plan FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -229,34 +175,12 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Create(ctx context.Conte
 	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
-	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
-	// Get objects from FMC
-	resId, err := r.client.Get(plan.getPath(), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
-		return
-	}
-
-	// Check if exactly one object is returned
-	val := resId.Get("items").Array()
-	if len(val) != 1 {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
-		return
-	}
-
-	// Extract ID from the object
-	if retrievedId := val[0].Get("id"); retrievedId.Exists() {
-		plan.Id = types.StringValue(retrievedId.String())
-		tflog.Debug(ctx, fmt.Sprintf("%s: Found object", plan.Id))
-	} else {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object id from payload: %s", resId.String()))
-	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDPlatformSettingsSyslogLoggingSetup{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBody(ctx, FTDPlatformSettingsSyslogLoggingDestination{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -276,8 +200,8 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Create(ctx context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDPlatformSettingsSyslogLoggingSetup
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -328,8 +252,8 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Read(ctx context.Context
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDPlatformSettingsSyslogLoggingSetup
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -368,8 +292,8 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Update(ctx context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDPlatformSettingsSyslogLoggingSetup
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -384,10 +308,9 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Delete(ctx context.Conte
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	body := state.toBodyPutDelete(ctx)
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -400,7 +323,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Delete(ctx context.Conte
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 
-func (r *FTDPlatformSettingsSyslogLoggingSetupResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	idParts := strings.Split(req.ID, ",")
 
 	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {

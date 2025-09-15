@@ -382,8 +382,6 @@ func (data FTDPlatformSettingsSyslogLoggingSetup) toBodyPutDelete(ctx context.Co
 	if data.Type.ValueString() != "" {
 		body, _ = sjson.Set(body, "type", data.Type.ValueString())
 	}
-	body, _ = sjson.Set(body, "loggingToFMCType", "VPN")
-	body, _ = sjson.Set(body, "loggingToFMCLogLevel", "ERR")
 	return body
 }
 

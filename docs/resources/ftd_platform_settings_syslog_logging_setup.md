@@ -3,14 +3,14 @@
 page_title: "fmc_ftd_platform_settings_syslog_logging_setup Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - Syslog.
+  This resource manages FTD Platform Settings - Syslog - Logging Setup.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_logging_setup (Resource)
 
-This resource manages FTD Platform Settings - Syslog.
+This resource manages FTD Platform Settings - Syslog - Logging Setup.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
