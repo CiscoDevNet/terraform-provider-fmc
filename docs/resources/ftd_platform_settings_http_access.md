@@ -68,8 +68,8 @@ Required:
 
 Optional:
 
-- `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
+- `interface_literals` (Set of String) List of interface literals on which HTTP server is available.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
 
 <a id="nestedatt--http_configurations--interface_objects"></a>
 ### Nested Schema for `http_configurations.interface_objects`

@@ -21,6 +21,7 @@ attributes:
     description: Type of the object; this value is always 'NTPSetting'.
     computed: true
   - model_name: ntpMode
+    tf_name: synchronization_mode
     type: String
     description: Network Time Protocol (NTP) mode.
     enum_values: [SYNC_VIA_MGMT_CENTER_NTP, SYNC_VIA_NTP_SERVER]
@@ -30,7 +31,7 @@ attributes:
     tf_name: ntp_servers
     type: List
     element_type: String
-    description: List of NTP servers.
+    description: List of NTP servers IP Addresses.
     exclude_example: true
     exclude_test: true
 

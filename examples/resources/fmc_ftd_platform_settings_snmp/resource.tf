@@ -7,7 +7,7 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
   listen_port               = 161
   snmp_management_hosts = [
     {
-      management_host_ip_object_id    = "123e4567-e89b-12d3-a456-426614174000"
+      ip_object_id                    = "123e4567-e89b-12d3-a456-426614174000"
       snmp_version                    = "SNMPv3"
       username                        = "snmpuser1"
       poll                            = true
@@ -27,7 +27,7 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
     {
       security_level                = "Priv"
       username                      = "snmpuser1"
-      encryption_password_type      = "Clear"
+      password_type                 = "Clear"
       authentication_algorithm_type = "SHA256"
       authentication_password       = "MyAuthPassword123"
       encryption_type               = "AES256"

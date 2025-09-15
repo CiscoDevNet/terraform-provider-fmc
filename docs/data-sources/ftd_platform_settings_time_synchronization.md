@@ -33,6 +33,6 @@ data "fmc_ftd_platform_settings_time_synchronization" "example" {
 
 ### Read-Only
 
-- `ntp_mode` (String) Network Time Protocol (NTP) mode.
-- `ntp_servers` (List of String) List of NTP servers.
+- `ntp_servers` (List of String) List of NTP servers IP Addresses.
+- `synchronization_mode` (String) Network Time Protocol (NTP) mode.
 - `type` (String) Type of the object; this value is always 'NTPSetting'.

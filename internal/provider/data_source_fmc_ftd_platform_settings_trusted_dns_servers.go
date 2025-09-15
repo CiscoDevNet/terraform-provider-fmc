@@ -96,7 +96,7 @@ func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Schema(ctx context.Cont
 				Computed:            true,
 			},
 			"trusted_dns_servers_literals": schema.SetAttribute{
-				MarkdownDescription: "Trusted DNS servers - literals.",
+				MarkdownDescription: "Trusted DNS servers - literals (IP Addresses).",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

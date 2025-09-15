@@ -136,7 +136,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"management_host_ip_object_id": schema.StringAttribute{
+						"ip_object_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.").String,
 							Required:            true,
 						},
@@ -227,8 +227,8 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 								stringvalidator.LengthBetween(0, 32),
 							},
 						},
-						"encryption_password_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether the `authentication_password` is in clear text or encrypted.").AddStringEnumDescription("Clear", "Encrypted").String,
+						"password_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether `authentication_password` and `encryption_password` are in clear text or encrypted.").AddStringEnumDescription("Clear", "Encrypted").String,
 							Optional:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("Clear", "Encrypted"),
@@ -242,7 +242,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 							},
 						},
 						"authentication_password": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("SNMPv3 authentication password. If you selected Encrypted as the `encryption_password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.").String,
 							Optional:            true,
 							Sensitive:           true,
 							Validators: []validator.String{
@@ -257,7 +257,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 							},
 						},
 						"encryption_password": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("SNMPv3 encryption password.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.").String,
 							Optional:            true,
 							Sensitive:           true,
 							Validators: []validator.String{
@@ -276,11 +276,11 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"trap_link_up": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("One of the device’s communication links has become available.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("One of the device's communication links has become available.").String,
 				Optional:            true,
 			},
 			"trap_link_down": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("One of the device’s communication links has failed.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("One of the device's communication links has failed.").String,
 				Optional:            true,
 			},
 			"trap_cold_start": schema.BoolAttribute{

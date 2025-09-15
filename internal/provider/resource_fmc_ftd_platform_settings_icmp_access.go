@@ -127,7 +127,7 @@ func (r *FTDPlatformSettingsICMPAccessResource) Schema(ctx context.Context, req 
 							},
 						},
 						"icmp_service_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the ICMP Service.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the ICMP Service object.").String,
 							Required:            true,
 						},
 						"source_network_object_id": schema.StringAttribute{
@@ -135,7 +135,7 @@ func (r *FTDPlatformSettingsICMPAccessResource) Schema(ctx context.Context, req 
 							Required:            true,
 						},
 						"interface_literals": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of interfaces to reach SNMP management host.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of interface literals to reach SNMP management host.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 						},

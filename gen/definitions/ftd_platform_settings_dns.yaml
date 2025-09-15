@@ -3,7 +3,7 @@ name: FTD Platform Settings DNS
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/dnssettings
 doc_category: Devices
 minimum_version_create: "7.7"
-res_description: This resource manages FTD Platform Settings - DNS.
+res_description: This resource manages FTD Platform Settings - DNS - DNS Settings.
 put_create: true
 retrieve_id: true
 put_delete: true
@@ -27,10 +27,11 @@ attributes:
     attributes:
       - model_name: id
         data_path: [dnsServerGroup]
-        tf_name: server_group_id
+        tf_name: id
         type: String
         description: ID of the DNS server group object.
         id: true
+        example: 12345678-1234-1234-1234-123456789012
         test_value: fmc_dns_server_group.test.id
       - model_name: isDefault
         type: Bool
@@ -79,7 +80,7 @@ attributes:
   - model_name: enableLookupViaMgmt
     tf_name: lookup_via_management_diagnostic_interface
     type: Bool
-    description: Enable lookup via management interface.
+    description: Enable lookup via management/diagnostic interface.
     example: true
 
 test_prerequisites: |-

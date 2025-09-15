@@ -39,7 +39,7 @@ type FTDPlatformSettingsTimeSynchronization struct {
 	Domain                types.String `tfsdk:"domain"`
 	FtdPlatformSettingsId types.String `tfsdk:"ftd_platform_settings_id"`
 	Type                  types.String `tfsdk:"type"`
-	NtpMode               types.String `tfsdk:"ntp_mode"`
+	SynchronizationMode   types.String `tfsdk:"synchronization_mode"`
 	NtpServers            types.List   `tfsdk:"ntp_servers"`
 }
 
@@ -65,8 +65,8 @@ func (data FTDPlatformSettingsTimeSynchronization) toBody(ctx context.Context, s
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.NtpMode.IsNull() {
-		body, _ = sjson.Set(body, "ntpMode", data.NtpMode.ValueString())
+	if !data.SynchronizationMode.IsNull() {
+		body, _ = sjson.Set(body, "ntpMode", data.SynchronizationMode.ValueString())
 	}
 	if !data.NtpServers.IsNull() {
 		var values []string
@@ -87,9 +87,9 @@ func (data *FTDPlatformSettingsTimeSynchronization) fromBody(ctx context.Context
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("ntpMode"); value.Exists() {
-		data.NtpMode = types.StringValue(value.String())
+		data.SynchronizationMode = types.StringValue(value.String())
 	} else {
-		data.NtpMode = types.StringNull()
+		data.SynchronizationMode = types.StringNull()
 	}
 	if value := res.Get("ntpServerInfos"); value.Exists() {
 		data.NtpServers = helpers.GetStringList(value.Array())
@@ -112,10 +112,10 @@ func (data *FTDPlatformSettingsTimeSynchronization) fromBodyPartial(ctx context.
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("ntpMode"); value.Exists() && !data.NtpMode.IsNull() {
-		data.NtpMode = types.StringValue(value.String())
+	if value := res.Get("ntpMode"); value.Exists() && !data.SynchronizationMode.IsNull() {
+		data.SynchronizationMode = types.StringValue(value.String())
 	} else {
-		data.NtpMode = types.StringNull()
+		data.SynchronizationMode = types.StringNull()
 	}
 	if value := res.Get("ntpServerInfos"); value.Exists() && !data.NtpServers.IsNull() {
 		data.NtpServers = helpers.GetStringList(value.Array())

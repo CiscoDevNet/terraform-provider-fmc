@@ -64,7 +64,7 @@ func (r *FTDPlatformSettingsDNSResource) Metadata(ctx context.Context, req resou
 func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - DNS Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -100,7 +100,7 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"server_group_id": schema.StringAttribute{
+						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the DNS server group object.").String,
 							Optional:            true,
 						},
@@ -150,7 +150,7 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"lookup_via_management_diagnostic_interface": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable lookup via management interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable lookup via management/diagnostic interface.").String,
 				Optional:            true,
 			},
 		},

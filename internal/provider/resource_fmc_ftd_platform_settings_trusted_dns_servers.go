@@ -61,7 +61,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Metadata(ctx context.Cont
 func (r *FTDPlatformSettingsTrustedDNSServersResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Trusted DNS Servers.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - Trusted DNS Servers.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -113,7 +113,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Schema(ctx context.Contex
 				Optional:            true,
 			},
 			"trusted_dns_servers_literals": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Trusted DNS servers - literals.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Trusted DNS servers - literals (IP Addresses).").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},

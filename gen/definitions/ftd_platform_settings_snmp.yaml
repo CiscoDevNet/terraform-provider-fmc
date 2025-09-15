@@ -60,7 +60,7 @@ attributes:
     attributes:
       - model_name: id
         data_path: [ipAddress]
-        tf_name: management_host_ip_object_id
+        tf_name: ip_object_id
         type: String
         description: Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
         mandatory: true
@@ -161,10 +161,10 @@ attributes:
         string_max_length: 32
         example: snmpuser1
       - model_name: encryptionPasswordType
-        tf_name: encryption_password_type
+        tf_name: password_type
         type: String
         enum_values: [Clear, Encrypted]
-        description: Whether the `authentication_password` is in clear text or encrypted.
+        description: Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
         example: Clear
       - model_name: authAlgoType
         tf_name: authentication_algorithm_type
@@ -174,7 +174,7 @@ attributes:
         example: SHA256
       - model_name: authenticationPassword
         type: String
-        description: SNMPv3 authentication password. If you selected Encrypted as the `encryption_password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+        description: SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
         example: MyAuthPassword123
         sensitive: true
         write_only: true
@@ -186,7 +186,7 @@ attributes:
         example: AES256
       - model_name: encryptionPassword
         type: String
-        description: SNMPv3 encryption password.
+        description: SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
         example: MyEncryptionPassword123
         sensitive: true
         write_only: true
@@ -209,13 +209,13 @@ attributes:
     data_path: [snmpTrap]
     tf_name: trap_link_up
     type: Bool
-    description: One of the device’s communication links has become available.
+    description: One of the device's communication links has become available.
     example: true
   - model_name: linkDown
     data_path: [snmpTrap]
     tf_name: trap_link_down
     type: Bool
-    description: One of the device’s communication links has failed.
+    description: One of the device's communication links has failed.
     example: true
   - model_name: coldStart
     data_path: [snmpTrap]

@@ -70,12 +70,12 @@ Required:
 
 - `action` (String) Action to take on matching ICMP packets.
   - Choices: `Permit`, `Deny`
-- `icmp_service_id` (String) ID of the ICMP Service.
+- `icmp_service_id` (String) ID of the ICMP Service object.
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses for ICMP access.
 
 Optional:
 
-- `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
+- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--icmp_configs--interface_objects))
 
 <a id="nestedatt--icmp_configs--interface_objects"></a>

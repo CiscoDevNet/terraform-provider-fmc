@@ -80,7 +80,7 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"server_group_id": schema.StringAttribute{
+						"id": schema.StringAttribute{
 							MarkdownDescription: "ID of the DNS server group object.",
 							Computed:            true,
 						},
@@ -121,7 +121,7 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 				},
 			},
 			"lookup_via_management_diagnostic_interface": schema.BoolAttribute{
-				MarkdownDescription: "Enable lookup via management interface.",
+				MarkdownDescription: "Enable lookup via management/diagnostic interface.",
 				Computed:            true,
 			},
 		},

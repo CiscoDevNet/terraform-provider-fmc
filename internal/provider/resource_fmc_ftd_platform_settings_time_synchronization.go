@@ -94,7 +94,7 @@ func (r *FTDPlatformSettingsTimeSynchronizationResource) Schema(ctx context.Cont
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"ntp_mode": schema.StringAttribute{
+			"synchronization_mode": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Network Time Protocol (NTP) mode.").AddStringEnumDescription("SYNC_VIA_MGMT_CENTER_NTP", "SYNC_VIA_NTP_SERVER").String,
 				Required:            true,
 				Validators: []validator.String{
@@ -102,7 +102,7 @@ func (r *FTDPlatformSettingsTimeSynchronizationResource) Schema(ctx context.Cont
 				},
 			},
 			"ntp_servers": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of NTP servers.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of NTP servers IP Addresses.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},

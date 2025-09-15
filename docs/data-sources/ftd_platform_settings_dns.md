@@ -35,7 +35,7 @@ data "fmc_ftd_platform_settings_dns" "example" {
 
 - `expire_entry_timer` (Number) Minimum time-to-live (TTL) for the DNS entry (in minutes).
 - `interface_objects` (Attributes List) Enable DNS lookups on all interfaces or on specific interfaces. (see [below for nested schema](#nestedatt--interface_objects))
-- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management interface.
+- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management/diagnostic interface.
 - `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the FQDN.
 - `server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--server_groups))
 - `type` (String) Type of the object; this value is always 'DNSSetting'.
@@ -55,5 +55,5 @@ Read-Only:
 Read-Only:
 
 - `filter_domains` (List of String) Mandatory for non-default groups. The group will be used for DNS resolutions for these domains only.
+- `id` (String) ID of the DNS server group object.
 - `is_default` (Boolean) Set DNS server group as default. Any DNS resolution request that does not match the filters for other groups will be resolved using the servers in this group.
-- `server_group_id` (String) ID of the DNS server group object.

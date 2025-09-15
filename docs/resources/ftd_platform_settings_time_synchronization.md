@@ -21,7 +21,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ftd_platform_settings_time_synchronization" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  ntp_mode                 = "SYNC_VIA_MGMT_CENTER_NTP"
+  synchronization_mode     = "SYNC_VIA_MGMT_CENTER_NTP"
 }
 ```
 
@@ -31,13 +31,13 @@ resource "fmc_ftd_platform_settings_time_synchronization" "example" {
 ### Required
 
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
-- `ntp_mode` (String) Network Time Protocol (NTP) mode.
+- `synchronization_mode` (String) Network Time Protocol (NTP) mode.
   - Choices: `SYNC_VIA_MGMT_CENTER_NTP`, `SYNC_VIA_NTP_SERVER`
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ntp_servers` (List of String) List of NTP servers.
+- `ntp_servers` (List of String) List of NTP servers IP Addresses.
 
 ### Read-Only
 

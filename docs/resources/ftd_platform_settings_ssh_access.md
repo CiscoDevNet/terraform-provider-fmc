@@ -43,7 +43,7 @@ resource "fmc_ftd_platform_settings_ssh_access" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
+- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--interface_objects))
 
 ### Read-Only

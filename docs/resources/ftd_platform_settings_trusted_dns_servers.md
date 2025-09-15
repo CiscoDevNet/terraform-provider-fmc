@@ -3,14 +3,14 @@
 page_title: "fmc_ftd_platform_settings_trusted_dns_servers Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - Trusted DNS Servers.
+  This resource manages FTD Platform Settings - DNS - Trusted DNS Servers.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
 ---
 
 # fmc_ftd_platform_settings_trusted_dns_servers (Resource)
 
-This resource manages FTD Platform Settings - Trusted DNS Servers.
+This resource manages FTD Platform Settings - DNS - Trusted DNS Servers.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
@@ -50,7 +50,7 @@ resource "fmc_ftd_platform_settings_trusted_dns_servers" "example" {
 - `trust_dhcp_pool` (Boolean) DNS Servers discovered by dhcp-pool are considered trusted DNS servers.
 - `trust_dhcp_relay` (Boolean) DNS Servers discovered by dhcp-relay are considered trusted DNS servers.
 - `trust_dns_server_group` (Boolean) DNS Server Group are considered trusted DNS servers.
-- `trusted_dns_servers_literals` (Set of String) Trusted DNS servers - literals.
+- `trusted_dns_servers_literals` (Set of String) Trusted DNS servers - literals (IP Addresses).
 - `trusted_dns_servers_objects` (Attributes Set) Trusted DNS servers - host objects. (see [below for nested schema](#nestedatt--trusted_dns_servers_objects))
 
 ### Read-Only

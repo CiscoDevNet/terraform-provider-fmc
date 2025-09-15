@@ -49,14 +49,14 @@ attributes:
       tf_name: interface_literals
       type: Set
       element_type: String
-      description: List of interfaces to reach SNMP management host.
+      description: List of interface literals on which HTTP server is available.
       exclude_example: true
       exclude_test: true
     - model_name: objects
       data_path: [interfaces]
       tf_name: interface_objects
       type: Set
-      description: List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.
+      description: List of interface objects (Security Zones or Interface Groups) on which HTTP server is available.
       attributes:
         - model_name: id
           type: String

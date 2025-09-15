@@ -76,7 +76,7 @@ func (d *FTDPlatformSettingsBannerDataSource) Schema(ctx context.Context, req da
 				Computed:            true,
 			},
 			"banner_text": schema.ListAttribute{
-				MarkdownDescription: "Text to be displayed in the banner. Each element of the list is a separate line of text.",
+				MarkdownDescription: "Banner text. Each element of the list is a separate line.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

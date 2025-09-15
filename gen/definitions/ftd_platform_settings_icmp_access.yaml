@@ -48,7 +48,7 @@ attributes:
         data_path: [icmpService]
         tf_name: icmp_service_id
         type: String
-        description: ID of the ICMP Service.
+        description: ID of the ICMP Service object.
         mandatory: true
         id: true
         example: 5a9f2d3c-08d1-11e6-b939-00155d0a1eb1
@@ -67,7 +67,7 @@ attributes:
         tf_name: interface_literals
         type: Set
         element_type: String
-        description: List of interfaces to reach SNMP management host.
+        description: List of interface literals to reach SNMP management host.
         exclude_example: true
         exclude_test: true
       - model_name: objects

@@ -14,8 +14,8 @@ attributes:
   - model_name: type
     type: String
     # CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
-    # API returns 'PG.PLATFORM.NgfwPFSettings' which is in provider replaced with 'FTDPlatformSettingsPolicy'
-    description: Type of the object ; this value is always 'FTDPlatformSettingsPolicy'
+    # API returns 'PG.PLATFORM.NgfwPFSettings' which is replaced with 'FTDPlatformSettingsPolicy' in Create
+    description: Type of the object; this value is always 'FTDPlatformSettingsPolicy'
     computed: true
   - model_name: type
     type: String

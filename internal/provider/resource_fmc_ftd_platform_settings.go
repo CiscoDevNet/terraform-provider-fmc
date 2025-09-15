@@ -83,7 +83,7 @@ func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.S
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object ; this value is always 'FTDPlatformSettingsPolicy'").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FTDPlatformSettingsPolicy'").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),

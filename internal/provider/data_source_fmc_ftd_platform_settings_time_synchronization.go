@@ -75,12 +75,12 @@ func (d *FTDPlatformSettingsTimeSynchronizationDataSource) Schema(ctx context.Co
 				MarkdownDescription: "Type of the object; this value is always 'NTPSetting'.",
 				Computed:            true,
 			},
-			"ntp_mode": schema.StringAttribute{
+			"synchronization_mode": schema.StringAttribute{
 				MarkdownDescription: "Network Time Protocol (NTP) mode.",
 				Computed:            true,
 			},
 			"ntp_servers": schema.ListAttribute{
-				MarkdownDescription: "List of NTP servers.",
+				MarkdownDescription: "List of NTP servers IP Addresses.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

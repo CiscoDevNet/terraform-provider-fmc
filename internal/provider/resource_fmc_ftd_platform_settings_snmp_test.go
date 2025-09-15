@@ -43,7 +43,7 @@ func TestAccFmcFTDPlatformSettingsSNMP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.use_device_management_interface", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.security_level", "Priv"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.username", "snmpuser1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.encryption_password_type", "Clear"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.password_type", "Clear"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.authentication_algorithm_type", "SHA256"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.encryption_type", "AES256"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "trap_syslog", "true"))
@@ -116,7 +116,7 @@ func testAccFmcFTDPlatformSettingsSNMPConfig_all() string {
 	config += `	location = "Data Center 1"` + "\n"
 	config += `	listen_port = 161` + "\n"
 	config += `	snmp_management_hosts = [{` + "\n"
-	config += `		management_host_ip_object_id = fmc_host.test.id` + "\n"
+	config += `		ip_object_id = fmc_host.test.id` + "\n"
 	config += `		snmp_version = "SNMPv3"` + "\n"
 	config += `		username = "snmpuser1"` + "\n"
 	config += `		poll = true` + "\n"
@@ -132,7 +132,7 @@ func testAccFmcFTDPlatformSettingsSNMPConfig_all() string {
 	config += `	snmpv3_users = [{` + "\n"
 	config += `		security_level = "Priv"` + "\n"
 	config += `		username = "snmpuser1"` + "\n"
-	config += `		encryption_password_type = "Clear"` + "\n"
+	config += `		password_type = "Clear"` + "\n"
 	config += `		authentication_algorithm_type = "SHA256"` + "\n"
 	config += `		authentication_password = "MyAuthPassword123"` + "\n"
 	config += `		encryption_type = "AES256"` + "\n"

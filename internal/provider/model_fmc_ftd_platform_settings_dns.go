@@ -49,7 +49,7 @@ type FTDPlatformSettingsDNS struct {
 }
 
 type FTDPlatformSettingsDNSServerGroups struct {
-	ServerGroupId types.String `tfsdk:"server_group_id"`
+	Id            types.String `tfsdk:"id"`
 	IsDefault     types.Bool   `tfsdk:"is_default"`
 	FilterDomains types.List   `tfsdk:"filter_domains"`
 }
@@ -85,8 +85,8 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 		body, _ = sjson.Set(body, "dnsServerGroups", []any{})
 		for _, item := range data.ServerGroups {
 			itemBody := ""
-			if !item.ServerGroupId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "dnsServerGroup.id", item.ServerGroupId.ValueString())
+			if !item.Id.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "dnsServerGroup.id", item.Id.ValueString())
 			}
 			if !item.IsDefault.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "isDefault", item.IsDefault.ValueBool())
@@ -140,9 +140,9 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 			parent := &data
 			data := FTDPlatformSettingsDNSServerGroups{}
 			if value := res.Get("dnsServerGroup.id"); value.Exists() {
-				data.ServerGroupId = types.StringValue(value.String())
+				data.Id = types.StringValue(value.String())
 			} else {
-				data.ServerGroupId = types.StringNull()
+				data.Id = types.StringNull()
 			}
 			if value := res.Get("isDefault"); value.Exists() {
 				data.IsDefault = types.BoolValue(value.Bool())
@@ -210,7 +210,7 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	}
 	for i := 0; i < len(data.ServerGroups); i++ {
 		keys := [...]string{"dnsServerGroup.id"}
-		keyValues := [...]string{data.ServerGroups[i].ServerGroupId.ValueString()}
+		keyValues := [...]string{data.ServerGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).ServerGroups[i]
@@ -244,10 +244,10 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 
 			continue
 		}
-		if value := res.Get("dnsServerGroup.id"); value.Exists() && !data.ServerGroupId.IsNull() {
-			data.ServerGroupId = types.StringValue(value.String())
+		if value := res.Get("dnsServerGroup.id"); value.Exists() && !data.Id.IsNull() {
+			data.Id = types.StringValue(value.String())
 		} else {
-			data.ServerGroupId = types.StringNull()
+			data.Id = types.StringNull()
 		}
 		if value := res.Get("isDefault"); value.Exists() && !data.IsDefault.IsNull() {
 			data.IsDefault = types.BoolValue(value.Bool())

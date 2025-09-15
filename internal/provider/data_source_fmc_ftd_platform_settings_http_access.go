@@ -93,12 +93,12 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, re
 							Computed:            true,
 						},
 						"interface_literals": schema.SetAttribute{
-							MarkdownDescription: "List of interfaces to reach SNMP management host.",
+							MarkdownDescription: "List of interface literals on which HTTP server is available.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
 						"interface_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.",
+							MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) on which HTTP server is available.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

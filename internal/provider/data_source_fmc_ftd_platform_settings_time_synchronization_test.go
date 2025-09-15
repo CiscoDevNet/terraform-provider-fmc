@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcFTDPlatformSettingsTimeSynchronization(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_time_synchronization.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_time_synchronization.test", "ntp_mode", "SYNC_VIA_MGMT_CENTER_NTP"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_time_synchronization.test", "synchronization_mode", "SYNC_VIA_MGMT_CENTER_NTP"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -62,7 +62,7 @@ resource "fmc_ftd_platform_settings" "test" {
 func testAccDataSourceFmcFTDPlatformSettingsTimeSynchronizationConfig() string {
 	config := `resource "fmc_ftd_platform_settings_time_synchronization" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	ntp_mode = "SYNC_VIA_MGMT_CENTER_NTP"` + "\n"
+	config += `	synchronization_mode = "SYNC_VIA_MGMT_CENTER_NTP"` + "\n"
 	config += `}` + "\n"
 
 	config += `

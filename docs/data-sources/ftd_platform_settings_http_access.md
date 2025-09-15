@@ -43,8 +43,8 @@ data "fmc_ftd_platform_settings_http_access" "example" {
 
 Read-Only:
 
-- `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
+- `interface_literals` (Set of String) List of interface literals on which HTTP server is available.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which HTTP access is allowed.
 
 <a id="nestedatt--http_configurations--interface_objects"></a>

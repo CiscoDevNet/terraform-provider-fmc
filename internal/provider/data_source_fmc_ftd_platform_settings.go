@@ -77,7 +77,7 @@ func (d *FTDPlatformSettingsDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object ; this value is always 'FTDPlatformSettingsPolicy'",
+				MarkdownDescription: "Type of the object; this value is always 'FTDPlatformSettingsPolicy'",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{

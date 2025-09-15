@@ -80,7 +80,7 @@ func (d *FTDPlatformSettingsSSHAccessDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"interface_literals": schema.SetAttribute{
-				MarkdownDescription: "List of interfaces to reach SNMP management host.",
+				MarkdownDescription: "List of interface literals to reach SNMP management host.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},

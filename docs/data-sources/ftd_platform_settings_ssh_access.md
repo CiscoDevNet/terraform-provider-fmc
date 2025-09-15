@@ -33,7 +33,7 @@ data "fmc_ftd_platform_settings_ssh_access" "example" {
 
 ### Read-Only
 
-- `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
+- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--interface_objects))
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which SSH access is allowed.
 - `type` (String) Type of the object; this value is always 'SSHAccessSetting'.

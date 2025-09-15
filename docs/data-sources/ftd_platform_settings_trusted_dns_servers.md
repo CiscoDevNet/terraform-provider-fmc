@@ -38,7 +38,7 @@ data "fmc_ftd_platform_settings_trusted_dns_servers" "example" {
 - `trust_dhcp_pool` (Boolean) DNS Servers discovered by dhcp-pool are considered trusted DNS servers.
 - `trust_dhcp_relay` (Boolean) DNS Servers discovered by dhcp-relay are considered trusted DNS servers.
 - `trust_dns_server_group` (Boolean) DNS Server Group are considered trusted DNS servers.
-- `trusted_dns_servers_literals` (Set of String) Trusted DNS servers - literals.
+- `trusted_dns_servers_literals` (Set of String) Trusted DNS servers - literals (IP Addresses).
 - `trusted_dns_servers_objects` (Attributes Set) Trusted DNS servers - host objects. (see [below for nested schema](#nestedatt--trusted_dns_servers_objects))
 - `type` (String) Type of the object; this value is always 'TrustedDNSSetting'.
 

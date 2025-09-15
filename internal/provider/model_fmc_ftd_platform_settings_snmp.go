@@ -70,7 +70,7 @@ type FTDPlatformSettingsSNMP struct {
 }
 
 type FTDPlatformSettingsSNMPSnmpManagementHosts struct {
-	ManagementHostIpObjectId     types.String                                                 `tfsdk:"management_host_ip_object_id"`
+	IpObjectId                   types.String                                                 `tfsdk:"ip_object_id"`
 	SnmpVersion                  types.String                                                 `tfsdk:"snmp_version"`
 	Username                     types.String                                                 `tfsdk:"username"`
 	ReadCommunityString          types.String                                                 `tfsdk:"read_community_string"`
@@ -85,7 +85,7 @@ type FTDPlatformSettingsSNMPSnmpManagementHosts struct {
 type FTDPlatformSettingsSNMPSnmpv3Users struct {
 	SecurityLevel               types.String `tfsdk:"security_level"`
 	Username                    types.String `tfsdk:"username"`
-	EncryptionPasswordType      types.String `tfsdk:"encryption_password_type"`
+	PasswordType                types.String `tfsdk:"password_type"`
 	AuthenticationAlgorithmType types.String `tfsdk:"authentication_algorithm_type"`
 	AuthenticationPassword      types.String `tfsdk:"authentication_password"`
 	EncryptionType              types.String `tfsdk:"encryption_type"`
@@ -139,8 +139,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
 		for _, item := range data.SnmpManagementHosts {
 			itemBody := ""
-			if !item.ManagementHostIpObjectId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.ManagementHostIpObjectId.ValueString())
+			if !item.IpObjectId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.IpObjectId.ValueString())
 			}
 			if !item.SnmpVersion.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "snmpVersion", item.SnmpVersion.ValueString())
@@ -197,8 +197,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 			if !item.Username.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "userName", item.Username.ValueString())
 			}
-			if !item.EncryptionPasswordType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "encryptionPasswordType", item.EncryptionPasswordType.ValueString())
+			if !item.PasswordType.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "encryptionPasswordType", item.PasswordType.ValueString())
 			}
 			if !item.AuthenticationAlgorithmType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "authAlgoType", item.AuthenticationAlgorithmType.ValueString())
@@ -311,9 +311,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 			parent := &data
 			data := FTDPlatformSettingsSNMPSnmpManagementHosts{}
 			if value := res.Get("ipAddress.id"); value.Exists() {
-				data.ManagementHostIpObjectId = types.StringValue(value.String())
+				data.IpObjectId = types.StringValue(value.String())
 			} else {
-				data.ManagementHostIpObjectId = types.StringNull()
+				data.IpObjectId = types.StringNull()
 			}
 			if value := res.Get("snmpVersion"); value.Exists() {
 				data.SnmpVersion = types.StringValue(value.String())
@@ -394,9 +394,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.Username = types.StringNull()
 			}
 			if value := res.Get("encryptionPasswordType"); value.Exists() {
-				data.EncryptionPasswordType = types.StringValue(value.String())
+				data.PasswordType = types.StringValue(value.String())
 			} else {
-				data.EncryptionPasswordType = types.StringNull()
+				data.PasswordType = types.StringNull()
 			}
 			if value := res.Get("authAlgoType"); value.Exists() {
 				data.AuthenticationAlgorithmType = types.StringValue(value.String())
@@ -545,7 +545,7 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	}
 	for i := 0; i < len(data.SnmpManagementHosts); i++ {
 		keys := [...]string{"ipAddress.id"}
-		keyValues := [...]string{data.SnmpManagementHosts[i].ManagementHostIpObjectId.ValueString()}
+		keyValues := [...]string{data.SnmpManagementHosts[i].IpObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).SnmpManagementHosts[i]
@@ -579,10 +579,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 
 			continue
 		}
-		if value := res.Get("ipAddress.id"); value.Exists() && !data.ManagementHostIpObjectId.IsNull() {
-			data.ManagementHostIpObjectId = types.StringValue(value.String())
+		if value := res.Get("ipAddress.id"); value.Exists() && !data.IpObjectId.IsNull() {
+			data.IpObjectId = types.StringValue(value.String())
 		} else {
-			data.ManagementHostIpObjectId = types.StringNull()
+			data.IpObjectId = types.StringNull()
 		}
 		if value := res.Get("snmpVersion"); value.Exists() && !data.SnmpVersion.IsNull() {
 			data.SnmpVersion = types.StringValue(value.String())
@@ -720,10 +720,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.Username = types.StringNull()
 		}
-		if value := res.Get("encryptionPasswordType"); value.Exists() && !data.EncryptionPasswordType.IsNull() {
-			data.EncryptionPasswordType = types.StringValue(value.String())
+		if value := res.Get("encryptionPasswordType"); value.Exists() && !data.PasswordType.IsNull() {
+			data.PasswordType = types.StringValue(value.String())
 		} else {
-			data.EncryptionPasswordType = types.StringNull()
+			data.PasswordType = types.StringNull()
 		}
 		if value := res.Get("authAlgoType"); value.Exists() && !data.AuthenticationAlgorithmType.IsNull() {
 			data.AuthenticationAlgorithmType = types.StringValue(value.String())

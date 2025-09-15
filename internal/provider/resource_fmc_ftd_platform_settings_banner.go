@@ -93,7 +93,7 @@ func (r *FTDPlatformSettingsBannerResource) Schema(ctx context.Context, req reso
 				},
 			},
 			"banner_text": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Text to be displayed in the banner. Each element of the list is a separate line of text.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Banner text. Each element of the list is a separate line.").String,
 				ElementType:         types.StringType,
 				Required:            true,
 			},

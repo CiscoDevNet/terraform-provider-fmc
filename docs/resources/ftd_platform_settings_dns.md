@@ -3,14 +3,14 @@
 page_title: "fmc_ftd_platform_settings_dns Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - DNS.
+  This resource manages FTD Platform Settings - DNS - DNS Settings.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
 ---
 
 # fmc_ftd_platform_settings_dns (Resource)
 
-This resource manages FTD Platform Settings - DNS.
+This resource manages FTD Platform Settings - DNS - DNS Settings.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
@@ -23,8 +23,8 @@ resource "fmc_ftd_platform_settings_dns" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   server_groups = [
     {
-      server_group_id = ""
-      is_default      = true
+      id         = "12345678-1234-1234-1234-123456789012"
+      is_default = true
     }
   ]
   expire_entry_timer = 1
@@ -52,7 +52,7 @@ resource "fmc_ftd_platform_settings_dns" "example" {
 - `expire_entry_timer` (Number) Minimum time-to-live (TTL) for the DNS entry (in minutes).
   - Range: `1`-`65535`
 - `interface_objects` (Attributes List) Enable DNS lookups on all interfaces or on specific interfaces. (see [below for nested schema](#nestedatt--interface_objects))
-- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management interface.
+- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management/diagnostic interface.
 - `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the FQDN.
   - Range: `1`-`65535`
 - `server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--server_groups))
@@ -78,8 +78,8 @@ Required:
 Optional:
 
 - `filter_domains` (List of String) Mandatory for non-default groups. The group will be used for DNS resolutions for these domains only.
+- `id` (String) ID of the DNS server group object.
 - `is_default` (Boolean) Set DNS server group as default. Any DNS resolution request that does not match the filters for other groups will be resolved using the servers in this group.
-- `server_group_id` (String) ID of the DNS server group object.
 
 ## Import
 

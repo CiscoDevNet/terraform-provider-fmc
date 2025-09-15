@@ -30,7 +30,7 @@ resource "fmc_ftd_platform_settings_banner" "example" {
 
 ### Required
 
-- `banner_text` (List of String) Text to be displayed in the banner. Each element of the list is a separate line of text.
+- `banner_text` (List of String) Banner text. Each element of the list is a separate line.
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
 
 ### Optional

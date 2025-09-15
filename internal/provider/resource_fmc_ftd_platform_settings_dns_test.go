@@ -84,7 +84,7 @@ func testAccFmcFTDPlatformSettingsDNSConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_dns" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	server_groups = [{` + "\n"
-	config += `		server_group_id = fmc_dns_server_group.test.id` + "\n"
+	config += `		id = fmc_dns_server_group.test.id` + "\n"
 	config += `		is_default = true` + "\n"
 	config += `	}]` + "\n"
 	config += `	expire_entry_timer = 1` + "\n"

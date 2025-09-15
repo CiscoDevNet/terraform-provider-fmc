@@ -51,8 +51,8 @@ data "fmc_ftd_platform_settings_snmp" "example" {
 - `trap_failover` (Boolean) Change in the failover state.
 - `trap_field_replacement_unit_delete` (Boolean) Field Replaceable Unit (FRU) has been removed.
 - `trap_field_replacement_unit_insert` (Boolean) Field Replaceable Unit (FRU) has been inserted.
-- `trap_link_down` (Boolean) One of the device’s communication links has failed.
-- `trap_link_up` (Boolean) One of the device’s communication links has become available.
+- `trap_link_down` (Boolean) One of the device's communication links has failed.
+- `trap_link_up` (Boolean) One of the device's communication links has become available.
 - `trap_memory_rising_threshold` (Boolean) Memory utilization exceeds a predefined threshold
 - `trap_memory_rising_threshold_value` (Number) Percent of memory utilization that triggers a trap.
 - `trap_nat_packet_discard` (Boolean) IP packets are discarded by the NAT.
@@ -68,7 +68,7 @@ Read-Only:
 
 - `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--snmp_management_hosts--interface_objects))
-- `management_host_ip_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
+- `ip_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
 - `poll` (Boolean) The management station periodically requests information from the device.
 - `read_community_string` (String, Sensitive) (SNMPv1, 2c only) Read community string.
 - `snmp_version` (String) SNMP version to be used.
@@ -94,9 +94,9 @@ Read-Only:
 Read-Only:
 
 - `authentication_algorithm_type` (String) Type of authentication algorithm.
-- `authentication_password` (String, Sensitive) SNMPv3 authentication password. If you selected Encrypted as the `encryption_password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
-- `encryption_password` (String, Sensitive) SNMPv3 encryption password.
-- `encryption_password_type` (String) Whether the `authentication_password` is in clear text or encrypted.
+- `authentication_password` (String, Sensitive) SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+- `encryption_password` (String, Sensitive) SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
 - `encryption_type` (String) Type of encryption algorithm.
+- `password_type` (String) Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
 - `security_level` (String) Select desired security level.
 - `username` (String) SNMPv3 username.

@@ -29,7 +29,7 @@ attributes:
     tf_name: interface_literals
     type: Set
     element_type: String
-    description: List of interfaces to reach SNMP management host.
+    description: List of interface literals to reach SNMP management host.
     exclude_example: true
     exclude_test: true
   - model_name: objects

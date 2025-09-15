@@ -28,7 +28,7 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
   listen_port               = 161
   snmp_management_hosts = [
     {
-      management_host_ip_object_id    = "123e4567-e89b-12d3-a456-426614174000"
+      ip_object_id                    = "123e4567-e89b-12d3-a456-426614174000"
       snmp_version                    = "SNMPv3"
       username                        = "snmpuser1"
       poll                            = true
@@ -48,7 +48,7 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
     {
       security_level                = "Priv"
       username                      = "snmpuser1"
-      encryption_password_type      = "Clear"
+      password_type                 = "Clear"
       authentication_algorithm_type = "SHA256"
       authentication_password       = "MyAuthPassword123"
       encryption_type               = "AES256"
@@ -109,8 +109,8 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
 - `trap_failover` (Boolean) Change in the failover state.
 - `trap_field_replacement_unit_delete` (Boolean) Field Replaceable Unit (FRU) has been removed.
 - `trap_field_replacement_unit_insert` (Boolean) Field Replaceable Unit (FRU) has been inserted.
-- `trap_link_down` (Boolean) One of the device’s communication links has failed.
-- `trap_link_up` (Boolean) One of the device’s communication links has become available.
+- `trap_link_down` (Boolean) One of the device's communication links has failed.
+- `trap_link_up` (Boolean) One of the device's communication links has become available.
 - `trap_memory_rising_threshold` (Boolean) Memory utilization exceeds a predefined threshold
 - `trap_memory_rising_threshold_value` (Number) Percent of memory utilization that triggers a trap.
   - Range: `50`-`95`
@@ -129,7 +129,7 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
 
 Required:
 
-- `management_host_ip_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
+- `ip_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
 - `snmp_version` (String) SNMP version to be used.
   - Choices: `SNMPv1`, `SNMPv2c`, `SNMPv3`
 
@@ -171,12 +171,12 @@ Optional:
 
 - `authentication_algorithm_type` (String) Type of authentication algorithm.
   - Choices: `SHA`, `SHA224`, `SHA256`, `SHA384`
-- `authentication_password` (String, Sensitive) SNMPv3 authentication password. If you selected Encrypted as the `encryption_password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
-- `encryption_password` (String, Sensitive) SNMPv3 encryption password.
-- `encryption_password_type` (String) Whether the `authentication_password` is in clear text or encrypted.
-  - Choices: `Clear`, `Encrypted`
+- `authentication_password` (String, Sensitive) SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+- `encryption_password` (String, Sensitive) SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
 - `encryption_type` (String) Type of encryption algorithm.
   - Choices: `AES128`, `AES192`, `AES256`
+- `password_type` (String) Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
+  - Choices: `Clear`, `Encrypted`
 
 ## Import
 
