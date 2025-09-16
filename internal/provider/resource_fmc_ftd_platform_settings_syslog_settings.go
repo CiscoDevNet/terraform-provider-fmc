@@ -64,7 +64,7 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Metadata(ctx context.Context
 func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Syslog Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Syslog Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -96,7 +96,7 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, 
 				},
 			},
 			"facility": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Syslog facility value.").AddStringEnumDescription("LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", "LOCAL7").AddDefaultValueDescription("LOCAL4").String,
+				MarkdownDescription: helpers.NewAttributeDescription("System log facility for syslog servers to use as a basis to file messages.").AddStringEnumDescription("LOCAL0", "LOCAL1", "LOCAL2", "LOCAL3", "LOCAL4", "LOCAL5", "LOCAL6", "LOCAL7").AddDefaultValueDescription("LOCAL4").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -105,25 +105,28 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, 
 				Default: stringdefault.StaticString("LOCAL4"),
 			},
 			"timestamp_format": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Add timestamp to syslog messages in the specified format.").AddStringEnumDescription("RFC_5424", "LEGACY").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Include timestamp to generated syslog messages in the specified format.").AddStringEnumDescription("RFC_5424", "LEGACY").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("RFC_5424", "LEGACY"),
 				},
 			},
 			"device_id_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("INTERFACE", "USERDEFINEDID", "HOSTNAME").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Include device identifier to syslog messages.").AddStringEnumDescription("INTERFACE", "USERDEFINEDID", "HOSTNAME").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("INTERFACE", "USERDEFINEDID", "HOSTNAME"),
 				},
 			},
 			"device_id_user_defined_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined ID for the device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.").String,
 				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.LengthBetween(0, 16),
+				},
 			},
 			"device_id_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface ID for the device, either Security Zone or Interface Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.").String,
 				Optional:            true,
 			},
 			"all_syslog_messages": schema.BoolAttribute{
@@ -158,7 +161,7 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Create(ctx context.Context, 
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogSettings) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettings) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -223,6 +226,14 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Create(ctx context.Context, 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogSettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettings) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogSettings
 
 	// Read state
@@ -363,15 +374,3 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) ImportState(ctx context.Cont
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

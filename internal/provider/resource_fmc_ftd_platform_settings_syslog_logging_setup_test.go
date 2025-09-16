@@ -38,10 +38,8 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "internal_buffer_memory_size", "4096"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_type", "VPN"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_level", "ERR"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_host_id", "d3f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_username", "ftpuser"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_path", "/logs"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_interface_groups.0.id", "e7f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash_maximum_space", "3076"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash_minimum_free_space", "1024"))
@@ -66,7 +64,17 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 
 const testAccFmcFTDPlatformSettingsSyslogLoggingSetupPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_logging_setup"
+}
+
+resource "fmc_host" "test" {
+  name = "ftd_platform_settings_syslog_logging_setup"
+  ip   = "10.0.2.1"
+}
+
+resource "fmc_interface_group" "test" {
+  name           = "ftd_platform_settings_syslog_logging_setup"
+  interface_mode = "ROUTED"
 }
 `
 
@@ -87,12 +95,12 @@ func testAccFmcFTDPlatformSettingsSyslogLoggingSetupConfig_all() string {
 	config += `	internal_buffer_memory_size = 4096` + "\n"
 	config += `	fmc_logging_type = "VPN"` + "\n"
 	config += `	fmc_logging_level = "ERR"` + "\n"
-	config += `	ftp_server_host_id = "d3f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"` + "\n"
+	config += `	ftp_server_host_id = fmc_host.test.id` + "\n"
 	config += `	ftp_server_username = "ftpuser"` + "\n"
 	config += `	ftp_server_password = "ftppassword"` + "\n"
 	config += `	ftp_server_path = "/logs"` + "\n"
 	config += `	ftp_server_interface_groups = [{` + "\n"
-	config += `		id = "e7f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"` + "\n"
+	config += `		id = fmc_interface_group.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	flash = false` + "\n"
 	config += `	flash_maximum_space = 3076` + "\n"

@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_settings Data Source - terraform-p
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Settings.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_settings (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Settings.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -35,9 +40,9 @@ data "fmc_ftd_platform_settings_syslog_settings" "example" {
 
 - `all_syslog_messages` (Boolean) Enable all syslog messages.
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
-- `device_id_interface_id` (String) Interface ID for the device, either Security Zone or Interface Group.
-- `device_id_type` (String)
-- `device_id_user_defined_id` (String) User defined ID for the device.
-- `facility` (String) Syslog facility value.
-- `timestamp_format` (String) Add timestamp to syslog messages in the specified format.
+- `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.
+- `device_id_type` (String) Include device identifier to syslog messages.
+- `device_id_user_defined_id` (String) User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.
+- `facility` (String) System log facility for syslog servers to use as a basis to file messages.
+- `timestamp_format` (String) Include timestamp to generated syslog messages in the specified format.
 - `type` (String) Type of the object; this value is always 'SyslogSetting'.

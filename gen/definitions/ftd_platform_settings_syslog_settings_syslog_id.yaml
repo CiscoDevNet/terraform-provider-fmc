@@ -1,8 +1,10 @@
+# FMCBUG: API inverts the `enabled` value (`true` becomes `false` and vice versa)
+# Manual Resource - toBody
 ---
 name: FTD Platform Settings Syslog Settings Syslog ID
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/syslogsettings/%v/syslogids
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.
 skip_minimum_test: true
 attributes:
@@ -22,7 +24,6 @@ attributes:
     type: String
     description: Type of the object; this value is always 'SyslogId'.
     computed: true
-
   - model_name: syslogId
     tf_name: syslog_id
     type: Int64
@@ -31,7 +32,7 @@ attributes:
     example: 106004
   - model_name: logLevel
     type: String
-    description: Log level.
+    description: Logging level.
     enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG, DEFAULT]
     example: ERR
     default_value: DEFAULT
@@ -43,7 +44,7 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_ftd_platform_settings" "test" {
-    name        = "ftd_platform_settings_banner"
+    name        = "ftd_platform_settings_syslog_settings_syslog_id"
   }
 
   resource "fmc_ftd_platform_settings_syslog_settings" "test" {

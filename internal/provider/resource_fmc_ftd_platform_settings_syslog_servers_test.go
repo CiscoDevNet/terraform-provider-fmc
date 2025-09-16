@@ -33,7 +33,6 @@ func TestAccFmcFTDPlatformSettingsSyslogServers(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_servers.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "allow_user_traffic_when_tcp_syslog_server_is_down", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "message_queue_size", "512"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.ip_object_id", "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.protocol", "TCP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.port", "1470"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.secure_syslog", "true"))
@@ -59,7 +58,17 @@ func TestAccFmcFTDPlatformSettingsSyslogServers(t *testing.T) {
 
 const testAccFmcFTDPlatformSettingsSyslogServersPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_servers"
+}
+
+resource "fmc_host" "test" {
+  name = "ftd_platform_settings_syslog_servers"
+  ip   = "10.0.2.1"
+}
+
+resource "fmc_security_zone" "test" {
+  name           = "ftd_platform_settings_syslog_servers"
+  interface_type = "ROUTED"
 }
 `
 
@@ -76,7 +85,7 @@ func testAccFmcFTDPlatformSettingsSyslogServersConfig_all() string {
 	config += `	allow_user_traffic_when_tcp_syslog_server_is_down = true` + "\n"
 	config += `	message_queue_size = 512` + "\n"
 	config += `	servers = [{` + "\n"
-	config += `		ip_object_id = "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"` + "\n"
+	config += `		ip_object_id = fmc_host.test.id` + "\n"
 	config += `		protocol = "TCP"` + "\n"
 	config += `		port = 1470` + "\n"
 	config += `		secure_syslog = true` + "\n"

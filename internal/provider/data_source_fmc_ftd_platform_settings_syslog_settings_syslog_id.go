@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -55,7 +57,7 @@ func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Metadata(_ context
 func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Settings Syslog ID.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Settings Syslog ID.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -83,7 +85,7 @@ func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Schema(ctx context
 				Computed:            true,
 			},
 			"log_level": schema.StringAttribute{
-				MarkdownDescription: "Log level.",
+				MarkdownDescription: "Logging level.",
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -107,6 +109,14 @@ func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Configure(_ contex
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings Syslog ID, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSyslogSettingsSyslogID
 
 	// Read config

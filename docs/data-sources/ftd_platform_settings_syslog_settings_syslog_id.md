@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_settings_syslog_id Data Source - t
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Settings Syslog ID.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_settings_syslog_id (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Settings Syslog ID.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -36,6 +41,6 @@ data "fmc_ftd_platform_settings_syslog_settings_syslog_id" "example" {
 ### Read-Only
 
 - `enabled` (Boolean) Enable or disable the syslog ID.
-- `log_level` (String) Log level.
+- `log_level` (String) Logging level.
 - `syslog_id` (Number) Syslog message ID.
 - `type` (String) Type of the object; this value is always 'SyslogId'.

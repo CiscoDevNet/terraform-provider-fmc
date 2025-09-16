@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_event_list Data Source - terraform
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Event List.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_event_list (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Event List.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -34,7 +39,7 @@ data "fmc_ftd_platform_settings_syslog_event_list" "example" {
 ### Read-Only
 
 - `event_classes` (Attributes List) List of event classes. (see [below for nested schema](#nestedatt--event_classes))
-- `message_ids` (Set of String) Enter Syslog Message ID. Use hyphen to specify range of IDs
+- `message_ids` (Set of String) Syslog Message IDs. Use hyphen to specify range of IDs.
 - `name` (String) Name of the event list.
 - `type` (String) Type of the object; this value is always 'EventList'.
 
@@ -44,4 +49,4 @@ data "fmc_ftd_platform_settings_syslog_event_list" "example" {
 Read-Only:
 
 - `class` (String) Event class.
-- `severity` (String) Severity level.
+- `severity` (String) Syslog severity level.

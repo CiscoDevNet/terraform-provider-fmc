@@ -36,14 +36,14 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsSyslogLoggingDestination struct {
-	Id                       types.String                                                   `tfsdk:"id"`
-	Domain                   types.String                                                   `tfsdk:"domain"`
-	FtdPlatformSettingsId    types.String                                                   `tfsdk:"ftd_platform_settings_id"`
-	Type                     types.String                                                   `tfsdk:"type"`
-	LoggingDestination       types.String                                                   `tfsdk:"logging_destination"`
-	EventClassFilterCriteria types.String                                                   `tfsdk:"event_class_filter_criteria"`
-	EventClassFilterValue    types.String                                                   `tfsdk:"event_class_filter_value"`
-	EventClassFilters        []FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters `tfsdk:"event_class_filters"`
+	Id                             types.String                                                   `tfsdk:"id"`
+	Domain                         types.String                                                   `tfsdk:"domain"`
+	FtdPlatformSettingsId          types.String                                                   `tfsdk:"ftd_platform_settings_id"`
+	Type                           types.String                                                   `tfsdk:"type"`
+	LoggingDestination             types.String                                                   `tfsdk:"logging_destination"`
+	GlobalEventClassFilterCriteria types.String                                                   `tfsdk:"global_event_class_filter_criteria"`
+	GlobalEventClassFilterValue    types.String                                                   `tfsdk:"global_event_class_filter_value"`
+	EventClassFilters              []FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters `tfsdk:"event_class_filters"`
 }
 
 type FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters struct {
@@ -54,7 +54,7 @@ type FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsSyslogLoggingDestination = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsSyslogLoggingDestination = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 
@@ -76,11 +76,11 @@ func (data FTDPlatformSettingsSyslogLoggingDestination) toBody(ctx context.Conte
 	if !data.LoggingDestination.IsNull() {
 		body, _ = sjson.Set(body, "loggingDestination", data.LoggingDestination.ValueString())
 	}
-	if !data.EventClassFilterCriteria.IsNull() {
-		body, _ = sjson.Set(body, "allEventConfig.filterCriteria", data.EventClassFilterCriteria.ValueString())
+	if !data.GlobalEventClassFilterCriteria.IsNull() {
+		body, _ = sjson.Set(body, "allEventConfig.filterCriteria", data.GlobalEventClassFilterCriteria.ValueString())
 	}
-	if !data.EventClassFilterValue.IsNull() {
-		body, _ = sjson.Set(body, "allEventConfig.value", data.EventClassFilterValue.ValueString())
+	if !data.GlobalEventClassFilterValue.IsNull() {
+		body, _ = sjson.Set(body, "allEventConfig.value", data.GlobalEventClassFilterValue.ValueString())
 	}
 	if len(data.EventClassFilters) > 0 {
 		body, _ = sjson.Set(body, "specificEventConfig", []any{})
@@ -114,14 +114,14 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBody(ctx context.Co
 		data.LoggingDestination = types.StringValue("INTERNAL_BUFFER")
 	}
 	if value := res.Get("allEventConfig.filterCriteria"); value.Exists() {
-		data.EventClassFilterCriteria = types.StringValue(value.String())
+		data.GlobalEventClassFilterCriteria = types.StringValue(value.String())
 	} else {
-		data.EventClassFilterCriteria = types.StringNull()
+		data.GlobalEventClassFilterCriteria = types.StringNull()
 	}
 	if value := res.Get("allEventConfig.value"); value.Exists() {
-		data.EventClassFilterValue = types.StringValue(value.String())
+		data.GlobalEventClassFilterValue = types.StringValue(value.String())
 	} else {
-		data.EventClassFilterValue = types.StringNull()
+		data.GlobalEventClassFilterValue = types.StringNull()
 	}
 	if value := res.Get("specificEventConfig"); value.Exists() {
 		data.EventClassFilters = make([]FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters, 0)
@@ -163,15 +163,15 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBodyPartial(ctx con
 	} else if data.LoggingDestination.ValueString() != "INTERNAL_BUFFER" {
 		data.LoggingDestination = types.StringNull()
 	}
-	if value := res.Get("allEventConfig.filterCriteria"); value.Exists() && !data.EventClassFilterCriteria.IsNull() {
-		data.EventClassFilterCriteria = types.StringValue(value.String())
+	if value := res.Get("allEventConfig.filterCriteria"); value.Exists() && !data.GlobalEventClassFilterCriteria.IsNull() {
+		data.GlobalEventClassFilterCriteria = types.StringValue(value.String())
 	} else {
-		data.EventClassFilterCriteria = types.StringNull()
+		data.GlobalEventClassFilterCriteria = types.StringNull()
 	}
-	if value := res.Get("allEventConfig.value"); value.Exists() && !data.EventClassFilterValue.IsNull() {
-		data.EventClassFilterValue = types.StringValue(value.String())
+	if value := res.Get("allEventConfig.value"); value.Exists() && !data.GlobalEventClassFilterValue.IsNull() {
+		data.GlobalEventClassFilterValue = types.StringValue(value.String())
 	} else {
-		data.EventClassFilterValue = types.StringNull()
+		data.GlobalEventClassFilterValue = types.StringNull()
 	}
 	for i := 0; i < len(data.EventClassFilters); i++ {
 		keys := [...]string{"class", "severity"}

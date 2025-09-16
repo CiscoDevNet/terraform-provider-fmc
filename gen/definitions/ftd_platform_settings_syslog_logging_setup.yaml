@@ -2,7 +2,7 @@
 name: FTD Platform Settings Syslog Logging Setup
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/basicloggingsetups
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - Syslog - Logging Setup.
 put_create: true
 retrieve_id: true
@@ -23,12 +23,12 @@ attributes:
   # Basic Logging Settings
   - model_name: enableLogging
     type: Bool
-    description: Turns on the data plane system logging for the threat defense device.
+    description: Turns on the data plane system logging.
     example: true
   - model_name: enableLoggingFailover
     tf_name: enable_logging_on_the_failover_standby_unit
     type: Bool
-    description: Turns on logging for the standby for the threat defense device, if available.
+    description: Turns on logging for the failover standby unit, if available.
     example: false
   - model_name: enableEMBLEMFormat
     tf_name: emblem_format
@@ -53,14 +53,14 @@ attributes:
   - model_name: loggingToFMCType
     tf_name: fmc_logging_type
     type: String
-    description: Syslog message logging to the Firewall Management Center (FMC).
+    description: Firewall Management Center (FMC) syslog message logging mode.
     enum_values: ["OFF", "ALL", "VPN"]
     example: "VPN"
     default_value: "VPN"
   - model_name: loggingToFMCLogLevel
     tf_name: fmc_logging_level
     type: String
-    description: Syslog message logging level to the Firewall Management Center (FMC).
+    description: Firewall Management Center (FMC) syslog message logging level.
     enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
     example: "ERR"
     default_value: "ERR"
@@ -72,6 +72,7 @@ attributes:
     type: String
     description: Id of host object representing the FTP server.
     example: "d3f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"
+    test_value: fmc_host.test.id
   - model_name: userName
     data_path: [ftpServerInfo]
     tf_name: ftp_server_username
@@ -96,18 +97,19 @@ attributes:
     data_path: [ftpServerInfo]
     tf_name: ftp_server_interface_groups
     type: List
-    description: Interface groups through which the FTP server is reachable.
+    description: Interface Groups through which the FTP server is reachable.
     attributes:
       - model_name: id
         type: String
-        description: Id of the interface group.
+        description: Id of the Interface Group.
         example: "e7f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"
+        test_value: fmc_interface_group.test.id
 
   # Flash size
   - model_name: enableFlash
     tf_name: flash
     type: Bool
-    description: Save the buffer contents to the flash memory before it is overwritten
+    description: Save buffer contents to the flash memory before it is overwritten.
     example: false
   - model_name: maxFlashForLoggingInKB
     tf_name: flash_maximum_space
@@ -120,7 +122,7 @@ attributes:
   - model_name: minFreePreservedSpaceInKB
     tf_name: flash_minimum_free_space
     type: Int64
-    description: Minimum free space to be preserved in flash memory (in kilobytes)
+    description: Minimum free space to be preserved in flash memory (in kilobytes).
     min_int: 0
     max_int: 8044176
     default_value: 1024
@@ -128,5 +130,15 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_ftd_platform_settings" "test" {
-    name        = "ftd_platform_settings_banner"
+    name        = "ftd_platform_settings_syslog_logging_setup"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_settings_syslog_logging_setup"
+    ip   = "10.0.2.1"
+  }
+
+  resource "fmc_interface_group" "test" {
+    name           = "ftd_platform_settings_syslog_logging_setup"
+    interface_mode = "ROUTED"
   }

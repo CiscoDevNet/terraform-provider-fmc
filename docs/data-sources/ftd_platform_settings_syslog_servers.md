@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_servers Data Source - terraform-pr
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Servers.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_servers (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Servers.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

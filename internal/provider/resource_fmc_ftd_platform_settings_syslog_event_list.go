@@ -63,7 +63,7 @@ func (r *FTDPlatformSettingsSyslogEventListResource) Metadata(ctx context.Contex
 func (r *FTDPlatformSettingsSyslogEventListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Event Lists.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Event Lists.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -111,7 +111,7 @@ func (r *FTDPlatformSettingsSyslogEventListResource) Schema(ctx context.Context,
 							},
 						},
 						"severity": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Severity level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Syslog severity level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),
@@ -121,7 +121,7 @@ func (r *FTDPlatformSettingsSyslogEventListResource) Schema(ctx context.Context,
 				},
 			},
 			"message_ids": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enter Syslog Message ID. Use hyphen to specify range of IDs").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Syslog Message IDs. Use hyphen to specify range of IDs.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
@@ -146,7 +146,7 @@ func (r *FTDPlatformSettingsSyslogEventListResource) Create(ctx context.Context,
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogEventList) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogEventList) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Event List creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -189,6 +189,14 @@ func (r *FTDPlatformSettingsSyslogEventListResource) Create(ctx context.Context,
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogEventListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogEventList) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Event List, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogEventList
 
 	// Read state
@@ -328,15 +336,3 @@ func (r *FTDPlatformSettingsSyslogEventListResource) ImportState(ctx context.Con
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

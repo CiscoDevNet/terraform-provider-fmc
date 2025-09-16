@@ -64,7 +64,7 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Metadata(ctx conte
 func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Destinations.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Destinations.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -96,7 +96,7 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Schema(ctx context
 				},
 			},
 			"logging_destination": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The logging destination.").AddStringEnumDescription("INTERNAL_BUFFER", "CONSOLE", "SYSLOG_SERVERS", "SNMP_TRAP", "EMAIL", "SSH_SESSION").AddDefaultValueDescription("INTERNAL_BUFFER").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logging destination.").AddStringEnumDescription("INTERNAL_BUFFER", "CONSOLE", "SYSLOG_SERVERS", "SNMP_TRAP", "EMAIL", "SSH_SESSION").AddDefaultValueDescription("INTERNAL_BUFFER").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -104,15 +104,15 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Schema(ctx context
 				},
 				Default: stringdefault.StaticString("INTERNAL_BUFFER"),
 			},
-			"event_class_filter_criteria": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Filter that will apply to all classes not listed in `event_configurations`.").AddStringEnumDescription("SEVERITY", "EVENT_LIST", "DISABLE").String,
+			"global_event_class_filter_criteria": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Filter that will apply to all classes not listed in `event_class_filters`.").AddStringEnumDescription("SEVERITY", "EVENT_LIST", "DISABLE").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SEVERITY", "EVENT_LIST", "DISABLE"),
 				},
 			},
-			"event_class_filter_value": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value for the `event_class_filter_criteria`. This is mandatory if `event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.").String,
+			"global_event_class_filter_value": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Value for the `global_event_class_filter_criteria`. This is mandatory if `global_event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.").String,
 				Optional:            true,
 			},
 			"event_class_filters": schema.ListNestedAttribute{
@@ -128,7 +128,7 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Schema(ctx context
 							},
 						},
 						"severity": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Severity level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Syslog severity level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),
@@ -158,7 +158,7 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Create(ctx context
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogLoggingDestination) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingDestination) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Destination creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -201,6 +201,14 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Create(ctx context
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingDestination) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Destination, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read state
@@ -340,15 +348,3 @@ func (r *FTDPlatformSettingsSyslogLoggingDestinationResource) ImportState(ctx co
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

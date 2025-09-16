@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_logging_setup Data Source - terraf
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Logging Setup.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_logging_setup (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Logging Setup.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -34,15 +39,15 @@ data "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
 ### Read-Only
 
 - `emblem_format` (Boolean) Enables EMBLEM format logging.
-- `enable_logging` (Boolean) Turns on the data plane system logging for the threat defense device.
-- `enable_logging_on_the_failover_standby_unit` (Boolean) Turns on logging for the standby for the threat defense device, if available.
-- `flash` (Boolean) Save the buffer contents to the flash memory before it is overwritten
+- `enable_logging` (Boolean) Turns on the data plane system logging.
+- `enable_logging_on_the_failover_standby_unit` (Boolean) Turns on logging for the failover standby unit, if available.
+- `flash` (Boolean) Save buffer contents to the flash memory before it is overwritten.
 - `flash_maximum_space` (Number) Maximum space to be used in the flash memory for logging (in kilobytes).
-- `flash_minimum_free_space` (Number) Minimum free space to be preserved in flash memory (in kilobytes)
-- `fmc_logging_level` (String) Syslog message logging level to the Firewall Management Center (FMC).
-- `fmc_logging_type` (String) Syslog message logging to the Firewall Management Center (FMC).
+- `flash_minimum_free_space` (Number) Minimum free space to be preserved in flash memory (in kilobytes).
+- `fmc_logging_level` (String) Firewall Management Center (FMC) syslog message logging level.
+- `fmc_logging_type` (String) Firewall Management Center (FMC) syslog message logging mode.
 - `ftp_server_host_id` (String) Id of host object representing the FTP server.
-- `ftp_server_interface_groups` (Attributes List) Interface groups through which the FTP server is reachable. (see [below for nested schema](#nestedatt--ftp_server_interface_groups))
+- `ftp_server_interface_groups` (Attributes List) Interface Groups through which the FTP server is reachable. (see [below for nested schema](#nestedatt--ftp_server_interface_groups))
 - `ftp_server_password` (String, Sensitive) Password to log in to the FTP server.
 - `ftp_server_path` (String) Path on the FTP server to which the logs are uploaded.
 - `ftp_server_username` (String) User name to log in to the FTP server.
@@ -55,4 +60,4 @@ data "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the interface group.
+- `id` (String) Id of the Interface Group.

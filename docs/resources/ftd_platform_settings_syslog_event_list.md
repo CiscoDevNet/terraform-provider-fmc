@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - Syslog - Event Lists.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_event_list (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - Syslog - Event Lists.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -44,7 +43,7 @@ resource "fmc_ftd_platform_settings_syslog_event_list" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `event_classes` (Attributes List) List of event classes. (see [below for nested schema](#nestedatt--event_classes))
-- `message_ids` (Set of String) Enter Syslog Message ID. Use hyphen to specify range of IDs
+- `message_ids` (Set of String) Syslog Message IDs. Use hyphen to specify range of IDs.
 
 ### Read-Only
 
@@ -58,7 +57,7 @@ Required:
 
 - `class` (String) Event class.
   - Choices: `ACCESS_LIST`, `APPLICATION_FIREWALL`, `AUTH`, `BOTNET_TRAFFIC_FILTERING`, `BRIDGE`, `CA`, `CARD_MANAGEMENT`, `CLUSTERING`, `CONFIG`, `CSD`, `CTS`, `DAP`, `EAPOUDP`, `EIGRP`, `EMAIL`, `ENVIRONMENT_MONITORING`, `HA`, `IDENTITY_BASED_FIREWALL`, `IDS`, `IKEV2_TOOLKIT`, `IP`, `IPAA`, `IPS`, `IPV6`, `LICENSING`, `MDM_PROXY`, `NACPOLICY`, `NACSETTINGS`, `NAT_AND_PAT`, `NETWORK_ACCESS_POINT`, `NP`, `NP_SSL`, `OSPF`, `PASSWORD_ENCRYPTION`, `PHONE_PROXY`, `RIP`, `RM`, `RULE_ENGINE`, `SCANSAFE`, `SESSION`, `SMART_CALL_HOME`, `SNMP`, `SSL`, `SVC`, `SYS`, `TAG_SWITCHING`, `THREAT_DETECTION`, `TRANSACTIONAL_RULE_ENGINE_TRE`, `UC_IMS`, `VM`, `VPDN`, `VPN`, `VPNC`, `VPNFO`, `VPNLB`, `VXLAN`, `WEBFO`, `WEBVPN`
-- `severity` (String) Severity level.
+- `severity` (String) Syslog severity level.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
 
 ## Import

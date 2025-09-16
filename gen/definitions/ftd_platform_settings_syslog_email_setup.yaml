@@ -2,7 +2,7 @@
 name: FTD Platform Settings Syslog Email Setup
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/loggingemailsetups
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - Syslog - Email Setup.
 put_create: true
 retrieve_id: true
@@ -19,7 +19,6 @@ attributes:
     type: String
     description: Type of the object; this value is always 'LoggingEmailSetup'.
     computed: true
-
   - model_name: sourceEmail
     tf_name: source_email_address
     type: String
@@ -47,5 +46,5 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_ftd_platform_settings" "test" {
-    name        = "ftd_platform_settings_banner"
+    name        = "ftd_platform_settings_syslog_email_setup"
   }

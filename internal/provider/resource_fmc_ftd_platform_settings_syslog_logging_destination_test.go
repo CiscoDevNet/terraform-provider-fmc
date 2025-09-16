@@ -32,8 +32,8 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingDestination(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_logging_destination.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "logging_destination", "INTERNAL_BUFFER"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "event_class_filter_criteria", "SEVERITY"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "event_class_filter_value", "EMERG"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "global_event_class_filter_criteria", "SEVERITY"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "global_event_class_filter_value", "CRIT"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "event_class_filters.0.class", "AUTH"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_destination.test", "event_class_filters.0.severity", "ERR"))
 
@@ -57,7 +57,7 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingDestination(t *testing.T) {
 
 const testAccFmcFTDPlatformSettingsSyslogLoggingDestinationPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_logging_destination"
 }
 `
 
@@ -72,8 +72,8 @@ func testAccFmcFTDPlatformSettingsSyslogLoggingDestinationConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_syslog_logging_destination" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	logging_destination = "INTERNAL_BUFFER"` + "\n"
-	config += `	event_class_filter_criteria = "SEVERITY"` + "\n"
-	config += `	event_class_filter_value = "EMERG"` + "\n"
+	config += `	global_event_class_filter_criteria = "SEVERITY"` + "\n"
+	config += `	global_event_class_filter_value = "CRIT"` + "\n"
 	config += `	event_class_filters = [{` + "\n"
 	config += `		class = "AUTH"` + "\n"
 	config += `		severity = "ERR"` + "\n"

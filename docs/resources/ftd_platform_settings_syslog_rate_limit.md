@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - Syslog - Rate Limits.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_rate_limit (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - Syslog - Rate Limits.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -35,7 +34,8 @@ resource "fmc_ftd_platform_settings_syslog_rate_limit" "example" {
 
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
 - `number_of_messages` (Number) Number of messages.
-- `rate_limit_type` (String) The rate limit type.
+  - Range: `1`-`2147483647`
+- `rate_limit_type` (String) Rate limit type.
   - Choices: `LOG_LEVEL`, `SYSLOG_ID`
 - `rate_limit_value` (String) Value for the `rate_limit_type`.
 
@@ -43,6 +43,7 @@ resource "fmc_ftd_platform_settings_syslog_rate_limit" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `interval` (Number) Interval in seconds.
+  - Range: `1`-`2147483647`
 
 ### Read-Only
 

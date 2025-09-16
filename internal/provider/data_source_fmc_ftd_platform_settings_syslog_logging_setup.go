@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -55,7 +57,7 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Metadata(_ context.Con
 func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Logging Setup.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Logging Setup.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -75,11 +77,11 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				Computed:            true,
 			},
 			"enable_logging": schema.BoolAttribute{
-				MarkdownDescription: "Turns on the data plane system logging for the threat defense device.",
+				MarkdownDescription: "Turns on the data plane system logging.",
 				Computed:            true,
 			},
 			"enable_logging_on_the_failover_standby_unit": schema.BoolAttribute{
-				MarkdownDescription: "Turns on logging for the standby for the threat defense device, if available.",
+				MarkdownDescription: "Turns on logging for the failover standby unit, if available.",
 				Computed:            true,
 			},
 			"emblem_format": schema.BoolAttribute{
@@ -95,11 +97,11 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				Computed:            true,
 			},
 			"fmc_logging_type": schema.StringAttribute{
-				MarkdownDescription: "Syslog message logging to the Firewall Management Center (FMC).",
+				MarkdownDescription: "Firewall Management Center (FMC) syslog message logging mode.",
 				Computed:            true,
 			},
 			"fmc_logging_level": schema.StringAttribute{
-				MarkdownDescription: "Syslog message logging level to the Firewall Management Center (FMC).",
+				MarkdownDescription: "Firewall Management Center (FMC) syslog message logging level.",
 				Computed:            true,
 			},
 			"ftp_server_host_id": schema.StringAttribute{
@@ -120,19 +122,19 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				Computed:            true,
 			},
 			"ftp_server_interface_groups": schema.ListNestedAttribute{
-				MarkdownDescription: "Interface groups through which the FTP server is reachable.",
+				MarkdownDescription: "Interface Groups through which the FTP server is reachable.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the interface group.",
+							MarkdownDescription: "Id of the Interface Group.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"flash": schema.BoolAttribute{
-				MarkdownDescription: "Save the buffer contents to the flash memory before it is overwritten",
+				MarkdownDescription: "Save buffer contents to the flash memory before it is overwritten.",
 				Computed:            true,
 			},
 			"flash_maximum_space": schema.Int64Attribute{
@@ -140,7 +142,7 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				Computed:            true,
 			},
 			"flash_minimum_free_space": schema.Int64Attribute{
-				MarkdownDescription: "Minimum free space to be preserved in flash memory (in kilobytes)",
+				MarkdownDescription: "Minimum free space to be preserved in flash memory (in kilobytes).",
 				Computed:            true,
 			},
 		},
@@ -160,6 +162,14 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Configure(_ context.Co
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingSetup) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Setup, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSyslogLoggingSetup
 
 	// Read config

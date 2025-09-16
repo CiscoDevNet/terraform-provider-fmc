@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -55,7 +57,7 @@ func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Metadata(_ conte
 func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Logging Destination.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Logging Destination.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -75,15 +77,15 @@ func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Schema(ctx conte
 				Computed:            true,
 			},
 			"logging_destination": schema.StringAttribute{
-				MarkdownDescription: "The logging destination.",
+				MarkdownDescription: "Logging destination.",
 				Computed:            true,
 			},
-			"event_class_filter_criteria": schema.StringAttribute{
-				MarkdownDescription: "Filter that will apply to all classes not listed in `event_configurations`.",
+			"global_event_class_filter_criteria": schema.StringAttribute{
+				MarkdownDescription: "Filter that will apply to all classes not listed in `event_class_filters`.",
 				Computed:            true,
 			},
-			"event_class_filter_value": schema.StringAttribute{
-				MarkdownDescription: "Value for the `event_class_filter_criteria`. This is mandatory if `event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.",
+			"global_event_class_filter_value": schema.StringAttribute{
+				MarkdownDescription: "Value for the `global_event_class_filter_criteria`. This is mandatory if `global_event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.",
 				Computed:            true,
 			},
 			"event_class_filters": schema.ListNestedAttribute{
@@ -96,7 +98,7 @@ func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Schema(ctx conte
 							Computed:            true,
 						},
 						"severity": schema.StringAttribute{
-							MarkdownDescription: "Severity level.",
+							MarkdownDescription: "Syslog severity level.",
 							Computed:            true,
 						},
 					},
@@ -119,6 +121,14 @@ func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Configure(_ cont
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSyslogLoggingDestinationDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingDestination) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Destination, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSyslogLoggingDestination
 
 	// Read config

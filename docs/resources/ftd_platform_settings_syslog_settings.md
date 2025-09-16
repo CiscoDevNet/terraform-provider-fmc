@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - Syslog - Syslog Settings.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_settings (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - Syslog - Syslog Settings.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -25,7 +24,6 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
   timestamp_format                  = "RFC_5424"
   device_id_type                    = "USERDEFINEDID"
   device_id_user_defined_id         = "my_device_id"
-  device_id_interface_id            = "123e4567-e89b-12d3-a456-426614174000"
   all_syslog_messages               = true
   all_syslog_messages_logging_level = "ERR"
 }
@@ -43,14 +41,15 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
 - `all_syslog_messages` (Boolean) Enable all syslog messages.
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
-- `device_id_interface_id` (String) Interface ID for the device, either Security Zone or Interface Group.
-- `device_id_type` (String) - Choices: `INTERFACE`, `USERDEFINEDID`, `HOSTNAME`
-- `device_id_user_defined_id` (String) User defined ID for the device.
+- `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.
+- `device_id_type` (String) Include device identifier to syslog messages.
+  - Choices: `INTERFACE`, `USERDEFINEDID`, `HOSTNAME`
+- `device_id_user_defined_id` (String) User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.
 - `domain` (String) Name of the FMC domain
-- `facility` (String) Syslog facility value.
+- `facility` (String) System log facility for syslog servers to use as a basis to file messages.
   - Choices: `LOCAL0`, `LOCAL1`, `LOCAL2`, `LOCAL3`, `LOCAL4`, `LOCAL5`, `LOCAL6`, `LOCAL7`
   - Default value: `LOCAL4`
-- `timestamp_format` (String) Add timestamp to syslog messages in the specified format.
+- `timestamp_format` (String) Include timestamp to generated syslog messages in the specified format.
   - Choices: `RFC_5424`, `LEGACY`
 
 ### Read-Only

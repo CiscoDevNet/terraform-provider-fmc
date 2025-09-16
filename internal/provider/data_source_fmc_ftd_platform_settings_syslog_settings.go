@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -55,7 +57,7 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Metadata(_ context.Context
 func (d *FTDPlatformSettingsSyslogSettingsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Settings.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings Syslog Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -75,23 +77,23 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Schema(ctx context.Context
 				Computed:            true,
 			},
 			"facility": schema.StringAttribute{
-				MarkdownDescription: "Syslog facility value.",
+				MarkdownDescription: "System log facility for syslog servers to use as a basis to file messages.",
 				Computed:            true,
 			},
 			"timestamp_format": schema.StringAttribute{
-				MarkdownDescription: "Add timestamp to syslog messages in the specified format.",
+				MarkdownDescription: "Include timestamp to generated syslog messages in the specified format.",
 				Computed:            true,
 			},
 			"device_id_type": schema.StringAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Include device identifier to syslog messages.",
 				Computed:            true,
 			},
 			"device_id_user_defined_id": schema.StringAttribute{
-				MarkdownDescription: "User defined ID for the device.",
+				MarkdownDescription: "User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.",
 				Computed:            true,
 			},
 			"device_id_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Interface ID for the device, either Security Zone or Interface Group.",
+				MarkdownDescription: "Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.",
 				Computed:            true,
 			},
 			"all_syslog_messages": schema.BoolAttribute{
@@ -119,6 +121,14 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Configure(_ context.Contex
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSyslogSettingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettings) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSyslogSettings
 
 	// Read config

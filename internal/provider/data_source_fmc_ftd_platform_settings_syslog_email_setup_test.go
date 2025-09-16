@@ -53,7 +53,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogEmailSetup(t *testing.T) {
 
 const testAccDataSourceFmcFTDPlatformSettingsSyslogEmailSetupPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_email_setup"
 }
 `
 

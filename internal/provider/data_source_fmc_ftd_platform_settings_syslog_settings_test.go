@@ -35,7 +35,6 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "timestamp_format", "RFC_5424"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_type", "USERDEFINEDID"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_user_defined_id", "my_device_id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_interface_id", "123e4567-e89b-12d3-a456-426614174000"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages_logging_level", "ERR"))
 	resource.Test(t, resource.TestCase{
@@ -57,7 +56,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogSettings(t *testing.T) {
 
 const testAccDataSourceFmcFTDPlatformSettingsSyslogSettingsPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_settings"
 }
 `
 
@@ -72,7 +71,6 @@ func testAccDataSourceFmcFTDPlatformSettingsSyslogSettingsConfig() string {
 	config += `	timestamp_format = "RFC_5424"` + "\n"
 	config += `	device_id_type = "USERDEFINEDID"` + "\n"
 	config += `	device_id_user_defined_id = "my_device_id"` + "\n"
-	config += `	device_id_interface_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
 	config += `	all_syslog_messages = true` + "\n"
 	config += `	all_syslog_messages_logging_level = "ERR"` + "\n"
 	config += `}` + "\n"

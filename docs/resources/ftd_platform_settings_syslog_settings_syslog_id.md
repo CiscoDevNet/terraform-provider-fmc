@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_settings_syslog_id (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -42,7 +41,7 @@ resource "fmc_ftd_platform_settings_syslog_settings_syslog_id" "example" {
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Enable or disable the syslog ID.
   - Default value: `true`
-- `log_level` (String) Log level.
+- `log_level` (String) Logging level.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`, `DEFAULT`
   - Default value: `DEFAULT`
 

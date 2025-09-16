@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_rate_limit Data Source - terraform
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Rate Limit.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_rate_limit (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Rate Limit.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -35,6 +40,6 @@ data "fmc_ftd_platform_settings_syslog_rate_limit" "example" {
 
 - `interval` (Number) Interval in seconds.
 - `number_of_messages` (Number) Number of messages.
-- `rate_limit_type` (String) The rate limit type.
+- `rate_limit_type` (String) Rate limit type.
 - `rate_limit_value` (String) Value for the `rate_limit_type`.
 - `type` (String) Type of the object; this value is always 'RateLimit'.

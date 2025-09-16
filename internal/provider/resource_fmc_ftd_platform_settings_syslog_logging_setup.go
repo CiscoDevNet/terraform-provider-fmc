@@ -66,7 +66,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Metadata(ctx context.Con
 func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Setup.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Logging Setup.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -98,11 +98,11 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				},
 			},
 			"enable_logging": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Turns on the data plane system logging for the threat defense device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Turns on the data plane system logging.").String,
 				Optional:            true,
 			},
 			"enable_logging_on_the_failover_standby_unit": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Turns on logging for the standby for the threat defense device, if available.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Turns on logging for the failover standby unit, if available.").String,
 				Optional:            true,
 			},
 			"emblem_format": schema.BoolAttribute{
@@ -123,7 +123,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				Default: int64default.StaticInt64(4096),
 			},
 			"fmc_logging_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Syslog message logging to the Firewall Management Center (FMC).").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("VPN").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Firewall Management Center (FMC) syslog message logging mode.").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("VPN").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -132,7 +132,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				Default: stringdefault.StaticString("VPN"),
 			},
 			"fmc_logging_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Syslog message logging level to the Firewall Management Center (FMC).").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").AddDefaultValueDescription("ERR").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Firewall Management Center (FMC) syslog message logging level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").AddDefaultValueDescription("ERR").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -158,19 +158,19 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				Optional:            true,
 			},
 			"ftp_server_interface_groups": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface groups through which the FTP server is reachable.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interface Groups through which the FTP server is reachable.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface group.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Interface Group.").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
 			"flash": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Save the buffer contents to the flash memory before it is overwritten").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Save buffer contents to the flash memory before it is overwritten.").String,
 				Optional:            true,
 			},
 			"flash_maximum_space": schema.Int64Attribute{
@@ -183,7 +183,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				Default: int64default.StaticInt64(3076),
 			},
 			"flash_minimum_free_space": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Minimum free space to be preserved in flash memory (in kilobytes)").AddIntegerRangeDescription(0, 8044176).AddDefaultValueDescription("1024").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Minimum free space to be preserved in flash memory (in kilobytes).").AddIntegerRangeDescription(0, 8044176).AddDefaultValueDescription("1024").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.Int64{
@@ -212,7 +212,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Create(ctx context.Conte
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogLoggingSetup) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingSetup) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Setup creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -277,6 +277,14 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Create(ctx context.Conte
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogLoggingSetup) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Logging Setup, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogLoggingSetup
 
 	// Read state
@@ -417,15 +425,3 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) ImportState(ctx context.
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

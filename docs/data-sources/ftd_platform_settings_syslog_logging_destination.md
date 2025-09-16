@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_syslog_logging_destination Data Source - 
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings Syslog Logging Destination.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_logging_destination (Data Source)
 
 This data source reads the FTD Platform Settings Syslog Logging Destination.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -33,10 +38,10 @@ data "fmc_ftd_platform_settings_syslog_logging_destination" "example" {
 
 ### Read-Only
 
-- `event_class_filter_criteria` (String) Filter that will apply to all classes not listed in `event_configurations`.
-- `event_class_filter_value` (String) Value for the `event_class_filter_criteria`. This is mandatory if `event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.
 - `event_class_filters` (Attributes List) Filters per event class. (see [below for nested schema](#nestedatt--event_class_filters))
-- `logging_destination` (String) The logging destination.
+- `global_event_class_filter_criteria` (String) Filter that will apply to all classes not listed in `event_class_filters`.
+- `global_event_class_filter_value` (String) Value for the `global_event_class_filter_criteria`. This is mandatory if `global_event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.
+- `logging_destination` (String) Logging destination.
 - `type` (String) Type of the object; this value is always 'LoggingDestination'.
 
 <a id="nestedatt--event_class_filters"></a>
@@ -45,4 +50,4 @@ data "fmc_ftd_platform_settings_syslog_logging_destination" "example" {
 Read-Only:
 
 - `class` (String) Event class.
-- `severity` (String) Severity level.
+- `severity` (String) Syslog severity level.

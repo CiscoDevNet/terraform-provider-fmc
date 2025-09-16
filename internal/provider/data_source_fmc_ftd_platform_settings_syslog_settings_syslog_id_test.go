@@ -53,7 +53,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogSettingsSyslogID(t *testing.T)
 
 const testAccDataSourceFmcFTDPlatformSettingsSyslogSettingsSyslogIDPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_syslog_settings_syslog_id"
 }
 
 resource "fmc_ftd_platform_settings_syslog_settings" "test" {

@@ -47,7 +47,7 @@ type FTDPlatformSettingsSyslogSettingsSyslogID struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsSyslogSettingsSyslogID = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 
@@ -58,8 +58,6 @@ func (data FTDPlatformSettingsSyslogSettingsSyslogID) getPath() string {
 }
 
 // End of section. //template:end getPath
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
 func (data FTDPlatformSettingsSyslogSettingsSyslogID) toBody(ctx context.Context, state FTDPlatformSettingsSyslogSettingsSyslogID) string {
 	body := ""
@@ -73,12 +71,11 @@ func (data FTDPlatformSettingsSyslogSettingsSyslogID) toBody(ctx context.Context
 		body, _ = sjson.Set(body, "logLevel", data.LogLevel.ValueString())
 	}
 	if !data.Enabled.IsNull() {
-		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
+		// FMCBUG: API inverts the `enabled` value
+		body, _ = sjson.Set(body, "enabled", !data.Enabled.ValueBool())
 	}
 	return body
 }
-
-// End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
@@ -153,31 +150,3 @@ func (data *FTDPlatformSettingsSyslogSettingsSyslogID) fromBodyUnknowns(ctx cont
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk

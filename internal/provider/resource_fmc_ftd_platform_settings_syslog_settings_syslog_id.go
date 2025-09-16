@@ -65,7 +65,7 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Metadata(ctx context
 func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -108,7 +108,7 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Schema(ctx context.C
 				Required:            true,
 			},
 			"log_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Log level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG", "DEFAULT").AddDefaultValueDescription("DEFAULT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logging level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG", "DEFAULT").AddDefaultValueDescription("DEFAULT").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
@@ -143,7 +143,7 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Create(ctx context.C
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogSettingsSyslogID) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings Syslog ID creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -186,6 +186,14 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Create(ctx context.C
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings Syslog ID, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogSettingsSyslogID
 
 	// Read state
@@ -326,15 +334,3 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) ImportState(ctx cont
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

@@ -26,6 +26,7 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -63,7 +64,7 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Metadata(ctx context.Contex
 func (r *FTDPlatformSettingsSyslogRateLimitResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Rate Limits.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Rate Limits.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -95,7 +96,7 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Schema(ctx context.Context,
 				},
 			},
 			"rate_limit_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The rate limit type.").AddStringEnumDescription("LOG_LEVEL", "SYSLOG_ID").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Rate limit type.").AddStringEnumDescription("LOG_LEVEL", "SYSLOG_ID").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("LOG_LEVEL", "SYSLOG_ID"),
@@ -106,12 +107,18 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Schema(ctx context.Context,
 				Required:            true,
 			},
 			"number_of_messages": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Number of messages.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Number of messages.").AddIntegerRangeDescription(1, 2147483647).String,
 				Required:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 2147483647),
+				},
 			},
 			"interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval in seconds.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interval in seconds.").AddIntegerRangeDescription(1, 2147483647).String,
 				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 2147483647),
+				},
 			},
 		},
 	}
@@ -134,7 +141,7 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Create(ctx context.Context,
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSyslogRateLimit) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogRateLimit) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Rate Limit creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -177,6 +184,14 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Create(ctx context.Context,
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogRateLimitResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogRateLimit) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Rate Limit, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSyslogRateLimit
 
 	// Read state
@@ -316,15 +331,3 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) ImportState(ctx context.Con
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

@@ -54,7 +54,7 @@ type FTDPlatformSettingsSyslogEventListEventClasses struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsSyslogEventList = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsSyslogEventList = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 
@@ -229,31 +229,3 @@ func (data *FTDPlatformSettingsSyslogEventList) fromBodyUnknowns(ctx context.Con
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk

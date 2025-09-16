@@ -2,8 +2,8 @@
 name: FTD Platform Settings Syslog Servers
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/servers
 doc_category: Devices
-minimum_version_create: "7.7"
-res_description: This resource manages FTD Platform Settings - Syslog - Servers.
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Syslog Servers.
 put_create: true
 retrieve_id: true
 put_delete: true
@@ -19,7 +19,6 @@ attributes:
     type: String
     description: Type of the object; this value is always 'Server'.
     computed: true
-
   - model_name: allowUserTrafficWhenDown
     tf_name: allow_user_traffic_when_tcp_syslog_server_is_down
     type: Bool
@@ -29,7 +28,9 @@ attributes:
   - model_name: messageSizeQueue
     tf_name: message_queue_size
     type: Int64
-    description: Size of the queue for storing syslog messages on the security appliance when syslog server is busy. Specify 0 to allow an unlimited number of messages to be queued (subject to available block memory).
+    description:
+      Size of the queue for storing syslog messages on the security appliance when syslog server is busy.
+      Specify 0 to allow an unlimited number of messages to be queued (subject to available block memory).
     min_int: 0
     max_int: 8192
     example: 512
@@ -46,6 +47,7 @@ attributes:
         mandatory: true
         description: Id of host object representing the IP address of the syslog server.
         example: "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"
+        test_value: fmc_host.test.id
       - model_name: protocol
         type: String
         description: Protocol used to send syslog messages to the server.
@@ -112,5 +114,15 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_ftd_platform_settings" "test" {
-    name        = "ftd_platform_settings_banner"
+    name        = "ftd_platform_settings_syslog_servers"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_settings_syslog_servers"
+    ip   = "10.0.2.1"
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "ftd_platform_settings_syslog_servers"
+    interface_type = "ROUTED"
   }

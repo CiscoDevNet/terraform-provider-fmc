@@ -64,7 +64,7 @@ type FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsSyslogLoggingSetup = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsSyslogLoggingSetup = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 

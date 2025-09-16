@@ -54,7 +54,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogRateLimit(t *testing.T) {
 
 const testAccDataSourceFmcFTDPlatformSettingsSyslogRateLimitPrerequisitesConfig = `
 resource "fmc_ftd_platform_settings" "test" {
-  name        = "ftd_platform_settings_banner"
+  name        = "ftd_platform_settings_rate_limit"
 }
 `
 
