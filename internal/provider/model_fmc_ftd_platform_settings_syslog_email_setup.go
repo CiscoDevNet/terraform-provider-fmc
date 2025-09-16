@@ -225,6 +225,7 @@ func (data FTDPlatformSettingsSyslogEmailSetup) toBodyPutDelete(ctx context.Cont
 	if data.Type.ValueString() != "" {
 		body, _ = sjson.Set(body, "type", data.Type.ValueString())
 	}
+	// CSCwr26343 FMC API: Cannot clear FTD Platform Settings Syslog Email Setup sourceEmail field
 	body, _ = sjson.Set(body, "sourceEmail", "empty@fmc.local")
 	return body
 }

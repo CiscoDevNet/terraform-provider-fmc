@@ -1,5 +1,5 @@
-# FMCBUG: API inverts the `enabled` value (`true` becomes `false` and vice versa)
-# Manual Resource - toBody
+# FMCBUG CSCwr26361 FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted
+# Manual Resource - adjustBody
 ---
 name: FTD Platform Settings Syslog Settings Syslog ID
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/syslogsettings/%v/syslogids
@@ -7,6 +7,7 @@ doc_category: Devices
 minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.
 skip_minimum_test: true
+adjust_body: true
 attributes:
   - tf_name: ftd_platform_settings_id
     type: String

@@ -59,6 +59,8 @@ func (data FTDPlatformSettingsSyslogSettingsSyslogID) getPath() string {
 
 // End of section. //template:end getPath
 
+// Section below is generated&owned by "gen/generator.go". //template:begin toBody
+
 func (data FTDPlatformSettingsSyslogSettingsSyslogID) toBody(ctx context.Context, state FTDPlatformSettingsSyslogSettingsSyslogID) string {
 	body := ""
 	if data.Id.ValueString() != "" {
@@ -71,11 +73,12 @@ func (data FTDPlatformSettingsSyslogSettingsSyslogID) toBody(ctx context.Context
 		body, _ = sjson.Set(body, "logLevel", data.LogLevel.ValueString())
 	}
 	if !data.Enabled.IsNull() {
-		// FMCBUG: API inverts the `enabled` value
-		body, _ = sjson.Set(body, "enabled", !data.Enabled.ValueBool())
+		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
 	}
 	return body
 }
+
+// End of section. //template:end toBody
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
@@ -150,3 +153,11 @@ func (data *FTDPlatformSettingsSyslogSettingsSyslogID) fromBodyUnknowns(ctx cont
 }
 
 // End of section. //template:end fromBodyUnknowns
+
+func (data FTDPlatformSettingsSyslogSettingsSyslogID) adjustBody(ctx context.Context, req string) string {
+	// FMCBUG CSCwr26361 FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted
+	if !data.Enabled.IsNull() {
+		req, _ = sjson.Set(req, "enabled", !data.Enabled.ValueBool())
+	}
+	return req
+}
