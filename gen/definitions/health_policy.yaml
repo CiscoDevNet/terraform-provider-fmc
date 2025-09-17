@@ -1,0 +1,155 @@
+# FMCBUG CSCwr28458 FMC API: Health policies cannot be updated using PUT
+---
+name: Health Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/healthpolicies
+doc_category: Policies
+res_description: >-
+  This resource manages a Health Policy.\n
+  Due to FMC problems, updates are not supported; to change a policy, delete and recreate it.\n
+  Any not configured health module will accept its default settings.\n
+no_update: true
+skip_minimum_test: true
+attributes:
+  # General
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Health Policy.
+    example: my_health_policy
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the Health Policy.
+    example: My health policy
+  - model_name: type
+    type: String
+    description: Object type; This is always `HealthPolicy`
+    computed: true
+  - model_name: policyType
+    type: String
+    description: Define, if the policy is for the device or for the management center.
+    enum_values: [DevicePolicy, ManagementCenterPolicy]
+    example: DevicePolicy
+    mandatory: true
+  # - model_name: basePolicyID
+  #   tf_name: base_policy_id
+  #   type: String
+  #   description: The ID of the base policy from which this policy is derived.
+  #   example: 12345678-1234-1234-1234-123456789012
+  #   # mandatory: true
+  - model_name: defaultPolicy
+    tf_name: is_default_policy
+    type: Bool
+    description: Specify if this is the default policy.
+    example: false
+
+  # Health Modules
+  - model_name: healthModules
+    type: List
+    description: Configuration of health modules.
+    exclude_test: true
+    attributes:
+      - model_name: moduleId
+        type: String
+        description: Name of the health module.
+        enum_values: [hm_disk_status, hm_asp_drop, hm_tds, hm_db, hm_conn_status_sse, hm_is5800_powersupply, hm_card_reset, hm_ntp_server, hm_threat_grid_amp, hm_ftd_ha, hm_talosagent, hm_conn_status_amp, hm_snort_stats, hm_critical_process, hm_fsic, hm_ftd_csdac_identity_services, hm_deployed_configuration, hm_ftd_config_resource, hm_routing_stats, hm_vpn_stats, hm_snortstats, hm_is5800_alarm, hm_cluster, hm_bypass, hm_mu, hm_reconfig_detection, hm_xTLS, hm_pathmonitoring, hm_cpu, hm_process, hm_simu, hm_fmcaccess_config_change, hm_linkstate_propagation, hm_adv_snort_stats, hm_sdwan, hm_static_analysis, hm_chm, hm_platform_faults, hm_conn_stats, hm_fxos_health, hm_chassis_status_ftd, hm_du, hm_ifconfig, hm_flow_offload, hm_inlinelink_alarm]
+        example: hm_asp_drop
+        mandatory: true
+        id: true
+      - model_name: enabled
+        type: Bool
+        description: Enable health module.
+        example: true
+      - model_name: type
+        type: String
+        description: Type of health module.
+        enum_values: [FTD, FMC_FTD, SENSOR]
+        exclude_example: true
+        exclude_test: true
+      # - model_name: alertEnabled
+      #   type: Bool
+      #   description: Enable alert for health module.
+      #   computed: true
+      - model_name: severity
+        tf_name: alert_severity
+        type: String
+        description: Severity of health module alert.
+        enum_values: [Critical, Major, Warning, Minor, Info]
+        exclude_example: true
+        exclude_test: true
+      - model_name: criticalThreshold
+        type: Int64
+        description: Critical threshold value for health module.
+        min_int: 1
+        max_int: 99
+        exclude_example: true
+        exclude_test: true
+      - model_name: warningThreshold
+        type: Int64
+        description: Warning threshold value for health module.
+        min_int: 1
+        max_int: 99
+        exclude_example: true
+        exclude_test: true
+      - model_name: customThreshold
+        type: List
+        description: Custom threshold configuration for health module.
+        exclude_example: true
+        exclude_test: true
+        attributes:
+          - model_name: type
+            type: String
+            description: Type of custom threshold.
+          - model_name: value
+            type: Int64
+            description: Value of custom threshold.
+            min_int: 1
+            max_int: 99
+      - model_name: alertConfig
+        type: List
+        description: Alert configuration for health module.
+        attributes:
+          - model_name: name
+            type: String
+            description: Name of the alert configuration.
+            example: nat-xlate-failed
+          - model_name: enabled
+            type: Bool
+            description: Enable alert configuration.
+            example: true
+          - model_name: thresholds
+            type: List
+            description: Thresholds for alert configuration.
+            exclude_example: true
+            exclude_test: true
+            attributes:
+              - model_name: type
+                type: String
+                description: Type of threshold.
+              - model_name: value
+                type: Int64
+                description: Value of threshold.
+                min_int: 1
+                max_int: 99
+
+  # Settings
+  - model_name: alertEvaluationInterval
+    data_path: [setting]
+    tf_name: health_module_run_time_interval
+    type: Int64
+    description: Specify the interval (in minutes) for running the health modules.
+    min_int: 5
+    max_int: 60
+    example: 5
+    default_value: 5
+    test_value: 10
+  - model_name: dataCollectionInterval
+    data_path: [setting]
+    tf_name: metric_collection_interval
+    type: Int64
+    description: Specify the frequency (in minutes) for collection of time series data.
+    min_int: 1
+    max_int: 60
+    example: 1
+    default_value: 1
+    test_value: 15
