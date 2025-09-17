@@ -142,7 +142,7 @@ attributes:
     max_int: 60
     example: 5
     default_value: 5
-    test_value: 10
+    test_value: "10"
   - model_name: dataCollectionInterval
     data_path: [setting]
     tf_name: metric_collection_interval
@@ -152,4 +152,4 @@ attributes:
     max_int: 60
     example: 1
     default_value: 1
-    test_value: 15
+    test_value: "15"
