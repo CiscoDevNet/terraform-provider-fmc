@@ -1,10 +1,12 @@
 # FMCBUG CSCwq61825 FMC API: /policy/filepolicies/{ID}/filerules does not set analysis field
+# FMCBUG CSCwr16023 FMC API: File policies cannot be deleted
 ---
 name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
 doc_category: Policies
 minimum_version_create: "7.4"
 res_description: This resource manages File Policy with corresponding rules.
+skip_test: true # Due to FMCBUG CSCwr16023
 attributes:
   - model_name: name
     type: String
