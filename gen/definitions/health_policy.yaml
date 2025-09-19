@@ -7,6 +7,7 @@ res_description: >-
   This resource manages a Health Policy.\n
   Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n
   Any not configured health module will be created with its default settings.\n
+  Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
 skip_minimum_test: true
 attributes:
   # General
@@ -27,7 +28,7 @@ attributes:
   - model_name: policyType
     type: String
     description: Define, if the policy is for the device or for the management center.
-    enum_values: [DevicePolicy, ManagementCenterPolicy]
+    enum_values: [DevicePolicy] # , ManagementCenterPolicy]
     example: DevicePolicy
     mandatory: true
   # - model_name: basePolicyID

@@ -6,6 +6,7 @@ description: |-
   This resource manages a Health Policy.
   Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
   Any not configured health module will be created with its default settings.
+  Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
 ---
 
 # fmc_health_policy (Resource)
@@ -13,6 +14,7 @@ description: |-
 This resource manages a Health Policy.
  Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
  Any not configured health module will be created with its default settings.
+ Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
 
 ## Example Usage
 
@@ -46,7 +48,7 @@ resource "fmc_health_policy" "example" {
 
 - `name` (String) Name of the Health Policy.
 - `policy_type` (String) Define, if the policy is for the device or for the management center.
-  - Choices: `DevicePolicy`, `ManagementCenterPolicy`
+  - Choices: `DevicePolicy`
 
 ### Optional
 

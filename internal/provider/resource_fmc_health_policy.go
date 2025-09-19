@@ -64,7 +64,7 @@ func (r *HealthPolicyResource) Metadata(ctx context.Context, req resource.Metada
 func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will be created with its default settings.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will be created with its default settings.\n Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -97,10 +97,10 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"policy_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Define, if the policy is for the device or for the management center.").AddStringEnumDescription("DevicePolicy", "ManagementCenterPolicy").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Define, if the policy is for the device or for the management center.").AddStringEnumDescription("DevicePolicy").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("DevicePolicy", "ManagementCenterPolicy"),
+					stringvalidator.OneOf("DevicePolicy"),
 				},
 			},
 			"is_default_policy": schema.BoolAttribute{
