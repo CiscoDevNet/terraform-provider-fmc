@@ -1,0 +1,72 @@
+---
+name: FTD Platform Settings Syslog Settings
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/syslogsettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Syslog Settings.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SyslogSetting'.
+    computed: true
+  - model_name: facility
+    type: String
+    description: System log facility for syslog servers to use as a basis to file messages.
+    enum_values: [LOCAL0, LOCAL1, LOCAL2, LOCAL3, LOCAL4, LOCAL5, LOCAL6, LOCAL7]
+    example: LOCAL4
+    default_value: LOCAL4
+  - model_name: timeStampFormat
+    tf_name: timestamp_format
+    type: String
+    description: Include timestamp to generated syslog messages in the specified format.
+    enum_values: [RFC_5424, LEGACY]
+    example: RFC_5424
+  - model_name: deviceIdConfigType
+    data_path: [syslogDeviceIdConfig]
+    tf_name: device_id_type
+    type: String
+    description: Include device identifier in syslog messages.
+    enum_values: [INTERFACE, USERDEFINEDID, HOSTNAME]
+    example: USERDEFINEDID
+  - model_name: userDefinedId
+    data_path: [syslogDeviceIdConfig]
+    tf_name: device_id_user_defined_id
+    type: String
+    description: User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.
+    string_max_length: 16
+    example: my_device_id
+  - model_name: id
+    data_path: [syslogDeviceIdConfig, interface]
+    tf_name: device_id_interface_id
+    type: String
+    description: Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.
+    exclude_test: true
+    exclude_example: true
+  - model_name: enable
+    data_path: [syslogEnableAll]
+    tf_name: all_syslog_messages
+    type: Bool
+    description: Enable all syslog messages.
+    example: true
+  - model_name: loggingLevel
+    data_path: [syslogEnableAll]
+    tf_name: all_syslog_messages_logging_level
+    type: String
+    description: Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
+    enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
+    example: ERR
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_syslog_settings"
+  }

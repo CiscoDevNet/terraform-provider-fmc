@@ -112,10 +112,10 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"policy_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the policy to be assigned.").AddStringEnumDescription("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the policy to be assigned.").AddStringEnumDescription("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn", "FTDPlatformSettingsPolicy").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn"),
+					stringvalidator.OneOf("FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn", "FTDPlatformSettingsPolicy"),
 				},
 			},
 			"after_destroy_policy_id": schema.StringAttribute{

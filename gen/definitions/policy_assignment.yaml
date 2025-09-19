@@ -34,7 +34,7 @@ attributes:
     description: Type of the policy to be assigned.
     mandatory: true
     example: FTDNatPolicy
-    enum_values: ["FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn"]
+    enum_values: ["FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn", "FTDPlatformSettingsPolicy"]
   - model_name: dummy_after_destroy_policy_id
     tf_name: after_destroy_policy_id
     write_only: true

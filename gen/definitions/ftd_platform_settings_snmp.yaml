@@ -1,0 +1,330 @@
+---
+name: FTD Platform Settings SNMP
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/snmpsettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - SNMP.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'FTDSNMPPlatformSettings'.
+    computed: true
+  - model_name: enableSNMPServers
+    tf_name: enable_snmp_server
+    type: Bool
+    description: Enable SNMP servers.
+    example: true
+  - model_name: communityString
+    tf_name: read_community_string
+    type: String
+    description: Password used by a SNMP management station when sending requests to the threat defense device.
+    example: public
+    string_max_length: 32
+    sensitive: true
+    write_only: true
+  - model_name: sysAdminName
+    tf_name: system_administrator_name
+    type: String
+    description: Name of the device administrator or other contact person.
+    example: admin
+    string_max_length: 127
+  - model_name: location
+    type: String
+    description: Location of the device.
+    example: "Data Center 1"
+    string_max_length: 127
+  - model_name: port
+    tf_name: snmp_server_port
+    type: Int64
+    description: UDP port on which incoming requests will be accepted.
+    min_int: 1
+    max_int: 65535
+    example: 161
+    default_value: 161
+
+  # Hosts
+  - model_name: snmpMgmtHosts
+    tf_name: snmp_management_hosts
+    type: List
+    description: List of SNMP management hosts.
+    attributes:
+      - model_name: id
+        data_path: [ipAddress]
+        tf_name: ip_object_id
+        type: String
+        description: Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
+        mandatory: true
+        id: true
+        example: 123e4567-e89b-12d3-a456-426614174000
+        test_value: fmc_host.test.id
+      - model_name: snmpVersion
+        type: String
+        enum_values: [SNMPv1, SNMPv2c, SNMPv3]
+        description: SNMP version to be used.
+        example: SNMPv3
+        mandatory: true
+      - model_name: userName
+        tf_name: username
+        type: String
+        description: (SNMPv3 only) Select SNMPv3 username.
+        example: snmpuser1
+      - model_name: communityString
+        tf_name: read_community_string
+        type: String
+        description: (SNMPv1, 2c only) Read community string.
+        sensitive: true
+        write_only: true
+        exclude_example: true
+        exclude_test: true
+      - model_name: poll
+        type: Bool
+        description: The management station periodically requests information from the device.
+        example: true
+      - model_name: trap
+        type: Bool
+        description: The device sends trap events to the management station as they occur.
+        example: true
+      - model_name: port
+        tf_name: trap_port
+        type: Int64
+        description: SNMP trap UDP port.
+        min_int: 1
+        max_int: 65535
+        example: 162
+        default_value: 162
+      - model_name: ifSnmpHostMgmt
+        tf_name: use_management_interface
+        type: Bool
+        description: Use the device management interface to reach SNMP management station.
+        example: false
+      - model_name: literals
+        data_path: [interfaces]
+        tf_name: interface_literals
+        type: Set
+        element_type: String
+        description: List of interfaces to reach SNMP management host.
+        exclude_example: true
+        exclude_test: true
+      - model_name: objects
+        data_path: [interfaces]
+        tf_name: interface_objects
+        type: Set
+        description: List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the interface object.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            test_value: fmc_security_zone.test.id
+          - model_name: type
+            type: String
+            description: Type of the interface object; either 'SecurityZone' or 'InterfaceGroup'.
+            enum_values: [SecurityZone, InterfaceGroup]
+            example: SecurityZone
+            mandatory: true
+            test_value: fmc_security_zone.test.type
+          - model_name: name
+            type: String
+            description: Name of the interface object.
+            example: Outside
+            mandatory: true
+            test_value: fmc_security_zone.test.name
+
+  # Users
+  - model_name: snmpv3Users
+    type: List
+    description: List of SNMPv3 users.
+    attributes:
+      - model_name: securityLevel
+        type: String
+        enum_values: [Auth, NoAuth, Priv]
+        mandatory: true
+        description: Select desired security level.
+        example: Priv
+      - model_name: userName
+        tf_name: username
+        type: String
+        description: SNMPv3 username.
+        mandatory: true
+        id: true
+        string_max_length: 32
+        example: snmpuser1
+      - model_name: encryptionPasswordType
+        tf_name: password_type
+        type: String
+        enum_values: [Clear, Encrypted]
+        description: Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
+        example: Clear
+      - model_name: authAlgoType
+        tf_name: authentication_algorithm_type
+        type: String
+        enum_values: [SHA, SHA224, SHA256, SHA384]
+        description: Type of authentication algorithm.
+        example: SHA256
+      - model_name: authenticationPassword
+        type: String
+        description: SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+        example: MyAuthPassword123
+        sensitive: true
+        write_only: true
+        string_max_length: 256
+      - model_name: encryptionType
+        type: String
+        enum_values: [AES128, AES192, AES256]
+        description: Type of encryption algorithm.
+        example: AES256
+      - model_name: encryptionPassword
+        type: String
+        description: SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+        example: MyEncryptionPassword123
+        sensitive: true
+        write_only: true
+        string_max_length: 256
+
+  # SNMP Traps
+  - model_name: syslog
+    data_path: [snmpTrap]
+    tf_name: trap_syslog
+    type: Bool
+    description: Enable transmission of trap-related syslog messages.
+    example: true
+  - model_name: authentication
+    data_path: [snmpTrap]
+    tf_name: trap_authentication
+    type: Bool
+    description: Unauthorized SNMP access. This authentication failure occurs for packets with an incorrect community string.
+    example: true
+  - model_name: linkUp
+    data_path: [snmpTrap]
+    tf_name: trap_link_up
+    type: Bool
+    description: One of the device's communication links has become available.
+    example: true
+  - model_name: linkDown
+    data_path: [snmpTrap]
+    tf_name: trap_link_down
+    type: Bool
+    description: One of the device's communication links has failed.
+    example: true
+  - model_name: coldStart
+    data_path: [snmpTrap]
+    tf_name: trap_cold_start
+    type: Bool
+    description: The device is reinitializing itself such that its configuration or the protocol entity implementation may be altered.
+    example: true
+  - model_name: warmStart
+    data_path: [snmpTrap]
+    tf_name: trap_warm_start
+    type: Bool
+    description: The device is reinitializing itself such that its configuration and the protocol entity implementation is unaltered.
+    example: true
+  - model_name: fruinsert
+    data_path: [snmpTrap]
+    tf_name: trap_field_replacement_unit_insert
+    type: Bool
+    description: Field Replaceable Unit (FRU) has been inserted.
+    example: true
+  - model_name: fruremove
+    data_path: [snmpTrap]
+    tf_name: trap_field_replacement_unit_delete
+    type: Bool
+    description: Field Replaceable Unit (FRU) has been removed.
+    example: true
+  - model_name: entityConfigChange
+    data_path: [snmpTrap]
+    tf_name: trap_configuration_change
+    type: Bool
+    description: There has been a hardware change.
+    example: true
+  - model_name: connLimitReached
+    data_path: [snmpTrap]
+    tf_name: trap_connection_limit_reached
+    type: Bool
+    description: Connection attempt was rejected because the configured connections limit has been reached.
+    example: true
+  - model_name: natPacketDiscard
+    data_path: [snmpTrap]
+    tf_name: trap_nat_packet_discard
+    type: Bool
+    description: IP packets are discarded by the NAT.
+    example: true
+  - model_name: cputhreshold
+    data_path: [snmpTrap]
+    tf_name: trap_cpu_rising_threshold
+    type: Bool
+    description: CPU utilization exceeds a predefined threshold for a configured period of time.
+    example: true
+  - model_name: cputhresholdValueInPercent
+    data_path: [snmpTrap]
+    tf_name: trap_cpu_rising_threshold_value
+    type: Int64
+    description: Percent of CPU utilization that triggers a trap.
+    min_int: 10
+    max_int: 94
+    example: 70
+  - model_name: cputhresholdIntervalInMins
+    data_path: [snmpTrap]
+    tf_name: trap_cpu_rising_threshold_interval
+    type: Int64
+    description: Time interval (in minutes) to evaluate the CPU rising threshold.
+    min_int: 1
+    max_int: 60
+    example: 1
+  - model_name: memoryThreshold
+    data_path: [snmpTrap]
+    tf_name: trap_memory_rising_threshold
+    type: Bool
+    description: Memory utilization exceeds a predefined threshold
+    example: true
+  - model_name: memThresholdValueInPercent
+    data_path: [snmpTrap]
+    tf_name: trap_memory_rising_threshold_value
+    type: Int64
+    description: Percent of memory utilization that triggers a trap.
+    min_int: 50
+    max_int: 95
+    example: 70
+  - model_name: failoverState
+    data_path: [snmpTrap]
+    tf_name: trap_failover
+    type: Bool
+    description: Change in the failover state.
+    example: true
+  - model_name: clusterState
+    data_path: [snmpTrap]
+    tf_name: trap_cluster
+    type: Bool
+    description: Change in the cluster state.
+    example: true
+  - model_name: peerFlap
+    data_path: [snmpTrap]
+    tf_name: trap_peer_flap
+    type: Bool
+    description: BGP route flapping detected.
+    example: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_snmp"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_settings_snmp_host1"
+    ip   = "10.0.2.1"
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "ftd_platform_settings_snmp_zone1"
+    interface_type = "ROUTED"
+  }

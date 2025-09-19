@@ -1,0 +1,102 @@
+---
+name: FTD Platform Settings DNS
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/dnssettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - DNS - DNS Settings.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DNSSetting'.
+    computed: true
+  # DNS Settings
+  - model_name: dnsServerGroups
+    tf_name: server_groups
+    type: List
+    description: List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default.
+    attributes:
+      - model_name: id
+        data_path: [dnsServerGroup]
+        tf_name: id
+        type: String
+        description: ID of the DNS server group object.
+        id: true
+        example: 12345678-1234-1234-1234-123456789012
+        test_value: fmc_dns_server_group.test.id
+      - model_name: isDefault
+        type: Bool
+        description: Set DNS server group as default. Any DNS resolution request that does not match the filters for other groups will be resolved using the servers in this group.
+        example: true
+      - model_name: bypassDomains
+        tf_name: filter_domains
+        type: List
+        element_type: String
+        max_list: 30
+        description: Mandatory for non-default groups. The group will be used for DNS resolutions for these domains only.
+        exclude_example: true
+        exclude_test: true
+  - model_name: expiryTimerInMins
+    tf_name: expire_entry_timer
+    type: Int64
+    min_int: 1
+    max_int: 65535
+    description: Minimum time-to-live (TTL) for the DNS entry (in minutes).
+    example: 1
+  - model_name: pollTimerInMins
+    tf_name: poll_timer
+    type: Int64
+    min_int: 1
+    max_int: 65535
+    description: Time limit after which the device queries the DNS server to resolve the name.
+    example: 240
+  - model_name: interfaceObjects
+    type: List
+    description: List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.
+    attributes:
+      - model_name: id
+        type: String
+        description: ID of the interface object (Security Zone or Interface Group).
+        id: true
+        mandatory: true
+        example: 12345678-1234-1234-1234-123456789012
+        test_value: fmc_interface_group.test.id
+      - model_name: type
+        type: String
+        mandatory: true
+        description: Type of the interface object.
+        example: SecurityZone
+        enum_values: [SecurityZone, InterfaceGroup]
+        test_value: fmc_interface_group.test.type
+  - model_name: enableLookupViaMgmt
+    tf_name: use_management_interface
+    type: Bool
+    description: Enable lookup via management/diagnostic interface.
+    example: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_banner"
+  }
+
+  resource "fmc_interface_group" "test" {
+    name           = "ftd_platform_settings_dns_ig"
+    interface_mode = "ROUTED"
+  }
+
+  resource "fmc_dns_server_group" "test" {
+    name           = "ftd_platform_settings_dns_dns_sg"
+    default_domain = "example.com"
+    dns_servers = [
+      { ip = "10.10.10.10" }
+    ]
+  }

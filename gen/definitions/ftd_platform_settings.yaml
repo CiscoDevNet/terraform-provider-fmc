@@ -1,0 +1,26 @@
+# Manual resource - Create
+---
+name: FTD Platform Settings
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies
+doc_category: Devices
+minimum_version_create: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of FTD platform settings.
+    example: my_ftd_platform_settings
+    data_source_query: true
+  - model_name: type
+    type: String
+    # CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
+    # API returns 'PG.PLATFORM.NgfwPFSettings' which is replaced with 'FTDPlatformSettingsPolicy' in Create
+    description: Type of the object; this value is always 'FTDPlatformSettingsPolicy'
+    computed: true
+  - model_name: type
+    type: String
+    value: FTDPlatformSettingsPolicy
+  - model_name: description
+    type: String
+    description: FTD platform settings description.
+    example: My FTD platform settings

@@ -1,0 +1,74 @@
+---
+name: FTD Platform Settings SSH Access
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/sshaccesssettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - SSH Access. For multiple rules, create multiple resources.
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SSHAccessSetting'.
+    computed: true
+  - model_name: id
+    data_path: [ipAddress, object]
+    tf_name: source_network_object_id
+    type: String
+    description: Id of network object (host, network, network group) defining the source IP addresses from which SSH access is allowed.
+    example: 5a9f6d9c-3f8d-11e4-9163-6c4008b8c5d7
+    test_value: fmc_host.test.id
+    mandatory: true
+  - model_name: literals
+    data_path: [interfaces]
+    tf_name: interface_literals
+    type: Set
+    element_type: String
+    description: List of interface literals on which SSH access is allowed.
+    exclude_example: true
+    exclude_test: true
+  - model_name: objects
+    data_path: [interfaces]
+    tf_name: interface_objects
+    type: Set
+    description: List of interface objects (Security Zones or Interface Groups) on which SSH access is allowed.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the interface object.
+        example: 123e4567-e89b-12d3-a456-426614174000
+        mandatory: true
+        test_value: fmc_security_zone.test.id
+      - model_name: type
+        type: String
+        description: Type of the interface object; either 'SecurityZone' or 'InterfaceGroup'.
+        enum_values: [SecurityZone, InterfaceGroup]
+        example: SecurityZone
+        mandatory: true
+        test_value: fmc_security_zone.test.type
+      - model_name: name
+        type: String
+        description: Name of the interface object.
+        example: Outside
+        mandatory: true
+        test_value: fmc_security_zone.test.name
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_setting_ssh_access"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_setting_ssh_access_host1"
+    ip   = "10.0.2.1"
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "ftd_platform_setting_ssh_access_zone1"
+    interface_type = "ROUTED"
+  }

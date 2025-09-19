@@ -1,0 +1,129 @@
+---
+name: FTD Platform Settings Syslog Servers
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/servers
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Syslog Servers.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Server'.
+    computed: true
+  - model_name: allowUserTrafficWhenDown
+    tf_name: allow_user_traffic_when_tcp_syslog_server_is_down
+    type: Bool
+    description: Allow user traffic when TCP syslog server is down.
+    example: true
+    default_value: true
+  - model_name: messageSizeQueue
+    tf_name: message_queue_size
+    type: Int64
+    description:
+      Size of the queue for storing syslog messages on the security appliance when syslog server is busy.
+      Specify 0 to allow an unlimited number of messages to be queued (subject to available block memory).
+    min_int: 0
+    max_int: 8192
+    example: 512
+    default_value: 512
+  - model_name: servers
+    tf_name: syslog_servers
+    type: List
+    description: List of syslog servers.
+    attributes:
+      - model_name: id
+        data_path: [ipAddress, object]
+        tf_name: ip_object_id
+        type: String
+        id: true
+        mandatory: true
+        description: Id of host object representing the IP address of the syslog server.
+        example: "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"
+        test_value: fmc_host.test.id
+      - model_name: protocol
+        type: String
+        description: Protocol used to send syslog messages to the server.
+        enum_values: [TCP, UDP]
+        example: "TCP"
+        default_value: "TCP"
+      - model_name: port
+        type: Int64
+        description: Port number used to send syslog messages to the server.
+        min_int: 1025
+        max_int: 65535
+        example: 1470
+        default_value: 1470
+      - model_name: logMessagesInEMBLEM
+        tf_name: emblem_format
+        type: Bool
+        description: (UDP only) Log messages in EMBLEM format.
+        exclude_example: true
+        exclude_test: true
+      - model_name: secureSyslog
+        tf_name: secure_syslog
+        type: Bool
+        description: (TCP only) Use TLS to secure syslog messages sent to the server.
+        example: true
+      - model_name: isMgmtReachable
+        tf_name: use_management_interface
+        type: Bool
+        description: Use management interface to reach syslog server (true) or use data interfaces (false).
+        example: false
+        default_value: true
+      - model_name: literals
+        data_path: [interfaces]
+        tf_name: interface_literals
+        type: Set
+        element_type: String
+        description: List of interface literals to reach syslog server.
+        exclude_example: true
+        exclude_test: true
+      - model_name: objects
+        data_path: [interfaces]
+        tf_name: interface_objects
+        type: Set
+        description: List of interface objects (Security Zones or Interface Groups) to reach syslog server.
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the interface object.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            test_value: fmc_security_zone.test.id
+          - model_name: type
+            type: String
+            description: Type of the interface object; either 'SecurityZone' or 'InterfaceGroup'.
+            enum_values: [SecurityZone, InterfaceGroup]
+            example: SecurityZone
+            mandatory: true
+            test_value: fmc_security_zone.test.type
+          - model_name: name
+            type: String
+            description: Name of the interface object.
+            example: Outside
+            mandatory: true
+            test_value: fmc_security_zone.test.name
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_syslog_servers"
+  }
+
+  resource "fmc_host" "test" {
+    name = "ftd_platform_settings_syslog_servers"
+    ip   = "10.0.2.1"
+  }
+
+  resource "fmc_security_zone" "test" {
+    name           = "ftd_platform_settings_syslog_servers"
+    interface_type = "ROUTED"
+  }

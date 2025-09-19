@@ -1,0 +1,60 @@
+---
+name: FTD Platform Settings Syslog Logging Destination
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/loggingdestinations
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Logging Destinations.
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'LoggingDestination'.
+    computed: true
+  - model_name: loggingDestination
+    type: String
+    enum_values: [INTERNAL_BUFFER, CONSOLE, SYSLOG_SERVERS, SNMP_TRAP, EMAIL, SSH_SESSION]
+    example: INTERNAL_BUFFER
+    default_value: INTERNAL_BUFFER
+    description: Logging destination.
+  - model_name: filterCriteria
+    data_path: [allEventConfig]
+    tf_name: global_event_class_filter_criteria
+    type: String
+    description: Filter that will apply to all classes not listed in `event_class_filters`.
+    enum_values: [SEVERITY, EVENT_LIST, DISABLE]
+    example: SEVERITY
+    mandatory: true
+  - model_name: value
+    data_path: [allEventConfig]
+    tf_name: global_event_class_filter_value
+    type: String
+    description: Value for the `global_event_class_filter_criteria`. This is mandatory if `global_event_class_filter_criteria` is set to `SEVERITY` or `EVENT_LIST`.
+    example: "CRIT"
+  - model_name: specificEventConfig
+    tf_name: event_class_filters
+    type: List
+    description: Filters per event class.
+    attributes:
+      - model_name: class
+        type: String
+        mandatory: true
+        description: Event class.
+        enum_values: [AUTH, BRIDGE, CA, CONFIG, CSD, DAP, EAPOUDP, EIGRP, HA, IDS, IP, IPAA, IPS, NP, OSPF, RM, RULE_ENGINE, SESSION, SNMP, SSL, SVC, SYS, TAG_SWITCHING, VM, VPDN, VPN, VPNC, VPNFO, VPNLB, WEBFO, WEBVPN]
+        example: AUTH
+      - model_name: severity
+        type: String
+        mandatory: true
+        description: Syslog severity level.
+        enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
+        example: ERR
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_syslog_logging_destination"
+  }

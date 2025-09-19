@@ -1,0 +1,49 @@
+---
+name: FTD Platform Settings Syslog Event List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/eventlists
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Event Lists.
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'EventList'.
+    computed: true
+  - model_name: name
+    type: String
+    description: Name of the event list.
+    example: my_event_list
+    mandatory: true
+  - model_name: eventClasses
+    type: List
+    description: List of event classes.
+    attributes:
+      - model_name: class
+        description: Event class.
+        type: String
+        mandatory: true
+        enum_values: [ACCESS_LIST, APPLICATION_FIREWALL, AUTH, BOTNET_TRAFFIC_FILTERING, BRIDGE, CA, CARD_MANAGEMENT, CLUSTERING, CONFIG, CSD, CTS, DAP, EAPOUDP, EIGRP, EMAIL, ENVIRONMENT_MONITORING, HA, IDENTITY_BASED_FIREWALL, IDS, IKEV2_TOOLKIT, IP, IPAA, IPS, IPV6, LICENSING, MDM_PROXY, NACPOLICY, NACSETTINGS, NAT_AND_PAT, NETWORK_ACCESS_POINT, NP, NP_SSL, OSPF, PASSWORD_ENCRYPTION, PHONE_PROXY, RIP, RM, RULE_ENGINE, SCANSAFE, SESSION, SMART_CALL_HOME, SNMP, SSL, SVC, SYS, TAG_SWITCHING, THREAT_DETECTION, TRANSACTIONAL_RULE_ENGINE_TRE, UC_IMS, VM, VPDN, VPN, VPNC, VPNFO, VPNLB, VXLAN, WEBFO, WEBVPN]
+        example: AUTH
+      - model_name: severity
+        description: Syslog severity level.
+        type: String
+        mandatory: true
+        enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
+        example: ERR
+  - model_name: messageIds
+    type: Set
+    element_type: String
+    description: Syslog Message IDs. Use hyphen to specify range of IDs.
+    example: "100000-200000"
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_syslog_event_list"
+  }

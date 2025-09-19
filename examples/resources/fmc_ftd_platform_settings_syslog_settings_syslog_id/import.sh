@@ -1,0 +1,1 @@
+terraform import fmc_ftd_platform_settings_syslog_settings_syslog_id.example "<ftd_platform_settings_id>,<ftd_platform_settings_syslog_settings_id>,<id>"

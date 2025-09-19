@@ -1,0 +1,53 @@
+# FMCBUG CSCwr26361 FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted
+# Manual Resource - adjustBody
+---
+name: FTD Platform Settings Syslog Settings Syslog ID
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/syslogsettings/%v/syslogids
+doc_category: Devices
+minimum_version: "7.7"
+res_description: This resource manages FTD Platform Settings - Syslog - Syslog Settings - Syslog IDs.
+skip_minimum_test: true
+adjust_body: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - tf_name: ftd_platform_settings_syslog_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings Syslog Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings_syslog_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'SyslogId'.
+    computed: true
+  - model_name: syslogId
+    tf_name: syslog_id
+    type: Int64
+    description: Syslog message ID.
+    mandatory: true
+    example: 106004
+  - model_name: logLevel
+    type: String
+    description: Logging level.
+    enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG, DEFAULT]
+    example: ERR
+    default_value: DEFAULT
+  - model_name: enabled
+    type: Bool
+    description: Enable or disable the syslog ID.
+    example: true
+    default_value: true
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name        = "ftd_platform_settings_syslog_settings_syslog_id"
+  }
+
+  resource "fmc_ftd_platform_settings_syslog_settings" "test" {
+   ftd_platform_settings_id = fmc_ftd_platform_settings.test.id
+  }

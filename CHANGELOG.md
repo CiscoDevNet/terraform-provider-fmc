@@ -8,6 +8,8 @@
 - (Enhancement) Add support for `fmc_health_policy` resource and data source
 - (Enhancement) Add support for `fmc_secure_client_posture_package` resource and data source
 - (Enhancement) Add support for `fmc_dynamic_access_policy` resource and data source (no records support)
+- (Enhancement) Add support for `fmc_ftd_platform_settings_*` resources and data sources
+- (Enhancement) Add support for `fmc_dns_server_group` resource and data source
 
 ## 2.0.0-rc6
 
