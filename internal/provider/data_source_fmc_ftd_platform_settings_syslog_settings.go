@@ -22,10 +22,8 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -121,11 +119,9 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Configure(_ context.Contex
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSyslogSettingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettings) {
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettings) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings, minimum required version is 7.7", d.client.FMCVersion))
 		return
 	}

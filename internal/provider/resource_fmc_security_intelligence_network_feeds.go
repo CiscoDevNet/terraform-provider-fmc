@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -136,11 +135,9 @@ func (r *SecurityIntelligenceNetworkFeedsResource) Configure(_ context.Context, 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *SecurityIntelligenceNetworkFeedsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateSecurityIntelligenceNetworkFeeds) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateSecurityIntelligenceNetworkFeeds) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Security Intelligence Network Feeds creation, minumum required version is 7.4", r.client.FMCVersion))
 		return
 	}
@@ -455,11 +452,8 @@ func (r *SecurityIntelligenceNetworkFeedsResource) ImportState(ctx context.Conte
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *SecurityIntelligenceNetworkFeedsResource) createSubresources(ctx context.Context, state, plan SecurityIntelligenceNetworkFeeds, reqMods ...func(*fmc.Req)) (SecurityIntelligenceNetworkFeeds, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateSecurityIntelligenceNetworkFeeds) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateSecurityIntelligenceNetworkFeeds) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (Security Intelligence Network Feeds)", state.Id.ValueString()))
 		var tmpObject SecurityIntelligenceNetworkFeeds
 		tmpObject.Items = make(map[string]SecurityIntelligenceNetworkFeedsItems, 1)
@@ -538,11 +532,8 @@ func (r *SecurityIntelligenceNetworkFeedsResource) createSubresources(ctx contex
 func (r *SecurityIntelligenceNetworkFeedsResource) deleteSubresources(ctx context.Context, state, plan SecurityIntelligenceNetworkFeeds, reqMods ...func(*fmc.Req)) (SecurityIntelligenceNetworkFeeds, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteSecurityIntelligenceNetworkFeeds) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteSecurityIntelligenceNetworkFeeds) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Security Intelligence Network Feeds)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

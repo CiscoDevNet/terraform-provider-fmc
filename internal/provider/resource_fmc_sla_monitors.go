@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -565,11 +564,8 @@ func (r *SLAMonitorsResource) createSubresources(ctx context.Context, state, pla
 func (r *SLAMonitorsResource) deleteSubresources(ctx context.Context, state, plan SLAMonitors, reqMods ...func(*fmc.Req)) (SLAMonitors, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteSLAMonitors) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteSLAMonitors) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (SLA Monitors)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

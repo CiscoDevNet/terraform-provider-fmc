@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -138,11 +137,9 @@ func (r *DNSServerGroupResource) Configure(_ context.Context, req resource.Confi
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DNSServerGroupResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateDNSServerGroup) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateDNSServerGroup) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support DNS Server Group creation, minumum required version is 7.4", r.client.FMCVersion))
 		return
 	}

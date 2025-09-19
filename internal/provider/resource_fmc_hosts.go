@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -492,11 +491,8 @@ func (r *HostsResource) createSubresources(ctx context.Context, state, plan Host
 func (r *HostsResource) deleteSubresources(ctx context.Context, state, plan Hosts, reqMods ...func(*fmc.Req)) (Hosts, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteHosts) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteHosts) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Hosts)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

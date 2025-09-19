@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -451,11 +450,8 @@ func (r *IPv6AddressPoolsResource) ImportState(ctx context.Context, req resource
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IPv6AddressPoolsResource) createSubresources(ctx context.Context, state, plan IPv6AddressPools, reqMods ...func(*fmc.Req)) (IPv6AddressPools, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateIPv6AddressPools) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIPv6AddressPools) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IPv6 Address Pools)", state.Id.ValueString()))
 		var tmpObject IPv6AddressPools
 		tmpObject.Items = make(map[string]IPv6AddressPoolsItems, 1)
@@ -534,11 +530,8 @@ func (r *IPv6AddressPoolsResource) createSubresources(ctx context.Context, state
 func (r *IPv6AddressPoolsResource) deleteSubresources(ctx context.Context, state, plan IPv6AddressPools, reqMods ...func(*fmc.Req)) (IPv6AddressPools, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteIPv6AddressPools) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIPv6AddressPools) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IPv6 Address Pools)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

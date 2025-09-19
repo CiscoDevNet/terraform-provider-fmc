@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -456,11 +455,8 @@ func (r *ExpandedCommunityListsResource) ImportState(ctx context.Context, req re
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *ExpandedCommunityListsResource) createSubresources(ctx context.Context, state, plan ExpandedCommunityLists, reqMods ...func(*fmc.Req)) (ExpandedCommunityLists, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateExpandedCommunityLists) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateExpandedCommunityLists) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (Expanded Community Lists)", state.Id.ValueString()))
 		var tmpObject ExpandedCommunityLists
 		tmpObject.Items = make(map[string]ExpandedCommunityListsItems, 1)
@@ -541,11 +537,8 @@ func (r *ExpandedCommunityListsResource) createSubresources(ctx context.Context,
 func (r *ExpandedCommunityListsResource) deleteSubresources(ctx context.Context, state, plan ExpandedCommunityLists, reqMods ...func(*fmc.Req)) (ExpandedCommunityLists, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteExpandedCommunityLists) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteExpandedCommunityLists) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Expanded Community Lists)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

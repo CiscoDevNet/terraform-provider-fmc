@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -139,11 +138,9 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Configure(_ context.
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings Syslog ID creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -187,11 +184,8 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Create(ctx context.C
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsSyslogSettingsSyslogID) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Syslog Settings Syslog ID, minimum required version is 7.7", r.client.FMCVersion))
 		return
 	}
