@@ -34,7 +34,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsDNS(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "server_groups.0.is_default", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "expire_entry_timer", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "poll_timer", "240"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "lookup_via_management_diagnostic_interface", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "use_management_interface", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -88,7 +88,7 @@ func testAccDataSourceFmcFTDPlatformSettingsDNSConfig() string {
 	config += `		id = fmc_interface_group.test.id` + "\n"
 	config += `		type = fmc_interface_group.test.type` + "\n"
 	config += `	}]` + "\n"
-	config += `	lookup_via_management_diagnostic_interface = true` + "\n"
+	config += `	use_management_interface = true` + "\n"
 	config += `}` + "\n"
 
 	config += `

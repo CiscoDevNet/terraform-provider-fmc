@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_dns Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings DNS.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_dns (Data Source)
 
 This data source reads the FTD Platform Settings DNS.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -34,11 +39,11 @@ data "fmc_ftd_platform_settings_dns" "example" {
 ### Read-Only
 
 - `expire_entry_timer` (Number) Minimum time-to-live (TTL) for the DNS entry (in minutes).
-- `interface_objects` (Attributes List) Enable DNS lookups on all interfaces or on specific interfaces. (see [below for nested schema](#nestedatt--interface_objects))
-- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management/diagnostic interface.
-- `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the FQDN.
+- `interface_objects` (Attributes List) List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution. (see [below for nested schema](#nestedatt--interface_objects))
+- `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the name.
 - `server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--server_groups))
 - `type` (String) Type of the object; this value is always 'DNSSetting'.
+- `use_management_interface` (Boolean) Enable lookup via management/diagnostic interface.
 
 <a id="nestedatt--interface_objects"></a>
 ### Nested Schema for `interface_objects`

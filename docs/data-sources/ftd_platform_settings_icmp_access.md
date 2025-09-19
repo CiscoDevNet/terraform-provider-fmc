@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_icmp_access Data Source - terraform-provi
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings ICMP Access.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_icmp_access (Data Source)
 
 This data source reads the FTD Platform Settings ICMP Access.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -34,23 +39,23 @@ data "fmc_ftd_platform_settings_icmp_access" "example" {
 ### Read-Only
 
 - `burst_size` (Number) Burst size on ICMPv4 Unreachable messages.
-- `icmp_configs` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--icmp_configs))
+- `icmp_configurations` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--icmp_configurations))
 - `rate_limit` (Number) Rate limit on ICMPv4 Unreachable messages.
 - `type` (String) Type of the object; this value is always 'ICMPSetting'.
 
-<a id="nestedatt--icmp_configs"></a>
-### Nested Schema for `icmp_configs`
+<a id="nestedatt--icmp_configurations"></a>
+### Nested Schema for `icmp_configurations`
 
 Read-Only:
 
 - `action` (String) Action to take on matching ICMP packets.
 - `icmp_service_id` (String) ID of the ICMP Service object.
-- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--icmp_configs--interface_objects))
+- `interface_literals` (Set of String) List of interface literals for this rule.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) for this rule. (see [below for nested schema](#nestedatt--icmp_configurations--interface_objects))
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses for ICMP access.
 
-<a id="nestedatt--icmp_configs--interface_objects"></a>
-### Nested Schema for `icmp_configs.interface_objects`
+<a id="nestedatt--icmp_configurations--interface_objects"></a>
+### Nested Schema for `icmp_configurations.interface_objects`
 
 Read-Only:
 

@@ -1,19 +1,19 @@
 resource "fmc_ftd_platform_settings_snmp" "example" {
   ftd_platform_settings_id  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  enable_snmp_servers       = true
+  enable_snmp_server        = true
   read_community_string     = "public"
   system_administrator_name = "admin"
   location                  = "Data Center 1"
-  listen_port               = 161
+  snmp_server_port          = 161
   snmp_management_hosts = [
     {
-      ip_object_id                    = "123e4567-e89b-12d3-a456-426614174000"
-      snmp_version                    = "SNMPv3"
-      username                        = "snmpuser1"
-      poll                            = true
-      trap                            = true
-      trap_port                       = 162
-      use_device_management_interface = false
+      ip_object_id             = "123e4567-e89b-12d3-a456-426614174000"
+      snmp_version             = "SNMPv3"
+      username                 = "snmpuser1"
+      poll                     = true
+      trap                     = true
+      trap_port                = 162
+      use_management_interface = false
       interface_objects = [
         {
           id   = "123e4567-e89b-12d3-a456-426614174000"

@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - Banner.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_banner (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - Banner.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

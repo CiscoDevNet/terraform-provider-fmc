@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -56,7 +58,7 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Metadata(_ context.Context, re
 func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings HTTP Access.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings HTTP Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -79,7 +81,7 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, re
 				MarkdownDescription: "Enable HTTP server.",
 				Computed:            true,
 			},
-			"port": schema.Int64Attribute{
+			"http_server_port": schema.Int64Attribute{
 				MarkdownDescription: "Port on which the HTTP server will listen. Please don't use 80 or 1443.",
 				Computed:            true,
 			},
@@ -137,6 +139,14 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Configure(_ context.Context, r
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsHTTPAccessDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsHTTPAccess
 
 	// Read config

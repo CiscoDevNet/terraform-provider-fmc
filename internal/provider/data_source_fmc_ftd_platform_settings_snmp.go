@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -56,7 +58,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Metadata(_ context.Context, req data
 func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings SNMP.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings SNMP.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -75,7 +77,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Type of the object; this value is always 'FTDSNMPPlatformSettings'.",
 				Computed:            true,
 			},
-			"enable_snmp_servers": schema.BoolAttribute{
+			"enable_snmp_server": schema.BoolAttribute{
 				MarkdownDescription: "Enable SNMP servers.",
 				Computed:            true,
 			},
@@ -92,7 +94,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Location of the device.",
 				Computed:            true,
 			},
-			"listen_port": schema.Int64Attribute{
+			"snmp_server_port": schema.Int64Attribute{
 				MarkdownDescription: "UDP port on which incoming requests will be accepted.",
 				Computed:            true,
 			},
@@ -130,7 +132,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 							MarkdownDescription: "SNMP trap UDP port.",
 							Computed:            true,
 						},
-						"use_device_management_interface": schema.BoolAttribute{
+						"use_management_interface": schema.BoolAttribute{
 							MarkdownDescription: "Use the device management interface to reach SNMP management station.",
 							Computed:            true,
 						},
@@ -293,6 +295,14 @@ func (d *FTDPlatformSettingsSNMPDataSource) Configure(_ context.Context, req dat
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSNMPDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSNMP) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SNMP, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSNMP
 
 	// Read config

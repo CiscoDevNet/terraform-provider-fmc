@@ -77,19 +77,19 @@ func (d *FTDPlatformSettingsSyslogRateLimitDataSource) Schema(ctx context.Contex
 				Computed:            true,
 			},
 			"rate_limit_type": schema.StringAttribute{
-				MarkdownDescription: "Rate limit type.",
+				MarkdownDescription: "Rate limit type - severity level or syslog ID.",
 				Computed:            true,
 			},
 			"rate_limit_value": schema.StringAttribute{
-				MarkdownDescription: "Value for the `rate_limit_type`.",
+				MarkdownDescription: "Severity level or syslog message ID as per `rate_limit_type`.",
 				Computed:            true,
 			},
 			"number_of_messages": schema.Int64Attribute{
-				MarkdownDescription: "Number of messages.",
+				MarkdownDescription: "Maximum number of messages of the specified type allowed in the specified time period.",
 				Computed:            true,
 			},
 			"interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval in seconds.",
+				MarkdownDescription: "Number of seconds before the rate limit counter resets.",
 				Computed:            true,
 			},
 		},

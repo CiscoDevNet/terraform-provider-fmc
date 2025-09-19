@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - HTTP Access.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_http_access (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - HTTP Access.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -22,7 +21,7 @@ The following restrictions apply:
 resource "fmc_ftd_platform_settings_http_access" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   enable_http_server       = true
-  port                     = 443
+  http_server_port         = 443
   http_configurations = [
     {
       source_network_object_id = "5a9f6d9c-3f8d-11e4-9163-6c4008b8c5d7"
@@ -50,7 +49,7 @@ resource "fmc_ftd_platform_settings_http_access" "example" {
 - `domain` (String) Name of the FMC domain
 - `enable_http_server` (Boolean) Enable HTTP server.
 - `http_configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--http_configurations))
-- `port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
+- `http_server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
   - Range: `1`-`65535`
   - Default value: `443`
 

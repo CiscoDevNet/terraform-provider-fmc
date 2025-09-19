@@ -112,7 +112,7 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, 
 				},
 			},
 			"device_id_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Include device identifier to syslog messages.").AddStringEnumDescription("INTERFACE", "USERDEFINEDID", "HOSTNAME").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Include device identifier in syslog messages.").AddStringEnumDescription("INTERFACE", "USERDEFINEDID", "HOSTNAME").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("INTERFACE", "USERDEFINEDID", "HOSTNAME"),

@@ -61,7 +61,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Metadata(ctx context.Cont
 func (r *FTDPlatformSettingsTrustedDNSServersResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - Trusted DNS Servers.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - Trusted DNS Servers.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -150,7 +150,7 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Create(ctx context.Contex
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsTrustedDNSServers) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsTrustedDNSServers) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Trusted DNS Servers creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -215,6 +215,14 @@ func (r *FTDPlatformSettingsTrustedDNSServersResource) Create(ctx context.Contex
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsTrustedDNSServersResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsTrustedDNSServers) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings Trusted DNS Servers, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsTrustedDNSServers
 
 	// Read state

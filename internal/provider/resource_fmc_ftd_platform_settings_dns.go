@@ -64,7 +64,7 @@ func (r *FTDPlatformSettingsDNSResource) Metadata(ctx context.Context, req resou
 func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - DNS Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - DNS - DNS Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -124,14 +124,14 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"poll_timer": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Time limit after which the device queries the DNS server to resolve the FQDN.").AddIntegerRangeDescription(1, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Time limit after which the device queries the DNS server to resolve the name.").AddIntegerRangeDescription(1, 65535).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 65535),
 				},
 			},
 			"interface_objects": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable DNS lookups on all interfaces or on specific interfaces.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -149,7 +149,7 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 					},
 				},
 			},
-			"lookup_via_management_diagnostic_interface": schema.BoolAttribute{
+			"use_management_interface": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable lookup via management/diagnostic interface.").String,
 				Optional:            true,
 			},
@@ -174,7 +174,7 @@ func (r *FTDPlatformSettingsDNSResource) Create(ctx context.Context, req resourc
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsDNS) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsDNS) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings DNS creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -239,6 +239,14 @@ func (r *FTDPlatformSettingsDNSResource) Create(ctx context.Context, req resourc
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsDNSResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsDNS) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings DNS, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsDNS
 
 	// Read state

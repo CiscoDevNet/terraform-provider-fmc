@@ -85,7 +85,7 @@ func (d *FTDPlatformSettingsSyslogServersDataSource) Schema(ctx context.Context,
 				MarkdownDescription: "Size of the queue for storing syslog messages on the security appliance when syslog server is busy. Specify 0 to allow an unlimited number of messages to be queued (subject to available block memory).",
 				Computed:            true,
 			},
-			"servers": schema.ListNestedAttribute{
+			"syslog_servers": schema.ListNestedAttribute{
 				MarkdownDescription: "List of syslog servers.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

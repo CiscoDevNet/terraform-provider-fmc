@@ -63,7 +63,7 @@ func (r *FTDPlatformSettingsSSHAccessResource) Metadata(ctx context.Context, req
 func (r *FTDPlatformSettingsSSHAccessResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - SSH Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - SSH Access. For multiple rules, create multiple resources.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -99,12 +99,12 @@ func (r *FTDPlatformSettingsSSHAccessResource) Schema(ctx context.Context, req r
 				Required:            true,
 			},
 			"interface_literals": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of interface literals to reach SNMP management host.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of interface literals on which SSH access is allowed.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
 			"interface_objects": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of interface objects (Security Zones or Interface Groups) on which SSH access is allowed.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -147,7 +147,7 @@ func (r *FTDPlatformSettingsSSHAccessResource) Create(ctx context.Context, req r
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSSHAccess) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSSHAccess) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SSH Access creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -190,6 +190,14 @@ func (r *FTDPlatformSettingsSSHAccessResource) Create(ctx context.Context, req r
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSSHAccessResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSSHAccess) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SSH Access, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSSHAccess
 
 	// Read state

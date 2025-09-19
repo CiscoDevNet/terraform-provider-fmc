@@ -40,25 +40,25 @@ data "fmc_ftd_platform_settings_syslog_servers" "example" {
 
 - `allow_user_traffic_when_tcp_syslog_server_is_down` (Boolean) Allow user traffic when TCP syslog server is down.
 - `message_queue_size` (Number) Size of the queue for storing syslog messages on the security appliance when syslog server is busy. Specify 0 to allow an unlimited number of messages to be queued (subject to available block memory).
-- `servers` (Attributes List) List of syslog servers. (see [below for nested schema](#nestedatt--servers))
+- `syslog_servers` (Attributes List) List of syslog servers. (see [below for nested schema](#nestedatt--syslog_servers))
 - `type` (String) Type of the object; this value is always 'Server'.
 
-<a id="nestedatt--servers"></a>
-### Nested Schema for `servers`
+<a id="nestedatt--syslog_servers"></a>
+### Nested Schema for `syslog_servers`
 
 Read-Only:
 
 - `emblem_format` (Boolean) (UDP only) Log messages in EMBLEM format.
 - `interface_literals` (Set of String) List of interface literals to reach syslog server.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach syslog server. (see [below for nested schema](#nestedatt--servers--interface_objects))
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach syslog server. (see [below for nested schema](#nestedatt--syslog_servers--interface_objects))
 - `ip_object_id` (String) Id of host object representing the IP address of the syslog server.
 - `port` (Number) Port number used to send syslog messages to the server.
 - `protocol` (String) Protocol used to send syslog messages to the server.
 - `secure_syslog` (Boolean) (TCP only) Use TLS to secure syslog messages sent to the server.
 - `use_management_interface` (Boolean) Use management interface to reach syslog server (true) or use data interfaces (false).
 
-<a id="nestedatt--servers--interface_objects"></a>
-### Nested Schema for `servers.interface_objects`
+<a id="nestedatt--syslog_servers--interface_objects"></a>
+### Nested Schema for `syslog_servers.interface_objects`
 
 Read-Only:
 

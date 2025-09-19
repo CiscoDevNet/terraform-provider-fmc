@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_ssh_access Data Source - terraform-provid
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings SSH Access.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_ssh_access (Data Source)
 
 This data source reads the FTD Platform Settings SSH Access.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -33,8 +38,8 @@ data "fmc_ftd_platform_settings_ssh_access" "example" {
 
 ### Read-Only
 
-- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--interface_objects))
+- `interface_literals` (Set of String) List of interface literals on which SSH access is allowed.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which SSH access is allowed. (see [below for nested schema](#nestedatt--interface_objects))
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which SSH access is allowed.
 - `type` (String) Type of the object; this value is always 'SSHAccessSetting'.
 

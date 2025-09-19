@@ -65,7 +65,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Metadata(ctx context.Context, re
 func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - HTTP Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - HTTP Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -100,7 +100,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 				MarkdownDescription: helpers.NewAttributeDescription("Enable HTTP server.").String,
 				Optional:            true,
 			},
-			"port": schema.Int64Attribute{
+			"http_server_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Port on which the HTTP server will listen. Please don't use 80 or 1443.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("443").String,
 				Optional:            true,
 				Computed:            true,
@@ -170,7 +170,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req 
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsHTTPAccess) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -235,6 +235,14 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsHTTPAccessResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsHTTPAccess
 
 	// Read state

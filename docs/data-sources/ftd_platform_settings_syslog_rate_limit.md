@@ -38,8 +38,8 @@ data "fmc_ftd_platform_settings_syslog_rate_limit" "example" {
 
 ### Read-Only
 
-- `interval` (Number) Interval in seconds.
-- `number_of_messages` (Number) Number of messages.
-- `rate_limit_type` (String) Rate limit type.
-- `rate_limit_value` (String) Value for the `rate_limit_type`.
+- `interval` (Number) Number of seconds before the rate limit counter resets.
+- `number_of_messages` (Number) Maximum number of messages of the specified type allowed in the specified time period.
+- `rate_limit_type` (String) Rate limit type - severity level or syslog ID.
+- `rate_limit_value` (String) Severity level or syslog message ID as per `rate_limit_type`.
 - `type` (String) Type of the object; this value is always 'RateLimit'.

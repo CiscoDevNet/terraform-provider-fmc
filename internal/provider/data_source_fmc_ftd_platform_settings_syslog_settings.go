@@ -85,7 +85,7 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Schema(ctx context.Context
 				Computed:            true,
 			},
 			"device_id_type": schema.StringAttribute{
-				MarkdownDescription: "Include device identifier to syslog messages.",
+				MarkdownDescription: "Include device identifier in syslog messages.",
 				Computed:            true,
 			},
 			"device_id_user_defined_id": schema.StringAttribute{

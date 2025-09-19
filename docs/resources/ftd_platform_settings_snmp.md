@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - SNMP.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_snmp (Resource)
@@ -13,28 +13,27 @@ description: |-
 This resource manages FTD Platform Settings - SNMP.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
 ```terraform
 resource "fmc_ftd_platform_settings_snmp" "example" {
   ftd_platform_settings_id  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  enable_snmp_servers       = true
+  enable_snmp_server        = true
   read_community_string     = "public"
   system_administrator_name = "admin"
   location                  = "Data Center 1"
-  listen_port               = 161
+  snmp_server_port          = 161
   snmp_management_hosts = [
     {
-      ip_object_id                    = "123e4567-e89b-12d3-a456-426614174000"
-      snmp_version                    = "SNMPv3"
-      username                        = "snmpuser1"
-      poll                            = true
-      trap                            = true
-      trap_port                       = 162
-      use_device_management_interface = false
+      ip_object_id             = "123e4567-e89b-12d3-a456-426614174000"
+      snmp_version             = "SNMPv3"
+      username                 = "snmpuser1"
+      poll                     = true
+      trap                     = true
+      trap_port                = 162
+      use_management_interface = false
       interface_objects = [
         {
           id   = "123e4567-e89b-12d3-a456-426614174000"
@@ -87,13 +86,13 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `enable_snmp_servers` (Boolean) Enable SNMP servers.
-- `listen_port` (Number) UDP port on which incoming requests will be accepted.
-  - Range: `1`-`65535`
-  - Default value: `161`
+- `enable_snmp_server` (Boolean) Enable SNMP servers.
 - `location` (String) Location of the device.
 - `read_community_string` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
 - `snmp_management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--snmp_management_hosts))
+- `snmp_server_port` (Number) UDP port on which incoming requests will be accepted.
+  - Range: `1`-`65535`
+  - Default value: `161`
 - `snmpv3_users` (Attributes List) List of SNMPv3 users. (see [below for nested schema](#nestedatt--snmpv3_users))
 - `system_administrator_name` (String) Name of the device administrator or other contact person.
 - `trap_authentication` (Boolean) Unauthorized SNMP access. This authentication failure occurs for packets with an incorrect community string.
@@ -143,7 +142,7 @@ Optional:
 - `trap_port` (Number) SNMP trap UDP port.
   - Range: `1`-`65535`
   - Default value: `162`
-- `use_device_management_interface` (Boolean) Use the device management interface to reach SNMP management station.
+- `use_management_interface` (Boolean) Use the device management interface to reach SNMP management station.
 - `username` (String) (SNMPv3 only) Select SNMPv3 username.
 
 <a id="nestedatt--snmp_management_hosts--interface_objects"></a>

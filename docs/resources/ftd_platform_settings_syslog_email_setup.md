@@ -3,14 +3,14 @@
 page_title: "fmc_ftd_platform_settings_syslog_email_setup Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - Syslog - Email Setup.
+  This resource manages FTD Platform Settings - Syslog - Email Setup. Due API limitation, the source email address cannot be cleared once set. On destroy it is set to a random value.
   The following restrictions apply:
   Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_email_setup (Resource)
 
-This resource manages FTD Platform Settings - Syslog - Email Setup.
+This resource manages FTD Platform Settings - Syslog - Email Setup. Due API limitation, the source email address cannot be cleared once set. On destroy it is set to a random value.
 
 The following restrictions apply:
   - Minimum FMC version: `7.7`

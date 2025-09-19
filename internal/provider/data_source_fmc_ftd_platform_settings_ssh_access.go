@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -56,7 +58,7 @@ func (d *FTDPlatformSettingsSSHAccessDataSource) Metadata(_ context.Context, req
 func (d *FTDPlatformSettingsSSHAccessDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings SSH Access.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings SSH Access.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -80,12 +82,12 @@ func (d *FTDPlatformSettingsSSHAccessDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"interface_literals": schema.SetAttribute{
-				MarkdownDescription: "List of interface literals to reach SNMP management host.",
+				MarkdownDescription: "List of interface literals on which SSH access is allowed.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
 			"interface_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.",
+				MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) on which SSH access is allowed.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -121,6 +123,14 @@ func (d *FTDPlatformSettingsSSHAccessDataSource) Configure(_ context.Context, re
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsSSHAccessDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSSHAccess) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SSH Access, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsSSHAccess
 
 	// Read config

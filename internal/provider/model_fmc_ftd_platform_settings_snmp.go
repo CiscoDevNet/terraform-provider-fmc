@@ -41,11 +41,11 @@ type FTDPlatformSettingsSNMP struct {
 	Domain                         types.String                                 `tfsdk:"domain"`
 	FtdPlatformSettingsId          types.String                                 `tfsdk:"ftd_platform_settings_id"`
 	Type                           types.String                                 `tfsdk:"type"`
-	EnableSnmpServers              types.Bool                                   `tfsdk:"enable_snmp_servers"`
+	EnableSnmpServer               types.Bool                                   `tfsdk:"enable_snmp_server"`
 	ReadCommunityString            types.String                                 `tfsdk:"read_community_string"`
 	SystemAdministratorName        types.String                                 `tfsdk:"system_administrator_name"`
 	Location                       types.String                                 `tfsdk:"location"`
-	ListenPort                     types.Int64                                  `tfsdk:"listen_port"`
+	SnmpServerPort                 types.Int64                                  `tfsdk:"snmp_server_port"`
 	SnmpManagementHosts            []FTDPlatformSettingsSNMPSnmpManagementHosts `tfsdk:"snmp_management_hosts"`
 	Snmpv3Users                    []FTDPlatformSettingsSNMPSnmpv3Users         `tfsdk:"snmpv3_users"`
 	TrapSyslog                     types.Bool                                   `tfsdk:"trap_syslog"`
@@ -70,16 +70,16 @@ type FTDPlatformSettingsSNMP struct {
 }
 
 type FTDPlatformSettingsSNMPSnmpManagementHosts struct {
-	IpObjectId                   types.String                                                 `tfsdk:"ip_object_id"`
-	SnmpVersion                  types.String                                                 `tfsdk:"snmp_version"`
-	Username                     types.String                                                 `tfsdk:"username"`
-	ReadCommunityString          types.String                                                 `tfsdk:"read_community_string"`
-	Poll                         types.Bool                                                   `tfsdk:"poll"`
-	Trap                         types.Bool                                                   `tfsdk:"trap"`
-	TrapPort                     types.Int64                                                  `tfsdk:"trap_port"`
-	UseDeviceManagementInterface types.Bool                                                   `tfsdk:"use_device_management_interface"`
-	InterfaceLiterals            types.Set                                                    `tfsdk:"interface_literals"`
-	InterfaceObjects             []FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects `tfsdk:"interface_objects"`
+	IpObjectId             types.String                                                 `tfsdk:"ip_object_id"`
+	SnmpVersion            types.String                                                 `tfsdk:"snmp_version"`
+	Username               types.String                                                 `tfsdk:"username"`
+	ReadCommunityString    types.String                                                 `tfsdk:"read_community_string"`
+	Poll                   types.Bool                                                   `tfsdk:"poll"`
+	Trap                   types.Bool                                                   `tfsdk:"trap"`
+	TrapPort               types.Int64                                                  `tfsdk:"trap_port"`
+	UseManagementInterface types.Bool                                                   `tfsdk:"use_management_interface"`
+	InterfaceLiterals      types.Set                                                    `tfsdk:"interface_literals"`
+	InterfaceObjects       []FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects `tfsdk:"interface_objects"`
 }
 
 type FTDPlatformSettingsSNMPSnmpv3Users struct {
@@ -101,7 +101,7 @@ type FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsSNMP = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsSNMP = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 
@@ -120,8 +120,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.EnableSnmpServers.IsNull() {
-		body, _ = sjson.Set(body, "enableSNMPServers", data.EnableSnmpServers.ValueBool())
+	if !data.EnableSnmpServer.IsNull() {
+		body, _ = sjson.Set(body, "enableSNMPServers", data.EnableSnmpServer.ValueBool())
 	}
 	if !data.ReadCommunityString.IsNull() {
 		body, _ = sjson.Set(body, "communityString", data.ReadCommunityString.ValueString())
@@ -132,8 +132,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if !data.Location.IsNull() {
 		body, _ = sjson.Set(body, "location", data.Location.ValueString())
 	}
-	if !data.ListenPort.IsNull() {
-		body, _ = sjson.Set(body, "port", data.ListenPort.ValueInt64())
+	if !data.SnmpServerPort.IsNull() {
+		body, _ = sjson.Set(body, "port", data.SnmpServerPort.ValueInt64())
 	}
 	if len(data.SnmpManagementHosts) > 0 {
 		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
@@ -160,8 +160,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 			if !item.TrapPort.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "port", item.TrapPort.ValueInt64())
 			}
-			if !item.UseDeviceManagementInterface.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ifSnmpHostMgmt", item.UseDeviceManagementInterface.ValueBool())
+			if !item.UseManagementInterface.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ifSnmpHostMgmt", item.UseManagementInterface.ValueBool())
 			}
 			if !item.InterfaceLiterals.IsNull() {
 				var values []string
@@ -286,9 +286,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("enableSNMPServers"); value.Exists() {
-		data.EnableSnmpServers = types.BoolValue(value.Bool())
+		data.EnableSnmpServer = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSnmpServers = types.BoolNull()
+		data.EnableSnmpServer = types.BoolNull()
 	}
 	if value := res.Get("sysAdminName"); value.Exists() {
 		data.SystemAdministratorName = types.StringValue(value.String())
@@ -301,9 +301,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.Location = types.StringNull()
 	}
 	if value := res.Get("port"); value.Exists() {
-		data.ListenPort = types.Int64Value(value.Int())
+		data.SnmpServerPort = types.Int64Value(value.Int())
 	} else {
-		data.ListenPort = types.Int64Value(161)
+		data.SnmpServerPort = types.Int64Value(161)
 	}
 	if value := res.Get("snmpMgmtHosts"); value.Exists() {
 		data.SnmpManagementHosts = make([]FTDPlatformSettingsSNMPSnmpManagementHosts, 0)
@@ -341,9 +341,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.TrapPort = types.Int64Value(162)
 			}
 			if value := res.Get("ifSnmpHostMgmt"); value.Exists() {
-				data.UseDeviceManagementInterface = types.BoolValue(value.Bool())
+				data.UseManagementInterface = types.BoolValue(value.Bool())
 			} else {
-				data.UseDeviceManagementInterface = types.BoolNull()
+				data.UseManagementInterface = types.BoolNull()
 			}
 			if value := res.Get("interfaces.literals"); value.Exists() {
 				data.InterfaceLiterals = helpers.GetStringSet(value.Array())
@@ -523,10 +523,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("enableSNMPServers"); value.Exists() && !data.EnableSnmpServers.IsNull() {
-		data.EnableSnmpServers = types.BoolValue(value.Bool())
+	if value := res.Get("enableSNMPServers"); value.Exists() && !data.EnableSnmpServer.IsNull() {
+		data.EnableSnmpServer = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSnmpServers = types.BoolNull()
+		data.EnableSnmpServer = types.BoolNull()
 	}
 	if value := res.Get("sysAdminName"); value.Exists() && !data.SystemAdministratorName.IsNull() {
 		data.SystemAdministratorName = types.StringValue(value.String())
@@ -538,10 +538,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Location = types.StringNull()
 	}
-	if value := res.Get("port"); value.Exists() && !data.ListenPort.IsNull() {
-		data.ListenPort = types.Int64Value(value.Int())
-	} else if data.ListenPort.ValueInt64() != 161 {
-		data.ListenPort = types.Int64Null()
+	if value := res.Get("port"); value.Exists() && !data.SnmpServerPort.IsNull() {
+		data.SnmpServerPort = types.Int64Value(value.Int())
+	} else if data.SnmpServerPort.ValueInt64() != 161 {
+		data.SnmpServerPort = types.Int64Null()
 	}
 	for i := 0; i < len(data.SnmpManagementHosts); i++ {
 		keys := [...]string{"ipAddress.id"}
@@ -609,10 +609,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 		} else if data.TrapPort.ValueInt64() != 162 {
 			data.TrapPort = types.Int64Null()
 		}
-		if value := res.Get("ifSnmpHostMgmt"); value.Exists() && !data.UseDeviceManagementInterface.IsNull() {
-			data.UseDeviceManagementInterface = types.BoolValue(value.Bool())
+		if value := res.Get("ifSnmpHostMgmt"); value.Exists() && !data.UseManagementInterface.IsNull() {
+			data.UseManagementInterface = types.BoolValue(value.Bool())
 		} else {
-			data.UseDeviceManagementInterface = types.BoolNull()
+			data.UseManagementInterface = types.BoolNull()
 		}
 		if value := res.Get("interfaces.literals"); value.Exists() && !data.InterfaceLiterals.IsNull() {
 			data.InterfaceLiterals = helpers.GetStringSet(value.Array())

@@ -32,7 +32,7 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_logging_setup.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "enable_logging", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "enable_logging_on_the_failover_standby_unit", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "enable_logging_on_failover_standby_unit", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "emblem_format", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "send_debug_messages_as_syslog", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "internal_buffer_memory_size", "4096"))
@@ -89,7 +89,7 @@ func testAccFmcFTDPlatformSettingsSyslogLoggingSetupConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_syslog_logging_setup" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	enable_logging = true` + "\n"
-	config += `	enable_logging_on_the_failover_standby_unit = false` + "\n"
+	config += `	enable_logging_on_failover_standby_unit = false` + "\n"
 	config += `	emblem_format = false` + "\n"
 	config += `	send_debug_messages_as_syslog = false` + "\n"
 	config += `	internal_buffer_memory_size = 4096` + "\n"

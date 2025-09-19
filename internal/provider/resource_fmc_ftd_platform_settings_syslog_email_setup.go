@@ -63,7 +63,7 @@ func (r *FTDPlatformSettingsSyslogEmailSetupResource) Metadata(ctx context.Conte
 func (r *FTDPlatformSettingsSyslogEmailSetupResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Email Setup.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Email Setup. Due API limitation, the source email address cannot be cleared once set. On destroy it is set to a random value.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

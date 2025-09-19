@@ -65,7 +65,7 @@ func (r *FTDPlatformSettingsSNMPResource) Metadata(ctx context.Context, req reso
 func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - SNMP.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - SNMP.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -96,7 +96,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_snmp_servers": schema.BoolAttribute{
+			"enable_snmp_server": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable SNMP servers.").String,
 				Optional:            true,
 			},
@@ -122,7 +122,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringvalidator.LengthBetween(0, 127),
 				},
 			},
-			"listen_port": schema.Int64Attribute{
+			"snmp_server_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("UDP port on which incoming requests will be accepted.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("161").String,
 				Optional:            true,
 				Computed:            true,
@@ -173,7 +173,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 							},
 							Default: int64default.StaticInt64(162),
 						},
-						"use_device_management_interface": schema.BoolAttribute{
+						"use_management_interface": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Use the device management interface to reach SNMP management station.").String,
 							Optional:            true,
 						},
@@ -373,7 +373,7 @@ func (r *FTDPlatformSettingsSNMPResource) Create(ctx context.Context, req resour
 	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateFTDPlatformSettingsSNMP) {
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSNMP) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SNMP creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -438,6 +438,14 @@ func (r *FTDPlatformSettingsSNMPResource) Create(ctx context.Context, req resour
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsSNMPResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsSNMP) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings SNMP, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state FTDPlatformSettingsSNMP
 
 	// Read state

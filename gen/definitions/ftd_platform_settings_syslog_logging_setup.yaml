@@ -60,7 +60,7 @@ attributes:
   - model_name: loggingToFMCLogLevel
     tf_name: fmc_logging_level
     type: String
-    description: FMC logging level. Required if `fmc_logging_type` is not "OFF".
+    description: FMC logging level. Required if `fmc_logging_type` is not `OFF``.
     enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
     example: "ERR"
 

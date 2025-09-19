@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_http_access Data Source - terraform-provi
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings HTTP Access.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_http_access (Data Source)
 
 This data source reads the FTD Platform Settings HTTP Access.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -35,7 +40,7 @@ data "fmc_ftd_platform_settings_http_access" "example" {
 
 - `enable_http_server` (Boolean) Enable HTTP server.
 - `http_configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--http_configurations))
-- `port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
+- `http_server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
 - `type` (String) Type of the object; this value is always 'HttpAccessSetting'.
 
 <a id="nestedatt--http_configurations"></a>

@@ -80,7 +80,7 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				MarkdownDescription: "Turns on the data plane system logging.",
 				Computed:            true,
 			},
-			"enable_logging_on_the_failover_standby_unit": schema.BoolAttribute{
+			"enable_logging_on_failover_standby_unit": schema.BoolAttribute{
 				MarkdownDescription: "Turns on logging for the failover standby unit, if available.",
 				Computed:            true,
 			},
@@ -97,11 +97,11 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				Computed:            true,
 			},
 			"fmc_logging_type": schema.StringAttribute{
-				MarkdownDescription: "Firewall Management Center (FMC) syslog message logging mode.",
+				MarkdownDescription: "FMC logging mode.",
 				Computed:            true,
 			},
 			"fmc_logging_level": schema.StringAttribute{
-				MarkdownDescription: "Firewall Management Center (FMC) syslog message logging level.",
+				MarkdownDescription: "FMC logging level. Required if `fmc_logging_type` is not `OFF``.",
 				Computed:            true,
 			},
 			"ftp_server_host_id": schema.StringAttribute{

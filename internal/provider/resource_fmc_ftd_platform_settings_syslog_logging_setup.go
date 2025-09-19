@@ -101,7 +101,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				MarkdownDescription: helpers.NewAttributeDescription("Turns on the data plane system logging.").String,
 				Optional:            true,
 			},
-			"enable_logging_on_the_failover_standby_unit": schema.BoolAttribute{
+			"enable_logging_on_failover_standby_unit": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Turns on logging for the failover standby unit, if available.").String,
 				Optional:            true,
 			},
@@ -123,22 +123,20 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				Default: int64default.StaticInt64(4096),
 			},
 			"fmc_logging_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Firewall Management Center (FMC) syslog message logging mode.").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("VPN").String,
+				MarkdownDescription: helpers.NewAttributeDescription("FMC logging mode.").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("OFF").String,
 				Optional:            true,
 				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("OFF", "ALL", "VPN"),
 				},
-				Default: stringdefault.StaticString("VPN"),
+				Default: stringdefault.StaticString("OFF"),
 			},
 			"fmc_logging_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Firewall Management Center (FMC) syslog message logging level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").AddDefaultValueDescription("ERR").String,
+				MarkdownDescription: helpers.NewAttributeDescription("FMC logging level. Required if `fmc_logging_type` is not `OFF``.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
 				Optional:            true,
-				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),
 				},
-				Default: stringdefault.StaticString("ERR"),
 			},
 			"ftp_server_host_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of host object representing the FTP server.").String,

@@ -3,14 +3,14 @@
 page_title: "fmc_ftd_platform_settings_syslog_rate_limit Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - Syslog - Rate Limits.
+  This resource manages FTD Platform Settings - Syslog - Rate Limits. For multiple rate limits, create multiple resources.
   The following restrictions apply:
   Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_syslog_rate_limit (Resource)
 
-This resource manages FTD Platform Settings - Syslog - Rate Limits.
+This resource manages FTD Platform Settings - Syslog - Rate Limits. For multiple rate limits, create multiple resources.
 
 The following restrictions apply:
   - Minimum FMC version: `7.7`
@@ -33,16 +33,16 @@ resource "fmc_ftd_platform_settings_syslog_rate_limit" "example" {
 ### Required
 
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
-- `number_of_messages` (Number) Number of messages.
+- `number_of_messages` (Number) Maximum number of messages of the specified type allowed in the specified time period.
   - Range: `1`-`2147483647`
-- `rate_limit_type` (String) Rate limit type.
+- `rate_limit_type` (String) Rate limit type - severity level or syslog ID.
   - Choices: `LOG_LEVEL`, `SYSLOG_ID`
-- `rate_limit_value` (String) Value for the `rate_limit_type`.
+- `rate_limit_value` (String) Severity level or syslog message ID as per `rate_limit_type`.
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `interval` (Number) Interval in seconds.
+- `interval` (Number) Number of seconds before the rate limit counter resets.
   - Range: `1`-`2147483647`
 
 ### Read-Only

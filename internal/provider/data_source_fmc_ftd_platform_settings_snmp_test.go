@@ -31,16 +31,16 @@ import (
 func TestAccDataSourceFmcFTDPlatformSettingsSNMP(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_snmp.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "enable_snmp_servers", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "enable_snmp_server", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "system_administrator_name", "admin"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "location", "Data Center 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "listen_port", "161"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_server_port", "161"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.snmp_version", "SNMPv3"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.username", "snmpuser1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.poll", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.trap", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.trap_port", "162"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.use_device_management_interface", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.use_management_interface", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.security_level", "Priv"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.username", "snmpuser1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.password_type", "Clear"))
@@ -105,11 +105,11 @@ resource "fmc_security_zone" "test" {
 func testAccDataSourceFmcFTDPlatformSettingsSNMPConfig() string {
 	config := `resource "fmc_ftd_platform_settings_snmp" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	enable_snmp_servers = true` + "\n"
+	config += `	enable_snmp_server = true` + "\n"
 	config += `	read_community_string = "public"` + "\n"
 	config += `	system_administrator_name = "admin"` + "\n"
 	config += `	location = "Data Center 1"` + "\n"
-	config += `	listen_port = 161` + "\n"
+	config += `	snmp_server_port = 161` + "\n"
 	config += `	snmp_management_hosts = [{` + "\n"
 	config += `		ip_object_id = fmc_host.test.id` + "\n"
 	config += `		snmp_version = "SNMPv3"` + "\n"
@@ -117,7 +117,7 @@ func testAccDataSourceFmcFTDPlatformSettingsSNMPConfig() string {
 	config += `		poll = true` + "\n"
 	config += `		trap = true` + "\n"
 	config += `		trap_port = 162` + "\n"
-	config += `		use_device_management_interface = false` + "\n"
+	config += `		use_management_interface = false` + "\n"
 	config += `		interface_objects = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"
 	config += `			type = fmc_security_zone.test.type` + "\n"

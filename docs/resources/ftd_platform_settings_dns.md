@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - DNS - DNS Settings.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_dns (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - DNS - DNS Settings.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -35,7 +34,7 @@ resource "fmc_ftd_platform_settings_dns" "example" {
       type = "SecurityZone"
     }
   ]
-  lookup_via_management_diagnostic_interface = true
+  use_management_interface = true
 }
 ```
 
@@ -51,11 +50,11 @@ resource "fmc_ftd_platform_settings_dns" "example" {
 - `domain` (String) Name of the FMC domain
 - `expire_entry_timer` (Number) Minimum time-to-live (TTL) for the DNS entry (in minutes).
   - Range: `1`-`65535`
-- `interface_objects` (Attributes List) Enable DNS lookups on all interfaces or on specific interfaces. (see [below for nested schema](#nestedatt--interface_objects))
-- `lookup_via_management_diagnostic_interface` (Boolean) Enable lookup via management/diagnostic interface.
-- `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the FQDN.
+- `interface_objects` (Attributes List) List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution. (see [below for nested schema](#nestedatt--interface_objects))
+- `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the name.
   - Range: `1`-`65535`
 - `server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--server_groups))
+- `use_management_interface` (Boolean) Enable lookup via management/diagnostic interface.
 
 ### Read-Only
 

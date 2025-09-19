@@ -32,7 +32,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsHTTPAccess(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_http_access.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_http_access.test", "enable_http_server", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_http_access.test", "port", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_http_access.test", "http_server_port", "443"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -74,7 +74,7 @@ func testAccDataSourceFmcFTDPlatformSettingsHTTPAccessConfig() string {
 	config := `resource "fmc_ftd_platform_settings_http_access" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	enable_http_server = true` + "\n"
-	config += `	port = 443` + "\n"
+	config += `	http_server_port = 443` + "\n"
 	config += `	http_configurations = [{` + "\n"
 	config += `		source_network_object_id = fmc_host.test.id` + "\n"
 	config += `		interface_objects = [{` + "\n"

@@ -64,7 +64,7 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Metadata(ctx context.Contex
 func (r *FTDPlatformSettingsSyslogRateLimitResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Rate Limits.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Platform Settings - Syslog - Rate Limits. For multiple rate limits, create multiple resources.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -96,25 +96,25 @@ func (r *FTDPlatformSettingsSyslogRateLimitResource) Schema(ctx context.Context,
 				},
 			},
 			"rate_limit_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Rate limit type.").AddStringEnumDescription("LOG_LEVEL", "SYSLOG_ID").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Rate limit type - severity level or syslog ID.").AddStringEnumDescription("LOG_LEVEL", "SYSLOG_ID").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("LOG_LEVEL", "SYSLOG_ID"),
 				},
 			},
 			"rate_limit_value": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value for the `rate_limit_type`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Severity level or syslog message ID as per `rate_limit_type`.").String,
 				Required:            true,
 			},
 			"number_of_messages": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Number of messages.").AddIntegerRangeDescription(1, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of messages of the specified type allowed in the specified time period.").AddIntegerRangeDescription(1, 2147483647).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 2147483647),
 				},
 			},
 			"interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval in seconds.").AddIntegerRangeDescription(1, 2147483647).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Number of seconds before the rate limit counter resets.").AddIntegerRangeDescription(1, 2147483647).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 2147483647),

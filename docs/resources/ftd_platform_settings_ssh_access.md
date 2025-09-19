@@ -3,18 +3,17 @@
 page_title: "fmc_ftd_platform_settings_ssh_access Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
-  This resource manages FTD Platform Settings - SSH Access.
+  This resource manages FTD Platform Settings - SSH Access. For multiple rules, create multiple resources.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_ssh_access (Resource)
 
-This resource manages FTD Platform Settings - SSH Access.
+This resource manages FTD Platform Settings - SSH Access. For multiple rules, create multiple resources.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -43,8 +42,8 @@ resource "fmc_ftd_platform_settings_ssh_access" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--interface_objects))
+- `interface_literals` (Set of String) List of interface literals on which SSH access is allowed.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which SSH access is allowed. (see [below for nested schema](#nestedatt--interface_objects))
 
 ### Read-Only
 

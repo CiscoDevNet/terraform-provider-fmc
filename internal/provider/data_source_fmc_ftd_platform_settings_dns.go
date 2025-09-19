@@ -22,8 +22,10 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -56,7 +58,7 @@ func (d *FTDPlatformSettingsDNSDataSource) Metadata(_ context.Context, req datas
 func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings DNS.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FTD Platform Settings DNS.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -101,11 +103,11 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 			},
 			"poll_timer": schema.Int64Attribute{
-				MarkdownDescription: "Time limit after which the device queries the DNS server to resolve the FQDN.",
+				MarkdownDescription: "Time limit after which the device queries the DNS server to resolve the name.",
 				Computed:            true,
 			},
 			"interface_objects": schema.ListNestedAttribute{
-				MarkdownDescription: "Enable DNS lookups on all interfaces or on specific interfaces.",
+				MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -120,7 +122,7 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 					},
 				},
 			},
-			"lookup_via_management_diagnostic_interface": schema.BoolAttribute{
+			"use_management_interface": schema.BoolAttribute{
 				MarkdownDescription: "Enable lookup via management/diagnostic interface.",
 				Computed:            true,
 			},
@@ -141,6 +143,14 @@ func (d *FTDPlatformSettingsDNSDataSource) Configure(_ context.Context, req data
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *FTDPlatformSettingsDNSDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	// Get FMC version
+	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
+
+	// Check if FMC client is connected to supports this object
+	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsDNS) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings DNS, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config FTDPlatformSettingsDNS
 
 	// Read config

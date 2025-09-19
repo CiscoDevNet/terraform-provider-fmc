@@ -14,5 +14,5 @@ resource "fmc_ftd_platform_settings_dns" "example" {
       type = "SecurityZone"
     }
   ]
-  lookup_via_management_diagnostic_interface = true
+  use_management_interface = true
 }

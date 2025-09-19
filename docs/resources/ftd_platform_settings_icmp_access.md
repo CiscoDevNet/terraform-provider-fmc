@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages FTD Platform Settings - ICMP Access.
   The following restrictions apply:
-  Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.7
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_icmp_access (Resource)
@@ -13,8 +13,7 @@ description: |-
 This resource manages FTD Platform Settings - ICMP Access.
 
 The following restrictions apply:
-  - Read operations are supported by any tested FMC version
-  - Minimum FMC version for object management (Create/Update/Delete): `7.7`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -23,7 +22,7 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   rate_limit               = 1
   burst_size               = 1
-  icmp_configs = [
+  icmp_configurations = [
     {
       action                   = "Permit"
       icmp_service_id          = "5a9f2d3c-08d1-11e6-b939-00155d0a1eb1"
@@ -53,7 +52,7 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
   - Range: `1`-`10`
   - Default value: `1`
 - `domain` (String) Name of the FMC domain
-- `icmp_configs` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--icmp_configs))
+- `icmp_configurations` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--icmp_configurations))
 - `rate_limit` (Number) Rate limit on ICMPv4 Unreachable messages.
   - Range: `1`-`100`
   - Default value: `1`
@@ -63,8 +62,8 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'ICMPSetting'.
 
-<a id="nestedatt--icmp_configs"></a>
-### Nested Schema for `icmp_configs`
+<a id="nestedatt--icmp_configurations"></a>
+### Nested Schema for `icmp_configurations`
 
 Required:
 
@@ -75,11 +74,11 @@ Required:
 
 Optional:
 
-- `interface_literals` (Set of String) List of interface literals to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--icmp_configs--interface_objects))
+- `interface_literals` (Set of String) List of interface literals for this rule.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) for this rule. (see [below for nested schema](#nestedatt--icmp_configurations--interface_objects))
 
-<a id="nestedatt--icmp_configs--interface_objects"></a>
-### Nested Schema for `icmp_configs.interface_objects`
+<a id="nestedatt--icmp_configurations--interface_objects"></a>
+### Nested Schema for `icmp_configurations.interface_objects`
 
 Required:
 

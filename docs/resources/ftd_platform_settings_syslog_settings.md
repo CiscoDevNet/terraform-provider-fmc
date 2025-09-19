@@ -42,7 +42,7 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
 - `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.
-- `device_id_type` (String) Include device identifier to syslog messages.
+- `device_id_type` (String) Include device identifier in syslog messages.
   - Choices: `INTERFACE`, `USERDEFINEDID`, `HOSTNAME`
 - `device_id_user_defined_id` (String) User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.
 - `domain` (String) Name of the FMC domain

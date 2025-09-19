@@ -37,15 +37,15 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsDNS struct {
-	Id                                     types.String                             `tfsdk:"id"`
-	Domain                                 types.String                             `tfsdk:"domain"`
-	FtdPlatformSettingsId                  types.String                             `tfsdk:"ftd_platform_settings_id"`
-	Type                                   types.String                             `tfsdk:"type"`
-	ServerGroups                           []FTDPlatformSettingsDNSServerGroups     `tfsdk:"server_groups"`
-	ExpireEntryTimer                       types.Int64                              `tfsdk:"expire_entry_timer"`
-	PollTimer                              types.Int64                              `tfsdk:"poll_timer"`
-	InterfaceObjects                       []FTDPlatformSettingsDNSInterfaceObjects `tfsdk:"interface_objects"`
-	LookupViaManagementDiagnosticInterface types.Bool                               `tfsdk:"lookup_via_management_diagnostic_interface"`
+	Id                     types.String                             `tfsdk:"id"`
+	Domain                 types.String                             `tfsdk:"domain"`
+	FtdPlatformSettingsId  types.String                             `tfsdk:"ftd_platform_settings_id"`
+	Type                   types.String                             `tfsdk:"type"`
+	ServerGroups           []FTDPlatformSettingsDNSServerGroups     `tfsdk:"server_groups"`
+	ExpireEntryTimer       types.Int64                              `tfsdk:"expire_entry_timer"`
+	PollTimer              types.Int64                              `tfsdk:"poll_timer"`
+	InterfaceObjects       []FTDPlatformSettingsDNSInterfaceObjects `tfsdk:"interface_objects"`
+	UseManagementInterface types.Bool                               `tfsdk:"use_management_interface"`
 }
 
 type FTDPlatformSettingsDNSServerGroups struct {
@@ -62,7 +62,7 @@ type FTDPlatformSettingsDNSInterfaceObjects struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionCreateFTDPlatformSettingsDNS = version.Must(version.NewVersion("7.7"))
+var minFMCVersionFTDPlatformSettingsDNS = version.Must(version.NewVersion("7.7"))
 
 // End of section. //template:end minimumVersions
 
@@ -118,8 +118,8 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 			body, _ = sjson.SetRaw(body, "interfaceObjects.-1", itemBody)
 		}
 	}
-	if !data.LookupViaManagementDiagnosticInterface.IsNull() {
-		body, _ = sjson.Set(body, "enableLookupViaMgmt", data.LookupViaManagementDiagnosticInterface.ValueBool())
+	if !data.UseManagementInterface.IsNull() {
+		body, _ = sjson.Set(body, "enableLookupViaMgmt", data.UseManagementInterface.ValueBool())
 	}
 	return body
 }
@@ -188,9 +188,9 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		})
 	}
 	if value := res.Get("enableLookupViaMgmt"); value.Exists() {
-		data.LookupViaManagementDiagnosticInterface = types.BoolValue(value.Bool())
+		data.UseManagementInterface = types.BoolValue(value.Bool())
 	} else {
-		data.LookupViaManagementDiagnosticInterface = types.BoolNull()
+		data.UseManagementInterface = types.BoolNull()
 	}
 }
 
@@ -319,10 +319,10 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 		}
 		(*parent).InterfaceObjects[i] = data
 	}
-	if value := res.Get("enableLookupViaMgmt"); value.Exists() && !data.LookupViaManagementDiagnosticInterface.IsNull() {
-		data.LookupViaManagementDiagnosticInterface = types.BoolValue(value.Bool())
+	if value := res.Get("enableLookupViaMgmt"); value.Exists() && !data.UseManagementInterface.IsNull() {
+		data.UseManagementInterface = types.BoolValue(value.Bool())
 	} else {
-		data.LookupViaManagementDiagnosticInterface = types.BoolNull()
+		data.UseManagementInterface = types.BoolNull()
 	}
 }
 

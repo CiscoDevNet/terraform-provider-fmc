@@ -4,11 +4,16 @@ page_title: "fmc_ftd_platform_settings_snmp Data Source - terraform-provider-fmc
 subcategory: "Devices"
 description: |-
   This data source reads the FTD Platform Settings SNMP.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_ftd_platform_settings_snmp (Data Source)
 
 This data source reads the FTD Platform Settings SNMP.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
@@ -33,11 +38,11 @@ data "fmc_ftd_platform_settings_snmp" "example" {
 
 ### Read-Only
 
-- `enable_snmp_servers` (Boolean) Enable SNMP servers.
-- `listen_port` (Number) UDP port on which incoming requests will be accepted.
+- `enable_snmp_server` (Boolean) Enable SNMP servers.
 - `location` (String) Location of the device.
 - `read_community_string` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
 - `snmp_management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--snmp_management_hosts))
+- `snmp_server_port` (Number) UDP port on which incoming requests will be accepted.
 - `snmpv3_users` (Attributes List) List of SNMPv3 users. (see [below for nested schema](#nestedatt--snmpv3_users))
 - `system_administrator_name` (String) Name of the device administrator or other contact person.
 - `trap_authentication` (Boolean) Unauthorized SNMP access. This authentication failure occurs for packets with an incorrect community string.
@@ -74,7 +79,7 @@ Read-Only:
 - `snmp_version` (String) SNMP version to be used.
 - `trap` (Boolean) The device sends trap events to the management station as they occur.
 - `trap_port` (Number) SNMP trap UDP port.
-- `use_device_management_interface` (Boolean) Use the device management interface to reach SNMP management station.
+- `use_management_interface` (Boolean) Use the device management interface to reach SNMP management station.
 - `username` (String) (SNMPv3 only) Select SNMPv3 username.
 
 <a id="nestedatt--snmp_management_hosts--interface_objects"></a>
