@@ -2,7 +2,7 @@
 name: FTD Platform Settings HTTP Access
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/httpaccesssettings
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - HTTP Access.
 put_create: true
 retrieve_id: true
@@ -24,6 +24,7 @@ attributes:
     description: Enable HTTP server.
     example: true
   - model_name: port
+    tf_name: http_server_port
     type: Int64
     description: Port on which the HTTP server will listen. Please don't use 80 or 1443.
     min_int: 1

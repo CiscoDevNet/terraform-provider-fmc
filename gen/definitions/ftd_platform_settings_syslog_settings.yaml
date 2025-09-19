@@ -35,7 +35,7 @@ attributes:
     data_path: [syslogDeviceIdConfig]
     tf_name: device_id_type
     type: String
-    description: Include device identifier to syslog messages.
+    description: Include device identifier in syslog messages.
     enum_values: [INTERFACE, USERDEFINEDID, HOSTNAME]
     example: USERDEFINEDID
   - model_name: userDefinedId

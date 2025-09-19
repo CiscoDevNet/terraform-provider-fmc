@@ -3,7 +3,7 @@ name: FTD Platform Settings Syslog Rate Limit
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/syslog/ratelimits
 doc_category: Devices
 minimum_version: "7.7"
-res_description: This resource manages FTD Platform Settings - Syslog - Rate Limits.
+res_description: This resource manages FTD Platform Settings - Syslog - Rate Limits. For multiple rate limits, create multiple resources.
 skip_minimum_test: true
 attributes:
   - tf_name: ftd_platform_settings_id
@@ -18,19 +18,19 @@ attributes:
     computed: true
   - model_name: rateLimitType
     type: String
-    description: Rate limit type.
+    description: Rate limit type - severity level or syslog ID.
     enum_values: [LOG_LEVEL, SYSLOG_ID]
     example: LOG_LEVEL
     mandatory: true
   - model_name: value
     tf_name: rate_limit_value
     type: String
-    description: Value for the `rate_limit_type`.
+    description: Severity level or syslog message ID as per `rate_limit_type`.
     mandatory: true
     example: "ERR"
   - model_name: numberOfMessages
     type: Int64
-    description: Number of messages.
+    description: Maximum number of messages of the specified type allowed in the specified time period.
     mandatory: true
     min_int: 1
     max_int: 2147483647
@@ -38,7 +38,7 @@ attributes:
   - model_name: intervalInSeconds
     tf_name: interval
     type: Int64
-    description: Interval in seconds.
+    description: Number of seconds before the rate limit counter resets.
     min_int: 1
     max_int: 2147483647
     example: 60

@@ -2,7 +2,7 @@
 name: FTD Platform Settings SNMP
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/snmpsettings
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - SNMP.
 put_create: true
 retrieve_id: true
@@ -20,7 +20,7 @@ attributes:
     description: Type of the object; this value is always 'FTDSNMPPlatformSettings'.
     computed: true
   - model_name: enableSNMPServers
-    tf_name: enable_snmp_servers
+    tf_name: enable_snmp_server
     type: Bool
     description: Enable SNMP servers.
     example: true
@@ -44,7 +44,7 @@ attributes:
     example: "Data Center 1"
     string_max_length: 127
   - model_name: port
-    tf_name: listen_port
+    tf_name: snmp_server_port
     type: Int64
     description: UDP port on which incoming requests will be accepted.
     min_int: 1
@@ -103,7 +103,7 @@ attributes:
         example: 162
         default_value: 162
       - model_name: ifSnmpHostMgmt
-        tf_name: use_device_management_interface
+        tf_name: use_management_interface
         type: Bool
         description: Use the device management interface to reach SNMP management station.
         example: false

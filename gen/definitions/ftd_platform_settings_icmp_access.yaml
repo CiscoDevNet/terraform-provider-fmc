@@ -2,7 +2,7 @@
 name: FTD Platform Settings ICMP Access
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/icmpsettings
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - ICMP Access.
 put_create: true
 retrieve_id: true
@@ -34,6 +34,7 @@ attributes:
     default_value: 1
     example: 1
   - model_name: icmpConfigs
+    tf_name: icmp_configurations
     type: List
     description: ICMP access rules.
     attributes:
@@ -67,14 +68,14 @@ attributes:
         tf_name: interface_literals
         type: Set
         element_type: String
-        description: List of interface literals to reach SNMP management host.
+        description: List of interface literals for this rule.
         exclude_example: true
         exclude_test: true
       - model_name: objects
         data_path: [interfaces]
         tf_name: interface_objects
         type: Set
-        description: List of interface objects (Security Zones or Interface Groups) to reach SNMP management host.
+        description: List of interface objects (Security Zones or Interface Groups) for this rule.
         attributes:
           - model_name: id
             type: String

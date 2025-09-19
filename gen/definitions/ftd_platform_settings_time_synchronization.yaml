@@ -3,7 +3,7 @@
 name: FTD Platform Settings Time Synchronization
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/ntpsettings
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - Time Synchronization.
 put_create: true
 retrieve_id: true

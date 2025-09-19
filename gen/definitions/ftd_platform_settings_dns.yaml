@@ -2,7 +2,7 @@
 name: FTD Platform Settings DNS
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/dnssettings
 doc_category: Devices
-minimum_version_create: "7.7"
+minimum_version: "7.7"
 res_description: This resource manages FTD Platform Settings - DNS - DNS Settings.
 put_create: true
 retrieve_id: true
@@ -57,11 +57,11 @@ attributes:
     type: Int64
     min_int: 1
     max_int: 65535
-    description: Time limit after which the device queries the DNS server to resolve the FQDN.
+    description: Time limit after which the device queries the DNS server to resolve the name.
     example: 240
   - model_name: interfaceObjects
     type: List
-    description: Enable DNS lookups on all interfaces or on specific interfaces.
+    description: List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.
     attributes:
       - model_name: id
         type: String
@@ -78,7 +78,7 @@ attributes:
         enum_values: [SecurityZone, InterfaceGroup]
         test_value: fmc_interface_group.test.type
   - model_name: enableLookupViaMgmt
-    tf_name: lookup_via_management_diagnostic_interface
+    tf_name: use_management_interface
     type: Bool
     description: Enable lookup via management/diagnostic interface.
     example: true

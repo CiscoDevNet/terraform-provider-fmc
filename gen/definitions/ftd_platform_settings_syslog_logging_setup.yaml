@@ -26,7 +26,7 @@ attributes:
     description: Turns on the data plane system logging.
     example: true
   - model_name: enableLoggingFailover
-    tf_name: enable_logging_on_the_failover_standby_unit
+    tf_name: enable_logging_on_failover_standby_unit
     type: Bool
     description: Turns on logging for the failover standby unit, if available.
     example: false
@@ -53,17 +53,16 @@ attributes:
   - model_name: loggingToFMCType
     tf_name: fmc_logging_type
     type: String
-    description: Firewall Management Center (FMC) syslog message logging mode.
+    description: FMC logging mode.
     enum_values: ["OFF", "ALL", "VPN"]
     example: "VPN"
-    default_value: "VPN"
+    default_value: "OFF"
   - model_name: loggingToFMCLogLevel
     tf_name: fmc_logging_level
     type: String
-    description: Firewall Management Center (FMC) syslog message logging level.
+    description: FMC logging level. Required if `fmc_logging_type` is not "OFF".
     enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
     example: "ERR"
-    default_value: "ERR"
 
   # FTP Server Information
   - model_name: id
