@@ -4,15 +4,15 @@ page_title: "fmc_health_policy Resource - terraform-provider-fmc"
 subcategory: "Policies"
 description: |-
   This resource manages a Health Policy.
-  Due to FMC problems, updates are not supported; to change a policy, delete and recreate it.
-  Any not configured health module will accept its default settings.
+  Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
+  Any not configured health module will be created with its default settings.
 ---
 
 # fmc_health_policy (Resource)
 
 This resource manages a Health Policy.
- Due to FMC problems, updates are not supported; to change a policy, delete and recreate it.
- Any not configured health module will accept its default settings.
+ Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
+ Any not configured health module will be created with its default settings.
 
 ## Example Usage
 
@@ -84,7 +84,7 @@ Optional:
 - `custom_threshold` (Attributes List) Custom threshold configuration for health module. (see [below for nested schema](#nestedatt--health_modules--custom_threshold))
 - `enabled` (Boolean) Enable health module.
 - `type` (String) Type of health module.
-  - Choices: `FTD`, `FMC_FTD`, `SENSOR`
+  - Choices: `FTD`, `FMC_FTD`, `SENSOR`, `FMC`
 - `warning_threshold` (Number) Warning threshold value for health module.
   - Range: `1`-`99`
 
@@ -103,6 +103,7 @@ Optional:
 Optional:
 
 - `type` (String) Type of threshold.
+  - Choices: `red`, `yellow`
 - `value` (Number) Value of threshold.
   - Range: `1`-`99`
 
@@ -114,6 +115,7 @@ Optional:
 Optional:
 
 - `type` (String) Type of custom threshold.
+  - Choices: `Red-FC`, `Yellow-FC`
 - `value` (Number) Value of custom threshold.
   - Range: `1`-`99`
 

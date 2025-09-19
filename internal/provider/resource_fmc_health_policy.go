@@ -64,7 +64,7 @@ func (r *HealthPolicyResource) Metadata(ctx context.Context, req resource.Metada
 func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to FMC problems, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will accept its default settings.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will be created with its default settings.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -124,10 +124,10 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of health module.").AddStringEnumDescription("FTD", "FMC_FTD", "SENSOR").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of health module.").AddStringEnumDescription("FTD", "FMC_FTD", "SENSOR", "FMC").String,
 							Optional:            true,
 							Validators: []validator.String{
-								stringvalidator.OneOf("FTD", "FMC_FTD", "SENSOR"),
+								stringvalidator.OneOf("FTD", "FMC_FTD", "SENSOR", "FMC"),
 							},
 						},
 						"alert_severity": schema.StringAttribute{
@@ -157,8 +157,11 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of custom threshold.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of custom threshold.").AddStringEnumDescription("Red-FC", "Yellow-FC").String,
 										Optional:            true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("Red-FC", "Yellow-FC"),
+										},
 									},
 									"value": schema.Int64Attribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Value of custom threshold.").AddIntegerRangeDescription(1, 99).String,
@@ -189,8 +192,11 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"type": schema.StringAttribute{
-													MarkdownDescription: helpers.NewAttributeDescription("Type of threshold.").String,
+													MarkdownDescription: helpers.NewAttributeDescription("Type of threshold.").AddStringEnumDescription("red", "yellow").String,
 													Optional:            true,
+													Validators: []validator.String{
+														stringvalidator.OneOf("red", "yellow"),
+													},
 												},
 												"value": schema.Int64Attribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Value of threshold.").AddIntegerRangeDescription(1, 99).String,
@@ -349,8 +355,19 @@ func (r *HealthPolicyResource) Update(ctx context.Context, req resource.UpdateRe
 	}
 
 	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !plan.Domain.IsNull() && plan.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+
+	body := plan.toBody(ctx, state)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 

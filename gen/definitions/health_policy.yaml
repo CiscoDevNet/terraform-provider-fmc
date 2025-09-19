@@ -5,9 +5,8 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/healthpolicies
 doc_category: Policies
 res_description: >-
   This resource manages a Health Policy.\n
-  Due to FMC problems, updates are not supported; to change a policy, delete and recreate it.\n
-  Any not configured health module will accept its default settings.\n
-no_update: true
+  Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n
+  Any not configured health module will be created with its default settings.\n
 skip_minimum_test: true
 attributes:
   # General
@@ -63,7 +62,7 @@ attributes:
       - model_name: type
         type: String
         description: Type of health module.
-        enum_values: [FTD, FMC_FTD, SENSOR]
+        enum_values: [FTD, FMC_FTD, SENSOR, FMC]
         exclude_example: true
         exclude_test: true
       # - model_name: alertEnabled
@@ -99,6 +98,7 @@ attributes:
         attributes:
           - model_name: type
             type: String
+            enum_values: [Red-FC, Yellow-FC]
             description: Type of custom threshold.
           - model_name: value
             type: Int64
@@ -125,6 +125,7 @@ attributes:
             attributes:
               - model_name: type
                 type: String
+                enum_values: [red, yellow]
                 description: Type of threshold.
               - model_name: value
                 type: Int64
