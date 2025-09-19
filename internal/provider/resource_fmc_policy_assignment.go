@@ -221,10 +221,10 @@ func (r *PolicyAssignmentResource) Create(ctx context.Context, req resource.Crea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (r *PolicyAssignmentResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state PolicyAssignment
+	var res fmc.Res
+	var err error
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -240,15 +240,33 @@ func (r *PolicyAssignmentResource) Read(ctx context.Context, req resource.ReadRe
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
-	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
-	res, err := r.client.Get(urlPath, reqMods...)
+	// FMCBUG CSCwr27063 FMC API: Policy assignment endpoint does not collect health policy assignments correctly (duplicates CSCwq97093)
+	if state.PolicyType.ValueString() == "HealthPolicy" {
+		var resTmp fmc.Res
+		urlPath := state.getPath() + "?expanded=true"
+		resTmp, err = r.client.Get(urlPath, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
 
-	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
-		resp.State.RemoveResource(ctx)
-		return
-	} else if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
+		query := fmt.Sprintf("items.#(id==%s)", state.Id.ValueString())
+		res = resTmp.Get(query)
+		if !res.Exists() {
+			resp.State.RemoveResource(ctx)
+			return
+		}
+	} else {
+		urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
+		res, err = r.client.Get(urlPath, reqMods...)
+
+		if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+			resp.State.RemoveResource(ctx)
+			return
+		} else if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+			return
+		}
 	}
 
 	imp, diags := helpers.IsFlagImporting(ctx, req)
@@ -270,8 +288,6 @@ func (r *PolicyAssignmentResource) Read(ctx context.Context, req resource.ReadRe
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
 
 func (r *PolicyAssignmentResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state PolicyAssignment
@@ -352,7 +368,7 @@ func (r *PolicyAssignmentResource) Update(ctx context.Context, req resource.Upda
 			} else {
 				// Policy assignment already exists - need to update it
 				tflog.Debug(ctx, fmt.Sprintf("%s: Policy assignment already exists", plan.Id.ValueString()))
-				_, diags = r.updatePolicyAssignment(ctx, res, toRemove, toRemove, PolicyAssignment{}, reqMods...)
+				_, diags = r.updatePolicyAssignment(ctx, res, toRemove, PolicyAssignment{}, toRemove, reqMods...)
 				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 					return
 				}

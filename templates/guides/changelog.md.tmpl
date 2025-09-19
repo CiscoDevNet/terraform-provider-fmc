@@ -10,9 +10,11 @@ description: |-
 ## 2.0.0 (Unreleased)
 
 - (Fix) Prefilter policy is not assigned to Access Control Policy on creation
+- (Fix) `fmc_policy_assignment` for Health Policies on FMC 7.6 and later does not work correctly
 - (Change) Remove `ValidateConfig` for `fmc_vpn_ra_connection_profiles`
 - (Change) Remove `fmc_device_ha_pair_physical_interface_mac_address` resource and data source
 - (Change) `fmc_file_analysis`: `store_files` attribute allowed values update
+- (Enhancement) Add support for `fmc_health_policy` resource and data source
 - (Enhancement) Add support for `fmc_secure_client_posture_package` resource and data source
 - (Enhancement) Add support for `fmc_dynamic_access_policy` resource and data source (no records support)
 - (Enhancement) Add support for `fmc_ftd_platform_settings_*` resources and data sources
