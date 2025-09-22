@@ -59,7 +59,7 @@ func (d *HealthPolicyDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *HealthPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Health Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Health Policy.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -205,6 +205,12 @@ func (d *HealthPolicyDataSource) Configure(_ context.Context, req datasource.Con
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *HealthPolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionHealthPolicy) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Health Policy, minimum required version is 7.7", d.client.FMCVersion))
+		return
+	}
 	var config HealthPolicy
 
 	// Read config

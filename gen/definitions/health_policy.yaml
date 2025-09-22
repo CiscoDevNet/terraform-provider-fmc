@@ -9,6 +9,7 @@ res_description: >-
   Any not configured health module will be created with its default settings.\n
   Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
 skip_minimum_test: true
+minimum_version: "7.7"
 attributes:
   # General
   - model_name: name
