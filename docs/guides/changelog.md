@@ -11,6 +11,7 @@ description: |-
 
 - (Fix) Prefilter policy is not assigned to Access Control Policy on creation
 - (Fix) `fmc_policy_assignment` for Health Policies on FMC 7.6 and later does not work correctly
+- (Fix) Attempt to stabilize VPN Remote Access resources
 - (Change) Remove `ValidateConfig` for `fmc_vpn_ra_connection_profiles`
 - (Change) Remove `fmc_device_ha_pair_physical_interface_mac_address` resource and data source
 - (Change) `fmc_file_analysis`: `store_files` attribute allowed values update

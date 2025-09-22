@@ -22,6 +22,8 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
@@ -170,8 +172,6 @@ func (d *VPNRAIPSecCryptoMapDataSource) Configure(_ context.Context, req datasou
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *VPNRAIPSecCryptoMapDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config VPNRAIPSecCryptoMap
 
@@ -221,7 +221,21 @@ func (d *VPNRAIPSecCryptoMapDataSource) Read(ctx context.Context, req datasource
 		}
 	}
 	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
-	res, err := d.client.Get(urlPath, reqMods...)
+
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = d.client.Get(urlPath, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
@@ -234,5 +248,3 @@ func (d *VPNRAIPSecCryptoMapDataSource) Read(ctx context.Context, req datasource
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read

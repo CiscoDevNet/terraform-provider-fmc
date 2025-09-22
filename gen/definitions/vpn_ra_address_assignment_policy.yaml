@@ -1,4 +1,6 @@
-# Manual resource - toBodyPutDelete
+# FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+# Manual resource - toBodyPutDelete, Read, Create, Update
+# Manual data source - Read
 ---
 name: VPN RA Address Assignment Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/addressassignmentsettings

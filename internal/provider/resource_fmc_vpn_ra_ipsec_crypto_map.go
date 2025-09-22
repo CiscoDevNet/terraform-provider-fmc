@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
@@ -201,8 +202,6 @@ func (r *VPNRAIPSecCryptoMapResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *VPNRAIPSecCryptoMapResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan VPNRAIPSecCryptoMap
 
@@ -220,29 +219,36 @@ func (r *VPNRAIPSecCryptoMapResource) Create(ctx context.Context, req resource.C
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: considering object interface_id %s", plan.Id, plan.InterfaceId))
 	if plan.Id.ValueString() == "" && plan.InterfaceId.ValueString() != "" {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
-			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.InterfaceId.ValueString() == v.Get("interfaceObject.id").String() {
-						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_id '%v', id: %s", plan.Id.ValueString(), plan.InterfaceId.ValueString(), plan.Id.ValueString()))
-						return false
-					}
-					return true
-				})
-			}
-			if plan.Id.ValueString() != "" || !res.Get("paging.next.0").Exists() {
+		urlPath := plan.getPath() + "?expanded=true"
+
+		// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+		var res fmc.Res
+		var err error
+		for range 5 {
+			res, err = r.client.Get(urlPath, reqMods...)
+			if err == nil {
 				break
 			}
-			offset += limit
+			if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+				break
+			}
+			time.Sleep(5 * time.Second)
+		}
+
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+			return
+		}
+
+		if value := res.Get("items"); len(value.Array()) > 0 {
+			value.ForEach(func(k, v gjson.Result) bool {
+				if plan.InterfaceId.ValueString() == v.Get("interfaceObject.id").String() {
+					plan.Id = types.StringValue(v.Get("id").String())
+					tflog.Debug(ctx, fmt.Sprintf("%s: Found object with interface_id '%v', id: %s", plan.Id.ValueString(), plan.InterfaceId.ValueString(), plan.Id.ValueString()))
+					return false
+				}
+				return true
+			})
 		}
 
 		if plan.Id.ValueString() == "" {
@@ -255,7 +261,20 @@ func (r *VPNRAIPSecCryptoMapResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := plan.toBody(ctx, VPNRAIPSecCryptoMap{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	urlPath := plan.getPath() + "/" + url.PathEscape(plan.Id.ValueString())
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = r.client.Put(urlPath, body, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -270,10 +289,6 @@ func (r *VPNRAIPSecCryptoMapResource) Create(ctx context.Context, req resource.C
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
-
-// Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *VPNRAIPSecCryptoMapResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state VPNRAIPSecCryptoMap
@@ -293,9 +308,22 @@ func (r *VPNRAIPSecCryptoMapResource) Read(ctx context.Context, req resource.Rea
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
 	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
-	res, err := r.client.Get(urlPath, reqMods...)
 
-	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = r.client.Get(urlPath, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+
+	if err != nil && strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
 		resp.State.RemoveResource(ctx)
 		return
 	} else if err != nil {
@@ -323,10 +351,6 @@ func (r *VPNRAIPSecCryptoMapResource) Read(ctx context.Context, req resource.Rea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// End of section. //template:end read
-
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *VPNRAIPSecCryptoMapResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state VPNRAIPSecCryptoMap
 
@@ -351,7 +375,20 @@ func (r *VPNRAIPSecCryptoMapResource) Update(ctx context.Context, req resource.U
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString())
+	for range 5 {
+		res, err = r.client.Put(urlPath, body, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -362,8 +399,6 @@ func (r *VPNRAIPSecCryptoMapResource) Update(ctx context.Context, req resource.U
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
@@ -410,15 +445,3 @@ func (r *VPNRAIPSecCryptoMapResource) ImportState(ctx context.Context, req resou
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

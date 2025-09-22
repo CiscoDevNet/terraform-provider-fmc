@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -33,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -129,8 +131,6 @@ func (r *VPNRACertificateMapResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
 func (r *VPNRACertificateMapResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan VPNRACertificateMap
 
@@ -147,17 +147,39 @@ func (r *VPNRACertificateMapResource) Create(ctx context.Context, req resource.C
 	}
 	//// ID needs to be retrieved from FMC, however we are expecting exactly one object
 	// Get objects from FMC
-	resId, err := r.client.Get(plan.getPath(), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
-		return
-	}
 
-	// Check if exactly one object is returned
-	val := resId.Get("items").Array()
-	if len(val) != 1 {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
-		return
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var resId, res fmc.Res
+	var err error
+	var val []gjson.Result
+	for range 5 {
+		for range 5 {
+			resId, err = r.client.Get(plan.getPath(), reqMods...)
+			if err == nil {
+				break
+			}
+			if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+				break
+			}
+			time.Sleep(5 * time.Second)
+		}
+
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+			return
+		}
+
+		// Check if exactly one object is returned
+		val = resId.Get("items").Array()
+		if len(val) == 0 {
+			time.Sleep(5 * time.Second)
+			continue
+		}
+		if len(val) != 1 {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Expected 1 object, got %d", len(val)))
+			return
+		}
+		break
 	}
 
 	// Extract ID from the object
@@ -172,7 +194,17 @@ func (r *VPNRACertificateMapResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := plan.toBody(ctx, VPNRACertificateMap{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	urlPath := plan.getPath() + "/" + url.PathEscape(plan.Id.ValueString())
+	for range 5 {
+		res, err = r.client.Put(urlPath, body, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -187,10 +219,6 @@ func (r *VPNRACertificateMapResource) Create(ctx context.Context, req resource.C
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
-
-// Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *VPNRACertificateMapResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state VPNRACertificateMap
@@ -210,7 +238,20 @@ func (r *VPNRACertificateMapResource) Read(ctx context.Context, req resource.Rea
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.String()))
 
 	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
-	res, err := r.client.Get(urlPath, reqMods...)
+
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = r.client.Get(urlPath, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
 
 	if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 		resp.State.RemoveResource(ctx)
@@ -240,10 +281,6 @@ func (r *VPNRACertificateMapResource) Read(ctx context.Context, req resource.Rea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// End of section. //template:end read
-
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *VPNRACertificateMapResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state VPNRACertificateMap
 
@@ -268,7 +305,20 @@ func (r *VPNRACertificateMapResource) Update(ctx context.Context, req resource.U
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString())
+	for range 5 {
+		res, err = r.client.Put(urlPath, body, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -279,8 +329,6 @@ func (r *VPNRACertificateMapResource) Update(ctx context.Context, req resource.U
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
@@ -333,15 +381,3 @@ func (r *VPNRACertificateMapResource) ImportState(ctx context.Context, req resou
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

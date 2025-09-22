@@ -309,13 +309,13 @@ func (r *VPNRAResource) Create(ctx context.Context, req resource.CreateRequest, 
 	plan.Id = types.StringValue(res.Get("id").String())
 	plan.fromBodyUnknowns(ctx, res)
 
+	// Wait for the FMC to process the new object and create subresources
+	time.Sleep(5 * time.Second)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
-
-	// Wait for the FMC to process the new object and create subresources
-	time.Sleep(5 * time.Second)
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
@@ -452,15 +452,3 @@ func (r *VPNRAResource) ImportState(ctx context.Context, req resource.ImportStat
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

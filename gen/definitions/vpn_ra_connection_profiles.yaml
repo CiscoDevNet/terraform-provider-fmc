@@ -1,5 +1,7 @@
-# Manual resource - createSubresources, deleteSubresources
 # FMCBUG CSCwq59124 FMC API: Multiple fields malfunction in /policy/ravpns/{containerUUID}/connectionprofiles endpoint
+# FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+# Manual resource - createSubresources, deleteSubresources, Read, Create
+# Manual data source - Read
 ---
 name: VPN RA Connection Profiles
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/connectionprofiles

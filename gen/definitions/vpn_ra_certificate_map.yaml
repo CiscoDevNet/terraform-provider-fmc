@@ -1,4 +1,7 @@
 # FMCBUG CSCwq59110 FMC API: Cannot set Default Connection Profile over API (policy/ravpns/{containerUUID}/certificatemapsettings)
+# FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+# Manual resource - Read, Create, Update
+# Manual data source - Read
 ---
 name: VPN RA Certificate Map
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/certificatemapsettings

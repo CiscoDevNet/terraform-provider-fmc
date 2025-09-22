@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
@@ -441,8 +442,6 @@ func (r *VPNRAConnectionProfilesResource) Create(ctx context.Context, req resour
 
 // End of section. //template:end create
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (r *VPNRAConnectionProfilesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state VPNRAConnectionProfiles
 
@@ -462,7 +461,20 @@ func (r *VPNRAConnectionProfilesResource) Read(ctx context.Context, req resource
 
 	// Get all objects from FMC
 	urlPath := state.getPath() + "?expanded=true"
-	res, err := r.client.Get(urlPath, reqMods...)
+
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = r.client.Get(urlPath, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") && !strings.Contains(err.Error(), "StatusCode 400") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
 		return
@@ -487,8 +499,6 @@ func (r *VPNRAConnectionProfilesResource) Read(ctx context.Context, req resource
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 

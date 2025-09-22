@@ -21,6 +21,8 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
+	"time"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -296,8 +298,6 @@ func (d *VPNRAConnectionProfilesDataSource) Configure(_ context.Context, req dat
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *VPNRAConnectionProfilesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config VPNRAConnectionProfiles
 
@@ -318,7 +318,21 @@ func (d *VPNRAConnectionProfilesDataSource) Read(ctx context.Context, req dataso
 
 	// Get all objects from FMC
 	urlPath := config.getPath() + "?expanded=true"
-	res, err := d.client.Get(urlPath, reqMods...)
+
+	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+	var res fmc.Res
+	var err error
+	for range 5 {
+		res, err = d.client.Get(urlPath, reqMods...)
+		if err == nil {
+			break
+		}
+		if !strings.Contains(err.Error(), "StatusCode 404") {
+			break
+		}
+		time.Sleep(5 * time.Second)
+	}
+
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
@@ -331,5 +345,3 @@ func (d *VPNRAConnectionProfilesDataSource) Read(ctx context.Context, req dataso
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read
