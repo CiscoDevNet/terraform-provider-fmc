@@ -28,7 +28,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -461,10 +460,8 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 		return state, diags
 	}
 
-	// Get FMC version from the client
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteNetworkGroups) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteNetworkGroups) {
 		// Traverse delSeq in reverse order, so that any parent comes before its children.
 		for i := len(delSeq) - 1; i >= 0; i-- {
 			gn := delSeq[i].name

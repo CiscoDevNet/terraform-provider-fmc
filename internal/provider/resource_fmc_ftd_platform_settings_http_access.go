@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -166,11 +165,9 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Configure(_ context.Context, req
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access creation, minumum required version is 7.7", r.client.FMCVersion))
 		return
 	}
@@ -235,11 +232,8 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Create(ctx context.Context, req 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *FTDPlatformSettingsHTTPAccessResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionFTDPlatformSettingsHTTPAccess) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings HTTP Access, minimum required version is 7.7", r.client.FMCVersion))
 		return
 	}

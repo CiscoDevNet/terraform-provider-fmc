@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -460,11 +459,8 @@ func (r *ASPathsResource) ImportState(ctx context.Context, req resource.ImportSt
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *ASPathsResource) createSubresources(ctx context.Context, state, plan ASPaths, reqMods ...func(*fmc.Req)) (ASPaths, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateASPaths) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateASPaths) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (AS Paths)", state.Id.ValueString()))
 		var tmpObject ASPaths
 		tmpObject.Items = make(map[string]ASPathsItems, 1)
@@ -545,11 +541,8 @@ func (r *ASPathsResource) createSubresources(ctx context.Context, state, plan AS
 func (r *ASPathsResource) deleteSubresources(ctx context.Context, state, plan ASPaths, reqMods ...func(*fmc.Req)) (ASPaths, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteASPaths) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteASPaths) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (AS Paths)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

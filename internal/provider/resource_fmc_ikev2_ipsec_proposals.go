@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -462,11 +461,8 @@ func (r *IKEv2IPsecProposalsResource) ImportState(ctx context.Context, req resou
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IKEv2IPsecProposalsResource) createSubresources(ctx context.Context, state, plan IKEv2IPsecProposals, reqMods ...func(*fmc.Req)) (IKEv2IPsecProposals, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateIKEv2IPsecProposals) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIKEv2IPsecProposals) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IKEv2 IPsec Proposals)", state.Id.ValueString()))
 		var tmpObject IKEv2IPsecProposals
 		tmpObject.Items = make(map[string]IKEv2IPsecProposalsItems, 1)
@@ -545,11 +541,8 @@ func (r *IKEv2IPsecProposalsResource) createSubresources(ctx context.Context, st
 func (r *IKEv2IPsecProposalsResource) deleteSubresources(ctx context.Context, state, plan IKEv2IPsecProposals, reqMods ...func(*fmc.Req)) (IKEv2IPsecProposals, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteIKEv2IPsecProposals) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIKEv2IPsecProposals) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IKEv2 IPsec Proposals)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

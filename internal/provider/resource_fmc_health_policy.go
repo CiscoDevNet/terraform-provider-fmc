@@ -64,7 +64,7 @@ func (r *HealthPolicyResource) Metadata(ctx context.Context, req resource.Metada
 func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will be created with its default settings.\n Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Health Policy.\n Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.\n Any not configured health module will be created with its default settings.\n Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -249,6 +249,12 @@ func (r *HealthPolicyResource) Configure(_ context.Context, req resource.Configu
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *HealthPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionHealthPolicy) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Health Policy creation, minumum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var plan HealthPolicy
 
 	// Read plan
@@ -288,6 +294,11 @@ func (r *HealthPolicyResource) Create(ctx context.Context, req resource.CreateRe
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *HealthPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionHealthPolicy) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Health Policy, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state HealthPolicy
 
 	// Read state

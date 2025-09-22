@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -519,11 +518,8 @@ func (r *ApplicationFiltersResource) ImportState(ctx context.Context, req resour
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *ApplicationFiltersResource) createSubresources(ctx context.Context, state, plan ApplicationFilters, reqMods ...func(*fmc.Req)) (ApplicationFilters, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateApplicationFilters) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateApplicationFilters) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (Application Filters)", state.Id.ValueString()))
 		var tmpObject ApplicationFilters
 		tmpObject.Items = make(map[string]ApplicationFiltersItems, 1)
@@ -602,11 +598,8 @@ func (r *ApplicationFiltersResource) createSubresources(ctx context.Context, sta
 func (r *ApplicationFiltersResource) deleteSubresources(ctx context.Context, state, plan ApplicationFilters, reqMods ...func(*fmc.Req)) (ApplicationFilters, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteApplicationFilters) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteApplicationFilters) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Application Filters)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

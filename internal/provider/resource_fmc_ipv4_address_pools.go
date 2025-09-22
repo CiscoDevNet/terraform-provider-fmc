@@ -450,11 +450,8 @@ func (r *IPv4AddressPoolsResource) ImportState(ctx context.Context, req resource
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state, plan IPv4AddressPools, reqMods ...func(*fmc.Req)) (IPv4AddressPools, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateIPv4AddressPools) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIPv4AddressPools) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IPv4 Address Pools)", state.Id.ValueString()))
 		var tmpObject IPv4AddressPools
 		tmpObject.Items = make(map[string]IPv4AddressPoolsItems, 1)
@@ -464,7 +461,7 @@ func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state
 			body := tmpObject.toBodyNonBulk(ctx, state)
 
 			// If FMC version is lower than 7.4, drop addressType
-			if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+			if r.client.FMCVersionParsed.LessThan(version.Must(version.NewVersion("7.4"))) {
 				body, _ = sjson.Delete(body, "addressType")
 			}
 
@@ -537,11 +534,8 @@ func (r *IPv4AddressPoolsResource) createSubresources(ctx context.Context, state
 func (r *IPv4AddressPoolsResource) deleteSubresources(ctx context.Context, state, plan IPv4AddressPools, reqMods ...func(*fmc.Req)) (IPv4AddressPools, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteIPv4AddressPools) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIPv4AddressPools) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IPv4 Address Pools)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted
@@ -625,8 +619,7 @@ func (r *IPv4AddressPoolsResource) updateSubresources(ctx context.Context, state
 		body := tmpObject.toBodyNonBulk(ctx, state)
 
 		// If FMC version is lower than 7.4, drop addressType
-		fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-		if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+		if r.client.FMCVersionParsed.LessThan(version.Must(version.NewVersion("7.4"))) {
 			body, _ = sjson.Delete(body, "addressType")
 		}
 

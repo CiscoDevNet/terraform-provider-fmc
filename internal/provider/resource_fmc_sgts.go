@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -132,11 +131,9 @@ func (r *SGTsResource) Configure(_ context.Context, req resource.ConfigureReques
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *SGTsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateSGTs) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateSGTs) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support SGTs creation, minumum required version is 7.4", r.client.FMCVersion))
 		return
 	}
@@ -451,11 +448,8 @@ func (r *SGTsResource) ImportState(ctx context.Context, req resource.ImportState
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *SGTsResource) createSubresources(ctx context.Context, state, plan SGTs, reqMods ...func(*fmc.Req)) (SGTs, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateSGTs) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateSGTs) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (SGTs)", state.Id.ValueString()))
 		var tmpObject SGTs
 		tmpObject.Items = make(map[string]SGTsItems, 1)
@@ -534,11 +528,8 @@ func (r *SGTsResource) createSubresources(ctx context.Context, state, plan SGTs,
 func (r *SGTsResource) deleteSubresources(ctx context.Context, state, plan SGTs, reqMods ...func(*fmc.Req)) (SGTs, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteSGTs) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteSGTs) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (SGTs)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

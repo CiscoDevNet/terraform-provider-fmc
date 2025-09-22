@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -471,11 +470,8 @@ func (r *IPv4PrefixListsResource) ImportState(ctx context.Context, req resource.
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IPv4PrefixListsResource) createSubresources(ctx context.Context, state, plan IPv4PrefixLists, reqMods ...func(*fmc.Req)) (IPv4PrefixLists, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateIPv4PrefixLists) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIPv4PrefixLists) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IPv4 Prefix Lists)", state.Id.ValueString()))
 		var tmpObject IPv4PrefixLists
 		tmpObject.Items = make(map[string]IPv4PrefixListsItems, 1)
@@ -556,11 +552,8 @@ func (r *IPv4PrefixListsResource) createSubresources(ctx context.Context, state,
 func (r *IPv4PrefixListsResource) deleteSubresources(ctx context.Context, state, plan IPv4PrefixLists, reqMods ...func(*fmc.Req)) (IPv4PrefixLists, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteIPv4PrefixLists) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIPv4PrefixLists) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IPv4 Prefix Lists)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

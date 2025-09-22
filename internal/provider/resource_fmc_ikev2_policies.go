@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -497,11 +496,8 @@ func (r *IKEv2PoliciesResource) ImportState(ctx context.Context, req resource.Im
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *IKEv2PoliciesResource) createSubresources(ctx context.Context, state, plan IKEv2Policies, reqMods ...func(*fmc.Req)) (IKEv2Policies, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateIKEv2Policies) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIKEv2Policies) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IKEv2 Policies)", state.Id.ValueString()))
 		var tmpObject IKEv2Policies
 		tmpObject.Items = make(map[string]IKEv2PoliciesItems, 1)
@@ -580,11 +576,8 @@ func (r *IKEv2PoliciesResource) createSubresources(ctx context.Context, state, p
 func (r *IKEv2PoliciesResource) deleteSubresources(ctx context.Context, state, plan IKEv2Policies, reqMods ...func(*fmc.Req)) (IKEv2Policies, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteIKEv2Policies) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIKEv2Policies) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IKEv2 Policies)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

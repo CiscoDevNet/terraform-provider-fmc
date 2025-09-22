@@ -141,8 +141,7 @@ func (r *IPv4AddressPoolResource) Create(ctx context.Context, req resource.Creat
 	body := plan.toBody(ctx, IPv4AddressPool{})
 
 	// If FMC version is lower than 7.4, drop addressType
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-	if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+	if r.client.FMCVersionParsed.LessThan(version.Must(version.NewVersion("7.4"))) {
 		body, _ = sjson.Delete(body, "addressType")
 	}
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -239,8 +238,7 @@ func (r *IPv4AddressPoolResource) Update(ctx context.Context, req resource.Updat
 	body := plan.toBody(ctx, state)
 
 	// If FMC version is lower than 7.4, drop addressType
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-	if fmcVersion.LessThan(version.Must(version.NewVersion("7.4"))) {
+	if r.client.FMCVersionParsed.LessThan(version.Must(version.NewVersion("7.4"))) {
 		body, _ = sjson.Delete(body, "addressType")
 	}
 

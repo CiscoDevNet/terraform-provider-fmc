@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -485,11 +484,8 @@ func (r *TunnelZonesResource) createSubresources(ctx context.Context, state, pla
 func (r *TunnelZonesResource) deleteSubresources(ctx context.Context, state, plan TunnelZones, reqMods ...func(*fmc.Req)) (TunnelZones, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteTunnelZones) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteTunnelZones) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Tunnel Zones)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

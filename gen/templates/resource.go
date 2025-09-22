@@ -530,11 +530,9 @@ func (r *{{camelCase .Name}}Resource) Configure(_ context.Context, req resource.
 
 func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	{{- if or .MinimumVersion .MinimumVersionCreate}}
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersion{{if .MinimumVersionCreate}}Create{{end}}{{camelCase .Name}}) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersion{{if .MinimumVersionCreate}}Create{{end}}{{camelCase .Name}}) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support {{.Name}} creation, minumum required version is {{if .MinimumVersionCreate}}{{.MinimumVersionCreate}}{{else}}{{.MinimumVersion}}{{end}}", r.client.FMCVersion))
 		return
 	}
@@ -693,11 +691,8 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 
 func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	{{- if .MinimumVersion}}
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersion{{camelCase .Name}}) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersion{{camelCase .Name}}) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support {{.Name}}, minimum required version is {{.MinimumVersion}}", r.client.FMCVersion))
 		return
 	}
@@ -1113,11 +1108,8 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 // We want to save the state after each create event, to be able track already created resources
 func (r *{{camelCase .Name}}Resource) createSubresources(ctx context.Context, state, plan {{camelCase .Name}}, reqMods ...func(*fmc.Req)) ({{camelCase .Name}}, diag.Diagnostics) {	
 	{{- if .MinimumVersionBulkCreate}}
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreate{{camelCase .Name}}) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreate{{camelCase .Name}}) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode ({{.Name}})", state.Id.ValueString()))
 		var tmpObject {{camelCase .Name}}
 		tmpObject.Items = make(map[string]{{camelCase .Name}}Items, 1)
@@ -1209,12 +1201,9 @@ func (r *{{camelCase .Name}}Resource) deleteSubresources(ctx context.Context, st
 	objectsToRemove := plan.Clone()
 	
 	{{- if .MinimumVersionBulkDelete}}
-	
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDelete{{camelCase .Name}}) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDelete{{camelCase .Name}}) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode ({{.Name}})", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

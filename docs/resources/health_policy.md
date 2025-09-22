@@ -7,6 +7,8 @@ description: |-
   Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
   Any not configured health module will be created with its default settings.
   Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_health_policy (Resource)
@@ -15,6 +17,9 @@ This resource manages a Health Policy.
  Due to bug in certain FMC versions, updates are not supported; to change a policy, delete and recreate it.
  Any not configured health module will be created with its default settings.
  Only one ManagementCenterPolicy Health Policy can exist. Due to unability to update policies, ManagementCenterPolicy is not supported.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

@@ -25,7 +25,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -118,11 +117,9 @@ func (r *SecurityIntelligenceURLFeedResource) Configure(_ context.Context, req r
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *SecurityIntelligenceURLFeedResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateSecurityIntelligenceURLFeed) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateSecurityIntelligenceURLFeed) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Security Intelligence URL Feed creation, minumum required version is 7.4", r.client.FMCVersion))
 		return
 	}

@@ -29,7 +29,6 @@ import (
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
-	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -132,11 +131,9 @@ func (r *ResourceProfilesResource) Configure(_ context.Context, req resource.Con
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *ResourceProfilesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersionCreateResourceProfiles) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateResourceProfiles) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Resource Profiles creation, minumum required version is 7.4", r.client.FMCVersion))
 		return
 	}
@@ -451,11 +448,8 @@ func (r *ResourceProfilesResource) ImportState(ctx context.Context, req resource
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
 func (r *ResourceProfilesResource) createSubresources(ctx context.Context, state, plan ResourceProfiles, reqMods ...func(*fmc.Req)) (ResourceProfiles, diag.Diagnostics) {
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk creates
-	if fmcVersion.LessThan(minFMCVersionBulkCreateResourceProfiles) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateResourceProfiles) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (Resource Profiles)", state.Id.ValueString()))
 		var tmpObject ResourceProfiles
 		tmpObject.Items = make(map[string]ResourceProfilesItems, 1)
@@ -534,11 +528,8 @@ func (r *ResourceProfilesResource) createSubresources(ctx context.Context, state
 func (r *ResourceProfilesResource) deleteSubresources(ctx context.Context, state, plan ResourceProfiles, reqMods ...func(*fmc.Req)) (ResourceProfiles, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
-	// Get FMC version from the clinet
-	fmcVersion, _ := version.NewVersion(strings.Split(r.client.FMCVersion, " ")[0])
-
 	// Check if FMC version supports bulk deletes
-	if fmcVersion.LessThan(minFMCVersionBulkDeleteResourceProfiles) {
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteResourceProfiles) {
 		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (Resource Profiles)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted

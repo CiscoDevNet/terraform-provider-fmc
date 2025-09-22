@@ -207,11 +207,9 @@ func (d *{{camelCase .Name}}DataSource) Configure(_ context.Context, req datasou
 
 func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	{{- if .MinimumVersion}}
-	// Get FMC version
-	fmcVersion, _ := version.NewVersion(strings.Split(d.client.FMCVersion, " ")[0])
 
 	// Check if FMC client is connected to supports this object
-	if fmcVersion.LessThan(minFMCVersion{{camelCase .Name}}) {
+	if d.client.FMCVersionParsed.LessThan(minFMCVersion{{camelCase .Name}}) {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support {{.Name}}, minimum required version is {{.MinimumVersion}}", d.client.FMCVersion))
 		return
 	}

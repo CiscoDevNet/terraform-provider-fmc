@@ -4,11 +4,16 @@ page_title: "fmc_health_policy Data Source - terraform-provider-fmc"
 subcategory: "Policies"
 description: |-
   This data source reads the Health Policy.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_health_policy (Data Source)
 
 This data source reads the Health Policy.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
