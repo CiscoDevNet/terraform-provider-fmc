@@ -273,14 +273,6 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 		}
 	}
 
-	if !plan.HealthPolicyId.IsNull() {
-		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
-		resp.Diagnostics.Append(diags...)
-		if resp.Diagnostics.HasError() {
-			return
-		}
-	}
-
 	// Let long-running deployment finish because it enables DELETE verb. Our tests really expect that.
 	for i := time.Duration(0); i < 10*time.Minute; i += atom {
 		res, err = r.client.Get(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), reqMods...)
@@ -292,6 +284,16 @@ func (r *DeviceResource) Create(ctx context.Context, req resource.CreateRequest,
 			break // access policy fully deployed
 		}
 		time.Sleep(atom)
+	}
+
+	// On device registration, default health policy is auto assigned. We are waiting till that is finished. (see loop above)
+	// Health policy assignment triggers automatic deployment.
+	if !plan.HealthPolicyId.IsNull() {
+		diags = r.updatePolicy(ctx, plan.Id.ValueString(), "Device", path.Root("health_policy_id"), req.Plan, resp.State, reqMods...)
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	plan.fromBodyUnknowns(ctx, res)

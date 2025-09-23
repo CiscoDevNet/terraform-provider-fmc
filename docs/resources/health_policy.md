@@ -31,9 +31,10 @@ resource "fmc_health_policy" "example" {
   is_default_policy = false
   health_modules = [
     {
-      module_id = "hm_asp_drop"
-      enabled   = true
-      alert_config = [
+      name    = "hm_asp_drop"
+      enabled = true
+      type    = "FTD"
+      alert_configs = [
         {
           name    = "nat-xlate-failed"
           enabled = true
@@ -78,53 +79,56 @@ resource "fmc_health_policy" "example" {
 
 Required:
 
-- `module_id` (String) Name of the health module.
+- `name` (String) Name of the health module.
   - Choices: `hm_disk_status`, `hm_asp_drop`, `hm_tds`, `hm_db`, `hm_conn_status_sse`, `hm_is5800_powersupply`, `hm_card_reset`, `hm_ntp_server`, `hm_threat_grid_amp`, `hm_ftd_ha`, `hm_talosagent`, `hm_conn_status_amp`, `hm_snort_stats`, `hm_critical_process`, `hm_fsic`, `hm_ftd_csdac_identity_services`, `hm_deployed_configuration`, `hm_ftd_config_resource`, `hm_routing_stats`, `hm_vpn_stats`, `hm_snortstats`, `hm_is5800_alarm`, `hm_cluster`, `hm_bypass`, `hm_mu`, `hm_reconfig_detection`, `hm_xTLS`, `hm_pathmonitoring`, `hm_cpu`, `hm_process`, `hm_simu`, `hm_fmcaccess_config_change`, `hm_linkstate_propagation`, `hm_adv_snort_stats`, `hm_sdwan`, `hm_static_analysis`, `hm_chm`, `hm_platform_faults`, `hm_conn_stats`, `hm_fxos_health`, `hm_chassis_status_ftd`, `hm_du`, `hm_ifconfig`, `hm_flow_offload`, `hm_inlinelink_alarm`
+- `type` (String) Type of health module.
+  - Choices: `FTD`, `FMC_FTD`, `SENSOR`, `FMC`
 
 Optional:
 
-- `alert_config` (Attributes List) Alert configuration for health module. (see [below for nested schema](#nestedatt--health_modules--alert_config))
+- `alert_configs` (Attributes List) Alert configuration for health module. (see [below for nested schema](#nestedatt--health_modules--alert_configs))
 - `alert_severity` (String) Severity of health module alert.
   - Choices: `Critical`, `Major`, `Warning`, `Minor`, `Info`
 - `critical_threshold` (Number) Critical threshold value for health module.
   - Range: `1`-`99`
-- `custom_threshold` (Attributes List) Custom threshold configuration for health module. (see [below for nested schema](#nestedatt--health_modules--custom_threshold))
+- `custom_thresholds` (Attributes List) Custom threshold configuration for health module. (see [below for nested schema](#nestedatt--health_modules--custom_thresholds))
 - `enabled` (Boolean) Enable health module.
-- `type` (String) Type of health module.
-  - Choices: `FTD`, `FMC_FTD`, `SENSOR`, `FMC`
 - `warning_threshold` (Number) Warning threshold value for health module.
   - Range: `1`-`99`
 
-<a id="nestedatt--health_modules--alert_config"></a>
-### Nested Schema for `health_modules.alert_config`
+<a id="nestedatt--health_modules--alert_configs"></a>
+### Nested Schema for `health_modules.alert_configs`
 
-Optional:
+Required:
 
 - `enabled` (Boolean) Enable alert configuration.
 - `name` (String) Name of the alert configuration.
-- `thresholds` (Attributes List) Thresholds for alert configuration. (see [below for nested schema](#nestedatt--health_modules--alert_config--thresholds))
-
-<a id="nestedatt--health_modules--alert_config--thresholds"></a>
-### Nested Schema for `health_modules.alert_config.thresholds`
 
 Optional:
 
+- `thresholds` (Attributes List) Thresholds for alert configuration. (see [below for nested schema](#nestedatt--health_modules--alert_configs--thresholds))
+
+<a id="nestedatt--health_modules--alert_configs--thresholds"></a>
+### Nested Schema for `health_modules.alert_configs.thresholds`
+
+Required:
+
+- `threshold` (Number) Threshold level.
+  - Range: `1`-`99`
 - `type` (String) Type of threshold.
   - Choices: `red`, `yellow`
-- `value` (Number) Value of threshold.
+
+
+
+<a id="nestedatt--health_modules--custom_thresholds"></a>
+### Nested Schema for `health_modules.custom_thresholds`
+
+Required:
+
+- `threshold` (Number) Threshold level.
   - Range: `1`-`99`
-
-
-
-<a id="nestedatt--health_modules--custom_threshold"></a>
-### Nested Schema for `health_modules.custom_threshold`
-
-Optional:
-
 - `type` (String) Type of custom threshold.
   - Choices: `Red-FC`, `Yellow-FC`
-- `value` (Number) Value of custom threshold.
-  - Range: `1`-`99`
 
 ## Import
 

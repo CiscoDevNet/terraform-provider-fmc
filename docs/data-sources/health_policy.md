@@ -47,38 +47,38 @@ data "fmc_health_policy" "example" {
 
 Read-Only:
 
-- `alert_config` (Attributes List) Alert configuration for health module. (see [below for nested schema](#nestedatt--health_modules--alert_config))
+- `alert_configs` (Attributes List) Alert configuration for health module. (see [below for nested schema](#nestedatt--health_modules--alert_configs))
 - `alert_severity` (String) Severity of health module alert.
 - `critical_threshold` (Number) Critical threshold value for health module.
-- `custom_threshold` (Attributes List) Custom threshold configuration for health module. (see [below for nested schema](#nestedatt--health_modules--custom_threshold))
+- `custom_thresholds` (Attributes List) Custom threshold configuration for health module. (see [below for nested schema](#nestedatt--health_modules--custom_thresholds))
 - `enabled` (Boolean) Enable health module.
-- `module_id` (String) Name of the health module.
+- `name` (String) Name of the health module.
 - `type` (String) Type of health module.
 - `warning_threshold` (Number) Warning threshold value for health module.
 
-<a id="nestedatt--health_modules--alert_config"></a>
-### Nested Schema for `health_modules.alert_config`
+<a id="nestedatt--health_modules--alert_configs"></a>
+### Nested Schema for `health_modules.alert_configs`
 
 Read-Only:
 
 - `enabled` (Boolean) Enable alert configuration.
 - `name` (String) Name of the alert configuration.
-- `thresholds` (Attributes List) Thresholds for alert configuration. (see [below for nested schema](#nestedatt--health_modules--alert_config--thresholds))
+- `thresholds` (Attributes List) Thresholds for alert configuration. (see [below for nested schema](#nestedatt--health_modules--alert_configs--thresholds))
 
-<a id="nestedatt--health_modules--alert_config--thresholds"></a>
-### Nested Schema for `health_modules.alert_config.thresholds`
+<a id="nestedatt--health_modules--alert_configs--thresholds"></a>
+### Nested Schema for `health_modules.alert_configs.thresholds`
 
 Read-Only:
 
+- `threshold` (Number) Threshold level.
 - `type` (String) Type of threshold.
-- `value` (Number) Value of threshold.
 
 
 
-<a id="nestedatt--health_modules--custom_threshold"></a>
-### Nested Schema for `health_modules.custom_threshold`
+<a id="nestedatt--health_modules--custom_thresholds"></a>
+### Nested Schema for `health_modules.custom_thresholds`
 
 Read-Only:
 
+- `threshold` (Number) Threshold level.
 - `type` (String) Type of custom threshold.
-- `value` (Number) Value of custom threshold.

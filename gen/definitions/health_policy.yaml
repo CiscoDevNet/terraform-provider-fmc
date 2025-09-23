@@ -51,6 +51,7 @@ attributes:
     exclude_test: true
     attributes:
       - model_name: moduleId
+        tf_name: name
         type: String
         description: Name of the health module.
         enum_values: [hm_disk_status, hm_asp_drop, hm_tds, hm_db, hm_conn_status_sse, hm_is5800_powersupply, hm_card_reset, hm_ntp_server, hm_threat_grid_amp, hm_ftd_ha, hm_talosagent, hm_conn_status_amp, hm_snort_stats, hm_critical_process, hm_fsic, hm_ftd_csdac_identity_services, hm_deployed_configuration, hm_ftd_config_resource, hm_routing_stats, hm_vpn_stats, hm_snortstats, hm_is5800_alarm, hm_cluster, hm_bypass, hm_mu, hm_reconfig_detection, hm_xTLS, hm_pathmonitoring, hm_cpu, hm_process, hm_simu, hm_fmcaccess_config_change, hm_linkstate_propagation, hm_adv_snort_stats, hm_sdwan, hm_static_analysis, hm_chm, hm_platform_faults, hm_conn_stats, hm_fxos_health, hm_chassis_status_ftd, hm_du, hm_ifconfig, hm_flow_offload, hm_inlinelink_alarm]
@@ -65,8 +66,8 @@ attributes:
         type: String
         description: Type of health module.
         enum_values: [FTD, FMC_FTD, SENSOR, FMC]
-        exclude_example: true
-        exclude_test: true
+        mandatory: true
+        example: FTD
       # - model_name: alertEnabled
       #   type: Bool
       #   description: Enable alert for health module.
@@ -92,7 +93,7 @@ attributes:
         max_int: 99
         exclude_example: true
         exclude_test: true
-      - model_name: customThreshold
+      - model_name: customThresholds
         type: List
         description: Custom threshold configuration for health module.
         exclude_example: true
@@ -102,12 +103,17 @@ attributes:
             type: String
             enum_values: [Red-FC, Yellow-FC]
             description: Type of custom threshold.
+            mandatory: true
+            id: true
           - model_name: value
+            tf_name: threshold
             type: Int64
-            description: Value of custom threshold.
+            description: Threshold level.
+            mandatory: true
             min_int: 1
             max_int: 99
       - model_name: alertConfig
+        tf_name: alert_configs
         type: List
         description: Alert configuration for health module.
         attributes:
@@ -115,10 +121,12 @@ attributes:
             type: String
             description: Name of the alert configuration.
             example: nat-xlate-failed
+            mandatory: true
           - model_name: enabled
             type: Bool
             description: Enable alert configuration.
             example: true
+            mandatory: true
           - model_name: thresholds
             type: List
             description: Thresholds for alert configuration.
@@ -129,11 +137,15 @@ attributes:
                 type: String
                 enum_values: [red, yellow]
                 description: Type of threshold.
+                mandatory: true
+                id: true
               - model_name: value
+                tf_name: threshold
                 type: Int64
-                description: Value of threshold.
+                description: Threshold level.
                 min_int: 1
                 max_int: 99
+                mandatory: true
 
   # Settings
   - model_name: alertEvaluationInterval
