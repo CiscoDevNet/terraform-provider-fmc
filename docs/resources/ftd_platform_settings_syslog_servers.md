@@ -24,7 +24,7 @@ resource "fmc_ftd_platform_settings_syslog_servers" "example" {
   message_queue_size                                = 512
   syslog_servers = [
     {
-      ip_object_id             = "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"
+      network_object_id        = "c1a0f5b6-3d4e-11b2-9f8f-0242ac112345"
       protocol                 = "TCP"
       port                     = 1470
       secure_syslog            = true
@@ -68,7 +68,7 @@ resource "fmc_ftd_platform_settings_syslog_servers" "example" {
 
 Required:
 
-- `ip_object_id` (String) Id of host object representing the IP address of the syslog server.
+- `network_object_id` (String) Id of host object representing the IP address of the syslog server.
 
 Optional:
 

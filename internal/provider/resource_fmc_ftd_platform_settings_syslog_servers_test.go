@@ -85,7 +85,7 @@ func testAccFmcFTDPlatformSettingsSyslogServersConfig_all() string {
 	config += `	allow_user_traffic_when_tcp_syslog_server_is_down = true` + "\n"
 	config += `	message_queue_size = 512` + "\n"
 	config += `	syslog_servers = [{` + "\n"
-	config += `		ip_object_id = fmc_host.test.id` + "\n"
+	config += `		network_object_id = fmc_host.test.id` + "\n"
 	config += `		protocol = "TCP"` + "\n"
 	config += `		port = 1470` + "\n"
 	config += `		secure_syslog = true` + "\n"

@@ -31,21 +31,21 @@ import (
 func TestAccDataSourceFmcFTDPlatformSettingsSNMP(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_snmp.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "enable_snmp_server", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "system_administrator_name", "admin"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_server", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "system_administrator", "admin"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "location", "Data Center 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_server_port", "161"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.snmp_version", "SNMPv3"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.username", "snmpuser1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.poll", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.trap", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.trap_port", "162"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmp_management_hosts.0.use_management_interface", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.snmp_version", "SNMPv3"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.username", "snmpuser1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.poll", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.trap", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.trap_port", "162"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "management_hosts.0.use_management_interface", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.security_level", "Priv"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.username", "snmpuser1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.password_type", "Clear"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.authentication_algorithm_type", "SHA256"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.encryption_type", "AES256"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.authentication_algorithm", "SHA256"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "snmpv3_users.0.encryption_algorithm", "AES256"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_syslog", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_authentication", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_link_up", "true"))
@@ -57,13 +57,13 @@ func TestAccDataSourceFmcFTDPlatformSettingsSNMP(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_configuration_change", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_connection_limit_reached", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_nat_packet_discard", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising_threshold", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising_threshold_value", "70"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising_threshold_interval", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_memory_rising_threshold", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_memory_rising_threshold_value", "70"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_failover", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cluster", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising_threshold", "70"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cpu_rising_interval", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_memory_rising", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_memory_rising_threshold", "70"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_failover_state", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_cluster_state", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_snmp.test", "trap_peer_flap", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -105,13 +105,13 @@ resource "fmc_security_zone" "test" {
 func testAccDataSourceFmcFTDPlatformSettingsSNMPConfig() string {
 	config := `resource "fmc_ftd_platform_settings_snmp" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	enable_snmp_server = true` + "\n"
-	config += `	read_community_string = "public"` + "\n"
-	config += `	system_administrator_name = "admin"` + "\n"
+	config += `	snmp_server = true` + "\n"
+	config += `	read_community = "public"` + "\n"
+	config += `	system_administrator = "admin"` + "\n"
 	config += `	location = "Data Center 1"` + "\n"
 	config += `	snmp_server_port = 161` + "\n"
-	config += `	snmp_management_hosts = [{` + "\n"
-	config += `		ip_object_id = fmc_host.test.id` + "\n"
+	config += `	management_hosts = [{` + "\n"
+	config += `		network_object_id = fmc_host.test.id` + "\n"
 	config += `		snmp_version = "SNMPv3"` + "\n"
 	config += `		username = "snmpuser1"` + "\n"
 	config += `		poll = true` + "\n"
@@ -128,9 +128,9 @@ func testAccDataSourceFmcFTDPlatformSettingsSNMPConfig() string {
 	config += `		security_level = "Priv"` + "\n"
 	config += `		username = "snmpuser1"` + "\n"
 	config += `		password_type = "Clear"` + "\n"
-	config += `		authentication_algorithm_type = "SHA256"` + "\n"
+	config += `		authentication_algorithm = "SHA256"` + "\n"
 	config += `		authentication_password = "MyAuthPassword123"` + "\n"
-	config += `		encryption_type = "AES256"` + "\n"
+	config += `		encryption_algorithm = "AES256"` + "\n"
 	config += `		encryption_password = "MyEncryptionPassword123"` + "\n"
 	config += `	}]` + "\n"
 	config += `	trap_syslog = true` + "\n"
@@ -144,13 +144,13 @@ func testAccDataSourceFmcFTDPlatformSettingsSNMPConfig() string {
 	config += `	trap_configuration_change = true` + "\n"
 	config += `	trap_connection_limit_reached = true` + "\n"
 	config += `	trap_nat_packet_discard = true` + "\n"
-	config += `	trap_cpu_rising_threshold = true` + "\n"
-	config += `	trap_cpu_rising_threshold_value = 70` + "\n"
-	config += `	trap_cpu_rising_threshold_interval = 1` + "\n"
-	config += `	trap_memory_rising_threshold = true` + "\n"
-	config += `	trap_memory_rising_threshold_value = 70` + "\n"
-	config += `	trap_failover = true` + "\n"
-	config += `	trap_cluster = true` + "\n"
+	config += `	trap_cpu_rising = true` + "\n"
+	config += `	trap_cpu_rising_threshold = 70` + "\n"
+	config += `	trap_cpu_rising_interval = 1` + "\n"
+	config += `	trap_memory_rising = true` + "\n"
+	config += `	trap_memory_rising_threshold = 70` + "\n"
+	config += `	trap_failover_state = true` + "\n"
+	config += `	trap_cluster_state = true` + "\n"
 	config += `	trap_peer_flap = true` + "\n"
 	config += `}` + "\n"
 

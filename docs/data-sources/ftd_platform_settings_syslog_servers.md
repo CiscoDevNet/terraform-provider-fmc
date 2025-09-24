@@ -51,7 +51,7 @@ Read-Only:
 - `emblem_format` (Boolean) (UDP only) Log messages in EMBLEM format.
 - `interface_literals` (Set of String) List of interface literals to reach syslog server.
 - `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach syslog server. (see [below for nested schema](#nestedatt--syslog_servers--interface_objects))
-- `ip_object_id` (String) Id of host object representing the IP address of the syslog server.
+- `network_object_id` (String) Id of host object representing the IP address of the syslog server.
 - `port` (Number) Port number used to send syslog messages to the server.
 - `protocol` (String) Protocol used to send syslog messages to the server.
 - `secure_syslog` (Boolean) (TCP only) Use TLS to secure syslog messages sent to the server.

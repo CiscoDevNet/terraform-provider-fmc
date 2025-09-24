@@ -47,7 +47,7 @@ type FTDPlatformSettingsSyslogServers struct {
 }
 
 type FTDPlatformSettingsSyslogServersSyslogServers struct {
-	IpObjectId             types.String                                                    `tfsdk:"ip_object_id"`
+	NetworkObjectId        types.String                                                    `tfsdk:"network_object_id"`
 	Protocol               types.String                                                    `tfsdk:"protocol"`
 	Port                   types.Int64                                                     `tfsdk:"port"`
 	EmblemFormat           types.Bool                                                      `tfsdk:"emblem_format"`
@@ -95,8 +95,8 @@ func (data FTDPlatformSettingsSyslogServers) toBody(ctx context.Context, state F
 		body, _ = sjson.Set(body, "servers", []any{})
 		for _, item := range data.SyslogServers {
 			itemBody := ""
-			if !item.IpObjectId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipAddress.object.id", item.IpObjectId.ValueString())
+			if !item.NetworkObjectId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress.object.id", item.NetworkObjectId.ValueString())
 			}
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol", item.Protocol.ValueString())
@@ -166,9 +166,9 @@ func (data *FTDPlatformSettingsSyslogServers) fromBody(ctx context.Context, res 
 			parent := &data
 			data := FTDPlatformSettingsSyslogServersSyslogServers{}
 			if value := res.Get("ipAddress.object.id"); value.Exists() {
-				data.IpObjectId = types.StringValue(value.String())
+				data.NetworkObjectId = types.StringValue(value.String())
 			} else {
-				data.IpObjectId = types.StringNull()
+				data.NetworkObjectId = types.StringNull()
 			}
 			if value := res.Get("protocol"); value.Exists() {
 				data.Protocol = types.StringValue(value.String())
@@ -256,7 +256,7 @@ func (data *FTDPlatformSettingsSyslogServers) fromBodyPartial(ctx context.Contex
 	}
 	for i := 0; i < len(data.SyslogServers); i++ {
 		keys := [...]string{"ipAddress.object.id"}
-		keyValues := [...]string{data.SyslogServers[i].IpObjectId.ValueString()}
+		keyValues := [...]string{data.SyslogServers[i].NetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).SyslogServers[i]
@@ -290,10 +290,10 @@ func (data *FTDPlatformSettingsSyslogServers) fromBodyPartial(ctx context.Contex
 
 			continue
 		}
-		if value := res.Get("ipAddress.object.id"); value.Exists() && !data.IpObjectId.IsNull() {
-			data.IpObjectId = types.StringValue(value.String())
+		if value := res.Get("ipAddress.object.id"); value.Exists() && !data.NetworkObjectId.IsNull() {
+			data.NetworkObjectId = types.StringValue(value.String())
 		} else {
-			data.IpObjectId = types.StringNull()
+			data.NetworkObjectId = types.StringNull()
 		}
 		if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
 			data.Protocol = types.StringValue(value.String())

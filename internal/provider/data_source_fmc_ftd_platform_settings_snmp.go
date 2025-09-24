@@ -75,16 +75,16 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Type of the object; this value is always 'FTDSNMPPlatformSettings'.",
 				Computed:            true,
 			},
-			"enable_snmp_server": schema.BoolAttribute{
+			"snmp_server": schema.BoolAttribute{
 				MarkdownDescription: "Enable SNMP servers.",
 				Computed:            true,
 			},
-			"read_community_string": schema.StringAttribute{
+			"read_community": schema.StringAttribute{
 				MarkdownDescription: "Password used by a SNMP management station when sending requests to the threat defense device.",
 				Computed:            true,
 				Sensitive:           true,
 			},
-			"system_administrator_name": schema.StringAttribute{
+			"system_administrator": schema.StringAttribute{
 				MarkdownDescription: "Name of the device administrator or other contact person.",
 				Computed:            true,
 			},
@@ -96,13 +96,13 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "UDP port on which incoming requests will be accepted.",
 				Computed:            true,
 			},
-			"snmp_management_hosts": schema.ListNestedAttribute{
+			"management_hosts": schema.ListNestedAttribute{
 				MarkdownDescription: "List of SNMP management hosts.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"ip_object_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.",
+						"network_object_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 network.",
 							Computed:            true,
 						},
 						"snmp_version": schema.StringAttribute{
@@ -113,7 +113,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 							MarkdownDescription: "(SNMPv3 only) Select SNMPv3 username.",
 							Computed:            true,
 						},
-						"read_community_string": schema.StringAttribute{
+						"read_community": schema.StringAttribute{
 							MarkdownDescription: "(SNMPv1, 2c only) Read community string.",
 							Computed:            true,
 							Sensitive:           true,
@@ -179,7 +179,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 							MarkdownDescription: "Whether `authentication_password` and `encryption_password` are in clear text or encrypted.",
 							Computed:            true,
 						},
-						"authentication_algorithm_type": schema.StringAttribute{
+						"authentication_algorithm": schema.StringAttribute{
 							MarkdownDescription: "Type of authentication algorithm.",
 							Computed:            true,
 						},
@@ -188,7 +188,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 							Computed:            true,
 							Sensitive:           true,
 						},
-						"encryption_type": schema.StringAttribute{
+						"encryption_algorithm": schema.StringAttribute{
 							MarkdownDescription: "Type of encryption algorithm.",
 							Computed:            true,
 						},
@@ -244,31 +244,31 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "IP packets are discarded by the NAT.",
 				Computed:            true,
 			},
-			"trap_cpu_rising_threshold": schema.BoolAttribute{
+			"trap_cpu_rising": schema.BoolAttribute{
 				MarkdownDescription: "CPU utilization exceeds a predefined threshold for a configured period of time.",
 				Computed:            true,
 			},
-			"trap_cpu_rising_threshold_value": schema.Int64Attribute{
+			"trap_cpu_rising_threshold": schema.Int64Attribute{
 				MarkdownDescription: "Percent of CPU utilization that triggers a trap.",
 				Computed:            true,
 			},
-			"trap_cpu_rising_threshold_interval": schema.Int64Attribute{
+			"trap_cpu_rising_interval": schema.Int64Attribute{
 				MarkdownDescription: "Time interval (in minutes) to evaluate the CPU rising threshold.",
 				Computed:            true,
 			},
-			"trap_memory_rising_threshold": schema.BoolAttribute{
+			"trap_memory_rising": schema.BoolAttribute{
 				MarkdownDescription: "Memory utilization exceeds a predefined threshold",
 				Computed:            true,
 			},
-			"trap_memory_rising_threshold_value": schema.Int64Attribute{
+			"trap_memory_rising_threshold": schema.Int64Attribute{
 				MarkdownDescription: "Percent of memory utilization that triggers a trap.",
 				Computed:            true,
 			},
-			"trap_failover": schema.BoolAttribute{
+			"trap_failover_state": schema.BoolAttribute{
 				MarkdownDescription: "Change in the failover state.",
 				Computed:            true,
 			},
-			"trap_cluster": schema.BoolAttribute{
+			"trap_cluster_state": schema.BoolAttribute{
 				MarkdownDescription: "Change in the cluster state.",
 				Computed:            true,
 			},

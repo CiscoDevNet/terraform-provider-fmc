@@ -117,7 +117,7 @@ func (r *FTDPlatformSettingsSyslogServersResource) Schema(ctx context.Context, r
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"ip_object_id": schema.StringAttribute{
+						"network_object_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of host object representing the IP address of the syslog server.").String,
 							Required:            true,
 						},
