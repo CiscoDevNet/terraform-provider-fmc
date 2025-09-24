@@ -40,8 +40,8 @@ type FTDPlatformSettingsSyslogSettings struct {
 	Type                          types.String `tfsdk:"type"`
 	Facility                      types.String `tfsdk:"facility"`
 	TimestampFormat               types.String `tfsdk:"timestamp_format"`
-	DeviceIdType                  types.String `tfsdk:"device_id_type"`
-	DeviceIdUserDefinedId         types.String `tfsdk:"device_id_user_defined_id"`
+	DeviceIdSource                types.String `tfsdk:"device_id_source"`
+	DeviceIdUserDefined           types.String `tfsdk:"device_id_user_defined"`
 	DeviceIdInterfaceId           types.String `tfsdk:"device_id_interface_id"`
 	AllSyslogMessages             types.Bool   `tfsdk:"all_syslog_messages"`
 	AllSyslogMessagesLoggingLevel types.String `tfsdk:"all_syslog_messages_logging_level"`
@@ -75,11 +75,11 @@ func (data FTDPlatformSettingsSyslogSettings) toBody(ctx context.Context, state 
 	if !data.TimestampFormat.IsNull() {
 		body, _ = sjson.Set(body, "timeStampFormat", data.TimestampFormat.ValueString())
 	}
-	if !data.DeviceIdType.IsNull() {
-		body, _ = sjson.Set(body, "syslogDeviceIdConfig.deviceIdConfigType", data.DeviceIdType.ValueString())
+	if !data.DeviceIdSource.IsNull() {
+		body, _ = sjson.Set(body, "syslogDeviceIdConfig.deviceIdConfigType", data.DeviceIdSource.ValueString())
 	}
-	if !data.DeviceIdUserDefinedId.IsNull() {
-		body, _ = sjson.Set(body, "syslogDeviceIdConfig.userDefinedId", data.DeviceIdUserDefinedId.ValueString())
+	if !data.DeviceIdUserDefined.IsNull() {
+		body, _ = sjson.Set(body, "syslogDeviceIdConfig.userDefinedId", data.DeviceIdUserDefined.ValueString())
 	}
 	if !data.DeviceIdInterfaceId.IsNull() {
 		body, _ = sjson.Set(body, "syslogDeviceIdConfig.interface.id", data.DeviceIdInterfaceId.ValueString())
@@ -114,14 +114,14 @@ func (data *FTDPlatformSettingsSyslogSettings) fromBody(ctx context.Context, res
 		data.TimestampFormat = types.StringNull()
 	}
 	if value := res.Get("syslogDeviceIdConfig.deviceIdConfigType"); value.Exists() {
-		data.DeviceIdType = types.StringValue(value.String())
+		data.DeviceIdSource = types.StringValue(value.String())
 	} else {
-		data.DeviceIdType = types.StringNull()
+		data.DeviceIdSource = types.StringNull()
 	}
 	if value := res.Get("syslogDeviceIdConfig.userDefinedId"); value.Exists() {
-		data.DeviceIdUserDefinedId = types.StringValue(value.String())
+		data.DeviceIdUserDefined = types.StringValue(value.String())
 	} else {
-		data.DeviceIdUserDefinedId = types.StringNull()
+		data.DeviceIdUserDefined = types.StringNull()
 	}
 	if value := res.Get("syslogDeviceIdConfig.interface.id"); value.Exists() {
 		data.DeviceIdInterfaceId = types.StringValue(value.String())
@@ -164,15 +164,15 @@ func (data *FTDPlatformSettingsSyslogSettings) fromBodyPartial(ctx context.Conte
 	} else {
 		data.TimestampFormat = types.StringNull()
 	}
-	if value := res.Get("syslogDeviceIdConfig.deviceIdConfigType"); value.Exists() && !data.DeviceIdType.IsNull() {
-		data.DeviceIdType = types.StringValue(value.String())
+	if value := res.Get("syslogDeviceIdConfig.deviceIdConfigType"); value.Exists() && !data.DeviceIdSource.IsNull() {
+		data.DeviceIdSource = types.StringValue(value.String())
 	} else {
-		data.DeviceIdType = types.StringNull()
+		data.DeviceIdSource = types.StringNull()
 	}
-	if value := res.Get("syslogDeviceIdConfig.userDefinedId"); value.Exists() && !data.DeviceIdUserDefinedId.IsNull() {
-		data.DeviceIdUserDefinedId = types.StringValue(value.String())
+	if value := res.Get("syslogDeviceIdConfig.userDefinedId"); value.Exists() && !data.DeviceIdUserDefined.IsNull() {
+		data.DeviceIdUserDefined = types.StringValue(value.String())
 	} else {
-		data.DeviceIdUserDefinedId = types.StringNull()
+		data.DeviceIdUserDefined = types.StringNull()
 	}
 	if value := res.Get("syslogDeviceIdConfig.interface.id"); value.Exists() && !data.DeviceIdInterfaceId.IsNull() {
 		data.DeviceIdInterfaceId = types.StringValue(value.String())

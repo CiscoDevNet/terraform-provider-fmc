@@ -110,22 +110,22 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, 
 					stringvalidator.OneOf("RFC_5424", "LEGACY"),
 				},
 			},
-			"device_id_type": schema.StringAttribute{
+			"device_id_source": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Include device identifier in syslog messages.").AddStringEnumDescription("INTERFACE", "USERDEFINEDID", "HOSTNAME").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("INTERFACE", "USERDEFINEDID", "HOSTNAME"),
 				},
 			},
-			"device_id_user_defined_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.").String,
+			"device_id_user_defined": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("User defined device identifier. This is required when `device_id_source` is set to `USERDEFINEDID`.").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.LengthBetween(0, 16),
 				},
 			},
 			"device_id_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.").String,
 				Optional:            true,
 			},
 			"all_syslog_messages": schema.BoolAttribute{

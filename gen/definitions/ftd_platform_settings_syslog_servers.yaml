@@ -36,7 +36,6 @@ attributes:
     example: 512
     default_value: 512
   - model_name: servers
-    tf_name: syslog_servers
     type: List
     description: List of syslog servers.
     attributes:

@@ -33,10 +33,10 @@ func TestAccFmcFTDPlatformSettingsSyslogServers(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_servers.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "allow_user_traffic_when_tcp_syslog_server_is_down", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "message_queue_size", "512"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "syslog_servers.0.protocol", "TCP"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "syslog_servers.0.port", "1470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "syslog_servers.0.secure_syslog", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "syslog_servers.0.use_management_interface", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.protocol", "TCP"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.port", "1470"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.secure_syslog", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_servers.test", "servers.0.use_management_interface", "false"))
 
 	var steps []resource.TestStep
 	steps = append(steps, resource.TestStep{
@@ -84,7 +84,7 @@ func testAccFmcFTDPlatformSettingsSyslogServersConfig_all() string {
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	allow_user_traffic_when_tcp_syslog_server_is_down = true` + "\n"
 	config += `	message_queue_size = 512` + "\n"
-	config += `	syslog_servers = [{` + "\n"
+	config += `	servers = [{` + "\n"
 	config += `		network_object_id = fmc_host.test.id` + "\n"
 	config += `		protocol = "TCP"` + "\n"
 	config += `		port = 1470` + "\n"

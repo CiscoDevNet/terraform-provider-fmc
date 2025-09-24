@@ -112,7 +112,7 @@ func (r *FTDPlatformSettingsSyslogServersResource) Schema(ctx context.Context, r
 				},
 				Default: int64default.StaticInt64(512),
 			},
-			"syslog_servers": schema.ListNestedAttribute{
+			"servers": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of syslog servers.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{

@@ -51,7 +51,7 @@ attributes:
 
   # Logging to Secure Firewall Management Center
   - model_name: loggingToFMCType
-    tf_name: fmc_logging_type
+    tf_name: fmc_logging_mode
     type: String
     description: FMC logging mode.
     enum_values: ["OFF", "ALL", "VPN"]

@@ -121,7 +121,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 				},
 				Default: int64default.StaticInt64(4096),
 			},
-			"fmc_logging_type": schema.StringAttribute{
+			"fmc_logging_mode": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("FMC logging mode.").AddStringEnumDescription("OFF", "ALL", "VPN").AddDefaultValueDescription("OFF").String,
 				Optional:            true,
 				Computed:            true,

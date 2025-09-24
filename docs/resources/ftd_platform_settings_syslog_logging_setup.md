@@ -25,7 +25,7 @@ resource "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
   emblem_format                           = false
   send_debug_messages_as_syslog           = false
   internal_buffer_memory_size             = 4096
-  fmc_logging_type                        = "VPN"
+  fmc_logging_mode                        = "VPN"
   fmc_logging_level                       = "ERR"
   ftp_server_host_id                      = "d3f5e8c0-1d4b-11b2-9f0e-ecf4bbf7a5c6"
   ftp_server_username                     = "ftpuser"
@@ -64,7 +64,7 @@ resource "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
   - Default value: `1024`
 - `fmc_logging_level` (String) FMC logging level. Required if `fmc_logging_type` is not `OFF``.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
-- `fmc_logging_type` (String) FMC logging mode.
+- `fmc_logging_mode` (String) FMC logging mode.
   - Choices: `OFF`, `ALL`, `VPN`
   - Default value: `OFF`
 - `ftp_server_host_id` (String) Id of host object representing the FTP server.
