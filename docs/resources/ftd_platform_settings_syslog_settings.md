@@ -22,8 +22,8 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
   ftd_platform_settings_id          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   facility                          = "LOCAL4"
   timestamp_format                  = "RFC_5424"
-  device_id_type                    = "USERDEFINEDID"
-  device_id_user_defined_id         = "my_device_id"
+  device_id_source                  = "USERDEFINEDID"
+  device_id_user_defined            = "my_device_id"
   all_syslog_messages               = true
   all_syslog_messages_logging_level = "ERR"
 }
@@ -41,10 +41,10 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
 - `all_syslog_messages` (Boolean) Enable all syslog messages.
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
-- `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.
-- `device_id_type` (String) Include device identifier in syslog messages.
+- `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.
+- `device_id_source` (String) Include device identifier in syslog messages.
   - Choices: `INTERFACE`, `USERDEFINEDID`, `HOSTNAME`
-- `device_id_user_defined_id` (String) User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.
+- `device_id_user_defined` (String) User defined device identifier. This is required when `device_id_source` is set to `USERDEFINEDID`.
 - `domain` (String) Name of the FMC domain
 - `facility` (String) System log facility for syslog servers to use as a basis to file messages.
   - Choices: `LOCAL0`, `LOCAL1`, `LOCAL2`, `LOCAL3`, `LOCAL4`, `LOCAL5`, `LOCAL6`, `LOCAL7`

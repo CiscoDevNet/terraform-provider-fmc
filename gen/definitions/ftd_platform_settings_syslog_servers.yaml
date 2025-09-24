@@ -36,13 +36,12 @@ attributes:
     example: 512
     default_value: 512
   - model_name: servers
-    tf_name: syslog_servers
     type: List
     description: List of syslog servers.
     attributes:
       - model_name: id
         data_path: [ipAddress, object]
-        tf_name: ip_object_id
+        tf_name: network_object_id
         type: String
         id: true
         mandatory: true

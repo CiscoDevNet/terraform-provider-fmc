@@ -20,12 +20,12 @@ attributes:
     description: Type of the object; this value is always 'FTDSNMPPlatformSettings'.
     computed: true
   - model_name: enableSNMPServers
-    tf_name: enable_snmp_server
+    tf_name: snmp_server
     type: Bool
     description: Enable SNMP servers.
     example: true
   - model_name: communityString
-    tf_name: read_community_string
+    tf_name: read_community
     type: String
     description: Password used by a SNMP management station when sending requests to the threat defense device.
     example: public
@@ -33,7 +33,7 @@ attributes:
     sensitive: true
     write_only: true
   - model_name: sysAdminName
-    tf_name: system_administrator_name
+    tf_name: system_administrator
     type: String
     description: Name of the device administrator or other contact person.
     example: admin
@@ -54,15 +54,15 @@ attributes:
 
   # Hosts
   - model_name: snmpMgmtHosts
-    tf_name: snmp_management_hosts
+    tf_name: management_hosts
     type: List
     description: List of SNMP management hosts.
     attributes:
       - model_name: id
         data_path: [ipAddress]
-        tf_name: ip_object_id
+        tf_name: network_object_id
         type: String
-        description: Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
+        description: Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 network.
         mandatory: true
         id: true
         example: 123e4567-e89b-12d3-a456-426614174000
@@ -79,7 +79,7 @@ attributes:
         description: (SNMPv3 only) Select SNMPv3 username.
         example: snmpuser1
       - model_name: communityString
-        tf_name: read_community_string
+        tf_name: read_community
         type: String
         description: (SNMPv1, 2c only) Read community string.
         sensitive: true
@@ -167,7 +167,7 @@ attributes:
         description: Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
         example: Clear
       - model_name: authAlgoType
-        tf_name: authentication_algorithm_type
+        tf_name: authentication_algorithm
         type: String
         enum_values: [SHA, SHA224, SHA256, SHA384]
         description: Type of authentication algorithm.
@@ -180,6 +180,7 @@ attributes:
         write_only: true
         string_max_length: 256
       - model_name: encryptionType
+        tf_name: encryption_algorithm
         type: String
         enum_values: [AES128, AES192, AES256]
         description: Type of encryption algorithm.
@@ -261,13 +262,13 @@ attributes:
     example: true
   - model_name: cputhreshold
     data_path: [snmpTrap]
-    tf_name: trap_cpu_rising_threshold
+    tf_name: trap_cpu_rising
     type: Bool
     description: CPU utilization exceeds a predefined threshold for a configured period of time.
     example: true
   - model_name: cputhresholdValueInPercent
     data_path: [snmpTrap]
-    tf_name: trap_cpu_rising_threshold_value
+    tf_name: trap_cpu_rising_threshold
     type: Int64
     description: Percent of CPU utilization that triggers a trap.
     min_int: 10
@@ -275,7 +276,7 @@ attributes:
     example: 70
   - model_name: cputhresholdIntervalInMins
     data_path: [snmpTrap]
-    tf_name: trap_cpu_rising_threshold_interval
+    tf_name: trap_cpu_rising_interval
     type: Int64
     description: Time interval (in minutes) to evaluate the CPU rising threshold.
     min_int: 1
@@ -283,13 +284,13 @@ attributes:
     example: 1
   - model_name: memoryThreshold
     data_path: [snmpTrap]
-    tf_name: trap_memory_rising_threshold
+    tf_name: trap_memory_rising
     type: Bool
     description: Memory utilization exceeds a predefined threshold
     example: true
   - model_name: memThresholdValueInPercent
     data_path: [snmpTrap]
-    tf_name: trap_memory_rising_threshold_value
+    tf_name: trap_memory_rising_threshold
     type: Int64
     description: Percent of memory utilization that triggers a trap.
     min_int: 50
@@ -297,13 +298,13 @@ attributes:
     example: 70
   - model_name: failoverState
     data_path: [snmpTrap]
-    tf_name: trap_failover
+    tf_name: trap_failover_state
     type: Bool
     description: Change in the failover state.
     example: true
   - model_name: clusterState
     data_path: [snmpTrap]
-    tf_name: trap_cluster
+    tf_name: trap_cluster_state
     type: Bool
     description: Change in the cluster state.
     example: true

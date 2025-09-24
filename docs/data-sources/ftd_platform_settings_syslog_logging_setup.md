@@ -45,7 +45,7 @@ data "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
 - `flash_maximum_space` (Number) Maximum space to be used in the flash memory for logging (in kilobytes).
 - `flash_minimum_free_space` (Number) Minimum free space to be preserved in flash memory (in kilobytes).
 - `fmc_logging_level` (String) FMC logging level. Required if `fmc_logging_type` is not `OFF``.
-- `fmc_logging_type` (String) FMC logging mode.
+- `fmc_logging_mode` (String) FMC logging mode.
 - `ftp_server_host_id` (String) Id of host object representing the FTP server.
 - `ftp_server_interface_groups` (Attributes List) Interface Groups through which the FTP server is reachable. (see [below for nested schema](#nestedatt--ftp_server_interface_groups))
 - `ftp_server_password` (String, Sensitive) Password to log in to the FTP server.

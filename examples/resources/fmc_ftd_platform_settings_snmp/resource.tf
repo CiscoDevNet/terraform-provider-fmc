@@ -1,13 +1,13 @@
 resource "fmc_ftd_platform_settings_snmp" "example" {
-  ftd_platform_settings_id  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  enable_snmp_server        = true
-  read_community_string     = "public"
-  system_administrator_name = "admin"
-  location                  = "Data Center 1"
-  snmp_server_port          = 161
-  snmp_management_hosts = [
+  ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  snmp_server              = true
+  read_community           = "public"
+  system_administrator     = "admin"
+  location                 = "Data Center 1"
+  snmp_server_port         = 161
+  management_hosts = [
     {
-      ip_object_id             = "123e4567-e89b-12d3-a456-426614174000"
+      network_object_id        = "123e4567-e89b-12d3-a456-426614174000"
       snmp_version             = "SNMPv3"
       username                 = "snmpuser1"
       poll                     = true
@@ -25,13 +25,13 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
   ]
   snmpv3_users = [
     {
-      security_level                = "Priv"
-      username                      = "snmpuser1"
-      password_type                 = "Clear"
-      authentication_algorithm_type = "SHA256"
-      authentication_password       = "MyAuthPassword123"
-      encryption_type               = "AES256"
-      encryption_password           = "MyEncryptionPassword123"
+      security_level           = "Priv"
+      username                 = "snmpuser1"
+      password_type            = "Clear"
+      authentication_algorithm = "SHA256"
+      authentication_password  = "MyAuthPassword123"
+      encryption_algorithm     = "AES256"
+      encryption_password      = "MyEncryptionPassword123"
     }
   ]
   trap_syslog                        = true
@@ -45,12 +45,12 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
   trap_configuration_change          = true
   trap_connection_limit_reached      = true
   trap_nat_packet_discard            = true
-  trap_cpu_rising_threshold          = true
-  trap_cpu_rising_threshold_value    = 70
-  trap_cpu_rising_threshold_interval = 1
-  trap_memory_rising_threshold       = true
-  trap_memory_rising_threshold_value = 70
-  trap_failover                      = true
-  trap_cluster                       = true
+  trap_cpu_rising                    = true
+  trap_cpu_rising_threshold          = 70
+  trap_cpu_rising_interval           = 1
+  trap_memory_rising                 = true
+  trap_memory_rising_threshold       = 70
+  trap_failover_state                = true
+  trap_cluster_state                 = true
   trap_peer_flap                     = true
 }

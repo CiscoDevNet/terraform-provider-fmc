@@ -33,8 +33,8 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_syslog_settings.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "facility", "LOCAL4"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "timestamp_format", "RFC_5424"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_type", "USERDEFINEDID"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_user_defined_id", "my_device_id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_source", "USERDEFINEDID"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "device_id_user_defined", "my_device_id"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages_logging_level", "ERR"))
 	resource.Test(t, resource.TestCase{
@@ -69,8 +69,8 @@ func testAccDataSourceFmcFTDPlatformSettingsSyslogSettingsConfig() string {
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	facility = "LOCAL4"` + "\n"
 	config += `	timestamp_format = "RFC_5424"` + "\n"
-	config += `	device_id_type = "USERDEFINEDID"` + "\n"
-	config += `	device_id_user_defined_id = "my_device_id"` + "\n"
+	config += `	device_id_source = "USERDEFINEDID"` + "\n"
+	config += `	device_id_user_defined = "my_device_id"` + "\n"
 	config += `	all_syslog_messages = true` + "\n"
 	config += `	all_syslog_messages_logging_level = "ERR"` + "\n"
 	config += `}` + "\n"

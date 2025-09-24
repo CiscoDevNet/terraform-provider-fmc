@@ -97,7 +97,7 @@ func (d *HealthPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"module_id": schema.StringAttribute{
+						"name": schema.StringAttribute{
 							MarkdownDescription: "Name of the health module.",
 							Computed:            true,
 						},
@@ -121,7 +121,7 @@ func (d *HealthPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 							MarkdownDescription: "Warning threshold value for health module.",
 							Computed:            true,
 						},
-						"custom_threshold": schema.ListNestedAttribute{
+						"custom_thresholds": schema.ListNestedAttribute{
 							MarkdownDescription: "Custom threshold configuration for health module.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -130,14 +130,14 @@ func (d *HealthPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 										MarkdownDescription: "Type of custom threshold.",
 										Computed:            true,
 									},
-									"value": schema.Int64Attribute{
-										MarkdownDescription: "Value of custom threshold.",
+									"threshold": schema.Int64Attribute{
+										MarkdownDescription: "Threshold level.",
 										Computed:            true,
 									},
 								},
 							},
 						},
-						"alert_config": schema.ListNestedAttribute{
+						"alert_configs": schema.ListNestedAttribute{
 							MarkdownDescription: "Alert configuration for health module.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -159,8 +159,8 @@ func (d *HealthPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 													MarkdownDescription: "Type of threshold.",
 													Computed:            true,
 												},
-												"value": schema.Int64Attribute{
-													MarkdownDescription: "Value of threshold.",
+												"threshold": schema.Int64Attribute{
+													MarkdownDescription: "Threshold level.",
 													Computed:            true,
 												},
 											},

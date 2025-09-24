@@ -37,62 +37,62 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsSNMP struct {
-	Id                             types.String                                 `tfsdk:"id"`
-	Domain                         types.String                                 `tfsdk:"domain"`
-	FtdPlatformSettingsId          types.String                                 `tfsdk:"ftd_platform_settings_id"`
-	Type                           types.String                                 `tfsdk:"type"`
-	EnableSnmpServer               types.Bool                                   `tfsdk:"enable_snmp_server"`
-	ReadCommunityString            types.String                                 `tfsdk:"read_community_string"`
-	SystemAdministratorName        types.String                                 `tfsdk:"system_administrator_name"`
-	Location                       types.String                                 `tfsdk:"location"`
-	SnmpServerPort                 types.Int64                                  `tfsdk:"snmp_server_port"`
-	SnmpManagementHosts            []FTDPlatformSettingsSNMPSnmpManagementHosts `tfsdk:"snmp_management_hosts"`
-	Snmpv3Users                    []FTDPlatformSettingsSNMPSnmpv3Users         `tfsdk:"snmpv3_users"`
-	TrapSyslog                     types.Bool                                   `tfsdk:"trap_syslog"`
-	TrapAuthentication             types.Bool                                   `tfsdk:"trap_authentication"`
-	TrapLinkUp                     types.Bool                                   `tfsdk:"trap_link_up"`
-	TrapLinkDown                   types.Bool                                   `tfsdk:"trap_link_down"`
-	TrapColdStart                  types.Bool                                   `tfsdk:"trap_cold_start"`
-	TrapWarmStart                  types.Bool                                   `tfsdk:"trap_warm_start"`
-	TrapFieldReplacementUnitInsert types.Bool                                   `tfsdk:"trap_field_replacement_unit_insert"`
-	TrapFieldReplacementUnitDelete types.Bool                                   `tfsdk:"trap_field_replacement_unit_delete"`
-	TrapConfigurationChange        types.Bool                                   `tfsdk:"trap_configuration_change"`
-	TrapConnectionLimitReached     types.Bool                                   `tfsdk:"trap_connection_limit_reached"`
-	TrapNatPacketDiscard           types.Bool                                   `tfsdk:"trap_nat_packet_discard"`
-	TrapCpuRisingThreshold         types.Bool                                   `tfsdk:"trap_cpu_rising_threshold"`
-	TrapCpuRisingThresholdValue    types.Int64                                  `tfsdk:"trap_cpu_rising_threshold_value"`
-	TrapCpuRisingThresholdInterval types.Int64                                  `tfsdk:"trap_cpu_rising_threshold_interval"`
-	TrapMemoryRisingThreshold      types.Bool                                   `tfsdk:"trap_memory_rising_threshold"`
-	TrapMemoryRisingThresholdValue types.Int64                                  `tfsdk:"trap_memory_rising_threshold_value"`
-	TrapFailover                   types.Bool                                   `tfsdk:"trap_failover"`
-	TrapCluster                    types.Bool                                   `tfsdk:"trap_cluster"`
-	TrapPeerFlap                   types.Bool                                   `tfsdk:"trap_peer_flap"`
+	Id                             types.String                             `tfsdk:"id"`
+	Domain                         types.String                             `tfsdk:"domain"`
+	FtdPlatformSettingsId          types.String                             `tfsdk:"ftd_platform_settings_id"`
+	Type                           types.String                             `tfsdk:"type"`
+	SnmpServer                     types.Bool                               `tfsdk:"snmp_server"`
+	ReadCommunity                  types.String                             `tfsdk:"read_community"`
+	SystemAdministrator            types.String                             `tfsdk:"system_administrator"`
+	Location                       types.String                             `tfsdk:"location"`
+	SnmpServerPort                 types.Int64                              `tfsdk:"snmp_server_port"`
+	ManagementHosts                []FTDPlatformSettingsSNMPManagementHosts `tfsdk:"management_hosts"`
+	Snmpv3Users                    []FTDPlatformSettingsSNMPSnmpv3Users     `tfsdk:"snmpv3_users"`
+	TrapSyslog                     types.Bool                               `tfsdk:"trap_syslog"`
+	TrapAuthentication             types.Bool                               `tfsdk:"trap_authentication"`
+	TrapLinkUp                     types.Bool                               `tfsdk:"trap_link_up"`
+	TrapLinkDown                   types.Bool                               `tfsdk:"trap_link_down"`
+	TrapColdStart                  types.Bool                               `tfsdk:"trap_cold_start"`
+	TrapWarmStart                  types.Bool                               `tfsdk:"trap_warm_start"`
+	TrapFieldReplacementUnitInsert types.Bool                               `tfsdk:"trap_field_replacement_unit_insert"`
+	TrapFieldReplacementUnitDelete types.Bool                               `tfsdk:"trap_field_replacement_unit_delete"`
+	TrapConfigurationChange        types.Bool                               `tfsdk:"trap_configuration_change"`
+	TrapConnectionLimitReached     types.Bool                               `tfsdk:"trap_connection_limit_reached"`
+	TrapNatPacketDiscard           types.Bool                               `tfsdk:"trap_nat_packet_discard"`
+	TrapCpuRising                  types.Bool                               `tfsdk:"trap_cpu_rising"`
+	TrapCpuRisingThreshold         types.Int64                              `tfsdk:"trap_cpu_rising_threshold"`
+	TrapCpuRisingInterval          types.Int64                              `tfsdk:"trap_cpu_rising_interval"`
+	TrapMemoryRising               types.Bool                               `tfsdk:"trap_memory_rising"`
+	TrapMemoryRisingThreshold      types.Int64                              `tfsdk:"trap_memory_rising_threshold"`
+	TrapFailoverState              types.Bool                               `tfsdk:"trap_failover_state"`
+	TrapClusterState               types.Bool                               `tfsdk:"trap_cluster_state"`
+	TrapPeerFlap                   types.Bool                               `tfsdk:"trap_peer_flap"`
 }
 
-type FTDPlatformSettingsSNMPSnmpManagementHosts struct {
-	IpObjectId             types.String                                                 `tfsdk:"ip_object_id"`
-	SnmpVersion            types.String                                                 `tfsdk:"snmp_version"`
-	Username               types.String                                                 `tfsdk:"username"`
-	ReadCommunityString    types.String                                                 `tfsdk:"read_community_string"`
-	Poll                   types.Bool                                                   `tfsdk:"poll"`
-	Trap                   types.Bool                                                   `tfsdk:"trap"`
-	TrapPort               types.Int64                                                  `tfsdk:"trap_port"`
-	UseManagementInterface types.Bool                                                   `tfsdk:"use_management_interface"`
-	InterfaceLiterals      types.Set                                                    `tfsdk:"interface_literals"`
-	InterfaceObjects       []FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects `tfsdk:"interface_objects"`
+type FTDPlatformSettingsSNMPManagementHosts struct {
+	NetworkObjectId        types.String                                             `tfsdk:"network_object_id"`
+	SnmpVersion            types.String                                             `tfsdk:"snmp_version"`
+	Username               types.String                                             `tfsdk:"username"`
+	ReadCommunity          types.String                                             `tfsdk:"read_community"`
+	Poll                   types.Bool                                               `tfsdk:"poll"`
+	Trap                   types.Bool                                               `tfsdk:"trap"`
+	TrapPort               types.Int64                                              `tfsdk:"trap_port"`
+	UseManagementInterface types.Bool                                               `tfsdk:"use_management_interface"`
+	InterfaceLiterals      types.Set                                                `tfsdk:"interface_literals"`
+	InterfaceObjects       []FTDPlatformSettingsSNMPManagementHostsInterfaceObjects `tfsdk:"interface_objects"`
 }
 
 type FTDPlatformSettingsSNMPSnmpv3Users struct {
-	SecurityLevel               types.String `tfsdk:"security_level"`
-	Username                    types.String `tfsdk:"username"`
-	PasswordType                types.String `tfsdk:"password_type"`
-	AuthenticationAlgorithmType types.String `tfsdk:"authentication_algorithm_type"`
-	AuthenticationPassword      types.String `tfsdk:"authentication_password"`
-	EncryptionType              types.String `tfsdk:"encryption_type"`
-	EncryptionPassword          types.String `tfsdk:"encryption_password"`
+	SecurityLevel           types.String `tfsdk:"security_level"`
+	Username                types.String `tfsdk:"username"`
+	PasswordType            types.String `tfsdk:"password_type"`
+	AuthenticationAlgorithm types.String `tfsdk:"authentication_algorithm"`
+	AuthenticationPassword  types.String `tfsdk:"authentication_password"`
+	EncryptionAlgorithm     types.String `tfsdk:"encryption_algorithm"`
+	EncryptionPassword      types.String `tfsdk:"encryption_password"`
 }
 
-type FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects struct {
+type FTDPlatformSettingsSNMPManagementHostsInterfaceObjects struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 	Name types.String `tfsdk:"name"`
@@ -120,14 +120,14 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.EnableSnmpServer.IsNull() {
-		body, _ = sjson.Set(body, "enableSNMPServers", data.EnableSnmpServer.ValueBool())
+	if !data.SnmpServer.IsNull() {
+		body, _ = sjson.Set(body, "enableSNMPServers", data.SnmpServer.ValueBool())
 	}
-	if !data.ReadCommunityString.IsNull() {
-		body, _ = sjson.Set(body, "communityString", data.ReadCommunityString.ValueString())
+	if !data.ReadCommunity.IsNull() {
+		body, _ = sjson.Set(body, "communityString", data.ReadCommunity.ValueString())
 	}
-	if !data.SystemAdministratorName.IsNull() {
-		body, _ = sjson.Set(body, "sysAdminName", data.SystemAdministratorName.ValueString())
+	if !data.SystemAdministrator.IsNull() {
+		body, _ = sjson.Set(body, "sysAdminName", data.SystemAdministrator.ValueString())
 	}
 	if !data.Location.IsNull() {
 		body, _ = sjson.Set(body, "location", data.Location.ValueString())
@@ -135,12 +135,12 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if !data.SnmpServerPort.IsNull() {
 		body, _ = sjson.Set(body, "port", data.SnmpServerPort.ValueInt64())
 	}
-	if len(data.SnmpManagementHosts) > 0 {
+	if len(data.ManagementHosts) > 0 {
 		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
-		for _, item := range data.SnmpManagementHosts {
+		for _, item := range data.ManagementHosts {
 			itemBody := ""
-			if !item.IpObjectId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.IpObjectId.ValueString())
+			if !item.NetworkObjectId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.NetworkObjectId.ValueString())
 			}
 			if !item.SnmpVersion.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "snmpVersion", item.SnmpVersion.ValueString())
@@ -148,8 +148,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 			if !item.Username.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "userName", item.Username.ValueString())
 			}
-			if !item.ReadCommunityString.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "communityString", item.ReadCommunityString.ValueString())
+			if !item.ReadCommunity.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "communityString", item.ReadCommunity.ValueString())
 			}
 			if !item.Poll.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "poll", item.Poll.ValueBool())
@@ -200,14 +200,14 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 			if !item.PasswordType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "encryptionPasswordType", item.PasswordType.ValueString())
 			}
-			if !item.AuthenticationAlgorithmType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "authAlgoType", item.AuthenticationAlgorithmType.ValueString())
+			if !item.AuthenticationAlgorithm.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "authAlgoType", item.AuthenticationAlgorithm.ValueString())
 			}
 			if !item.AuthenticationPassword.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "authenticationPassword", item.AuthenticationPassword.ValueString())
 			}
-			if !item.EncryptionType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "encryptionType", item.EncryptionType.ValueString())
+			if !item.EncryptionAlgorithm.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "encryptionType", item.EncryptionAlgorithm.ValueString())
 			}
 			if !item.EncryptionPassword.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "encryptionPassword", item.EncryptionPassword.ValueString())
@@ -248,26 +248,26 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if !data.TrapNatPacketDiscard.IsNull() {
 		body, _ = sjson.Set(body, "snmpTrap.natPacketDiscard", data.TrapNatPacketDiscard.ValueBool())
 	}
+	if !data.TrapCpuRising.IsNull() {
+		body, _ = sjson.Set(body, "snmpTrap.cputhreshold", data.TrapCpuRising.ValueBool())
+	}
 	if !data.TrapCpuRisingThreshold.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.cputhreshold", data.TrapCpuRisingThreshold.ValueBool())
+		body, _ = sjson.Set(body, "snmpTrap.cputhresholdValueInPercent", data.TrapCpuRisingThreshold.ValueInt64())
 	}
-	if !data.TrapCpuRisingThresholdValue.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.cputhresholdValueInPercent", data.TrapCpuRisingThresholdValue.ValueInt64())
+	if !data.TrapCpuRisingInterval.IsNull() {
+		body, _ = sjson.Set(body, "snmpTrap.cputhresholdIntervalInMins", data.TrapCpuRisingInterval.ValueInt64())
 	}
-	if !data.TrapCpuRisingThresholdInterval.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.cputhresholdIntervalInMins", data.TrapCpuRisingThresholdInterval.ValueInt64())
+	if !data.TrapMemoryRising.IsNull() {
+		body, _ = sjson.Set(body, "snmpTrap.memoryThreshold", data.TrapMemoryRising.ValueBool())
 	}
 	if !data.TrapMemoryRisingThreshold.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.memoryThreshold", data.TrapMemoryRisingThreshold.ValueBool())
+		body, _ = sjson.Set(body, "snmpTrap.memThresholdValueInPercent", data.TrapMemoryRisingThreshold.ValueInt64())
 	}
-	if !data.TrapMemoryRisingThresholdValue.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.memThresholdValueInPercent", data.TrapMemoryRisingThresholdValue.ValueInt64())
+	if !data.TrapFailoverState.IsNull() {
+		body, _ = sjson.Set(body, "snmpTrap.failoverState", data.TrapFailoverState.ValueBool())
 	}
-	if !data.TrapFailover.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.failoverState", data.TrapFailover.ValueBool())
-	}
-	if !data.TrapCluster.IsNull() {
-		body, _ = sjson.Set(body, "snmpTrap.clusterState", data.TrapCluster.ValueBool())
+	if !data.TrapClusterState.IsNull() {
+		body, _ = sjson.Set(body, "snmpTrap.clusterState", data.TrapClusterState.ValueBool())
 	}
 	if !data.TrapPeerFlap.IsNull() {
 		body, _ = sjson.Set(body, "snmpTrap.peerFlap", data.TrapPeerFlap.ValueBool())
@@ -286,14 +286,14 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("enableSNMPServers"); value.Exists() {
-		data.EnableSnmpServer = types.BoolValue(value.Bool())
+		data.SnmpServer = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSnmpServer = types.BoolNull()
+		data.SnmpServer = types.BoolNull()
 	}
 	if value := res.Get("sysAdminName"); value.Exists() {
-		data.SystemAdministratorName = types.StringValue(value.String())
+		data.SystemAdministrator = types.StringValue(value.String())
 	} else {
-		data.SystemAdministratorName = types.StringNull()
+		data.SystemAdministrator = types.StringNull()
 	}
 	if value := res.Get("location"); value.Exists() {
 		data.Location = types.StringValue(value.String())
@@ -306,14 +306,14 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.SnmpServerPort = types.Int64Value(161)
 	}
 	if value := res.Get("snmpMgmtHosts"); value.Exists() {
-		data.SnmpManagementHosts = make([]FTDPlatformSettingsSNMPSnmpManagementHosts, 0)
+		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := FTDPlatformSettingsSNMPSnmpManagementHosts{}
+			data := FTDPlatformSettingsSNMPManagementHosts{}
 			if value := res.Get("ipAddress.id"); value.Exists() {
-				data.IpObjectId = types.StringValue(value.String())
+				data.NetworkObjectId = types.StringValue(value.String())
 			} else {
-				data.IpObjectId = types.StringNull()
+				data.NetworkObjectId = types.StringNull()
 			}
 			if value := res.Get("snmpVersion"); value.Exists() {
 				data.SnmpVersion = types.StringValue(value.String())
@@ -351,10 +351,10 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects, 0)
+				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPManagementHostsInterfaceObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := FTDPlatformSettingsSNMPSnmpManagementHostsInterfaceObjects{}
+					data := FTDPlatformSettingsSNMPManagementHostsInterfaceObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
@@ -374,7 +374,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 					return true
 				})
 			}
-			(*parent).SnmpManagementHosts = append((*parent).SnmpManagementHosts, data)
+			(*parent).ManagementHosts = append((*parent).ManagementHosts, data)
 			return true
 		})
 	}
@@ -399,14 +399,14 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.PasswordType = types.StringNull()
 			}
 			if value := res.Get("authAlgoType"); value.Exists() {
-				data.AuthenticationAlgorithmType = types.StringValue(value.String())
+				data.AuthenticationAlgorithm = types.StringValue(value.String())
 			} else {
-				data.AuthenticationAlgorithmType = types.StringNull()
+				data.AuthenticationAlgorithm = types.StringNull()
 			}
 			if value := res.Get("encryptionType"); value.Exists() {
-				data.EncryptionType = types.StringValue(value.String())
+				data.EncryptionAlgorithm = types.StringValue(value.String())
 			} else {
-				data.EncryptionType = types.StringNull()
+				data.EncryptionAlgorithm = types.StringNull()
 			}
 			(*parent).Snmpv3Users = append((*parent).Snmpv3Users, data)
 			return true
@@ -468,39 +468,39 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.TrapNatPacketDiscard = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.cputhreshold"); value.Exists() {
-		data.TrapCpuRisingThreshold = types.BoolValue(value.Bool())
+		data.TrapCpuRising = types.BoolValue(value.Bool())
 	} else {
-		data.TrapCpuRisingThreshold = types.BoolNull()
+		data.TrapCpuRising = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.cputhresholdValueInPercent"); value.Exists() {
-		data.TrapCpuRisingThresholdValue = types.Int64Value(value.Int())
+		data.TrapCpuRisingThreshold = types.Int64Value(value.Int())
 	} else {
-		data.TrapCpuRisingThresholdValue = types.Int64Null()
+		data.TrapCpuRisingThreshold = types.Int64Null()
 	}
 	if value := res.Get("snmpTrap.cputhresholdIntervalInMins"); value.Exists() {
-		data.TrapCpuRisingThresholdInterval = types.Int64Value(value.Int())
+		data.TrapCpuRisingInterval = types.Int64Value(value.Int())
 	} else {
-		data.TrapCpuRisingThresholdInterval = types.Int64Null()
+		data.TrapCpuRisingInterval = types.Int64Null()
 	}
 	if value := res.Get("snmpTrap.memoryThreshold"); value.Exists() {
-		data.TrapMemoryRisingThreshold = types.BoolValue(value.Bool())
+		data.TrapMemoryRising = types.BoolValue(value.Bool())
 	} else {
-		data.TrapMemoryRisingThreshold = types.BoolNull()
+		data.TrapMemoryRising = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.memThresholdValueInPercent"); value.Exists() {
-		data.TrapMemoryRisingThresholdValue = types.Int64Value(value.Int())
+		data.TrapMemoryRisingThreshold = types.Int64Value(value.Int())
 	} else {
-		data.TrapMemoryRisingThresholdValue = types.Int64Null()
+		data.TrapMemoryRisingThreshold = types.Int64Null()
 	}
 	if value := res.Get("snmpTrap.failoverState"); value.Exists() {
-		data.TrapFailover = types.BoolValue(value.Bool())
+		data.TrapFailoverState = types.BoolValue(value.Bool())
 	} else {
-		data.TrapFailover = types.BoolNull()
+		data.TrapFailoverState = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.clusterState"); value.Exists() {
-		data.TrapCluster = types.BoolValue(value.Bool())
+		data.TrapClusterState = types.BoolValue(value.Bool())
 	} else {
-		data.TrapCluster = types.BoolNull()
+		data.TrapClusterState = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.peerFlap"); value.Exists() {
 		data.TrapPeerFlap = types.BoolValue(value.Bool())
@@ -523,15 +523,15 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("enableSNMPServers"); value.Exists() && !data.EnableSnmpServer.IsNull() {
-		data.EnableSnmpServer = types.BoolValue(value.Bool())
+	if value := res.Get("enableSNMPServers"); value.Exists() && !data.SnmpServer.IsNull() {
+		data.SnmpServer = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSnmpServer = types.BoolNull()
+		data.SnmpServer = types.BoolNull()
 	}
-	if value := res.Get("sysAdminName"); value.Exists() && !data.SystemAdministratorName.IsNull() {
-		data.SystemAdministratorName = types.StringValue(value.String())
+	if value := res.Get("sysAdminName"); value.Exists() && !data.SystemAdministrator.IsNull() {
+		data.SystemAdministrator = types.StringValue(value.String())
 	} else {
-		data.SystemAdministratorName = types.StringNull()
+		data.SystemAdministrator = types.StringNull()
 	}
 	if value := res.Get("location"); value.Exists() && !data.Location.IsNull() {
 		data.Location = types.StringValue(value.String())
@@ -543,12 +543,12 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else if data.SnmpServerPort.ValueInt64() != 161 {
 		data.SnmpServerPort = types.Int64Null()
 	}
-	for i := 0; i < len(data.SnmpManagementHosts); i++ {
+	for i := 0; i < len(data.ManagementHosts); i++ {
 		keys := [...]string{"ipAddress.id"}
-		keyValues := [...]string{data.SnmpManagementHosts[i].IpObjectId.ValueString()}
+		keyValues := [...]string{data.ManagementHosts[i].NetworkObjectId.ValueString()}
 
 		parent := &data
-		data := (*parent).SnmpManagementHosts[i]
+		data := (*parent).ManagementHosts[i]
 		parentRes := &res
 		var res gjson.Result
 
@@ -570,19 +570,19 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing SnmpManagementHosts[%d] = %+v",
+			tflog.Debug(ctx, fmt.Sprintf("removing ManagementHosts[%d] = %+v",
 				i,
-				(*parent).SnmpManagementHosts[i],
+				(*parent).ManagementHosts[i],
 			))
-			(*parent).SnmpManagementHosts = slices.Delete((*parent).SnmpManagementHosts, i, i+1)
+			(*parent).ManagementHosts = slices.Delete((*parent).ManagementHosts, i, i+1)
 			i--
 
 			continue
 		}
-		if value := res.Get("ipAddress.id"); value.Exists() && !data.IpObjectId.IsNull() {
-			data.IpObjectId = types.StringValue(value.String())
+		if value := res.Get("ipAddress.id"); value.Exists() && !data.NetworkObjectId.IsNull() {
+			data.NetworkObjectId = types.StringValue(value.String())
 		} else {
-			data.IpObjectId = types.StringNull()
+			data.NetworkObjectId = types.StringNull()
 		}
 		if value := res.Get("snmpVersion"); value.Exists() && !data.SnmpVersion.IsNull() {
 			data.SnmpVersion = types.StringValue(value.String())
@@ -672,7 +672,7 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 			}
 			(*parent).InterfaceObjects[i] = data
 		}
-		(*parent).SnmpManagementHosts[i] = data
+		(*parent).ManagementHosts[i] = data
 	}
 	for i := 0; i < len(data.Snmpv3Users); i++ {
 		keys := [...]string{"userName"}
@@ -725,15 +725,15 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.PasswordType = types.StringNull()
 		}
-		if value := res.Get("authAlgoType"); value.Exists() && !data.AuthenticationAlgorithmType.IsNull() {
-			data.AuthenticationAlgorithmType = types.StringValue(value.String())
+		if value := res.Get("authAlgoType"); value.Exists() && !data.AuthenticationAlgorithm.IsNull() {
+			data.AuthenticationAlgorithm = types.StringValue(value.String())
 		} else {
-			data.AuthenticationAlgorithmType = types.StringNull()
+			data.AuthenticationAlgorithm = types.StringNull()
 		}
-		if value := res.Get("encryptionType"); value.Exists() && !data.EncryptionType.IsNull() {
-			data.EncryptionType = types.StringValue(value.String())
+		if value := res.Get("encryptionType"); value.Exists() && !data.EncryptionAlgorithm.IsNull() {
+			data.EncryptionAlgorithm = types.StringValue(value.String())
 		} else {
-			data.EncryptionType = types.StringNull()
+			data.EncryptionAlgorithm = types.StringNull()
 		}
 		(*parent).Snmpv3Users[i] = data
 	}
@@ -792,40 +792,40 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.TrapNatPacketDiscard = types.BoolNull()
 	}
-	if value := res.Get("snmpTrap.cputhreshold"); value.Exists() && !data.TrapCpuRisingThreshold.IsNull() {
-		data.TrapCpuRisingThreshold = types.BoolValue(value.Bool())
+	if value := res.Get("snmpTrap.cputhreshold"); value.Exists() && !data.TrapCpuRising.IsNull() {
+		data.TrapCpuRising = types.BoolValue(value.Bool())
 	} else {
-		data.TrapCpuRisingThreshold = types.BoolNull()
+		data.TrapCpuRising = types.BoolNull()
 	}
-	if value := res.Get("snmpTrap.cputhresholdValueInPercent"); value.Exists() && !data.TrapCpuRisingThresholdValue.IsNull() {
-		data.TrapCpuRisingThresholdValue = types.Int64Value(value.Int())
+	if value := res.Get("snmpTrap.cputhresholdValueInPercent"); value.Exists() && !data.TrapCpuRisingThreshold.IsNull() {
+		data.TrapCpuRisingThreshold = types.Int64Value(value.Int())
 	} else {
-		data.TrapCpuRisingThresholdValue = types.Int64Null()
+		data.TrapCpuRisingThreshold = types.Int64Null()
 	}
-	if value := res.Get("snmpTrap.cputhresholdIntervalInMins"); value.Exists() && !data.TrapCpuRisingThresholdInterval.IsNull() {
-		data.TrapCpuRisingThresholdInterval = types.Int64Value(value.Int())
+	if value := res.Get("snmpTrap.cputhresholdIntervalInMins"); value.Exists() && !data.TrapCpuRisingInterval.IsNull() {
+		data.TrapCpuRisingInterval = types.Int64Value(value.Int())
 	} else {
-		data.TrapCpuRisingThresholdInterval = types.Int64Null()
+		data.TrapCpuRisingInterval = types.Int64Null()
 	}
-	if value := res.Get("snmpTrap.memoryThreshold"); value.Exists() && !data.TrapMemoryRisingThreshold.IsNull() {
-		data.TrapMemoryRisingThreshold = types.BoolValue(value.Bool())
+	if value := res.Get("snmpTrap.memoryThreshold"); value.Exists() && !data.TrapMemoryRising.IsNull() {
+		data.TrapMemoryRising = types.BoolValue(value.Bool())
 	} else {
-		data.TrapMemoryRisingThreshold = types.BoolNull()
+		data.TrapMemoryRising = types.BoolNull()
 	}
-	if value := res.Get("snmpTrap.memThresholdValueInPercent"); value.Exists() && !data.TrapMemoryRisingThresholdValue.IsNull() {
-		data.TrapMemoryRisingThresholdValue = types.Int64Value(value.Int())
+	if value := res.Get("snmpTrap.memThresholdValueInPercent"); value.Exists() && !data.TrapMemoryRisingThreshold.IsNull() {
+		data.TrapMemoryRisingThreshold = types.Int64Value(value.Int())
 	} else {
-		data.TrapMemoryRisingThresholdValue = types.Int64Null()
+		data.TrapMemoryRisingThreshold = types.Int64Null()
 	}
-	if value := res.Get("snmpTrap.failoverState"); value.Exists() && !data.TrapFailover.IsNull() {
-		data.TrapFailover = types.BoolValue(value.Bool())
+	if value := res.Get("snmpTrap.failoverState"); value.Exists() && !data.TrapFailoverState.IsNull() {
+		data.TrapFailoverState = types.BoolValue(value.Bool())
 	} else {
-		data.TrapFailover = types.BoolNull()
+		data.TrapFailoverState = types.BoolNull()
 	}
-	if value := res.Get("snmpTrap.clusterState"); value.Exists() && !data.TrapCluster.IsNull() {
-		data.TrapCluster = types.BoolValue(value.Bool())
+	if value := res.Get("snmpTrap.clusterState"); value.Exists() && !data.TrapClusterState.IsNull() {
+		data.TrapClusterState = types.BoolValue(value.Bool())
 	} else {
-		data.TrapCluster = types.BoolNull()
+		data.TrapClusterState = types.BoolNull()
 	}
 	if value := res.Get("snmpTrap.peerFlap"); value.Exists() && !data.TrapPeerFlap.IsNull() {
 		data.TrapPeerFlap = types.BoolValue(value.Bool())

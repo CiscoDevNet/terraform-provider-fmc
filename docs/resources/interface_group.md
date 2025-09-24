@@ -30,7 +30,7 @@ resource "fmc_interface_group" "example" {
 ### Required
 
 - `interface_mode` (String) All interfaces' types must match the interface mode.
-  - Choices: `INLINE`, `SWITCHED`, `ROUTED`
+  - Choices: `PASSIVE`, `INLINE`, `SWITCHED`, `ROUTED`, `MANAGEMENT`, `LOOPBACK`
 - `name` (String) Name of the object.
 
 ### Optional

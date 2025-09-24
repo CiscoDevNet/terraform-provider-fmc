@@ -38,52 +38,52 @@ data "fmc_ftd_platform_settings_snmp" "example" {
 
 ### Read-Only
 
-- `enable_snmp_server` (Boolean) Enable SNMP servers.
 - `location` (String) Location of the device.
-- `read_community_string` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
-- `snmp_management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--snmp_management_hosts))
+- `management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--management_hosts))
+- `read_community` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
+- `snmp_server` (Boolean) Enable SNMP servers.
 - `snmp_server_port` (Number) UDP port on which incoming requests will be accepted.
 - `snmpv3_users` (Attributes List) List of SNMPv3 users. (see [below for nested schema](#nestedatt--snmpv3_users))
-- `system_administrator_name` (String) Name of the device administrator or other contact person.
+- `system_administrator` (String) Name of the device administrator or other contact person.
 - `trap_authentication` (Boolean) Unauthorized SNMP access. This authentication failure occurs for packets with an incorrect community string.
-- `trap_cluster` (Boolean) Change in the cluster state.
+- `trap_cluster_state` (Boolean) Change in the cluster state.
 - `trap_cold_start` (Boolean) The device is reinitializing itself such that its configuration or the protocol entity implementation may be altered.
 - `trap_configuration_change` (Boolean) There has been a hardware change.
 - `trap_connection_limit_reached` (Boolean) Connection attempt was rejected because the configured connections limit has been reached.
-- `trap_cpu_rising_threshold` (Boolean) CPU utilization exceeds a predefined threshold for a configured period of time.
-- `trap_cpu_rising_threshold_interval` (Number) Time interval (in minutes) to evaluate the CPU rising threshold.
-- `trap_cpu_rising_threshold_value` (Number) Percent of CPU utilization that triggers a trap.
-- `trap_failover` (Boolean) Change in the failover state.
+- `trap_cpu_rising` (Boolean) CPU utilization exceeds a predefined threshold for a configured period of time.
+- `trap_cpu_rising_interval` (Number) Time interval (in minutes) to evaluate the CPU rising threshold.
+- `trap_cpu_rising_threshold` (Number) Percent of CPU utilization that triggers a trap.
+- `trap_failover_state` (Boolean) Change in the failover state.
 - `trap_field_replacement_unit_delete` (Boolean) Field Replaceable Unit (FRU) has been removed.
 - `trap_field_replacement_unit_insert` (Boolean) Field Replaceable Unit (FRU) has been inserted.
 - `trap_link_down` (Boolean) One of the device's communication links has failed.
 - `trap_link_up` (Boolean) One of the device's communication links has become available.
-- `trap_memory_rising_threshold` (Boolean) Memory utilization exceeds a predefined threshold
-- `trap_memory_rising_threshold_value` (Number) Percent of memory utilization that triggers a trap.
+- `trap_memory_rising` (Boolean) Memory utilization exceeds a predefined threshold
+- `trap_memory_rising_threshold` (Number) Percent of memory utilization that triggers a trap.
 - `trap_nat_packet_discard` (Boolean) IP packets are discarded by the NAT.
 - `trap_peer_flap` (Boolean) BGP route flapping detected.
 - `trap_syslog` (Boolean) Enable transmission of trap-related syslog messages.
 - `trap_warm_start` (Boolean) The device is reinitializing itself such that its configuration and the protocol entity implementation is unaltered.
 - `type` (String) Type of the object; this value is always 'FTDSNMPPlatformSettings'.
 
-<a id="nestedatt--snmp_management_hosts"></a>
-### Nested Schema for `snmp_management_hosts`
+<a id="nestedatt--management_hosts"></a>
+### Nested Schema for `management_hosts`
 
 Read-Only:
 
 - `interface_literals` (Set of String) List of interfaces to reach SNMP management host.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--snmp_management_hosts--interface_objects))
-- `ip_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) to reach SNMP management host. (see [below for nested schema](#nestedatt--management_hosts--interface_objects))
+- `network_object_id` (String) Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 network.
 - `poll` (Boolean) The management station periodically requests information from the device.
-- `read_community_string` (String, Sensitive) (SNMPv1, 2c only) Read community string.
+- `read_community` (String, Sensitive) (SNMPv1, 2c only) Read community string.
 - `snmp_version` (String) SNMP version to be used.
 - `trap` (Boolean) The device sends trap events to the management station as they occur.
 - `trap_port` (Number) SNMP trap UDP port.
 - `use_management_interface` (Boolean) Use the device management interface to reach SNMP management station.
 - `username` (String) (SNMPv3 only) Select SNMPv3 username.
 
-<a id="nestedatt--snmp_management_hosts--interface_objects"></a>
-### Nested Schema for `snmp_management_hosts.interface_objects`
+<a id="nestedatt--management_hosts--interface_objects"></a>
+### Nested Schema for `management_hosts.interface_objects`
 
 Read-Only:
 
@@ -98,10 +98,10 @@ Read-Only:
 
 Read-Only:
 
-- `authentication_algorithm_type` (String) Type of authentication algorithm.
+- `authentication_algorithm` (String) Type of authentication algorithm.
 - `authentication_password` (String, Sensitive) SNMPv3 authentication password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
+- `encryption_algorithm` (String) Type of encryption algorithm.
 - `encryption_password` (String, Sensitive) SNMPv3 encryption password. If you selected Encrypted as the `password_type`, the password must be formatted as xx:xx:xx..., where xx are hexadecimal values.
-- `encryption_type` (String) Type of encryption algorithm.
 - `password_type` (String) Whether `authentication_password` and `encryption_password` are in clear text or encrypted.
 - `security_level` (String) Select desired security level.
 - `username` (String) SNMPv3 username.

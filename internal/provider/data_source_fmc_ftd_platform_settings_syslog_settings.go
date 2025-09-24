@@ -82,16 +82,16 @@ func (d *FTDPlatformSettingsSyslogSettingsDataSource) Schema(ctx context.Context
 				MarkdownDescription: "Include timestamp to generated syslog messages in the specified format.",
 				Computed:            true,
 			},
-			"device_id_type": schema.StringAttribute{
+			"device_id_source": schema.StringAttribute{
 				MarkdownDescription: "Include device identifier in syslog messages.",
 				Computed:            true,
 			},
-			"device_id_user_defined_id": schema.StringAttribute{
-				MarkdownDescription: "User defined device identifier. This is required when `device_id_type` is set to `USERDEFINEDID`.",
+			"device_id_user_defined": schema.StringAttribute{
+				MarkdownDescription: "User defined device identifier. This is required when `device_id_source` is set to `USERDEFINEDID`.",
 				Computed:            true,
 			},
 			"device_id_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_type` is set to `INTERFACE`.",
+				MarkdownDescription: "Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.",
 				Computed:            true,
 			},
 			"all_syslog_messages": schema.BoolAttribute{

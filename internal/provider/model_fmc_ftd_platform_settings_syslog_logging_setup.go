@@ -45,7 +45,7 @@ type FTDPlatformSettingsSyslogLoggingSetup struct {
 	EmblemFormat                       types.Bool                                                      `tfsdk:"emblem_format"`
 	SendDebugMessagesAsSyslog          types.Bool                                                      `tfsdk:"send_debug_messages_as_syslog"`
 	InternalBufferMemorySize           types.Int64                                                     `tfsdk:"internal_buffer_memory_size"`
-	FmcLoggingType                     types.String                                                    `tfsdk:"fmc_logging_type"`
+	FmcLoggingMode                     types.String                                                    `tfsdk:"fmc_logging_mode"`
 	FmcLoggingLevel                    types.String                                                    `tfsdk:"fmc_logging_level"`
 	FtpServerHostId                    types.String                                                    `tfsdk:"ftp_server_host_id"`
 	FtpServerUsername                  types.String                                                    `tfsdk:"ftp_server_username"`
@@ -98,8 +98,8 @@ func (data FTDPlatformSettingsSyslogLoggingSetup) toBody(ctx context.Context, st
 	if !data.InternalBufferMemorySize.IsNull() {
 		body, _ = sjson.Set(body, "internalBuffMemSizeInBytes", data.InternalBufferMemorySize.ValueInt64())
 	}
-	if !data.FmcLoggingType.IsNull() {
-		body, _ = sjson.Set(body, "loggingToFMCType", data.FmcLoggingType.ValueString())
+	if !data.FmcLoggingMode.IsNull() {
+		body, _ = sjson.Set(body, "loggingToFMCType", data.FmcLoggingMode.ValueString())
 	}
 	if !data.FmcLoggingLevel.IsNull() {
 		body, _ = sjson.Set(body, "loggingToFMCLogLevel", data.FmcLoggingLevel.ValueString())
@@ -174,9 +174,9 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBody(ctx context.Context,
 		data.InternalBufferMemorySize = types.Int64Value(4096)
 	}
 	if value := res.Get("loggingToFMCType"); value.Exists() {
-		data.FmcLoggingType = types.StringValue(value.String())
+		data.FmcLoggingMode = types.StringValue(value.String())
 	} else {
-		data.FmcLoggingType = types.StringValue("OFF")
+		data.FmcLoggingMode = types.StringValue("OFF")
 	}
 	if value := res.Get("loggingToFMCLogLevel"); value.Exists() {
 		data.FmcLoggingLevel = types.StringValue(value.String())
@@ -268,10 +268,10 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBodyPartial(ctx context.C
 	} else if data.InternalBufferMemorySize.ValueInt64() != 4096 {
 		data.InternalBufferMemorySize = types.Int64Null()
 	}
-	if value := res.Get("loggingToFMCType"); value.Exists() && !data.FmcLoggingType.IsNull() {
-		data.FmcLoggingType = types.StringValue(value.String())
-	} else if data.FmcLoggingType.ValueString() != "OFF" {
-		data.FmcLoggingType = types.StringNull()
+	if value := res.Get("loggingToFMCType"); value.Exists() && !data.FmcLoggingMode.IsNull() {
+		data.FmcLoggingMode = types.StringValue(value.String())
+	} else if data.FmcLoggingMode.ValueString() != "OFF" {
+		data.FmcLoggingMode = types.StringNull()
 	}
 	if value := res.Get("loggingToFMCLogLevel"); value.Exists() && !data.FmcLoggingLevel.IsNull() {
 		data.FmcLoggingLevel = types.StringValue(value.String())

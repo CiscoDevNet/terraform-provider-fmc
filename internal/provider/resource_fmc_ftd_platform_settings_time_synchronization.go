@@ -101,7 +101,7 @@ func (r *FTDPlatformSettingsTimeSynchronizationResource) Schema(ctx context.Cont
 				},
 			},
 			"ntp_servers": schema.ListAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of NTP servers IP Addresses.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of NTP servers IP Addresses / Hostnames.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},

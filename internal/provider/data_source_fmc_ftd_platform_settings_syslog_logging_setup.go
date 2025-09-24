@@ -94,7 +94,7 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				MarkdownDescription: "Size of the internal buffer to which syslog messages are saved if the logging buffer is enabled.",
 				Computed:            true,
 			},
-			"fmc_logging_type": schema.StringAttribute{
+			"fmc_logging_mode": schema.StringAttribute{
 				MarkdownDescription: "FMC logging mode.",
 				Computed:            true,
 			},

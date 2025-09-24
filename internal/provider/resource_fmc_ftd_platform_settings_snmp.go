@@ -95,11 +95,11 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_snmp_server": schema.BoolAttribute{
+			"snmp_server": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable SNMP servers.").String,
 				Optional:            true,
 			},
-			"read_community_string": schema.StringAttribute{
+			"read_community": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Password used by a SNMP management station when sending requests to the threat defense device.").String,
 				Optional:            true,
 				Sensitive:           true,
@@ -107,7 +107,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringvalidator.LengthBetween(0, 32),
 				},
 			},
-			"system_administrator_name": schema.StringAttribute{
+			"system_administrator": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Name of the device administrator or other contact person.").String,
 				Optional:            true,
 				Validators: []validator.String{
@@ -130,13 +130,13 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 				},
 				Default: int64default.StaticInt64(161),
 			},
-			"snmp_management_hosts": schema.ListNestedAttribute{
+			"management_hosts": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of SNMP management hosts.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"ip_object_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 subnet.").String,
+						"network_object_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the network object that defines the SNMP management station's host address. This can be an IPv6 host, IPv4 host, IPv4 range or IPv4 network.").String,
 							Required:            true,
 						},
 						"snmp_version": schema.StringAttribute{
@@ -150,7 +150,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 							MarkdownDescription: helpers.NewAttributeDescription("(SNMPv3 only) Select SNMPv3 username.").String,
 							Optional:            true,
 						},
-						"read_community_string": schema.StringAttribute{
+						"read_community": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("(SNMPv1, 2c only) Read community string.").String,
 							Optional:            true,
 							Sensitive:           true,
@@ -233,7 +233,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 								stringvalidator.OneOf("Clear", "Encrypted"),
 							},
 						},
-						"authentication_algorithm_type": schema.StringAttribute{
+						"authentication_algorithm": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of authentication algorithm.").AddStringEnumDescription("SHA", "SHA224", "SHA256", "SHA384").String,
 							Optional:            true,
 							Validators: []validator.String{
@@ -248,7 +248,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 								stringvalidator.LengthBetween(0, 256),
 							},
 						},
-						"encryption_type": schema.StringAttribute{
+						"encryption_algorithm": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of encryption algorithm.").AddStringEnumDescription("AES128", "AES192", "AES256").String,
 							Optional:            true,
 							Validators: []validator.String{
@@ -310,40 +310,40 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("IP packets are discarded by the NAT.").String,
 				Optional:            true,
 			},
-			"trap_cpu_rising_threshold": schema.BoolAttribute{
+			"trap_cpu_rising": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("CPU utilization exceeds a predefined threshold for a configured period of time.").String,
 				Optional:            true,
 			},
-			"trap_cpu_rising_threshold_value": schema.Int64Attribute{
+			"trap_cpu_rising_threshold": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Percent of CPU utilization that triggers a trap.").AddIntegerRangeDescription(10, 94).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(10, 94),
 				},
 			},
-			"trap_cpu_rising_threshold_interval": schema.Int64Attribute{
+			"trap_cpu_rising_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Time interval (in minutes) to evaluate the CPU rising threshold.").AddIntegerRangeDescription(1, 60).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 60),
 				},
 			},
-			"trap_memory_rising_threshold": schema.BoolAttribute{
+			"trap_memory_rising": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Memory utilization exceeds a predefined threshold").String,
 				Optional:            true,
 			},
-			"trap_memory_rising_threshold_value": schema.Int64Attribute{
+			"trap_memory_rising_threshold": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Percent of memory utilization that triggers a trap.").AddIntegerRangeDescription(50, 95).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(50, 95),
 				},
 			},
-			"trap_failover": schema.BoolAttribute{
+			"trap_failover_state": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Change in the failover state.").String,
 				Optional:            true,
 			},
-			"trap_cluster": schema.BoolAttribute{
+			"trap_cluster_state": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Change in the cluster state.").String,
 				Optional:            true,
 			},

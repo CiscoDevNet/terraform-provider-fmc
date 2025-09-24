@@ -106,8 +106,6 @@ func (d *FTDPlatformSettingsDataSource) Configure(_ context.Context, req datasou
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *FTDPlatformSettingsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config FTDPlatformSettings
 
@@ -165,10 +163,11 @@ func (d *FTDPlatformSettingsDataSource) Read(ctx context.Context, req datasource
 
 	config.fromBody(ctx, res)
 
+	// FMCBUG: CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
+	config.Type = types.StringValue("FTDPlatformSettingsPolicy")
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read

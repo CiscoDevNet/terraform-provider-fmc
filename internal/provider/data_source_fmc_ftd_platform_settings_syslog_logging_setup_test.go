@@ -36,7 +36,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "emblem_format", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "send_debug_messages_as_syslog", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "internal_buffer_memory_size", "4096"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_type", "VPN"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_mode", "VPN"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_level", "ERR"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_username", "ftpuser"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_path", "/logs"))
@@ -88,7 +88,7 @@ func testAccDataSourceFmcFTDPlatformSettingsSyslogLoggingSetupConfig() string {
 	config += `	emblem_format = false` + "\n"
 	config += `	send_debug_messages_as_syslog = false` + "\n"
 	config += `	internal_buffer_memory_size = 4096` + "\n"
-	config += `	fmc_logging_type = "VPN"` + "\n"
+	config += `	fmc_logging_mode = "VPN"` + "\n"
 	config += `	fmc_logging_level = "ERR"` + "\n"
 	config += `	ftp_server_host_id = fmc_host.test.id` + "\n"
 	config += `	ftp_server_username = "ftpuser"` + "\n"

@@ -112,7 +112,7 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"module_id": schema.StringAttribute{
+						"name": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Name of the health module.").AddStringEnumDescription("hm_disk_status", "hm_asp_drop", "hm_tds", "hm_db", "hm_conn_status_sse", "hm_is5800_powersupply", "hm_card_reset", "hm_ntp_server", "hm_threat_grid_amp", "hm_ftd_ha", "hm_talosagent", "hm_conn_status_amp", "hm_snort_stats", "hm_critical_process", "hm_fsic", "hm_ftd_csdac_identity_services", "hm_deployed_configuration", "hm_ftd_config_resource", "hm_routing_stats", "hm_vpn_stats", "hm_snortstats", "hm_is5800_alarm", "hm_cluster", "hm_bypass", "hm_mu", "hm_reconfig_detection", "hm_xTLS", "hm_pathmonitoring", "hm_cpu", "hm_process", "hm_simu", "hm_fmcaccess_config_change", "hm_linkstate_propagation", "hm_adv_snort_stats", "hm_sdwan", "hm_static_analysis", "hm_chm", "hm_platform_faults", "hm_conn_stats", "hm_fxos_health", "hm_chassis_status_ftd", "hm_du", "hm_ifconfig", "hm_flow_offload", "hm_inlinelink_alarm").String,
 							Required:            true,
 							Validators: []validator.String{
@@ -125,7 +125,7 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of health module.").AddStringEnumDescription("FTD", "FMC_FTD", "SENSOR", "FMC").String,
-							Optional:            true,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("FTD", "FMC_FTD", "SENSOR", "FMC"),
 							},
@@ -151,21 +151,21 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 								int64validator.Between(1, 99),
 							},
 						},
-						"custom_threshold": schema.ListNestedAttribute{
+						"custom_thresholds": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Custom threshold configuration for health module.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of custom threshold.").AddStringEnumDescription("Red-FC", "Yellow-FC").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("Red-FC", "Yellow-FC"),
 										},
 									},
-									"value": schema.Int64Attribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Value of custom threshold.").AddIntegerRangeDescription(1, 99).String,
-										Optional:            true,
+									"threshold": schema.Int64Attribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Threshold level.").AddIntegerRangeDescription(1, 99).String,
+										Required:            true,
 										Validators: []validator.Int64{
 											int64validator.Between(1, 99),
 										},
@@ -173,18 +173,18 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 								},
 							},
 						},
-						"alert_config": schema.ListNestedAttribute{
+						"alert_configs": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Alert configuration for health module.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"name": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Name of the alert configuration.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"enabled": schema.BoolAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Enable alert configuration.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"thresholds": schema.ListNestedAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Thresholds for alert configuration.").String,
@@ -193,14 +193,14 @@ func (r *HealthPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 											Attributes: map[string]schema.Attribute{
 												"type": schema.StringAttribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Type of threshold.").AddStringEnumDescription("red", "yellow").String,
-													Optional:            true,
+													Required:            true,
 													Validators: []validator.String{
 														stringvalidator.OneOf("red", "yellow"),
 													},
 												},
-												"value": schema.Int64Attribute{
-													MarkdownDescription: helpers.NewAttributeDescription("Value of threshold.").AddIntegerRangeDescription(1, 99).String,
-													Optional:            true,
+												"threshold": schema.Int64Attribute{
+													MarkdownDescription: helpers.NewAttributeDescription("Threshold level.").AddIntegerRangeDescription(1, 99).String,
+													Required:            true,
 													Validators: []validator.Int64{
 														int64validator.Between(1, 99),
 													},
@@ -428,15 +428,3 @@ func (r *HealthPolicyResource) ImportState(ctx context.Context, req resource.Imp
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

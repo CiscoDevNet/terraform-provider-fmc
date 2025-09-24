@@ -5,9 +5,10 @@ resource "fmc_health_policy" "example" {
   is_default_policy = false
   health_modules = [
     {
-      module_id = "hm_asp_drop"
-      enabled   = true
-      alert_config = [
+      name    = "hm_asp_drop"
+      enabled = true
+      type    = "FTD"
+      alert_configs = [
         {
           name    = "nat-xlate-failed"
           enabled = true

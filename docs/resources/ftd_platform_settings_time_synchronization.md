@@ -36,7 +36,7 @@ resource "fmc_ftd_platform_settings_time_synchronization" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ntp_servers` (List of String) List of NTP servers IP Addresses.
+- `ntp_servers` (List of String) List of NTP servers IP Addresses / Hostnames.
 
 ### Read-Only
 
