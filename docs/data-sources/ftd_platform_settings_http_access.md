@@ -38,22 +38,22 @@ data "fmc_ftd_platform_settings_http_access" "example" {
 
 ### Read-Only
 
-- `enable_http_server` (Boolean) Enable HTTP server.
-- `http_configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--http_configurations))
+- `configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--configurations))
+- `http_server` (Boolean) Enable HTTP server.
 - `http_server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
 - `type` (String) Type of the object; this value is always 'HttpAccessSetting'.
 
-<a id="nestedatt--http_configurations"></a>
-### Nested Schema for `http_configurations`
+<a id="nestedatt--configurations"></a>
+### Nested Schema for `configurations`
 
 Read-Only:
 
 - `interface_literals` (Set of String) List of interface literals on which HTTP server is available.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--configurations--interface_objects))
 - `source_network_object_id` (String) Id of network object (host, network, network group) defining the source IP addresses from which HTTP access is allowed.
 
-<a id="nestedatt--http_configurations--interface_objects"></a>
-### Nested Schema for `http_configurations.interface_objects`
+<a id="nestedatt--configurations--interface_objects"></a>
+### Nested Schema for `configurations.interface_objects`
 
 Read-Only:
 

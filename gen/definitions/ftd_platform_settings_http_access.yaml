@@ -20,6 +20,7 @@ attributes:
     description: Type of the object; this value is always 'HttpAccessSetting'.
     computed: true
   - model_name: enableHttpServer
+    tf_name: http_server
     type: Bool
     description: Enable HTTP server.
     example: true
@@ -32,7 +33,7 @@ attributes:
     example: 443
     default_value: 443
   - model_name: httpConfiguration
-    tf_name: http_configurations
+    tf_name: configurations
     type: List
     description: List of allowed HTTP connections.
     attributes:

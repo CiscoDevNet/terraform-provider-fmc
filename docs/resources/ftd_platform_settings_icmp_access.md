@@ -22,7 +22,7 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   rate_limit               = 1
   burst_size               = 1
-  icmp_configurations = [
+  configurations = [
     {
       action                   = "Permit"
       icmp_service_id          = "5a9f2d3c-08d1-11e6-b939-00155d0a1eb1"
@@ -51,8 +51,8 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
 - `burst_size` (Number) Burst size on ICMPv4 Unreachable messages.
   - Range: `1`-`10`
   - Default value: `1`
+- `configurations` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--configurations))
 - `domain` (String) Name of the FMC domain
-- `icmp_configurations` (Attributes List) ICMP access rules. (see [below for nested schema](#nestedatt--icmp_configurations))
 - `rate_limit` (Number) Rate limit on ICMPv4 Unreachable messages.
   - Range: `1`-`100`
   - Default value: `1`
@@ -62,8 +62,8 @@ resource "fmc_ftd_platform_settings_icmp_access" "example" {
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'ICMPSetting'.
 
-<a id="nestedatt--icmp_configurations"></a>
-### Nested Schema for `icmp_configurations`
+<a id="nestedatt--configurations"></a>
+### Nested Schema for `configurations`
 
 Required:
 
@@ -75,10 +75,10 @@ Required:
 Optional:
 
 - `interface_literals` (Set of String) List of interface literals for this rule.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) for this rule. (see [below for nested schema](#nestedatt--icmp_configurations--interface_objects))
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) for this rule. (see [below for nested schema](#nestedatt--configurations--interface_objects))
 
-<a id="nestedatt--icmp_configurations--interface_objects"></a>
-### Nested Schema for `icmp_configurations.interface_objects`
+<a id="nestedatt--configurations--interface_objects"></a>
+### Nested Schema for `configurations.interface_objects`
 
 Required:
 

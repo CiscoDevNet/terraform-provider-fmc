@@ -83,7 +83,7 @@ func (d *FTDPlatformSettingsICMPAccessDataSource) Schema(ctx context.Context, re
 				MarkdownDescription: "Burst size on ICMPv4 Unreachable messages.",
 				Computed:            true,
 			},
-			"icmp_configurations": schema.ListNestedAttribute{
+			"configurations": schema.ListNestedAttribute{
 				MarkdownDescription: "ICMP access rules.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

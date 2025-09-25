@@ -113,7 +113,7 @@ func (r *FTDPlatformSettingsICMPAccessResource) Schema(ctx context.Context, req 
 				},
 				Default: int64default.StaticInt64(1),
 			},
-			"icmp_configurations": schema.ListNestedAttribute{
+			"configurations": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("ICMP access rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{

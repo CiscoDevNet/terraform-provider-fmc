@@ -34,7 +34,7 @@ attributes:
     default_value: 1
     example: 1
   - model_name: icmpConfigs
-    tf_name: icmp_configurations
+    tf_name: configurations
     type: List
     description: ICMP access rules.
     attributes:

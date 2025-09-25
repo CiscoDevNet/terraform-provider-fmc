@@ -95,7 +95,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_http_server": schema.BoolAttribute{
+			"http_server": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable HTTP server.").String,
 				Optional:            true,
 			},
@@ -108,7 +108,7 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 				},
 				Default: int64default.StaticInt64(443),
 			},
-			"http_configurations": schema.ListNestedAttribute{
+			"configurations": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of allowed HTTP connections.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{

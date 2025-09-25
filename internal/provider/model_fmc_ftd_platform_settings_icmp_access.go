@@ -37,24 +37,24 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type FTDPlatformSettingsICMPAccess struct {
-	Id                    types.String                                      `tfsdk:"id"`
-	Domain                types.String                                      `tfsdk:"domain"`
-	FtdPlatformSettingsId types.String                                      `tfsdk:"ftd_platform_settings_id"`
-	Type                  types.String                                      `tfsdk:"type"`
-	RateLimit             types.Int64                                       `tfsdk:"rate_limit"`
-	BurstSize             types.Int64                                       `tfsdk:"burst_size"`
-	IcmpConfigurations    []FTDPlatformSettingsICMPAccessIcmpConfigurations `tfsdk:"icmp_configurations"`
+	Id                    types.String                                  `tfsdk:"id"`
+	Domain                types.String                                  `tfsdk:"domain"`
+	FtdPlatformSettingsId types.String                                  `tfsdk:"ftd_platform_settings_id"`
+	Type                  types.String                                  `tfsdk:"type"`
+	RateLimit             types.Int64                                   `tfsdk:"rate_limit"`
+	BurstSize             types.Int64                                   `tfsdk:"burst_size"`
+	Configurations        []FTDPlatformSettingsICMPAccessConfigurations `tfsdk:"configurations"`
 }
 
-type FTDPlatformSettingsICMPAccessIcmpConfigurations struct {
-	Action                types.String                                                      `tfsdk:"action"`
-	IcmpServiceId         types.String                                                      `tfsdk:"icmp_service_id"`
-	SourceNetworkObjectId types.String                                                      `tfsdk:"source_network_object_id"`
-	InterfaceLiterals     types.Set                                                         `tfsdk:"interface_literals"`
-	InterfaceObjects      []FTDPlatformSettingsICMPAccessIcmpConfigurationsInterfaceObjects `tfsdk:"interface_objects"`
+type FTDPlatformSettingsICMPAccessConfigurations struct {
+	Action                types.String                                                  `tfsdk:"action"`
+	IcmpServiceId         types.String                                                  `tfsdk:"icmp_service_id"`
+	SourceNetworkObjectId types.String                                                  `tfsdk:"source_network_object_id"`
+	InterfaceLiterals     types.Set                                                     `tfsdk:"interface_literals"`
+	InterfaceObjects      []FTDPlatformSettingsICMPAccessConfigurationsInterfaceObjects `tfsdk:"interface_objects"`
 }
 
-type FTDPlatformSettingsICMPAccessIcmpConfigurationsInterfaceObjects struct {
+type FTDPlatformSettingsICMPAccessConfigurationsInterfaceObjects struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 	Name types.String `tfsdk:"name"`
@@ -88,9 +88,9 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 	if !data.BurstSize.IsNull() {
 		body, _ = sjson.Set(body, "burstSize", data.BurstSize.ValueInt64())
 	}
-	if len(data.IcmpConfigurations) > 0 {
+	if len(data.Configurations) > 0 {
 		body, _ = sjson.Set(body, "icmpConfigs", []any{})
-		for _, item := range data.IcmpConfigurations {
+		for _, item := range data.Configurations {
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "icmpAction", item.Action.ValueString())
@@ -149,10 +149,10 @@ func (data *FTDPlatformSettingsICMPAccess) fromBody(ctx context.Context, res gjs
 		data.BurstSize = types.Int64Value(1)
 	}
 	if value := res.Get("icmpConfigs"); value.Exists() {
-		data.IcmpConfigurations = make([]FTDPlatformSettingsICMPAccessIcmpConfigurations, 0)
+		data.Configurations = make([]FTDPlatformSettingsICMPAccessConfigurations, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := FTDPlatformSettingsICMPAccessIcmpConfigurations{}
+			data := FTDPlatformSettingsICMPAccessConfigurations{}
 			if value := res.Get("icmpAction"); value.Exists() {
 				data.Action = types.StringValue(value.String())
 			} else {
@@ -174,10 +174,10 @@ func (data *FTDPlatformSettingsICMPAccess) fromBody(ctx context.Context, res gjs
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsICMPAccessIcmpConfigurationsInterfaceObjects, 0)
+				data.InterfaceObjects = make([]FTDPlatformSettingsICMPAccessConfigurationsInterfaceObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := FTDPlatformSettingsICMPAccessIcmpConfigurationsInterfaceObjects{}
+					data := FTDPlatformSettingsICMPAccessConfigurationsInterfaceObjects{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
@@ -197,7 +197,7 @@ func (data *FTDPlatformSettingsICMPAccess) fromBody(ctx context.Context, res gjs
 					return true
 				})
 			}
-			(*parent).IcmpConfigurations = append((*parent).IcmpConfigurations, data)
+			(*parent).Configurations = append((*parent).Configurations, data)
 			return true
 		})
 	}
@@ -227,12 +227,12 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 	} else if data.BurstSize.ValueInt64() != 1 {
 		data.BurstSize = types.Int64Null()
 	}
-	for i := 0; i < len(data.IcmpConfigurations); i++ {
+	for i := 0; i < len(data.Configurations); i++ {
 		keys := [...]string{"icmpService.id", "network.object.id"}
-		keyValues := [...]string{data.IcmpConfigurations[i].IcmpServiceId.ValueString(), data.IcmpConfigurations[i].SourceNetworkObjectId.ValueString()}
+		keyValues := [...]string{data.Configurations[i].IcmpServiceId.ValueString(), data.Configurations[i].SourceNetworkObjectId.ValueString()}
 
 		parent := &data
-		data := (*parent).IcmpConfigurations[i]
+		data := (*parent).Configurations[i]
 		parentRes := &res
 		var res gjson.Result
 
@@ -254,11 +254,11 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing IcmpConfigurations[%d] = %+v",
+			tflog.Debug(ctx, fmt.Sprintf("removing Configurations[%d] = %+v",
 				i,
-				(*parent).IcmpConfigurations[i],
+				(*parent).Configurations[i],
 			))
-			(*parent).IcmpConfigurations = slices.Delete((*parent).IcmpConfigurations, i, i+1)
+			(*parent).Configurations = slices.Delete((*parent).Configurations, i, i+1)
 			i--
 
 			continue
@@ -336,7 +336,7 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 			}
 			(*parent).InterfaceObjects[i] = data
 		}
-		(*parent).IcmpConfigurations[i] = data
+		(*parent).Configurations[i] = data
 	}
 }
 

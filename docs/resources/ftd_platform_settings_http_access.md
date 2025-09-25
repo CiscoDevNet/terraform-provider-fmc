@@ -20,9 +20,9 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ftd_platform_settings_http_access" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  enable_http_server       = true
+  http_server              = true
   http_server_port         = 443
-  http_configurations = [
+  configurations = [
     {
       source_network_object_id = "5a9f6d9c-3f8d-11e4-9163-6c4008b8c5d7"
       interface_objects = [
@@ -46,9 +46,9 @@ resource "fmc_ftd_platform_settings_http_access" "example" {
 
 ### Optional
 
+- `configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--configurations))
 - `domain` (String) Name of the FMC domain
-- `enable_http_server` (Boolean) Enable HTTP server.
-- `http_configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--http_configurations))
+- `http_server` (Boolean) Enable HTTP server.
 - `http_server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
   - Range: `1`-`65535`
   - Default value: `443`
@@ -58,8 +58,8 @@ resource "fmc_ftd_platform_settings_http_access" "example" {
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'HttpAccessSetting'.
 
-<a id="nestedatt--http_configurations"></a>
-### Nested Schema for `http_configurations`
+<a id="nestedatt--configurations"></a>
+### Nested Schema for `configurations`
 
 Required:
 
@@ -68,10 +68,10 @@ Required:
 Optional:
 
 - `interface_literals` (Set of String) List of interface literals on which HTTP server is available.
-- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--http_configurations--interface_objects))
+- `interface_objects` (Attributes Set) List of interface objects (Security Zones or Interface Groups) on which HTTP server is available. (see [below for nested schema](#nestedatt--configurations--interface_objects))
 
-<a id="nestedatt--http_configurations--interface_objects"></a>
-### Nested Schema for `http_configurations.interface_objects`
+<a id="nestedatt--configurations--interface_objects"></a>
+### Nested Schema for `configurations.interface_objects`
 
 Required:
 
