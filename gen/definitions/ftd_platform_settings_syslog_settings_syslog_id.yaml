@@ -32,6 +32,7 @@ attributes:
     mandatory: true
     example: 106004
   - model_name: logLevel
+    tf_name: logging_level
     type: String
     description: Logging level.
     enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG, DEFAULT]

@@ -31,8 +31,8 @@ import (
 func TestAccFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_logging_setup.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "enable_logging", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "enable_logging_on_failover_standby_unit", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "logging_enabled", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "logging_on_failover_standby_unit_enabled", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "emblem_format", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "send_debug_messages_as_syslog", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "internal_buffer_memory_size", "4096"))
@@ -40,7 +40,7 @@ func TestAccFmcFTDPlatformSettingsSyslogLoggingSetup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "fmc_logging_level", "ERR"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_username", "ftpuser"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "ftp_server_path", "/logs"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash_enabled", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash_maximum_space", "3076"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_logging_setup.test", "flash_minimum_free_space", "1024"))
 
@@ -88,8 +88,8 @@ resource "fmc_interface_group" "test" {
 func testAccFmcFTDPlatformSettingsSyslogLoggingSetupConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_syslog_logging_setup" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	enable_logging = true` + "\n"
-	config += `	enable_logging_on_failover_standby_unit = false` + "\n"
+	config += `	logging_enabled = true` + "\n"
+	config += `	logging_on_failover_standby_unit_enabled = false` + "\n"
 	config += `	emblem_format = false` + "\n"
 	config += `	send_debug_messages_as_syslog = false` + "\n"
 	config += `	internal_buffer_memory_size = 4096` + "\n"
@@ -102,7 +102,7 @@ func testAccFmcFTDPlatformSettingsSyslogLoggingSetupConfig_all() string {
 	config += `	ftp_server_interface_groups = [{` + "\n"
 	config += `		id = fmc_interface_group.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	flash = false` + "\n"
+	config += `	flash_enabled = false` + "\n"
 	config += `	flash_maximum_space = 3076` + "\n"
 	config += `	flash_minimum_free_space = 1024` + "\n"
 	config += `}` + "\n"

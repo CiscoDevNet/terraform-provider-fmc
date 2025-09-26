@@ -74,11 +74,11 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 				MarkdownDescription: "Type of the object; this value is always 'SyslogSetting'.",
 				Computed:            true,
 			},
-			"enable_logging": schema.BoolAttribute{
+			"logging_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Turns on the data plane system logging.",
 				Computed:            true,
 			},
-			"enable_logging_on_failover_standby_unit": schema.BoolAttribute{
+			"logging_on_failover_standby_unit_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Turns on logging for the failover standby unit, if available.",
 				Computed:            true,
 			},
@@ -131,7 +131,7 @@ func (d *FTDPlatformSettingsSyslogLoggingSetupDataSource) Schema(ctx context.Con
 					},
 				},
 			},
-			"flash": schema.BoolAttribute{
+			"flash_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Save buffer contents to the flash memory before it is overwritten.",
 				Computed:            true,
 			},

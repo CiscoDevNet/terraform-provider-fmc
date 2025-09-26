@@ -89,8 +89,8 @@ func (d *FTDPlatformSettingsSyslogEmailSetupDataSource) Schema(ctx context.Conte
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
-						"log_level": schema.StringAttribute{
-							MarkdownDescription: "Log level.",
+						"logging_level": schema.StringAttribute{
+							MarkdownDescription: "Logging level.",
 							Computed:            true,
 						},
 					},

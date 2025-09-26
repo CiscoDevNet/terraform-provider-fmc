@@ -20,11 +20,11 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ftd_platform_settings_snmp" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  snmp_server              = true
+  server_enabled           = true
   read_community           = "public"
   system_administrator     = "admin"
   location                 = "Data Center 1"
-  snmp_server_port         = 161
+  server_port              = 161
   management_hosts = [
     {
       network_object_id        = "123e4567-e89b-12d3-a456-426614174000"
@@ -89,8 +89,8 @@ resource "fmc_ftd_platform_settings_snmp" "example" {
 - `location` (String) Location of the device.
 - `management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--management_hosts))
 - `read_community` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
-- `snmp_server` (Boolean) Enable SNMP servers.
-- `snmp_server_port` (Number) UDP port on which incoming requests will be accepted.
+- `server_enabled` (Boolean) Enable SNMP servers.
+- `server_port` (Number) UDP port on which incoming requests will be accepted.
   - Range: `1`-`65535`
   - Default value: `161`
 - `snmpv3_users` (Attributes List) List of SNMPv3 users. (see [below for nested schema](#nestedatt--snmpv3_users))

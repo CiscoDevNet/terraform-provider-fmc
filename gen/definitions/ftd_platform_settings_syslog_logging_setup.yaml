@@ -22,11 +22,12 @@ attributes:
 
   # Basic Logging Settings
   - model_name: enableLogging
+    tf_name: logging_enabled
     type: Bool
     description: Turns on the data plane system logging.
     example: true
   - model_name: enableLoggingFailover
-    tf_name: enable_logging_on_failover_standby_unit
+    tf_name: logging_on_failover_standby_unit_enabled
     type: Bool
     description: Turns on logging for the failover standby unit, if available.
     example: false
@@ -106,7 +107,7 @@ attributes:
 
   # Flash size
   - model_name: enableFlash
-    tf_name: flash
+    tf_name: flash_enabled
     type: Bool
     description: Save buffer contents to the flash memory before it is overwritten.
     example: false

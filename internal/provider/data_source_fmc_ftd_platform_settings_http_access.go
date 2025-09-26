@@ -75,15 +75,15 @@ func (d *FTDPlatformSettingsHTTPAccessDataSource) Schema(ctx context.Context, re
 				MarkdownDescription: "Type of the object; this value is always 'HttpAccessSetting'.",
 				Computed:            true,
 			},
-			"enable_http_server": schema.BoolAttribute{
+			"server_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Enable HTTP server.",
 				Computed:            true,
 			},
-			"http_server_port": schema.Int64Attribute{
+			"server_port": schema.Int64Attribute{
 				MarkdownDescription: "Port on which the HTTP server will listen. Please don't use 80 or 1443.",
 				Computed:            true,
 			},
-			"http_configurations": schema.ListNestedAttribute{
+			"configurations": schema.ListNestedAttribute{
 				MarkdownDescription: "List of allowed HTTP connections.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

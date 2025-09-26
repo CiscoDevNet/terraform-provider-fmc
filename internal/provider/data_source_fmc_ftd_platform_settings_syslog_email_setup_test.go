@@ -33,7 +33,7 @@ func TestAccDataSourceFmcFTDPlatformSettingsSyslogEmailSetup(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_syslog_email_setup.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_email_setup.test", "source_email_address", "test@example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_email_setup.test", "destinations.0.email_addresses.0", "recipient@example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_email_setup.test", "destinations.0.log_level", "ERR"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_syslog_email_setup.test", "destinations.0.logging_level", "ERR"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -67,7 +67,7 @@ func testAccDataSourceFmcFTDPlatformSettingsSyslogEmailSetupConfig() string {
 	config += `	source_email_address = "test@example.com"` + "\n"
 	config += `	destinations = [{` + "\n"
 	config += `		email_addresses = ["recipient@example.com"]` + "\n"
-	config += `		log_level = "ERR"` + "\n"
+	config += `		logging_level = "ERR"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

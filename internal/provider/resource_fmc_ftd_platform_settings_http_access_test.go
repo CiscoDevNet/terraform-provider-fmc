@@ -31,8 +31,8 @@ import (
 func TestAccFmcFTDPlatformSettingsHTTPAccess(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_http_access.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_http_access.test", "enable_http_server", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_http_access.test", "http_server_port", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_http_access.test", "server_enabled", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_http_access.test", "server_port", "443"))
 
 	var steps []resource.TestStep
 	steps = append(steps, resource.TestStep{
@@ -78,9 +78,9 @@ resource "fmc_security_zone" "test" {
 func testAccFmcFTDPlatformSettingsHTTPAccessConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_http_access" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	enable_http_server = true` + "\n"
-	config += `	http_server_port = 443` + "\n"
-	config += `	http_configurations = [{` + "\n"
+	config += `	server_enabled = true` + "\n"
+	config += `	server_port = 443` + "\n"
+	config += `	configurations = [{` + "\n"
 	config += `		source_network_object_id = fmc_host.test.id` + "\n"
 	config += `		interface_objects = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"

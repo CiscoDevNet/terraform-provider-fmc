@@ -32,7 +32,7 @@ func TestAccFmcFTDPlatformSettingsSyslogSettingsSyslogID(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_syslog_settings_syslog_id.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings_syslog_id.test", "syslog_id", "106004"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings_syslog_id.test", "log_level", "ERR"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings_syslog_id.test", "logging_level", "ERR"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings_syslog_id.test", "enabled", "true"))
 
 	var steps []resource.TestStep
@@ -75,7 +75,7 @@ func testAccFmcFTDPlatformSettingsSyslogSettingsSyslogIDConfig_all() string {
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	ftd_platform_settings_syslog_settings_id = fmc_ftd_platform_settings_syslog_settings.test.id` + "\n"
 	config += `	syslog_id = 106004` + "\n"
-	config += `	log_level = "ERR"` + "\n"
+	config += `	logging_level = "ERR"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `}` + "\n"
 	return config

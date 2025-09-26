@@ -39,7 +39,7 @@ type FTDPlatformSettingsBanner struct {
 	Domain                types.String `tfsdk:"domain"`
 	FtdPlatformSettingsId types.String `tfsdk:"ftd_platform_settings_id"`
 	Type                  types.String `tfsdk:"type"`
-	BannerText            types.List   `tfsdk:"banner_text"`
+	Text                  types.List   `tfsdk:"text"`
 }
 
 // End of section. //template:end types
@@ -64,9 +64,9 @@ func (data FTDPlatformSettingsBanner) toBody(ctx context.Context, state FTDPlatf
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.BannerText.IsNull() {
+	if !data.Text.IsNull() {
 		var values []string
-		data.BannerText.ElementsAs(ctx, &values, false)
+		data.Text.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "bannerText", values)
 	}
 	return body
@@ -83,9 +83,9 @@ func (data *FTDPlatformSettingsBanner) fromBody(ctx context.Context, res gjson.R
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("bannerText"); value.Exists() {
-		data.BannerText = helpers.GetStringList(value.Array())
+		data.Text = helpers.GetStringList(value.Array())
 	} else {
-		data.BannerText = types.ListNull(types.StringType)
+		data.Text = types.ListNull(types.StringType)
 	}
 }
 
@@ -103,10 +103,10 @@ func (data *FTDPlatformSettingsBanner) fromBodyPartial(ctx context.Context, res 
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("bannerText"); value.Exists() && !data.BannerText.IsNull() {
-		data.BannerText = helpers.GetStringList(value.Array())
+	if value := res.Get("bannerText"); value.Exists() && !data.Text.IsNull() {
+		data.Text = helpers.GetStringList(value.Array())
 	} else {
-		data.BannerText = types.ListNull(types.StringType)
+		data.Text = types.ListNull(types.StringType)
 	}
 }
 

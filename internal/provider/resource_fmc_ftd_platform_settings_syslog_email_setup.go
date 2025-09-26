@@ -107,8 +107,8 @@ func (r *FTDPlatformSettingsSyslogEmailSetupResource) Schema(ctx context.Context
 							ElementType:         types.StringType,
 							Required:            true,
 						},
-						"log_level": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Log level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
+						"logging_level": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Logging level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG"),

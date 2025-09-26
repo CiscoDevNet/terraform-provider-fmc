@@ -39,9 +39,7 @@ data "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
 ### Read-Only
 
 - `emblem_format` (Boolean) Enables EMBLEM format logging.
-- `enable_logging` (Boolean) Turns on the data plane system logging.
-- `enable_logging_on_failover_standby_unit` (Boolean) Turns on logging for the failover standby unit, if available.
-- `flash` (Boolean) Save buffer contents to the flash memory before it is overwritten.
+- `flash_enabled` (Boolean) Save buffer contents to the flash memory before it is overwritten.
 - `flash_maximum_space` (Number) Maximum space to be used in the flash memory for logging (in kilobytes).
 - `flash_minimum_free_space` (Number) Minimum free space to be preserved in flash memory (in kilobytes).
 - `fmc_logging_level` (String) FMC logging level. Required if `fmc_logging_type` is not `OFF``.
@@ -52,6 +50,8 @@ data "fmc_ftd_platform_settings_syslog_logging_setup" "example" {
 - `ftp_server_path` (String) Path on the FTP server to which the logs are uploaded.
 - `ftp_server_username` (String) User name to log in to the FTP server.
 - `internal_buffer_memory_size` (Number) Size of the internal buffer to which syslog messages are saved if the logging buffer is enabled.
+- `logging_enabled` (Boolean) Turns on the data plane system logging.
+- `logging_on_failover_standby_unit_enabled` (Boolean) Turns on logging for the failover standby unit, if available.
 - `send_debug_messages_as_syslog` (Boolean) Redirects all the debug trace output to the syslog.
 - `type` (String) Type of the object; this value is always 'SyslogSetting'.
 

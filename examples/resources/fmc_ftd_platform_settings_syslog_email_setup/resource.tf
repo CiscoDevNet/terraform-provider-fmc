@@ -4,7 +4,7 @@ resource "fmc_ftd_platform_settings_syslog_email_setup" "example" {
   destinations = [
     {
       email_addresses = ["recipient@example.com"]
-      log_level       = "ERR"
+      logging_level   = "ERR"
     }
   ]
 }

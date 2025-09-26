@@ -33,7 +33,7 @@ func TestAccFmcFTDPlatformSettingsICMPAccess(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_icmp_access.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_icmp_access.test", "rate_limit", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_icmp_access.test", "burst_size", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_icmp_access.test", "icmp_configurations.0.action", "Permit"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_icmp_access.test", "configurations.0.action", "Permit"))
 
 	var steps []resource.TestStep
 	steps = append(steps, resource.TestStep{
@@ -87,9 +87,9 @@ func testAccFmcFTDPlatformSettingsICMPAccessConfig_all() string {
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
 	config += `	rate_limit = 1` + "\n"
 	config += `	burst_size = 1` + "\n"
-	config += `	icmp_configurations = [{` + "\n"
+	config += `	configurations = [{` + "\n"
 	config += `		action = "Permit"` + "\n"
-	config += `		icmp_service_id = fmc_icmpv4_object.test.id` + "\n"
+	config += `		icmp_service_object_id = fmc_icmpv4_object.test.id` + "\n"
 	config += `		source_network_object_id = fmc_host.test.id` + "\n"
 	config += `		interface_objects = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"

@@ -39,9 +39,10 @@ attributes:
         description: Destination email address.
         example: "recipient@example.com"
       - model_name: logLevel
+        tf_name: logging_level
         type: String
         mandatory: true
-        description: Log level.
+        description: Logging level.
         enum_values: [EMERG, ALERT, CRIT, ERR, WARNING, NOTICE, INFO, DEBUG]
         example: "ERR"
 

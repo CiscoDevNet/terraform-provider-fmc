@@ -106,7 +106,7 @@ func (r *FTDPlatformSettingsSyslogSettingsSyslogIDResource) Schema(ctx context.C
 				MarkdownDescription: helpers.NewAttributeDescription("Syslog message ID.").String,
 				Required:            true,
 			},
-			"log_level": schema.StringAttribute{
+			"logging_level": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Logging level.").AddStringEnumDescription("EMERG", "ALERT", "CRIT", "ERR", "WARNING", "NOTICE", "INFO", "DEBUG", "DEFAULT").AddDefaultValueDescription("DEFAULT").String,
 				Optional:            true,
 				Computed:            true,

@@ -47,7 +47,7 @@ type FTDPlatformSettingsSyslogEmailSetup struct {
 
 type FTDPlatformSettingsSyslogEmailSetupDestinations struct {
 	EmailAddresses types.List   `tfsdk:"email_addresses"`
-	LogLevel       types.String `tfsdk:"log_level"`
+	LoggingLevel   types.String `tfsdk:"logging_level"`
 }
 
 // End of section. //template:end types
@@ -84,8 +84,8 @@ func (data FTDPlatformSettingsSyslogEmailSetup) toBody(ctx context.Context, stat
 				item.EmailAddresses.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "emailIds", values)
 			}
-			if !item.LogLevel.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logLevel", item.LogLevel.ValueString())
+			if !item.LoggingLevel.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logLevel", item.LoggingLevel.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "destinationEmails.-1", itemBody)
 		}
@@ -119,9 +119,9 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBody(ctx context.Context, r
 				data.EmailAddresses = types.ListNull(types.StringType)
 			}
 			if value := res.Get("logLevel"); value.Exists() {
-				data.LogLevel = types.StringValue(value.String())
+				data.LoggingLevel = types.StringValue(value.String())
 			} else {
-				data.LogLevel = types.StringNull()
+				data.LoggingLevel = types.StringNull()
 			}
 			(*parent).Destinations = append((*parent).Destinations, data)
 			return true
@@ -150,7 +150,7 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBodyPartial(ctx context.Con
 	}
 	for i := 0; i < len(data.Destinations); i++ {
 		keys := [...]string{"logLevel"}
-		keyValues := [...]string{data.Destinations[i].LogLevel.ValueString()}
+		keyValues := [...]string{data.Destinations[i].LoggingLevel.ValueString()}
 
 		parent := &data
 		data := (*parent).Destinations[i]
@@ -189,10 +189,10 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBodyPartial(ctx context.Con
 		} else {
 			data.EmailAddresses = types.ListNull(types.StringType)
 		}
-		if value := res.Get("logLevel"); value.Exists() && !data.LogLevel.IsNull() {
-			data.LogLevel = types.StringValue(value.String())
+		if value := res.Get("logLevel"); value.Exists() && !data.LoggingLevel.IsNull() {
+			data.LoggingLevel = types.StringValue(value.String())
 		} else {
-			data.LogLevel = types.StringNull()
+			data.LoggingLevel = types.StringNull()
 		}
 		(*parent).Destinations[i] = data
 	}

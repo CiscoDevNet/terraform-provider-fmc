@@ -31,10 +31,10 @@ import (
 func TestAccFmcFTDPlatformSettingsSNMP(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ftd_platform_settings_snmp.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmp_server", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "server_enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "system_administrator", "admin"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "location", "Data Center 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "snmp_server_port", "161"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "server_port", "161"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "management_hosts.0.snmp_version", "SNMPv3"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "management_hosts.0.username", "snmpuser1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_snmp.test", "management_hosts.0.poll", "true"))
@@ -110,11 +110,11 @@ resource "fmc_security_zone" "test" {
 func testAccFmcFTDPlatformSettingsSNMPConfig_all() string {
 	config := `resource "fmc_ftd_platform_settings_snmp" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	snmp_server = true` + "\n"
+	config += `	server_enabled = true` + "\n"
 	config += `	read_community = "public"` + "\n"
 	config += `	system_administrator = "admin"` + "\n"
 	config += `	location = "Data Center 1"` + "\n"
-	config += `	snmp_server_port = 161` + "\n"
+	config += `	server_port = 161` + "\n"
 	config += `	management_hosts = [{` + "\n"
 	config += `		network_object_id = fmc_host.test.id` + "\n"
 	config += `		snmp_version = "SNMPv3"` + "\n"

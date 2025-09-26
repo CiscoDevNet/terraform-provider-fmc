@@ -54,7 +54,7 @@ attributes:
     exclude_example: true
   - model_name: enable
     data_path: [syslogEnableAll]
-    tf_name: all_syslog_messages
+    tf_name: all_syslog_messages_enabled
     type: Bool
     description: Enable all syslog messages.
     example: true

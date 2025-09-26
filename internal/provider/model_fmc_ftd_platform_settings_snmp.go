@@ -41,11 +41,11 @@ type FTDPlatformSettingsSNMP struct {
 	Domain                         types.String                             `tfsdk:"domain"`
 	FtdPlatformSettingsId          types.String                             `tfsdk:"ftd_platform_settings_id"`
 	Type                           types.String                             `tfsdk:"type"`
-	SnmpServer                     types.Bool                               `tfsdk:"snmp_server"`
+	ServerEnabled                  types.Bool                               `tfsdk:"server_enabled"`
 	ReadCommunity                  types.String                             `tfsdk:"read_community"`
 	SystemAdministrator            types.String                             `tfsdk:"system_administrator"`
 	Location                       types.String                             `tfsdk:"location"`
-	SnmpServerPort                 types.Int64                              `tfsdk:"snmp_server_port"`
+	ServerPort                     types.Int64                              `tfsdk:"server_port"`
 	ManagementHosts                []FTDPlatformSettingsSNMPManagementHosts `tfsdk:"management_hosts"`
 	Snmpv3Users                    []FTDPlatformSettingsSNMPSnmpv3Users     `tfsdk:"snmpv3_users"`
 	TrapSyslog                     types.Bool                               `tfsdk:"trap_syslog"`
@@ -120,8 +120,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.SnmpServer.IsNull() {
-		body, _ = sjson.Set(body, "enableSNMPServers", data.SnmpServer.ValueBool())
+	if !data.ServerEnabled.IsNull() {
+		body, _ = sjson.Set(body, "enableSNMPServers", data.ServerEnabled.ValueBool())
 	}
 	if !data.ReadCommunity.IsNull() {
 		body, _ = sjson.Set(body, "communityString", data.ReadCommunity.ValueString())
@@ -132,8 +132,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 	if !data.Location.IsNull() {
 		body, _ = sjson.Set(body, "location", data.Location.ValueString())
 	}
-	if !data.SnmpServerPort.IsNull() {
-		body, _ = sjson.Set(body, "port", data.SnmpServerPort.ValueInt64())
+	if !data.ServerPort.IsNull() {
+		body, _ = sjson.Set(body, "port", data.ServerPort.ValueInt64())
 	}
 	if len(data.ManagementHosts) > 0 {
 		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
@@ -286,9 +286,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("enableSNMPServers"); value.Exists() {
-		data.SnmpServer = types.BoolValue(value.Bool())
+		data.ServerEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.SnmpServer = types.BoolNull()
+		data.ServerEnabled = types.BoolNull()
 	}
 	if value := res.Get("sysAdminName"); value.Exists() {
 		data.SystemAdministrator = types.StringValue(value.String())
@@ -301,9 +301,9 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.Location = types.StringNull()
 	}
 	if value := res.Get("port"); value.Exists() {
-		data.SnmpServerPort = types.Int64Value(value.Int())
+		data.ServerPort = types.Int64Value(value.Int())
 	} else {
-		data.SnmpServerPort = types.Int64Value(161)
+		data.ServerPort = types.Int64Value(161)
 	}
 	if value := res.Get("snmpMgmtHosts"); value.Exists() {
 		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0)
@@ -523,10 +523,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("enableSNMPServers"); value.Exists() && !data.SnmpServer.IsNull() {
-		data.SnmpServer = types.BoolValue(value.Bool())
+	if value := res.Get("enableSNMPServers"); value.Exists() && !data.ServerEnabled.IsNull() {
+		data.ServerEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.SnmpServer = types.BoolNull()
+		data.ServerEnabled = types.BoolNull()
 	}
 	if value := res.Get("sysAdminName"); value.Exists() && !data.SystemAdministrator.IsNull() {
 		data.SystemAdministrator = types.StringValue(value.String())
@@ -538,10 +538,10 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Location = types.StringNull()
 	}
-	if value := res.Get("port"); value.Exists() && !data.SnmpServerPort.IsNull() {
-		data.SnmpServerPort = types.Int64Value(value.Int())
-	} else if data.SnmpServerPort.ValueInt64() != 161 {
-		data.SnmpServerPort = types.Int64Null()
+	if value := res.Get("port"); value.Exists() && !data.ServerPort.IsNull() {
+		data.ServerPort = types.Int64Value(value.Int())
+	} else if data.ServerPort.ValueInt64() != 161 {
+		data.ServerPort = types.Int64Null()
 	}
 	for i := 0; i < len(data.ManagementHosts); i++ {
 		keys := [...]string{"ipAddress.id"}

@@ -128,7 +128,7 @@ func (r *FTDPlatformSettingsSyslogSettingsResource) Schema(ctx context.Context, 
 				MarkdownDescription: helpers.NewAttributeDescription("Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.").String,
 				Optional:            true,
 			},
-			"all_syslog_messages": schema.BoolAttribute{
+			"all_syslog_messages_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable all syslog messages.").String,
 				Optional:            true,
 			},
