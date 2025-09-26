@@ -35,7 +35,7 @@ func TestAccFmcFTDPlatformSettingsSyslogSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "timestamp_format", "RFC_5424"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "device_id_source", "USERDEFINEDID"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "device_id_user_defined", "my_device_id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages_enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ftd_platform_settings_syslog_settings.test", "all_syslog_messages_logging_level", "ERR"))
 
 	var steps []resource.TestStep
@@ -76,7 +76,7 @@ func testAccFmcFTDPlatformSettingsSyslogSettingsConfig_all() string {
 	config += `	timestamp_format = "RFC_5424"` + "\n"
 	config += `	device_id_source = "USERDEFINEDID"` + "\n"
 	config += `	device_id_user_defined = "my_device_id"` + "\n"
-	config += `	all_syslog_messages = true` + "\n"
+	config += `	all_syslog_messages_enabled = true` + "\n"
 	config += `	all_syslog_messages_logging_level = "ERR"` + "\n"
 	config += `}` + "\n"
 	return config

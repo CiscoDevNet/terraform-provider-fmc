@@ -24,7 +24,7 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
   timestamp_format                  = "RFC_5424"
   device_id_source                  = "USERDEFINEDID"
   device_id_user_defined            = "my_device_id"
-  all_syslog_messages               = true
+  all_syslog_messages_enabled       = true
   all_syslog_messages_logging_level = "ERR"
 }
 ```
@@ -38,7 +38,7 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
 
 ### Optional
 
-- `all_syslog_messages` (Boolean) Enable all syslog messages.
+- `all_syslog_messages_enabled` (Boolean) Enable all syslog messages.
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
 - `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.

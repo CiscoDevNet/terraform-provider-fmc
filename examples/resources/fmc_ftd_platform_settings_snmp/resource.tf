@@ -1,10 +1,10 @@
 resource "fmc_ftd_platform_settings_snmp" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  snmp_server              = true
+  server_enabled           = true
   read_community           = "public"
   system_administrator     = "admin"
   location                 = "Data Center 1"
-  snmp_server_port         = 161
+  server_port              = 161
   management_hosts = [
     {
       network_object_id        = "123e4567-e89b-12d3-a456-426614174000"

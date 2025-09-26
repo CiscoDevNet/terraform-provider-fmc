@@ -40,7 +40,7 @@ type FTDPlatformSettingsSyslogSettingsSyslogID struct {
 	FtdPlatformSettingsSyslogSettingsId types.String `tfsdk:"ftd_platform_settings_syslog_settings_id"`
 	Type                                types.String `tfsdk:"type"`
 	SyslogId                            types.Int64  `tfsdk:"syslog_id"`
-	LogLevel                            types.String `tfsdk:"log_level"`
+	LoggingLevel                        types.String `tfsdk:"logging_level"`
 	Enabled                             types.Bool   `tfsdk:"enabled"`
 }
 
@@ -69,8 +69,8 @@ func (data FTDPlatformSettingsSyslogSettingsSyslogID) toBody(ctx context.Context
 	if !data.SyslogId.IsNull() {
 		body, _ = sjson.Set(body, "syslogId", data.SyslogId.ValueInt64())
 	}
-	if !data.LogLevel.IsNull() {
-		body, _ = sjson.Set(body, "logLevel", data.LogLevel.ValueString())
+	if !data.LoggingLevel.IsNull() {
+		body, _ = sjson.Set(body, "logLevel", data.LoggingLevel.ValueString())
 	}
 	if !data.Enabled.IsNull() {
 		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
@@ -94,9 +94,9 @@ func (data *FTDPlatformSettingsSyslogSettingsSyslogID) fromBody(ctx context.Cont
 		data.SyslogId = types.Int64Null()
 	}
 	if value := res.Get("logLevel"); value.Exists() {
-		data.LogLevel = types.StringValue(value.String())
+		data.LoggingLevel = types.StringValue(value.String())
 	} else {
-		data.LogLevel = types.StringValue("DEFAULT")
+		data.LoggingLevel = types.StringValue("DEFAULT")
 	}
 	if value := res.Get("enabled"); value.Exists() {
 		data.Enabled = types.BoolValue(value.Bool())
@@ -124,10 +124,10 @@ func (data *FTDPlatformSettingsSyslogSettingsSyslogID) fromBodyPartial(ctx conte
 	} else {
 		data.SyslogId = types.Int64Null()
 	}
-	if value := res.Get("logLevel"); value.Exists() && !data.LogLevel.IsNull() {
-		data.LogLevel = types.StringValue(value.String())
-	} else if data.LogLevel.ValueString() != "DEFAULT" {
-		data.LogLevel = types.StringNull()
+	if value := res.Get("logLevel"); value.Exists() && !data.LoggingLevel.IsNull() {
+		data.LoggingLevel = types.StringValue(value.String())
+	} else if data.LoggingLevel.ValueString() != "DEFAULT" {
+		data.LoggingLevel = types.StringNull()
 	}
 	if value := res.Get("enabled"); value.Exists() && !data.Enabled.IsNull() {
 		data.Enabled = types.BoolValue(value.Bool())

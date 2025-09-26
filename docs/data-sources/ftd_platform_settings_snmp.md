@@ -41,8 +41,8 @@ data "fmc_ftd_platform_settings_snmp" "example" {
 - `location` (String) Location of the device.
 - `management_hosts` (Attributes List) List of SNMP management hosts. (see [below for nested schema](#nestedatt--management_hosts))
 - `read_community` (String, Sensitive) Password used by a SNMP management station when sending requests to the threat defense device.
-- `snmp_server` (Boolean) Enable SNMP servers.
-- `snmp_server_port` (Number) UDP port on which incoming requests will be accepted.
+- `server_enabled` (Boolean) Enable SNMP servers.
+- `server_port` (Number) UDP port on which incoming requests will be accepted.
 - `snmpv3_users` (Attributes List) List of SNMPv3 users. (see [below for nested schema](#nestedatt--snmpv3_users))
 - `system_administrator` (String) Name of the device administrator or other contact person.
 - `trap_authentication` (Boolean) Unauthorized SNMP access. This authentication failure occurs for packets with an incorrect community string.

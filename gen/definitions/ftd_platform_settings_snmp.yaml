@@ -20,7 +20,7 @@ attributes:
     description: Type of the object; this value is always 'FTDSNMPPlatformSettings'.
     computed: true
   - model_name: enableSNMPServers
-    tf_name: snmp_server
+    tf_name: server_enabled
     type: Bool
     description: Enable SNMP servers.
     example: true
@@ -44,7 +44,7 @@ attributes:
     example: "Data Center 1"
     string_max_length: 127
   - model_name: port
-    tf_name: snmp_server_port
+    tf_name: server_port
     type: Int64
     description: UDP port on which incoming requests will be accepted.
     min_int: 1

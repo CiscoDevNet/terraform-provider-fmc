@@ -95,7 +95,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"snmp_server": schema.BoolAttribute{
+			"server_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable SNMP servers.").String,
 				Optional:            true,
 			},
@@ -121,7 +121,7 @@ func (r *FTDPlatformSettingsSNMPResource) Schema(ctx context.Context, req resour
 					stringvalidator.LengthBetween(0, 127),
 				},
 			},
-			"snmp_server_port": schema.Int64Attribute{
+			"server_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("UDP port on which incoming requests will be accepted.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("161").String,
 				Optional:            true,
 				Computed:            true,

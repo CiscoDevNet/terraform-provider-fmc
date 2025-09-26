@@ -96,11 +96,11 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"enable_logging": schema.BoolAttribute{
+			"logging_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Turns on the data plane system logging.").String,
 				Optional:            true,
 			},
-			"enable_logging_on_failover_standby_unit": schema.BoolAttribute{
+			"logging_on_failover_standby_unit_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Turns on logging for the failover standby unit, if available.").String,
 				Optional:            true,
 			},
@@ -166,7 +166,7 @@ func (r *FTDPlatformSettingsSyslogLoggingSetupResource) Schema(ctx context.Conte
 					},
 				},
 			},
-			"flash": schema.BoolAttribute{
+			"flash_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Save buffer contents to the flash memory before it is overwritten.").String,
 				Optional:            true,
 			},

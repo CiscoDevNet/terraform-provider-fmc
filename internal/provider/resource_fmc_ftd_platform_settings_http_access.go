@@ -95,11 +95,11 @@ func (r *FTDPlatformSettingsHTTPAccessResource) Schema(ctx context.Context, req 
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"http_server": schema.BoolAttribute{
+			"server_enabled": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable HTTP server.").String,
 				Optional:            true,
 			},
-			"http_server_port": schema.Int64Attribute{
+			"server_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Port on which the HTTP server will listen. Please don't use 80 or 1443.").AddIntegerRangeDescription(1, 65535).AddDefaultValueDescription("443").String,
 				Optional:            true,
 				Computed:            true,

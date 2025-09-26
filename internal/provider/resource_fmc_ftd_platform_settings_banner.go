@@ -91,7 +91,7 @@ func (r *FTDPlatformSettingsBannerResource) Schema(ctx context.Context, req reso
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"banner_text": schema.ListAttribute{
+			"text": schema.ListAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Banner text. Each element of the list is a separate line.").String,
 				ElementType:         types.StringType,
 				Required:            true,

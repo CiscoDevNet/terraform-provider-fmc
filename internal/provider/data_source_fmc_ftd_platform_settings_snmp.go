@@ -75,7 +75,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Type of the object; this value is always 'FTDSNMPPlatformSettings'.",
 				Computed:            true,
 			},
-			"snmp_server": schema.BoolAttribute{
+			"server_enabled": schema.BoolAttribute{
 				MarkdownDescription: "Enable SNMP servers.",
 				Computed:            true,
 			},
@@ -92,7 +92,7 @@ func (d *FTDPlatformSettingsSNMPDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Location of the device.",
 				Computed:            true,
 			},
-			"snmp_server_port": schema.Int64Attribute{
+			"server_port": schema.Int64Attribute{
 				MarkdownDescription: "UDP port on which incoming requests will be accepted.",
 				Computed:            true,
 			},

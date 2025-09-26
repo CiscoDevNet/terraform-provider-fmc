@@ -43,7 +43,7 @@ type FTDPlatformSettingsSyslogSettings struct {
 	DeviceIdSource                types.String `tfsdk:"device_id_source"`
 	DeviceIdUserDefined           types.String `tfsdk:"device_id_user_defined"`
 	DeviceIdInterfaceId           types.String `tfsdk:"device_id_interface_id"`
-	AllSyslogMessages             types.Bool   `tfsdk:"all_syslog_messages"`
+	AllSyslogMessagesEnabled      types.Bool   `tfsdk:"all_syslog_messages_enabled"`
 	AllSyslogMessagesLoggingLevel types.String `tfsdk:"all_syslog_messages_logging_level"`
 }
 
@@ -84,8 +84,8 @@ func (data FTDPlatformSettingsSyslogSettings) toBody(ctx context.Context, state 
 	if !data.DeviceIdInterfaceId.IsNull() {
 		body, _ = sjson.Set(body, "syslogDeviceIdConfig.interface.id", data.DeviceIdInterfaceId.ValueString())
 	}
-	if !data.AllSyslogMessages.IsNull() {
-		body, _ = sjson.Set(body, "syslogEnableAll.enable", data.AllSyslogMessages.ValueBool())
+	if !data.AllSyslogMessagesEnabled.IsNull() {
+		body, _ = sjson.Set(body, "syslogEnableAll.enable", data.AllSyslogMessagesEnabled.ValueBool())
 	}
 	if !data.AllSyslogMessagesLoggingLevel.IsNull() {
 		body, _ = sjson.Set(body, "syslogEnableAll.loggingLevel", data.AllSyslogMessagesLoggingLevel.ValueString())
@@ -129,9 +129,9 @@ func (data *FTDPlatformSettingsSyslogSettings) fromBody(ctx context.Context, res
 		data.DeviceIdInterfaceId = types.StringNull()
 	}
 	if value := res.Get("syslogEnableAll.enable"); value.Exists() {
-		data.AllSyslogMessages = types.BoolValue(value.Bool())
+		data.AllSyslogMessagesEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.AllSyslogMessages = types.BoolNull()
+		data.AllSyslogMessagesEnabled = types.BoolNull()
 	}
 	if value := res.Get("syslogEnableAll.loggingLevel"); value.Exists() {
 		data.AllSyslogMessagesLoggingLevel = types.StringValue(value.String())
@@ -179,10 +179,10 @@ func (data *FTDPlatformSettingsSyslogSettings) fromBodyPartial(ctx context.Conte
 	} else {
 		data.DeviceIdInterfaceId = types.StringNull()
 	}
-	if value := res.Get("syslogEnableAll.enable"); value.Exists() && !data.AllSyslogMessages.IsNull() {
-		data.AllSyslogMessages = types.BoolValue(value.Bool())
+	if value := res.Get("syslogEnableAll.enable"); value.Exists() && !data.AllSyslogMessagesEnabled.IsNull() {
+		data.AllSyslogMessagesEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.AllSyslogMessages = types.BoolNull()
+		data.AllSyslogMessagesEnabled = types.BoolNull()
 	}
 	if value := res.Get("syslogEnableAll.loggingLevel"); value.Exists() && !data.AllSyslogMessagesLoggingLevel.IsNull() {
 		data.AllSyslogMessagesLoggingLevel = types.StringValue(value.String())

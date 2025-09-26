@@ -24,7 +24,7 @@ resource "fmc_ftd_platform_settings_syslog_email_setup" "example" {
   destinations = [
     {
       email_addresses = ["recipient@example.com"]
-      log_level       = "ERR"
+      logging_level   = "ERR"
     }
   ]
 }
@@ -54,7 +54,7 @@ resource "fmc_ftd_platform_settings_syslog_email_setup" "example" {
 Required:
 
 - `email_addresses` (List of String) Destination email address.
-- `log_level` (String) Log level.
+- `logging_level` (String) Logging level.
   - Choices: `EMERG`, `ALERT`, `CRIT`, `ERR`, `WARNING`, `NOTICE`, `INFO`, `DEBUG`
 
 ## Import

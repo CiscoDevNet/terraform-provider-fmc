@@ -125,7 +125,7 @@ func (r *FTDPlatformSettingsICMPAccessResource) Schema(ctx context.Context, req 
 								stringvalidator.OneOf("Permit", "Deny"),
 							},
 						},
-						"icmp_service_id": schema.StringAttribute{
+						"icmp_service_object_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the ICMP Service object.").String,
 							Required:            true,
 						},

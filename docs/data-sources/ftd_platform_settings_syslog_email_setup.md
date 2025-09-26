@@ -48,4 +48,4 @@ data "fmc_ftd_platform_settings_syslog_email_setup" "example" {
 Read-Only:
 
 - `email_addresses` (List of String) Destination email address.
-- `log_level` (String) Log level.
+- `logging_level` (String) Logging level.

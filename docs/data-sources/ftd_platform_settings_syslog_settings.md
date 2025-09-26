@@ -38,7 +38,7 @@ data "fmc_ftd_platform_settings_syslog_settings" "example" {
 
 ### Read-Only
 
-- `all_syslog_messages` (Boolean) Enable all syslog messages.
+- `all_syslog_messages_enabled` (Boolean) Enable all syslog messages.
 - `all_syslog_messages_logging_level` (String) Logging level for all syslog messages. This is required when `all_syslog_messages` is set to `true`.
 - `device_id_interface_id` (String) Use the IP address of the selected interface (Security Zone or Interface Group that maps to a single interface). This is required when `device_id_source` is set to `INTERFACE`.
 - `device_id_source` (String) Include device identifier in syslog messages.

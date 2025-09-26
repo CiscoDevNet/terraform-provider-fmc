@@ -39,8 +39,8 @@ data "fmc_ftd_platform_settings_http_access" "example" {
 ### Read-Only
 
 - `configurations` (Attributes List) List of allowed HTTP connections. (see [below for nested schema](#nestedatt--configurations))
-- `http_server` (Boolean) Enable HTTP server.
-- `http_server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
+- `server_enabled` (Boolean) Enable HTTP server.
+- `server_port` (Number) Port on which the HTTP server will listen. Please don't use 80 or 1443.
 - `type` (String) Type of the object; this value is always 'HttpAccessSetting'.
 
 <a id="nestedatt--configurations"></a>

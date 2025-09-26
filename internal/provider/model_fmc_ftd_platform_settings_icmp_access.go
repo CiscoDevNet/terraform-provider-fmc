@@ -48,7 +48,7 @@ type FTDPlatformSettingsICMPAccess struct {
 
 type FTDPlatformSettingsICMPAccessConfigurations struct {
 	Action                types.String                                                  `tfsdk:"action"`
-	IcmpServiceId         types.String                                                  `tfsdk:"icmp_service_id"`
+	IcmpServiceObjectId   types.String                                                  `tfsdk:"icmp_service_object_id"`
 	SourceNetworkObjectId types.String                                                  `tfsdk:"source_network_object_id"`
 	InterfaceLiterals     types.Set                                                     `tfsdk:"interface_literals"`
 	InterfaceObjects      []FTDPlatformSettingsICMPAccessConfigurationsInterfaceObjects `tfsdk:"interface_objects"`
@@ -95,8 +95,8 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "icmpAction", item.Action.ValueString())
 			}
-			if !item.IcmpServiceId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "icmpService.id", item.IcmpServiceId.ValueString())
+			if !item.IcmpServiceObjectId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "icmpService.id", item.IcmpServiceObjectId.ValueString())
 			}
 			if !item.SourceNetworkObjectId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "network.object.id", item.SourceNetworkObjectId.ValueString())
@@ -159,9 +159,9 @@ func (data *FTDPlatformSettingsICMPAccess) fromBody(ctx context.Context, res gjs
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("icmpService.id"); value.Exists() {
-				data.IcmpServiceId = types.StringValue(value.String())
+				data.IcmpServiceObjectId = types.StringValue(value.String())
 			} else {
-				data.IcmpServiceId = types.StringNull()
+				data.IcmpServiceObjectId = types.StringNull()
 			}
 			if value := res.Get("network.object.id"); value.Exists() {
 				data.SourceNetworkObjectId = types.StringValue(value.String())
@@ -229,7 +229,7 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 	}
 	for i := 0; i < len(data.Configurations); i++ {
 		keys := [...]string{"icmpService.id", "network.object.id"}
-		keyValues := [...]string{data.Configurations[i].IcmpServiceId.ValueString(), data.Configurations[i].SourceNetworkObjectId.ValueString()}
+		keyValues := [...]string{data.Configurations[i].IcmpServiceObjectId.ValueString(), data.Configurations[i].SourceNetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).Configurations[i]
@@ -268,10 +268,10 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 		} else {
 			data.Action = types.StringNull()
 		}
-		if value := res.Get("icmpService.id"); value.Exists() && !data.IcmpServiceId.IsNull() {
-			data.IcmpServiceId = types.StringValue(value.String())
+		if value := res.Get("icmpService.id"); value.Exists() && !data.IcmpServiceObjectId.IsNull() {
+			data.IcmpServiceObjectId = types.StringValue(value.String())
 		} else {
-			data.IcmpServiceId = types.StringNull()
+			data.IcmpServiceObjectId = types.StringNull()
 		}
 		if value := res.Get("network.object.id"); value.Exists() && !data.SourceNetworkObjectId.IsNull() {
 			data.SourceNetworkObjectId = types.StringValue(value.String())

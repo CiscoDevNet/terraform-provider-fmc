@@ -75,7 +75,7 @@ func (d *FTDPlatformSettingsBannerDataSource) Schema(ctx context.Context, req da
 				MarkdownDescription: "Type of the object; this value is always 'BannerSetting'.",
 				Computed:            true,
 			},
-			"banner_text": schema.ListAttribute{
+			"text": schema.ListAttribute{
 				MarkdownDescription: "Banner text. Each element of the list is a separate line.",
 				ElementType:         types.StringType,
 				Computed:            true,

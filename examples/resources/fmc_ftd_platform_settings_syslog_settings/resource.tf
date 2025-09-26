@@ -4,6 +4,6 @@ resource "fmc_ftd_platform_settings_syslog_settings" "example" {
   timestamp_format                  = "RFC_5424"
   device_id_source                  = "USERDEFINEDID"
   device_id_user_defined            = "my_device_id"
-  all_syslog_messages               = true
+  all_syslog_messages_enabled       = true
   all_syslog_messages_logging_level = "ERR"
 }

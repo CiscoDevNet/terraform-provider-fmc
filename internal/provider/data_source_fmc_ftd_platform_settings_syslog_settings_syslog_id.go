@@ -82,7 +82,7 @@ func (d *FTDPlatformSettingsSyslogSettingsSyslogIDDataSource) Schema(ctx context
 				MarkdownDescription: "Syslog message ID.",
 				Computed:            true,
 			},
-			"log_level": schema.StringAttribute{
+			"logging_level": schema.StringAttribute{
 				MarkdownDescription: "Logging level.",
 				Computed:            true,
 			},

@@ -20,12 +20,12 @@ attributes:
     description: Type of the object; this value is always 'HttpAccessSetting'.
     computed: true
   - model_name: enableHttpServer
-    tf_name: http_server
+    tf_name: server_enabled
     type: Bool
     description: Enable HTTP server.
     example: true
   - model_name: port
-    tf_name: http_server_port
+    tf_name: server_port
     type: Int64
     description: Port on which the HTTP server will listen. Please don't use 80 or 1443.
     min_int: 1

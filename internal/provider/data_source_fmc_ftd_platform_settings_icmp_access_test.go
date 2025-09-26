@@ -84,7 +84,7 @@ func testAccDataSourceFmcFTDPlatformSettingsICMPAccessConfig() string {
 	config += `	burst_size = 1` + "\n"
 	config += `	configurations = [{` + "\n"
 	config += `		action = "Permit"` + "\n"
-	config += `		icmp_service_id = fmc_icmpv4_object.test.id` + "\n"
+	config += `		icmp_service_object_id = fmc_icmpv4_object.test.id` + "\n"
 	config += `		source_network_object_id = fmc_host.test.id` + "\n"
 	config += `		interface_objects = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"

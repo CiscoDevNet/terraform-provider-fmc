@@ -47,7 +47,7 @@ attributes:
         example: Permit
       - model_name: id
         data_path: [icmpService]
-        tf_name: icmp_service_id
+        tf_name: icmp_service_object_id
         type: String
         description: ID of the ICMP Service object.
         mandatory: true

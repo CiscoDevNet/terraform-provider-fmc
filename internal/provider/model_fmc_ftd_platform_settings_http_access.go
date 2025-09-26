@@ -41,8 +41,8 @@ type FTDPlatformSettingsHTTPAccess struct {
 	Domain                types.String                                  `tfsdk:"domain"`
 	FtdPlatformSettingsId types.String                                  `tfsdk:"ftd_platform_settings_id"`
 	Type                  types.String                                  `tfsdk:"type"`
-	HttpServer            types.Bool                                    `tfsdk:"http_server"`
-	HttpServerPort        types.Int64                                   `tfsdk:"http_server_port"`
+	ServerEnabled         types.Bool                                    `tfsdk:"server_enabled"`
+	ServerPort            types.Int64                                   `tfsdk:"server_port"`
 	Configurations        []FTDPlatformSettingsHTTPAccessConfigurations `tfsdk:"configurations"`
 }
 
@@ -80,11 +80,11 @@ func (data FTDPlatformSettingsHTTPAccess) toBody(ctx context.Context, state FTDP
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.HttpServer.IsNull() {
-		body, _ = sjson.Set(body, "enableHttpServer", data.HttpServer.ValueBool())
+	if !data.ServerEnabled.IsNull() {
+		body, _ = sjson.Set(body, "enableHttpServer", data.ServerEnabled.ValueBool())
 	}
-	if !data.HttpServerPort.IsNull() {
-		body, _ = sjson.Set(body, "port", data.HttpServerPort.ValueInt64())
+	if !data.ServerPort.IsNull() {
+		body, _ = sjson.Set(body, "port", data.ServerPort.ValueInt64())
 	}
 	if len(data.Configurations) > 0 {
 		body, _ = sjson.Set(body, "httpConfiguration", []any{})
@@ -131,14 +131,14 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBody(ctx context.Context, res gjs
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("enableHttpServer"); value.Exists() {
-		data.HttpServer = types.BoolValue(value.Bool())
+		data.ServerEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.HttpServer = types.BoolNull()
+		data.ServerEnabled = types.BoolNull()
 	}
 	if value := res.Get("port"); value.Exists() {
-		data.HttpServerPort = types.Int64Value(value.Int())
+		data.ServerPort = types.Int64Value(value.Int())
 	} else {
-		data.HttpServerPort = types.Int64Value(443)
+		data.ServerPort = types.Int64Value(443)
 	}
 	if value := res.Get("httpConfiguration"); value.Exists() {
 		data.Configurations = make([]FTDPlatformSettingsHTTPAccessConfigurations, 0)
@@ -199,15 +199,15 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBodyPartial(ctx context.Context, 
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("enableHttpServer"); value.Exists() && !data.HttpServer.IsNull() {
-		data.HttpServer = types.BoolValue(value.Bool())
+	if value := res.Get("enableHttpServer"); value.Exists() && !data.ServerEnabled.IsNull() {
+		data.ServerEnabled = types.BoolValue(value.Bool())
 	} else {
-		data.HttpServer = types.BoolNull()
+		data.ServerEnabled = types.BoolNull()
 	}
-	if value := res.Get("port"); value.Exists() && !data.HttpServerPort.IsNull() {
-		data.HttpServerPort = types.Int64Value(value.Int())
-	} else if data.HttpServerPort.ValueInt64() != 443 {
-		data.HttpServerPort = types.Int64Null()
+	if value := res.Get("port"); value.Exists() && !data.ServerPort.IsNull() {
+		data.ServerPort = types.Int64Value(value.Int())
+	} else if data.ServerPort.ValueInt64() != 443 {
+		data.ServerPort = types.Int64Null()
 	}
 	for i := 0; i < len(data.Configurations); i++ {
 		keys := [...]string{"ipAddress.id"}
