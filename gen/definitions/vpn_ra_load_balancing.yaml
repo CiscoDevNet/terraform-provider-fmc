@@ -1,3 +1,6 @@
+# FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
+# Manual resource - Read, Create, Update
+# Manual data source - Read
 ---
 name: VPN RA Load Balancing
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ravpns/%v/loadbalancesettings

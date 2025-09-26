@@ -1059,11 +1059,3 @@ func (data VPNRAConnectionProfiles) toBodyNonBulk(ctx context.Context, state VPN
 }
 
 // End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
-
-// End of section. //template:end adjustBody
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk
