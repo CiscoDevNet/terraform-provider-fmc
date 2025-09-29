@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0 (Unreleased)
+## 2.0.0-rc7
 
 - (Fix) Prefilter policy is not assigned to Access Control Policy on creation
 - (Fix) `fmc_policy_assignment` for Health Policies on FMC 7.6 and later does not work correctly
