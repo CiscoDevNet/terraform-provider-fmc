@@ -20,7 +20,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ftd_platform_settings_banner" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  text                     = ["Welcome to FTD"]
+  text_lines               = ["Welcome to FTD"]
 }
 ```
 
@@ -30,7 +30,7 @@ resource "fmc_ftd_platform_settings_banner" "example" {
 ### Required
 
 - `ftd_platform_settings_id` (String) Id of the parent FTD Platform Settings.
-- `text` (List of String) Banner text. Each element of the list is a separate line.
+- `text_lines` (List of String) Banner text. Each element of the list is a separate line.
 
 ### Optional
 

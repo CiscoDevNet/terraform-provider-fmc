@@ -38,5 +38,5 @@ data "fmc_ftd_platform_settings_banner" "example" {
 
 ### Read-Only
 
-- `text` (List of String) Banner text. Each element of the list is a separate line.
+- `text_lines` (List of String) Banner text. Each element of the list is a separate line.
 - `type` (String) Type of the object; this value is always 'BannerSetting'.

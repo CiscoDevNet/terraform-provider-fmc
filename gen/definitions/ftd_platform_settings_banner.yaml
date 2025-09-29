@@ -20,7 +20,7 @@ attributes:
     description: Type of the object; this value is always 'BannerSetting'.
     computed: true
   - model_name: bannerText
-    tf_name: text
+    tf_name: text_lines
     type: List
     element_type: String
     description: Banner text. Each element of the list is a separate line.

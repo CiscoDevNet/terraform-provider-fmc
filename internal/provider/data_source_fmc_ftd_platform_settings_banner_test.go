@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcFTDPlatformSettingsBanner(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_banner.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_banner.test", "text.0", "Welcome to FTD"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_banner.test", "text_lines.0", "Welcome to FTD"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -62,7 +62,7 @@ resource "fmc_ftd_platform_settings" "test" {
 func testAccDataSourceFmcFTDPlatformSettingsBannerConfig() string {
 	config := `resource "fmc_ftd_platform_settings_banner" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	text = ["Welcome to FTD"]` + "\n"
+	config += `	text_lines = ["Welcome to FTD"]` + "\n"
 	config += `}` + "\n"
 
 	config += `
