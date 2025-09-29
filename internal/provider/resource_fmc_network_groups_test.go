@@ -194,23 +194,32 @@ func TestAccFmcNetworkGroups_Sequential(t *testing.T) {
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
-	}, {
-		// step 8
-		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"my_network_groups_g2" = {` + "\n" +
-			`		network_groups = ["my_network_groups_g2"]` + "\n" +
-			`	}` + "\n" +
-			`}}`,
-		ExpectError: regexp.MustCompile(`Cycle in network_groups`),
-	}, {
-		// step 9
-		Config: `resource fmc_network_groups test { items = {` + "\n" +
-			`	"my_network_groups_g2" = {` + "\n" +
-			`		network_groups = ["no_such_group"]` + "\n" +
-			`	}` + "\n" +
-			`}}`,
-		ExpectError: regexp.MustCompile(`Failed to create`),
 	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}
+
+func TestAccFmcNetworkGroups_InvalidDefinitions(t *testing.T) {
+	steps := []resource.TestStep{
+		{
+			Config: `resource fmc_network_groups test { items = {` + "\n" +
+				`	"my_network_groups_cycle_test" = {` + "\n" +
+				`		network_groups = ["my_network_groups_cycle_test"]` + "\n" +
+				`	}` + "\n" +
+				`}}`,
+			ExpectError: regexp.MustCompile(`Cycle in network_groups`),
+		}, {
+			Config: `resource fmc_network_groups test { items = {` + "\n" +
+				`	"no_such_group_parent" = {` + "\n" +
+				`		network_groups = ["no_such_group_child"]` + "\n" +
+				`	}` + "\n" +
+				`}}`,
+			ExpectError: regexp.MustCompile(`Failed to create`),
+		}}
 
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
