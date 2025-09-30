@@ -17,6 +17,7 @@ attributes:
     type: String
     description: Description of the object.
     example: My host object
+    missing_in_response_if_set_to_empty_string: true
   - model_name: value
     tf_name: ip
     type: String

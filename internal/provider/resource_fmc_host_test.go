@@ -90,3 +90,30 @@ func testAccFmcHostConfig_all() string {
 }
 
 // End of section. //template:end testAccConfigAll
+
+func TestAccFmcHost_EmptyDescription(t *testing.T) {
+
+	step_01 := `resource "fmc_host" "test" {` + "\n" +
+		`	name = "hosts_1"` + "\n" +
+		`	ip = "1.2.3.1"` + "\n" +
+		`	description = "host1"` + "\n" +
+		`}` + "\n"
+
+	step_02 := `resource "fmc_host" "test" {` + "\n" +
+		`	name = "hosts_1"` + "\n" +
+		`	ip = "1.2.3.1"` + "\n" +
+		`	description = ""` + "\n" +
+		`}` + "\n"
+
+	steps := []resource.TestStep{{
+		Config: step_01,
+	}, {
+		Config: step_02,
+	}}
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		Steps:                    steps,
+	})
+}

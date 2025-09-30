@@ -22,6 +22,7 @@ attributes:
         type: String
         description: Description of the object.
         example: "My Host 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
         description: Indicates whether object values can be overridden.
