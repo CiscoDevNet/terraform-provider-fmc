@@ -35,6 +35,7 @@ resource "fmc_intrusion_policy" "example" {
 - `domain` (String) Name of the FMC domain
 - `inspection_mode` (String) Inspection mode.
   - Choices: `PREVENTION`, `DETECTION`
+  - Default value: `PREVENTION`
 
 ### Read-Only
 
