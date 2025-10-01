@@ -400,47 +400,36 @@ func (r *IPv6AddressPoolsResource) Delete(ctx context.Context, req resource.Dele
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *IPv6AddressPoolsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: <domain_name>,<ref_id>,[<object1_name>,<object2_name>,...]
-	// <domain_name> is optional
-	// <ref_id> for objects that have `reference` attributes
-	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config IPv6AddressPools
 
-	// Compile pattern for import command parsing
+	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
-
-	// Parse parameter
 	match := inputPattern.FindStringSubmatch(req.ID)
-
-	// Check if regex matched
 	if match == nil {
-		resp.Diagnostics.AddError("Import error", "Failed to parse import parameters. Please provide import string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]")
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,[<obj1_name>,<obj2_name>,...]\n<domain> is optional.\n" + fmt.Sprintf("Got: %q", req.ID)
+		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
 
-	// Extract values
+	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
 		config.Domain = types.StringValue(tmpDomain)
 	}
-	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
+	// Generate new ID (random, does not relate to FMC in any way)
+	config.Id = types.StringValue(uuid.New().String())
 
 	// Fill state with names of objects to import
+	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 	config.Items = make(map[string]IPv6AddressPoolsItems, len(names))
 	for _, v := range names {
 		config.Items[v] = IPv6AddressPoolsItems{}
 	}
 
-	// Generate new ID
-	config.Id = types.StringValue(uuid.New().String())
-
-	// Set filled in structure
-	diags := resp.State.Set(ctx, config)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Set import flag
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
