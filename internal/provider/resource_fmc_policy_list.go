@@ -257,6 +257,23 @@ func (r *PolicyListResource) Configure(_ context.Context, req resource.Configure
 
 // End of section. //template:end model
 
+func (r PolicyListResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.Conflicting(
+			path.MatchRoot("address_standard_access_lists"),
+			path.MatchRoot("address_ipv4_prefix_lists"),
+		),
+		resourcevalidator.Conflicting(
+			path.MatchRoot("next_hop_standard_access_lists"),
+			path.MatchRoot("next_hop_ipv4_prefix_lists"),
+		),
+		resourcevalidator.Conflicting(
+			path.MatchRoot("route_source_standard_access_lists"),
+			path.MatchRoot("route_source_ipv4_prefix_lists"),
+		),
+	}
+}
+
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *PolicyListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
@@ -447,20 +464,3 @@ func (r *PolicyListResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 // End of section. //template:end import
-
-func (r PolicyListResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
-	return []resource.ConfigValidator{
-		resourcevalidator.Conflicting(
-			path.MatchRoot("address_standard_access_lists"),
-			path.MatchRoot("address_ipv4_prefix_lists"),
-		),
-		resourcevalidator.Conflicting(
-			path.MatchRoot("next_hop_standard_access_lists"),
-			path.MatchRoot("next_hop_ipv4_prefix_lists"),
-		),
-		resourcevalidator.Conflicting(
-			path.MatchRoot("route_source_standard_access_lists"),
-			path.MatchRoot("route_source_ipv4_prefix_lists"),
-		),
-	}
-}
