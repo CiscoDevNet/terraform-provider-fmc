@@ -412,11 +412,6 @@ func Subtract(a, b int) int {
 	return a - b
 }
 
-// Templating helper function to add two numbers
-func Add(a, b int) int {
-	return a + b
-}
-
 // Map of templating functions
 var functions = template.FuncMap{
 	"toGoName":                    ToGoName,
@@ -447,7 +442,6 @@ var functions = template.FuncMap{
 	"isDomainDependent":           IsDomainDependent,
 	"importParts":                 ImportParts,
 	"subtract":                    Subtract,
-	"add":                         Add,
 }
 
 func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
