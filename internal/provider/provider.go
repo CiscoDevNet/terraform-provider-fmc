@@ -95,7 +95,7 @@ func (p *FmcProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 				Sensitive:           true,
 			},
 			"url": schema.StringAttribute{
-				MarkdownDescription: "URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall) . This can also be set as the FMC_URL environment variable.",
+				MarkdownDescription: "URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall). This can also be set as the FMC_URL environment variable.",
 				Optional:            true,
 			},
 			"insecure": schema.BoolAttribute{
