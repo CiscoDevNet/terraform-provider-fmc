@@ -72,5 +72,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-terraform import fmc_ipv4_address_pools.example "<domain>,[<ipv4_address_pools_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_ipv4_address_pools.example "<domain>,[<item1_name>,<item2_name>,...]"
 ```

@@ -1,1 +1,3 @@
-terraform import fmc_security_zones.example "<domain>,[<security_zones_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_security_zones.example "<domain>,[<item1_name>,<item2_name>,...]"
+

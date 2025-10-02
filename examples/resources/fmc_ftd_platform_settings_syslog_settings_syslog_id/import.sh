@@ -1,1 +1,2 @@
-terraform import fmc_ftd_platform_settings_syslog_settings_syslog_id.example "<ftd_platform_settings_id>,<ftd_platform_settings_syslog_settings_id>,<id>"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_ftd_platform_settings_syslog_settings_syslog_id.example "<domain>,<ftd_platform_settings_id>,<ftd_platform_settings_syslog_settings_id>,<id>"

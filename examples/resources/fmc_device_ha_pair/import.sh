@@ -1,1 +1,2 @@
-terraform import fmc_device_ha_pair.example "<id>"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_device_ha_pair.example "<domain>,<id>"
