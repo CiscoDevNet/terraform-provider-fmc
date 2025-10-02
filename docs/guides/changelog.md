@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0 (Unreleased)
+
+- (Enhancement) `domain` support for importing non-bulk resources
+
 ## 2.0.0-rc7
 
 - (Fix) Prefilter policy is not assigned to Access Control Policy on creation

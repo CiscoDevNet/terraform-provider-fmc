@@ -1,1 +1,3 @@
-terraform import fmc_dns_server_groups.example "<domain>,[<dns_server_groups_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_dns_server_groups.example "<domain>,[<item1_name>,<item2_name>,...]"
+

@@ -22,11 +22,11 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"regexp"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
-	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -336,33 +336,31 @@ func (r *FTDAutoNATRuleResource) Delete(ctx context.Context, req resource.Delete
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-
 func (r *FTDAutoNATRuleResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	idParts := strings.Split(req.ID, ",")
+	var config FTDAutoNATRule
 
-	if len(idParts) != 2 || idParts[0] == "" || idParts[1] == "" {
-		resp.Diagnostics.AddError(
-			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: <ftd_nat_policy_id>,<id>. Got: %q", req.ID),
-		)
+	// Parse import ID
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<ftd_nat_policy_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
+	match := inputPattern.FindStringSubmatch(req.ID)
+	if match == nil {
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<ftd_nat_policy_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("ftd_nat_policy_id"), idParts[0])...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[1])...)
+
+	// Set domain, if provided
+	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
+		config.Domain = types.StringValue(tmpDomain)
+	}
+	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
+	config.FtdNatPolicyId = types.StringValue(match[inputPattern.SubexpIndex("ftd_nat_policy_id")])
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources

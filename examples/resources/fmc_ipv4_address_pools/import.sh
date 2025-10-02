@@ -1,1 +1,3 @@
-terraform import fmc_ipv4_address_pools.example "<domain>,[<ipv4_address_pools_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_ipv4_address_pools.example "<domain>,[<item1_name>,<item2_name>,...]"
+
