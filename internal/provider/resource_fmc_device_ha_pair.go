@@ -112,7 +112,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of High Availability Link interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of High Availability Link interface on the primary FTD device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -133,14 +133,14 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical name of failover interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of High Availability Link interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ha_link_use_ipv6": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use IPv6 addressing for HA communication.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use IPv6 addressing for High Availability communication.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
@@ -149,35 +149,35 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node on High Availability interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ha_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node on High Availabilityinterface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"ha_link_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Subnet mask for HA link.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Subnet mask for High Availability link.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_use_same_as_ha": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use the same link for state and HA.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use the same link for state and High Availability.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of physical interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of state link physical interface taken on the primary FTD device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -198,28 +198,28 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"state_link_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of state link interface.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_use_ipv6": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use IPv6 addressing for HA communication.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use IPv6 addressing for state link communication.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.Bool{
 					boolplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_primary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of primary node on state link interface.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"state_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node on state link interface.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
