@@ -84,12 +84,12 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of network groups. The key of the map is the name of the individual Network Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Network Groups. The key of the map is the name of the individual Network Group.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network Group.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Network Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -107,16 +107,16 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"network_groups": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of `fmc_network_groups` resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of network objects (Hosts, Networs, Ranges or FQDNs).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of network objects (Hosts, Networks, Ranges, FQDNs or Network Group).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

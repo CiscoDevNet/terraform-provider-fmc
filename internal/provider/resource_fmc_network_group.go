@@ -82,7 +82,7 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the ojbect.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"type": schema.StringAttribute{
@@ -93,7 +93,7 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"objects": schema.SetNestedAttribute{
@@ -102,7 +102,7 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the network object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the network object.").String,
 							Optional:            true,
 						},
 					},
@@ -114,7 +114,7 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"value": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format. Please do not use /32 mask for host.").String,
 							Optional:            true,
 						},
 					},

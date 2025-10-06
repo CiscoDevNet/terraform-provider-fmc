@@ -11,15 +11,16 @@ attributes:
     data_source_query: true
   - model_name: description
     type: String
-    description: Description of the ojbect.
+    description: Description of the object.
     example: "My Network Group 1"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'NetworkGroup'.
     computed: true
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     exclude_example: true
     test_value: "true"
     minimum_test_value: "true"
@@ -29,7 +30,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: ID of the network object
+        description: ID of the network object.
         id: true
         example: 12345678-1234-1234-1234-123456789012
         test_value: fmc_range.test.id
@@ -42,6 +43,7 @@ attributes:
     attributes:
       - model_name: value
         type: String
+        description: IP address or network in CIDR format. Please do not use /32 mask for host.
         id: true
         example: 10.1.1.0/24
       - model_name: type

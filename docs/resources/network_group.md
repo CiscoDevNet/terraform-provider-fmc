@@ -38,11 +38,11 @@ resource "fmc_network_group" "example" {
 
 ### Optional
 
-- `description` (String) Description of the ojbect.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) Set of literal values (Host or Network). (see [below for nested schema](#nestedatt--literals))
 - `objects` (Attributes Set) Set of network objects (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--objects))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 
@@ -54,7 +54,7 @@ resource "fmc_network_group" "example" {
 
 Optional:
 
-- `value` (String)
+- `value` (String) IP address or network in CIDR format. Please do not use /32 mask for host.
 
 
 <a id="nestedatt--objects"></a>
@@ -62,7 +62,7 @@ Optional:
 
 Optional:
 
-- `id` (String) ID of the network object
+- `id` (String) ID of the network object.
 
 ## Import
 

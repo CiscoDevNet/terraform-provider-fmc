@@ -45,7 +45,7 @@ resource "fmc_network_groups" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of network groups. The key of the map is the name of the individual Network Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Network Groups. The key of the map is the name of the individual Network Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -58,13 +58,13 @@ Optional:
 
 - `description` (String) Description of the object.
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--items--literals))
-- `network_groups` (Set of String) Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.
-- `objects` (Attributes Set) Set of network objects (Hosts, Networs, Ranges or FQDNs). (see [below for nested schema](#nestedatt--items--objects))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `network_groups` (Set of String) Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of `fmc_network_groups` resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.
+- `objects` (Attributes Set) Set of network objects (Hosts, Networks, Ranges, FQDNs or Network Group). (see [below for nested schema](#nestedatt--items--objects))
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 
-- `id` (String) Id of the managed Network Group.
+- `id` (String) Id of the Network Group.
 - `type` (String) Type of the object; this value is always 'NetworkGroup'.
 
 <a id="nestedatt--items--literals"></a>
