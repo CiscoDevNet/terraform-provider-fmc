@@ -60,5 +60,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-terraform import fmc_vpn_ra_address_assignment_policy.example "<vpn_ra_id>,<id>"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_vpn_ra_address_assignment_policy.example "<domain>,<vpn_ra_id>,<id>"
 ```

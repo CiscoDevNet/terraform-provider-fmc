@@ -1,1 +1,3 @@
-terraform import fmc_as_paths.example "<domain>,[<as_paths_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_as_paths.example "<domain>,[<item1_name>,<item2_name>,...]"
+

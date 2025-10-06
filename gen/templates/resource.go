@@ -1009,95 +1009,58 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 {{- if not .NoImport}}
-
-{{- if not .IsBulk}}
-
 func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	{{- if hasReference .Attributes}}
-	idParts := strings.Split(req.ID, ",")
-
-	if len(idParts) != {{importParts .Attributes}}{{range $index, $attr := .Attributes}}{{if $attr.Reference}} || idParts[{{$index}}] == ""{{end}}{{end}}  || idParts[{{subtract (importParts .Attributes) 1}}] == "" {
-		resp.Diagnostics.AddError(
-			"Unexpected Import Identifier",
-			fmt.Sprintf("Expected import identifier with format: {{range $index, $attr := .Attributes}}{{if $attr.Reference}}{{if $index}},{{end}}<{{$attr.TfName}}>{{end}}{{end}},<id>. Got: %q", req.ID),
-		)
-		return
-	}
-
-	{{- range $index, $attr := .Attributes}}
-	{{- if or $attr.Reference $attr.Id}}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("{{$attr.TfName}}"), idParts[{{$index}}])...)
-	{{- end}}
-	{{- end}}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), idParts[{{subtract (importParts .Attributes) 1}}])...)
-	{{- else}}
-	resource.ImportStatePassthroughID(ctx, path.Root("id"), req, resp)
-	{{- end}}
-
-	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
-}
-{{- end}}
-
-{{- if .IsBulk}}
-func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Import looks for string in the following format: <domain_name>,<ref_id>,[<object1_name>,<object2_name>,...]
-	// <domain_name> is optional
-	// <ref_id> for objects that have `reference` attributes
-	// <object1_name>,<object2_name>,... is coma-separated list of object names
 	var config {{camelCase .Name}}
 
-	// Compile pattern for import command parsing
+	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
 	{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
 	(?P<{{$attr.TfName}}>[^\s,]+),
 	{{- end -}}{{- end -}}{{- end -}}
-	\[(?P<names>.*?)\]$`)
-
-	// Parse parameter
+	{{- if .IsBulk -}}\[(?P<names>.*?)\]{{- else -}}(?P<id>[^\s,]+?){{- end -}}
+	$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
-
-	// Check if regex matched
 	if match == nil {
-		resp.Diagnostics.AddError("Import error", "Failed to parse import parameters. Please provide import string in the following format: <domain_name>,[<object1_name>,<object2_name>,...]")
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>{{range $index, $attr := .Attributes}}{{if $attr.Reference}},<{{$attr.TfName}}>{{end}}{{end}},
+			{{- if .IsBulk -}}[<item1_name>,<item2_name>,...]{{- else -}}<id>{{- end -}}\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
 
-	// Extract values
+	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
 		config.Domain = types.StringValue(tmpDomain)
 	}
-	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
+	
+	{{- if .IsBulk}}
+	// Generate new ID (random, does not relate to FMC in any way)
+	config.Id = types.StringValue(uuid.New().String())
 
 	// Fill state with names of objects to import
+	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 	config.Items = make(map[string]{{camelCase .Name}}Items, len(names))
 	for _, v := range names {
 		config.Items[v] = {{camelCase .Name}}Items{}
 	}
+	{{- else}}
+	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
+	{{- end}}
 
-	{{if hasReference .Attributes -}}
-	// Set reference attributes
-	{{range $index, $attr := .Attributes -}}
-	{{- if $attr.Reference -}}
+	{{- if hasReference .Attributes -}}
+	{{- range $index, $attr := .Attributes -}}
+	{{- if $attr.Reference}}
 	config.{{toGoName $attr.TfName}} = types.StringValue(match[inputPattern.SubexpIndex("{{$attr.TfName}}")])
 	{{- end -}}
 	{{- end -}}
 	{{- end}}
 
-	// Generate new ID
-	config.Id = types.StringValue(uuid.New().String())
-
-	// Set filled in structure
-	diags := resp.State.Set(ctx, config)
-	resp.Diagnostics.Append(diags...)
+	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
 	if resp.Diagnostics.HasError() {
 		return
 	}
 
-	// Set import flag
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
-{{- end}}
-
 {{- end}}
 // End of section. //template:end import
 

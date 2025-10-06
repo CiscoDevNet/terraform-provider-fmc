@@ -4,13 +4,15 @@ page_title: "fmc_device_ha_pair Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This device manages FTD HA Pair configuration.
-  Configuration of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
+  Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
+  On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
 ---
 
 # fmc_device_ha_pair (Resource)
 
 This device manages FTD HA Pair configuration.
- Configuration of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
+ Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
+ On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
 
 ## Example Usage
 
@@ -54,32 +56,32 @@ resource "fmc_device_ha_pair" "example" {
 
 ### Required
 
-- `ha_link_interface_id` (String) Id of High Availability Link interface.
+- `ha_link_interface_id` (String) Id of High Availability Link interface taken from the primary FTD device.
 - `ha_link_interface_name` (String) Name of High Availability Link interface.
 - `ha_link_interface_type` (String) Type of High Availability Link interface.
-- `ha_link_logical_name` (String) Logical name of failover interface.
-- `ha_link_netmask` (String) Subnet mask for HA link.
-- `ha_link_primary_ip` (String) IP of primary node interface.
-- `ha_link_secondary_ip` (String) IP of secondary node interface.
+- `ha_link_logical_name` (String) Logical name of High Availability Link interface.
+- `ha_link_netmask` (String) Subnet mask for High Availability link.
+- `ha_link_primary_ip` (String) IP of primary node on High Availability interface.
+- `ha_link_secondary_ip` (String) IP of secondary node on High Availability interface.
 - `name` (String) Name of the High Availability (HA) Pair.
 - `primary_device_id` (String) Id of primary FTD in the HA Pair.
 - `secondary_device_id` (String) Id of secondary FTD in the HA Pair.
-- `state_link_use_same_as_ha` (Boolean) Use the same link for state and HA.
+- `state_link_use_same_as_ha` (Boolean) Use the same link for state and High Availability.
 
 ### Optional
 
-- `action` (String) FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
+- `action` (String) FTD HA PUT operation action. Specifically used for manual switch.
   - Choices: `SWITCH`, `HABREAK`
 - `domain` (String) Name of the FMC domain
 - `encryption_enabled` (Boolean) Use encryption for communication.
-- `encryption_key` (String) Pass shared key for encryption if CUSTOM key geneeration scheme is selected.
+- `encryption_key` (String) Preshared key for encryption if CUSTOM key generation scheme is selected.
 - `encryption_key_generation_scheme` (String) Select the encyption key generation scheme.
   - Choices: `AUTO`, `CUSTOM`
 - `failed_interfaces_limit` (Number) Number of Failed Interfaces that triggers failover.
   - Range: `1`-`211`
 - `failed_interfaces_percent` (Number) Percentage of Failed Interfaces that triggers failover.
   - Range: `1`-`100`
-- `ha_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
+- `ha_link_use_ipv6` (Boolean) Use IPv6 addressing for High Availability communication.
   - Default value: `false`
 - `interface_hold_time` (Number) Interface Hold Time in seconds
   - Range: `25`-`75`
@@ -102,14 +104,14 @@ resource "fmc_device_ha_pair" "example" {
 - `peer_poll_time_unit` (String) Peer Pool Time Unit
   - Choices: `SEC`, `MSEC`
   - Default value: `SEC`
-- `state_link_interface_id` (String) ID of physical interface.
+- `state_link_interface_id` (String) ID of state link physical interface taken from the primary FTD device.
 - `state_link_interface_name` (String) Name of state link interface.
 - `state_link_interface_type` (String) Type of state link interface.
-- `state_link_logical_name` (String)
+- `state_link_logical_name` (String) Logical name of state link interface.
 - `state_link_netmask` (String) Subnet mask for state link.
-- `state_link_primary_ip` (String) IP of primary node interface.
-- `state_link_secondary_ip` (String) IP of secondary node interface.
-- `state_link_use_ipv6` (Boolean) Use IPv6 addressing for HA communication.
+- `state_link_primary_ip` (String) IP of primary node on state link interface.
+- `state_link_secondary_ip` (String) IP of secondary node on state link interface.
+- `state_link_use_ipv6` (Boolean) Use IPv6 addressing for state link communication.
 
 ### Read-Only
 
@@ -123,5 +125,6 @@ Import is supported using the following syntax:
 The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/commands/import) can be used, for example:
 
 ```shell
-terraform import fmc_device_ha_pair.example "<id>"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_device_ha_pair.example "<domain>,<id>"
 ```
