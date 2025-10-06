@@ -498,14 +498,6 @@ func (data *DeviceHAPair) fromBodyUnknowns(ctx context.Context, res gjson.Result
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
 // toBodyPutDelete generates minimal required body to brek the HA.
 func (data DeviceHAPair) toBodyPutDelete(ctx context.Context, state DeviceHAPair) string {
 	body := ""
