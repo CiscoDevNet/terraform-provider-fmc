@@ -29,27 +29,24 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcFQDNObject(t *testing.T) {
+func TestAccFmcFQDNs(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "name", "my_fqdn_object"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "fqdn", "www.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "dns_resolution", "IPV4_AND_IPV6"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "description", "My FQDN Object"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdn_object.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdns.test", "items.my_fqdns.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdns.test", "items.my_fqdns.description", "My FQDN 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdns.test", "items.my_fqdns.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdns.test", "items.my_fqdns.fqdn", "www.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdns.test", "items.my_fqdns.dns_resolution", "IPV4_AND_IPV6"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdns.test", "items.my_fqdns.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcFQDNObjectConfig_minimum(),
+			Config: testAccFmcFQDNsConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcFQDNObjectConfig_all(),
+		Config: testAccFmcFQDNsConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
-	})
-	steps = append(steps, resource.TestStep{
-		ResourceName: "fmc_fqdn_object.test",
-		ImportState:  true,
 	})
 
 	resource.Test(t, resource.TestCase{
@@ -67,10 +64,11 @@ func TestAccFmcFQDNObject(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcFQDNObjectConfig_minimum() string {
-	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
-	config += `	fqdn = "www.example.com"` + "\n"
+func testAccFmcFQDNsConfig_minimum() string {
+	config := `resource "fmc_fqdns" "test" {` + "\n"
+	config += `	items = { "my_fqdns" = {` + "\n"
+	config += `		fqdn = "www.example.com"` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -79,13 +77,14 @@ func testAccFmcFQDNObjectConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcFQDNObjectConfig_all() string {
-	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
-	config += `	fqdn = "www.example.com"` + "\n"
-	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
-	config += `	description = "My FQDN Object"` + "\n"
-	config += `	overridable = true` + "\n"
+func testAccFmcFQDNsConfig_all() string {
+	config := `resource "fmc_fqdns" "test" {` + "\n"
+	config += `	items = { "my_fqdns" = {` + "\n"
+	config += `		description = "My FQDN 1"` + "\n"
+	config += `		overridable = true` + "\n"
+	config += `		fqdn = "www.example.com"` + "\n"
+	config += `		dns_resolution = "IPV4_AND_IPV6"` + "\n"
+	config += `	}}` + "\n"
 	config += `}` + "\n"
 	return config
 }

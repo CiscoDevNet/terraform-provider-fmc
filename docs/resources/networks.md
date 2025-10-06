@@ -22,7 +22,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_networks" "example" {
   items = {
-    my_networks_object = {
+    my_networks = {
       description = "My Network 1"
       prefix      = "10.1.1.0/24"
     }
@@ -35,7 +35,7 @@ resource "fmc_networks" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of networks. The key of the map is the name of the individual Network. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Networks. The key of the map is the name of the individual Network. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -50,16 +50,16 @@ resource "fmc_networks" "example" {
 
 Required:
 
-- `prefix` (String) Prefix of the network.
+- `prefix` (String) Prefix of the Network.
 
 Optional:
 
 - `description` (String) Description of the object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 
-- `id` (String) Id of the managed Network.
+- `id` (String) Id of the Network object.
 - `type` (String) Type of the object; this value is always 'Network'.
 
 ## Import

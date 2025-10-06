@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &FQDNObjectDataSource{}
-	_ datasource.DataSourceWithConfigure = &FQDNObjectDataSource{}
+	_ datasource.DataSource              = &FQDNDataSource{}
+	_ datasource.DataSourceWithConfigure = &FQDNDataSource{}
 )
 
-func NewFQDNObjectDataSource() datasource.DataSource {
-	return &FQDNObjectDataSource{}
+func NewFQDNDataSource() datasource.DataSource {
+	return &FQDNDataSource{}
 }
 
-type FQDNObjectDataSource struct {
+type FQDNDataSource struct {
 	client *fmc.Client
 }
 
-func (d *FQDNObjectDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_fqdn_object"
+func (d *FQDNDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_fqdn"
 }
 
-func (d *FQDNObjectDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *FQDNDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FQDN Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FQDN (Fully Qualified Domain Name) Object.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -89,7 +89,7 @@ func (d *FQDNObjectDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -99,7 +99,7 @@ func (d *FQDNObjectDataSource) Schema(ctx context.Context, req datasource.Schema
 		},
 	}
 }
-func (d *FQDNObjectDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *FQDNDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -108,7 +108,7 @@ func (d *FQDNObjectDataSource) ConfigValidators(ctx context.Context) []datasourc
 	}
 }
 
-func (d *FQDNObjectDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *FQDNDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -120,8 +120,8 @@ func (d *FQDNObjectDataSource) Configure(_ context.Context, req datasource.Confi
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *FQDNObjectDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config FQDNObject
+func (d *FQDNDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config FQDN
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

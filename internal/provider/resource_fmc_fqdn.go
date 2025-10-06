@@ -44,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FQDNObjectResource{}
-	_ resource.ResourceWithImportState = &FQDNObjectResource{}
+	_ resource.Resource                = &FQDNResource{}
+	_ resource.ResourceWithImportState = &FQDNResource{}
 )
 
-func NewFQDNObjectResource() resource.Resource {
-	return &FQDNObjectResource{}
+func NewFQDNResource() resource.Resource {
+	return &FQDNResource{}
 }
 
-type FQDNObjectResource struct {
+type FQDNResource struct {
 	client *fmc.Client
 }
 
-func (r *FQDNObjectResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_fqdn_object"
+func (r *FQDNResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_fqdn"
 }
 
-func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FQDNResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN (Fully Qualified Domain Name) Object.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -102,7 +102,7 @@ func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"type": schema.StringAttribute{
@@ -116,7 +116,7 @@ func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequ
 	}
 }
 
-func (r *FQDNObjectResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FQDNResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -128,8 +128,8 @@ func (r *FQDNObjectResource) Configure(_ context.Context, req resource.Configure
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *FQDNObjectResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan FQDNObject
+func (r *FQDNResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan FQDN
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -146,7 +146,7 @@ func (r *FQDNObjectResource) Create(ctx context.Context, req resource.CreateRequ
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FQDNObject{})
+	body := plan.toBody(ctx, FQDN{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -167,8 +167,8 @@ func (r *FQDNObjectResource) Create(ctx context.Context, req resource.CreateRequ
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FQDNObjectResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FQDNObject
+func (r *FQDNResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FQDN
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -219,8 +219,8 @@ func (r *FQDNObjectResource) Read(ctx context.Context, req resource.ReadRequest,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FQDNObjectResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FQDNObject
+func (r *FQDNResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FQDN
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -259,8 +259,8 @@ func (r *FQDNObjectResource) Update(ctx context.Context, req resource.UpdateRequ
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FQDNObjectResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FQDNObject
+func (r *FQDNResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FQDN
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -289,8 +289,8 @@ func (r *FQDNObjectResource) Delete(ctx context.Context, req resource.DeleteRequ
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *FQDNObjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config FQDNObject
+func (r *FQDNResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	var config FQDN
 
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
@@ -316,3 +316,15 @@ func (r *FQDNObjectResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

@@ -49,26 +49,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FQDNObjectsResource{}
-	_ resource.ResourceWithImportState = &FQDNObjectsResource{}
+	_ resource.Resource                = &FQDNsResource{}
+	_ resource.ResourceWithImportState = &FQDNsResource{}
 )
 
-func NewFQDNObjectsResource() resource.Resource {
-	return &FQDNObjectsResource{}
+func NewFQDNsResource() resource.Resource {
+	return &FQDNsResource{}
 }
 
-type FQDNObjectsResource struct {
+type FQDNsResource struct {
 	client *fmc.Client
 }
 
-func (r *FQDNObjectsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_fqdn_objects"
+func (r *FQDNsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_fqdns"
 }
 
-func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *FQDNsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FQDN Objects through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN (Fully Qualified Domain Name) Object through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -91,7 +91,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the FQDN object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -102,7 +102,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"fqdn": schema.StringAttribute{
@@ -132,7 +132,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 	}
 }
 
-func (r *FQDNObjectsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *FQDNsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -144,8 +144,8 @@ func (r *FQDNObjectsResource) Configure(_ context.Context, req resource.Configur
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *FQDNObjectsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan FQDNObjects
+func (r *FQDNsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan FQDNs
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -167,7 +167,7 @@ func (r *FQDNObjectsResource) Create(ctx context.Context, req resource.CreateReq
 	// Create random ID to track bulk resource. This does not relate to FMC in any way
 	state.Id = types.StringValue(uuid.New().String())
 	// Erase all Items, those will be filled in after creation
-	state.Items = make(map[string]FQDNObjectsItems, len(plan.Items))
+	state.Items = make(map[string]FQDNsItems, len(plan.Items))
 	// Creation process is put in a separate function, as that same proces will be needed with `Update`
 	plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
 	resp.Diagnostics.Append(diags...)
@@ -191,8 +191,8 @@ func (r *FQDNObjectsResource) Create(ctx context.Context, req resource.CreateReq
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *FQDNObjectsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FQDNObjects
+func (r *FQDNsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state FQDNs
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -240,8 +240,8 @@ func (r *FQDNObjectsResource) Read(ctx context.Context, req resource.ReadRequest
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FQDNObjectsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FQDNObjects
+func (r *FQDNsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state FQDNs
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -265,8 +265,8 @@ func (r *FQDNObjectsResource) Update(ctx context.Context, req resource.UpdateReq
 
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
-	var toDelete FQDNObjects
-	toDelete.Items = make(map[string]FQDNObjectsItems, len(state.Items))
+	var toDelete FQDNs
+	toDelete.Items = make(map[string]FQDNsItems, len(state.Items))
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -297,8 +297,8 @@ func (r *FQDNObjectsResource) Update(ctx context.Context, req resource.UpdateReq
 
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
-	var toCreate FQDNObjects
-	toCreate.Items = make(map[string]FQDNObjectsItems, len(plan.Items))
+	var toCreate FQDNs
+	toCreate.Items = make(map[string]FQDNsItems, len(plan.Items))
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -321,8 +321,8 @@ func (r *FQDNObjectsResource) Update(ctx context.Context, req resource.UpdateReq
 	// UPDATE
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
-	var toUpdate FQDNObjects
-	toUpdate.Items = make(map[string]FQDNObjectsItems, len(plan.Items))
+	var toUpdate FQDNs
+	toUpdate.Items = make(map[string]FQDNsItems, len(plan.Items))
 
 	for _, valueState := range state.Items {
 
@@ -368,8 +368,8 @@ func (r *FQDNObjectsResource) Update(ctx context.Context, req resource.UpdateReq
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FQDNObjectsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FQDNObjects
+func (r *FQDNsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state FQDNs
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -405,8 +405,8 @@ func (r *FQDNObjectsResource) Delete(ctx context.Context, req resource.DeleteReq
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *FQDNObjectsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config FQDNObjects
+func (r *FQDNsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	var config FQDNs
 
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
@@ -426,9 +426,9 @@ func (r *FQDNObjectsResource) ImportState(ctx context.Context, req resource.Impo
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]FQDNObjectsItems, len(names))
+	config.Items = make(map[string]FQDNsItems, len(names))
 	for _, v := range names {
-		config.Items[v] = FQDNObjectsItems{}
+		config.Items[v] = FQDNsItems{}
 	}
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
@@ -444,12 +444,12 @@ func (r *FQDNObjectsResource) ImportState(ctx context.Context, req resource.Impo
 // Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
-func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, plan FQDNObjects, reqMods ...func(*fmc.Req)) (FQDNObjects, diag.Diagnostics) {
+func (r *FQDNsResource) createSubresources(ctx context.Context, state, plan FQDNs, reqMods ...func(*fmc.Req)) (FQDNs, diag.Diagnostics) {
 	var idx = 0
-	var bulk FQDNObjects
-	bulk.Items = make(map[string]FQDNObjectsItems, bulkSizeCreate)
+	var bulk FQDNs
+	bulk.Items = make(map[string]FQDNsItems, bulkSizeCreate)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (FQDN Objects)", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (FQDNs)", state.Id.ValueString()))
 
 	// iterate over all items
 	for k, v := range plan.Items {
@@ -463,7 +463,7 @@ func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, pla
 		if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
 
 			// Parse body of the request to string
-			body := bulk.toBody(ctx, FQDNObjects{})
+			body := bulk.toBody(ctx, FQDNs{})
 
 			// Execute request
 			urlPath := state.getPath() + "?bulk=true"
@@ -479,7 +479,7 @@ func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, pla
 			maps.Copy(state.Items, bulk.Items)
 
 			// Clear bulk item for next run
-			bulk.Items = make(map[string]FQDNObjectsItems, bulkSizeCreate)
+			bulk.Items = make(map[string]FQDNsItems, bulkSizeCreate)
 		}
 	}
 
@@ -490,12 +490,12 @@ func (r *FQDNObjectsResource) createSubresources(ctx context.Context, state, pla
 
 // Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
-func (r *FQDNObjectsResource) deleteSubresources(ctx context.Context, state, plan FQDNObjects, reqMods ...func(*fmc.Req)) (FQDNObjects, diag.Diagnostics) {
+func (r *FQDNsResource) deleteSubresources(ctx context.Context, state, plan FQDNs, reqMods ...func(*fmc.Req)) (FQDNs, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
 	// Check if FMC version supports bulk deletes
-	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteFQDNObjects) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (FQDN Objects)", state.Id.ValueString()))
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteFQDNs) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (FQDNs)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
@@ -515,7 +515,7 @@ func (r *FQDNObjectsResource) deleteSubresources(ctx context.Context, state, pla
 			delete(state.Items, k)
 		}
 	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (FQDN Objects)", state.Id.ValueString()))
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (FQDNs)", state.Id.ValueString()))
 
 		var idx = 0
 
@@ -568,11 +568,11 @@ func (r *FQDNObjectsResource) deleteSubresources(ctx context.Context, state, pla
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
-func (r *FQDNObjectsResource) updateSubresources(ctx context.Context, state, plan FQDNObjects, reqMods ...func(*fmc.Req)) (FQDNObjects, diag.Diagnostics) {
-	var tmpObject FQDNObjects
-	tmpObject.Items = make(map[string]FQDNObjectsItems, 1)
+func (r *FQDNsResource) updateSubresources(ctx context.Context, state, plan FQDNs, reqMods ...func(*fmc.Req)) (FQDNs, diag.Diagnostics) {
+	var tmpObject FQDNs
+	tmpObject.Items = make(map[string]FQDNsItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (FQDN Objects)", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (FQDNs)", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
 		tmpObject.Items[k] = v

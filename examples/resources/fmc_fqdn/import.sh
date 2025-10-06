@@ -1,3 +1,2 @@
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_fqdn_objects.example "<domain>,[<item1_name>,<item2_name>,...]"
-
+terraform import fmc_fqdn.example "<domain>,<id>"

@@ -34,13 +34,13 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type FQDNObjects struct {
-	Id     types.String                `tfsdk:"id"`
-	Domain types.String                `tfsdk:"domain"`
-	Items  map[string]FQDNObjectsItems `tfsdk:"items"`
+type FQDNs struct {
+	Id     types.String          `tfsdk:"id"`
+	Domain types.String          `tfsdk:"domain"`
+	Items  map[string]FQDNsItems `tfsdk:"items"`
 }
 
-type FQDNObjectsItems struct {
+type FQDNsItems struct {
 	Id            types.String `tfsdk:"id"`
 	Description   types.String `tfsdk:"description"`
 	Overridable   types.Bool   `tfsdk:"overridable"`
@@ -52,13 +52,13 @@ type FQDNObjectsItems struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
-var minFMCVersionBulkDeleteFQDNObjects = version.Must(version.NewVersion("7.4"))
+var minFMCVersionBulkDeleteFQDNs = version.Must(version.NewVersion("7.4"))
 
 // End of section. //template:end minimumVersions
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data FQDNObjects) getPath() string {
+func (data FQDNs) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns"
 }
 
@@ -66,7 +66,7 @@ func (data FQDNObjects) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data FQDNObjects) toBody(ctx context.Context, state FQDNObjects) string {
+func (data FQDNs) toBody(ctx context.Context, state FQDNs) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
@@ -100,7 +100,7 @@ func (data FQDNObjects) toBody(ctx context.Context, state FQDNObjects) string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *FQDNObjects) fromBody(ctx context.Context, res gjson.Result) {
+func (data *FQDNs) fromBody(ctx context.Context, res gjson.Result) {
 	for k := range data.Items {
 		parent := &data
 		data := (*parent).Items[k]
@@ -163,7 +163,7 @@ func (data *FQDNObjects) fromBody(ctx context.Context, res gjson.Result) {
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *FQDNObjects) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *FQDNs) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.Items {
 		parent := &data
 		data := (*parent).Items[i]
@@ -187,7 +187,11 @@ func (data *FQDNObjects) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 			data.Description = types.StringValue(value.String())
 		} else {
-			data.Description = types.StringNull()
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
 		}
 		if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 			data.Overridable = types.BoolValue(value.Bool())
@@ -219,7 +223,7 @@ func (data *FQDNObjects) fromBodyPartial(ctx context.Context, res gjson.Result) 
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *FQDNObjects) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *FQDNs) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	for i, val := range data.Items {
 		var r gjson.Result
 		res.Get("items").ForEach(
@@ -262,7 +266,7 @@ func (data *FQDNObjects) fromBodyUnknowns(ctx context.Context, res gjson.Result)
 
 // Section below is generated&owned by "gen/generator.go". //template:begin Clone
 
-func (data *FQDNObjects) Clone() FQDNObjects {
+func (data *FQDNs) Clone() FQDNs {
 	ret := *data
 	ret.Items = maps.Clone(data.Items)
 
@@ -274,7 +278,7 @@ func (data *FQDNObjects) Clone() FQDNObjects {
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
 
 // Updates done one-by-one require different API body
-func (data FQDNObjects) toBodyNonBulk(ctx context.Context, state FQDNObjects) string {
+func (data FQDNs) toBodyNonBulk(ctx context.Context, state FQDNs) string {
 	// This is one-by-one update, so only one element to update is expected
 	if len(data.Items) > 1 {
 		tflog.Error(ctx, "Found more than one element to change. Only one will be changed.")
@@ -288,3 +292,23 @@ func (data FQDNObjects) toBodyNonBulk(ctx context.Context, state FQDNObjects) st
 }
 
 // End of section. //template:end toBodyNonBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
+
+// End of section. //template:end findObjectsToBeReplaced
+
+// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
+
+// End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// End of section. //template:end toBodyPutDelete
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
+
+// End of section. //template:end adjustBodyBulk

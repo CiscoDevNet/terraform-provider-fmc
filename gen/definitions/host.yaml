@@ -6,7 +6,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the host object.
+    description: Name of the Host object.
     example: my_host
     data_source_query: true
   - model_name: type
@@ -16,13 +16,13 @@ attributes:
   - model_name: description
     type: String
     description: Description of the object.
-    example: My host object
+    example: My Host object
     missing_in_response_if_set_to_empty_string: true
   - model_name: value
     tf_name: ip
     type: String
     mandatory: true
-    description: IP of the host.
+    description: IP of the Host.
     example: 10.1.1.1
   - model_name: overridable
     type: Bool

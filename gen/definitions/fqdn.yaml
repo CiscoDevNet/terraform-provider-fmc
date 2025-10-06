@@ -1,13 +1,15 @@
 ---
-name: FQDN Object
+name: FQDN
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns
 doc_category: Objects
+res_description: This resource manages a FQDN (Fully Qualified Domain Name) Object.
+ds_description: This data source reads the FQDN (Fully Qualified Domain Name) Object.
 attributes:
   - model_name: name
     type: String
     description: Name of the FQDN object.
     mandatory: true
-    example: my_fqdn_object
+    example: my_fqdn
     data_source_query: true
   - model_name: value
     tf_name: fqdn
@@ -25,9 +27,10 @@ attributes:
     type: String
     description: Description of the object.
     example: "My FQDN Object"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     exclude_example: true
     test_value: "true"
   - model_name: type

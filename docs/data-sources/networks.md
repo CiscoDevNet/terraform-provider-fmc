@@ -15,7 +15,7 @@ This data source reads the Networks.
 ```terraform
 data "fmc_networks" "example" {
   items = {
-    "my_networks_object" = {
+    "my_networks" = {
     }
   }
 }
@@ -27,7 +27,7 @@ data "fmc_networks" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of networks. The key of the map is the name of the individual Network. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Networks. The key of the map is the name of the individual Network. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -39,7 +39,7 @@ data "fmc_networks" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed Network.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
-- `prefix` (String) Prefix of the network.
+- `id` (String) Id of the Network object.
+- `overridable` (Boolean) Whether the object values can be overridden.
+- `prefix` (String) Prefix of the Network.
 - `type` (String) Type of the object; this value is always 'Network'.

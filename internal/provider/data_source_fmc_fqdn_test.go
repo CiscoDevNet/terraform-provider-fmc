@@ -28,24 +28,24 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
-func TestAccDataSourceFmcFQDNObject(t *testing.T) {
+func TestAccDataSourceFmcFQDN(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "name", "my_fqdn_object"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "fqdn", "www.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "dns_resolution", "IPV4_AND_IPV6"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "description", "My FQDN Object"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_fqdn_object.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn.test", "name", "my_fqdn"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn.test", "fqdn", "www.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn.test", "dns_resolution", "IPV4_AND_IPV6"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn.test", "description", "My FQDN Object"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_fqdn.test", "type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcFQDNObjectConfig(),
+				Config: testAccDataSourceFmcFQDNConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccNamedDataSourceFmcFQDNObjectConfig(),
+				Config: testAccNamedDataSourceFmcFQDNConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -59,9 +59,9 @@ func TestAccDataSourceFmcFQDNObject(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
-func testAccDataSourceFmcFQDNObjectConfig() string {
-	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+func testAccDataSourceFmcFQDNConfig() string {
+	config := `resource "fmc_fqdn" "test" {` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
 	config += `	description = "My FQDN Object"` + "\n"
@@ -69,16 +69,16 @@ func testAccDataSourceFmcFQDNObjectConfig() string {
 	config += `}` + "\n"
 
 	config += `
-		data "fmc_fqdn_object" "test" {
-			id = fmc_fqdn_object.test.id
+		data "fmc_fqdn" "test" {
+			id = fmc_fqdn.test.id
 		}
 	`
 	return config
 }
 
-func testAccNamedDataSourceFmcFQDNObjectConfig() string {
-	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+func testAccNamedDataSourceFmcFQDNConfig() string {
+	config := `resource "fmc_fqdn" "test" {` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
 	config += `	description = "My FQDN Object"` + "\n"
@@ -86,8 +86,8 @@ func testAccNamedDataSourceFmcFQDNObjectConfig() string {
 	config += `}` + "\n"
 
 	config += `
-		data "fmc_fqdn_object" "test" {
-			name = fmc_fqdn_object.test.name
+		data "fmc_fqdn" "test" {
+			name = fmc_fqdn.test.name
 		}
 	`
 	return config

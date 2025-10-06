@@ -30,7 +30,7 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
-type FQDNObject struct {
+type FQDN struct {
 	Id            types.String `tfsdk:"id"`
 	Domain        types.String `tfsdk:"domain"`
 	Name          types.String `tfsdk:"name"`
@@ -49,7 +49,7 @@ type FQDNObject struct {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
-func (data FQDNObject) getPath() string {
+func (data FQDN) getPath() string {
 	return "/api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns"
 }
 
@@ -57,7 +57,7 @@ func (data FQDNObject) getPath() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBody
 
-func (data FQDNObject) toBody(ctx context.Context, state FQDNObject) string {
+func (data FQDN) toBody(ctx context.Context, state FQDN) string {
 	body := ""
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
@@ -84,7 +84,7 @@ func (data FQDNObject) toBody(ctx context.Context, state FQDNObject) string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
-func (data *FQDNObject) fromBody(ctx context.Context, res gjson.Result) {
+func (data *FQDN) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -125,7 +125,7 @@ func (data *FQDNObject) fromBody(ctx context.Context, res gjson.Result) {
 // uncouple the provider from the exact values that the backend API might summon to replace nulls. (Such behavior might
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
-func (data *FQDNObject) fromBodyPartial(ctx context.Context, res gjson.Result) {
+func (data *FQDN) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
@@ -144,7 +144,11 @@ func (data *FQDNObject) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())
@@ -164,7 +168,7 @@ func (data *FQDNObject) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
-func (data *FQDNObject) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+func (data *FQDN) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	if data.Type.IsUnknown() {
 		if value := res.Get("type"); value.Exists() {
 			data.Type = types.StringValue(value.String())
@@ -175,3 +179,31 @@ func (data *FQDNObject) fromBodyUnknowns(ctx context.Context, res gjson.Result) 
 }
 
 // End of section. //template:end fromBodyUnknowns
+
+// Section below is generated&owned by "gen/generator.go". //template:begin Clone
+
+// End of section. //template:end Clone
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
+
+// End of section. //template:end toBodyNonBulk
+
+// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
+
+// End of section. //template:end findObjectsToBeReplaced
+
+// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
+
+// End of section. //template:end clearItemIds
+
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
+
+// End of section. //template:end toBodyPutDelete
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBody
+
+// End of section. //template:end adjustBody
+
+// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
+
+// End of section. //template:end adjustBodyBulk

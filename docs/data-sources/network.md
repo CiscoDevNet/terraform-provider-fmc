@@ -25,11 +25,11 @@ data "fmc_network" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object.
+- `name` (String) Name of the Network object.
 
 ### Read-Only
 
 - `description` (String) Description of the object.
 - `overridable` (Boolean) Whether the object values can be overridden.
-- `prefix` (String) Prefix of the network.
+- `prefix` (String) Prefix of the Network.
 - `type` (String) Type of the object; this value is always 'Network'.
