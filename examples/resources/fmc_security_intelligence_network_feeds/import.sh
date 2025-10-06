@@ -1,1 +1,3 @@
-terraform import fmc_security_intelligence_network_feeds.example "<domain>,[<security_intelligence_network_feeds_name>]"
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_security_intelligence_network_feeds.example "<domain>,[<item1_name>,<item2_name>,...]"
+
