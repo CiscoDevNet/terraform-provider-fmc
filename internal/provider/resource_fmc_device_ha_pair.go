@@ -69,7 +69,7 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -112,7 +112,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of High Availability Link interface on the primary FTD device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of High Availability Link interface taken from the primary FTD device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -156,7 +156,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"ha_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node on High Availabilityinterface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP of secondary node on High Availability interface.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -177,7 +177,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"state_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of state link physical interface taken on the primary FTD device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of state link physical interface taken from the primary FTD device.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -250,7 +250,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"encryption_key": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Pass shared key for encryption if CUSTOM key geneeration scheme is selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Preshared key for encryption if CUSTOM key generation scheme is selected.").String,
 				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -334,7 +334,7 @@ func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRe
 				Default: int64default.StaticInt64(25),
 			},
 			"action": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy").AddStringEnumDescription("SWITCH", "HABREAK").String,
+				MarkdownDescription: helpers.NewAttributeDescription("FTD HA PUT operation action. Specifically used for manual switch.").AddStringEnumDescription("SWITCH", "HABREAK").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("SWITCH", "HABREAK"),

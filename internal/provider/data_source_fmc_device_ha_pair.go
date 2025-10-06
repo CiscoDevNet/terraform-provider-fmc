@@ -89,7 +89,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"ha_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of High Availability Link interface on the primary FTD device.",
+				MarkdownDescription: "Id of High Availability Link interface taken from the primary FTD device.",
 				Computed:            true,
 			},
 			"ha_link_interface_name": schema.StringAttribute{
@@ -113,7 +113,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"ha_link_secondary_ip": schema.StringAttribute{
-				MarkdownDescription: "IP of secondary node on High Availabilityinterface.",
+				MarkdownDescription: "IP of secondary node on High Availability interface.",
 				Computed:            true,
 			},
 			"ha_link_netmask": schema.StringAttribute{
@@ -125,7 +125,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"state_link_interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of state link physical interface taken on the primary FTD device.",
+				MarkdownDescription: "ID of state link physical interface taken from the primary FTD device.",
 				Computed:            true,
 			},
 			"state_link_interface_name": schema.StringAttribute{
@@ -165,7 +165,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"encryption_key": schema.StringAttribute{
-				MarkdownDescription: "Pass shared key for encryption if CUSTOM key geneeration scheme is selected.",
+				MarkdownDescription: "Preshared key for encryption if CUSTOM key generation scheme is selected.",
 				Computed:            true,
 			},
 			"failed_interfaces_percent": schema.Int64Attribute{
@@ -205,7 +205,7 @@ func (d *DeviceHAPairDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"action": schema.StringAttribute{
-				MarkdownDescription: "FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy",
+				MarkdownDescription: "FTD HA PUT operation action. Specifically used for manual switch.",
 				Computed:            true,
 			},
 		},

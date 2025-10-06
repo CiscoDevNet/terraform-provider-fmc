@@ -29,19 +29,19 @@ data "fmc_device_ha_pair" "example" {
 
 ### Read-Only
 
-- `action` (String) FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
+- `action` (String) FTD HA PUT operation action. Specifically used for manual switch.
 - `encryption_enabled` (Boolean) Use encryption for communication.
-- `encryption_key` (String) Pass shared key for encryption if CUSTOM key geneeration scheme is selected.
+- `encryption_key` (String) Preshared key for encryption if CUSTOM key generation scheme is selected.
 - `encryption_key_generation_scheme` (String) Select the encyption key generation scheme.
 - `failed_interfaces_limit` (Number) Number of Failed Interfaces that triggers failover.
 - `failed_interfaces_percent` (Number) Percentage of Failed Interfaces that triggers failover.
-- `ha_link_interface_id` (String) Id of High Availability Link interface on the primary FTD device.
+- `ha_link_interface_id` (String) Id of High Availability Link interface taken from the primary FTD device.
 - `ha_link_interface_name` (String) Name of High Availability Link interface.
 - `ha_link_interface_type` (String) Type of High Availability Link interface.
 - `ha_link_logical_name` (String) Logical name of High Availability Link interface.
 - `ha_link_netmask` (String) Subnet mask for High Availability link.
 - `ha_link_primary_ip` (String) IP of primary node on High Availability interface.
-- `ha_link_secondary_ip` (String) IP of secondary node on High Availabilityinterface.
+- `ha_link_secondary_ip` (String) IP of secondary node on High Availability interface.
 - `ha_link_use_ipv6` (Boolean) Use IPv6 addressing for High Availability communication.
 - `interface_hold_time` (Number) Interface Hold Time in seconds
 - `interface_poll_time` (Number) Peer Pool Time (1-15 SEC or 500-999 MSEC)
@@ -52,7 +52,7 @@ data "fmc_device_ha_pair" "example" {
 - `peer_poll_time_unit` (String) Peer Pool Time Unit
 - `primary_device_id` (String) Id of primary FTD in the HA Pair.
 - `secondary_device_id` (String) Id of secondary FTD in the HA Pair.
-- `state_link_interface_id` (String) ID of state link physical interface taken on the primary FTD device.
+- `state_link_interface_id` (String) ID of state link physical interface taken from the primary FTD device.
 - `state_link_interface_name` (String) Name of state link interface.
 - `state_link_interface_type` (String) Type of state link interface.
 - `state_link_logical_name` (String) Logical name of state link interface.

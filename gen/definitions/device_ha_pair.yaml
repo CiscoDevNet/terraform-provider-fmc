@@ -6,7 +6,8 @@ doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_device_2_id]
 res_description: >-
   This device manages FTD HA Pair configuration.\n
-  Configuration of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n
+  Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n
+  On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
 attributes:
   - model_name: name
     type: String
@@ -36,13 +37,14 @@ attributes:
     description: Id of secondary FTD in the HA Pair.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     test_value: var.device_2_id
+
   # HA Link
   - model_name: id
     type: String
     mandatory: true
     tf_name: ha_link_interface_id
     data_path: [ftdHABootstrap, lanFailover, interfaceObject]
-    description: Id of High Availability Link interface on the primary FTD device.
+    description: Id of High Availability Link interface taken from the primary FTD device.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
     requires_replace: true
@@ -93,7 +95,7 @@ attributes:
     tf_name: ha_link_secondary_ip
     data_path: [ftdHABootstrap, lanFailover]
     example: "1.1.1.2"
-    description: IP of secondary node on High Availabilityinterface.
+    description: IP of secondary node on High Availability interface.
     requires_replace: true
   - model_name: subnetMask
     type: String
@@ -103,6 +105,7 @@ attributes:
     description: Subnet mask for High Availability link.
     example: "255.255.255.0"
     requires_replace: true
+
   # State Link
   - model_name: useSameLinkForFailovers
     tf_name: state_link_use_same_as_ha
@@ -117,7 +120,7 @@ attributes:
     type: String
     tf_name: state_link_interface_id
     data_path: [ftdHABootstrap, statefulFailover, interfaceObject]
-    description: ID of state link physical interface taken on the primary FTD device.
+    description: ID of state link physical interface taken from the primary FTD device.
     example: 96d24097-41c4-4332-a4d0-a8c07ac08482
     write_only: true
     requires_replace: true
@@ -171,6 +174,7 @@ attributes:
     example: "255.255.255.0"
     description: Subnet mask for state link.
     requires_replace: true
+
   # IPsec Encryption
   - model_name: isEncryptionEnabled
     tf_name: encryption_enabled
@@ -192,11 +196,12 @@ attributes:
     type: String
     data_path: [ftdHABootstrap]
     tf_name: encryption_key
-    description: Pass shared key for encryption if CUSTOM key geneeration scheme is selected.
+    description: Preshared key for encryption if CUSTOM key generation scheme is selected.
     exclude_example: true
     exclude_test: true
     write_only: true
     requires_replace: true
+
   # Failover trigger criteria - Interface Failure Treshold ### Changes in this section will require changes in `go` code
   - model_name: percentFailedInterfaceExceed
     data_path: [ftdHAFailoverTriggerCriteria]
@@ -215,6 +220,7 @@ attributes:
     min_int: 1
     max_int: 211
     example: 1
+
   # Failover trigger criteria - Hello Packet Intervals ### Changes in this section will require changes in `go` code
   - model_name: peerPollTime
     data_path: [ftdHAFailoverTriggerCriteria]
@@ -269,10 +275,11 @@ attributes:
     max_int: 75
     default_value: 25
     example: 25
+
   # Other
   - model_name: action
     type: String
-    description: FTD HA PUT operation action. Specifically used for manual switch. HA Break will be triggered when you run terraform destroy
+    description: FTD HA PUT operation action. Specifically used for manual switch.
     enum_values: [SWITCH, HABREAK]
     exclude_test: true
     exclude_example: true
