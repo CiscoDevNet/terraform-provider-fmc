@@ -97,6 +97,10 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 							MarkdownDescription: "ID of the network object.",
 							Computed:            true,
 						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the network object.",
+							Computed:            true,
+						},
 					},
 				},
 			},

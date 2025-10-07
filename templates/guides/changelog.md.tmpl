@@ -10,6 +10,7 @@ description: |-
 ## 2.0.0 (Unreleased)
 
 - BREAKING CHANGE: Rename `fmc_fqdn_object` and `fmc_fqdn_objects` to `fmc_fqdn` and `fmc_fqdns` respectively.
+- (Enhancement) Add support for `fmc_network_groups` data source
 - (Enhancement) `domain` support for importing non-bulk resources
 
 ## 2.0.0-rc7

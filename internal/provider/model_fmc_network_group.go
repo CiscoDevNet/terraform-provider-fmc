@@ -45,7 +45,8 @@ type NetworkGroup struct {
 }
 
 type NetworkGroupObjects struct {
-	Id types.String `tfsdk:"id"`
+	Id   types.String `tfsdk:"id"`
+	Name types.String `tfsdk:"name"`
 }
 
 type NetworkGroupLiterals struct {
@@ -88,6 +89,9 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
+			}
+			if !item.Name.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
 			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
@@ -141,6 +145,11 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 				data.Id = types.StringValue(value.String())
 			} else {
 				data.Id = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
 			}
 			(*parent).Objects = append((*parent).Objects, data)
 			return true
@@ -235,6 +244,11 @@ func (data *NetworkGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 			data.Id = types.StringValue(value.String())
 		} else {
 			data.Id = types.StringNull()
+		}
+		if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+			data.Name = types.StringValue(value.String())
+		} else {
+			data.Name = types.StringNull()
 		}
 		(*parent).Objects[i] = data
 	}

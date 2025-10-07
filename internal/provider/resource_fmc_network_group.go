@@ -105,6 +105,10 @@ func (r *NetworkGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the network object.").String,
 							Optional:            true,
 						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the network object.").String,
+							Optional:            true,
+						},
 					},
 				},
 			},

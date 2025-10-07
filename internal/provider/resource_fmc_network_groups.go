@@ -66,7 +66,7 @@ func (r *NetworkGroupsResource) Metadata(ctx context.Context, req resource.Metad
 func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Network Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Network Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -122,6 +122,10 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the network object.").String,
+										Optional:            true,
+									},
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the network object.").String,
 										Optional:            true,
 									},
 								},
@@ -303,6 +307,11 @@ func synthesizeNetworkGroupsItem(ctx context.Context, item gjson.Result, ownedId
 		} else {
 			ret, _ = sjson.SetRaw(ret, "objects.-1", obj.String())
 		}
+	}
+
+	// Ensure that network_groups is always present, even if empty, to avoid diffs.
+	if ok := gjson.Parse(ret).Get("network_groups").Exists(); !ok {
+		ret, _ = sjson.Set(ret, "network_groups", []string{})
 	}
 
 	return ret
@@ -549,7 +558,12 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 // And if you iterate the result sequence in reverse, any parent is guaranteed to be placed before its children, which
 // is useful for delete operations.
 func graphTopologicalSeq(ctx context.Context, body string) ([]networkGroup, diag.Diagnostics) {
-	b := gjson.Parse(body).Get("items")
+	var b gjson.Result
+	if body == "{}" {
+		b = gjson.Result{}
+	} else {
+		b = gjson.Parse(body)
+	}
 	m := map[string]networkGroup{}
 	parentCount := map[string]int{}
 	for _, item := range b.Array() {

@@ -49,3 +49,4 @@ Read-Only:
 Read-Only:
 
 - `id` (String) ID of the network object.
+- `name` (String) Name of the network object.

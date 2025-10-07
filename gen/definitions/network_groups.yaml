@@ -1,13 +1,12 @@
 # Manual Resource - most of the resource is manual
 ---
 name: Network Groups
-no_data_source: true
 no_import: true
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
 doc_category: Objects
 minimum_version_bulk_delete: "7.4"
 res_description: This resource manages Network Groups through bulk operations.
-# is_bulk: true
+is_bulk: true
 attributes:
   - model_name: items
     type: Map
@@ -25,6 +24,7 @@ attributes:
         type: String
         description: Description of the object.
         example: "My Network Group 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: type
         type: String
         description: Type of the object; this value is always 'NetworkGroup'.
@@ -53,6 +53,11 @@ attributes:
             id: true
             example: cf271be2-e80d-4033-8e1d-285f133a5f8c
             test_value: fmc_range.test.id
+          - model_name: name
+            type: String
+            description: Name of the network object.
+            example: fmc_network_object_1
+            test_value: fmc_range.test.name
           - model_name: type
             type: String
             value: AnyNonEmptyString

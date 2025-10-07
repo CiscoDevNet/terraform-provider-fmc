@@ -615,6 +615,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewNetworkDataSource,
 		NewNetworkAnalysisPolicyDataSource,
 		NewNetworkGroupDataSource,
+		NewNetworkGroupsDataSource,
 		NewNetworksDataSource,
 		NewPolicyAssignmentDataSource,
 		NewPolicyListDataSource,

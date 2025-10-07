@@ -34,6 +34,11 @@ attributes:
         id: true
         example: 12345678-1234-1234-1234-123456789012
         test_value: fmc_range.test.id
+      - model_name: name
+        type: String
+        description: Name of the network object.
+        example: fmc_network_object_1
+        test_value: fmc_range.test.name
       - model_name: type
         type: String
         value: AnyNonEmptyString
