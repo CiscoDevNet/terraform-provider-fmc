@@ -148,3 +148,84 @@ resource "fmc_network_group" "network_group" {
 ```
 
 This two-stage approach ensures all dependencies are properly maintained throughout the replacement process.
+
+### Object Removal
+
+When removing objects that are referenced by other resources, you cannot do it in a single step.
+
+#### Example Scenario
+
+**Initial Configuration:**
+```hcl
+resource "fmc_hosts" "hosts" {
+  items = {
+    "host_1" = { ip = "10.10.1.1" }
+    "host_2" = { ip = "10.10.1.2" }
+  }
+}
+
+resource "fmc_network_group" "network_group" {
+  name = "network_group"
+  objects = [
+    { id = fmc_hosts.hosts.items["host_1"].id },
+    { id = fmc_hosts.hosts.items["host_2"].id },
+  ]
+}
+```
+
+**Desired Change:** Remove `host_2`
+
+```hcl
+resource "fmc_hosts" "hosts" {
+  items = {
+    "host_1" = { ip = "10.10.1.1" }
+  }
+}
+
+resource "fmc_network_group" "network_group" {
+  name = "network_group"
+  objects = [
+    { id = fmc_hosts.hosts.items["host_1"].id },
+  ]
+}
+```
+
+**Problem:** Terraform cannot determine the correct order of operations.
+
+#### Solution: Staged Deployment
+
+**Stage 1:** Remove references to the object
+
+```hcl
+# hosts unchanged
+resource "fmc_hosts" "hosts" {
+  items = {
+    "host_1" = { ip = "10.10.1.1" }
+    "host_2" = { ip = "10.10.1.2" }
+  }
+}
+
+resource "fmc_network_group" "network_group" {
+  name = "network_group"
+  objects = [
+    { id = fmc_hosts.hosts.items["host_1"].id },  # host_2 removed
+  ]
+}
+```
+
+**Stage 2:** Remove the object itself
+```hcl
+resource "fmc_hosts" "hosts" {
+  items = {
+    "host_1" = { ip = "10.10.1.1" }   # host_2 removed
+  }
+}
+
+# network group remains unchanged
+resource "fmc_network_group" "network_group" {
+  name = "network_group"
+  objects = [
+    { id = fmc_hosts.hosts.items["host_1"].id },
+  ]
+}
+```
