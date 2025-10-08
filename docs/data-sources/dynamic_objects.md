@@ -39,7 +39,7 @@ data "fmc_dynamic_objects" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed Dynamic Object.
+- `id` (String) Id of the Dynamic Object.
 - `mappings` (Set of String) List of mappings.
 - `object_type` (String) Type of dynamic object mappings.
 - `type` (String) Type of the object; this value is always 'DynamicObject'.
