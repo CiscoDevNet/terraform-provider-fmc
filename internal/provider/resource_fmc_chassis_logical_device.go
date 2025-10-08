@@ -257,12 +257,12 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				Optional:            true,
 			},
 			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
-						stringvalidator.OneOf("MALWARE", "URLFilter", "CARRIER", "PROTECT"),
+						stringvalidator.OneOf("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT"),
 					),
 				},
 			},

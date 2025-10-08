@@ -14,9 +14,9 @@ This resource manages a Port.
 
 ```terraform
 resource "fmc_port" "example" {
-  port        = "443"
   name        = "my_port"
   protocol    = "TCP"
+  port        = "443"
   description = "Port TCP/443 (HTTPS)"
 }
 ```
@@ -26,7 +26,7 @@ resource "fmc_port" "example" {
 
 ### Required
 
-- `name` (String) Name of the object.
+- `name` (String) Name of the Port object.
 - `protocol` (String) IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).
 
 ### Optional

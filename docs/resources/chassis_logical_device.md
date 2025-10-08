@@ -88,7 +88,7 @@ resource "fmc_chassis_logical_device" "example" {
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
 - `license_capabilities` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
-  - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`
+  - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`, `THREAT`
 - `permit_expert_mode` (String) Permit expert mode for the device.
   - Choices: `yes`, `no`
 - `platform_settings_id` (String) Id of the platform settings.

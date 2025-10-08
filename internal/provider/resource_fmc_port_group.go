@@ -80,7 +80,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Port Group object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -99,7 +99,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 				Optional:            true,
 			},
 			"objects": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -108,7 +108,7 @@ func (r *PortGroupResource) Schema(ctx context.Context, req resource.SchemaReque
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the port object.").AddStringEnumDescription("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object"),

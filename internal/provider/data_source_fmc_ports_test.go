@@ -31,10 +31,10 @@ import (
 func TestAccDataSourceFmcPorts(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ports.test", "items.my_ports.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.port", "443"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.protocol", "TCP"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.description", "Port TCP/443 (HTTPS)"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ports.test", "items.my_ports.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.protocol", "TCP"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.port", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ports.test", "items.my_ports.description", "Port TCP/443 (HTTPS)"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -58,8 +58,8 @@ func TestAccDataSourceFmcPorts(t *testing.T) {
 func testAccDataSourceFmcPortsConfig() string {
 	config := `resource "fmc_ports" "test" {` + "\n"
 	config += `	items = { "my_ports" = {` + "\n"
-	config += `		port = "443"` + "\n"
 	config += `		protocol = "TCP"` + "\n"
+	config += `		port = "443"` + "\n"
 	config += `		description = "Port TCP/443 (HTTPS)"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `	}}` + "\n"

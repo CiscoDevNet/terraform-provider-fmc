@@ -77,17 +77,24 @@ func (r *PortResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"port": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.").String,
-				Optional:            true,
-			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Port object.").String,
 				Required:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ProtocolPortObject'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"protocol": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).").String,
 				Required:            true,
+			},
+			"port": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.").String,
+				Optional:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
@@ -96,13 +103,6 @@ func (r *PortResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 			"overridable": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 				Optional:            true,
-			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ProtocolPortObject'.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
 			},
 		},
 	}

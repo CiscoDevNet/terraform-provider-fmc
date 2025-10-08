@@ -8,14 +8,14 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of port groups. The key of the map is the name of the individual Port Group.
+      Map of Port Groups. The key of the map is the name of the individual Port Group.
     mandatory: true
     map_key_example: my_port_groups
     attributes:
     - model_name: id
       type: String
       resource_id: true
-      description: Id of the managed Port Groups.
+      description: Id of the Port Group.
       exclude_example: true
       exclude_test: true
     - model_name: type
@@ -26,6 +26,7 @@ attributes:
       type: String
       description: Description of the object.
       example: "My port group description"
+      missing_in_response_if_set_to_empty_string: true
     - model_name: overridable
       type: Bool
       description: Indicates whether object values can be overridden.
@@ -34,6 +35,7 @@ attributes:
     - model_name: objects
       type: Set
       mandatory: true
+      description: Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group.
       attributes:
         - model_name: id
           type: String
@@ -45,6 +47,7 @@ attributes:
           type: String
           mandatory: true
           enum_values: [ProtocolPortObject, ICMPV6Object, ICMPV4Object]
+          description: Type of the port object.
           example: ProtocolPortObject
 
 test_prerequisites: |-

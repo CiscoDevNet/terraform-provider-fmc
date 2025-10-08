@@ -1,0 +1,48 @@
+---
+name: ICMPv6s
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/icmpv6objects
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of icmpv6s. The key of the map is the name of the individual ICMPv6 Object.
+    map_key_example: my_icmpv6_objects
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the managed ICMPv6 object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'ICMPV6Object'.
+        computed: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "ICMPv6 address unreachable response, type 1, code 3"
+        missing_in_response_if_set_to_empty_string: true
+      - model_name: icmpType
+        type: Int64
+        description: ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
+        example: "1"
+        min_int: 0
+        max_int: 255
+      - model_name: code
+        type: Int64
+        description: >-
+          ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate
+          to the given `icmp_type`.
+        min_int: 0
+        max_int: 255
+        example: "3"
+      - model_name: overridable
+        type: Bool
+        description: Indicates whether object values can be overridden.
+        exclude_example: true
+        test_value: "true"

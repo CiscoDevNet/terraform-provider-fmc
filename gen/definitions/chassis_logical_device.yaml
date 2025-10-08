@@ -195,7 +195,7 @@ attributes:
     tf_name: license_capabilities
     type: Set
     element_type: String
-    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT]
+    enum_values: [MALWARE, URLFilter, CARRIER, PROTECT, THREAT]
     description: License capabilities to be assigned to the device. This is used only as bootstrap configuration.
     example: MALWARE
   # Container Details

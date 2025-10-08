@@ -4,11 +4,13 @@ page_title: "fmc_icmpv6_object Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This resource manages an ICMPv6 Object.
+  This object is deprecated. Please use fmc_icmpv6 instead.
 ---
 
 # fmc_icmpv6_object (Resource)
 
 This resource manages an ICMPv6 Object.
+This object is deprecated. Please use `fmc_icmpv6` instead.
 
 ## Example Usage
 
