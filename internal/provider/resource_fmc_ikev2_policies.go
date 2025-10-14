@@ -446,8 +446,6 @@ func (r *IKEv2PoliciesResource) Delete(ctx context.Context, req resource.DeleteR
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *IKEv2PoliciesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config IKEv2Policies
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -459,22 +457,18 @@ func (r *IKEv2PoliciesResource) ImportState(ctx context.Context, req resource.Im
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	// Generate new ID (random, does not relate to FMC in any way)
-	config.Id = types.StringValue(uuid.New().String())
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]IKEv2PoliciesItems, len(names))
+	itemsMap := make(map[string]IKEv2PoliciesItems, len(names))
 	for _, v := range names {
-		config.Items[v] = IKEv2PoliciesItems{}
+		itemsMap[v] = IKEv2PoliciesItems{}
 	}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

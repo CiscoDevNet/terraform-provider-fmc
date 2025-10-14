@@ -1010,8 +1010,6 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 {{- if not .NoImport}}
 func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config {{camelCase .Name}}
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
 	{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
@@ -1029,35 +1027,31 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	
 	{{- if .IsBulk}}
 	// Generate new ID (random, does not relate to FMC in any way)
-	config.Id = types.StringValue(uuid.New().String())
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]{{camelCase .Name}}Items, len(names))
+	itemsMap := make(map[string]{{camelCase .Name}}Items, len(names))
 	for _, v := range names {
-		config.Items[v] = {{camelCase .Name}}Items{}
+		itemsMap[v] = {{camelCase .Name}}Items{}
 	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 	{{- else}}
-	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
 	{{- end}}
 
 	{{- if hasReference .Attributes -}}
 	{{- range $index, $attr := .Attributes -}}
 	{{- if $attr.Reference}}
-	config.{{toGoName $attr.TfName}} = types.StringValue(match[inputPattern.SubexpIndex("{{$attr.TfName}}")])
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("{{$attr.TfName}}"), match[inputPattern.SubexpIndex("{{$attr.TfName}}")])...)
 	{{- end -}}
 	{{- end -}}
 	{{- end}}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

@@ -26,6 +26,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
@@ -345,8 +346,6 @@ func (r *DeviceHAPairMonitoringResource) Delete(ctx context.Context, req resourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *DeviceHAPairMonitoringResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config DeviceHAPairMonitoring
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<ha_pair_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -358,15 +357,10 @@ func (r *DeviceHAPairMonitoringResource) ImportState(ctx context.Context, req re
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
-	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
-	config.HaPairId = types.StringValue(match[inputPattern.SubexpIndex("ha_pair_id")])
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("ha_pair_id"), match[inputPattern.SubexpIndex("ha_pair_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

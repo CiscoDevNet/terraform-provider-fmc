@@ -452,8 +452,6 @@ func (r *VPNS2SAdvancedSettingsResource) Delete(ctx context.Context, req resourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *VPNS2SAdvancedSettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config VPNS2SAdvancedSettings
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<vpn_s2s_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -465,15 +463,10 @@ func (r *VPNS2SAdvancedSettingsResource) ImportState(ctx context.Context, req re
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
-	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
-	config.VpnS2sId = types.StringValue(match[inputPattern.SubexpIndex("vpn_s2s_id")])
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vpn_s2s_id"), match[inputPattern.SubexpIndex("vpn_s2s_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

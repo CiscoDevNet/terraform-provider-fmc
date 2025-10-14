@@ -504,8 +504,6 @@ func (r *VPNS2SEndpointsResource) Delete(ctx context.Context, req resource.Delet
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config VPNS2SEndpoints
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<vpn_s2s_id>[^\s,]+),\[(?P<names>.*?)\]$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -517,23 +515,19 @@ func (r *VPNS2SEndpointsResource) ImportState(ctx context.Context, req resource.
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	// Generate new ID (random, does not relate to FMC in any way)
-	config.Id = types.StringValue(uuid.New().String())
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]VPNS2SEndpointsItems, len(names))
+	itemsMap := make(map[string]VPNS2SEndpointsItems, len(names))
 	for _, v := range names {
-		config.Items[v] = VPNS2SEndpointsItems{}
+		itemsMap[v] = VPNS2SEndpointsItems{}
 	}
-	config.VpnS2sId = types.StringValue(match[inputPattern.SubexpIndex("vpn_s2s_id")])
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vpn_s2s_id"), match[inputPattern.SubexpIndex("vpn_s2s_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }

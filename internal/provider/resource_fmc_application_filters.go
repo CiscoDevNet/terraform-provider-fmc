@@ -468,8 +468,6 @@ func (r *ApplicationFiltersResource) Delete(ctx context.Context, req resource.De
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *ApplicationFiltersResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config ApplicationFilters
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -481,22 +479,18 @@ func (r *ApplicationFiltersResource) ImportState(ctx context.Context, req resour
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	// Generate new ID (random, does not relate to FMC in any way)
-	config.Id = types.StringValue(uuid.New().String())
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]ApplicationFiltersItems, len(names))
+	itemsMap := make(map[string]ApplicationFiltersItems, len(names))
 	for _, v := range names {
-		config.Items[v] = ApplicationFiltersItems{}
+		itemsMap[v] = ApplicationFiltersItems{}
 	}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
