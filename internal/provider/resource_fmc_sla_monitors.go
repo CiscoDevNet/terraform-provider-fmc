@@ -466,8 +466,6 @@ func (r *SLAMonitorsResource) Delete(ctx context.Context, req resource.DeleteReq
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *SLAMonitorsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	var config SLAMonitors
-
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -479,22 +477,18 @@ func (r *SLAMonitorsResource) ImportState(ctx context.Context, req resource.Impo
 
 	// Set domain, if provided
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		config.Domain = types.StringValue(tmpDomain)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	// Generate new ID (random, does not relate to FMC in any way)
-	config.Id = types.StringValue(uuid.New().String())
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	config.Items = make(map[string]SLAMonitorsItems, len(names))
+	itemsMap := make(map[string]SLAMonitorsItems, len(names))
 	for _, v := range names {
-		config.Items[v] = SLAMonitorsItems{}
+		itemsMap[v] = SLAMonitorsItems{}
 	}
-
-	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
-	if resp.Diagnostics.HasError() {
-		return
-	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
