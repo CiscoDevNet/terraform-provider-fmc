@@ -139,15 +139,15 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"fall_through": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Fallthrough to Interface PAT (Destination Interface)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Fallthrough to Interface PAT (Destination Interface).").String,
 							Optional:            true,
 						},
 						"interface_in_original_destination": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Use interface address as original destination").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Use interface address as original destination.").String,
 							Optional:            true,
 						},
 						"interface_in_translated_source": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address.").String,
 							Optional:            true,
 						},
 						"ipv6": schema.BoolAttribute{
@@ -155,63 +155,63 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"net_to_net": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Net to Net Mapping").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Net to Net Mapping.").String,
 							Optional:            true,
 						},
 						"no_proxy_arp": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Do not proxy ARP on Destination Interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Do not proxy ARP on Destination Interface.").String,
 							Optional:            true,
 						},
 						"unidirectional": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether the rule is unidirectional").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the rule is unidirectional.").String,
 							Optional:            true,
 						},
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group.").String,
 							Optional:            true,
 						},
 						"original_source_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of original source network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of original source network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"original_source_port_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of original source port object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of original source port object.").String,
 							Optional:            true,
 						},
 						"original_destination_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of original destination network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of original destination network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"original_destination_port_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of original destination port object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of original destination port object.").String,
 							Optional:            true,
 						},
 						"route_lookup": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface.").String,
 							Optional:            true,
 						},
 						"destination_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group.").String,
 							Optional:            true,
 						},
 						"translated_source_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of translated source network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of translated source network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"translated_source_port_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of translated source port object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of translated source port object.").String,
 							Optional:            true,
 						},
 						"translate_dns": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Translate DNS replies that match this rule").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Translate DNS replies that match this rule.").String,
 							Optional:            true,
 						},
 						"translated_destination_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"translated_destination_port_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination port object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination port object.").String,
 							Optional:            true,
 						},
 					},
@@ -234,11 +234,11 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"destination_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of destination security zone or interface group.").String,
 							Optional:            true,
 						},
 						"fall_through": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Fallthrough to Interface PAT (Destination Interface)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Fallthrough to Interface PAT (Destination Interface).").String,
 							Optional:            true,
 						},
 						"ipv6": schema.BoolAttribute{
@@ -246,50 +246,50 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"net_to_net": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Net to Net Mapping").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Net to Net Mapping.").String,
 							Optional:            true,
 						},
 						"no_proxy_arp": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Do not proxy ARP on Destination Interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Do not proxy ARP on Destination Interface.").String,
 							Optional:            true,
 						},
 						"original_network_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of original network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of original network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"original_port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Original port number").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Original port number.").String,
 							Optional:            true,
 						},
 						"protocol": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Service protocol").AddStringEnumDescription("TCP", "UDP").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Service protocol.").AddStringEnumDescription("TCP", "UDP").String,
 							Optional:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("TCP", "UDP"),
 							},
 						},
 						"perform_route_lookup": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface.").String,
 							Optional:            true,
 						},
 						"source_interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of source security zone or interface group.").String,
 							Optional:            true,
 						},
 						"translate_dns": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Translate DNS replies that match this rule").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Translate DNS replies that match this rule.").String,
 							Optional:            true,
 						},
 						"translated_network_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of translated network object (host, network or range)").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of translated network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"translated_network_is_destination_interface": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Translate source network to destination interface address.").String,
 							Optional:            true,
 						},
 						"translated_port": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Translated port number").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Translated port number.").String,
 							Optional:            true,
 						},
 					},

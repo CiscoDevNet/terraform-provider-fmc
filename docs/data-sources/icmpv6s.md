@@ -42,5 +42,5 @@ Read-Only:
 - `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
 - `id` (String) Id of the managed ICMPv6 object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'ICMPV6Object'.

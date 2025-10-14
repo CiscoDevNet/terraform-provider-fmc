@@ -85,22 +85,15 @@ func (r *SecurityZonesResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual Security Zone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Security Zones. The key of the map is the name of the individual Security Zone.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Security Zone.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Security Zone.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.ConditionalUseStateForUnknownString("interface_type"),
-							},
-						},
-						"interface_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.").AddStringEnumDescription("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "ASA").String,
-							Required:            true,
-							Validators: []validator.String{
-								stringvalidator.OneOf("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "ASA"),
 							},
 						},
 						"type": schema.StringAttribute{
@@ -108,6 +101,13 @@ func (r *SecurityZonesResource) Schema(ctx context.Context, req resource.SchemaR
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+							},
+						},
+						"interface_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.").AddStringEnumDescription("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "ASA").String,
+							Required:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "ASA"),
 							},
 						},
 					},

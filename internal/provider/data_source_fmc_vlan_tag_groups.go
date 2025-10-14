@@ -66,7 +66,7 @@ func (d *VLANTagGroupsDataSource) Schema(ctx context.Context, req datasource.Sch
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group.",
+				MarkdownDescription: "Map of VLAN Tag Groups. The key of the map is the name of the individual VLAN Tag Group.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -84,7 +84,7 @@ func (d *VLANTagGroupsDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 						"vlan_tags": schema.SetNestedAttribute{

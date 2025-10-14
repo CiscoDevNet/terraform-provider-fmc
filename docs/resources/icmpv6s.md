@@ -56,7 +56,7 @@ Optional:
 - `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
   - Range: `0`-`255`
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 

@@ -39,5 +39,5 @@ data "fmc_tunnel_zones" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed Tunnel Zone.
+- `id` (String) Id of the Tunnel Zone.
 - `type` (String) Type of the object; this value is always 'TunnelTag'.

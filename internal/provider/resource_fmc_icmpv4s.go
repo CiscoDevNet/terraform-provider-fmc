@@ -122,7 +122,7 @@ func (r *ICMPv4sResource) Schema(ctx context.Context, req resource.SchemaRequest
 							},
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 					},

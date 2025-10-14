@@ -36,7 +36,7 @@ resource "fmc_icmpv4" "example" {
 - `domain` (String) Name of the FMC domain
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
   - Range: `0`-`255`
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 

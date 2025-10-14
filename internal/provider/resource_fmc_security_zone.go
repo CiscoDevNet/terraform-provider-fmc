@@ -80,8 +80,15 @@ func (r *SecurityZoneResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Security Zone object.").String,
 				Required:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecurityZone'.").String,
+				Computed:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
+				},
 			},
 			"interface_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.").AddStringEnumDescription("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "ASA").String,
@@ -91,13 +98,6 @@ func (r *SecurityZoneResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
-				},
-			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'SecurityZone'.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 		},

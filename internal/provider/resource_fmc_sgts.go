@@ -67,7 +67,7 @@ func (r *SGTsResource) Metadata(ctx context.Context, req resource.MetadataReques
 func (r *SGTsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages SGTs through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages SGT (Security Group Tag) Object through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -90,7 +90,7 @@ func (r *SGTsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed SGT.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the SGT.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),

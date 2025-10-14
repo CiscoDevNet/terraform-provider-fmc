@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcPrefilterPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "name", "my_prefilter_policy"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "description", "My prefilter policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "description", "My Prefilter policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_prefilter_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action", "BLOCK_TUNNELS"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_prefilter_policy.test", "default_action_id"))
@@ -110,7 +110,7 @@ resource "fmc_security_zone" "test" {
 func testAccDataSourceFmcPrefilterPolicyConfig() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
 	config += `	name = "my_prefilter_policy"` + "\n"
-	config += `	description = "My prefilter policy"` + "\n"
+	config += `	description = "My Prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"
@@ -179,7 +179,7 @@ func testAccDataSourceFmcPrefilterPolicyConfig() string {
 func testAccNamedDataSourceFmcPrefilterPolicyConfig() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
 	config += `	name = "my_prefilter_policy"` + "\n"
-	config += `	description = "My prefilter policy"` + "\n"
+	config += `	description = "My Prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
 	config += `	default_action_log_begin = true` + "\n"
 	config += `	default_action_log_end = false` + "\n"

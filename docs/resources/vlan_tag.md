@@ -28,14 +28,14 @@ resource "fmc_vlan_tag" "example" {
 ### Required
 
 - `end_tag` (String) VLAN Tag end value.
-- `name` (String) Name of the object.
+- `name` (String) Name of the VLAN Tag object.
 - `start_tag` (String) VLAN Tag starting value.
 
 ### Optional
 
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 

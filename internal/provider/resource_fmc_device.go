@@ -91,7 +91,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("User-specified name, must be unique.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the device.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -101,16 +101,19 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"host_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the device. Either the host_name or nat_id must be present.").String,
+			"host": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.").String,
 				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"nat_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("(used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.").String,
 				Optional:            true,
 			},
-			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory").AddStringEnumDescription("ESSENTIALS", "IPS", "URL", "MALWARE_DEFENSE", "CARRIER", "SECURE_CLIENT_PREMIER", "SECURE_CLIENT_PREMIER_ADVANTAGE", "SECURE_CLIENT_VPNOnly", "BASE", "THREAT", "PROTECT", "CONTROL", "URLFilter", "MALWARE", "VPN", "SSL").String,
+			"licenses": schema.SetAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Array of strings representing the license capabilities on the managed device.").AddStringEnumDescription("ESSENTIALS", "IPS", "URL", "MALWARE_DEFENSE", "CARRIER", "SECURE_CLIENT_PREMIER", "SECURE_CLIENT_PREMIER_ADVANTAGE", "SECURE_CLIENT_VPNOnly", "BASE", "THREAT", "PROTECT", "CONTROL", "URLFilter", "MALWARE", "VPN", "SSL").String,
 				ElementType:         types.StringType,
 				Required:            true,
 				Validators: []validator.Set{
@@ -149,8 +152,8 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				MarkdownDescription: helpers.NewAttributeDescription("Enables Object Group Search").String,
 				Optional:            true,
 			},
-			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.").String,
+			"access_control_policy_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy.").String,
 				Required:            true,
 			},
 			"nat_policy_id": schema.StringAttribute{
@@ -427,8 +430,8 @@ func (r *DeviceResource) Update(ctx context.Context, req resource.UpdateRequest,
 	}
 
 	// Update policy assignments
-	if plan.AccessPolicyId != state.AccessPolicyId {
-		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_policy_id"), req.Plan, req.State, reqMods...)
+	if plan.AccessControlPolicyId != state.AccessControlPolicyId {
+		diags = r.updatePolicy(ctx, deviceId, deviceType, path.Root("access_control_policy_id"), req.Plan, req.State, reqMods...)
 		resp.Diagnostics.Append(diags...)
 		if resp.Diagnostics.HasError() {
 			return
@@ -646,7 +649,7 @@ func (r *DeviceResource) ImportState(ctx context.Context, req resource.ImportSta
 	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
 		config.Domain = types.StringValue(tmpDomain)
 	}
-	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])
+	config.Id = types.StringValue(match[inputPattern.SubexpIndex("id")])s
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, config)...)
 	if resp.Diagnostics.HasError() {

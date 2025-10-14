@@ -38,5 +38,5 @@ data "fmc_application_business_relevances" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Application Business Relevance level.
+- `id` (String) Id of the Application Business Relevance level.
 - `type` (String) Type of the object; this value is always 'ApplicationProductivity'.

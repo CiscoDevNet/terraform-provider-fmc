@@ -25,7 +25,7 @@ data "fmc_network_analysis_policy" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the policy.
+- `name` (String) Name of the Network Analysis Policy.
 
 ### Read-Only
 

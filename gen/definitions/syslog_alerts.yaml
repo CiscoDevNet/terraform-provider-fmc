@@ -10,7 +10,7 @@ attributes:
     type: Map
     description: >-
       Map of Syslog Alerts. The key of the map is the name of the individual Syslog Alert.
-    map_key_example: test_syslog_alert_1
+    map_key_example: my_syslog_alerts
     mandatory: true
     attributes:
       - model_name: id

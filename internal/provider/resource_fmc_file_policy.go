@@ -89,11 +89,11 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of file policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of file File Policy.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
@@ -104,15 +104,15 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 			},
 			"first_time_file_analysis": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Analyze first-seen files while AMP cloud disposition is pending").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Analyze first-seen files while AMP cloud disposition is pending.").String,
 				Optional:            true,
 			},
 			"custom_detection_list": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable custom detection list").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable custom detection list.").String,
 				Optional:            true,
 			},
 			"clean_list": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable clean list").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable clean list.").String,
 				Optional:            true,
 			},
 			"threat_score": schema.StringAttribute{
@@ -123,19 +123,19 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"inspect_archives": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Inspect Archives").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Inspect Archives.").String,
 				Optional:            true,
 			},
 			"block_encrypted_archives": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Block encrypted archives").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Block encrypted archives.").String,
 				Optional:            true,
 			},
 			"block_uninspectable_archives": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Block uninspectable Archives").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Block uninspectable Archives.").String,
 				Optional:            true,
 			},
 			"max_archive_depth": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Max archive depth").AddIntegerRangeDescription(1, 3).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Max archive depth.").AddIntegerRangeDescription(1, 3).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 3),
@@ -147,7 +147,7 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of File Rule").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of File Rule.").String,
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -194,15 +194,15 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The id of file category.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of file category.").String,
 										Required:            true,
 									},
 									"name": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The name of file category.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Name of file category.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The type of file category.").AddDefaultValueDescription("FileCategory").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of file category.").AddDefaultValueDescription("FileCategory").String,
 										Optional:            true,
 										Computed:            true,
 										Default:             stringdefault.StaticString("FileCategory"),
@@ -216,15 +216,15 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The id of file type.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of file type.").String,
 										Required:            true,
 									},
 									"name": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The name of file type.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Name of file type.").String,
 										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("The name of file type.").AddDefaultValueDescription("FileType").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of file type.").AddDefaultValueDescription("FileType").String,
 										Optional:            true,
 										Computed:            true,
 										Default:             stringdefault.StaticString("FileType"),

@@ -97,6 +97,9 @@ func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaReq
 				Validators: []validator.String{
 					stringvalidator.OneOf("SINGLE_HOP", "MULTI_HOP"),
 				},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"echo": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("BFD echo status.").AddStringEnumDescription("ENABLED", "DISABLED").String,
@@ -105,43 +108,32 @@ func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaReq
 					stringvalidator.OneOf("ENABLED", "DISABLED"),
 				},
 			},
-			"interval_time": schema.StringAttribute{
+			"interval_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Interval unit of measurement of time.").AddStringEnumDescription("MILLISECONDS", "MICROSECONDS", "NONE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("MILLISECONDS", "MICROSECONDS", "NONE"),
 				},
 			},
-			"min_transmit": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Transmit unit value.").AddIntegerRangeDescription(50, 999000).String,
-				Optional:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(50, 999000),
-				},
-			},
-			"tx_rx_multiplier": schema.Int64Attribute{
+			"multiplier": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("BFD Multipler value.").AddIntegerRangeDescription(3, 50).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(3, 50),
 				},
 			},
-			"min_receive": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds").AddIntegerRangeDescription(50, 999000).String,
+			"minimum_transmit": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Transmit unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.").AddIntegerRangeDescription(50, 999000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(50, 999000),
 				},
 			},
-			"authentication_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for BFD Authentication (1-24 characters)").String,
-				Optional:            true,
-			},
-			"authentication_key_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Authentication Key ID").AddIntegerRangeDescription(0, 255).String,
+			"minimum_receive": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.").AddIntegerRangeDescription(50, 999000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(0, 255),
+					int64validator.Between(50, 999000),
 				},
 			},
 			"authentication_type": schema.StringAttribute{
@@ -151,11 +143,26 @@ func (r *BFDTemplateResource) Schema(ctx context.Context, req resource.SchemaReq
 					stringvalidator.OneOf("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE"),
 				},
 			},
+			"authentication_password": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Password for BFD Authentication").String,
+				Optional:            true,
+				Sensitive:           true,
+				Validators: []validator.String{
+					stringvalidator.LengthBetween(0, 28),
+				},
+			},
 			"authentication_password_encryption": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Determines if `authentication_password` is encrypted").AddStringEnumDescription("UN_ENCRYPTED", "ENCRYPTED", "NONE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("UN_ENCRYPTED", "ENCRYPTED", "NONE"),
+				},
+			},
+			"authentication_key_id": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Authentication Key ID").AddIntegerRangeDescription(0, 255).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 255),
 				},
 			},
 		},

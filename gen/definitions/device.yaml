@@ -1,3 +1,4 @@
+# Manual resource - Create, Read, Update, Delete
 ---
 name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
@@ -9,7 +10,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: User-specified name, must be unique.
+    description: Name of the device.
     data_source_query: true
     example: my_device
   # type is set twice on purpose - to make sure this is part of POST request and to make it computed field
@@ -22,11 +23,13 @@ attributes:
     description: Type of the device; this value is always 'Device'.
     computed: true
   - model_name: hostName
+    tf_name: host
     type: String
-    description: Hostname or IP address of the device. Either the host_name or nat_id must be present.
+    description: Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
     mandatory: true
     example: 10.0.0.1
     test_value: var.ftd_addr
+    requires_replace: true
   - model_name: natID
     tf_name: nat_id
     type: String
@@ -35,7 +38,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: license_caps
-    tf_name: license_capabilities
+    tf_name: licenses
     type: Set
     element_type: String
     mandatory: true
@@ -58,7 +61,7 @@ attributes:
         VPN,
         SSL,
       ]
-    description: "Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory"
+    description: "Array of strings representing the license capabilities on the managed device."
     example: ESSENTIALS
     test_value: "[var.license_capabilities]"
   - model_name: regKey
@@ -101,11 +104,11 @@ attributes:
     exclude_test: true
   # Policy assignments
   - model_name: id
-    tf_name: access_policy_id
+    tf_name: access_control_policy_id
     type: String
     mandatory: true
     data_path: [accessPolicy]
-    description: Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
+    description: Id of the assigned Access Control Policy.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_access_control_policy.test.id
   - model_name: dummy_nat_policy_id

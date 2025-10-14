@@ -34,7 +34,7 @@ attributes:
     example: "3"
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     exclude_example: true
     test_value: "true"
 

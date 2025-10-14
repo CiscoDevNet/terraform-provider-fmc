@@ -63,7 +63,8 @@ func (r *StandardACLResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Standard ACL.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.2").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Standard ACL (Access Control List / Access List) Object.").AddAttributeDescription("This object is deprecated. Please use `fmc_standard_access_list` instead.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.2").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This object is deprecated. Please use `fmc_standard_access_list` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -81,7 +82,7 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Standard ACL object.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
@@ -101,14 +102,14 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates the redistribution access: PERMIT or DENY.").AddStringEnumDescription("PERMIT", "DENY").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Action for the rule.").AddStringEnumDescription("PERMIT", "DENY").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PERMIT", "DENY"),
 							},
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects (Host, Network, Range).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects (Host, Network, Network Group).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -117,7 +118,7 @@ func (r *StandardACLResource) Schema(ctx context.Context, req resource.SchemaReq
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object (such as fmc_network.this.type, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 										Optional:            true,
 									},
 								},

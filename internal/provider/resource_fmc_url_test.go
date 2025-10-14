@@ -32,9 +32,9 @@ import (
 func TestAccFmcURL(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_url.test", "name", "my_url"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_url.test", "url", "https://www.example.com/app"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_url.test", "description", "My URL"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_url.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_url.test", "description", "My URL"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_url.test", "url", "https://www.example.com/app"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -81,8 +81,8 @@ func testAccFmcURLConfig_minimum() string {
 func testAccFmcURLConfig_all() string {
 	config := `resource "fmc_url" "test" {` + "\n"
 	config += `	name = "my_url"` + "\n"
-	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	description = "My URL"` + "\n"
+	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 	return config

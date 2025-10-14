@@ -38,5 +38,5 @@ data "fmc_application_risks" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Application Risk level.
+- `id` (String) Id of the Application Risk level.
 - `type` (String) Type of the object; this value is always 'ApplicationRisk'.

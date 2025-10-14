@@ -48,21 +48,21 @@ resource "fmc_device_physical_interface" "example" {
 - `duplex` (String) Duplex configuraion.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Indicates whether to propagate SGT.
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enable_sgt_propagate` (Boolean) Whether to propagate SGT.
+- `enabled` (Boolean) Whether to enable the interface.
   - Default value: `true`
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
   - Choices: `AUTO`, `CL108RS`, `CL74FC`, `CL91RS`, `DISABLE`
 - `flow_control_send` (String) Flow Control Send configuraion, can be one of ON, OFF.
   - Choices: `ON`, `OFF`
-- `ip_based_monitoring` (Boolean) Indicates whether to enable IP based Monitoring.
+- `ip_based_monitoring` (Boolean) Whether to enable IP based Monitoring.
 - `ip_based_monitoring_next_hop` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
   - Choices: `AUTO`, `PEER_IPV4`, `PEER_IPV6`, `AUTO4`, `AUTO6`
 - `ipv4_address_pool_id` (String) Id of the assigned IPv4 address pool.
-- `ipv4_dhcp_obtain_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
-- `ipv4_dhcp_route_metric` (Number) The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.
+- `ipv4_dhcp_default_route_metric` (Number) The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.
   - Range: `1`-`255`
+- `ipv4_dhcp_obtain_default_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
 - `ipv4_pppoe_authentication` (String) PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.
   - Choices: `PAP`, `CHAP`, `MSCHAP`
 - `ipv4_pppoe_password` (String) PPPoE Configuration - PPPoE Password.
@@ -74,27 +74,27 @@ resource "fmc_device_physical_interface" "example" {
 - `ipv4_pppoe_vpdn_group_name` (String) PPPoE Configuration - PPPoE Group Name.
 - `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
 - `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
+- `ipv6` (Boolean) Whether to enable IPv6.
 - `ipv6_address_pool_id` (String) Id of the assigned IPv6 address pool.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `ipv6_auto_config` (Boolean) Whether to enable IPv6 autoconfiguration.
+- `ipv6_dad` (Boolean) Whether to enable IPv6 DAD Loopback Detect (DAD).
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
   - Range: `0`-`600`
-- `ipv6_default_route_by_dhcp` (Boolean) Indicates whether to obtain default route from DHCPv6.
 - `ipv6_dhcp` (Boolean) Enable DHCPv6 client.
+- `ipv6_dhcp_address_config` (Boolean) Whether to enable DHCPv6 for address config.
 - `ipv6_dhcp_client_pd_hint_prefixes` (String) Hint Prefixes for Prefix Delegation (PD)
 - `ipv6_dhcp_client_pd_prefix_name` (String) Prefix Name for Prefix Delegation (PD)
+- `ipv6_dhcp_nonaddress_config` (Boolean) Whether to enable DHCPv6 for non-address config.
+- `ipv6_dhcp_obtain_default_route` (Boolean) Whether to obtain default route from DHCPv6.
 - `ipv6_dhcp_pool_id` (String) Id of the assigned DHCPv6 pool
 - `ipv6_dhcp_pool_type` (String) Type of the object; this value is always 'IPv6AddressPool'.
-- `ipv6_enable` (Boolean) Indicates whether to enable IPv6.
-- `ipv6_enable_auto_config` (Boolean) Indicates whether to enable IPv6 autoconfiguration.
-- `ipv6_enable_dad` (Boolean) Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
-- `ipv6_enable_dhcp_address_config` (Boolean) Indicates whether to enable DHCPv6 for address config.
-- `ipv6_enable_dhcp_nonaddress_config` (Boolean) Indicates whether to enable DHCPv6 for non-address config.
-- `ipv6_enable_ra` (Boolean) Indicates whether to enable IPv6 router advertisement (RA).
-- `ipv6_enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `ipv6_enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `ipv6_link_local_address` (String) IPv6 Configuration - Link-Local Address.
 - `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval.
   - Range: `1000`-`3600000`
 - `ipv6_prefixes` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_prefixes))
+- `ipv6_ra` (Boolean) Whether to enable IPv6 router advertisement (RA).
 - `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions
   - Range: `3`-`1800`
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
@@ -104,9 +104,9 @@ resource "fmc_device_physical_interface" "example" {
 - `lldp_receive` (Boolean) LLDP receive configuraion.
 - `lldp_transmit` (Boolean) LLDP transmit configuraion.
 - `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
-- `management_access` (Boolean) Indicates whether to enable Management Access.
+- `management_access` (Boolean) Whether to enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
-- `management_only` (Boolean) Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
+- `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
   - Range: `64`-`9000`
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
@@ -116,9 +116,9 @@ resource "fmc_device_physical_interface" "example" {
   - Range: `1`-`30000`
 - `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value
   - Range: `1`-`30`
-- `priority` (Number) Priority 0-65535. Can only be set for routed interfaces.
+- `priority` (Number) Priority. Can only be set for routed interfaces.
   - Range: `0`-`65535`
-- `security_zone_id` (String) Id of the assigned security zone. Can only be used when logical_name is set.
+- `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
@@ -131,11 +131,15 @@ resource "fmc_device_physical_interface" "example" {
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`
 
-Optional:
+Required:
 
-- `enable_alias` (Boolean) Enable Alias for custom ARP entry
 - `ip_address` (String) IP address for custom ARP entry
 - `mac_address` (String) MAC address for custom ARP entry in format 0123.4567.89ab.
+
+Optional:
+
+- `enabled` (Boolean) Enable Alias for custom ARP entry
+  - Default value: `true`
 
 
 <a id="nestedatt--ipv6_addresses"></a>
@@ -144,7 +148,7 @@ Optional:
 Optional:
 
 - `address` (String) IPv6 address without a slash and prefix.
-- `enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `prefix` (String) Prefix width for the IPv6 address.
 
 
@@ -153,9 +157,8 @@ Optional:
 
 Optional:
 
-- `address` (String) IPv6 address without a slash and prefix.
-- `default` (String) Prefix width for the IPv6 address.
-- `enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `address` (String) IPv6 address with the prefix length.
+- `default` (Boolean) Use default prefix.
 
 
 <a id="nestedatt--management_access_network_objects"></a>
@@ -163,7 +166,7 @@ Optional:
 
 Optional:
 
-- `id` (String) ID of the network object (host, network or range).
+- `id` (String) ID of the network object (Host, Network or Range).
 - `type` (String) Type of the object
 
 ## Import

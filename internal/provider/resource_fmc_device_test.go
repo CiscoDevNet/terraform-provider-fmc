@@ -91,10 +91,10 @@ resource "fmc_access_control_policy" "test" {
 func testAccFmcDeviceConfig_minimum() string {
 	config := `resource "fmc_device" "test" {` + "\n"
 	config += `	name = "my_device"` + "\n"
-	config += `	host_name = var.ftd_addr` + "\n"
-	config += `	license_capabilities = [var.license_capabilities]` + "\n"
+	config += `	host = var.ftd_addr` + "\n"
+	config += `	licenses = [var.license_capabilities]` + "\n"
 	config += `	registration_key = var.device_registration_key` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -106,12 +106,12 @@ func testAccFmcDeviceConfig_minimum() string {
 func testAccFmcDeviceConfig_all() string {
 	config := `resource "fmc_device" "test" {` + "\n"
 	config += `	name = "my_device"` + "\n"
-	config += `	host_name = var.ftd_addr` + "\n"
-	config += `	license_capabilities = [var.license_capabilities]` + "\n"
+	config += `	host = var.ftd_addr` + "\n"
+	config += `	licenses = [var.license_capabilities]` + "\n"
 	config += `	registration_key = var.device_registration_key` + "\n"
 	config += `	performance_tier = "FTDv5"` + "\n"
 	config += `	snort_engine = "SNORT3"` + "\n"
-	config += `	access_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }

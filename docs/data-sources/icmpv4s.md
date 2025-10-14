@@ -42,5 +42,5 @@ Read-Only:
 - `description` (String) Description of the object.
 - `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
 - `id` (String) Id of the ICMPv4 object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'ICMPV4Object'.

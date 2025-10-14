@@ -102,13 +102,13 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable the interface.").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable the interface.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
 			"management_only": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.").String,
 				Optional:            true,
 			},
 			"description": schema.StringAttribute{
@@ -123,7 +123,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone. Can only be used when logical_name is set.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone. Can only be used when `logical_name` is set.").String,
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
@@ -138,14 +138,14 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority 0-65535. Can only be set for routed interfaces.").AddIntegerRangeDescription(0, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Priority. Can only be set for routed interfaces.").AddIntegerRangeDescription(0, 65535).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 65535),
 				},
 			},
 			"enable_sgt_propagate": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to propagate SGT.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to propagate SGT.").String,
 				Optional:            true,
 			},
 			"nve_only": schema.BoolAttribute{
@@ -164,12 +164,12 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned IPv4 address pool.").String,
 				Optional:            true,
 			},
-			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
+			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.").String,
 				Optional:            true,
 			},
-			"ipv4_dhcp_route_metric": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.").AddIntegerRangeDescription(1, 255).String,
+			"ipv4_dhcp_default_route_metric": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.").AddIntegerRangeDescription(1, 255).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 255),
@@ -209,20 +209,20 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE store username and password in Flash.").String,
 				Optional:            true,
 			},
-			"ipv6_enable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6.").String,
+			"ipv6": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6.").String,
 				Optional:            true,
 			},
 			"ipv6_enforce_eui": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 				Optional:            true,
 			},
 			"ipv6_link_local_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv6 Configuration - Link-Local Address.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_auto_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 autoconfiguration.").String,
+			"ipv6_auto_config": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 autoconfiguration.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -239,7 +239,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 							Optional:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 							Optional:            true,
 						},
 					},
@@ -255,22 +255,18 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address with the prefix length.").String,
 							Optional:            true,
 						},
-						"default": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
-							Optional:            true,
-						},
-						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+						"default": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use default prefix.").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
-			"ipv6_enable_dad": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 DAD Loopback Detect (DAD).").String,
+			"ipv6_dad": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 DAD Loopback Detect (DAD).").String,
 				Optional:            true,
 			},
 			"ipv6_dad_attempts": schema.Int64Attribute{
@@ -294,8 +290,8 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 					int64validator.Between(0, 3600000),
 				},
 			},
-			"ipv6_enable_ra": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 router advertisement (RA).").String,
+			"ipv6_ra": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 router advertisement (RA).").String,
 				Optional:            true,
 			},
 			"ipv6_ra_life_time": schema.Int64Attribute{
@@ -316,8 +312,8 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Enable DHCPv6 client.").String,
 				Optional:            true,
 			},
-			"ipv6_default_route_by_dhcp": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to obtain default route from DHCPv6.").String,
+			"ipv6_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to obtain default route from DHCPv6.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
@@ -328,12 +324,12 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPv6AddressPool'.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_dhcp_address_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for address config.").String,
+			"ipv6_dhcp_address_config": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable DHCPv6 for address config.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_dhcp_nonaddress_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for non-address config.").String,
+			"ipv6_dhcp_nonaddress_config": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable DHCPv6 for non-address config.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
@@ -345,7 +341,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				Optional:            true,
 			},
 			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IP based Monitoring.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IP based Monitoring.").String,
 				Optional:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
@@ -400,7 +396,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				},
 			},
 			"management_access": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable Management Access.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable Management Access.").String,
 				Optional:            true,
 			},
 			"management_access_network_objects": schema.SetNestedAttribute{
@@ -409,7 +405,7 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the network object (host, network or range).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the network object (Host, Network or Range).").String,
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{
@@ -434,15 +430,17 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 					Attributes: map[string]schema.Attribute{
 						"mac_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("MAC address for custom ARP entry in format 0123.4567.89ab.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"ip_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP address for custom ARP entry").String,
-							Optional:            true,
+							Required:            true,
 						},
-						"enable_alias": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry").String,
+						"enabled": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry").AddDefaultValueDescription("true").String,
 							Optional:            true,
+							Computed:            true,
+							Default:             booldefault.StaticBool(true),
 						},
 					},
 				},

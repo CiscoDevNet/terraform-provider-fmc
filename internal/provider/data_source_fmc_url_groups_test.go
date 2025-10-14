@@ -30,12 +30,12 @@ import (
 
 func TestAccDataSourceFmcURLGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.url_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url_groups.test", "items.url_group_1.description", "My URL group"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.url_group_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.url_group_1.urls.0.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.url_group_1.literals.0.url", "https://www.example.com/app"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url_groups.test", "items.url_group_1.literals.0.url", "https://www.example.com/app"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.my_url_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.my_url_groups.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url_groups.test", "items.my_url_groups.description", "My URL group"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url_groups.test", "items.my_url_groups.urls.0.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.my_url_groups.literals.0.url", "https://www.example.com/app"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url_groups.test", "items.my_url_groups.literals.0.url", "https://www.example.com/app"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -55,7 +55,7 @@ func TestAccDataSourceFmcURLGroups(t *testing.T) {
 
 const testAccDataSourceFmcURLGroupsPrerequisitesConfig = `
 resource "fmc_url" "test" {
-  name        = "url_1"
+  name        = "url_groups"
   url         = "https://www.example.com/app"
 }
 `
@@ -66,7 +66,7 @@ resource "fmc_url" "test" {
 
 func testAccDataSourceFmcURLGroupsConfig() string {
 	config := `resource "fmc_url_groups" "test" {` + "\n"
-	config += `	items = { "url_group_1" = {` + "\n"
+	config += `	items = { "my_url_groups" = {` + "\n"
 	config += `		description = "My URL group"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		urls = [{` + "\n"
@@ -82,7 +82,7 @@ func testAccDataSourceFmcURLGroupsConfig() string {
 		data "fmc_url_groups" "test" {
 			depends_on = [fmc_url_groups.test]
 			items = {
-				"url_group_1" = {
+				"my_url_groups" = {
 				}
 			}
 		}

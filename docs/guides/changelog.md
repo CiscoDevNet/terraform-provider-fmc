@@ -9,12 +9,18 @@ description: |-
 
 ## 2.0.0 (Unreleased)
 
+- BREAKING CHANGE: `fmc_device`: Update attribute names
+- BREAKING CHANGE: `fmc_bfd_template`: Update attribute names
+- BREAKING CHANGE: `fmc_prefilter_policy`: Update attribute names
+- BREAKING CHANGE: `fmc_access_control_policy`: Update attribute names
 - (Change): Rename `fmc_fqdn_object` to `fmc_fqdn`. `fmc_fqdn_object` will be removed in future releases
 - (Change): Rename `fmc_fqdn_objects` to `fmc_fqdns`. `fmc_fqdn_objects` will be removed in future releases
 - (Change): Rename `fmc_icmpv4_object` to `fmc_icmpv4`. `fmc_icmpv4_object` will be removed in future releases
 - (Change): Rename `fmc_icmpv4_objects` to `fmc_icmpv4s`. `fmc_icmpv4_objects` will be removed in future releases
 - (Change): Rename `fmc_icmpv6_object` to `fmc_icmpv6`. `fmc_icmpv6_object` will be removed in future releases
 - (Change): Rename `fmc_icmpv6_objects` to `fmc_icmpv6s`. `fmc_icmpv6_objects` will be removed in future releases
+- (Change): Rename `fmc_standard_acl` to `fmc_standard_access_list`. `fmc_standard_acl` will be removed in future releases
+- (Change): Rename `fmc_extended_acl` to `fmc_extended_access_list`. `fmc_extended_acl` will be removed in future releases
 - (Enhancement) Add support for `fmc_network_groups` data source
 - (Enhancement) `domain` support for importing non-bulk resources
 

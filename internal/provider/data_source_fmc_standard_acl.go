@@ -59,7 +59,8 @@ func (d *StandardACLDataSource) Metadata(_ context.Context, req datasource.Metad
 func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Standard ACL.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Standard ACL (Access Control List / Access List) Object.").AddAttributeDescription("This object is deprecated. Please use `fmc_standard_access_list` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This object is deprecated. Please use `fmc_standard_access_list` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,7 +73,7 @@ func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
+				MarkdownDescription: "Name of the Standard ACL object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -90,11 +91,11 @@ func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Indicates the redistribution access: PERMIT or DENY.",
+							MarkdownDescription: "Action for the rule.",
 							Computed:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects (Host, Network, Range).",
+							MarkdownDescription: "Set of objects (Host, Network, Network Group).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -103,7 +104,7 @@ func (d *StandardACLDataSource) Schema(ctx context.Context, req datasource.Schem
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object (such as fmc_network.this.type, etc.).",
+										MarkdownDescription: "Type of the object.",
 										Computed:            true,
 									},
 								},

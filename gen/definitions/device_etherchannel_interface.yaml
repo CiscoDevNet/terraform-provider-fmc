@@ -35,7 +35,7 @@ attributes:
   - model_name: managementOnly
     type: Bool
     description: >-
-      Indicates whether this interface limits traffic to management traffic; when true, through-the-box traffic is
+      Whether this interface limits traffic to management traffic; when true, through-the-box traffic is
       disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
     exclude_test: true
     exclude_example: true
@@ -79,7 +79,7 @@ attributes:
     example: 9000
   - model_name: priority
     type: Int64
-    description: Priority 0-65535. Can only be set for routed interfaces.
+    description: Priority. Can only be set for routed interfaces.
     min_int: 0
     max_int: 65535
     exclude_example: true
@@ -104,6 +104,7 @@ attributes:
         type: String
         description: Id of the object.
         id: true
+        mandatory: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: data.fmc_device_physical_interface.test.id
       - model_name: type
@@ -149,23 +150,23 @@ attributes:
   # IPv4 - DHCP
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
-    tf_name: ipv4_dhcp_obtain_route
+    tf_name: ipv4_dhcp_obtain_default_route
     type: Bool
     description: >-
       Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
-      from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1.
-      Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be
+      default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1.
+      Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be
       non-null.
-      The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+      The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
     exclude_example: true
     exclude_test: true
   - model_name: dhcpRouteMetric
     data_path: [ipv4, dhcp]
-    tf_name: ipv4_dhcp_route_metric
+    tf_name: ipv4_dhcp_default_route_metric
     type: Int64
     description: >-
-      The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be
-      null when using ipv4_static_address.
+      The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be
+      null when using `ipv4_static_address`.
     min_int: 1
     max_int: 255
     exclude_example: true
@@ -226,15 +227,15 @@ attributes:
   # IPv6 - Basic
   - model_name: enableIPV6
     data_path: [ipv6]
-    tf_name: ipv6_enable
-    description: Indicates whether to enable IPv6.
+    tf_name: ipv6
+    description: Whether to enable IPv6.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enforceEUI64
     data_path: [ipv6]
     tf_name: ipv6_enforce_eui
-    description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    description: Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -246,8 +247,8 @@ attributes:
     exclude_test: true
   - model_name: enableAutoConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_auto_config
-    description: Indicates whether to enable IPv6 autoconfiguration.
+    tf_name: ipv6_auto_config
+    description: Whether to enable IPv6 autoconfiguration.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -271,7 +272,7 @@ attributes:
         example: "124"
       - model_name: enforceEUI64
         tf_name: enforce_eui
-        description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        description: Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
         exclude_example: true
         exclude_test: true
@@ -293,25 +294,18 @@ attributes:
     attributes:
       - model_name: address
         type: String
-        description: IPv6 address without a slash and prefix.
+        description: IPv6 address with the prefix length.
         id: true
         example: "2004::"
       - model_name: default
-        type: String
-        description: Prefix width for the IPv6 address.
-        id: true
-        example: "124"
-      - model_name: enforceEUI64
-        tf_name: enforce_eui
-        description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
-        exclude_example: true
-        exclude_test: true
-  # IPv6 Settings
+        description: Use default prefix.
+        example: "false"
+  # IPv6 Settings:
   - model_name: enableDADLoopback
     data_path: [ipv6]
-    tf_name: ipv6_enable_dad
-    description: Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
+    tf_name: ipv6_dad
+    description: Whether to enable IPv6 DAD Loopback Detect (DAD).
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -344,8 +338,8 @@ attributes:
     exclude_test: true
   - model_name: enableRA
     data_path: [ipv6]
-    tf_name: ipv6_enable_ra
-    description: Indicates whether to enable IPv6 router advertisement (RA).
+    tf_name: ipv6_ra
+    description: Whether to enable IPv6 router advertisement (RA).
     type: Bool
     exclude_test: true
     exclude_example: true
@@ -377,8 +371,8 @@ attributes:
     exclude_test: true
   - model_name: obtainIPV6DefaultRouteDHCP
     data_path: [ipv6, DHCP]
-    tf_name: ipv6_default_route_by_dhcp
-    description: Indicates whether to obtain default route from DHCPv6.
+    tf_name: ipv6_dhcp_obtain_default_route
+    description: Whether to obtain default route from DHCPv6.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -398,15 +392,15 @@ attributes:
     exclude_test: true
   - model_name: enableDHCPAddrConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_dhcp_address_config
-    description: Indicates whether to enable DHCPv6 for address config.
+    tf_name: ipv6_dhcp_address_config
+    description: Whether to enable DHCPv6 for address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableDHCPNonAddrConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_dhcp_nonaddress_config
-    description: Indicates whether to enable DHCPv6 for non-address config.
+    tf_name: ipv6_dhcp_nonaddress_config
+    description: Whether to enable DHCPv6 for non-address config.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -428,7 +422,7 @@ attributes:
   - model_name: enable
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring
-    description: Indicates whether to enable IP based Monitoring.
+    description: Whether to enable IP based Monitoring.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -500,7 +494,7 @@ attributes:
   - model_name: enableAccess
     data_path: [fmcAccessConfig]
     tf_name: management_access
-    description: Indicates whether to enable Management Access.
+    description: Whether to enable Management Access.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -514,7 +508,7 @@ attributes:
       - model_name: id
         id: true
         type: String
-        description: ID of the network object (host, network or range).
+        description: ID of the network object (Host, Network or Range).
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -536,7 +530,7 @@ attributes:
     description: MAC address for standby interface in format 0123.4567.89ab.
     exclude_example: true
     exclude_test: true
-  # Advanced - Information
+  # Advanced - ARP
   - model_name: arpConfig
     tf_name: arp_table_entries
     data_path: [arpConfig]
@@ -547,18 +541,16 @@ attributes:
       - model_name: macAddress
         type: String
         description: MAC address for custom ARP entry in format 0123.4567.89ab.
-        exclude_example: true
-        exclude_test: true
+        mandatory: true
       - model_name: ipAddress
         type: String
         description: IP address for custom ARP entry
-        exclude_example: true
-        exclude_test: true
+        mandatory: true
       - model_name: enableAlias
+        tf_name: enabled
         type: Bool
         description: Enable Alias for custom ARP entry
-        exclude_example: true
-        exclude_test: true
+        default_value: true
   # Advanced - Security Configuration
   - model_name: enableAntiSpoofing
     type: Bool

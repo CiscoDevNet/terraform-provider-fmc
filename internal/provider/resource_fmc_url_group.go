@@ -78,12 +78,8 @@ func (r *URLGroupResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the URL Group object.").String,
 				Required:            true,
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
-				Optional:            true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'UrlGroup'.").String,
@@ -92,8 +88,12 @@ func (r *URLGroupResource) Schema(ctx context.Context, req resource.SchemaReques
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+				Optional:            true,
+			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"urls": schema.SetNestedAttribute{

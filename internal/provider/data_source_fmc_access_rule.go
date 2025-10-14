@@ -408,11 +408,11 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 					},
 				},
 			},
-			"log_begin": schema.BoolAttribute{
+			"log_connection_begin": schema.BoolAttribute{
 				MarkdownDescription: "Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.",
 				Computed:            true,
 			},
-			"log_end": schema.BoolAttribute{
+			"log_connection_end": schema.BoolAttribute{
 				MarkdownDescription: "Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.",
 				Computed:            true,
 			},
@@ -428,15 +428,15 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Send alerts to syslog.",
 				Computed:            true,
 			},
-			"syslog_config_id": schema.StringAttribute{
-				MarkdownDescription: "Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
+			"syslog_alert_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
 				Computed:            true,
 			},
 			"syslog_severity": schema.StringAttribute{
 				MarkdownDescription: "Override the Severity of syslog alerts.",
 				Computed:            true,
 			},
-			"snmp_config_id": schema.StringAttribute{
+			"snmp_alert_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.",
 				Computed:            true,
 			},

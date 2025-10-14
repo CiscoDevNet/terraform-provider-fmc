@@ -93,7 +93,7 @@ func (d *ICMPv4DataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 		},
