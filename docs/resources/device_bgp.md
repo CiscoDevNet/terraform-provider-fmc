@@ -90,13 +90,16 @@ resource "fmc_device_bgp" "example" {
 <a id="nestedatt--ipv4_aggregate_addresses"></a>
 ### Nested Schema for `ipv4_aggregate_addresses`
 
+Required:
+
+- `network_id` (String) Network ID (desired network/host object)
+
 Optional:
 
 - `advertise_map_id` (String) Advertise Route Map ID (select the routes to create AS_SET origin communities)
 - `attribute_map_id` (String) Attribute Route Map ID (set the attribute of the aggregate route).
 - `filter` (Boolean) Filter all routes from updates (summary only)
 - `generate_as` (Boolean) Generate AS set path information
-- `network_id` (String) Network ID (desired network/host object)
 - `suppress_map_id` (String) Suppress Route Map ID (select the routes to be suppressed).
 
 
@@ -106,11 +109,11 @@ Optional:
 Required:
 
 - `access_list_id` (String) Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.
+- `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates.
+  - Choices: `incomingroutefilter`, `outgoingroutefilter`
 
 Optional:
 
-- `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates
-  - Choices: `incomingroutefilter`, `outgoingroutefilter`
 - `process_id` (String) Process ID for the OSPF routing protocol.
 - `protocol` (String) Routing process for which you want to filter
   - Choices: `CONNECTED`, `BGP`, `OSPF`, `RIP`, `STATIC`
@@ -119,9 +122,13 @@ Optional:
 <a id="nestedatt--ipv4_neighbors"></a>
 ### Nested Schema for `ipv4_neighbors`
 
-Optional:
+Required:
 
 - `address` (String) IP address of the BGP neighbor
+- `remote_as` (String) AS number of the BGP neighbor
+
+Optional:
+
 - `as_override` (Boolean) Enable overriding of the AS number of the originating router with the AS number of the sending BGP router.
 - `authentication_password` (String, Sensitive) Setting password enables authentication.
 - `bfd_fallover` (String) BFD Fallover
@@ -136,7 +143,7 @@ Optional:
   - Default value: `false`
 - `enable_address` (Boolean) Enable communication with this BGP neighbor
   - Default value: `false`
-- `filter_access_lists` (Attributes List) Set incoming or outgoing Access List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_access_lists))
+- `filter_access_lists` (Attributes List) Set incoming or outgoing Standard Access List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_access_lists))
 - `filter_as_paths` (Attributes List) Set incoming or outgoing AS path filter to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_as_paths))
 - `filter_maximum_prefixes` (Number) Maximum number of prefixes allowed from the neighbor
   - Range: `1`-`2147483647`
@@ -159,7 +166,6 @@ Optional:
   - Range: `3`-`65535`
 - `next_hop_self` (Boolean) Use itself as next hop for this neighbor
   - Default value: `false`
-- `remote_as` (String) AS number of the BGP neighbor
 - `routes_advertise_maps` (Attributes List) Define conditionally advertised routes. (see [below for nested schema](#nestedatt--ipv4_neighbors--routes_advertise_maps))
 - `routes_advertisement_interval` (Number) Time interval to advertise routes in seconds
   - Range: `0`-`600`
