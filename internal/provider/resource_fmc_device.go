@@ -101,7 +101,7 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"host": schema.StringAttribute{
+			"host_name": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{

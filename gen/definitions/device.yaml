@@ -23,7 +23,7 @@ attributes:
     description: Type of the device; this value is always 'Device'.
     computed: true
   - model_name: hostName
-    tf_name: host
+    tf_name: host_name
     type: String
     description: Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
     mandatory: true

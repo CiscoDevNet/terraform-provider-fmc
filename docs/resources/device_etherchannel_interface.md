@@ -14,14 +14,14 @@ This resource manages a Device EtherChannel Interface.
 
 ```terraform
 resource "fmc_device_etherchannel_interface" "example" {
-  device_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  logical_name         = "myinterface-0-1"
-  description          = "my description"
-  mode                 = "NONE"
-  security_zone_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  mtu                  = 9000
-  enable_sgt_propagate = false
-  ether_channel_id     = "1"
+  device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  logical_name     = "myinterface-0-1"
+  description      = "my description"
+  mode             = "NONE"
+  security_zone_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  mtu              = 9000
+  sgt_propagate    = false
+  ether_channel_id = "1"
   selected_interfaces = [
     {
       id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -47,15 +47,13 @@ resource "fmc_device_etherchannel_interface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
 - `domain` (String) Name of the FMC domain
 - `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
   - Choices: `AUTO`, `FULL`, `HALF`
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Enable SGT propagation.
-  - Default value: `false`
 - `enabled` (Boolean) Enable the interface.
   - Default value: `true`
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
@@ -127,6 +125,8 @@ resource "fmc_device_etherchannel_interface" "example" {
   - Range: `0`-`65535`
 - `security_zone_id` (String) Id of the assigned security zone.
 - `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
+- `sgt_propagate` (Boolean) Enable SGT propagation.
+  - Default value: `false`
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.

@@ -50,7 +50,7 @@ type DeviceEtherChannelInterface struct {
 	Name                                  types.String                                                `tfsdk:"name"`
 	Mtu                                   types.Int64                                                 `tfsdk:"mtu"`
 	Priority                              types.Int64                                                 `tfsdk:"priority"`
-	EnableSgtPropagate                    types.Bool                                                  `tfsdk:"enable_sgt_propagate"`
+	SgtPropagate                          types.Bool                                                  `tfsdk:"sgt_propagate"`
 	EtherChannelId                        types.String                                                `tfsdk:"ether_channel_id"`
 	SelectedInterfaces                    []DeviceEtherChannelInterfaceSelectedInterfaces             `tfsdk:"selected_interfaces"`
 	NveOnly                               types.Bool                                                  `tfsdk:"nve_only"`
@@ -103,7 +103,7 @@ type DeviceEtherChannelInterface struct {
 	ActiveMacAddress                      types.String                                                `tfsdk:"active_mac_address"`
 	StandbyMacAddress                     types.String                                                `tfsdk:"standby_mac_address"`
 	ArpTableEntries                       []DeviceEtherChannelInterfaceArpTableEntries                `tfsdk:"arp_table_entries"`
-	EnableAntiSpoofing                    types.Bool                                                  `tfsdk:"enable_anti_spoofing"`
+	AntiSpoofing                          types.Bool                                                  `tfsdk:"anti_spoofing"`
 	AllowFullFragmentReassembly           types.Bool                                                  `tfsdk:"allow_full_fragment_reassembly"`
 	OverrideDefaultFragmentSettingChain   types.Int64                                                 `tfsdk:"override_default_fragment_setting_chain"`
 	OverrideDefaultFragmentSettingSize    types.Int64                                                 `tfsdk:"override_default_fragment_setting_size"`
@@ -184,8 +184,8 @@ func (data DeviceEtherChannelInterface) toBody(ctx context.Context, state Device
 	if !data.Priority.IsNull() {
 		body, _ = sjson.Set(body, "priority", data.Priority.ValueInt64())
 	}
-	if !data.EnableSgtPropagate.IsNull() {
-		body, _ = sjson.Set(body, "enableSGTPropagate", data.EnableSgtPropagate.ValueBool())
+	if !data.SgtPropagate.IsNull() {
+		body, _ = sjson.Set(body, "enableSGTPropagate", data.SgtPropagate.ValueBool())
 	}
 	if !data.EtherChannelId.IsNull() {
 		body, _ = sjson.Set(body, "etherChannelId", data.EtherChannelId.ValueString())
@@ -402,8 +402,8 @@ func (data DeviceEtherChannelInterface) toBody(ctx context.Context, state Device
 			body, _ = sjson.SetRaw(body, "arpConfig.arpConfig.-1", itemBody)
 		}
 	}
-	if !data.EnableAntiSpoofing.IsNull() {
-		body, _ = sjson.Set(body, "enableAntiSpoofing", data.EnableAntiSpoofing.ValueBool())
+	if !data.AntiSpoofing.IsNull() {
+		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
 	}
 	if !data.AllowFullFragmentReassembly.IsNull() {
 		body, _ = sjson.Set(body, "fragmentReassembly", data.AllowFullFragmentReassembly.ValueBool())
@@ -481,9 +481,9 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.Priority = types.Int64Null()
 	}
 	if value := res.Get("enableSGTPropagate"); value.Exists() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
+		data.SgtPropagate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSgtPropagate = types.BoolValue(false)
+		data.SgtPropagate = types.BoolValue(false)
 	}
 	if value := res.Get("etherChannelId"); value.Exists() {
 		data.EtherChannelId = types.StringValue(value.String())
@@ -831,9 +831,9 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		})
 	}
 	if value := res.Get("enableAntiSpoofing"); value.Exists() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())
@@ -921,10 +921,10 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.Priority = types.Int64Null()
 	}
-	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.EnableSgtPropagate.IsNull() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
-	} else if data.EnableSgtPropagate.ValueBool() != false {
-		data.EnableSgtPropagate = types.BoolNull()
+	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.SgtPropagate.IsNull() {
+		data.SgtPropagate = types.BoolValue(value.Bool())
+	} else if data.SgtPropagate.ValueBool() != false {
+		data.SgtPropagate = types.BoolNull()
 	}
 	if value := res.Get("etherChannelId"); value.Exists() && !data.EtherChannelId.IsNull() {
 		data.EtherChannelId = types.StringValue(value.String())
@@ -1416,10 +1416,10 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 		}
 		(*parent).ArpTableEntries[i] = data
 	}
-	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.EnableAntiSpoofing.IsNull() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.AntiSpoofing.IsNull() {
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() && !data.AllowFullFragmentReassembly.IsNull() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())

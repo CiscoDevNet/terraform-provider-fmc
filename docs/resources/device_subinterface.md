@@ -14,17 +14,17 @@ This resource manages a Device Subinterface.
 
 ```terraform
 resource "fmc_device_subinterface" "example" {
-  device_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  logical_name         = "myinterface-0-1"
-  description          = "my description"
-  security_zone_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  mtu                  = 9000
-  enable_sgt_propagate = false
-  interface_name       = "GigabitEthernet0/1"
-  sub_interface_id     = 7
-  vlan_id              = 4094
-  ipv4_static_address  = "10.1.1.1"
-  ipv4_static_netmask  = "24"
+  device_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  logical_name        = "myinterface-0-1"
+  description         = "my description"
+  security_zone_id    = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  mtu                 = 9000
+  sgt_propagate       = false
+  interface_name      = "GigabitEthernet0/1"
+  sub_interface_id    = 7
+  vlan_id             = 4094
+  ipv4_static_address = "10.1.1.1"
+  ipv4_static_netmask = "24"
 }
 ```
 
@@ -44,11 +44,10 @@ resource "fmc_device_subinterface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Optional user-created description.
 - `domain` (String) Name of the FMC domain
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Whether to propagate SGT.
 - `enabled` (Boolean) Whether to enable the interface.
   - Default value: `true`
 - `ip_based_monitoring` (Boolean) Whether to enable IP based Monitoring.
@@ -110,6 +109,7 @@ resource "fmc_device_subinterface" "example" {
 - `priority` (Number) Priority. Can only be set for routed interfaces.
   - Range: `0`-`65535`
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `sgt_propagate` (Boolean) Whether to propagate SGT.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 
 ### Read-Only

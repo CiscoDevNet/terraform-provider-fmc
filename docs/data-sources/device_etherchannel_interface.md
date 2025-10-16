@@ -36,12 +36,11 @@ data "fmc_device_etherchannel_interface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
 - `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Enable SGT propagation.
 - `enabled` (Boolean) Enable the interface.
 - `ether_channel_id` (String) Value of Ether Channel ID, allowed range 1 to 48.
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
@@ -99,6 +98,7 @@ data "fmc_device_etherchannel_interface" "example" {
 - `priority` (Number) Priority. Can only be set for routed interfaces.
 - `security_zone_id` (String) Id of the assigned security zone.
 - `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
+- `sgt_propagate` (Boolean) Enable SGT propagation.
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `type` (String) Type of the object.

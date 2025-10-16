@@ -89,7 +89,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: enableSGTPropagate
-    tf_name: enable_sgt_propagate
+    tf_name: sgt_propagate
     type: Bool
     description: Whether to propagate SGT.
     example: "false"
@@ -532,6 +532,7 @@ attributes:
         default_value: true
   # Advanced - Security Configuration
   - model_name: enableAntiSpoofing
+    tf_name: anti_spoofing
     type: Bool
     description: Enable Anti Spoofing
     exclude_example: true

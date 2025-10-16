@@ -14,16 +14,16 @@ This resource manages a Device Physical Interface.
 
 ```terraform
 resource "fmc_device_physical_interface" "example" {
-  device_id            = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  logical_name         = "myinterface-0-1"
-  description          = "my description"
-  mode                 = "NONE"
-  security_zone_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  name                 = "GigabitEthernet0/1"
-  mtu                  = 1400
-  enable_sgt_propagate = false
-  ipv4_static_address  = "10.1.1.1"
-  ipv4_static_netmask  = "24"
+  device_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  logical_name        = "myinterface-0-1"
+  description         = "my description"
+  mode                = "NONE"
+  security_zone_id    = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  name                = "GigabitEthernet0/1"
+  mtu                 = 1400
+  sgt_propagate       = false
+  ipv4_static_address = "10.1.1.1"
+  ipv4_static_netmask = "24"
 }
 ```
 
@@ -41,14 +41,13 @@ resource "fmc_device_physical_interface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
 - `domain` (String) Name of the FMC domain
 - `duplex` (String) Duplex configuraion.
   - Choices: `AUTO`, `FULL`, `HALF`
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Whether to propagate SGT.
 - `enabled` (Boolean) Whether to enable the interface.
   - Default value: `true`
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
@@ -119,6 +118,7 @@ resource "fmc_device_physical_interface" "example" {
 - `priority` (Number) Priority. Can only be set for routed interfaces.
   - Range: `0`-`65535`
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `sgt_propagate` (Boolean) Whether to propagate SGT.
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.

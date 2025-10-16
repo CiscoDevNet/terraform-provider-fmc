@@ -7,12 +7,36 @@ description: |-
 
 # Changelog
 
-## 2.0.0 (Unreleased)
+## 2.0.0-rc8 (Unreleased)
 
+- BREAKING CHANGE: `fmc_device_physical_interface`, `fmc_device_etherchannel_interface`, `fmc_device_subinterface`: Update attribute names
+    - `ipv4_dhcp_obtain_route` -> `ipv4_dhcp_obtain_default_route`
+    - `ipv4_dhcp_route_metric` -> `ipv4_dhcp_default_route_metric`
+    - Removed `enable` from several ipv6 related attributes
+    - `ipv6_default_route_by_dhcp` -> `ipv6_dhcp_obtain_default_route`
+    - `enable_sgt_propagate` -> `sgt_propagate`
+    - `enable_anti_spoofing` -> `anti_spoofing`
 - BREAKING CHANGE: `fmc_device`: Update attribute names
-- BREAKING CHANGE: `fmc_bfd_template`: Update attribute names
+    - `license_capabilities` -> `licenses`
+    - `access_policy_id` -> `access_control_policy_id`
+- BREAKING CHANGE: `fmc_chassis_logical_device` Update attribute definitions
+    - `license_capabilities` -> `licenses`
+    - `access_policy_id` -> `access_control_policy_id`
+    - Add missing `licenses` options
+- BREAKING CHANGE: `fmc_bfd_template`: Update attribute definitions
+    - `interval_time` -> `interval_type`
+    - `min_transmit` -> `minimum_transmit`
+    - `tx_rx_multiplier` -> `multiplier`
 - BREAKING CHANGE: `fmc_prefilter_policy`: Update attribute names
-- BREAKING CHANGE: `fmc_access_control_policy`: Update attribute names
+    - `*snmp_config*` -> `*snmp_alert*`
+    - `*syslog_config*` -> `*syslog_alert*`
+- BREAKING CHANGE: `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Update attribute names
+    - `default_action_log_begin` -> `default_action_log_connection_begin`
+    - `default_action_log_end` -> `default_action_log_connection_end`
+    - `*snmp_config*` -> `*snmp_alert*`
+    - `*syslog_config*` -> `*syslog_alert*`
+    - add `default_action_variable_set_id`
+
 - (Change): Rename `fmc_fqdn_object` to `fmc_fqdn`. `fmc_fqdn_object` will be removed in future releases
 - (Change): Rename `fmc_fqdn_objects` to `fmc_fqdns`. `fmc_fqdn_objects` will be removed in future releases
 - (Change): Rename `fmc_icmpv4_object` to `fmc_icmpv4`. `fmc_icmpv4_object` will be removed in future releases

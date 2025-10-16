@@ -36,10 +36,9 @@ data "fmc_device_subinterface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Optional user-created description.
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Whether to propagate SGT.
 - `enabled` (Boolean) Whether to enable the interface.
 - `interface_name` (String) Name of the parent interface. It has to already exist on the device.
 - `ip_based_monitoring` (Boolean) Whether to enable IP based Monitoring.
@@ -88,6 +87,7 @@ data "fmc_device_subinterface" "example" {
 - `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value
 - `priority` (Number) Priority. Can only be set for routed interfaces.
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `sgt_propagate` (Boolean) Whether to propagate SGT.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface. For multi-instance devices, this value must match with what was configured on chassis.
 - `type` (String) Type of the object, this value is always 'SubInterface'.

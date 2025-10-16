@@ -36,39 +36,39 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type ChassisLogicalDevice struct {
-	Id                  types.String                             `tfsdk:"id"`
-	Domain              types.String                             `tfsdk:"domain"`
-	ChassisId           types.String                             `tfsdk:"chassis_id"`
-	Type                types.String                             `tfsdk:"type"`
-	DeviceId            types.String                             `tfsdk:"device_id"`
-	DeviceType          types.String                             `tfsdk:"device_type"`
-	Name                types.String                             `tfsdk:"name"`
-	FtdVersion          types.String                             `tfsdk:"ftd_version"`
-	Ipv4Address         types.String                             `tfsdk:"ipv4_address"`
-	Ipv4Netmask         types.String                             `tfsdk:"ipv4_netmask"`
-	Ipv4Gateway         types.String                             `tfsdk:"ipv4_gateway"`
-	Ipv6Address         types.String                             `tfsdk:"ipv6_address"`
-	Ipv6Prefix          types.Int64                              `tfsdk:"ipv6_prefix"`
-	Ipv6Gateway         types.String                             `tfsdk:"ipv6_gateway"`
-	SearchDomain        types.String                             `tfsdk:"search_domain"`
-	Fqdn                types.String                             `tfsdk:"fqdn"`
-	FirewallMode        types.String                             `tfsdk:"firewall_mode"`
-	DnsServers          types.String                             `tfsdk:"dns_servers"`
-	DevicePassword      types.String                             `tfsdk:"device_password"`
-	AdminState          types.String                             `tfsdk:"admin_state"`
-	PermitExpertMode    types.String                             `tfsdk:"permit_expert_mode"`
-	ResourceProfileId   types.String                             `tfsdk:"resource_profile_id"`
-	ResourceProfileName types.String                             `tfsdk:"resource_profile_name"`
-	AssignedInterfaces  []ChassisLogicalDeviceAssignedInterfaces `tfsdk:"assigned_interfaces"`
-	DeviceGroupId       types.String                             `tfsdk:"device_group_id"`
-	AccessPolicyId      types.String                             `tfsdk:"access_policy_id"`
-	PlatformSettingsId  types.String                             `tfsdk:"platform_settings_id"`
-	LicenseCapabilities types.Set                                `tfsdk:"license_capabilities"`
-	ContainerId         types.String                             `tfsdk:"container_id"`
-	ContainerType       types.String                             `tfsdk:"container_type"`
-	ContainerName       types.String                             `tfsdk:"container_name"`
-	ContainerRole       types.String                             `tfsdk:"container_role"`
-	ContainerStatus     types.String                             `tfsdk:"container_status"`
+	Id                    types.String                             `tfsdk:"id"`
+	Domain                types.String                             `tfsdk:"domain"`
+	ChassisId             types.String                             `tfsdk:"chassis_id"`
+	Type                  types.String                             `tfsdk:"type"`
+	DeviceId              types.String                             `tfsdk:"device_id"`
+	DeviceType            types.String                             `tfsdk:"device_type"`
+	Name                  types.String                             `tfsdk:"name"`
+	FtdVersion            types.String                             `tfsdk:"ftd_version"`
+	Ipv4Address           types.String                             `tfsdk:"ipv4_address"`
+	Ipv4Netmask           types.String                             `tfsdk:"ipv4_netmask"`
+	Ipv4Gateway           types.String                             `tfsdk:"ipv4_gateway"`
+	Ipv6Address           types.String                             `tfsdk:"ipv6_address"`
+	Ipv6Prefix            types.Int64                              `tfsdk:"ipv6_prefix"`
+	Ipv6Gateway           types.String                             `tfsdk:"ipv6_gateway"`
+	SearchDomain          types.String                             `tfsdk:"search_domain"`
+	Fqdn                  types.String                             `tfsdk:"fqdn"`
+	FirewallMode          types.String                             `tfsdk:"firewall_mode"`
+	DnsServers            types.String                             `tfsdk:"dns_servers"`
+	DevicePassword        types.String                             `tfsdk:"device_password"`
+	AdminState            types.String                             `tfsdk:"admin_state"`
+	PermitExpertMode      types.String                             `tfsdk:"permit_expert_mode"`
+	ResourceProfileId     types.String                             `tfsdk:"resource_profile_id"`
+	ResourceProfileName   types.String                             `tfsdk:"resource_profile_name"`
+	AssignedInterfaces    []ChassisLogicalDeviceAssignedInterfaces `tfsdk:"assigned_interfaces"`
+	DeviceGroupId         types.String                             `tfsdk:"device_group_id"`
+	AccessControlPolicyId types.String                             `tfsdk:"access_control_policy_id"`
+	PlatformSettingsId    types.String                             `tfsdk:"platform_settings_id"`
+	Licenses              types.Set                                `tfsdk:"licenses"`
+	ContainerId           types.String                             `tfsdk:"container_id"`
+	ContainerType         types.String                             `tfsdk:"container_type"`
+	ContainerName         types.String                             `tfsdk:"container_name"`
+	ContainerRole         types.String                             `tfsdk:"container_role"`
+	ContainerStatus       types.String                             `tfsdk:"container_status"`
 }
 
 type ChassisLogicalDeviceAssignedInterfaces struct {
@@ -161,15 +161,15 @@ func (data ChassisLogicalDevice) toBody(ctx context.Context, state ChassisLogica
 	if !data.DeviceGroupId.IsNull() {
 		body, _ = sjson.Set(body, "deviceRegistration.deviceGroup.id", data.DeviceGroupId.ValueString())
 	}
-	if !data.AccessPolicyId.IsNull() {
-		body, _ = sjson.Set(body, "deviceRegistration.accessPolicy.id", data.AccessPolicyId.ValueString())
+	if !data.AccessControlPolicyId.IsNull() {
+		body, _ = sjson.Set(body, "deviceRegistration.accessPolicy.id", data.AccessControlPolicyId.ValueString())
 	}
 	if !data.PlatformSettingsId.IsNull() {
 		body, _ = sjson.Set(body, "deviceRegistration.platformSettings.id", data.PlatformSettingsId.ValueString())
 	}
-	if !data.LicenseCapabilities.IsNull() {
+	if !data.Licenses.IsNull() {
 		var values []string
-		data.LicenseCapabilities.ElementsAs(ctx, &values, false)
+		data.Licenses.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "deviceRegistration.licenseCaps", values)
 	}
 	return body
@@ -300,9 +300,9 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 		data.PlatformSettingsId = types.StringNull()
 	}
 	if value := res.Get("deviceRegistration.licenseCaps"); value.Exists() {
-		data.LicenseCapabilities = helpers.GetStringSet(value.Array())
+		data.Licenses = helpers.GetStringSet(value.Array())
 	} else {
-		data.LicenseCapabilities = types.SetNull(types.StringType)
+		data.Licenses = types.SetNull(types.StringType)
 	}
 	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
 		data.ContainerId = types.StringValue(value.String())
@@ -488,10 +488,10 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 	} else {
 		data.PlatformSettingsId = types.StringNull()
 	}
-	if value := res.Get("deviceRegistration.licenseCaps"); value.Exists() && !data.LicenseCapabilities.IsNull() {
-		data.LicenseCapabilities = helpers.GetStringSet(value.Array())
+	if value := res.Get("deviceRegistration.licenseCaps"); value.Exists() && !data.Licenses.IsNull() {
+		data.Licenses = helpers.GetStringSet(value.Array())
 	} else {
-		data.LicenseCapabilities = types.SetNull(types.StringType)
+		data.Licenses = types.SetNull(types.StringType)
 	}
 	if value := res.Get("metadata.containerDetails.id"); value.Exists() {
 		data.ContainerId = types.StringValue(value.String())

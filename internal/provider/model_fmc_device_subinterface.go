@@ -49,7 +49,7 @@ type DeviceSubinterface struct {
 	SecurityZoneId                        types.String                        `tfsdk:"security_zone_id"`
 	Mtu                                   types.Int64                         `tfsdk:"mtu"`
 	Priority                              types.Int64                         `tfsdk:"priority"`
-	EnableSgtPropagate                    types.Bool                          `tfsdk:"enable_sgt_propagate"`
+	SgtPropagate                          types.Bool                          `tfsdk:"sgt_propagate"`
 	InterfaceName                         types.String                        `tfsdk:"interface_name"`
 	SubInterfaceId                        types.Int64                         `tfsdk:"sub_interface_id"`
 	VlanId                                types.Int64                         `tfsdk:"vlan_id"`
@@ -93,7 +93,7 @@ type DeviceSubinterface struct {
 	ActiveMacAddress                      types.String                        `tfsdk:"active_mac_address"`
 	StandbyMacAddress                     types.String                        `tfsdk:"standby_mac_address"`
 	ArpTableEntries                       []DeviceSubinterfaceArpTableEntries `tfsdk:"arp_table_entries"`
-	EnableAntiSpoofing                    types.Bool                          `tfsdk:"enable_anti_spoofing"`
+	AntiSpoofing                          types.Bool                          `tfsdk:"anti_spoofing"`
 	AllowFullFragmentReassembly           types.Bool                          `tfsdk:"allow_full_fragment_reassembly"`
 	OverrideDefaultFragmentSettingChain   types.Int64                         `tfsdk:"override_default_fragment_setting_chain"`
 	OverrideDefaultFragmentSettingSize    types.Int64                         `tfsdk:"override_default_fragment_setting_size"`
@@ -160,8 +160,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Priority.IsNull() {
 		body, _ = sjson.Set(body, "priority", data.Priority.ValueInt64())
 	}
-	if !data.EnableSgtPropagate.IsNull() {
-		body, _ = sjson.Set(body, "enableSGTPropagate", data.EnableSgtPropagate.ValueBool())
+	if !data.SgtPropagate.IsNull() {
+		body, _ = sjson.Set(body, "enableSGTPropagate", data.SgtPropagate.ValueBool())
 	}
 	if !data.InterfaceName.IsNull() {
 		body, _ = sjson.Set(body, "name", data.InterfaceName.ValueString())
@@ -328,8 +328,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			body, _ = sjson.SetRaw(body, "arpConfig.arpConfig.-1", itemBody)
 		}
 	}
-	if !data.EnableAntiSpoofing.IsNull() {
-		body, _ = sjson.Set(body, "enableAntiSpoofing", data.EnableAntiSpoofing.ValueBool())
+	if !data.AntiSpoofing.IsNull() {
+		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
 	}
 	if !data.AllowFullFragmentReassembly.IsNull() {
 		body, _ = sjson.Set(body, "fragmentReassembly", data.AllowFullFragmentReassembly.ValueBool())
@@ -402,9 +402,9 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Priority = types.Int64Null()
 	}
 	if value := res.Get("enableSGTPropagate"); value.Exists() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
+		data.SgtPropagate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSgtPropagate = types.BoolNull()
+		data.SgtPropagate = types.BoolNull()
 	}
 	if value := res.Get("name"); value.Exists() {
 		data.InterfaceName = types.StringValue(value.String())
@@ -674,9 +674,9 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		})
 	}
 	if value := res.Get("enableAntiSpoofing"); value.Exists() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())
@@ -759,10 +759,10 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Priority = types.Int64Null()
 	}
-	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.EnableSgtPropagate.IsNull() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
+	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.SgtPropagate.IsNull() {
+		data.SgtPropagate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSgtPropagate = types.BoolNull()
+		data.SgtPropagate = types.BoolNull()
 	}
 	if value := res.Get("name"); value.Exists() && !data.InterfaceName.IsNull() {
 		data.InterfaceName = types.StringValue(value.String())
@@ -1118,10 +1118,10 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 		}
 		(*parent).ArpTableEntries[i] = data
 	}
-	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.EnableAntiSpoofing.IsNull() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.AntiSpoofing.IsNull() {
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() && !data.AllowFullFragmentReassembly.IsNull() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())

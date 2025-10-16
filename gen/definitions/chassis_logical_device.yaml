@@ -178,7 +178,7 @@ attributes:
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
   - model_name: id
     data_path: [deviceRegistration, accessPolicy]
-    tf_name: access_policy_id
+    tf_name: access_control_policy_id
     type: String
     description: Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
@@ -192,7 +192,7 @@ attributes:
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
   - model_name: licenseCaps
     data_path: [deviceRegistration]
-    tf_name: license_capabilities
+    tf_name: licenses
     type: Set
     element_type: String
     enum_values: [MALWARE, URLFilter, CARRIER, PROTECT, THREAT]

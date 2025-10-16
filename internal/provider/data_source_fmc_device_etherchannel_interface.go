@@ -120,7 +120,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				MarkdownDescription: "Priority. Can only be set for routed interfaces.",
 				Computed:            true,
 			},
-			"enable_sgt_propagate": schema.BoolAttribute{
+			"sgt_propagate": schema.BoolAttribute{
 				MarkdownDescription: "Enable SGT propagation.",
 				Computed:            true,
 			},
@@ -404,7 +404,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 					},
 				},
 			},
-			"enable_anti_spoofing": schema.BoolAttribute{
+			"anti_spoofing": schema.BoolAttribute{
 				MarkdownDescription: "Enable Anti Spoofing",
 				Computed:            true,
 			},

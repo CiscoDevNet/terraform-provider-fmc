@@ -1,6 +1,6 @@
 resource "fmc_device" "example" {
   name                     = "my_device"
-  host                     = "10.0.0.1"
+  host_name                = "10.0.0.1"
   licenses                 = ["ESSENTIALS"]
   registration_key         = "key1"
   performance_tier         = "FTDv5"

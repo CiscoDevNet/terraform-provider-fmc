@@ -156,7 +156,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 					int64validator.Between(0, 65535),
 				},
 			},
-			"enable_sgt_propagate": schema.BoolAttribute{
+			"sgt_propagate": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable SGT propagation.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
@@ -483,7 +483,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 					},
 				},
 			},
-			"enable_anti_spoofing": schema.BoolAttribute{
+			"anti_spoofing": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable Anti Spoofing").String,
 				Optional:            true,
 			},

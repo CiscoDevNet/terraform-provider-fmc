@@ -37,7 +37,7 @@ data "fmc_device" "example" {
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
-- `host` (String) Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
+- `host_name` (String) Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
 - `is_multi_instance` (Boolean) True if the device is part of a multi-instance.
 - `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
 - `licenses` (Set of String) Array of strings representing the license capabilities on the managed device.

@@ -36,12 +36,11 @@ data "fmc_device_physical_interface" "example" {
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
+- `anti_spoofing` (Boolean) Enable Anti Spoofing
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
 - `description` (String) Optional user-created description.
 - `duplex` (String) Duplex configuraion.
-- `enable_anti_spoofing` (Boolean) Enable Anti Spoofing
-- `enable_sgt_propagate` (Boolean) Whether to propagate SGT.
 - `enabled` (Boolean) Whether to enable the interface.
 - `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
 - `flow_control_send` (String) Flow Control Send configuraion, can be one of ON, OFF.
@@ -96,6 +95,7 @@ data "fmc_device_physical_interface" "example" {
 - `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value
 - `priority` (Number) Priority. Can only be set for routed interfaces.
 - `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `sgt_propagate` (Boolean) Whether to propagate SGT.
 - `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `type` (String) Type of the resource.

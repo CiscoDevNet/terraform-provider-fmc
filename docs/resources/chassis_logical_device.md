@@ -49,10 +49,10 @@ resource "fmc_chassis_logical_device" "example" {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
-  device_group_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  access_policy_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  license_capabilities = ["MALWARE"]
+  device_group_id          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  platform_settings_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  licenses                 = ["MALWARE"]
 }
 ```
 
@@ -61,7 +61,7 @@ resource "fmc_chassis_logical_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+- `access_control_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `chassis_id` (String) Id of the parent chassis.
 - `device_password` (String, Sensitive) Admin password for the device.
@@ -87,7 +87,7 @@ resource "fmc_chassis_logical_device" "example" {
 - `ipv6_address` (String) Management IPv6 address of the device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+- `licenses` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
   - Choices: `MALWARE`, `URLFilter`, `CARRIER`, `PROTECT`, `THREAT`
 - `permit_expert_mode` (String) Permit expert mode for the device.
   - Choices: `yes`, `no`

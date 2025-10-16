@@ -117,7 +117,7 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Priority. Can only be set for routed interfaces.",
 				Computed:            true,
 			},
-			"enable_sgt_propagate": schema.BoolAttribute{
+			"sgt_propagate": schema.BoolAttribute{
 				MarkdownDescription: "Whether to propagate SGT.",
 				Computed:            true,
 			},
@@ -337,7 +337,7 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 					},
 				},
 			},
-			"enable_anti_spoofing": schema.BoolAttribute{
+			"anti_spoofing": schema.BoolAttribute{
 				MarkdownDescription: "Enable Anti Spoofing",
 				Computed:            true,
 			},
