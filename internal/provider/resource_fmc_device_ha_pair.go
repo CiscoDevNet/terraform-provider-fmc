@@ -70,7 +70,7 @@ func (r *DeviceHAPairResource) Metadata(ctx context.Context, req resource.Metada
 func (r *DeviceHAPairResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages FTD HA Pair configuration.\n Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.\n On destroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
