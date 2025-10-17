@@ -21,6 +21,7 @@ attributes:
     type: String
     description: Description of the object.
     example: My IPv6 Address Pool object
+    missing_in_response_if_set_to_empty_string: true
   - model_name: ipv6StartAddress
     tf_name: start_address
     type: String

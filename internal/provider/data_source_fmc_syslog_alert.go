@@ -72,7 +72,7 @@ func (d *SyslogAlertDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Syslog Alert. There is no built-in Syslog alert.",
+				MarkdownDescription: "Name of the Syslog Alert.",
 				Optional:            true,
 				Computed:            true,
 			},

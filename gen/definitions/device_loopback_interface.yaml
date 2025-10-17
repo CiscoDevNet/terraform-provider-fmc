@@ -22,7 +22,7 @@ attributes:
     computed_body_param: true
     description: Name of the loopback interface (Loopback<loopback_id>)
     data_source_query: true
-# General
+  # General
   - model_name: ifname
     tf_name: logical_name
     type: String
@@ -68,11 +68,13 @@ attributes:
         type: String
         description: IPv6 address without a slash and prefix.
         id: true
+        mandatory: true
         example: "2004::10"
       - model_name: prefix
         type: String
         description: Prefix width for the IPv6 address.
         id: true
+        mandatory: true
         example: "64"
 
 test_prerequisites: |-

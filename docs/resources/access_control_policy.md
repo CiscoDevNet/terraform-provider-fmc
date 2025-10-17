@@ -14,18 +14,18 @@ This resource manages Access Control Policy (ACP) with corresponding Access Rule
 
 ```terraform
 resource "fmc_access_control_policy" "example" {
-  name                              = "my_access_control_policy"
-  description                       = "My Access Control Policy"
-  default_action                    = "BLOCK"
-  default_action_log_begin          = true
-  default_action_log_end            = false
-  default_action_send_events_to_fmc = true
-  default_action_send_syslog        = true
-  default_action_syslog_config_id   = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
-  prefilter_policy_id               = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
-  default_action_syslog_severity    = "DEBUG"
-  default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  manage_categories                 = true
+  name                                = "my_access_control_policy"
+  description                         = "My Access Control Policy"
+  default_action                      = "BLOCK"
+  default_action_log_connection_begin = true
+  default_action_log_connection_end   = false
+  default_action_send_events_to_fmc   = true
+  default_action_send_syslog          = true
+  default_action_syslog_alert_id      = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+  default_action_syslog_severity      = "DEBUG"
+  default_action_snmp_alert_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  prefilter_policy_id                 = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+  manage_categories                   = true
   categories = [
     {
       name = "category_1"
@@ -154,17 +154,17 @@ resource "fmc_access_control_policy" "example" {
           reputation = "QUESTIONABLE_AND_UNKNOWN"
         }
       ]
-      log_begin           = true
-      log_end             = true
-      send_events_to_fmc  = true
-      send_syslog         = true
-      syslog_config_id    = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
-      syslog_severity     = "DEBUG"
-      snmp_config_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      file_policy_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      time_range_id       = "0050568A-7F57-0ed3-0000-004294975576"
-      variable_set_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      log_connection_begin = true
+      log_connection_end   = true
+      send_events_to_fmc   = true
+      send_syslog          = true
+      syslog_alert_id      = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+      syslog_severity      = "DEBUG"
+      snmp_alert_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      file_policy_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      intrusion_policy_id  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      time_range_id        = "0050568A-7F57-0ed3-0000-004294975576"
+      variable_set_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       applications = [
         {
           id = "7967"
@@ -222,17 +222,18 @@ resource "fmc_access_control_policy" "example" {
 
 - `categories` (Attributes List) Ordered list of categories. (see [below for nested schema](#nestedatt--categories))
 - `default_action_intrusion_policy_id` (String) Id of the Intrusion Policy. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
-- `default_action_log_begin` (Boolean) Log events at the beginning of the connection.
+- `default_action_log_connection_begin` (Boolean) Log events at the beginning of the connection.
   - Default value: `false`
-- `default_action_log_end` (Boolean) Log events at the end of the connection.
+- `default_action_log_connection_end` (Boolean) Log events at the end of the connection.
   - Default value: `false`
 - `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
   - Default value: `false`
 - `default_action_send_syslog` (Boolean) Send events to a syslog server.
-- `default_action_snmp_config_id` (String) Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `default_action_syslog_config_id` (String) Id of the syslog config. Can be set only when default_action_send_syslog is true and either default_action_log_begin or default_action_log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
+- `default_action_snmp_alert_id` (String) Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
+- `default_action_syslog_alert_id` (String) Id of the syslog alert. Can be set only when `default_action_syslog_enabled` is true and either `default_action_log_begin` or `default_action_log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `default_action_syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
+- `default_action_variable_set_id` (String) Id of the Variable Set. Cannot be set when default action is BLOCK, TRUST, NETWORK_DISCOVERY.
 - `description` (String) Description of the Access Control Policy.
 - `domain` (String) Name of the FMC domain
 - `manage_categories` (Boolean) Should this resource manage Access Policy Categories. For Data Sources this defaults to `false` (Categories are not read).
@@ -294,9 +295,9 @@ Optional:
 - `endpoint_device_types` (Attributes Set) Set of objects representing the source Endpoint Device Types. (see [below for nested schema](#nestedatt--rules--endpoint_device_types))
 - `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
 - `intrusion_policy_id` (String) Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
-- `log_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
+- `log_connection_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
   - Default value: `false`
-- `log_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.
+- `log_connection_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.
   - Default value: `false`
 - `log_files` (Boolean) Log file events.
   - Default value: `false`
@@ -306,7 +307,7 @@ Optional:
   - Default value: `false`
 - `send_syslog` (Boolean) Send alerts to syslog.
   - Default value: `false`
-- `snmp_config_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.
+- `snmp_alert_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.
 - `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic. (see [below for nested schema](#nestedatt--rules--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--rules--source_network_objects))
@@ -314,7 +315,7 @@ Optional:
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule. (see [below for nested schema](#nestedatt--rules--source_port_objects))
 - `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags. (see [below for nested schema](#nestedatt--rules--source_sgt_objects))
 - `source_zones` (Attributes Set) Set of objects representing source Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--rules--source_zones))
-- `syslog_config_id` (String) Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
+- `syslog_alert_id` (String) Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `time_range_id` (String) Id of Time Range object applied to the rule.

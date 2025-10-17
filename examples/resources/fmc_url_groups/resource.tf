@@ -1,6 +1,6 @@
 resource "fmc_url_groups" "example" {
   items = {
-    url_group_1 = {
+    my_url_groups = {
       description = "My URL group"
       urls = [
         {

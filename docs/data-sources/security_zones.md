@@ -27,7 +27,7 @@ data "fmc_security_zones" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Security Zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -38,6 +38,6 @@ data "fmc_security_zones" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Security Zone.
+- `id` (String) Id of the Security Zone.
 - `interface_type` (String) The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.
 - `type` (String) Type of the object; this value is always 'SecurityZone'.

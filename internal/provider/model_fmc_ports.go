@@ -42,11 +42,11 @@ type Ports struct {
 
 type PortsItems struct {
 	Id          types.String `tfsdk:"id"`
-	Port        types.String `tfsdk:"port"`
+	Type        types.String `tfsdk:"type"`
 	Protocol    types.String `tfsdk:"protocol"`
+	Port        types.String `tfsdk:"port"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
-	Type        types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -78,11 +78,11 @@ func (data Ports) toBody(ctx context.Context, state Ports) string {
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			if !item.Port.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "port", item.Port.ValueString())
-			}
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol", item.Protocol.ValueString())
+			}
+			if !item.Port.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "port", item.Port.ValueString())
 			}
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
@@ -126,15 +126,20 @@ func (data *Ports) fromBody(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
-		if value := res.Get("port"); value.Exists() {
-			data.Port = types.StringValue(value.String())
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
 		} else {
-			data.Port = types.StringNull()
+			data.Type = types.StringNull()
 		}
 		if value := res.Get("protocol"); value.Exists() {
 			data.Protocol = types.StringValue(value.String())
 		} else {
 			data.Protocol = types.StringNull()
+		}
+		if value := res.Get("port"); value.Exists() {
+			data.Port = types.StringValue(value.String())
+		} else {
+			data.Port = types.StringNull()
 		}
 		if value := res.Get("description"); value.Exists() {
 			data.Description = types.StringValue(value.String())
@@ -145,11 +150,6 @@ func (data *Ports) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		(*parent).Items[k] = data
 	}
@@ -184,30 +184,34 @@ func (data *Ports) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
-		if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
-			data.Port = types.StringValue(value.String())
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
 		} else {
-			data.Port = types.StringNull()
+			data.Type = types.StringNull()
 		}
 		if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
 			data.Protocol = types.StringValue(value.String())
 		} else {
 			data.Protocol = types.StringNull()
 		}
+		if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+			data.Port = types.StringValue(value.String())
+		} else {
+			data.Port = types.StringNull()
+		}
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 			data.Description = types.StringValue(value.String())
 		} else {
-			data.Description = types.StringNull()
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
 		}
 		if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		(*parent).Items[i] = data
 	}

@@ -444,13 +444,13 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
-			"log_begin": schema.BoolAttribute{
+			"log_connection_begin": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
-			"log_end": schema.BoolAttribute{
+			"log_connection_end": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
@@ -474,8 +474,8 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
 			},
-			"syslog_config_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
+			"syslog_alert_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
 				Optional:            true,
 			},
 			"syslog_severity": schema.StringAttribute{
@@ -485,7 +485,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 					stringvalidator.OneOf("ALERT", "CRIT", "DEBUG", "EMERG", "ERR", "INFO", "NOTICE", "WARNING"),
 				},
 			},
-			"snmp_config_id": schema.StringAttribute{
+			"snmp_alert_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.").String,
 				Optional:            true,
 			},

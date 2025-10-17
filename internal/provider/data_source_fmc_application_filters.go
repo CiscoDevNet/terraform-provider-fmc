@@ -72,7 +72,7 @@ func (d *ApplicationFiltersDataSource) Schema(ctx context.Context, req datasourc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed File Type.",
+							MarkdownDescription: "Id of the Application Filter.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

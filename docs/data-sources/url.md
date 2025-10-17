@@ -25,11 +25,11 @@ data "fmc_url" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object.
+- `name` (String) Name of the URL object.
 
 ### Read-Only
 
 - `description` (String) Description of the object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Url'.
-- `url` (String) URL value.
+- `url` (String) The URL string.

@@ -31,7 +31,7 @@ data "fmc_vlan_tag_group" "example" {
 
 - `description` (String) Description of the object.
 - `literals` (Attributes Set) Set of literal values to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'VlanGroupTag'
 - `vlan_tags` (Attributes Set) Set of VLAN Tag objects to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--vlan_tags))
 

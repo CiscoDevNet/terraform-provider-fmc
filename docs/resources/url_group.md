@@ -34,7 +34,7 @@ resource "fmc_url_group" "example" {
 
 ### Required
 
-- `name` (String) Name of the object.
+- `name` (String) Name of the URL Group object.
 - `urls` (Attributes Set) Set of URL objects to be included in the URL group. (see [below for nested schema](#nestedatt--urls))
 
 ### Optional
@@ -42,7 +42,7 @@ resource "fmc_url_group" "example" {
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) Set of literal values to be included in the URL group. (see [below for nested schema](#nestedatt--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 

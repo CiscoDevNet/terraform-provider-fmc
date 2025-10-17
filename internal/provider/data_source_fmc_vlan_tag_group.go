@@ -85,7 +85,7 @@ func (d *VLANTagGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 			"vlan_tags": schema.SetNestedAttribute{

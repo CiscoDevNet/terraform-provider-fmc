@@ -34,7 +34,7 @@ attributes:
   - model_name: ifname
     data_path: [interface]
     tf_name: interface_logical_name
-    description: Logical Name of the interface for BFD assignment if SINGLE_HOP selected.
+    description: Logical Name of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.
     type: String
     example: outside
     data_source_query: true
@@ -42,7 +42,7 @@ attributes:
   - model_name: id
     data_path: [destinationAddress]
     tf_name: destination_host_object_id
-    description: Id of the destination host object if MULTI_HOP selected.
+    description: Id of the destination host object if `hop_type` is set to MULTI_HOP.
     type: String
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_example: true
@@ -50,7 +50,7 @@ attributes:
   - model_name: id
     data_path: [sourceAddress]
     tf_name: source_host_object_id
-    description: Id of the source host object if MULTI_HOP selected.
+    description: Id of the source host object if `hop_type` is set to MULTI_HOP.
     type: String
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_example: true
@@ -58,7 +58,7 @@ attributes:
   - model_name: id
     data_path: [interface]
     tf_name: interface_id
-    description: Id of the interface for BFD assignment if SINGLE_HOP selected.
+    description: Id of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.
     type: String
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.id

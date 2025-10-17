@@ -17,7 +17,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Application Business Relevance level.
+        description: Id of the Application Business Relevance level.
         exclude_example: true
         exclude_test: true
       - model_name: type

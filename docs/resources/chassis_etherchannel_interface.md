@@ -38,6 +38,8 @@ resource "fmc_chassis_etherchannel_interface" "example" {
 - `chassis_id` (String) Id of the parent chassis.
 - `ether_channel_id` (Number) Ether Channel ID
   - Range: `1`-`48`
+- `port_type` (String) Type of the port.
+  - Choices: `DATA`, `DATA_SHARING`
 - `speed` (String) Interface speed.
   - Choices: `AUTO`, `TEN_MBPS`, `HUNDRED_MBPS`, `ONE_GBPS`, `TEN_GBPS`, `TWENTY_FIVE_GBPS`, `FORTY_GBPS`, `HUNDRED_GBPS`, `TWO_HUNDRED_GBPS`, `FOUR_HUNDRED_GBPS`, `DETECT_SFP`
 
@@ -54,8 +56,6 @@ resource "fmc_chassis_etherchannel_interface" "example" {
   - Choices: `ACTIVE`, `ON`, `PASSIVE`
 - `lacp_rate` (String) Link Aggregation Control Protocol (LACP) rate.
   - Choices: `DEFAULT`, `FAST`, `NORMAL`
-- `port_type` (String) Type of the port.
-  - Choices: `DATA`, `DATA_SHARING`
 - `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
 
 ### Read-Only

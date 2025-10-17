@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcURLs(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_urls.test", "items.url_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_urls.test", "items.url_1.url", "https://www.example.com/app"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_urls.test", "items.url_1.description", "My URL"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_urls.test", "items.url_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_urls.test", "items.my_urls.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_urls.test", "items.my_urls.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_urls.test", "items.my_urls.description", "My URL"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_urls.test", "items.my_urls.url", "https://www.example.com/app"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -64,7 +64,7 @@ func TestAccFmcURLs(t *testing.T) {
 
 func testAccFmcURLsConfig_minimum() string {
 	config := `resource "fmc_urls" "test" {` + "\n"
-	config += `	items = { "url_1" = {` + "\n"
+	config += `	items = { "my_urls" = {` + "\n"
 	config += `		url = "https://www.example.com/app"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -77,9 +77,9 @@ func testAccFmcURLsConfig_minimum() string {
 
 func testAccFmcURLsConfig_all() string {
 	config := `resource "fmc_urls" "test" {` + "\n"
-	config += `	items = { "url_1" = {` + "\n"
-	config += `		url = "https://www.example.com/app"` + "\n"
+	config += `	items = { "my_urls" = {` + "\n"
 	config += `		description = "My URL"` + "\n"
+	config += `		url = "https://www.example.com/app"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"

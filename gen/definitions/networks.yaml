@@ -8,30 +8,31 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of networks. The key of the map is the name of the individual Network.
-    map_key_example: my_networks_object
+      Map of Networks. The key of the map is the name of the individual Network.
+    map_key_example: my_networks
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Network.
+        description: Id of the Network object.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
         description: Description of the object.
         example: "My Network 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
-        description: Indicates whether object values can be overridden.
+        description: Whether the object values can be overridden.
         exclude_example: true
         test_value: "true"
       - model_name: value
         tf_name: prefix
         type: String
         mandatory: true
-        description: Prefix of the network.
+        description: Prefix of the Network.
         example: 10.1.1.0/24
       - model_name: type
         type: String

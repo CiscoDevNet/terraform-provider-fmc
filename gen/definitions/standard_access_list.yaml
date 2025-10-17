@@ -1,0 +1,67 @@
+---
+name: Standard Access List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/standardaccesslists
+doc_category: Objects
+minimum_version_create: "7.2"
+res_description: This resource manages Standard Access List (Access Control List / ACP) Object.
+ds_description: This data source reads the Standard Access List (Access Control List / ACP) Object.
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the Standard Access List object.
+    mandatory: true
+    example: my_standard_acl
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My standard ACL"
+    missing_in_response_if_set_to_empty_string: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'StandardAccessList'.
+    computed: true
+  - model_name: entries
+    type: List
+    description: Ordered list of Access List entries.
+    ordered_list: true
+    mandatory: true
+    min_list: 1
+    max_list: 1000
+    attributes:
+      - model_name: action
+        type: String
+        description: Action for the rule.
+        enum_values: [PERMIT, DENY]
+        example: DENY
+        minimum_test_value: '"PERMIT"'
+        mandatory: true
+      - model_name: objects
+        data_path: [networks]
+        description: Set of objects (Host, Network, Network Group).
+        exclude_test: true # conflict with literals below
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            exclude_example: true
+          - model_name: type
+            type: String
+            description: Type of the object.
+            exclude_example: true
+      - model_name: literals
+        data_path: [networks]
+        description: Set of literal values.
+        minimum_test_value: '[{value="2005::/56"}]'
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            id: true
+            example: 10.1.1.0/24
+            # minimum_test_value set at parent level
+          - model_name: type
+            type: String
+            value: AnyNonEmptyString

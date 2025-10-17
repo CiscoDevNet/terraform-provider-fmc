@@ -66,7 +66,7 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of url groups. The key of the map is the name of the individual URL Group.",
+				MarkdownDescription: "Map of URL Groups. The key of the map is the name of the individual URL Group.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
@@ -75,16 +75,16 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							MarkdownDescription: "Id of the managed URL Group.",
 							Computed:            true,
 						},
-						"description": schema.StringAttribute{
-							MarkdownDescription: "Description of the object.",
-							Computed:            true,
-						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: "Type of the object; this value is always 'UrlGroup'.",
 							Computed:            true,
 						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: "Description of the object.",
+							Computed:            true,
+						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 						"urls": schema.SetNestedAttribute{
@@ -93,7 +93,7 @@ func (d *URLGroupsDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "Id of the object (such as fmc_url.example.id, etc.).",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 								},

@@ -63,7 +63,8 @@ func (r *ICMPv4ObjectResource) Metadata(ctx context.Context, req resource.Metada
 func (r *ICMPv4ObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an ICMPv4 Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an ICMPv4 Object.").AddAttributeDescription("This object is deprecated. Please use `fmc_icmpv4` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This object is deprecated. Please use `fmc_icmpv4` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

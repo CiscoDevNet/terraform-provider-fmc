@@ -35,32 +35,32 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type DeviceVNIInterface struct {
-	Id                       types.String                      `tfsdk:"id"`
-	Domain                   types.String                      `tfsdk:"domain"`
-	DeviceId                 types.String                      `tfsdk:"device_id"`
-	Type                     types.String                      `tfsdk:"type"`
-	VniId                    types.Int64                       `tfsdk:"vni_id"`
-	MulticastGroupAddress    types.String                      `tfsdk:"multicast_group_address"`
-	SegmentId                types.Int64                       `tfsdk:"segment_id"`
-	NveNumber                types.Int64                       `tfsdk:"nve_number"`
-	Enabled                  types.Bool                        `tfsdk:"enabled"`
-	LogicalName              types.String                      `tfsdk:"logical_name"`
-	Description              types.String                      `tfsdk:"description"`
-	Mtu                      types.Int64                       `tfsdk:"mtu"`
-	Priority                 types.Int64                       `tfsdk:"priority"`
-	SecurityZoneId           types.String                      `tfsdk:"security_zone_id"`
-	Ipv4StaticAddress        types.String                      `tfsdk:"ipv4_static_address"`
-	Ipv4StaticNetmask        types.String                      `tfsdk:"ipv4_static_netmask"`
-	Ipv4DhcpObtainRoute      types.Bool                        `tfsdk:"ipv4_dhcp_obtain_route"`
-	Ipv4DhcpRouteMetric      types.Int64                       `tfsdk:"ipv4_dhcp_route_metric"`
-	Ipv6Enable               types.Bool                        `tfsdk:"ipv6_enable"`
-	Ipv6EnforceEui           types.Bool                        `tfsdk:"ipv6_enforce_eui"`
-	Ipv6EnableAutoConfig     types.Bool                        `tfsdk:"ipv6_enable_auto_config"`
-	Ipv6EnableDhcpAddress    types.Bool                        `tfsdk:"ipv6_enable_dhcp_address"`
-	Ipv6EnableDhcpNonaddress types.Bool                        `tfsdk:"ipv6_enable_dhcp_nonaddress"`
-	Ipv6EnableRa             types.Bool                        `tfsdk:"ipv6_enable_ra"`
-	Ipv6Addresses            []DeviceVNIInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
-	EnableProxy              types.Bool                        `tfsdk:"enable_proxy"`
+	Id                         types.String                      `tfsdk:"id"`
+	Domain                     types.String                      `tfsdk:"domain"`
+	DeviceId                   types.String                      `tfsdk:"device_id"`
+	Type                       types.String                      `tfsdk:"type"`
+	VniId                      types.Int64                       `tfsdk:"vni_id"`
+	MulticastGroupAddress      types.String                      `tfsdk:"multicast_group_address"`
+	SegmentId                  types.Int64                       `tfsdk:"segment_id"`
+	NveNumber                  types.Int64                       `tfsdk:"nve_number"`
+	Enabled                    types.Bool                        `tfsdk:"enabled"`
+	LogicalName                types.String                      `tfsdk:"logical_name"`
+	Description                types.String                      `tfsdk:"description"`
+	Mtu                        types.Int64                       `tfsdk:"mtu"`
+	Priority                   types.Int64                       `tfsdk:"priority"`
+	SecurityZoneId             types.String                      `tfsdk:"security_zone_id"`
+	Ipv4StaticAddress          types.String                      `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask          types.String                      `tfsdk:"ipv4_static_netmask"`
+	Ipv4DhcpObtainDefaultRoute types.Bool                        `tfsdk:"ipv4_dhcp_obtain_default_route"`
+	Ipv4DhcpDefaultRouteMetric types.Int64                       `tfsdk:"ipv4_dhcp_default_route_metric"`
+	Ipv6                       types.Bool                        `tfsdk:"ipv6"`
+	Ipv6EnforceEui             types.Bool                        `tfsdk:"ipv6_enforce_eui"`
+	Ipv6AutoConfig             types.Bool                        `tfsdk:"ipv6_auto_config"`
+	Ipv6DhcpAddress            types.Bool                        `tfsdk:"ipv6_dhcp_address"`
+	Ipv6DhcpNonaddress         types.Bool                        `tfsdk:"ipv6_dhcp_nonaddress"`
+	Ipv6Ra                     types.Bool                        `tfsdk:"ipv6_ra"`
+	Ipv6Addresses              []DeviceVNIInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
+	Proxy                      types.Bool                        `tfsdk:"proxy"`
 }
 
 type DeviceVNIInterfaceIpv6Addresses struct {
@@ -127,29 +127,29 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 	if !data.Ipv4StaticNetmask.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
-	if !data.Ipv4DhcpObtainRoute.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainRoute.ValueBool())
+	if !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainDefaultRoute.ValueBool())
 	}
-	if !data.Ipv4DhcpRouteMetric.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.dhcp.dhcpRouteMetric", data.Ipv4DhcpRouteMetric.ValueInt64())
+	if !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.dhcpRouteMetric", data.Ipv4DhcpDefaultRouteMetric.ValueInt64())
 	}
-	if !data.Ipv6Enable.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableIPV6", data.Ipv6Enable.ValueBool())
+	if !data.Ipv6.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableIPV6", data.Ipv6.ValueBool())
 	}
 	if !data.Ipv6EnforceEui.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enforceEUI64", data.Ipv6EnforceEui.ValueBool())
 	}
-	if !data.Ipv6EnableAutoConfig.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6EnableAutoConfig.ValueBool())
+	if !data.Ipv6AutoConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
 	}
-	if !data.Ipv6EnableDhcpAddress.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDHCPAddrConfig", data.Ipv6EnableDhcpAddress.ValueBool())
+	if !data.Ipv6DhcpAddress.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPAddrConfig", data.Ipv6DhcpAddress.ValueBool())
 	}
-	if !data.Ipv6EnableDhcpNonaddress.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDHCPNonAddrConfig", data.Ipv6EnableDhcpNonaddress.ValueBool())
+	if !data.Ipv6DhcpNonaddress.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPNonAddrConfig", data.Ipv6DhcpNonaddress.ValueBool())
 	}
-	if !data.Ipv6EnableRa.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6EnableRa.ValueBool())
+	if !data.Ipv6Ra.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6Ra.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
 		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
@@ -167,8 +167,8 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
 		}
 	}
-	if !data.EnableProxy.IsNull() {
-		body, _ = sjson.Set(body, "enableProxy", data.EnableProxy.ValueBool())
+	if !data.Proxy.IsNull() {
+		body, _ = sjson.Set(body, "enableProxy", data.Proxy.ValueBool())
 	}
 	return body
 }
@@ -244,19 +244,19 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() {
-		data.Ipv4DhcpRouteMetric = types.Int64Value(value.Int())
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4DhcpRouteMetric = types.Int64Null()
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
 	}
 	if value := res.Get("ipv6.enableIPV6"); value.Exists() {
-		data.Ipv6Enable = types.BoolValue(value.Bool())
+		data.Ipv6 = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6Enable = types.BoolNull()
+		data.Ipv6 = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enforceEUI64"); value.Exists() {
 		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
@@ -264,24 +264,24 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() {
-		data.Ipv6EnableAutoConfig = types.BoolValue(value.Bool())
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableAutoConfig = types.BoolNull()
+		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() {
-		data.Ipv6EnableDhcpAddress = types.BoolValue(value.Bool())
+		data.Ipv6DhcpAddress = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpAddress = types.BoolNull()
+		data.Ipv6DhcpAddress = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() {
-		data.Ipv6EnableDhcpNonaddress = types.BoolValue(value.Bool())
+		data.Ipv6DhcpNonaddress = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpNonaddress = types.BoolNull()
+		data.Ipv6DhcpNonaddress = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableRA"); value.Exists() {
-		data.Ipv6EnableRa = types.BoolValue(value.Bool())
+		data.Ipv6Ra = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableRa = types.BoolNull()
+		data.Ipv6Ra = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DeviceVNIInterfaceIpv6Addresses, 0)
@@ -308,9 +308,9 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		})
 	}
 	if value := res.Get("enableProxy"); value.Exists() {
-		data.EnableProxy = types.BoolValue(value.Bool())
+		data.Proxy = types.BoolValue(value.Bool())
 	} else {
-		data.EnableProxy = types.BoolValue(false)
+		data.Proxy = types.BoolValue(false)
 	}
 }
 
@@ -388,45 +388,45 @@ func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
-	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainRoute.IsNull() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
-	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() && !data.Ipv4DhcpRouteMetric.IsNull() {
-		data.Ipv4DhcpRouteMetric = types.Int64Value(value.Int())
+	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() && !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4DhcpRouteMetric = types.Int64Null()
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
 	}
-	if value := res.Get("ipv6.enableIPV6"); value.Exists() && !data.Ipv6Enable.IsNull() {
-		data.Ipv6Enable = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableIPV6"); value.Exists() && !data.Ipv6.IsNull() {
+		data.Ipv6 = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6Enable = types.BoolNull()
+		data.Ipv6 = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enforceEUI64"); value.Exists() && !data.Ipv6EnforceEui.IsNull() {
 		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
 	} else {
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() && !data.Ipv6EnableAutoConfig.IsNull() {
-		data.Ipv6EnableAutoConfig = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() && !data.Ipv6AutoConfig.IsNull() {
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableAutoConfig = types.BoolNull()
+		data.Ipv6AutoConfig = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() && !data.Ipv6EnableDhcpAddress.IsNull() {
-		data.Ipv6EnableDhcpAddress = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() && !data.Ipv6DhcpAddress.IsNull() {
+		data.Ipv6DhcpAddress = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpAddress = types.BoolNull()
+		data.Ipv6DhcpAddress = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() && !data.Ipv6EnableDhcpNonaddress.IsNull() {
-		data.Ipv6EnableDhcpNonaddress = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() && !data.Ipv6DhcpNonaddress.IsNull() {
+		data.Ipv6DhcpNonaddress = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpNonaddress = types.BoolNull()
+		data.Ipv6DhcpNonaddress = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableRA"); value.Exists() && !data.Ipv6EnableRa.IsNull() {
-		data.Ipv6EnableRa = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableRA"); value.Exists() && !data.Ipv6Ra.IsNull() {
+		data.Ipv6Ra = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableRa = types.BoolNull()
+		data.Ipv6Ra = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
@@ -481,10 +481,10 @@ func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 		}
 		(*parent).Ipv6Addresses[i] = data
 	}
-	if value := res.Get("enableProxy"); value.Exists() && !data.EnableProxy.IsNull() {
-		data.EnableProxy = types.BoolValue(value.Bool())
-	} else if data.EnableProxy.ValueBool() != false {
-		data.EnableProxy = types.BoolNull()
+	if value := res.Get("enableProxy"); value.Exists() && !data.Proxy.IsNull() {
+		data.Proxy = types.BoolValue(value.Bool())
+	} else if data.Proxy.ValueBool() != false {
+		data.Proxy = types.BoolNull()
 	}
 }
 

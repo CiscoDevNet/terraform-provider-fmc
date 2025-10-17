@@ -66,29 +66,29 @@ func (d *URLsDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of security zones. The key of the map is the name of the individual URL object.",
+				MarkdownDescription: "Map of URLs. The key of the map is the name of the individual URL object.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed URL object.",
+							MarkdownDescription: "Id of the URL object.",
 							Computed:            true,
 						},
-						"url": schema.StringAttribute{
-							MarkdownDescription: "URL value.",
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the object; this value is always 'Url'.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
 							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
-						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
+						"url": schema.StringAttribute{
+							MarkdownDescription: "The URL string.",
 							Computed:            true,
 						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'Url'.",
+						"overridable": schema.BoolAttribute{
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 					},

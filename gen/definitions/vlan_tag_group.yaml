@@ -13,13 +13,14 @@ attributes:
     type: String
     description: Description of the object.
     example: "My VLAN Tag Group"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'VlanGroupTag'
     computed: true
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     example: true
   - model_name: objects
     tf_name: vlan_tags

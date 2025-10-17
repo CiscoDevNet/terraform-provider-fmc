@@ -6,6 +6,8 @@ doc_category: Objects
 minimum_version_create: "7.4"
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"
+res_description: This resource manages SGT (Security Group Tag) Object through bulk operations.
+ds_description: This data source reads the SGT (Security Group Tag) Object through bulk operations.
 attributes:
   - model_name: items
     type: Map
@@ -17,7 +19,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed SGT.
+        description: Id of the SGT.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -28,6 +30,7 @@ attributes:
         type: String
         description: Description of the object.
         example: My SGT object
+        missing_in_response_if_set_to_empty_string: true
       - model_name: tag
         type: String
         mandatory: true

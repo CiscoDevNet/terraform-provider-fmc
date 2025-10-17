@@ -31,7 +31,7 @@ import (
 
 func TestAccFmcFQDNObject(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "name", "my_fqdn_object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "name", "my_fqdn"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "fqdn", "www.example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "dns_resolution", "IPV4_AND_IPV6"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_object.test", "description", "My FQDN Object"))
@@ -69,7 +69,7 @@ func TestAccFmcFQDNObject(t *testing.T) {
 
 func testAccFmcFQDNObjectConfig_minimum() string {
 	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -81,7 +81,7 @@ func testAccFmcFQDNObjectConfig_minimum() string {
 
 func testAccFmcFQDNObjectConfig_all() string {
 	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
 	config += `	description = "My FQDN Object"` + "\n"

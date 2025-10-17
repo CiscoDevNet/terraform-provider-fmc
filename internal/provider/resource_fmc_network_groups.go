@@ -66,7 +66,7 @@ func (r *NetworkGroupsResource) Metadata(ctx context.Context, req resource.Metad
 func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Network Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Network Groups through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -84,12 +84,12 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of network groups. The key of the map is the name of the individual Network Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Network Groups. The key of the map is the name of the individual Network Group.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network Group.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Network Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -107,21 +107,25 @@ func (r *NetworkGroupsResource) Schema(ctx context.Context, req resource.SchemaR
 							},
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"network_groups": schema.SetAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of names (not Ids) of child Network Groups. The names must be defined in the same instance of `fmc_network_groups` resource. This is an auxiliary way to add a child Network Group: the suggested way is to instead add it inside `objects` by its Ids.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of network objects (Hosts, Networs, Ranges or FQDNs).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of network objects (Hosts, Networks, Ranges, FQDNs or Network Group).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the network object.").String,
+										Optional:            true,
+									},
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the network object.").String,
 										Optional:            true,
 									},
 								},
@@ -303,6 +307,11 @@ func synthesizeNetworkGroupsItem(ctx context.Context, item gjson.Result, ownedId
 		} else {
 			ret, _ = sjson.SetRaw(ret, "objects.-1", obj.String())
 		}
+	}
+
+	// Ensure that network_groups is always present, even if empty, to avoid diffs.
+	if ok := gjson.Parse(ret).Get("network_groups").Exists(); !ok {
+		ret, _ = sjson.Set(ret, "network_groups", []string{})
 	}
 
 	return ret
@@ -549,7 +558,12 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 // And if you iterate the result sequence in reverse, any parent is guaranteed to be placed before its children, which
 // is useful for delete operations.
 func graphTopologicalSeq(ctx context.Context, body string) ([]networkGroup, diag.Diagnostics) {
-	b := gjson.Parse(body).Get("items")
+	var b gjson.Result
+	if body == "{}" {
+		b = gjson.Result{}
+	} else {
+		b = gjson.Parse(body)
+	}
 	m := map[string]networkGroup{}
 	parentCount := map[string]int{}
 	for _, item := range b.Array() {

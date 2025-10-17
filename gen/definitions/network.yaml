@@ -6,22 +6,23 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the object.
-    example: my_network_object
+    description: Name of the Network object.
+    example: my_network
     data_source_query: true
   - model_name: type
     type: String
-    description: "Type of the object; this value is always 'Network'."
+    description: Type of the object; this value is always 'Network'.
     computed: true
   - model_name: description
     type: String
     description: Description of the object.
     example: My network object
+    missing_in_response_if_set_to_empty_string: true
   - model_name: value
     tf_name: prefix
     type: String
     mandatory: true
-    description: Prefix of the network.
+    description: Prefix of the Network.
     example: 10.1.2.0/24
   - model_name: overridable
     type: Bool

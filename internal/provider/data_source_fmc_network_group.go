@@ -77,7 +77,7 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the ojbect.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,7 +85,7 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 			"objects": schema.SetNestedAttribute{
@@ -94,7 +94,11 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the network object",
+							MarkdownDescription: "ID of the network object.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the network object.",
 							Computed:            true,
 						},
 					},
@@ -106,7 +110,7 @@ func (d *NetworkGroupDataSource) Schema(ctx context.Context, req datasource.Sche
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"value": schema.StringAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "IP address or network in CIDR format. Please do not use /32 mask for host.",
 							Computed:            true,
 						},
 					},

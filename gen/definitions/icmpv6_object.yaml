@@ -2,6 +2,7 @@
 name: ICMPv6 Object
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/icmpv6objects
 doc_category: Objects
+deprecation_message: This object is deprecated. Please use `fmc_icmpv6` instead.
 attributes:
   - model_name: icmpType
     type: Int64

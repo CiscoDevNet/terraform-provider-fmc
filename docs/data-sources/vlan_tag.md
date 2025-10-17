@@ -25,12 +25,12 @@ data "fmc_vlan_tag" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object.
+- `name` (String) Name of the VLAN Tag object.
 
 ### Read-Only
 
 - `description` (String) Description of the object.
 - `end_tag` (String) VLAN Tag end value.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `start_tag` (String) VLAN Tag starting value.
 - `type` (String) Type of the object; this value is always 'VlanTag'

@@ -15,13 +15,13 @@ This resource manages Prefilter Policy with corresponding rules.
 ```terraform
 resource "fmc_prefilter_policy" "example" {
   name                              = "my_prefilter_policy"
-  description                       = "My prefilter policy"
+  description                       = "My Prefilter policy"
   default_action                    = "BLOCK_TUNNELS"
   default_action_log_begin          = true
   default_action_log_end            = false
   default_action_send_events_to_fmc = true
-  default_action_syslog_config_id   = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
-  default_action_snmp_config_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  default_action_syslog_alert_id    = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+  default_action_snmp_alert_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   rules = [
     {
       name           = "rule1"
@@ -102,9 +102,9 @@ resource "fmc_prefilter_policy" "example" {
       log_end             = true
       send_events_to_fmc  = true
       send_syslog         = true
-      syslog_config_id    = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+      syslog_alert_id     = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
       syslog_severity     = "DEBUG"
-      snmp_config_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      snmp_alert_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
 }
@@ -117,24 +117,24 @@ resource "fmc_prefilter_policy" "example" {
 
 - `default_action` (String) Specifies the default action to take when none of the rules meet the conditions.
   - Choices: `BLOCK_TUNNELS`, `ANALYZE_TUNNELS`
-- `name` (String) Name of the prefilter policy.
+- `name` (String) Name of the Prefilter policy.
 
 ### Optional
 
-- `default_action_log_begin` (Boolean) Log events at the beginning of the connection.
-- `default_action_log_end` (Boolean) Log events at the end of the connection.
-- `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
-- `default_action_snmp_config_id` (String) UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `default_action_syslog_config_id` (String) UUID of the syslog config. Can be set only when either default_action_log_begin or default_action_log_end is true.
-- `description` (String) Description of the prefilter policy.
+- `default_action_log_begin` (Boolean) Log events at the beginning of the connection for default action.
+- `default_action_log_end` (Boolean) Log events at the end of the connection for default action.
+- `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer for default action.
+- `default_action_snmp_alert_id` (String) Id of the SNMP alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.
+- `default_action_syslog_alert_id` (String) Id of syslog alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.
+- `description` (String) Description of the policy.
 - `domain` (String) Name of the FMC domain
 - `rules` (Attributes List) The ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 
 ### Read-Only
 
-- `default_action_id` (String) Default action ID
+- `default_action_id` (String) Default action Id.
 - `id` (String) Id of the object
-- `type` (String) Object type; This is always `PrefilterPolicy`
+- `type` (String) Type of the object; this value is always `PrefilterPolicy`.
 
 <a id="nestedatt--rules"></a>
 ### Nested Schema for `rules`
@@ -144,38 +144,38 @@ Required:
 - `action` (String) What to do when the conditions defined by the rule are met.
   - Choices: `FASTPATH`, `ANALYZE`, `BLOCK`
 - `name` (String) Name of the rule.
-- `rule_type` (String) Type of the rule. At least one Encapsulation Port Object (encapsulation_ports) is mandatory to be specified for TUNNEL Rules.
+- `rule_type` (String) Type of the rule. At least one Encapsulation Port Object (`encapsulation_ports`) is mandatory to be specified for TUNNEL Rules.
   - Choices: `PREFILTER`, `TUNNEL`
 
 Optional:
 
-- `bidirectional` (Boolean) Indicates whether the rule is bidirectional. Can be true only for TUNNEL rules. Default is false.
+- `bidirectional` (Boolean) Indicates whether the rule is bidirectional. Used for TUNNEL rules.
 - `destination_interfaces` (Attributes Set) Set of objects that represent destination interfaces. (see [below for nested schema](#nestedatt--rules--destination_interfaces))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Networks, Hosts, Ranges or Network Groups). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule (Port or Port Groups). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--destination_port_objects))
-- `enabled` (Boolean) Indicates whether the prefilter rule is in effect (true) or not (false). Default is true.
+- `enabled` (Boolean) Enable the rule.
   - Default value: `true`
-- `encapsulation_ports` (Set of String) List of encapsulation ports to be used.
+- `encapsulation_ports` (Set of String) List of encapsulation ports to be used. Mandatory for TUNNEL rules.
   - Choices: `GRE`, `IP_IN_IP`, `IPV6_IN_IP`, `TEREDO`
-- `log_begin` (Boolean) Log events at the beginning of the connection. Default is false.
-- `log_end` (Boolean) Log events at the end of the connection. Default is false.
-- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. Default is false.
-- `send_syslog` (Boolean) Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging. Default is false.
-- `snmp_config_id` (String) UUID of the SNMP alert associated with the prefilter rule. Can be set only when either log_begin or log_end is true.
+- `log_begin` (Boolean) Log events at the beginning of the connection.
+- `log_end` (Boolean) Log events at the end of the connection.
+- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
+- `send_syslog` (Boolean) Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging.
+- `snmp_alert_id` (String) Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_begin` or `log_end` is true.
 - `source_interfaces` (Attributes Set) Set of objects that represent source interfaces. (see [below for nested schema](#nestedatt--rules--source_interfaces))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Networks, Hosts, Ranges or Network Groups). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (Port or Port Groups). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `syslog_config_id` (String) UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.
+- `syslog_alert_id` (String) Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_begin` or `log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
   - Choices: `ALERT`, `CRIT`, `DEBUG`, `EMERG`, `ERR`, `INFO`, `NOTICE`, `WARNING`
 - `time_range_id` (String) Id of Time Range object applied to the rule.
 - `tunnel_zone_id` (String) Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
-- `vlan_tag_objects` (Attributes Set) Set of objects representing vlan tags or vlan tag groups (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
+- `vlan_tag_objects` (Attributes Set) Set of objects representing vlan tags or vlan tag groups. (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
 
 Read-Only:
 
@@ -241,7 +241,7 @@ Optional:
 
 Optional:
 
-- `value` (String)
+- `value` (String) Network literal value.
 
 
 <a id="nestedatt--rules--source_network_objects"></a>
@@ -249,8 +249,8 @@ Optional:
 
 Required:
 
-- `id` (String) Id of the object
-- `type` (String) Type of the object
+- `id` (String) Id of the object.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--source_port_literals"></a>
@@ -258,11 +258,11 @@ Required:
 
 Required:
 
-- `protocol` (String)
+- `protocol` (String) Protocol number.
 
 Optional:
 
-- `port` (String)
+- `port` (String) Port number.
 
 
 <a id="nestedatt--rules--source_port_objects"></a>

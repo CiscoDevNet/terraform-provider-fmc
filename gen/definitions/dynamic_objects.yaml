@@ -15,7 +15,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Dynamic Object.
+        description: Id of the Dynamic Object.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -26,6 +26,7 @@ attributes:
         type: String
         description: Description of the object.
         example: "My Dynamic Object 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: objectType
         mandatory: true
         type: String

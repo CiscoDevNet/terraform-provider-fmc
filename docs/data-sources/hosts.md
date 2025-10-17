@@ -27,7 +27,7 @@ data "fmc_hosts" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of hosts. The key of the map is the name of the individual Host. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Hosts. The key of the map is the name of the individual Host. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -40,6 +40,6 @@ Read-Only:
 
 - `description` (String) Description of the object.
 - `id` (String) Id of the Host object.
-- `ip` (String) IP of the host.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `ip` (String) IP of the Host.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Host'.

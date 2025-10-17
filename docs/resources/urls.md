@@ -22,9 +22,9 @@ The following restrictions apply:
 ```terraform
 resource "fmc_urls" "example" {
   items = {
-    url_1 = {
-      url         = "https://www.example.com/app"
+    my_urls = {
       description = "My URL"
+      url         = "https://www.example.com/app"
     }
   }
 }
@@ -35,7 +35,7 @@ resource "fmc_urls" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual URL object. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of URLs. The key of the map is the name of the individual URL object. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -50,16 +50,16 @@ resource "fmc_urls" "example" {
 
 Required:
 
-- `url` (String) URL value.
+- `url` (String) The URL string.
 
 Optional:
 
 - `description` (String) Description of the object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 
-- `id` (String) Id of the managed URL object.
+- `id` (String) Id of the URL object.
 - `type` (String) Type of the object; this value is always 'Url'.
 
 ## Import

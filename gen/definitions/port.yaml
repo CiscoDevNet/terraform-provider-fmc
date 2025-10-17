@@ -3,17 +3,16 @@ name: Port
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/protocolportobjects
 doc_category: Objects
 attributes:
-  - model_name: port
-    type: String
-    description: >-
-      Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
-    example: "443"
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the Port object.
     mandatory: true
     example: my_port
     data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ProtocolPortObject'.
+    computed: true
   - model_name: protocol
     type: String
     description: >-
@@ -23,16 +22,18 @@ attributes:
       (e.g. 2048 means IP).
     mandatory: true
     example: TCP
+  - model_name: port
+    type: String
+    description: >-
+      Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
+    example: "443"
   - model_name: description
     type: String
     description: Description of the object.
     example: "Port TCP/443 (HTTPS)"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: overridable
     type: Bool
     description: Indicates whether object values can be overridden.
     exclude_example: true
     test_value: "true"
-  - model_name: type
-    type: String
-    description: Type of the object; this value is always 'ProtocolPortObject'.
-    computed: true

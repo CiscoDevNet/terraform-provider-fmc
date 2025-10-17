@@ -37,8 +37,8 @@ type URLGroup struct {
 	Id          types.String       `tfsdk:"id"`
 	Domain      types.String       `tfsdk:"domain"`
 	Name        types.String       `tfsdk:"name"`
-	Description types.String       `tfsdk:"description"`
 	Type        types.String       `tfsdk:"type"`
+	Description types.String       `tfsdk:"description"`
 	Overridable types.Bool         `tfsdk:"overridable"`
 	Urls        []URLGroupUrls     `tfsdk:"urls"`
 	Literals    []URLGroupLiterals `tfsdk:"literals"`
@@ -115,15 +115,15 @@ func (data *URLGroup) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("description"); value.Exists() {
-		data.Description = types.StringValue(value.String())
-	} else {
-		data.Description = types.StringNull()
-	}
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("description"); value.Exists() {
+		data.Description = types.StringValue(value.String())
+	} else {
+		data.Description = types.StringNull()
 	}
 	if value := res.Get("overridable"); value.Exists() {
 		data.Overridable = types.BoolValue(value.Bool())
@@ -174,15 +174,19 @@ func (data *URLGroup) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-		data.Description = types.StringValue(value.String())
-	} else {
-		data.Description = types.StringNull()
-	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
 	} else {
 		data.Type = types.StringNull()
+	}
+	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+		data.Description = types.StringValue(value.String())
+	} else {
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())

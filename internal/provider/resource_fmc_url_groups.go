@@ -83,7 +83,7 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of url groups. The key of the map is the name of the individual URL Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of URL Groups. The key of the map is the name of the individual URL Group.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -94,10 +94,6 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
-						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
-							Optional:            true,
-						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'UrlGroup'.").String,
 							Computed:            true,
@@ -105,8 +101,12 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+							Optional:            true,
+						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"urls": schema.SetNestedAttribute{
@@ -115,7 +115,7 @@ func (r *URLGroupsResource) Schema(ctx context.Context, req resource.SchemaReque
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Id of the object (such as fmc_url.example.id, etc.).").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
 										Optional:            true,
 									},
 								},

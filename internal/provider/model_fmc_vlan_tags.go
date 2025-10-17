@@ -42,9 +42,9 @@ type VLANTags struct {
 
 type VLANTagsItems struct {
 	Id          types.String `tfsdk:"id"`
+	Type        types.String `tfsdk:"type"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
-	Type        types.String `tfsdk:"type"`
 	StartTag    types.String `tfsdk:"start_tag"`
 	EndTag      types.String `tfsdk:"end_tag"`
 }
@@ -78,13 +78,13 @@ func (data VLANTags) toBody(ctx context.Context, state VLANTags) string {
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
+			itemBody, _ = sjson.Set(itemBody, "type", "VlanTag")
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
 			if !item.Overridable.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
-			itemBody, _ = sjson.Set(itemBody, "type", "VlanTag")
 			if !item.StartTag.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "data.startTag", item.StartTag.ValueString())
 			}
@@ -127,6 +127,11 @@ func (data *VLANTags) fromBody(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
 		if value := res.Get("description"); value.Exists() {
 			data.Description = types.StringValue(value.String())
 		} else {
@@ -136,11 +141,6 @@ func (data *VLANTags) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		if value := res.Get("data.startTag"); value.Exists() {
 			data.StartTag = types.StringValue(value.String())
@@ -185,20 +185,24 @@ func (data *VLANTags) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 			data.Description = types.StringValue(value.String())
 		} else {
-			data.Description = types.StringNull()
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
 		}
 		if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		if value := res.Get("data.startTag"); value.Exists() && !data.StartTag.IsNull() {
 			data.StartTag = types.StringValue(value.String())

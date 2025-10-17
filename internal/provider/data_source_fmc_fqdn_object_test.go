@@ -30,7 +30,7 @@ import (
 
 func TestAccDataSourceFmcFQDNObject(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "name", "my_fqdn_object"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "name", "my_fqdn"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "fqdn", "www.example.com"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "dns_resolution", "IPV4_AND_IPV6"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_fqdn_object.test", "description", "My FQDN Object"))
@@ -61,7 +61,7 @@ func TestAccDataSourceFmcFQDNObject(t *testing.T) {
 
 func testAccDataSourceFmcFQDNObjectConfig() string {
 	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
 	config += `	description = "My FQDN Object"` + "\n"
@@ -78,7 +78,7 @@ func testAccDataSourceFmcFQDNObjectConfig() string {
 
 func testAccNamedDataSourceFmcFQDNObjectConfig() string {
 	config := `resource "fmc_fqdn_object" "test" {` + "\n"
-	config += `	name = "my_fqdn_object"` + "\n"
+	config += `	name = "my_fqdn"` + "\n"
 	config += `	fqdn = "www.example.com"` + "\n"
 	config += `	dns_resolution = "IPV4_AND_IPV6"` + "\n"
 	config += `	description = "My FQDN Object"` + "\n"

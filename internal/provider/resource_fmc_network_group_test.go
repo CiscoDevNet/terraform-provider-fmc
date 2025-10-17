@@ -93,6 +93,7 @@ func testAccFmcNetworkGroupConfig_all() string {
 	config += `	overridable = true` + "\n"
 	config += `	objects = [{` + "\n"
 	config += `		id = fmc_range.test.id` + "\n"
+	config += `		name = fmc_range.test.name` + "\n"
 	config += `	}]` + "\n"
 	config += `	literals = [{` + "\n"
 	config += `		value = "10.1.1.0/24"` + "\n"

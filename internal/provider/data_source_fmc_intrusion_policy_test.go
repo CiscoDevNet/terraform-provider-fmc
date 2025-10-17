@@ -56,7 +56,7 @@ func TestAccDataSourceFmcIntrusionPolicy(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcIntrusionPolicyPrerequisitesConfig = `
-data "fmc_intrusion_policy" "builtin" {
+data "fmc_intrusion_policy" "test" {
   name = "Balanced Security and Connectivity"
 }
 `
@@ -69,7 +69,7 @@ func testAccDataSourceFmcIntrusionPolicyConfig() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
 	config += `	name = "my_intrusion_policy"` + "\n"
 	config += `	description = "My IPS Policy"` + "\n"
-	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
+	config += `	base_policy_id = data.fmc_intrusion_policy.test.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"
 	config += `}` + "\n"
 
@@ -85,7 +85,7 @@ func testAccNamedDataSourceFmcIntrusionPolicyConfig() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
 	config += `	name = "my_intrusion_policy"` + "\n"
 	config += `	description = "My IPS Policy"` + "\n"
-	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
+	config += `	base_policy_id = data.fmc_intrusion_policy.test.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"
 	config += `}` + "\n"
 

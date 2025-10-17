@@ -9,6 +9,6 @@ resource "fmc_device_vni_interface" "example" {
   security_zone_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ipv4_static_address     = "10.2.2.2"
   ipv4_static_netmask     = "24"
-  ipv6_enable             = true
-  ipv6_enable_auto_config = true
+  ipv6                    = true
+  ipv6_auto_config        = true
 }

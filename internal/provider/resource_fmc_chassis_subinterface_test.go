@@ -78,6 +78,7 @@ func testAccFmcChassisSubinterfaceConfig_minimum() string {
 	config += `	interface_id = data.fmc_device_physical_interface.test.name` + "\n"
 	config += `	sub_interface_id = 7` + "\n"
 	config += `	vlan_id = 4094` + "\n"
+	config += `	port_type = "DATA"` + "\n"
 	config += `}` + "\n"
 	return config
 }

@@ -35,7 +35,7 @@ resource "fmc_hosts" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of hosts. The key of the map is the name of the individual Host. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Hosts. The key of the map is the name of the individual Host. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -50,12 +50,12 @@ resource "fmc_hosts" "example" {
 
 Required:
 
-- `ip` (String) IP of the host.
+- `ip` (String) IP of the Host.
 
 Optional:
 
 - `description` (String) Description of the object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 

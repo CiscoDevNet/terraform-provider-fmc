@@ -83,7 +83,7 @@ func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of hosts. The key of the map is the name of the individual Host.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Hosts. The key of the map is the name of the individual Host.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -99,11 +99,11 @@ func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"ip": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("IP of the host.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IP of the Host.").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{

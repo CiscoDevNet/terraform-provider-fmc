@@ -30,8 +30,8 @@ resource "fmc_port_group" "example" {
 
 ### Required
 
-- `name` (String) Name of the object.
-- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--objects))
+- `name` (String) Name of the Port Group object.
+- `objects` (Attributes Set) Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group. (see [below for nested schema](#nestedatt--objects))
 
 ### Optional
 
@@ -49,7 +49,8 @@ resource "fmc_port_group" "example" {
 
 Required:
 
-- `type` (String) - Choices: `ProtocolPortObject`, `ICMPV6Object`, `ICMPV4Object`
+- `type` (String) Type of the port object.
+  - Choices: `ProtocolPortObject`, `ICMPV6Object`, `ICMPV4Object`
 
 Optional:
 

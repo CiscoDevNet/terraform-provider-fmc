@@ -45,8 +45,8 @@ type PrefilterPolicy struct {
 	DefaultActionLogBegin        types.Bool             `tfsdk:"default_action_log_begin"`
 	DefaultActionLogEnd          types.Bool             `tfsdk:"default_action_log_end"`
 	DefaultActionSendEventsToFmc types.Bool             `tfsdk:"default_action_send_events_to_fmc"`
-	DefaultActionSyslogConfigId  types.String           `tfsdk:"default_action_syslog_config_id"`
-	DefaultActionSnmpConfigId    types.String           `tfsdk:"default_action_snmp_config_id"`
+	DefaultActionSyslogAlertId   types.String           `tfsdk:"default_action_syslog_alert_id"`
+	DefaultActionSnmpAlertId     types.String           `tfsdk:"default_action_snmp_alert_id"`
 	Rules                        []PrefilterPolicyRules `tfsdk:"rules"`
 }
 
@@ -76,9 +76,9 @@ type PrefilterPolicyRules struct {
 	LogEnd                     types.Bool                                       `tfsdk:"log_end"`
 	SendEventsToFmc            types.Bool                                       `tfsdk:"send_events_to_fmc"`
 	SendSyslog                 types.Bool                                       `tfsdk:"send_syslog"`
-	SyslogConfigId             types.String                                     `tfsdk:"syslog_config_id"`
+	SyslogAlertId              types.String                                     `tfsdk:"syslog_alert_id"`
 	SyslogSeverity             types.String                                     `tfsdk:"syslog_severity"`
-	SnmpConfigId               types.String                                     `tfsdk:"snmp_config_id"`
+	SnmpAlertId                types.String                                     `tfsdk:"snmp_alert_id"`
 }
 
 type PrefilterPolicyRulesSourceInterfaces struct {
@@ -164,11 +164,11 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 	if !data.DefaultActionSendEventsToFmc.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.sendEventsToFMC", data.DefaultActionSendEventsToFmc.ValueBool())
 	}
-	if !data.DefaultActionSyslogConfigId.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.syslogConfig.id", data.DefaultActionSyslogConfigId.ValueString())
+	if !data.DefaultActionSyslogAlertId.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.syslogConfig.id", data.DefaultActionSyslogAlertId.ValueString())
 	}
-	if !data.DefaultActionSnmpConfigId.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpConfigId.ValueString())
+	if !data.DefaultActionSnmpAlertId.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpAlertId.ValueString())
 	}
 	if len(data.Rules) > 0 {
 		body, _ = sjson.Set(body, "dummy_rules", []any{})
@@ -363,14 +363,14 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 			if !item.SendSyslog.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableSyslog", item.SendSyslog.ValueBool())
 			}
-			if !item.SyslogConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogConfigId.ValueString())
+			if !item.SyslogAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogAlertId.ValueString())
 			}
 			if !item.SyslogSeverity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "syslogSeverity", item.SyslogSeverity.ValueString())
 			}
-			if !item.SnmpConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpConfigId.ValueString())
+			if !item.SnmpAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpAlertId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
 		}
@@ -424,14 +424,14 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultActionSendEventsToFmc = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() {
-		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
+		data.DefaultActionSyslogAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSyslogConfigId = types.StringNull()
+		data.DefaultActionSyslogAlertId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() {
-		data.DefaultActionSnmpConfigId = types.StringValue(value.String())
+		data.DefaultActionSnmpAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSnmpConfigId = types.StringNull()
+		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
 		data.Rules = make([]PrefilterPolicyRules, 0)
@@ -707,9 +707,9 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.SendSyslog = types.BoolNull()
 			}
 			if value := res.Get("syslogConfig.id"); value.Exists() {
-				data.SyslogConfigId = types.StringValue(value.String())
+				data.SyslogAlertId = types.StringValue(value.String())
 			} else {
-				data.SyslogConfigId = types.StringNull()
+				data.SyslogAlertId = types.StringNull()
 			}
 			if value := res.Get("syslogSeverity"); value.Exists() {
 				data.SyslogSeverity = types.StringValue(value.String())
@@ -717,9 +717,9 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.SyslogSeverity = types.StringNull()
 			}
 			if value := res.Get("snmpConfig.id"); value.Exists() {
-				data.SnmpConfigId = types.StringValue(value.String())
+				data.SnmpAlertId = types.StringValue(value.String())
 			} else {
-				data.SnmpConfigId = types.StringNull()
+				data.SnmpAlertId = types.StringNull()
 			}
 			(*parent).Rules = append((*parent).Rules, data)
 			return true
@@ -776,15 +776,15 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.DefaultActionSendEventsToFmc = types.BoolNull()
 	}
-	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() && !data.DefaultActionSyslogConfigId.IsNull() {
-		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
+	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() && !data.DefaultActionSyslogAlertId.IsNull() {
+		data.DefaultActionSyslogAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSyslogConfigId = types.StringNull()
+		data.DefaultActionSyslogAlertId = types.StringNull()
 	}
-	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() && !data.DefaultActionSnmpConfigId.IsNull() {
-		data.DefaultActionSnmpConfigId = types.StringValue(value.String())
+	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() && !data.DefaultActionSnmpAlertId.IsNull() {
+		data.DefaultActionSnmpAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSnmpConfigId = types.StringNull()
+		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
 	{
 		l := len(res.Get("dummy_rules").Array())
@@ -1417,20 +1417,20 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.SendSyslog = types.BoolNull()
 		}
-		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogConfigId.IsNull() {
-			data.SyslogConfigId = types.StringValue(value.String())
+		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogAlertId.IsNull() {
+			data.SyslogAlertId = types.StringValue(value.String())
 		} else {
-			data.SyslogConfigId = types.StringNull()
+			data.SyslogAlertId = types.StringNull()
 		}
 		if value := res.Get("syslogSeverity"); value.Exists() && !data.SyslogSeverity.IsNull() {
 			data.SyslogSeverity = types.StringValue(value.String())
 		} else {
 			data.SyslogSeverity = types.StringNull()
 		}
-		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpConfigId.IsNull() {
-			data.SnmpConfigId = types.StringValue(value.String())
+		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpAlertId.IsNull() {
+			data.SnmpAlertId = types.StringValue(value.String())
 		} else {
-			data.SnmpConfigId = types.StringNull()
+			data.SnmpAlertId = types.StringNull()
 		}
 		(*parent).Rules[i] = data
 	}

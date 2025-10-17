@@ -32,10 +32,10 @@ import (
 func TestAccFmcPorts(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ports.test", "items.my_ports.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.port", "443"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.protocol", "TCP"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.description", "Port TCP/443 (HTTPS)"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ports.test", "items.my_ports.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.protocol", "TCP"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.port", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ports.test", "items.my_ports.description", "Port TCP/443 (HTTPS)"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -79,8 +79,8 @@ func testAccFmcPortsConfig_minimum() string {
 func testAccFmcPortsConfig_all() string {
 	config := `resource "fmc_ports" "test" {` + "\n"
 	config += `	items = { "my_ports" = {` + "\n"
-	config += `		port = "443"` + "\n"
 	config += `		protocol = "TCP"` + "\n"
+	config += `		port = "443"` + "\n"
 	config += `		description = "Port TCP/443 (HTTPS)"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `	}}` + "\n"

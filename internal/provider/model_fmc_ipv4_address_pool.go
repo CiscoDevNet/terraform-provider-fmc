@@ -141,7 +141,11 @@ func (data *IPv4AddressPool) fromBodyPartial(ctx context.Context, res gjson.Resu
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("ipAddressRange"); value.Exists() && !data.Range.IsNull() {
 		data.Range = types.StringValue(value.String())

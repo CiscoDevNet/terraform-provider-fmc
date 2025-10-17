@@ -66,13 +66,13 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of port groups. The key of the map is the name of the individual Port Group.",
+				MarkdownDescription: "Map of Port Groups. The key of the map is the name of the individual Port Group.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Port Groups.",
+							MarkdownDescription: "Id of the Port Group.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -88,7 +88,7 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -97,7 +97,7 @@ func (d *PortGroupsDataSource) Schema(ctx context.Context, req datasource.Schema
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Type of the port object.",
 										Computed:            true,
 									},
 								},

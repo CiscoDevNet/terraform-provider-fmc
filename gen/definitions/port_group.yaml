@@ -5,7 +5,7 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the Port Group object.
     mandatory: true
     example: my_port_group
     data_source_query: true
@@ -17,6 +17,7 @@ attributes:
     type: String
     description: Description of the object.
     example: "My port group description"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: overridable
     type: Bool
     description: Indicates whether object values can be overridden.
@@ -25,6 +26,7 @@ attributes:
   - model_name: objects
     type: Set
     mandatory: true
+    description: Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group.
     attributes:
       - model_name: id
         type: String
@@ -36,7 +38,9 @@ attributes:
         type: String
         mandatory: true
         enum_values: [ProtocolPortObject, ICMPV6Object, ICMPV4Object]
+        description: Type of the port object.
         example: ProtocolPortObject
+        test_value: fmc_port.test.type
 
 test_prerequisites: |-
   resource "fmc_port" "test" {

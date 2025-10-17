@@ -71,17 +71,21 @@ func (d *PortDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"port": schema.StringAttribute{
-				MarkdownDescription: "Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.",
+			"name": schema.StringAttribute{
+				MarkdownDescription: "Name of the Port object.",
+				Optional:            true,
 				Computed:            true,
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
-				Optional:            true,
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'ProtocolPortObject'.",
 				Computed:            true,
 			},
 			"protocol": schema.StringAttribute{
 				MarkdownDescription: "IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).",
+				Computed:            true,
+			},
+			"port": schema.StringAttribute{
+				MarkdownDescription: "Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -90,10 +94,6 @@ func (d *PortDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 			},
 			"overridable": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether object values can be overridden.",
-				Computed:            true,
-			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'ProtocolPortObject'.",
 				Computed:            true,
 			},
 		},

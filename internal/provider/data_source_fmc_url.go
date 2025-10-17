@@ -72,24 +72,24 @@ func (d *URLDataSource) Schema(ctx context.Context, req datasource.SchemaRequest
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
+				MarkdownDescription: "Name of the URL object.",
 				Optional:            true,
 				Computed:            true,
 			},
-			"url": schema.StringAttribute{
-				MarkdownDescription: "URL value.",
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'Url'.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
 				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
-			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+			"url": schema.StringAttribute{
+				MarkdownDescription: "The URL string.",
 				Computed:            true,
 			},
-			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'Url'.",
+			"overridable": schema.BoolAttribute{
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 		},

@@ -87,7 +87,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"nve_number": schema.Int64Attribute{
-				MarkdownDescription: "VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.",
+				MarkdownDescription: "VTEP policy NVE number. If null, not mapped to a VTEP.",
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -107,7 +107,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: "Priority 0-65535.",
+				MarkdownDescription: "Priority.",
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
@@ -122,15 +122,15 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
 				Computed:            true,
 			},
-			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.",
+			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: "Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.",
 				Computed:            true,
 			},
-			"ipv4_dhcp_route_metric": schema.Int64Attribute{
-				MarkdownDescription: "The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.",
+			"ipv4_dhcp_default_route_metric": schema.Int64Attribute{
+				MarkdownDescription: "The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.",
 				Computed:            true,
 			},
-			"ipv6_enable": schema.BoolAttribute{
+			"ipv6": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable IPv6.",
 				Computed:            true,
 			},
@@ -138,19 +138,19 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 				Computed:            true,
 			},
-			"ipv6_enable_auto_config": schema.BoolAttribute{
+			"ipv6_auto_config": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable IPv6 autoconfiguration.",
 				Computed:            true,
 			},
-			"ipv6_enable_dhcp_address": schema.BoolAttribute{
+			"ipv6_dhcp_address": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable DHCPv6 for address config.",
 				Computed:            true,
 			},
-			"ipv6_enable_dhcp_nonaddress": schema.BoolAttribute{
+			"ipv6_dhcp_nonaddress": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable DHCPv6 for non-address config.",
 				Computed:            true,
 			},
-			"ipv6_enable_ra": schema.BoolAttribute{
+			"ipv6_ra": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable IPv6 router advertisement (RA).",
 				Computed:            true,
 			},
@@ -174,7 +174,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 					},
 				},
 			},
-			"enable_proxy": schema.BoolAttribute{
+			"proxy": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable proxy.",
 				Computed:            true,
 			},

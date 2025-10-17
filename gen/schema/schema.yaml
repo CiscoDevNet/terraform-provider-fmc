@@ -67,4 +67,5 @@ attribute:
   data_source_query: bool(required=False) # Set to true if the attribute can be used in the data source query. This is supported only for top-level attributes.
   data_source_optional_parameter: bool(required=False) # Set to true if the attribute can be used as an optional parameter in the data source query. This is supported only for top-level attributes.
   sensitive: bool(required=False) # Set to true if the attribute is sensitive
+  missing_in_response_if_set_to_empty_string: bool(required=False) # Set to true if the attribute is missing in the API GET response when it has been set to an empty string
   attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"

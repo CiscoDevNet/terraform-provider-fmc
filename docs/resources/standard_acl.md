@@ -3,14 +3,16 @@
 page_title: "fmc_standard_acl Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource manages a Standard ACL.
+  This resource manages Standard ACL (Access Control List / Access List) Object.
+  This object is deprecated. Please use fmc_standard_access_list instead.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.2
 ---
 
 # fmc_standard_acl (Resource)
 
-This resource manages a Standard ACL.
+This resource manages Standard ACL (Access Control List / Access List) Object.
+This object is deprecated. Please use `fmc_standard_access_list` instead.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
@@ -45,7 +47,7 @@ resource "fmc_standard_acl" "example" {
 ### Required
 
 - `entries` (Attributes List) Ordered list of ACL's entries. (see [below for nested schema](#nestedatt--entries))
-- `name` (String) Name of the object.
+- `name` (String) Name of the Standard ACL object.
 
 ### Optional
 
@@ -62,13 +64,13 @@ resource "fmc_standard_acl" "example" {
 
 Required:
 
-- `action` (String) Indicates the redistribution access: PERMIT or DENY.
+- `action` (String) Action for the rule.
   - Choices: `PERMIT`, `DENY`
 
 Optional:
 
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--entries--literals))
-- `objects` (Attributes Set) Set of objects (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--objects))
+- `objects` (Attributes Set) Set of objects (Host, Network, Network Group). (see [below for nested schema](#nestedatt--entries--objects))
 
 <a id="nestedatt--entries--literals"></a>
 ### Nested Schema for `entries.literals`
@@ -84,7 +86,7 @@ Optional:
 Optional:
 
 - `id` (String) Id of the object.
-- `type` (String) Type of the object (such as fmc_network.this.type, etc.).
+- `type` (String) Type of the object.
 
 ## Import
 

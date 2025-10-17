@@ -8,8 +8,7 @@ minimum_version: "7.4"
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the File Category. There can be only build-in File Categories.
+    description: Name of the File Category.
     mandatory: true
     example: PDF files
     data_source_query: true

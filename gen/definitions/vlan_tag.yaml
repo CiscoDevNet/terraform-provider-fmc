@@ -5,20 +5,11 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the VLAN Tag object.
     mandatory: true
     example: my_vlan_tag
     data_source_query: true
-  - model_name: description
-    type: String
-    description: Description of the object.
-    example: "My VLAN Tag"
-    mandatory: false
-  - model_name: overridable
-    type: Bool
-    description: Indicates whether object values can be overridden.
-    example: true
-    # Type is defined twice on purpose, as this needs to be an attribute, but also is required for POST/PUT requests
+  # Type is defined twice on purpose, as this needs to be an attribute, but also is required for POST/PUT requests
   - model_name: type
     type: String
     description: Type of the object; this value is always 'VlanTag'
@@ -27,6 +18,16 @@ attributes:
     type: String
     description: Type of the object; this value is always 'VlanTag'
     value: VlanTag
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My VLAN Tag"
+    mandatory: false
+    missing_in_response_if_set_to_empty_string: true
+  - model_name: overridable
+    type: Bool
+    description: Whether the object values can be overridden.
+    example: true
   - model_name: startTag
     type: String
     example: "12"

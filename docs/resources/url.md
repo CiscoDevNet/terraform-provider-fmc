@@ -15,8 +15,8 @@ This resource manages an URL.
 ```terraform
 resource "fmc_url" "example" {
   name        = "my_url"
-  url         = "https://www.example.com/app"
   description = "My URL"
+  url         = "https://www.example.com/app"
 }
 ```
 
@@ -25,14 +25,14 @@ resource "fmc_url" "example" {
 
 ### Required
 
-- `name` (String) Name of the object.
-- `url` (String) URL value.
+- `name` (String) Name of the URL object.
+- `url` (String) The URL string.
 
 ### Optional
 
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 

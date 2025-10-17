@@ -59,7 +59,7 @@ func (d *SGTDataSource) Metadata(_ context.Context, req datasource.MetadataReque
 func (d *SGTDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the SGT.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the SGT (Security Group Tag) Object.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

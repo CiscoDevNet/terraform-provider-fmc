@@ -64,7 +64,8 @@ func (r *FQDNObjectResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN (Fully Qualified Domain Name) Object.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdn` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdn` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -103,7 +104,7 @@ func (r *FQDNObjectResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"type": schema.StringAttribute{
@@ -310,3 +311,15 @@ func (r *FQDNObjectResource) ImportState(ctx context.Context, req resource.Impor
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

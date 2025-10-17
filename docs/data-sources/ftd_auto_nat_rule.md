@@ -33,19 +33,19 @@ data "fmc_ftd_auto_nat_rule" "example" {
 
 ### Read-Only
 
-- `destination_interface_id` (String) ID of destination security zone or interface group
-- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
+- `destination_interface_id` (String) ID of destination security zone or interface group.
+- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
-- `nat_type` (String) Type of the rule
-- `net_to_net` (Boolean) Net to Net Mapping
-- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface
-- `original_network_id` (String) ID of original network object (host, network or range)
-- `original_port` (Number) Original port number
-- `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface
-- `protocol` (String) Service protocol
-- `source_interface_id` (String) ID of source security zone or interface group
-- `translate_dns` (Boolean) Translate DNS replies that match this rule
-- `translated_network_id` (String) ID of translated network object (host, network or range)
-- `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address
-- `translated_port` (Number) Translated port number
+- `nat_type` (String) Type of the rule.
+- `net_to_net` (Boolean) Net to Net Mapping.
+- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
+- `original_network_id` (String) ID of original network object (Host, Network or Range).
+- `original_port` (Number) Original port number.
+- `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
+- `protocol` (String) Service protocol.
+- `source_interface_id` (String) ID of source security zone or interface group.
+- `translate_dns` (Boolean) Translate DNS replies that match this rule.
+- `translated_network_id` (String) ID of translated network object (Host, Network or Range).
+- `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address.
+- `translated_port` (Number) Translated port number.
 - `type` (String) Type of the object; this value is always 'FTDAutoNatRule'.

@@ -15,7 +15,7 @@ This data source reads the VLAN Tag Groups.
 ```terraform
 data "fmc_vlan_tag_groups" "example" {
   items = {
-    "fmc_vlan_tag_groups" = {
+    "vlan_tag_groups" = {
     }
   }
 }
@@ -27,7 +27,7 @@ data "fmc_vlan_tag_groups" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of VLAN Tag Groups. The key of the map is the name of the individual VLAN Tag Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -41,7 +41,7 @@ Read-Only:
 - `description` (String) Description of the object.
 - `id` (String) Id of the managed VLAN Tag Group.
 - `literals` (Attributes Set) Set of literal values to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--items--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'VlanGroupTag'
 - `vlan_tags` (Attributes Set) Set of VLAN Tag objects to be included in the VLAN Tag group. (see [below for nested schema](#nestedatt--items--vlan_tags))
 

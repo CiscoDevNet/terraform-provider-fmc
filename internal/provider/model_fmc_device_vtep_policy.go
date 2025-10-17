@@ -136,7 +136,7 @@ func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
 			if value := res.Get("nveVtepId"); value.Exists() {
 				data.NveNumber = types.Int64Value(value.Int())
 			} else {
-				data.NveNumber = types.Int64Null()
+				data.NveNumber = types.Int64Value(1)
 			}
 			if value := res.Get("nveDestinationPort"); value.Exists() {
 				data.EncapsulationPort = types.Int64Value(value.Int())
@@ -231,7 +231,7 @@ func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Res
 		}
 		if value := res.Get("nveVtepId"); value.Exists() && !data.NveNumber.IsNull() {
 			data.NveNumber = types.Int64Value(value.Int())
-		} else {
+		} else if data.NveNumber.ValueInt64() != 1 {
 			data.NveNumber = types.Int64Null()
 		}
 		if value := res.Get("nveDestinationPort"); value.Exists() && !data.EncapsulationPort.IsNull() {

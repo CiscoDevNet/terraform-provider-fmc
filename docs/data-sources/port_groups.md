@@ -27,7 +27,7 @@ data "fmc_port_groups" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of port groups. The key of the map is the name of the individual Port Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Port Groups. The key of the map is the name of the individual Port Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -39,8 +39,8 @@ data "fmc_port_groups" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed Port Groups.
-- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--items--objects))
+- `id` (String) Id of the Port Group.
+- `objects` (Attributes Set) Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group. (see [below for nested schema](#nestedatt--items--objects))
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
@@ -50,4 +50,4 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Id of the port object.
-- `type` (String)
+- `type` (String) Type of the port object.

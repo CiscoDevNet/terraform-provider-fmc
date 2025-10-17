@@ -8,9 +8,9 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of url groups. The key of the map is the name of the individual URL Group.
+      Map of URL Groups. The key of the map is the name of the individual URL Group.
     mandatory: true
-    map_key_example: url_group_1
+    map_key_example: my_url_groups
     attributes:
       - model_name: id
         type: String
@@ -18,17 +18,18 @@ attributes:
         description: Id of the managed URL Group.
         exclude_example: true
         exclude_test: true
-      - model_name: description
-        type: String
-        description: Description of the object.
-        example: "My URL group"
       - model_name: type
         type: String
         description: Type of the object; this value is always 'UrlGroup'.
         computed: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My URL group"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
-        description: Indicates whether object values can be overridden.
+        description: Whether the object values can be overridden.
         exclude_example: true
         test_value: "true"
       - model_name: objects
@@ -39,7 +40,7 @@ attributes:
         attributes:
           - model_name: id
             type: String
-            description: Id of the object (such as fmc_url.example.id, etc.).
+            description: Id of the object.
             id: true
             example: 0050568A-FAC7-0ed3-0000-004294987896
             test_value: fmc_url.test.id
@@ -51,8 +52,9 @@ attributes:
             type: String
             description: URL literal value.
             example: "https://www.example.com/app"
+
 test_prerequisites: |-
   resource "fmc_url" "test" {
-    name        = "url_1"
+    name        = "url_groups"
     url         = "https://www.example.com/app"
   }
