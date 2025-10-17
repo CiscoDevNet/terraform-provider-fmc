@@ -44,6 +44,8 @@ description: |-
 - (Change): Rename `fmc_icmpv6_objects` to `fmc_icmpv6s`. `fmc_icmpv6_objects` will be removed in future releases
 - (Change): Rename `fmc_standard_acl` to `fmc_standard_access_list`. `fmc_standard_acl` will be removed in future releases
 - (Change): Rename `fmc_extended_acl` to `fmc_extended_access_list`. `fmc_extended_acl` will be removed in future releases
+- (Fix): `fmc_device`: Computed parameters are not refreshed on Update
+- (Fix): `fmc_chassis_logical_devices`: Computed parameters are not refreshed on Update
 - (Enhancement) Add support for `fmc_network_groups` data source
 - (Enhancement) `domain` support for importing non-bulk resources
 

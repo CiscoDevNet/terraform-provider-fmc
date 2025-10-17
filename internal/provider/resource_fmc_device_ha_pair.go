@@ -541,6 +541,8 @@ func (r *DeviceHAPairResource) Update(ctx context.Context, req resource.UpdateRe
 		return
 	}
 
+	plan.fromBodyUnknowns(ctx, res)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)

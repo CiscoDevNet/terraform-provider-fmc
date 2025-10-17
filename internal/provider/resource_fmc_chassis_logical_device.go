@@ -508,6 +508,8 @@ func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.
 		}
 	}
 
+	plan.fromBodyUnknowns(ctx, res)
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
