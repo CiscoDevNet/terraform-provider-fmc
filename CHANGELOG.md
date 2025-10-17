@@ -1,6 +1,6 @@
 ## 2.0.0-rc8 (Unreleased)
 
-- BREAKING CHANGE: `fmc_device_physical_interface`, `fmc_device_etherchannel_interface`, `fmc_device_subinterface`: Update attribute names
+- BREAKING CHANGE: Range of `fmc_device_*_interface`, objects: Update attribute names
     - `ipv4_dhcp_obtain_route` -> `ipv4_dhcp_obtain_default_route`
     - `ipv4_dhcp_route_metric` -> `ipv4_dhcp_default_route_metric`
     - Removed `enable` from several ipv6 related attributes

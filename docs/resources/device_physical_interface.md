@@ -145,11 +145,14 @@ Optional:
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`
 
-Optional:
+Required:
 
 - `address` (String) IPv6 address without a slash and prefix.
-- `enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `prefix` (String) Prefix width for the IPv6 address.
+
+Optional:
+
+- `enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 
 
 <a id="nestedatt--ipv6_prefixes"></a>

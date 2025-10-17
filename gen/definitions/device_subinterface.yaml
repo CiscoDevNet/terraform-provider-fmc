@@ -248,11 +248,13 @@ attributes:
         type: String
         description: IPv6 address without a slash and prefix.
         id: true
+        mandatory: true
         example: "2004::"
       - model_name: prefix
         type: String
         description: Prefix width for the IPv6 address.
         id: true
+        mandatory: true
         example: "124"
       - model_name: enforceEUI64
         tf_name: enforce_eui

@@ -40,7 +40,7 @@ attributes:
   - model_name: vtepID
     tf_name: nve_number
     type: Int64
-    description: VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.
+    description: VTEP policy NVE number. If null, not mapped to a VTEP.
     min_int: 1
     max_int: 10000
     example: 1
@@ -71,16 +71,16 @@ attributes:
     exclude_test: true
   - model_name: priority
     type: Int64
-    description: Priority 0-65535.
+    description: Priority.
+    min_int: 0
+    max_int: 65535
     exclude_example: true
     exclude_test: true
   - model_name: id
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
-    description: >-
-      Id of the assigned security zone. Can only be used when `logical_name`
-      is set.
+    description: Id of the assigned security zone. Can only be used when `logical_name` is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_security_zone.test.id
     minimum_test_value: "null"
@@ -102,30 +102,30 @@ attributes:
     example: "24"
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
-    tf_name: ipv4_dhcp_obtain_route
+    tf_name: ipv4_dhcp_obtain_default_route
     type: Bool
     description: >-
       Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
-      from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1.
-      Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be
+      default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1.
+      Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be
       non-null.
-      The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.
+      The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
     exclude_example: true
     exclude_test: true
   - model_name: dhcpRouteMetric
     data_path: [ipv4, dhcp]
-    tf_name: ipv4_dhcp_route_metric
+    tf_name: ipv4_dhcp_default_route_metric
     type: Int64
     description: >-
-      The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be
-      null when using ipv4_static_address.
+      The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be
+      null when using `ipv4_static_address`.
     min_int: 1
     max_int: 255
     exclude_example: true
     exclude_test: true
   - model_name: enableIPV6
     data_path: [ipv6]
-    tf_name: ipv6_enable
+    tf_name: ipv6
     description: Indicates whether to enable IPv6.
     type: Bool
     example: "true"
@@ -138,27 +138,27 @@ attributes:
     test_value: "true"
   - model_name: enableAutoConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_auto_config
+    tf_name: ipv6_auto_config
     description: Indicates whether to enable IPv6 autoconfiguration.
     type: Bool
     example: "true"
   - model_name: enableDHCPAddrConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_dhcp_address
+    tf_name: ipv6_dhcp_address
     description: Indicates whether to enable DHCPv6 for address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableDHCPNonAddrConfig
     data_path: [ipv6]
-    tf_name: ipv6_enable_dhcp_nonaddress
+    tf_name: ipv6_dhcp_nonaddress
     description: Indicates whether to enable DHCPv6 for non-address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableRA
     data_path: [ipv6]
-    tf_name: ipv6_enable_ra
+    tf_name: ipv6_ra
     description: Indicates whether to enable IPv6 router advertisement (RA).
     type: Bool
     exclude_example: true
@@ -173,12 +173,14 @@ attributes:
         type: String
         description: IPv6 address without a slash and prefix.
         id: true
+        mandatory: true
         exclude_example: true
         test_value: '"2005::"'
       - model_name: prefix
         type: String
         description: Prefix width for the IPv6 address.
         id: true
+        mandatory: true
         exclude_example: true
         test_value: "56"
       - model_name: enforceEUI64
@@ -188,6 +190,7 @@ attributes:
         exclude_example: true
         test_value: "false"
   - model_name: enableProxy
+    tf_name: proxy
     type: Bool
     description: Indicates whether to enable proxy.
     default_value: "false"

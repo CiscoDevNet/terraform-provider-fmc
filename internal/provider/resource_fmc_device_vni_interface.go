@@ -119,7 +119,7 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				},
 			},
 			"nve_number": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VTEP NVE number (fmc_device_vtep_policy.example.vteps[0].nve_number). If null, not mapped to a VTEP.").AddIntegerRangeDescription(1, 10000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VTEP policy NVE number. If null, not mapped to a VTEP.").AddIntegerRangeDescription(1, 10000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 10000),
@@ -144,8 +144,11 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority 0-65535.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Priority.").AddIntegerRangeDescription(0, 65535).String,
 				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 65535),
+				},
 			},
 			"security_zone_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone. Can only be used when `logical_name` is set.").String,
@@ -159,18 +162,18 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
 				Optional:            true,
 			},
-			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining from there the default IPv4 route but anyway requires also ipv4_dhcp_route_metric to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires ipv4_dhcp_route_metric to be non-null. The ipv4_dhcp_obtain_route must be null when using ipv4_static_address.").String,
+			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.").String,
 				Optional:            true,
 			},
-			"ipv4_dhcp_route_metric": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The metric for ipv4_dhcp_obtain_route. Any non-null value enables DHCP as a side effect. Must be null when using ipv4_static_address.").AddIntegerRangeDescription(1, 255).String,
+			"ipv4_dhcp_default_route_metric": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.").AddIntegerRangeDescription(1, 255).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 255),
 				},
 			},
-			"ipv6_enable": schema.BoolAttribute{
+			"ipv6": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6.").String,
 				Optional:            true,
 			},
@@ -178,19 +181,19 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 				Optional:            true,
 			},
-			"ipv6_enable_auto_config": schema.BoolAttribute{
+			"ipv6_auto_config": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 autoconfiguration.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_dhcp_address": schema.BoolAttribute{
+			"ipv6_dhcp_address": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for address config.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_dhcp_nonaddress": schema.BoolAttribute{
+			"ipv6_dhcp_nonaddress": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable DHCPv6 for non-address config.").String,
 				Optional:            true,
 			},
-			"ipv6_enable_ra": schema.BoolAttribute{
+			"ipv6_ra": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 router advertisement (RA).").String,
 				Optional:            true,
 			},
@@ -201,11 +204,11 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"prefix": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
@@ -214,7 +217,7 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 					},
 				},
 			},
-			"enable_proxy": schema.BoolAttribute{
+			"proxy": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable proxy.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,

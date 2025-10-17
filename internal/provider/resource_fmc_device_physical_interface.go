@@ -233,11 +233,11 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"prefix": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
