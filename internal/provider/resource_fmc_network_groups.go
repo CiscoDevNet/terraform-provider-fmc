@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -48,7 +49,8 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource = &NetworkGroupsResource{}
+	_ resource.Resource                = &NetworkGroupsResource{}
+	_ resource.ResourceWithImportState = &NetworkGroupsResource{}
 )
 
 func NewNetworkGroupsResource() resource.Resource {
@@ -338,6 +340,8 @@ func (r *NetworkGroupsResource) Update(ctx context.Context, req resource.UpdateR
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
 
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+
 	body := plan.toBody(ctx, state)
 
 	//orig := state
@@ -346,6 +350,8 @@ func (r *NetworkGroupsResource) Update(ctx context.Context, req resource.UpdateR
 
 	state, diags = r.updateSubresources(ctx, req.Plan, plan, body, req.State, state, reqMods...)
 	resp.Diagnostics.Append(diags...)
+
+	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
 	resp.Diagnostics.Append(diags...)
@@ -380,8 +386,33 @@ func (r *NetworkGroupsResource) Delete(ctx context.Context, req resource.DeleteR
 	tflog.Debug(ctx, fmt.Sprintf("%s: Delete successful", state.Id.ValueString()))
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin import
-// End of section. //template:end import
+func (r *NetworkGroupsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	// Parse import ID
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
+	match := inputPattern.FindStringSubmatch(req.ID)
+	if match == nil {
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,[<item1_name>,<item2_name>,...]\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		resp.Diagnostics.AddError("Import error", errMsg)
+		return
+	}
+
+	// Set domain, if provided
+	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
+	}
+	// Generate new ID (random, does not relate to FMC in any way)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
+
+	// Fill state with names of objects to import
+	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
+	itemsMap := make(map[string]NetworkGroupsItems, len(names))
+	for _, v := range names {
+		itemsMap[v] = NetworkGroupsItems{NetworkGroups: types.SetNull(types.StringType)}
+	}
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
+
+	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
+}
 
 // updateSubresource creates, updates and deletes subresources of the Network Groups resource.
 // updateSubresources returns a coherent state whether it fails or succeeds. Caller should always persist that state

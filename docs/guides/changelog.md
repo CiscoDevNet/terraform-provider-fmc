@@ -46,7 +46,7 @@ description: |-
 - (Change): Rename `fmc_extended_acl` to `fmc_extended_access_list`. `fmc_extended_acl` will be removed in future releases
 - (Fix): `fmc_device`: Computed parameters are not refreshed on Update
 - (Fix): `fmc_chassis_logical_devices`: Computed parameters are not refreshed on Update
-- (Enhancement) Add support for `fmc_network_groups` data source
+- (Enhancement) Add support for `fmc_network_groups` data source and import
 - (Enhancement) `domain` support for importing non-bulk resources
 
 ## 2.0.0-rc7

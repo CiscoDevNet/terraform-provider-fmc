@@ -61,7 +61,7 @@ func main() {
 	flag.Parse()
 
 	opts := providerserver.ServeOpts{
-		Address: "local.providers/local/fmc",
+		Address: "registry.terraform.io/CiscoDevNet/fmc",
 		Debug:   debug,
 	}
 
