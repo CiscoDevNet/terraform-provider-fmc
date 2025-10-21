@@ -224,6 +224,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: linkLocalAddress
+    data_path: [ipv6]
     tf_name: ipv6_link_local_address
     type: String
     description: IPv6 Configuration - Link-Local Address.

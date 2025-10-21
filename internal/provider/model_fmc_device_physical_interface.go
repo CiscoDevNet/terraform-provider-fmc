@@ -227,7 +227,7 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "ipv6.enforceEUI64", data.Ipv6EnforceEui.ValueBool())
 	}
 	if !data.Ipv6LinkLocalAddress.IsNull() {
-		body, _ = sjson.Set(body, "linkLocalAddress", data.Ipv6LinkLocalAddress.ValueString())
+		body, _ = sjson.Set(body, "ipv6.linkLocalAddress", data.Ipv6LinkLocalAddress.ValueString())
 	}
 	if !data.Ipv6AutoConfig.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
@@ -530,7 +530,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 	} else {
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
-	if value := res.Get("linkLocalAddress"); value.Exists() {
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() {
 		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
 	} else {
 		data.Ipv6LinkLocalAddress = types.StringNull()
@@ -937,7 +937,7 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
-	if value := res.Get("linkLocalAddress"); value.Exists() && !data.Ipv6LinkLocalAddress.IsNull() {
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() && !data.Ipv6LinkLocalAddress.IsNull() {
 		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
 	} else {
 		data.Ipv6LinkLocalAddress = types.StringNull()
