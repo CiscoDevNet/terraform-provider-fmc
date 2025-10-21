@@ -39,7 +39,7 @@ resource "fmc_device_bgp_general_settings" "example" {
 - `aggregate_timer` (Number) Interval at which BGP routes will be aggregated or to disable timer-based router aggregation (in seconds).
   - Range: `6`-`60`
 - `as_number_in_path_attribute` (Number) Range to discard routes that have as-path segments that exceed a specified value.
-  - Range: `1`-`254`
+  - Range: `0`-`254`
 - `compare_med_from_different_neighbors` (Boolean) Allow comparing MED from different neighbors
 - `compare_router_id_in_path` (Boolean) Compare Router ID for identical EBGP paths
 - `default_local_preference` (Number) Default local preference
