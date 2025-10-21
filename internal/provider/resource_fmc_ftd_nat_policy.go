@@ -269,7 +269,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 								stringvalidator.OneOf("TCP", "UDP"),
 							},
 						},
-						"perform_route_lookup": schema.BoolAttribute{
+						"route_lookup": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Perform Route Lookup for Destination Interface.").String,
 							Optional:            true,
 						},
@@ -783,7 +783,6 @@ func (r *FTDNATPolicyResource) Delete(ctx context.Context, req resource.DeleteRe
 
 // End of section. //template:end delete
 
-// Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *FTDNATPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
@@ -800,7 +799,7 @@ func (r *FTDNATPolicyResource) ImportState(ctx context.Context, req resource.Imp
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
 
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("manage_rules"), true)...)
+
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end import

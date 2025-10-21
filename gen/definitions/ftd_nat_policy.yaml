@@ -281,7 +281,7 @@ attributes:
         exclude_example: true
         exclude_test: true
       - model_name: routeLookup
-        tf_name: perform_route_lookup
+        tf_name: route_lookup
         type: Bool
         description: Perform Route Lookup for Destination Interface.
         example: false

@@ -35,19 +35,19 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type PrefilterPolicy struct {
-	Id                           types.String           `tfsdk:"id"`
-	Domain                       types.String           `tfsdk:"domain"`
-	Name                         types.String           `tfsdk:"name"`
-	Description                  types.String           `tfsdk:"description"`
-	Type                         types.String           `tfsdk:"type"`
-	DefaultAction                types.String           `tfsdk:"default_action"`
-	DefaultActionId              types.String           `tfsdk:"default_action_id"`
-	DefaultActionLogBegin        types.Bool             `tfsdk:"default_action_log_begin"`
-	DefaultActionLogEnd          types.Bool             `tfsdk:"default_action_log_end"`
-	DefaultActionSendEventsToFmc types.Bool             `tfsdk:"default_action_send_events_to_fmc"`
-	DefaultActionSyslogAlertId   types.String           `tfsdk:"default_action_syslog_alert_id"`
-	DefaultActionSnmpAlertId     types.String           `tfsdk:"default_action_snmp_alert_id"`
-	Rules                        []PrefilterPolicyRules `tfsdk:"rules"`
+	Id                              types.String           `tfsdk:"id"`
+	Domain                          types.String           `tfsdk:"domain"`
+	Name                            types.String           `tfsdk:"name"`
+	Description                     types.String           `tfsdk:"description"`
+	Type                            types.String           `tfsdk:"type"`
+	DefaultAction                   types.String           `tfsdk:"default_action"`
+	DefaultActionId                 types.String           `tfsdk:"default_action_id"`
+	DefaultActionLogConnectionBegin types.Bool             `tfsdk:"default_action_log_connection_begin"`
+	DefaultActionLogConnectionEnd   types.Bool             `tfsdk:"default_action_log_connection_end"`
+	DefaultActionSendEventsToFmc    types.Bool             `tfsdk:"default_action_send_events_to_fmc"`
+	DefaultActionSyslogAlertId      types.String           `tfsdk:"default_action_syslog_alert_id"`
+	DefaultActionSnmpAlertId        types.String           `tfsdk:"default_action_snmp_alert_id"`
+	Rules                           []PrefilterPolicyRules `tfsdk:"rules"`
 }
 
 type PrefilterPolicyRules struct {
@@ -155,11 +155,11 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 	if !data.DefaultAction.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.action", data.DefaultAction.ValueString())
 	}
-	if !data.DefaultActionLogBegin.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.logBegin", data.DefaultActionLogBegin.ValueBool())
+	if !data.DefaultActionLogConnectionBegin.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.logBegin", data.DefaultActionLogConnectionBegin.ValueBool())
 	}
-	if !data.DefaultActionLogEnd.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.logEnd", data.DefaultActionLogEnd.ValueBool())
+	if !data.DefaultActionLogConnectionEnd.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.logEnd", data.DefaultActionLogConnectionEnd.ValueBool())
 	}
 	if !data.DefaultActionSendEventsToFmc.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.sendEventsToFMC", data.DefaultActionSendEventsToFmc.ValueBool())
@@ -409,14 +409,14 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultActionId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.logBegin"); value.Exists() {
-		data.DefaultActionLogBegin = types.BoolValue(value.Bool())
+		data.DefaultActionLogConnectionBegin = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogBegin = types.BoolNull()
+		data.DefaultActionLogConnectionBegin = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.logEnd"); value.Exists() {
-		data.DefaultActionLogEnd = types.BoolValue(value.Bool())
+		data.DefaultActionLogConnectionEnd = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogEnd = types.BoolNull()
+		data.DefaultActionLogConnectionEnd = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.sendEventsToFMC"); value.Exists() {
 		data.DefaultActionSendEventsToFmc = types.BoolValue(value.Bool())
@@ -761,15 +761,15 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.DefaultActionId = types.StringNull()
 	}
-	if value := res.Get("defaultAction.logBegin"); value.Exists() && !data.DefaultActionLogBegin.IsNull() {
-		data.DefaultActionLogBegin = types.BoolValue(value.Bool())
+	if value := res.Get("defaultAction.logBegin"); value.Exists() && !data.DefaultActionLogConnectionBegin.IsNull() {
+		data.DefaultActionLogConnectionBegin = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogBegin = types.BoolNull()
+		data.DefaultActionLogConnectionBegin = types.BoolNull()
 	}
-	if value := res.Get("defaultAction.logEnd"); value.Exists() && !data.DefaultActionLogEnd.IsNull() {
-		data.DefaultActionLogEnd = types.BoolValue(value.Bool())
+	if value := res.Get("defaultAction.logEnd"); value.Exists() && !data.DefaultActionLogConnectionEnd.IsNull() {
+		data.DefaultActionLogConnectionEnd = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogEnd = types.BoolNull()
+		data.DefaultActionLogConnectionEnd = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.sendEventsToFMC"); value.Exists() && !data.DefaultActionSendEventsToFmc.IsNull() {
 		data.DefaultActionSendEventsToFmc = types.BoolValue(value.Bool())

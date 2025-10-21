@@ -93,11 +93,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				MarkdownDescription: "Default action Id.",
 				Computed:            true,
 			},
-			"default_action_log_begin": schema.BoolAttribute{
+			"default_action_log_connection_begin": schema.BoolAttribute{
 				MarkdownDescription: "Log events at the beginning of the connection for default action.",
 				Computed:            true,
 			},
-			"default_action_log_end": schema.BoolAttribute{
+			"default_action_log_connection_end": schema.BoolAttribute{
 				MarkdownDescription: "Log events at the end of the connection for default action.",
 				Computed:            true,
 			},
@@ -106,11 +106,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Computed:            true,
 			},
 			"default_action_syslog_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of syslog alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.",
+				MarkdownDescription: "Id of syslog alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.",
 				Computed:            true,
 			},
 			"default_action_snmp_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the SNMP alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.",
+				MarkdownDescription: "Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.",
 				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
@@ -344,7 +344,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"syslog_alert_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_begin` or `log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
+							MarkdownDescription: "Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
 							Computed:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -352,7 +352,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"snmp_alert_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_begin` or `log_end` is true.",
+							MarkdownDescription: "Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.",
 							Computed:            true,
 						},
 					},

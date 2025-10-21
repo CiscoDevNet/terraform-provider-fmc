@@ -31,11 +31,11 @@ data "fmc_prefilter_policy" "example" {
 
 - `default_action` (String) Specifies the default action to take when none of the rules meet the conditions.
 - `default_action_id` (String) Default action Id.
-- `default_action_log_begin` (Boolean) Log events at the beginning of the connection for default action.
-- `default_action_log_end` (Boolean) Log events at the end of the connection for default action.
+- `default_action_log_connection_begin` (Boolean) Log events at the beginning of the connection for default action.
+- `default_action_log_connection_end` (Boolean) Log events at the end of the connection for default action.
 - `default_action_send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer for default action.
-- `default_action_snmp_alert_id` (String) Id of the SNMP alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.
-- `default_action_syslog_alert_id` (String) Id of syslog alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.
+- `default_action_snmp_alert_id` (String) Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.
+- `default_action_syslog_alert_id` (String) Id of syslog alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.
 - `description` (String) Description of the policy.
 - `rules` (Attributes List) The ordered list of rules. (see [below for nested schema](#nestedatt--rules))
 - `type` (String) Type of the object; this value is always `PrefilterPolicy`.
@@ -61,13 +61,13 @@ Read-Only:
 - `rule_type` (String) Type of the rule. At least one Encapsulation Port Object (`encapsulation_ports`) is mandatory to be specified for TUNNEL Rules.
 - `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
 - `send_syslog` (Boolean) Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging.
-- `snmp_alert_id` (String) Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_begin` or `log_end` is true.
+- `snmp_alert_id` (String) Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.
 - `source_interfaces` (Attributes Set) Set of objects that represent source interfaces. (see [below for nested schema](#nestedatt--rules--source_interfaces))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Networks, Hosts, Ranges or Network Groups). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule (Port or Port Groups). Can be only set for PREFILTER rules. (see [below for nested schema](#nestedatt--rules--source_port_objects))
-- `syslog_alert_id` (String) Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_begin` or `log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.
+- `syslog_alert_id` (String) Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
 - `time_range_id` (String) Id of Time Range object applied to the rule.
 - `tunnel_zone_id` (String) Id of Tunnel Zone. Can be only set for TUNNEL rules with ANALYZE action.

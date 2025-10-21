@@ -137,7 +137,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"default_action_syslog_alert_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the syslog alert. Can be set only when `default_action_syslog_enabled` is true and either `default_action_log_begin` or `default_action_log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the syslog alert. Can be set only when `default_action_syslog_enabled` is true and either `default_action_log_connection_begin` or `default_action_log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
 				Optional:            true,
 			},
 			"default_action_syslog_severity": schema.StringAttribute{
@@ -148,7 +148,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"default_action_snmp_alert_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.").String,
 				Optional:            true,
 			},
 			"default_action_intrusion_policy_id": schema.StringAttribute{
@@ -565,7 +565,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							Default:             booldefault.StaticBool(false),
 						},
 						"log_connection_end": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
@@ -589,7 +589,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							Default:             booldefault.StaticBool(false),
 						},
 						"syslog_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Alert. Can be set only when send_syslog is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
 							Optional:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -600,7 +600,7 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 							},
 						},
 						"snmp_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.").String,
 							Optional:            true,
 						},
 						"description": schema.StringAttribute{
@@ -1226,7 +1226,6 @@ func (r *AccessControlPolicyResource) Delete(ctx context.Context, req resource.D
 
 // End of section. //template:end delete
 
-// Section below is generated&owned by "gen/generator.go". //template:begin import
 func (r *AccessControlPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
@@ -1243,7 +1242,8 @@ func (r *AccessControlPolicyResource) ImportState(ctx context.Context, req resou
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
 
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("manage_categories"), true)...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("manage_rules"), true)...)
+
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end import

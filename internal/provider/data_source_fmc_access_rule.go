@@ -409,11 +409,11 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"log_connection_begin": schema.BoolAttribute{
-				MarkdownDescription: "Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.",
+				MarkdownDescription: "Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, `log_connection_begin` must be false or absent.",
 				Computed:            true,
 			},
 			"log_connection_end": schema.BoolAttribute{
-				MarkdownDescription: "Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.",
+				MarkdownDescription: "Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.",
 				Computed:            true,
 			},
 			"log_files": schema.BoolAttribute{
@@ -421,7 +421,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"send_events_to_fmc": schema.BoolAttribute{
-				MarkdownDescription: "Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.",
+				MarkdownDescription: "Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, `send_events_to_fmc` must be true.",
 				Computed:            true,
 			},
 			"send_syslog": schema.BoolAttribute{
@@ -429,7 +429,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"syslog_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
+				MarkdownDescription: "Id of Syslog Alert. Can be set only when send_syslog is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
 				Computed:            true,
 			},
 			"syslog_severity": schema.StringAttribute{
@@ -437,7 +437,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"snmp_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.",
+				MarkdownDescription: "Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{

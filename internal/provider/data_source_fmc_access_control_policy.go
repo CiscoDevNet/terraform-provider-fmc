@@ -110,7 +110,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"default_action_syslog_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the syslog alert. Can be set only when `default_action_syslog_enabled` is true and either `default_action_log_begin` or `default_action_log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
+				MarkdownDescription: "Id of the syslog alert. Can be set only when `default_action_syslog_enabled` is true and either `default_action_log_connection_begin` or `default_action_log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
 				Computed:            true,
 			},
 			"default_action_syslog_severity": schema.StringAttribute{
@@ -118,7 +118,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"default_action_snmp_alert_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.",
+				MarkdownDescription: "Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.",
 				Computed:            true,
 			},
 			"default_action_intrusion_policy_id": schema.StringAttribute{
@@ -509,7 +509,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							Computed:            true,
 						},
 						"log_connection_end": schema.BoolAttribute{
-							MarkdownDescription: "Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.",
+							MarkdownDescription: "Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.",
 							Computed:            true,
 						},
 						"log_files": schema.BoolAttribute{
@@ -525,7 +525,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							Computed:            true,
 						},
 						"syslog_alert_id": schema.StringAttribute{
-							MarkdownDescription: "Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
+							MarkdownDescription: "Id of Syslog Alert. Can be set only when send_syslog is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration in Access Control Policy Logging applies.",
 							Computed:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -533,7 +533,7 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 							Computed:            true,
 						},
 						"snmp_alert_id": schema.StringAttribute{
-							MarkdownDescription: "Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.",
+							MarkdownDescription: "Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{

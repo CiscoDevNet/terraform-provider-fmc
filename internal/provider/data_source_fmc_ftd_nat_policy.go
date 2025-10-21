@@ -239,7 +239,7 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 							MarkdownDescription: "Service protocol.",
 							Computed:            true,
 						},
-						"perform_route_lookup": schema.BoolAttribute{
+						"route_lookup": schema.BoolAttribute{
 							MarkdownDescription: "Perform Route Lookup for Destination Interface.",
 							Computed:            true,
 						},

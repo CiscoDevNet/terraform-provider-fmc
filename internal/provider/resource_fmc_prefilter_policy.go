@@ -117,11 +117,11 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"default_action_log_begin": schema.BoolAttribute{
+			"default_action_log_connection_begin": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection for default action.").String,
 				Optional:            true,
 			},
-			"default_action_log_end": schema.BoolAttribute{
+			"default_action_log_connection_end": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection for default action.").String,
 				Optional:            true,
 			},
@@ -130,11 +130,11 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 				Optional:            true,
 			},
 			"default_action_syslog_alert_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of syslog alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of syslog alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.").String,
 				Optional:            true,
 			},
 			"default_action_snmp_alert_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert. Can be set only when either `default_action_log_begin` or `default_action_log_end` is true.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.").String,
 				Optional:            true,
 			},
 			"rules": schema.ListNestedAttribute{
@@ -381,7 +381,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"syslog_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_begin` or `log_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.").String,
 							Optional:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -392,7 +392,7 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"snmp_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_begin` or `log_end` is true.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.").String,
 							Optional:            true,
 						},
 					},

@@ -44,7 +44,6 @@ func TestAccFmcDeviceHAPair(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "ha_link_netmask", "255.255.255.0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_interface_name", "GigabitEthernet0/0"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_logical_name", "Stateful-INTERFACE"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_use_ipv6", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_primary_ip", "10.10.10.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_secondary_ip", "10.10.10.2"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ha_pair.test", "state_link_netmask", "255.255.255.0"))

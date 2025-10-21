@@ -480,7 +480,7 @@ attributes:
         type: Bool
         description: >-
           Log events at the end of the connection. If 'MONITOR' action is selected
-          for access rule, log_end must be true.
+          for access rule, `log_connection_end` must be true.
         default_value: "false"
         example: "true"
       - model_name: logFiles
@@ -510,7 +510,7 @@ attributes:
         type: String
         description: >-
           Id of Syslog Alert. Can be set only when send_syslog is true and either
-          log_begin or log_end is true. If not set, the default syslog configuration
+          `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration
           in Access Control Policy Logging applies.
         example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
         exclude_test: true
@@ -533,7 +533,7 @@ attributes:
         tf_name: snmp_alert_id
         type: String
         description: >-
-          Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end
+          Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end`
           is true.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         exclude_test: true

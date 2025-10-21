@@ -464,7 +464,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							Default:             booldefault.StaticBool(false),
 						},
 						"log_connection_end": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
@@ -488,7 +488,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							Default:             booldefault.StaticBool(false),
 						},
 						"syslog_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Alert. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Syslog Alert. Can be set only when send_syslog is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration in Access Control Policy Logging applies.").String,
 							Optional:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
@@ -499,7 +499,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"snmp_alert_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.").String,
 							Optional:            true,
 						},
 						"description": schema.StringAttribute{

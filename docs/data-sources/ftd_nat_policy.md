@@ -49,8 +49,8 @@ Read-Only:
 - `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
 - `original_network_id` (String) ID of original network object (Host, Network or Range).
 - `original_port` (Number) Original port number.
-- `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
 - `protocol` (String) Service protocol.
+- `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
 - `source_interface_id` (String) ID of source security zone or interface group.
 - `translate_dns` (Boolean) Translate DNS replies that match this rule.
 - `translated_network_id` (String) ID of translated network object (Host, Network or Range).

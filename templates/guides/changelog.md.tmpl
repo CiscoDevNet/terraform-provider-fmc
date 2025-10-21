@@ -28,6 +28,8 @@ description: |-
     - `min_transmit` -> `minimum_transmit`
     - `tx_rx_multiplier` -> `multiplier`
 - BREAKING CHANGE: `fmc_prefilter_policy`: Update attribute names
+    - `default_action_log_begin` -> `default_action_log_connection_begin`
+    - `default_action_log_end` -> `default_action_log_connection_end`
     - `*snmp_config*` -> `*snmp_alert*`
     - `*syslog_config*` -> `*syslog_alert*`
 - BREAKING CHANGE: `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Update attribute names
@@ -36,6 +38,8 @@ description: |-
     - `*snmp_config*` -> `*snmp_alert*`
     - `*syslog_config*` -> `*syslog_alert*`
     - add `default_action_variable_set_id`
+- BREAKING CHANGE: `fmc_ftd_nat_policy`: Update attribute names
+    - Auto nat rules: `perform_route_lookup` -> `route_lookup`
 - (Change): Rename `fmc_fqdn_object` to `fmc_fqdn`. `fmc_fqdn_object` will be removed in future releases
 - (Change): Rename `fmc_fqdn_objects` to `fmc_fqdns`. `fmc_fqdn_objects` will be removed in future releases
 - (Change): Rename `fmc_icmpv4_object` to `fmc_icmpv4`. `fmc_icmpv4_object` will be removed in future releases

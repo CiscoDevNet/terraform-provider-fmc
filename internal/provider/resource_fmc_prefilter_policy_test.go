@@ -36,8 +36,8 @@ func TestAccFmcPrefilterPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_prefilter_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action", "BLOCK_TUNNELS"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_prefilter_policy.test", "default_action_id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action_log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action_log_end", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action_log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action_log_connection_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "rules.0.name", "rule1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_prefilter_policy.test", "rules.0.rule_type", "PREFILTER"))
@@ -132,8 +132,8 @@ func testAccFmcPrefilterPolicyConfig_all() string {
 	config += `	name = "my_prefilter_policy"` + "\n"
 	config += `	description = "My Prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
-	config += `	default_action_log_begin = true` + "\n"
-	config += `	default_action_log_end = false` + "\n"
+	config += `	default_action_log_connection_begin = true` + "\n"
+	config += `	default_action_log_connection_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		name = "rule1"` + "\n"

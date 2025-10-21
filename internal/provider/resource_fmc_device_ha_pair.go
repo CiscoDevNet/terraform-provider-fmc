@@ -42,6 +42,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
 )
 
@@ -445,8 +446,6 @@ func (r *DeviceHAPairResource) Create(ctx context.Context, req resource.CreateRe
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (r *DeviceHAPairResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state DeviceHAPair
 
@@ -483,6 +482,50 @@ func (r *DeviceHAPairResource) Read(ctx context.Context, req resource.ReadReques
 	// After `terraform import` we switch to a full read.
 	if imp {
 		state.fromBody(ctx, res)
+
+		// FMCBUG: HA Link interface ID and Type are not returned in the HA Pair GET response.
+		if state.HaLinkInterfaceId.IsNull() || state.HaLinkInterfaceType.IsNull() {
+			var urlPath string
+			var intfRes gjson.Result
+			var err error
+
+			if strings.Contains(state.HaLinkInterfaceName.ValueString(), "thernet") {
+				urlPath = fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/physicalinterfaces", state.PrimaryDeviceId.ValueString())
+			} else {
+				urlPath = fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/etherchannelinterfaces", state.PrimaryDeviceId.ValueString())
+			}
+
+			if urlPath != "" {
+				intfRes, err = r.client.Get(urlPath, reqMods...)
+				if err != nil {
+					resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
+				} else {
+					state.HaLinkInterfaceId = types.StringValue(intfRes.Get("items.#(name==" + state.HaLinkInterfaceName.ValueString() + ").id").String())
+					state.HaLinkInterfaceType = types.StringValue(intfRes.Get("items.#(name==" + state.HaLinkInterfaceName.ValueString() + ").type").String())
+				}
+			}
+
+			if state.StateLinkInterfaceName.ValueString() == state.HaLinkInterfaceName.ValueString() {
+				state.StateLinkUseSameAsHa = types.BoolValue(true)
+				state.StateLinkInterfaceId = types.StringNull()
+				state.StateLinkInterfaceName = types.StringNull()
+				state.StateLinkInterfaceType = types.StringNull()
+				state.StateLinkLogicalName = types.StringNull()
+				state.StateLinkUseIpv6 = types.BoolNull()
+				state.StateLinkPrimaryIp = types.StringNull()
+				state.StateLinkSecondaryIp = types.StringNull()
+				state.StateLinkNetmask = types.StringNull()
+			} else {
+				state.StateLinkUseSameAsHa = types.BoolValue(false)
+				state.StateLinkInterfaceId = types.StringValue(intfRes.Get("items.#(name==" + state.StateLinkInterfaceName.ValueString() + ").id").String())
+				state.StateLinkInterfaceType = types.StringValue(intfRes.Get("items.#(name==" + state.StateLinkInterfaceName.ValueString() + ").type").String())
+				if strings.Contains(state.StateLinkPrimaryIp.ValueString(), ".") {
+					state.StateLinkUseIpv6 = types.BoolValue(false)
+				} else {
+					state.StateLinkUseIpv6 = types.BoolValue(true)
+				}
+			}
+		}
 	} else {
 		state.fromBodyPartial(ctx, res)
 	}
@@ -494,8 +537,6 @@ func (r *DeviceHAPairResource) Read(ctx context.Context, req resource.ReadReques
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end read
 
 func (r *DeviceHAPairResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state DeviceHAPair
