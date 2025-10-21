@@ -9,6 +9,8 @@ description: |-
 
 ## 2.0.0-rc8 (Unreleased)
 
+- BREAKING CHANGE: `fmc_policy_list`: Update attribute name:
+    - `as_path_lists` -> `as_paths`
 - BREAKING CHANGE: `fmc_device_cluster`: Update attribute name `data_devices` to `data_nodes`.
 - BREAKING CHANGE: Range of `fmc_device_*_interface`, objects: Update attribute names
     - `ipv4_dhcp_obtain_route` -> `ipv4_dhcp_obtain_default_route`

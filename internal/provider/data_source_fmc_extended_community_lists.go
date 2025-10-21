@@ -72,7 +72,7 @@ func (d *ExtendedCommunityListsDataSource) Schema(ctx context.Context, req datas
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Extended Community List.",
+							MarkdownDescription: "Id of the Extended Community List object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -93,11 +93,11 @@ func (d *ExtendedCommunityListsDataSource) Schema(ctx context.Context, req datas
 										Computed:            true,
 									},
 									"route_target": schema.StringAttribute{
-										MarkdownDescription: "Route target (required if sub_type is Standard)",
+										MarkdownDescription: "Route target (required if `sub_type` is Standard)",
 										Computed:            true,
 									},
 									"regular_expression": schema.StringAttribute{
-										MarkdownDescription: "Regular expression (required if sub_type is Expanded)",
+										MarkdownDescription: "Regular expression (required if `sub_type` is Expanded)",
 										Computed:            true,
 									},
 								},

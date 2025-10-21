@@ -38,8 +38,8 @@ data "fmc_ipv4_prefix_lists" "example" {
 
 Read-Only:
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
-- `id` (String) Id of the managed IPv4 Prefix List.
+- `entries` (Attributes List) List of prefixes. (see [below for nested schema](#nestedatt--items--entries))
+- `id` (String) Id of the IPv4 Prefix List object.
 - `type` (String) Type of the object; this value is always 'IPv4PrefixList'.
 
 <a id="nestedatt--items--entries"></a>

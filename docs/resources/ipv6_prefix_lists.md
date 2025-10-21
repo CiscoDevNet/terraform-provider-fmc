@@ -56,11 +56,11 @@ resource "fmc_ipv6_prefix_lists" "example" {
 
 Required:
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
+- `entries` (Attributes List) List of prefixes. (see [below for nested schema](#nestedatt--items--entries))
 
 Read-Only:
 
-- `id` (String) Id of the managed IPv6 Prefix List.
+- `id` (String) Id of the IPv6 Prefix List object.
 - `type` (String) Type of the object; this value is always 'IPV6PrefixList'.
 
 <a id="nestedatt--items--entries"></a>

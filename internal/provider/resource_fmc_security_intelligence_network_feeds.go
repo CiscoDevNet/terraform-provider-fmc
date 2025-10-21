@@ -90,7 +90,7 @@ func (r *SecurityIntelligenceNetworkFeedsResource) Schema(ctx context.Context, r
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Security Intelligence Network Feed.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Security Intelligence Network Feed object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),

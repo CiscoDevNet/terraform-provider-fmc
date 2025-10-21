@@ -39,7 +39,7 @@ data "fmc_expanded_community_lists" "example" {
 Read-Only:
 
 - `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
-- `id` (String) Id of the managed Expanded Community List.
+- `id` (String) Id of the Expanded Community List object.
 - `type` (String) Type of the object; this value is always 'CommunityListObject'.
 
 <a id="nestedatt--items--entries"></a>

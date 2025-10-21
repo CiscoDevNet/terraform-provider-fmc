@@ -40,6 +40,6 @@ Read-Only:
 
 - `checksum_url` (String) URL with md5 checksum of the feed.
 - `feed_url` (String) Security Intelligence DNS Feed location.
-- `id` (String) Id of the managed Security Intelligence DNS Feed.
+- `id` (String) Id of the Security Intelligence DNS Feed object.
 - `type` (String) Type of the object; this value is always 'SIDNSFeed'.
 - `update_frequency` (Number) Feed update frequency (in minutes).

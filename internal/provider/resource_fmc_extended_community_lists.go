@@ -92,7 +92,7 @@ func (r *ExtendedCommunityListsResource) Schema(ctx context.Context, req resourc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Extended Community List.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Extended Community List object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.ConditionalUseStateForUnknownString("sub_type"),
@@ -125,11 +125,11 @@ func (r *ExtendedCommunityListsResource) Schema(ctx context.Context, req resourc
 										},
 									},
 									"route_target": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Route target (required if sub_type is Standard)").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Route target (required if `sub_type` is Standard)").String,
 										Optional:            true,
 									},
 									"regular_expression": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Regular expression (required if sub_type is Expanded)").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Regular expression (required if `sub_type` is Expanded)").String,
 										Optional:            true,
 									},
 								},
