@@ -56,7 +56,7 @@ func TestAccDataSourceFmcIntrusionPolicy(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcIntrusionPolicyPrerequisitesConfig = `
-data "fmc_intrusion_policy" "test" {
+data "fmc_intrusion_policy" "builtin" {
   name = "Balanced Security and Connectivity"
 }
 `

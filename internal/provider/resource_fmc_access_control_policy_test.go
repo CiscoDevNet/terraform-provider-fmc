@@ -374,7 +374,7 @@ func TestAccFmcAccessControlPolicy_NewValid(t *testing.T) {
 		Config: `resource fmc_access_control_policy step15 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_end=true, send_events_to_fmc=true}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_end=true, send_events_to_fmc=true}]` + "\n" +
 			`}`,
 	}, {
 		Config: `resource fmc_access_control_policy step16 {` + "\n" +
@@ -382,21 +382,21 @@ func TestAccFmcAccessControlPolicy_NewValid(t *testing.T) {
 			`	default_action = "BLOCK"` + "\n" +
 			`	rules = [{ name = "r1", action = "MONITOR"}]` + "\n" +
 			`}`,
-		ExpectError: regexp.MustCompile(`Cannot use log_end=false when action="MONITOR"`),
+		ExpectError: regexp.MustCompile(`Cannot use log_connection_end=false when action="MONITOR"`),
 	}, {
 		Config: `resource fmc_access_control_policy step17 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_end=true, send_events_to_fmc=null}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_end=true, send_events_to_fmc=null}]` + "\n" +
 			`}`,
 		ExpectError: regexp.MustCompile(`Cannot use send_events_to_fmc=false when action="MONITOR"`),
 	}, {
 		Config: `resource fmc_access_control_policy step18 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_begin=true, log_end=true, send_events_to_fmc=true}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_begin=true, log_connection_end=true, send_events_to_fmc=true}]` + "\n" +
 			`}`,
-		ExpectError: regexp.MustCompile(`Cannot use log_begin=true when action="MONITOR"`),
+		ExpectError: regexp.MustCompile(`Cannot use log_connection_begin=true when action="MONITOR"`),
 	}}
 
 	resource.Test(t, resource.TestCase{

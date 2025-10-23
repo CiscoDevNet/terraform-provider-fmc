@@ -35,6 +35,6 @@ attributes:
     default_value: PREVENTION
 
 test_prerequisites: |-
-  data "fmc_intrusion_policy" "test" {
+  data "fmc_intrusion_policy" "builtin" {
     name = "Balanced Security and Connectivity"
   }

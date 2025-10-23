@@ -3046,16 +3046,16 @@ func NewValidAccessControlPolicy(ctx context.Context, tfplan tfsdk.Plan) (Access
 	for _, rule := range plan.Rules {
 		switch {
 		case rule.Action.ValueString() == "MONITOR" && rule.LogConnectionBegin.ValueBool():
-			diags.AddAttributeError(path.Root("rules"), "Cannot use log_begin=true when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+			diags.AddAttributeError(path.Root("rules"), "Cannot use log_connection_begin=true when action=\"MONITOR\"",
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
 		case rule.Action.ValueString() == "MONITOR" && !rule.LogConnectionEnd.ValueBool():
-			diags.AddAttributeError(path.Root("rules"), "Cannot use log_end=false when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+			diags.AddAttributeError(path.Root("rules"), "Cannot use log_connection_end=false when action=\"MONITOR\"",
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
 		case rule.Action.ValueString() == "MONITOR" && !rule.SendEventsToFmc.ValueBool():
 			diags.AddAttributeError(path.Root("rules"), "Cannot use send_events_to_fmc=false when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
 		}
 	}
