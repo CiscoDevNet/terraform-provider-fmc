@@ -41,6 +41,9 @@ type {{camelCase .Name}} struct {
 {{- if isDomainDependent .}}
 	Domain types.String `tfsdk:"domain"`
 {{- end}}
+{{- if .RestEndpointVrf }}
+VrfId                types.String                               `tfsdk:"vrf_id"`
+{{- end}}
 {{- range .Attributes}}
 {{- if not .Value}}
 {{- if isNestedListSet .}}
@@ -151,11 +154,19 @@ const bulkSizeCreate{{camelCase .Name}} int = {{.BulkSizeCreate}}
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data {{camelCase .Name}}) getPath() string {
+	{{- if .RestEndpointVrf }}
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("{{.RestEndpointVrf}}"{{range .Attributes}}{{if .Reference}}, url.QueryEscape(data.{{toGoName .TfName}}.Value{{.Type}}()){{end}}{{end}}, url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("{{.RestEndpoint}}"{{range .Attributes}}{{if .Reference}}, url.QueryEscape(data.{{toGoName .TfName}}.Value{{.Type}}()){{end}}{{end}})
+	}
+	{{- else }}
 	{{- if hasReference .Attributes}}
 		return fmt.Sprintf("{{.RestEndpoint}}"{{range .Attributes}}{{if .Reference}}, url.QueryEscape(data.{{toGoName .TfName}}.Value{{.Type}}()){{end}}{{end}})
 	{{- else}}
 		return "{{.RestEndpoint}}"
 	{{- end}}
+	{{- end }}
 }
 
 // End of section. //template:end getPath
