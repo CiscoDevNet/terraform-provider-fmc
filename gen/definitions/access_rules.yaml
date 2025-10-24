@@ -472,7 +472,7 @@ attributes:
         type: Bool
         description: >-
           Log events at the beginning of the connection. If 'MONITOR' action is
-          selected for access rule, log_begin must be false or absent.
+          selected for access rule, `log_connection_begin` must be false or absent.
         default_value: "false"
         example: "true"
       - model_name: logEnd
@@ -494,7 +494,7 @@ attributes:
         type: Bool
         description: >-
           Send events to the Firepower Management Center event viewer. If 'MONITOR'
-          action is selected for access rule, send_events_to_fmc must be true.
+          action is selected for access rule, `send_events_to_fmc` must be true.
         default_value: "false"
         example: true
       - model_name: enableSyslog

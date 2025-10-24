@@ -31,13 +31,13 @@ description: |-
     - `min_transmit` -> `minimum_transmit`
     - `tx_rx_multiplier` -> `multiplier`
 - BREAKING CHANGE: `fmc_prefilter_policy`: Update attribute names
-    - `default_action_log_begin` -> `default_action_log_connection_begin`
-    - `default_action_log_end` -> `default_action_log_connection_end`
+    - `*log_begin` -> `*log_connection_begin`
+    - `*log_end` -> `*log_connection_end`
     - `*snmp_config*` -> `*snmp_alert*`
     - `*syslog_config*` -> `*syslog_alert*`
 - BREAKING CHANGE: `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Update attribute names
-    - `default_action_log_begin` -> `default_action_log_connection_begin`
-    - `default_action_log_end` -> `default_action_log_connection_end`
+    - `*log_begin` -> `*log_connection_begin`
+    - `*log_end` -> `*log_connection_end`
     - `*snmp_config*` -> `*snmp_alert*`
     - `*syslog_config*` -> `*syslog_alert*`
     - add `default_action_variable_set_id`

@@ -364,11 +364,11 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 								),
 							},
 						},
-						"log_begin": schema.BoolAttribute{
+						"log_connection_begin": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection.").String,
 							Optional:            true,
 						},
-						"log_end": schema.BoolAttribute{
+						"log_connection_end": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Log events at the end of the connection.").String,
 							Optional:            true,
 						},

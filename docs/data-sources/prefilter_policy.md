@@ -55,8 +55,8 @@ Read-Only:
 - `enabled` (Boolean) Enable the rule.
 - `encapsulation_ports` (Set of String) List of encapsulation ports to be used. Mandatory for TUNNEL rules.
 - `id` (String) Id of the prefilter rule.
-- `log_begin` (Boolean) Log events at the beginning of the connection.
-- `log_end` (Boolean) Log events at the end of the connection.
+- `log_connection_begin` (Boolean) Log events at the beginning of the connection.
+- `log_connection_end` (Boolean) Log events at the end of the connection.
 - `name` (String) Name of the rule.
 - `rule_type` (String) Type of the rule. At least one Encapsulation Port Object (`encapsulation_ports`) is mandatory to be specified for TUNNEL Rules.
 - `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.

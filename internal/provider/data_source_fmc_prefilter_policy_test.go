@@ -50,8 +50,8 @@ func TestAccDataSourceFmcPrefilterPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.source_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.port", "80"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_end", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.send_events_to_fmc", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -162,8 +162,8 @@ func testAccDataSourceFmcPrefilterPolicyConfig() string {
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
@@ -231,8 +231,8 @@ func testAccNamedDataSourceFmcPrefilterPolicyConfig() string {
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"

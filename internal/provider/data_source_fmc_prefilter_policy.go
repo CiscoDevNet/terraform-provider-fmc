@@ -327,11 +327,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
-						"log_begin": schema.BoolAttribute{
+						"log_connection_begin": schema.BoolAttribute{
 							MarkdownDescription: "Log events at the beginning of the connection.",
 							Computed:            true,
 						},
-						"log_end": schema.BoolAttribute{
+						"log_connection_end": schema.BoolAttribute{
 							MarkdownDescription: "Log events at the end of the connection.",
 							Computed:            true,
 						},

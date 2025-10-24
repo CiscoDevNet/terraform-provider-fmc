@@ -97,14 +97,14 @@ resource "fmc_prefilter_policy" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      encapsulation_ports = ["GRE"]
-      log_begin           = true
-      log_end             = true
-      send_events_to_fmc  = true
-      send_syslog         = true
-      syslog_alert_id     = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
-      syslog_severity     = "DEBUG"
-      snmp_alert_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      encapsulation_ports  = ["GRE"]
+      log_connection_begin = true
+      log_connection_end   = true
+      send_events_to_fmc   = true
+      send_syslog          = true
+      syslog_alert_id      = "35e197ca-33a8-11ef-b2d1-d98ae17766e7"
+      syslog_severity      = "DEBUG"
+      snmp_alert_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
 }
@@ -159,8 +159,8 @@ Optional:
   - Default value: `true`
 - `encapsulation_ports` (Set of String) List of encapsulation ports to be used. Mandatory for TUNNEL rules.
   - Choices: `GRE`, `IP_IN_IP`, `IPV6_IN_IP`, `TEREDO`
-- `log_begin` (Boolean) Log events at the beginning of the connection.
-- `log_end` (Boolean) Log events at the end of the connection.
+- `log_connection_begin` (Boolean) Log events at the beginning of the connection.
+- `log_connection_end` (Boolean) Log events at the end of the connection.
 - `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer.
 - `send_syslog` (Boolean) Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging.
 - `snmp_alert_id` (String) Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.

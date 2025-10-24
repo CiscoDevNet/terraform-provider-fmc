@@ -458,7 +458,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"log_connection_begin": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, `log_connection_begin` must be false or absent.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),
@@ -476,7 +476,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							Default:             booldefault.StaticBool(false),
 						},
 						"send_events_to_fmc": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.").AddDefaultValueDescription("false").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, `send_events_to_fmc` must be true.").AddDefaultValueDescription("false").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(false),

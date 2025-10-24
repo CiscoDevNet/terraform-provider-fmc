@@ -72,8 +72,8 @@ type PrefilterPolicyRules struct {
 	DestinationPortLiterals    []PrefilterPolicyRulesDestinationPortLiterals    `tfsdk:"destination_port_literals"`
 	DestinationPortObjects     []PrefilterPolicyRulesDestinationPortObjects     `tfsdk:"destination_port_objects"`
 	EncapsulationPorts         types.Set                                        `tfsdk:"encapsulation_ports"`
-	LogBegin                   types.Bool                                       `tfsdk:"log_begin"`
-	LogEnd                     types.Bool                                       `tfsdk:"log_end"`
+	LogConnectionBegin         types.Bool                                       `tfsdk:"log_connection_begin"`
+	LogConnectionEnd           types.Bool                                       `tfsdk:"log_connection_end"`
 	SendEventsToFmc            types.Bool                                       `tfsdk:"send_events_to_fmc"`
 	SendSyslog                 types.Bool                                       `tfsdk:"send_syslog"`
 	SyslogAlertId              types.String                                     `tfsdk:"syslog_alert_id"`
@@ -351,11 +351,11 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				item.EncapsulationPorts.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "encapsulationPorts", values)
 			}
-			if !item.LogBegin.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogBegin.ValueBool())
+			if !item.LogConnectionBegin.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogConnectionBegin.ValueBool())
 			}
-			if !item.LogEnd.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogEnd.ValueBool())
+			if !item.LogConnectionEnd.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogConnectionEnd.ValueBool())
 			}
 			if !item.SendEventsToFmc.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "sendEventsToFMC", item.SendEventsToFmc.ValueBool())
@@ -687,14 +687,14 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.EncapsulationPorts = types.SetNull(types.StringType)
 			}
 			if value := res.Get("logBegin"); value.Exists() {
-				data.LogBegin = types.BoolValue(value.Bool())
+				data.LogConnectionBegin = types.BoolValue(value.Bool())
 			} else {
-				data.LogBegin = types.BoolNull()
+				data.LogConnectionBegin = types.BoolNull()
 			}
 			if value := res.Get("logEnd"); value.Exists() {
-				data.LogEnd = types.BoolValue(value.Bool())
+				data.LogConnectionEnd = types.BoolValue(value.Bool())
 			} else {
-				data.LogEnd = types.BoolNull()
+				data.LogConnectionEnd = types.BoolNull()
 			}
 			if value := res.Get("sendEventsToFMC"); value.Exists() {
 				data.SendEventsToFmc = types.BoolValue(value.Bool())
@@ -1397,15 +1397,15 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.EncapsulationPorts = types.SetNull(types.StringType)
 		}
-		if value := res.Get("logBegin"); value.Exists() && !data.LogBegin.IsNull() {
-			data.LogBegin = types.BoolValue(value.Bool())
+		if value := res.Get("logBegin"); value.Exists() && !data.LogConnectionBegin.IsNull() {
+			data.LogConnectionBegin = types.BoolValue(value.Bool())
 		} else {
-			data.LogBegin = types.BoolNull()
+			data.LogConnectionBegin = types.BoolNull()
 		}
-		if value := res.Get("logEnd"); value.Exists() && !data.LogEnd.IsNull() {
-			data.LogEnd = types.BoolValue(value.Bool())
+		if value := res.Get("logEnd"); value.Exists() && !data.LogConnectionEnd.IsNull() {
+			data.LogConnectionEnd = types.BoolValue(value.Bool())
 		} else {
-			data.LogEnd = types.BoolNull()
+			data.LogConnectionEnd = types.BoolNull()
 		}
 		if value := res.Get("sendEventsToFMC"); value.Exists() && !data.SendEventsToFmc.IsNull() {
 			data.SendEventsToFmc = types.BoolValue(value.Bool())

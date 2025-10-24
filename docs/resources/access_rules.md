@@ -245,13 +245,13 @@ Optional:
 - `endpoint_device_types` (Attributes Set) Set of objects representing the source Endpoint Device Types. (see [below for nested schema](#nestedatt--items--endpoint_device_types))
 - `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
 - `intrusion_policy_id` (String) Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
-- `log_connection_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
+- `log_connection_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, `log_connection_begin` must be false or absent.
   - Default value: `false`
 - `log_connection_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.
   - Default value: `false`
 - `log_files` (Boolean) Log file events.
   - Default value: `false`
-- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.
+- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, `send_events_to_fmc` must be true.
   - Default value: `false`
 - `send_syslog` (Boolean) Send alerts to syslog.
   - Default value: `false`

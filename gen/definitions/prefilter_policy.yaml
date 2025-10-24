@@ -354,10 +354,12 @@ attributes:
 
       # Logging
       - model_name: logBegin
+        tf_name: log_connection_begin
         type: Bool
         description: Log events at the beginning of the connection.
         example: "true"
       - model_name: logEnd
+        tf_name: log_connection_end
         type: Bool
         description: Log events at the end of the connection.
         example: "true"
