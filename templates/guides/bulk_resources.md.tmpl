@@ -58,6 +58,23 @@ resource "fmc_hosts" "example" {
 }
 ```
 
+## Performance comparision
+The following table illustrates the performance difference between using individual resources and bulk resources for managing 1200 hosts.
+
+| Operation | Individual Resources | Bulk Resource |
+|-----------|----------------------|---------------|
+| Create    | ~30 minutes          | ~6 minutes    |
+| Refresh   | ~4 minutes           | ~17 seconds   |
+| Destroy   | ~46 minutes          | ~20 minutes   |
+
+Tests were performed in the following conditions:
+- FMC version: 7.7.10
+- Terraform version: 1.13.4
+- Terraform provider version: 2.0.0
+- FMC configured with default settings and no pre-existing objects
+- Table values are approximate and may vary based on environment and conditions, like FMC load and existing objects
+- Updates are done one by one in both cases, therefore update time of a single object is mostly equal to Refresh time
+
 ## Limitations
 
 ### Object Replacement
@@ -104,7 +121,7 @@ resource "fmc_network_group" "network_group" {
 ```
 
 **Problem:** Terraform cannot apply this change in a single run because:
-- It cannot modify `fmc_hosts` firstm, as this would break `fmc_network_group` reference to `host_2`
+- It cannot modify `fmc_hosts` first, as this would break `fmc_network_group` reference to `host_2`
 - It cannot modify `fmc_network_group` first, as `host_3` doesn't exist yet
 
 #### Solution: Staged Deployment
