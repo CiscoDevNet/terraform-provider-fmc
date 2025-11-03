@@ -304,7 +304,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "pathMonitoring.type", data.IpBasedMonitoringType.ValueString())
 	}
 	if !data.IpBasedMonitoringNextHop.IsNull() {
-		body, _ = sjson.Set(body, "monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
+		body, _ = sjson.Set(body, "pathMonitoring.monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
 	}
 	if !data.ActiveMacAddress.IsNull() {
 		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
@@ -313,7 +313,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig.arpConfig", []any{})
+		body, _ = sjson.Set(body, "arpConfig", []any{})
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {
@@ -325,7 +325,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			if !item.Enabled.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.Enabled.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "arpConfig.arpConfig.-1", itemBody)
+			body, _ = sjson.SetRaw(body, "arpConfig.-1", itemBody)
 		}
 	}
 	if !data.AntiSpoofing.IsNull() {
@@ -634,7 +634,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.IpBasedMonitoringType = types.StringNull()
 	}
-	if value := res.Get("monitoredIp"); value.Exists() {
+	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() {
 		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
 	} else {
 		data.IpBasedMonitoringNextHop = types.StringNull()
@@ -649,7 +649,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.StandbyMacAddress = types.StringNull()
 	}
-	if value := res.Get("arpConfig.arpConfig"); value.Exists() {
+	if value := res.Get("arpConfig"); value.Exists() {
 		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
@@ -1050,7 +1050,7 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.IpBasedMonitoringType = types.StringNull()
 	}
-	if value := res.Get("monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
+	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
 		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
 	} else {
 		data.IpBasedMonitoringNextHop = types.StringNull()
@@ -1074,7 +1074,7 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig.arpConfig").ForEach(
+		parentRes.Get("arpConfig").ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

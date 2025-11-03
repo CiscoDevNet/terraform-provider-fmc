@@ -425,6 +425,7 @@ attributes:
     exclude_example: true
     exclude_test: true
   - model_name: monitoredIp
+    data_path: [pathMonitoring]
     tf_name: ip_based_monitoring_next_hop
     type: String
     description: IP address to monitor.
@@ -446,7 +447,6 @@ attributes:
   # Advanced - ARP
   - model_name: arpConfig
     tf_name: arp_table_entries
-    data_path: [arpConfig]
     type: List
     exclude_example: true
     exclude_test: true
