@@ -88,7 +88,7 @@ attributes:
     type: String
     write_only: true
     description: Performance tier for the managed device.
-    enum_values: [FTDv5, FTDv10, FTDv20, FTDv30, FTDv50, FTDv100, Legacy]
+    enum_values: [FTDv, FTDv5, FTDv10, FTDv20, FTDv30, FTDv50, FTDv100, Legacy]
     example: FTDv5
   - model_name: snortEngine
     type: String
