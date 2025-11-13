@@ -80,7 +80,7 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				MarkdownDescription: "Type of the device; this value is always 'FMCManagedChassis'.",
 				Computed:            true,
 			},
-			"host_name": schema.StringAttribute{
+			"host": schema.StringAttribute{
 				MarkdownDescription: "Hostname or IP address of the chassis.",
 				Computed:            true,
 			},

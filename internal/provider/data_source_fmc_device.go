@@ -80,8 +80,8 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Type of the device; this value is always 'Device'.",
 				Computed:            true,
 			},
-			"host_name": schema.StringAttribute{
-				MarkdownDescription: "Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.",
+			"host": schema.StringAttribute{
+				MarkdownDescription: "Hostname or IP address of the device. Either the `host` or `nat_id` must be present.",
 				Computed:            true,
 			},
 			"nat_id": schema.StringAttribute{

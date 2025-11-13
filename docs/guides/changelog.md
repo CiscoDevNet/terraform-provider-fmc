@@ -22,6 +22,9 @@ description: |-
 - BREAKING CHANGE: `fmc_device`: Update attribute names
     - `license_capabilities` -> `licenses`
     - `access_policy_id` -> `access_control_policy_id`
+    - `host_name` -> `host`
+- BREAKING CHANGE: `fmc_chassis`: Update attribute names
+    - `host_name` -> `host`
 - BREAKING CHANGE: `fmc_chassis_logical_device` Update attribute definitions
     - `license_capabilities` -> `licenses`
     - `access_policy_id` -> `access_control_policy_id`

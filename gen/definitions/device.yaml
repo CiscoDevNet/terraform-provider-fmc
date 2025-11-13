@@ -4,7 +4,7 @@ name: Device
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords
 doc_category: Devices
 res_description: This resource manages a Device. This resource is not supported in cdFMC - to register the device in cdFMC, please use Security Cloud Control API instead.
-test_tags: [TF_VAR_device_registration_key, TF_VAR_license_capabilities]
+test_tags: [TF_VAR_device_registration_key, TF_VAR_licenses]
 attributes:
   # General
   - model_name: name
@@ -23,9 +23,9 @@ attributes:
     description: Type of the device; this value is always 'Device'.
     computed: true
   - model_name: hostName
-    tf_name: host_name
+    tf_name: host
     type: String
-    description: Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
+    description: Hostname or IP address of the device. Either the `host` or `nat_id` must be present.
     mandatory: true
     example: 10.0.0.1
     test_value: var.ftd_addr
@@ -63,7 +63,7 @@ attributes:
       ]
     description: "Array of strings representing the license capabilities on the managed device."
     example: ESSENTIALS
-    test_value: "[var.license_capabilities]"
+    test_value: "[var.licenses]"
   - model_name: regKey
     tf_name: registration_key
     type: String
@@ -176,7 +176,7 @@ attributes:
 test_prerequisites: |-
   variable "ftd_addr" { default = null } // tests will set $TF_VAR_ftd_addr
   variable "device_registration_key" {} // tests will set $TF_VAR_device_registration_key
-  variable "license_capabilities" { default = "BASE" } // tests will set $TF_VAR_license_capabilities
+  variable "licenses" { default = "BASE" } // tests will set $TF_VAR_licenses
 
   resource "fmc_access_control_policy" "test" {
     name = "fmc_device_access_control_policy"

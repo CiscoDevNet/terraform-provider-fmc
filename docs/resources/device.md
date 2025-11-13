@@ -15,7 +15,7 @@ This resource manages a Device. This resource is not supported in cdFMC - to reg
 ```terraform
 resource "fmc_device" "example" {
   name                     = "my_device"
-  host_name                = "10.0.0.1"
+  host                     = "10.0.0.1"
   licenses                 = ["ESSENTIALS"]
   registration_key         = "key1"
   performance_tier         = "FTDv5"
@@ -31,7 +31,7 @@ resource "fmc_device" "example" {
 ### Required
 
 - `access_control_policy_id` (String) Id of the assigned Access Control Policy.
-- `host_name` (String) Hostname or IP address of the device. Either the `host_name` or `nat_id` must be present.
+- `host` (String) Hostname or IP address of the device. Either the `host` or `nat_id` must be present.
 - `licenses` (Set of String) Array of strings representing the license capabilities on the managed device.
   - Choices: `ESSENTIALS`, `IPS`, `URL`, `MALWARE_DEFENSE`, `CARRIER`, `SECURE_CLIENT_PREMIER`, `SECURE_CLIENT_PREMIER_ADVANTAGE`, `SECURE_CLIENT_VPNOnly`, `BASE`, `THREAT`, `PROTECT`, `CONTROL`, `URLFilter`, `MALWARE`, `VPN`, `SSL`
 - `name` (String) Name of the device.

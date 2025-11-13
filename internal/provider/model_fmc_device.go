@@ -38,7 +38,7 @@ type Device struct {
 	Domain                 types.String `tfsdk:"domain"`
 	Name                   types.String `tfsdk:"name"`
 	Type                   types.String `tfsdk:"type"`
-	HostName               types.String `tfsdk:"host_name"`
+	Host                   types.String `tfsdk:"host"`
 	NatId                  types.String `tfsdk:"nat_id"`
 	Licenses               types.Set    `tfsdk:"licenses"`
 	RegistrationKey        types.String `tfsdk:"registration_key"`
@@ -84,8 +84,8 @@ func (data Device) toBody(ctx context.Context, state Device) string {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	body, _ = sjson.Set(body, "type", "Device")
-	if !data.HostName.IsNull() {
-		body, _ = sjson.Set(body, "hostName", data.HostName.ValueString())
+	if !data.Host.IsNull() {
+		body, _ = sjson.Set(body, "hostName", data.Host.ValueString())
 	}
 	if !data.NatId.IsNull() {
 		body, _ = sjson.Set(body, "natID", data.NatId.ValueString())
@@ -141,9 +141,9 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("hostName"); value.Exists() {
-		data.HostName = types.StringValue(value.String())
+		data.Host = types.StringValue(value.String())
 	} else {
-		data.HostName = types.StringNull()
+		data.Host = types.StringNull()
 	}
 	if value := res.Get("license_caps"); value.Exists() {
 		data.Licenses = helpers.GetStringSet(value.Array())
@@ -241,10 +241,10 @@ func (data *Device) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("hostName"); value.Exists() && !data.HostName.IsNull() {
-		data.HostName = types.StringValue(value.String())
+	if value := res.Get("hostName"); value.Exists() && !data.Host.IsNull() {
+		data.Host = types.StringValue(value.String())
 	} else {
-		data.HostName = types.StringNull()
+		data.Host = types.StringNull()
 	}
 	if value := res.Get("license_caps"); value.Exists() && !data.Licenses.IsNull() {
 		data.Licenses = helpers.GetStringSet(value.Array())
