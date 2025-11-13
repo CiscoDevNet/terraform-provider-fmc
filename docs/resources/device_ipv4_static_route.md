@@ -22,7 +22,7 @@ resource "fmc_device_ipv4_static_route" "example" {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
-  metric_value         = 254
+  metric               = 254
   gateway_host_literal = "10.0.0.1"
   sla_monitor_id       = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
@@ -35,7 +35,6 @@ resource "fmc_device_ipv4_static_route" "example" {
 
 - `destination_networks` (Attributes Set) Set of the destination networks matching this route (Host, Networks or Ranges). (see [below for nested schema](#nestedatt--destination_networks))
 - `device_id` (String) Id of the parent device.
-- `interface_id` (String) Id of the interface provided in `interface_logical_name`. The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).
 - `interface_logical_name` (String) Logical name of the parent interface. For transparent mode, any bridge group member interface. For routed mode with bridge groups, any bridge group member interface for the BVI name.
 
 ### Optional
@@ -43,11 +42,13 @@ resource "fmc_device_ipv4_static_route" "example" {
 - `domain` (String) Name of the FMC domain
 - `gateway_host_literal` (String) Next hop for this route as a literal IPv4 address. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.
 - `gateway_host_object_id` (String) Id of the next hop for this route. Exactly one of `gateway_host_object_id` or `gateway_host_literal` must be present.
-- `is_tunneled` (Boolean) Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.
+- `interface_id` (String) Id of the interface provided in `interface_logical_name`. The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).
+- `is_tunneled` (Boolean) Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric` attribute.
   - Default value: `false`
-- `metric_value` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.
+- `metric` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.
   - Range: `1`-`254`
 - `sla_monitor_id` (String) ID of SLA Monitor for Route Tracking.
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -69,5 +70,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_device_ipv4_static_route.example "<domain>,<device_id>,<id>"
+# <vrf_id> is optional.
+terraform import fmc_device_ipv4_static_route.example "<domain>,<device_id>,<vrf_id>,<id>"
 ```

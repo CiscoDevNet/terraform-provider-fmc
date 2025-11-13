@@ -89,6 +89,12 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				Optional:			true,
 			},
 			{{- end}}
+			{{- if .RestEndpointVrf }}
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+			},
+			{{- end}}
 			{{- range .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{

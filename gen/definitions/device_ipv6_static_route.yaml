@@ -1,6 +1,7 @@
 ---
 name: Device IPv6 Static Route
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv6staticroutes
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ipv6staticroutes
 doc_category: Devices
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
@@ -34,7 +35,6 @@ attributes:
       The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource
       before the static route resource (and destroys the interface resource only after the static route has been
       destroyed).
-    mandatory: true
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.id
   - model_name: selectedNetworks
@@ -50,6 +50,7 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: data.fmc_host.test.id
   - model_name: metricValue
+    tf_name: metric
     type: Int64
     description: >-
       The cost of the route. The metric is used to compare routes among different routing protocols. The default
@@ -86,7 +87,7 @@ attributes:
       if you want VPN traffic to use a different default route than non-VPN traffic.
       When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes
       is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic
-      is not supported. This attribute conflicts with `metric_value` attribute.
+      is not supported. This attribute conflicts with `metric` attribute.
     exclude_example: true
     default_value: "false"
     test_value: "true"

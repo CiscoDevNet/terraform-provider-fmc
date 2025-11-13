@@ -37,12 +37,13 @@ import (
 type DeviceIPv4StaticRoute struct {
 	Id                   types.String                               `tfsdk:"id"`
 	Domain               types.String                               `tfsdk:"domain"`
+	VrfId                types.String                               `tfsdk:"vrf_id"`
 	DeviceId             types.String                               `tfsdk:"device_id"`
 	InterfaceLogicalName types.String                               `tfsdk:"interface_logical_name"`
 	Type                 types.String                               `tfsdk:"type"`
 	InterfaceId          types.String                               `tfsdk:"interface_id"`
 	DestinationNetworks  []DeviceIPv4StaticRouteDestinationNetworks `tfsdk:"destination_networks"`
-	MetricValue          types.Int64                                `tfsdk:"metric_value"`
+	Metric               types.Int64                                `tfsdk:"metric"`
 	GatewayHostObjectId  types.String                               `tfsdk:"gateway_host_object_id"`
 	GatewayHostLiteral   types.String                               `tfsdk:"gateway_host_literal"`
 	IsTunneled           types.Bool                                 `tfsdk:"is_tunneled"`
@@ -62,7 +63,11 @@ type DeviceIPv4StaticRouteDestinationNetworks struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceIPv4StaticRoute) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
+	}
 }
 
 // End of section. //template:end getPath
@@ -90,8 +95,8 @@ func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4St
 			body, _ = sjson.SetRaw(body, "selectedNetworks.-1", itemBody)
 		}
 	}
-	if !data.MetricValue.IsNull() {
-		body, _ = sjson.Set(body, "metricValue", data.MetricValue.ValueInt64())
+	if !data.Metric.IsNull() {
+		body, _ = sjson.Set(body, "metricValue", data.Metric.ValueInt64())
 	}
 	if !data.GatewayHostObjectId.IsNull() {
 		body, _ = sjson.Set(body, "gateway.object.id", data.GatewayHostObjectId.ValueString())
@@ -138,9 +143,9 @@ func (data *DeviceIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 		})
 	}
 	if value := res.Get("metricValue"); value.Exists() {
-		data.MetricValue = types.Int64Value(value.Int())
+		data.Metric = types.Int64Value(value.Int())
 	} else {
-		data.MetricValue = types.Int64Null()
+		data.Metric = types.Int64Null()
 	}
 	if value := res.Get("gateway.object.id"); value.Exists() {
 		data.GatewayHostObjectId = types.StringValue(value.String())
@@ -226,10 +231,10 @@ func (data *DeviceIPv4StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		}
 		(*parent).DestinationNetworks[i] = data
 	}
-	if value := res.Get("metricValue"); value.Exists() && !data.MetricValue.IsNull() {
-		data.MetricValue = types.Int64Value(value.Int())
+	if value := res.Get("metricValue"); value.Exists() && !data.Metric.IsNull() {
+		data.Metric = types.Int64Value(value.Int())
 	} else {
-		data.MetricValue = types.Int64Null()
+		data.Metric = types.Int64Null()
 	}
 	if value := res.Get("gateway.object.id"); value.Exists() && !data.GatewayHostObjectId.IsNull() {
 		data.GatewayHostObjectId = types.StringValue(value.String())

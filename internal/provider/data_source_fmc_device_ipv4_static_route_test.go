@@ -82,7 +82,7 @@ func testAccDataSourceFmcDeviceIPv4StaticRouteConfig() string {
 	config += `	destination_networks = [{` + "\n"
 	config += `		id = data.fmc_network.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	metric_value = null` + "\n"
+	config += `	metric = null` + "\n"
 	config += `	gateway_host_literal = "10.0.0.1"` + "\n"
 	config += `	is_tunneled = true` + "\n"
 	config += `}` + "\n"
