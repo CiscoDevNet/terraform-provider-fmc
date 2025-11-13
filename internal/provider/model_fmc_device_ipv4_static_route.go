@@ -43,7 +43,7 @@ type DeviceIPv4StaticRoute struct {
 	Type                 types.String                               `tfsdk:"type"`
 	InterfaceId          types.String                               `tfsdk:"interface_id"`
 	DestinationNetworks  []DeviceIPv4StaticRouteDestinationNetworks `tfsdk:"destination_networks"`
-	MetricValue          types.Int64                                `tfsdk:"metric_value"`
+	Metric               types.Int64                                `tfsdk:"metric"`
 	GatewayHostObjectId  types.String                               `tfsdk:"gateway_host_object_id"`
 	GatewayHostLiteral   types.String                               `tfsdk:"gateway_host_literal"`
 	IsTunneled           types.Bool                                 `tfsdk:"is_tunneled"`
@@ -95,8 +95,8 @@ func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4St
 			body, _ = sjson.SetRaw(body, "selectedNetworks.-1", itemBody)
 		}
 	}
-	if !data.MetricValue.IsNull() {
-		body, _ = sjson.Set(body, "metricValue", data.MetricValue.ValueInt64())
+	if !data.Metric.IsNull() {
+		body, _ = sjson.Set(body, "metricValue", data.Metric.ValueInt64())
 	}
 	if !data.GatewayHostObjectId.IsNull() {
 		body, _ = sjson.Set(body, "gateway.object.id", data.GatewayHostObjectId.ValueString())
@@ -143,9 +143,9 @@ func (data *DeviceIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 		})
 	}
 	if value := res.Get("metricValue"); value.Exists() {
-		data.MetricValue = types.Int64Value(value.Int())
+		data.Metric = types.Int64Value(value.Int())
 	} else {
-		data.MetricValue = types.Int64Null()
+		data.Metric = types.Int64Null()
 	}
 	if value := res.Get("gateway.object.id"); value.Exists() {
 		data.GatewayHostObjectId = types.StringValue(value.String())
@@ -231,10 +231,10 @@ func (data *DeviceIPv4StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 		}
 		(*parent).DestinationNetworks[i] = data
 	}
-	if value := res.Get("metricValue"); value.Exists() && !data.MetricValue.IsNull() {
-		data.MetricValue = types.Int64Value(value.Int())
+	if value := res.Get("metricValue"); value.Exists() && !data.Metric.IsNull() {
+		data.Metric = types.Int64Value(value.Int())
 	} else {
-		data.MetricValue = types.Int64Null()
+		data.Metric = types.Int64Null()
 	}
 	if value := res.Get("gateway.object.id"); value.Exists() && !data.GatewayHostObjectId.IsNull() {
 		data.GatewayHostObjectId = types.StringValue(value.String())

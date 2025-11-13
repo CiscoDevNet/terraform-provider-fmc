@@ -11,6 +11,7 @@ description: |-
 
 - BREAKING CHANGE: `fmc_device_vrf_ipv4_static_route` is deprecated. Please use `fmc_device_ipv4_static_route`, which supports now `vrf_id` attribute.
 - BREAKING CHANGE: `fmc_device_vrf_ipv6_static_route` is deprecated. Please use `fmc_device_ipv6_static_route`, which supports now `vrf_id` attribute.
+- BREAKING CHANGE: `fmc_device_ipv4_static_route` and `fmc_device_ipv6_static_route`: attribute `metric_value` renamed to `metric`.
 - (Enhancement) `domain` support for importing non-bulk resources
 
 ## 2.0.0-rc7
