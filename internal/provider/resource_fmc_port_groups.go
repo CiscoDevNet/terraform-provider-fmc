@@ -85,12 +85,12 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of port groups. The key of the map is the name of the individual Port Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Port Groups. The key of the map is the name of the individual Port Group.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Port Groups.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Port Group.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -112,7 +112,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Optional:            true,
 						},
 						"objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group.").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -121,7 +121,7 @@ func (r *PortGroupsResource) Schema(ctx context.Context, req resource.SchemaRequ
 										Optional:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").AddStringEnumDescription("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the port object.").AddStringEnumDescription("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object").String,
 										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("ProtocolPortObject", "ICMPV6Object", "ICMPV4Object"),

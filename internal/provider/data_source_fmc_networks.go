@@ -66,13 +66,13 @@ func (d *NetworksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of networks. The key of the map is the name of the individual Network.",
+				MarkdownDescription: "Map of Networks. The key of the map is the name of the individual Network.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Network.",
+							MarkdownDescription: "Id of the Network object.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -80,11 +80,11 @@ func (d *NetworksDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 						"prefix": schema.StringAttribute{
-							MarkdownDescription: "Prefix of the network.",
+							MarkdownDescription: "Prefix of the Network.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

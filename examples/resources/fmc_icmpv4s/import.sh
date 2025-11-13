@@ -1,0 +1,3 @@
+# <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
+terraform import fmc_icmpv4s.example "<domain>,[<item1_name>,<item2_name>,...]"
+

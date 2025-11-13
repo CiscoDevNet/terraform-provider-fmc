@@ -3,12 +3,14 @@
 page_title: "fmc_fqdn_object Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source reads the FQDN Object.
+  This data source reads the FQDN (Fully Qualified Domain Name) Object.
+  This resource is deprecated and will be removed in a future release. Please use fmc_fqdn instead.
 ---
 
 # fmc_fqdn_object (Data Source)
 
-This data source reads the FQDN Object.
+This data source reads the FQDN (Fully Qualified Domain Name) Object.
+This resource is deprecated and will be removed in a future release. Please use `fmc_fqdn` instead.
 
 ## Example Usage
 
@@ -32,5 +34,5 @@ data "fmc_fqdn_object" "example" {
 - `description` (String) Description of the object.
 - `dns_resolution` (String) Type of DNS resolution.
 - `fqdn` (String) Fully Qualified Domain Name.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'FQDN'.

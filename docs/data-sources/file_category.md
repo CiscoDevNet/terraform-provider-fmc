@@ -30,7 +30,7 @@ data "fmc_file_category" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the File Category. There can be only build-in File Categories.
+- `name` (String) Name of the File Category.
 
 ### Read-Only
 

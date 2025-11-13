@@ -6,7 +6,7 @@ no_data_source: true
 no_import: true
 no_delete: true
 no_update: true
-doc_category: Deployment
+doc_category: Devices
 test_tags: [TF_VAR_device_id]
 attributes:
   - model_name: type

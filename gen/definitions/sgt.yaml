@@ -3,6 +3,8 @@ name: SGT
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/securitygrouptags
 doc_category: Objects
 minimum_version_create: "7.4"
+res_description: This resource manages SGT (Security Group Tag) Object.
+ds_description: This data source reads the SGT (Security Group Tag) Object.
 attributes:
   - model_name: name
     type: String
@@ -18,6 +20,7 @@ attributes:
     type: String
     description: Description of the object.
     example: My SGT object
+    missing_in_response_if_set_to_empty_string: true
   - model_name: tag
     type: String
     mandatory: true

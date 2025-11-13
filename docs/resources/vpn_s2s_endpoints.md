@@ -68,7 +68,7 @@ resource "fmc_vpn_s2s_endpoints" "example" {
 
 Required:
 
-- `extranet_device` (Boolean) Is the device managed by local FMC.
+- `extranet_device` (Boolean) Is this external device (not managed by FMC).
 - `peer_type` (String) Role of the device in the topology.
   - Choices: `PEER`, `HUB`, `SPOKE`
 
@@ -95,7 +95,7 @@ Optional:
 - `nat_exemption_inside_interface_id` (String) Id of the inside Security Zone for NAT Exemption identification.
 - `nat_traversal` (Boolean) Enable NAT traversal.
 - `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
-- `protected_networks` (Attributes Set) Set of protected networks. (see [below for nested schema](#nestedatt--items--protected_networks))
+- `protected_networks` (Attributes Set) Set of protected Networks. (see [below for nested schema](#nestedatt--items--protected_networks))
 - `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
 - `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
 - `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
@@ -110,7 +110,7 @@ Read-Only:
 
 Required:
 
-- `id` (String) Id of the protected network.
+- `id` (String) Id of the Network object.
 
 ## Import
 

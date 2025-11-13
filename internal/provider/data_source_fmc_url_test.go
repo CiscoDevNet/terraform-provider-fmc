@@ -31,9 +31,9 @@ import (
 func TestAccDataSourceFmcURL(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "name", "my_url"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "url", "https://www.example.com/app"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "description", "My URL"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_url.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "description", "My URL"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_url.test", "url", "https://www.example.com/app"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -61,8 +61,8 @@ func TestAccDataSourceFmcURL(t *testing.T) {
 func testAccDataSourceFmcURLConfig() string {
 	config := `resource "fmc_url" "test" {` + "\n"
 	config += `	name = "my_url"` + "\n"
-	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	description = "My URL"` + "\n"
+	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 
@@ -77,8 +77,8 @@ func testAccDataSourceFmcURLConfig() string {
 func testAccNamedDataSourceFmcURLConfig() string {
 	config := `resource "fmc_url" "test" {` + "\n"
 	config += `	name = "my_url"` + "\n"
-	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	description = "My URL"` + "\n"
+	config += `	url = "https://www.example.com/app"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
 

@@ -155,3 +155,54 @@ func TestAccFmcHosts_Sequential(t *testing.T) {
 		Steps:                    steps,
 	})
 }
+
+// # FMCVERSION <= 7.2
+// This test fails on FMC 7.2, as setting an empty description will set description as a single space.
+// Which will trigger incorrect diff on next plan.
+// func TestAccFmcHosts_EmptyDescription(t *testing.T) {
+
+// 	step_01 := `resource "fmc_hosts" "test" {` + "\n" +
+// 		`	items = {` + "\n" +
+// 		`		"hosts_1" = {` + "\n" +
+// 		`			ip = "1.2.3.1",` + "\n" +
+// 		`			description = "host1"` + "\n" +
+// 		`		},` + "\n" +
+// 		`		"hosts_2" = {` + "\n" +
+// 		`			ip = "1.2.3.2",` + "\n" +
+// 		`			description = ""` + "\n" +
+// 		`		},` + "\n" +
+// 		`		"hosts_3" = {` + "\n" +
+// 		`			ip = "1.2.3.3",` + "\n" +
+// 		`		},` + "\n" +
+// 		`	} ` + "\n" +
+// 		`}` + "\n"
+
+// 	step_02 := `resource "fmc_hosts" "test" {` + "\n" +
+// 		`	items = {` + "\n" +
+// 		`		"hosts_1" = {` + "\n" +
+// 		`			ip = "1.2.3.1",` + "\n" +
+// 		`			description = ""` + "\n" +
+// 		`		},` + "\n" +
+// 		`		"hosts_2" = {` + "\n" +
+// 		`			ip = "1.2.3.2",` + "\n" +
+// 		`			description = "host2"` + "\n" +
+// 		`		},` + "\n" +
+// 		`		"hosts_3" = {` + "\n" +
+// 		`			ip = "1.2.3.3",` + "\n" +
+// 		`			description = "host3"` + "\n" +
+// 		`		},` + "\n" +
+// 		`	} ` + "\n" +
+// 		`}` + "\n"
+
+// 	steps := []resource.TestStep{{
+// 		Config: step_01,
+// 	}, {
+// 		Config: step_02,
+// 	}}
+
+// 	resource.Test(t, resource.TestCase{
+// 		PreCheck:                 func() { testAccPreCheck(t) },
+// 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+// 		Steps:                    steps,
+// 	})
+// }

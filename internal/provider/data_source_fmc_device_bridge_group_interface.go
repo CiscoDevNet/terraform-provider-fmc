@@ -120,8 +120,8 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				MarkdownDescription: "Netmask for ipv4_static_address.",
 				Computed:            true,
 			},
-			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.",
+			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -140,7 +140,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 					},
 				},
 			},
-			"ipv6_enable_dad": schema.BoolAttribute{
+			"ipv6_dad": schema.BoolAttribute{
 				MarkdownDescription: "Indicates whether to enable IPv6 DAD Loopback Detect (DAD).",
 				Computed:            true,
 			},

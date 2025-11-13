@@ -27,7 +27,7 @@ data "fmc_vlan_tags" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual VLAN Tag object. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of VLAN Tags. The key of the map is the name of the individual VLAN Tag object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -40,7 +40,7 @@ Read-Only:
 
 - `description` (String) Description of the object.
 - `end_tag` (String) VLAN Tag end value.
-- `id` (String) Id of the managed VLAN Tag object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `id` (String) Id of the VLAN Tag object.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `start_tag` (String) VLAN Tag starting value.
 - `type` (String) Type of the object; this value is always 'VlanTag'

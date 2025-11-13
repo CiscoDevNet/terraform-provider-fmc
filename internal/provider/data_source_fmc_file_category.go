@@ -72,7 +72,7 @@ func (d *FileCategoryDataSource) Schema(ctx context.Context, req datasource.Sche
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the File Category. There can be only build-in File Categories.",
+				MarkdownDescription: "Name of the File Category.",
 				Optional:            true,
 				Computed:            true,
 			},

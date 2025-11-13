@@ -83,12 +83,19 @@ func (r *VLANTagsResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual VLAN Tag object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of VLAN Tags. The key of the map is the name of the individual VLAN Tag object.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed VLAN Tag object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the VLAN Tag object.").String,
+							Computed:            true,
+							PlanModifiers: []planmodifier.String{
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+							},
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'VlanTag'").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -99,15 +106,8 @@ func (r *VLANTagsResource) Schema(ctx context.Context, req resource.SchemaReques
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'VlanTag'").String,
-							Computed:            true,
-							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
-							},
 						},
 						"start_tag": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("VLAN Tag starting value.").String,

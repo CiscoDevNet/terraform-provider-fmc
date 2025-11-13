@@ -109,9 +109,9 @@ func testAccDataSourceFmcChassisLogicalDeviceConfig() string {
 	config += `		id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	}]` + "\n"
 	config += `	device_group_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	license_capabilities = ["MALWARE"]` + "\n"
+	config += `	licenses = ["MALWARE"]` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -147,9 +147,9 @@ func testAccNamedDataSourceFmcChassisLogicalDeviceConfig() string {
 	config += `		id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	}]` + "\n"
 	config += `	device_group_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	access_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	license_capabilities = ["MALWARE"]` + "\n"
+	config += `	licenses = ["MALWARE"]` + "\n"
 	config += `}` + "\n"
 
 	config += `

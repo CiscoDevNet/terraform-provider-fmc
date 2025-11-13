@@ -8,25 +8,16 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of security zones. The key of the map is the name of the individual VLAN Tag object.
+      Map of VLAN Tags. The key of the map is the name of the individual VLAN Tag object.
     map_key_example: my_vlan_tags
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed VLAN Tag object.
+        description: Id of the VLAN Tag object.
         exclude_example: true
         exclude_test: true
-      - model_name: description
-        type: String
-        description: Description of the object.
-        example: "My TAG id"
-        mandatory: false
-      - model_name: overridable
-        type: Bool
-        description: Indicates whether object values can be overridden.
-        example: true
         # Type is defined twice on purpose, as this needs to be an attribute, but also is required for POST/PUT requests
       - model_name: type
         type: String
@@ -36,6 +27,16 @@ attributes:
         type: String
         description: Type of the object; this value is always 'VlanTag'
         value: VlanTag
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My TAG id"
+        mandatory: false
+        missing_in_response_if_set_to_empty_string: true
+      - model_name: overridable
+        type: Bool
+        description: Whether the object values can be overridden.
+        example: true
       - model_name: startTag
         type: String
         example: "12"

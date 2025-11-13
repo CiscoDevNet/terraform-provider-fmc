@@ -73,7 +73,7 @@ func (d *DynamicObjectsDataSource) Schema(ctx context.Context, req datasource.Sc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Dynamic Object.",
+							MarkdownDescription: "Id of the Dynamic Object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

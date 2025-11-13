@@ -15,7 +15,7 @@ This data source reads the Syslog Alerts.
 ```terraform
 data "fmc_syslog_alerts" "example" {
   items = {
-    "test_syslog_alert_1" = {
+    "my_syslog_alerts" = {
     }
   }
 }

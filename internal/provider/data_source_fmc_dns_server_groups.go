@@ -72,7 +72,7 @@ func (d *DNSServerGroupsDataSource) Schema(ctx context.Context, req datasource.S
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed DNS Server Group.",
+							MarkdownDescription: "Id of the DNS Server Group object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

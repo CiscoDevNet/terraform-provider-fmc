@@ -58,7 +58,7 @@ Required:
 
 Read-Only:
 
-- `id` (String) Id of the managed Expanded Community List.
+- `id` (String) Id of the Expanded Community List object.
 - `type` (String) Type of the object; this value is always 'CommunityListObject'.
 
 <a id="nestedatt--items--entries"></a>

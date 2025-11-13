@@ -81,7 +81,7 @@ func (d *IPv6PrefixListDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: "List of entries",
+				MarkdownDescription: "List of prefixes.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

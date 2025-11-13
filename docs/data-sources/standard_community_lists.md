@@ -38,8 +38,8 @@ data "fmc_standard_community_lists" "example" {
 
 Read-Only:
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
-- `id` (String) Id of the managed Standard Community List.
+- `entries` (Attributes List) List of entries. (see [below for nested schema](#nestedatt--items--entries))
+- `id` (String) Id of the Standard Community List object.
 - `type` (String) Type of the object; this value is always 'CommunityListObject'.
 
 <a id="nestedatt--items--entries"></a>

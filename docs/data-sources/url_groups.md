@@ -15,7 +15,7 @@ This data source reads the URL Groups.
 ```terraform
 data "fmc_url_groups" "example" {
   items = {
-    "url_group_1" = {
+    "my_url_groups" = {
     }
   }
 }
@@ -27,7 +27,7 @@ data "fmc_url_groups" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of url groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of URL Groups. The key of the map is the name of the individual URL Group. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -41,7 +41,7 @@ Read-Only:
 - `description` (String) Description of the object.
 - `id` (String) Id of the managed URL Group.
 - `literals` (Attributes Set) Set of literal values to be included in the URL group. (see [below for nested schema](#nestedatt--items--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'UrlGroup'.
 - `urls` (Attributes Set) Set of URL objects to be included in the URL group. (see [below for nested schema](#nestedatt--items--urls))
 
@@ -58,4 +58,4 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Id of the object (such as fmc_url.example.id, etc.).
+- `id` (String) Id of the object.

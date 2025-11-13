@@ -1,0 +1,49 @@
+---
+name: FQDNs
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns
+doc_category: Objects
+is_bulk: true
+res_description: This resource manages a FQDN (Fully Qualified Domain Name) Object through bulk operations.
+ds_description: This data source reads the FQDN (Fully Qualified Domain Name) Object through bulk operations.
+minimum_version_bulk_delete: "7.4"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of FQDN Objects. The key of the map is the name of the individual FQDN Object.
+    map_key_example: my_fqdns
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the FQDN object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: "My FQDN 1"
+        missing_in_response_if_set_to_empty_string: true
+      - model_name: overridable
+        type: Bool
+        description: Whether the object values can be overridden.
+        exclude_example: true
+        example: "true"
+      - model_name: value
+        tf_name: fqdn
+        type: String
+        mandatory: true
+        description: Fully Qualified Domain Name.
+        example: www.example.com
+      - model_name: dnsResolution
+        tf_name: dns_resolution
+        enum_values: [IPV4_ONLY, IPV6_ONLY, IPV4_AND_IPV6]
+        type: String
+        description: Type of DNS resolution.
+        default_value: IPV4_AND_IPV6
+        example: IPV4_AND_IPV6
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'FQDN'.
+        computed: true

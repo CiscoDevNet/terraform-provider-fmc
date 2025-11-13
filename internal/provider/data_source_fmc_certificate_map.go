@@ -72,7 +72,7 @@ func (d *CertificateMapDataSource) Schema(ctx context.Context, req datasource.Sc
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the certificate map object.",
+				MarkdownDescription: "Name of the Certificate Map object.",
 				Optional:            true,
 				Computed:            true,
 			},

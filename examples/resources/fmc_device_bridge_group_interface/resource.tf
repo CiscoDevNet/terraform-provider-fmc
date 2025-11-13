@@ -17,7 +17,7 @@ resource "fmc_device_bridge_group_interface" "example" {
       prefix  = "64"
     }
   ]
-  ipv6_enable_dad     = true
+  ipv6_dad            = true
   ipv6_dad_attempts   = 1
   ipv6_ns_interval    = 1000
   ipv6_reachable_time = 0

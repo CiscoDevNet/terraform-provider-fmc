@@ -72,7 +72,7 @@ func (d *ApplicationTagsDataSource) Schema(ctx context.Context, req datasource.S
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Application Tag.",
+							MarkdownDescription: "Id of the Application Tag.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

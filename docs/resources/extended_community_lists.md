@@ -61,7 +61,7 @@ Required:
 
 Read-Only:
 
-- `id` (String) Id of the managed Extended Community List.
+- `id` (String) Id of the Extended Community List object.
 - `type` (String) Type of the object; this value is always 'ExtendedCommunityList'.
 
 <a id="nestedatt--items--entries"></a>
@@ -74,8 +74,8 @@ Required:
 
 Optional:
 
-- `regular_expression` (String) Regular expression (required if sub_type is Expanded)
-- `route_target` (String) Route target (required if sub_type is Standard)
+- `regular_expression` (String) Regular expression (required if `sub_type` is Expanded)
+- `route_target` (String) Route target (required if `sub_type` is Standard)
 
 ## Import
 

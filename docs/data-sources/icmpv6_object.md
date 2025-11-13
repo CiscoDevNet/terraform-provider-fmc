@@ -4,11 +4,13 @@ page_title: "fmc_icmpv6_object Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the ICMPv6 Object.
+  This object is deprecated. Please use fmc_icmpv6 instead.
 ---
 
 # fmc_icmpv6_object (Data Source)
 
 This data source reads the ICMPv6 Object.
+This object is deprecated. Please use `fmc_icmpv6` instead.
 
 ## Example Usage
 

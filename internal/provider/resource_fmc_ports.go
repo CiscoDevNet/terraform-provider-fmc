@@ -83,24 +83,31 @@ func (r *PortsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of ports. The key of the map is the name of the individual Port.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Ports. The key of the map is the name of the individual Port.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Port.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Port object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
 						},
-						"port": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.").String,
-							Optional:            true,
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ProtocolPortObject'.").String,
+							Computed:            true,
+							PlanModifiers: []planmodifier.String{
+								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+							},
 						},
 						"protocol": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).").String,
 							Required:            true,
+						},
+						"port": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.").String,
+							Optional:            true,
 						},
 						"description": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
@@ -109,13 +116,6 @@ func (r *PortsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 						"overridable": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 							Optional:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ProtocolPortObject'.").String,
-							Computed:            true,
-							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
-							},
 						},
 					},
 				},

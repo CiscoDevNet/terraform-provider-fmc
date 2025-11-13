@@ -93,7 +93,7 @@ func (r *ChassisResource) Schema(ctx context.Context, req resource.SchemaRequest
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"host_name": schema.StringAttribute{
+			"host": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the chassis.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{

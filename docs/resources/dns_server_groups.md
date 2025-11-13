@@ -69,7 +69,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed DNS Server Group.
+- `id` (String) Id of the DNS Server Group object.
 - `type` (String) Type of the object; this value is always 'DNSServerGroupObject'.
 
 <a id="nestedatt--items--dns_servers"></a>

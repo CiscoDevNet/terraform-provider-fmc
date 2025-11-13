@@ -13,7 +13,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the category object.
+    description: Name of the Access Category.
     example: my_category
     data_source_query: true
   - model_name: type

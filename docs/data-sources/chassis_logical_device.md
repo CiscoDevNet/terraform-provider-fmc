@@ -34,7 +34,7 @@ data "fmc_chassis_logical_device" "example" {
 
 ### Read-Only
 
-- `access_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
+- `access_control_policy_id` (String) Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.
 - `admin_state` (String) Admin state of the device.
 - `assigned_interfaces` (Attributes Set) Interface assignment for the device. (see [below for nested schema](#nestedatt--assigned_interfaces))
 - `container_id` (String) Id of the parent container. Empty if device is Standalone.
@@ -56,7 +56,7 @@ data "fmc_chassis_logical_device" "example" {
 - `ipv6_address` (String) Management IPv6 address of the device.
 - `ipv6_gateway` (String) Gateway for Management IPv6 address.
 - `ipv6_prefix` (Number) Prefix length of Management IPv6 address.
-- `license_capabilities` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
+- `licenses` (Set of String) License capabilities to be assigned to the device. This is used only as bootstrap configuration.
 - `permit_expert_mode` (String) Permit expert mode for the device.
 - `platform_settings_id` (String) Id of the platform settings.
 - `resource_profile_id` (String) Id of the resource profile. Changing resource profile will trigger instance restart on deployment, however changing this value will not trigger automatic deployment.

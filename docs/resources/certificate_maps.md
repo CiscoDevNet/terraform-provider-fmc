@@ -60,7 +60,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Certificate Map.
+- `id` (String) Id of the Certificate Map object.
 - `type` (String) Type of the object; this value is always 'CertificateMap'.
 
 <a id="nestedatt--items--rules"></a>

@@ -29,7 +29,7 @@ data "fmc_device_cluster" "example" {
 
 ### Read-Only
 
-- `cluster_key` (String) Secret key for the cluster, between 1 nd 63 characters.
+- `cluster_key` (String, Sensitive) Secret key for the cluster, between 1 nd 63 characters.
 - `control_node_ccl_ipv4_address` (String) Cluster control link IPv4 address / VTEP IPv4 address.
 - `control_node_ccl_prefix` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
 - `control_node_device_id` (String) Cluster Control Node device ID.
@@ -38,14 +38,14 @@ data "fmc_device_cluster" "example" {
 - `control_node_interface_type` (String) Cluster control link interface Type.
 - `control_node_priority` (Number) Priority of cluster controle node.
 - `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
-- `data_devices` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_devices))
+- `data_nodes` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_nodes))
 - `type` (String) Type of the resource; This is always `DeviceCluster`.
 
-<a id="nestedatt--data_devices"></a>
-### Nested Schema for `data_devices`
+<a id="nestedatt--data_nodes"></a>
+### Nested Schema for `data_nodes`
 
 Read-Only:
 
-- `data_node_ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
-- `data_node_device_id` (String) Cluster Data Node device ID.
-- `data_node_priority` (Number) Priority of cluster data node.
+- `ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
+- `device_id` (String) Cluster Data Node device ID.
+- `priority` (Number) Priority of cluster data node.

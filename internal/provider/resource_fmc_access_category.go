@@ -86,7 +86,7 @@ func (r *AccessCategoryResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the category object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Access Category.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{

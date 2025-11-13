@@ -142,11 +142,11 @@ func (r *DeviceLoopbackInterfaceResource) Schema(ctx context.Context, req resour
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IPv6 address without a slash and prefix.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"prefix": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Prefix width for the IPv6 address.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},

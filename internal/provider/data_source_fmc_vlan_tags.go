@@ -66,13 +66,17 @@ func (d *VLANTagsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of security zones. The key of the map is the name of the individual VLAN Tag object.",
+				MarkdownDescription: "Map of VLAN Tags. The key of the map is the name of the individual VLAN Tag object.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed VLAN Tag object.",
+							MarkdownDescription: "Id of the VLAN Tag object.",
+							Computed:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the object; this value is always 'VlanTag'",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -80,11 +84,7 @@ func (d *VLANTagsDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
-							Computed:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'VlanTag'",
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 						"start_tag": schema.StringAttribute{

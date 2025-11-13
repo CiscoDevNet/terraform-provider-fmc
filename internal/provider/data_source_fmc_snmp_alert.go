@@ -72,7 +72,7 @@ func (d *SNMPAlertDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the SNMP Alert. There is no built-in SNMP alert.",
+				MarkdownDescription: "Name of the SNMP Alert.",
 				Optional:            true,
 				Computed:            true,
 			},

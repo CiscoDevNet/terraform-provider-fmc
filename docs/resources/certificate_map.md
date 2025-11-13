@@ -31,7 +31,7 @@ resource "fmc_certificate_map" "example" {
 
 ### Required
 
-- `name` (String) Name of the certificate map object.
+- `name` (String) Name of the Certificate Map object.
 
 ### Optional
 

@@ -83,7 +83,7 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable_ra = false` + "\n"
+	config += `	ipv6_ra = false` + "\n"
 	config += `}` + "\n"
 
 	config += `
@@ -107,7 +107,7 @@ func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable_ra = false` + "\n"
+	config += `	ipv6_ra = false` + "\n"
 	config += `}` + "\n"
 
 	config += `

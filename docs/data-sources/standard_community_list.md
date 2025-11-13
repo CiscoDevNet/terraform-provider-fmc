@@ -29,7 +29,7 @@ data "fmc_standard_community_list" "example" {
 
 ### Read-Only
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) List of entries. (see [below for nested schema](#nestedatt--entries))
 - `type` (String) Type of the object; this value is always 'CommunityListObject'.
 
 <a id="nestedatt--entries"></a>

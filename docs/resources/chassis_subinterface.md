@@ -31,6 +31,8 @@ resource "fmc_chassis_subinterface" "example" {
 - `chassis_id` (String) Id of the parent chassis.
 - `interface_id` (String) Id of the parent interface.
 - `interface_name` (String) Name of the parent interface.
+- `port_type` (String) Type of the port.
+  - Choices: `DATA`, `DATA_SHARING`
 - `sub_interface_id` (Number) The numerical id of this subinterface, unique on the parent interface.
   - Range: `0`-`4294967295`
 - `vlan_id` (Number) VLAN identifier, unique per the parent interface.
@@ -39,8 +41,6 @@ resource "fmc_chassis_subinterface" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `port_type` (String) Type of the port.
-  - Choices: `DATA`, `DATA_SHARING`
 
 ### Read-Only
 

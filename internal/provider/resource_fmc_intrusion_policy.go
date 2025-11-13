@@ -31,6 +31,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -100,14 +101,13 @@ func (r *IntrusionPolicyResource) Schema(ctx context.Context, req resource.Schem
 				Required:            true,
 			},
 			"inspection_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Inspection mode.").AddStringEnumDescription("PREVENTION", "DETECTION").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Inspection mode.").AddStringEnumDescription("PREVENTION", "DETECTION").AddDefaultValueDescription("PREVENTION").String,
 				Optional:            true,
+				Computed:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("PREVENTION", "DETECTION"),
 				},
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
+				Default: stringdefault.StaticString("PREVENTION"),
 			},
 		},
 	}
@@ -214,8 +214,6 @@ func (r *IntrusionPolicyResource) Read(ctx context.Context, req resource.ReadReq
 
 // End of section. //template:end read
 
-// Section below is generated&owned by "gen/generator.go". //template:begin update
-
 func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
 	var plan, state IntrusionPolicy
 
@@ -240,7 +238,7 @@ func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.Updat
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString())+"?replicateInspectionMode=true", body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -251,8 +249,6 @@ func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.Updat
 	diags = resp.State.Set(ctx, &plan)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end update
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 

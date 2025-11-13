@@ -75,15 +75,15 @@ func (d *FTDAutoNATRuleDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 			},
 			"nat_type": schema.StringAttribute{
-				MarkdownDescription: "Type of the rule",
+				MarkdownDescription: "Type of the rule.",
 				Computed:            true,
 			},
 			"destination_interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of destination security zone or interface group",
+				MarkdownDescription: "ID of destination security zone or interface group.",
 				Computed:            true,
 			},
 			"fall_through": schema.BoolAttribute{
-				MarkdownDescription: "Fallthrough to Interface PAT (Destination Interface)",
+				MarkdownDescription: "Fallthrough to Interface PAT (Destination Interface).",
 				Computed:            true,
 			},
 			"ipv6": schema.BoolAttribute{
@@ -91,47 +91,47 @@ func (d *FTDAutoNATRuleDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 			},
 			"net_to_net": schema.BoolAttribute{
-				MarkdownDescription: "Net to Net Mapping",
+				MarkdownDescription: "Net to Net Mapping.",
 				Computed:            true,
 			},
 			"no_proxy_arp": schema.BoolAttribute{
-				MarkdownDescription: "Do not proxy ARP on Destination Interface",
+				MarkdownDescription: "Do not proxy ARP on Destination Interface.",
 				Computed:            true,
 			},
 			"original_network_id": schema.StringAttribute{
-				MarkdownDescription: "ID of original network object (host, network or range)",
+				MarkdownDescription: "ID of original network object (Host, Network or Range).",
 				Computed:            true,
 			},
 			"original_port": schema.Int64Attribute{
-				MarkdownDescription: "Original port number",
+				MarkdownDescription: "Original port number.",
 				Computed:            true,
 			},
 			"protocol": schema.StringAttribute{
-				MarkdownDescription: "Service protocol",
+				MarkdownDescription: "Service protocol.",
 				Computed:            true,
 			},
 			"perform_route_lookup": schema.BoolAttribute{
-				MarkdownDescription: "Perform Route Lookup for Destination Interface",
+				MarkdownDescription: "Perform Route Lookup for Destination Interface.",
 				Computed:            true,
 			},
 			"source_interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of source security zone or interface group",
+				MarkdownDescription: "ID of source security zone or interface group.",
 				Computed:            true,
 			},
 			"translate_dns": schema.BoolAttribute{
-				MarkdownDescription: "Translate DNS replies that match this rule",
+				MarkdownDescription: "Translate DNS replies that match this rule.",
 				Computed:            true,
 			},
 			"translated_network_id": schema.StringAttribute{
-				MarkdownDescription: "ID of translated network object (host, network or range)",
+				MarkdownDescription: "ID of translated network object (Host, Network or Range).",
 				Computed:            true,
 			},
 			"translated_network_is_destination_interface": schema.BoolAttribute{
-				MarkdownDescription: "Translate source network to destination interface address",
+				MarkdownDescription: "Translate source network to destination interface address.",
 				Computed:            true,
 			},
 			"translated_port": schema.Int64Attribute{
-				MarkdownDescription: "Translated port number",
+				MarkdownDescription: "Translated port number.",
 				Computed:            true,
 			},
 		},

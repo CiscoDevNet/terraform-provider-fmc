@@ -23,8 +23,8 @@ The following restrictions apply:
 resource "fmc_ports" "example" {
   items = {
     my_ports = {
-      port        = "443"
       protocol    = "TCP"
+      port        = "443"
       description = "Port TCP/443 (HTTPS)"
     }
   }
@@ -36,7 +36,7 @@ resource "fmc_ports" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of ports. The key of the map is the name of the individual Port. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Ports. The key of the map is the name of the individual Port. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -61,7 +61,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Port.
+- `id` (String) Id of the Port object.
 - `type` (String) Type of the object; this value is always 'ProtocolPortObject'.
 
 ## Import

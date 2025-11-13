@@ -33,7 +33,7 @@ func TestAccFmcHost(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "name", "my_host"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_host.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "description", "My host object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "description", "My Host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "ip", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_host.test", "overridable", "true"))
 
@@ -82,7 +82,7 @@ func testAccFmcHostConfig_minimum() string {
 func testAccFmcHostConfig_all() string {
 	config := `resource "fmc_host" "test" {` + "\n"
 	config += `	name = "my_host"` + "\n"
-	config += `	description = "My host object"` + "\n"
+	config += `	description = "My Host object"` + "\n"
 	config += `	ip = "10.1.1.1"` + "\n"
 	config += `	overridable = true` + "\n"
 	config += `}` + "\n"
@@ -90,3 +90,33 @@ func testAccFmcHostConfig_all() string {
 }
 
 // End of section. //template:end testAccConfigAll
+
+// # FMCVERSION <= 7.2
+// This test fails on FMC 7.2, as setting an empty description will set description as a single space.
+// Which will trigger incorrect diff on next plan.
+// func TestAccFmcHost_EmptyDescription(t *testing.T) {
+
+// 	step_01 := `resource "fmc_host" "test" {` + "\n" +
+// 		`	name = "hosts_1"` + "\n" +
+// 		`	ip = "1.2.3.1"` + "\n" +
+// 		`	description = "host1"` + "\n" +
+// 		`}` + "\n"
+
+// 	step_02 := `resource "fmc_host" "test" {` + "\n" +
+// 		`	name = "hosts_1"` + "\n" +
+// 		`	ip = "1.2.3.1"` + "\n" +
+// 		`	description = ""` + "\n" +
+// 		`}` + "\n"
+
+// 	steps := []resource.TestStep{{
+// 		Config: step_01,
+// 	}, {
+// 		Config: step_02,
+// 	}}
+
+// 	resource.Test(t, resource.TestCase{
+// 		PreCheck:                 func() { testAccPreCheck(t) },
+// 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+// 		Steps:                    steps,
+// 	})
+// }

@@ -81,7 +81,7 @@ func (r *CertificateMapResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the certificate map object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Certificate Map object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{

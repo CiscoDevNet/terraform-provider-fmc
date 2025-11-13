@@ -95,7 +95,7 @@ resource "fmc_route_map" "example" {
 
 ### Required
 
-- `entries` (Attributes List) List of route map entries. (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) List of Route Map entries. (see [below for nested schema](#nestedatt--entries))
 - `name` (String) Name of the Route Map object.
 
 ### Optional

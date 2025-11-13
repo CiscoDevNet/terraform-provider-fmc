@@ -94,11 +94,11 @@ func (d *ExtendedCommunityListDataSource) Schema(ctx context.Context, req dataso
 							Computed:            true,
 						},
 						"route_target": schema.StringAttribute{
-							MarkdownDescription: "Route target (required if sub_type is Standard)",
+							MarkdownDescription: "Route target (required if `sub_type` is Standard)",
 							Computed:            true,
 						},
 						"regular_expression": schema.StringAttribute{
-							MarkdownDescription: "Regular expression (required if sub_type is Expanded)",
+							MarkdownDescription: "Regular expression (required if `sub_type` is Expanded)",
 							Computed:            true,
 						},
 					},

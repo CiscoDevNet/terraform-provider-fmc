@@ -30,7 +30,7 @@ data "fmc_file_type" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the File Type. There can be only build-in File Types.
+- `name` (String) Name of the File Type.
 
 ### Read-Only
 

@@ -68,14 +68,14 @@ type AccessRulesItems struct {
 	UrlLiterals                []AccessRulesItemsUrlLiterals                `tfsdk:"url_literals"`
 	UrlObjects                 []AccessRulesItemsUrlObjects                 `tfsdk:"url_objects"`
 	UrlCategories              []AccessRulesItemsUrlCategories              `tfsdk:"url_categories"`
-	LogBegin                   types.Bool                                   `tfsdk:"log_begin"`
-	LogEnd                     types.Bool                                   `tfsdk:"log_end"`
+	LogConnectionBegin         types.Bool                                   `tfsdk:"log_connection_begin"`
+	LogConnectionEnd           types.Bool                                   `tfsdk:"log_connection_end"`
 	LogFiles                   types.Bool                                   `tfsdk:"log_files"`
 	SendEventsToFmc            types.Bool                                   `tfsdk:"send_events_to_fmc"`
 	SendSyslog                 types.Bool                                   `tfsdk:"send_syslog"`
-	SyslogConfigId             types.String                                 `tfsdk:"syslog_config_id"`
+	SyslogAlertId              types.String                                 `tfsdk:"syslog_alert_id"`
 	SyslogSeverity             types.String                                 `tfsdk:"syslog_severity"`
-	SnmpConfigId               types.String                                 `tfsdk:"snmp_config_id"`
+	SnmpAlertId                types.String                                 `tfsdk:"snmp_alert_id"`
 	Description                types.String                                 `tfsdk:"description"`
 	FilePolicyId               types.String                                 `tfsdk:"file_policy_id"`
 	IntrusionPolicyId          types.String                                 `tfsdk:"intrusion_policy_id"`
@@ -498,11 +498,11 @@ func (data AccessRules) toBody(ctx context.Context, state AccessRules) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "urls.urlCategoriesWithReputation.-1", itemChildBody)
 				}
 			}
-			if !item.LogBegin.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogBegin.ValueBool())
+			if !item.LogConnectionBegin.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogConnectionBegin.ValueBool())
 			}
-			if !item.LogEnd.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogEnd.ValueBool())
+			if !item.LogConnectionEnd.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogConnectionEnd.ValueBool())
 			}
 			if !item.LogFiles.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "logFiles", item.LogFiles.ValueBool())
@@ -513,14 +513,14 @@ func (data AccessRules) toBody(ctx context.Context, state AccessRules) string {
 			if !item.SendSyslog.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableSyslog", item.SendSyslog.ValueBool())
 			}
-			if !item.SyslogConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogConfigId.ValueString())
+			if !item.SyslogAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogAlertId.ValueString())
 			}
 			if !item.SyslogSeverity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "syslogSeverity", item.SyslogSeverity.ValueString())
 			}
-			if !item.SnmpConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpConfigId.ValueString())
+			if !item.SnmpAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpAlertId.ValueString())
 			}
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
@@ -1031,14 +1031,14 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("logBegin"); value.Exists() {
-				data.LogBegin = types.BoolValue(value.Bool())
+				data.LogConnectionBegin = types.BoolValue(value.Bool())
 			} else {
-				data.LogBegin = types.BoolValue(false)
+				data.LogConnectionBegin = types.BoolValue(false)
 			}
 			if value := res.Get("logEnd"); value.Exists() {
-				data.LogEnd = types.BoolValue(value.Bool())
+				data.LogConnectionEnd = types.BoolValue(value.Bool())
 			} else {
-				data.LogEnd = types.BoolValue(false)
+				data.LogConnectionEnd = types.BoolValue(false)
 			}
 			if value := res.Get("logFiles"); value.Exists() {
 				data.LogFiles = types.BoolValue(value.Bool())
@@ -1056,9 +1056,9 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				data.SendSyslog = types.BoolValue(false)
 			}
 			if value := res.Get("syslogConfig.id"); value.Exists() {
-				data.SyslogConfigId = types.StringValue(value.String())
+				data.SyslogAlertId = types.StringValue(value.String())
 			} else {
-				data.SyslogConfigId = types.StringNull()
+				data.SyslogAlertId = types.StringNull()
 			}
 			if value := res.Get("syslogSeverity"); value.Exists() {
 				data.SyslogSeverity = types.StringValue(value.String())
@@ -1066,9 +1066,9 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				data.SyslogSeverity = types.StringNull()
 			}
 			if value := res.Get("snmpConfig.id"); value.Exists() {
-				data.SnmpConfigId = types.StringValue(value.String())
+				data.SnmpAlertId = types.StringValue(value.String())
 			} else {
-				data.SnmpConfigId = types.StringNull()
+				data.SnmpAlertId = types.StringNull()
 			}
 			if value := res.Get("filePolicy.id"); value.Exists() {
 				data.FilePolicyId = types.StringValue(value.String())
@@ -2207,15 +2207,15 @@ func (data *AccessRules) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			}
 			(*parent).UrlCategories[i] = data
 		}
-		if value := res.Get("logBegin"); value.Exists() && !data.LogBegin.IsNull() {
-			data.LogBegin = types.BoolValue(value.Bool())
-		} else if data.LogBegin.ValueBool() != false {
-			data.LogBegin = types.BoolNull()
+		if value := res.Get("logBegin"); value.Exists() && !data.LogConnectionBegin.IsNull() {
+			data.LogConnectionBegin = types.BoolValue(value.Bool())
+		} else if data.LogConnectionBegin.ValueBool() != false {
+			data.LogConnectionBegin = types.BoolNull()
 		}
-		if value := res.Get("logEnd"); value.Exists() && !data.LogEnd.IsNull() {
-			data.LogEnd = types.BoolValue(value.Bool())
-		} else if data.LogEnd.ValueBool() != false {
-			data.LogEnd = types.BoolNull()
+		if value := res.Get("logEnd"); value.Exists() && !data.LogConnectionEnd.IsNull() {
+			data.LogConnectionEnd = types.BoolValue(value.Bool())
+		} else if data.LogConnectionEnd.ValueBool() != false {
+			data.LogConnectionEnd = types.BoolNull()
 		}
 		if value := res.Get("logFiles"); value.Exists() && !data.LogFiles.IsNull() {
 			data.LogFiles = types.BoolValue(value.Bool())
@@ -2232,20 +2232,20 @@ func (data *AccessRules) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		} else if data.SendSyslog.ValueBool() != false {
 			data.SendSyslog = types.BoolNull()
 		}
-		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogConfigId.IsNull() {
-			data.SyslogConfigId = types.StringValue(value.String())
+		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogAlertId.IsNull() {
+			data.SyslogAlertId = types.StringValue(value.String())
 		} else {
-			data.SyslogConfigId = types.StringNull()
+			data.SyslogAlertId = types.StringNull()
 		}
 		if value := res.Get("syslogSeverity"); value.Exists() && !data.SyslogSeverity.IsNull() {
 			data.SyslogSeverity = types.StringValue(value.String())
 		} else {
 			data.SyslogSeverity = types.StringNull()
 		}
-		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpConfigId.IsNull() {
-			data.SnmpConfigId = types.StringValue(value.String())
+		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpAlertId.IsNull() {
+			data.SnmpAlertId = types.StringValue(value.String())
 		} else {
-			data.SnmpConfigId = types.StringNull()
+			data.SnmpAlertId = types.StringNull()
 		}
 		if value := res.Get("filePolicy.id"); value.Exists() && !data.FilePolicyId.IsNull() {
 			data.FilePolicyId = types.StringValue(value.String())

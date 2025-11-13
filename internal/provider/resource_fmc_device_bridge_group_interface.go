@@ -144,8 +144,8 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask for ipv4_static_address.").String,
 				Optional:            true,
 			},
-			"ipv4_dhcp_obtain_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.").String,
+			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -164,7 +164,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 					},
 				},
 			},
-			"ipv6_enable_dad": schema.BoolAttribute{
+			"ipv6_dad": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable IPv6 DAD Loopback Detect (DAD).").String,
 				Optional:            true,
 			},
@@ -196,11 +196,11 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 					Attributes: map[string]schema.Attribute{
 						"mac_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("MAC address for custom ARP entry in format 0123.4567.89ab.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"ip_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP address for custom ARP entry").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"enable_alias": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry").String,

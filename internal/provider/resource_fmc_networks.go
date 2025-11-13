@@ -83,12 +83,12 @@ func (r *NetworksResource) Schema(ctx context.Context, req resource.SchemaReques
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of networks. The key of the map is the name of the individual Network.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Networks. The key of the map is the name of the individual Network.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Network.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Network object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -99,11 +99,11 @@ func (r *NetworksResource) Schema(ctx context.Context, req resource.SchemaReques
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"prefix": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Prefix of the network.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Prefix of the Network.").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{

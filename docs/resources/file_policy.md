@@ -57,20 +57,20 @@ resource "fmc_file_policy" "example" {
 
 ### Required
 
-- `name` (String) Name of file policy.
+- `name` (String) Name of file File Policy.
 
 ### Optional
 
-- `block_encrypted_archives` (Boolean) Block encrypted archives
-- `block_uninspectable_archives` (Boolean) Block uninspectable Archives
-- `clean_list` (Boolean) Enable clean list
-- `custom_detection_list` (Boolean) Enable custom detection list
+- `block_encrypted_archives` (Boolean) Block encrypted archives.
+- `block_uninspectable_archives` (Boolean) Block uninspectable Archives.
+- `clean_list` (Boolean) Enable clean list.
+- `custom_detection_list` (Boolean) Enable custom detection list.
 - `description` (String) File policy description.
 - `domain` (String) Name of the FMC domain
 - `file_rules` (Attributes List) The ordered list of file rules. (see [below for nested schema](#nestedatt--file_rules))
-- `first_time_file_analysis` (Boolean) Analyze first-seen files while AMP cloud disposition is pending
-- `inspect_archives` (Boolean) Inspect Archives
-- `max_archive_depth` (Number) Max archive depth
+- `first_time_file_analysis` (Boolean) Analyze first-seen files while AMP cloud disposition is pending.
+- `inspect_archives` (Boolean) Inspect Archives.
+- `max_archive_depth` (Number) Max archive depth.
   - Range: `1`-`3`
 - `threat_score` (String) If AMP Cloud disposition is Unknown, override disposition based upon threat score.
   - Choices: `DISABLED`, `MEDIUM`, `High`, `VERY_HIGH`
@@ -78,7 +78,7 @@ resource "fmc_file_policy" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object
+- `type` (String) Type of the object.
 
 <a id="nestedatt--file_rules"></a>
 ### Nested Schema for `file_rules`
@@ -101,7 +101,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of File Rule
+- `id` (String) Id of File Rule.
 - `type` (String) Type of File Rule.
 
 <a id="nestedatt--file_rules--file_categories"></a>
@@ -109,12 +109,12 @@ Read-Only:
 
 Required:
 
-- `id` (String) The id of file category.
-- `name` (String) The name of file category.
+- `id` (String) Id of file category.
+- `name` (String) Name of file category.
 
 Optional:
 
-- `type` (String) The type of file category.
+- `type` (String) Type of file category.
   - Default value: `FileCategory`
 
 
@@ -123,12 +123,12 @@ Optional:
 
 Required:
 
-- `id` (String) The id of file type.
-- `name` (String) The name of file type.
+- `id` (String) Id of file type.
+- `name` (String) Name of file type.
 
 Optional:
 
-- `type` (String) The name of file type.
+- `type` (String) Type of file type.
   - Default value: `FileType`
 
 ## Import

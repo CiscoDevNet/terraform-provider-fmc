@@ -35,13 +35,13 @@ func TestAccFmcBFDTemplate(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_bfd_template.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "hop_type", "SINGLE_HOP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "echo", "ENABLED"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "interval_time", "MILLISECONDS"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "min_transmit", "300"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "tx_rx_multiplier", "3"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "min_receive", "300"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_key_id", "1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "interval_type", "MILLISECONDS"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "multiplier", "3"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "minimum_transmit", "300"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "minimum_receive", "300"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_type", "MD5"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_password_encryption", "UN_ENCRYPTED"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_bfd_template.test", "authentication_key_id", "1"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -90,14 +90,14 @@ func testAccFmcBFDTemplateConfig_all() string {
 	config += `	name = "my_bfd_template"` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"
 	config += `	echo = "ENABLED"` + "\n"
-	config += `	interval_time = "MILLISECONDS"` + "\n"
-	config += `	min_transmit = 300` + "\n"
-	config += `	tx_rx_multiplier = 3` + "\n"
-	config += `	min_receive = 300` + "\n"
-	config += `	authentication_password = "ThisIsMySecretPassword"` + "\n"
-	config += `	authentication_key_id = 1` + "\n"
+	config += `	interval_type = "MILLISECONDS"` + "\n"
+	config += `	multiplier = 3` + "\n"
+	config += `	minimum_transmit = 300` + "\n"
+	config += `	minimum_receive = 300` + "\n"
 	config += `	authentication_type = "MD5"` + "\n"
+	config += `	authentication_password = "ThisIsMySecretPassword"` + "\n"
 	config += `	authentication_password_encryption = "UN_ENCRYPTED"` + "\n"
+	config += `	authentication_key_id = 1` + "\n"
 	config += `}` + "\n"
 	return config
 }

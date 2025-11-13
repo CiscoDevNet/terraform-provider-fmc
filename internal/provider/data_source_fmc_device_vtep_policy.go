@@ -100,15 +100,15 @@ func (d *DeviceVTEPPolicyDataSource) Schema(ctx context.Context, req datasource.
 							Computed:            true,
 						},
 						"neighbor_discovery": schema.StringAttribute{
-							MarkdownDescription: "How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).",
+							MarkdownDescription: "How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a ID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).",
 							Computed:            true,
 						},
 						"neighbor_address_literal": schema.StringAttribute{
-							MarkdownDescription: "Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address. Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.",
+							MarkdownDescription: "Used for `neighbor_discovery` STATIC_PEER_IP, where it holds any unicast IP address. Used for `neighbor_discovery` DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.",
 							Computed:            true,
 						},
 						"neighbor_address_id": schema.StringAttribute{
-							MarkdownDescription: "Used for neighbor_discovery STATIC_PEER_GROUP, where it holds UUID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).",
+							MarkdownDescription: "Used for `neighbor_discovery` STATIC_PEER_GROUP, where it holds ID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).",
 							Computed:            true,
 						},
 					},

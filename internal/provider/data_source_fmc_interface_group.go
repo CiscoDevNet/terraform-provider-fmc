@@ -72,7 +72,7 @@ func (d *InterfaceGroupDataSource) Schema(ctx context.Context, req datasource.Sc
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
+				MarkdownDescription: "Name of the Interface Group object.",
 				Optional:            true,
 				Computed:            true,
 			},

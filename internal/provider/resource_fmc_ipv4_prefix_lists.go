@@ -93,7 +93,7 @@ func (r *IPv4PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed IPv4 Prefix List.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the IPv4 Prefix List object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -107,7 +107,7 @@ func (r *IPv4PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"entries": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of entries").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of prefixes.").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

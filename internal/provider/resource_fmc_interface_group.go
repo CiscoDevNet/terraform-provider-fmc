@@ -81,7 +81,7 @@ func (r *InterfaceGroupResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Interface Group object.").String,
 				Required:            true,
 			},
 			"interface_mode": schema.StringAttribute{

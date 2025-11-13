@@ -1,6 +1,6 @@
 data "fmc_networks" "example" {
   items = {
-    "my_networks_object" = {
+    "my_networks" = {
     }
   }
 }

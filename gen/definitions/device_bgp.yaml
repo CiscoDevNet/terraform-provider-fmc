@@ -134,11 +134,13 @@ attributes:
         description: IP address of the BGP neighbor
         id: true
         example: "10.1.1.1"
+        mandatory: true
       - model_name: remoteAs
         tf_name: remote_as
         type: String
         description: AS number of the BGP neighbor
         example: "65534"
+        mandatory: true
       - model_name: fallOverBFD
         data_path: [neighborGeneral]
         tf_name: bfd_fallover
@@ -192,7 +194,7 @@ attributes:
       - model_name: neighborDistributeLists
         tf_name: filter_access_lists
         data_path: [neighborFiltering]
-        description: Set incoming or outgoing Access List to distribute BGP neighbor information.
+        description: Set incoming or outgoing Standard Access List to distribute BGP neighbor information.
         type: List
         exclude_test: true
         exclude_example: true
@@ -521,6 +523,7 @@ attributes:
         type: String
         description: Network ID (desired network/host object)
         id: true
+        mandatory: true
       - model_name: id
         tf_name: advertise_map_id
         data_path: [advertiseMap]
@@ -558,7 +561,8 @@ attributes:
         tf_name: direction
         type: String
         enum_values: [incomingroutefilter, outgoingroutefilter]
-        description: Determine if the filter should be applied to inbound updates or outbound updates
+        description: Determine if the filter should be applied to inbound updates or outbound updates.
+        mandatory: true
       - model_name: protocol
         tf_name: protocol
         data_path: [protocol]

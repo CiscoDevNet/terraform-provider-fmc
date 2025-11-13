@@ -72,7 +72,7 @@ func (d *IPv4PrefixListsDataSource) Schema(ctx context.Context, req datasource.S
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed IPv4 Prefix List.",
+							MarkdownDescription: "Id of the IPv4 Prefix List object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -80,7 +80,7 @@ func (d *IPv4PrefixListsDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"entries": schema.ListNestedAttribute{
-							MarkdownDescription: "List of entries",
+							MarkdownDescription: "List of prefixes.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

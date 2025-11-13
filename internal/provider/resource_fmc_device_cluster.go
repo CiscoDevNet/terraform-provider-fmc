@@ -96,6 +96,7 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 			"cluster_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Secret key for the cluster, between 1 nd 63 characters.").String,
 				Required:            true,
+				Sensitive:           true,
 			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Cluster Control VXLAN Network Identifier (VNI) Network").String,
@@ -135,20 +136,20 @@ func (r *DeviceClusterResource) Schema(ctx context.Context, req resource.SchemaR
 					int64validator.Between(1, 255),
 				},
 			},
-			"data_devices": schema.ListNestedAttribute{
+			"data_nodes": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of cluster data nodes.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"data_node_device_id": schema.StringAttribute{
+						"device_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node device ID.").String,
 							Required:            true,
 						},
-						"data_node_ccl_ipv4_address": schema.StringAttribute{
+						"ccl_ipv4_address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Cluster Data Node link IPv4 address / VTEP IPv4 address.").String,
 							Required:            true,
 						},
-						"data_node_priority": schema.Int64Attribute{
+						"priority": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Priority of cluster data node.").AddIntegerRangeDescription(1, 255).String,
 							Required:            true,
 							Validators: []validator.Int64{
@@ -191,8 +192,8 @@ func (r *DeviceClusterResource) Create(ctx context.Context, req resource.CreateR
 
 	// Deploy configuration to devices in Cluster (pre-requisite for cluster creation)
 	var clusterDeviceIds = []string{plan.ControlNodeDeviceId.ValueString()}
-	for _, v := range plan.DataDevices {
-		clusterDeviceIds = append(clusterDeviceIds, v.DataNodeDeviceId.ValueString())
+	for _, v := range plan.DataNodes {
+		clusterDeviceIds = append(clusterDeviceIds, v.DeviceId.ValueString())
 	}
 
 	deploy := DeviceDeploy{
@@ -354,28 +355,28 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	// Get list of state data devices
-	stateDevices := make([]string, len(state.DataDevices))
-	for i, v := range state.DataDevices {
-		stateDevices[i] = v.DataNodeDeviceId.ValueString()
+	stateDevices := make([]string, len(state.DataNodes))
+	for i, v := range state.DataNodes {
+		stateDevices[i] = v.DeviceId.ValueString()
 	}
 
 	// Get list of plan data devices
-	planDevices := make([]string, len(plan.DataDevices))
-	for i, v := range plan.DataDevices {
-		planDevices[i] = v.DataNodeDeviceId.ValueString()
+	planDevices := make([]string, len(plan.DataNodes))
+	for i, v := range plan.DataNodes {
+		planDevices[i] = v.DeviceId.ValueString()
 	}
 
 	// Check if any device needs to be removed from cluster
 	toBeRemoved := plan
-	toBeRemoved.DataDevices = []DeviceClusterDataDevices{}
-	for _, v := range state.DataDevices {
-		if !slices.Contains(planDevices, v.DataNodeDeviceId.ValueString()) {
-			toBeRemoved.DataDevices = append(toBeRemoved.DataDevices, v)
+	toBeRemoved.DataNodes = []DeviceClusterDataNodes{}
+	for _, v := range state.DataNodes {
+		if !slices.Contains(planDevices, v.DeviceId.ValueString()) {
+			toBeRemoved.DataNodes = append(toBeRemoved.DataNodes, v)
 		}
 	}
 
-	if len(toBeRemoved.DataDevices) > 0 {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be removed from cluster: %v", plan.Id.ValueString(), toBeRemoved.DataDevices))
+	if len(toBeRemoved.DataNodes) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be removed from cluster: %v", plan.Id.ValueString(), toBeRemoved.DataNodes))
 		body := toBeRemoved.toBody(ctx, DeviceCluster{})
 		body, _ = sjson.Set(body, "action", "REMOVE_NODES")
 		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
@@ -397,15 +398,15 @@ func (r *DeviceClusterResource) Update(ctx context.Context, req resource.UpdateR
 
 	// Check if any device needs to be added to cluster
 	toBeAdded := plan
-	toBeAdded.DataDevices = []DeviceClusterDataDevices{}
-	for _, v := range plan.DataDevices {
-		if !slices.Contains(stateDevices, v.DataNodeDeviceId.ValueString()) {
-			toBeAdded.DataDevices = append(toBeAdded.DataDevices, v)
+	toBeAdded.DataNodes = []DeviceClusterDataNodes{}
+	for _, v := range plan.DataNodes {
+		if !slices.Contains(stateDevices, v.DeviceId.ValueString()) {
+			toBeAdded.DataNodes = append(toBeAdded.DataNodes, v)
 		}
 	}
 
-	if len(toBeAdded.DataDevices) > 0 {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be added to cluster: %v", plan.Id.ValueString(), toBeAdded.DataDevices))
+	if len(toBeAdded.DataNodes) > 0 {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Data devices to be added to cluster: %v", plan.Id.ValueString(), toBeAdded.DataNodes))
 		body := toBeAdded.toBody(ctx, DeviceCluster{})
 		body, _ = sjson.Set(body, "action", "ADD_NODES")
 		res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)

@@ -68,7 +68,8 @@ func (r *FQDNObjectsResource) Metadata(ctx context.Context, req resource.Metadat
 func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FQDN Objects through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FQDN (Fully Qualified Domain Name) Object through bulk operations.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdns` instead.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkDeleteDescription("7.4").AddMinimumVersionBulkDisclaimerDescription().AddMinimumVersionBulkUpdateDescription().String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdns` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -91,7 +92,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the FQDN object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -102,7 +103,7 @@ func (r *FQDNObjectsResource) Schema(ctx context.Context, req resource.SchemaReq
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"fqdn": schema.StringAttribute{

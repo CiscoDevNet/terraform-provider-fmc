@@ -72,7 +72,7 @@ func (d *ResourceProfilesDataSource) Schema(ctx context.Context, req datasource.
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Resource Profile.",
+							MarkdownDescription: "Id of the Resource Profile object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

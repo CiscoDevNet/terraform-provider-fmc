@@ -81,7 +81,7 @@ func (d *StandardCommunityListDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: "List of entries",
+				MarkdownDescription: "List of entries.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

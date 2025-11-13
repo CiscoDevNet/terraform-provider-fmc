@@ -50,7 +50,7 @@ Read-Only:
 - `backup_local_identity_type` (String) Type of the local identity for the backup tunnel.
 - `connection_type` (String) Connection type.
 - `device_id` (String) Id of the device managed by local FMC.
-- `extranet_device` (Boolean) Is the device managed by local FMC.
+- `extranet_device` (Boolean) Is this external device (not managed by FMC).
 - `extranet_dynamic_ip` (Boolean) Is the IP address of the extranet device dynamic.
 - `extranet_ip_address` (String) IP address of extranet device (optionally coma separated Backup IP Addresses).
 - `id` (String) Id of the Endpoint object.
@@ -64,7 +64,7 @@ Read-Only:
 - `nat_traversal` (Boolean) Enable NAT traversal.
 - `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
 - `peer_type` (String) Role of the device in the topology.
-- `protected_networks` (Attributes Set) Set of protected networks. (see [below for nested schema](#nestedatt--items--protected_networks))
+- `protected_networks` (Attributes Set) Set of protected Networks. (see [below for nested schema](#nestedatt--items--protected_networks))
 - `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
 - `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
 - `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
@@ -75,4 +75,4 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Id of the protected network.
+- `id` (String) Id of the Network object.

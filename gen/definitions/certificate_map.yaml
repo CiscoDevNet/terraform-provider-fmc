@@ -6,7 +6,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the certificate map object.
+    description: Name of the Certificate Map object.
     example: my_certificate_map
     data_source_query: true
   - model_name: type

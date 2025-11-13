@@ -12,8 +12,7 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    description: >-
-      Id of the parent device.
+    description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_device_physical_interface.test.device_id
   - model_name: type
@@ -47,6 +46,7 @@ attributes:
         description: VTEP NVE number, currently must always be 1.
         min_int: 1
         max_int: 1
+        default_value: "1"
         example: "1"
       - model_name: nveDestinationPort
         tf_name: encapsulation_port
@@ -71,7 +71,7 @@ attributes:
         description: >-
           How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication.
           For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address.
-          For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group
+          For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a ID of a network group
           and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
         enum_values:
           - NONE
@@ -85,8 +85,8 @@ attributes:
         tf_name: neighbor_address_literal
         type: String
         description: >-
-          Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address.
-          Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to
+          Used for `neighbor_discovery` STATIC_PEER_IP, where it holds any unicast IP address.
+          Used for `neighbor_discovery` DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to
           239.255.255.255.
         example: 192.168.0.1
       - model_name: id
@@ -94,7 +94,7 @@ attributes:
         tf_name: neighbor_address_id
         type: String
         description: >-
-          Used for neighbor_discovery STATIC_PEER_GROUP, where it holds UUID of the network group
+          Used for `neighbor_discovery` STATIC_PEER_GROUP, where it holds ID of the network group
           and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
         exclude_example: true
         exclude_test: true

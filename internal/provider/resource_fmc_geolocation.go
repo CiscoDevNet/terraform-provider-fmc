@@ -79,7 +79,7 @@ func (r *GeolocationResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the geolocation object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Geolocation object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -90,7 +90,7 @@ func (r *GeolocationResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"continents": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of continents.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Continents.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -102,7 +102,7 @@ func (r *GeolocationResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"countries": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of countries.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Countries.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

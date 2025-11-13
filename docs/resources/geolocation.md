@@ -33,12 +33,12 @@ resource "fmc_geolocation" "example" {
 
 ### Required
 
-- `name` (String) Name of the geolocation object.
+- `name` (String) Name of the Geolocation object.
 
 ### Optional
 
-- `continents` (Attributes List) List of continents. (see [below for nested schema](#nestedatt--continents))
-- `countries` (Attributes List) List of countries. (see [below for nested schema](#nestedatt--countries))
+- `continents` (Attributes List) List of Continents. (see [below for nested schema](#nestedatt--continents))
+- `countries` (Attributes List) List of Countries. (see [below for nested schema](#nestedatt--countries))
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

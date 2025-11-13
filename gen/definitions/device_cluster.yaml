@@ -26,6 +26,7 @@ attributes:
     type: String
     mandatory: true
     write_only: true
+    sensitive: true
     data_path: [commonBootstrap]
     description: Secret key for the cluster, between 1 nd 63 characters.
     example: cisco123
@@ -93,11 +94,12 @@ attributes:
     example: 1
     description: Priority of cluster controle node.
   - model_name: dataDevices
+    tf_name: data_nodes
     type: List
     description: List of cluster data nodes.
     attributes:
       - model_name: id
-        tf_name: data_node_device_id
+        tf_name: device_id
         data_path: [deviceDetails]
         type: String
         mandatory: true
@@ -105,14 +107,14 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         id: true
       - model_name: cclIp
-        tf_name: data_node_ccl_ipv4_address
+        tf_name: ccl_ipv4_address
         data_path: [clusterNodeBootstrap]
         type: String
         mandatory: true
         description: Cluster Data Node link IPv4 address / VTEP IPv4 address.
         example: 10.10.4.2
       - model_name: priority
-        tf_name: data_node_priority
+        tf_name: priority
         data_path: [clusterNodeBootstrap]
         type: Int64
         mandatory: true

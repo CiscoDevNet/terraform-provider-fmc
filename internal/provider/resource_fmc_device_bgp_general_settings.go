@@ -110,10 +110,10 @@ func (r *DeviceBGPGeneralSettingsResource) Schema(ctx context.Context, req resou
 				},
 			},
 			"as_number_in_path_attribute": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Range to discard routes that have as-path segments that exceed a specified value.").AddIntegerRangeDescription(1, 254).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Range to discard routes that have as-path segments that exceed a specified value.").AddIntegerRangeDescription(0, 254).String,
 				Optional:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(1, 254),
+					int64validator.Between(0, 254),
 				},
 			},
 			"log_neighbor_changes": schema.BoolAttribute{

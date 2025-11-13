@@ -31,12 +31,12 @@ import (
 func TestAccDataSourceFmcPrefilterPolicy(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "name", "my_prefilter_policy"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "description", "My prefilter policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "description", "My Prefilter policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_prefilter_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action", "BLOCK_TUNNELS"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_prefilter_policy.test", "default_action_id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action_log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action_log_end", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action_log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action_log_connection_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.name", "rule1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.rule_type", "PREFILTER"))
@@ -50,8 +50,8 @@ func TestAccDataSourceFmcPrefilterPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.source_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.port", "80"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_end", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.send_events_to_fmc", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -110,10 +110,10 @@ resource "fmc_security_zone" "test" {
 func testAccDataSourceFmcPrefilterPolicyConfig() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
 	config += `	name = "my_prefilter_policy"` + "\n"
-	config += `	description = "My prefilter policy"` + "\n"
+	config += `	description = "My Prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
-	config += `	default_action_log_begin = true` + "\n"
-	config += `	default_action_log_end = false` + "\n"
+	config += `	default_action_log_connection_begin = true` + "\n"
+	config += `	default_action_log_connection_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		name = "rule1"` + "\n"
@@ -162,8 +162,8 @@ func testAccDataSourceFmcPrefilterPolicyConfig() string {
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
@@ -179,10 +179,10 @@ func testAccDataSourceFmcPrefilterPolicyConfig() string {
 func testAccNamedDataSourceFmcPrefilterPolicyConfig() string {
 	config := `resource "fmc_prefilter_policy" "test" {` + "\n"
 	config += `	name = "my_prefilter_policy"` + "\n"
-	config += `	description = "My prefilter policy"` + "\n"
+	config += `	description = "My Prefilter policy"` + "\n"
 	config += `	default_action = "BLOCK_TUNNELS"` + "\n"
-	config += `	default_action_log_begin = true` + "\n"
-	config += `	default_action_log_end = false` + "\n"
+	config += `	default_action_log_connection_begin = true` + "\n"
+	config += `	default_action_log_connection_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
 	config += `	rules = [{` + "\n"
 	config += `		name = "rule1"` + "\n"
@@ -231,8 +231,8 @@ func testAccNamedDataSourceFmcPrefilterPolicyConfig() string {
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"

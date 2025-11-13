@@ -73,16 +73,16 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the prefilter policy.",
+				MarkdownDescription: "Name of the Prefilter policy.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the prefilter policy.",
+				MarkdownDescription: "Description of the policy.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Object type; This is always `PrefilterPolicy`",
+				MarkdownDescription: "Type of the object; this value is always `PrefilterPolicy`.",
 				Computed:            true,
 			},
 			"default_action": schema.StringAttribute{
@@ -90,27 +90,27 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Computed:            true,
 			},
 			"default_action_id": schema.StringAttribute{
-				MarkdownDescription: "Default action ID",
+				MarkdownDescription: "Default action Id.",
 				Computed:            true,
 			},
-			"default_action_log_begin": schema.BoolAttribute{
-				MarkdownDescription: "Log events at the beginning of the connection.",
+			"default_action_log_connection_begin": schema.BoolAttribute{
+				MarkdownDescription: "Log events at the beginning of the connection for default action.",
 				Computed:            true,
 			},
-			"default_action_log_end": schema.BoolAttribute{
-				MarkdownDescription: "Log events at the end of the connection.",
+			"default_action_log_connection_end": schema.BoolAttribute{
+				MarkdownDescription: "Log events at the end of the connection for default action.",
 				Computed:            true,
 			},
 			"default_action_send_events_to_fmc": schema.BoolAttribute{
-				MarkdownDescription: "Send events to the Firepower Management Center event viewer.",
+				MarkdownDescription: "Send events to the Firepower Management Center event viewer for default action.",
 				Computed:            true,
 			},
-			"default_action_syslog_config_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the syslog config. Can be set only when either default_action_log_begin or default_action_log_end is true.",
+			"default_action_syslog_alert_id": schema.StringAttribute{
+				MarkdownDescription: "Id of syslog alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.",
 				Computed:            true,
 			},
-			"default_action_snmp_config_id": schema.StringAttribute{
-				MarkdownDescription: "UUID of the SNMP alert. Can be set only when either default_action_log_begin or default_action_log_end is true.",
+			"default_action_snmp_alert_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the SNMP alert. Can be set only when either `default_action_log_connection_begin` or `default_action_log_connection_end` is true.",
 				Computed:            true,
 			},
 			"rules": schema.ListNestedAttribute{
@@ -127,11 +127,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"rule_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the rule. At least one Encapsulation Port Object (encapsulation_ports) is mandatory to be specified for TUNNEL Rules.",
+							MarkdownDescription: "Type of the rule. At least one Encapsulation Port Object (`encapsulation_ports`) is mandatory to be specified for TUNNEL Rules.",
 							Computed:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether the prefilter rule is in effect (true) or not (false). Default is true.",
+							MarkdownDescription: "Enable the rule.",
 							Computed:            true,
 						},
 						"action": schema.StringAttribute{
@@ -139,7 +139,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 						},
 						"bidirectional": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether the rule is bidirectional. Can be true only for TUNNEL rules. Default is false.",
+							MarkdownDescription: "Indicates whether the rule is bidirectional. Used for TUNNEL rules.",
 							Computed:            true,
 						},
 						"tunnel_zone_id": schema.StringAttribute{
@@ -188,7 +188,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"value": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Network literal value.",
 										Computed:            true,
 									},
 								},
@@ -200,11 +200,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "Id of the object",
+										MarkdownDescription: "Id of the object.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object",
+										MarkdownDescription: "Type of the object.",
 										Computed:            true,
 									},
 								},
@@ -255,7 +255,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							},
 						},
 						"vlan_tag_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing vlan tags or vlan tag groups",
+							MarkdownDescription: "Set of objects representing vlan tags or vlan tag groups.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -272,11 +272,11 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Protocol number.",
 										Computed:            true,
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Port number.",
 										Computed:            true,
 									},
 								},
@@ -323,36 +323,36 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							},
 						},
 						"encapsulation_ports": schema.SetAttribute{
-							MarkdownDescription: "List of encapsulation ports to be used.",
+							MarkdownDescription: "List of encapsulation ports to be used. Mandatory for TUNNEL rules.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},
-						"log_begin": schema.BoolAttribute{
-							MarkdownDescription: "Log events at the beginning of the connection. Default is false.",
+						"log_connection_begin": schema.BoolAttribute{
+							MarkdownDescription: "Log events at the beginning of the connection.",
 							Computed:            true,
 						},
-						"log_end": schema.BoolAttribute{
-							MarkdownDescription: "Log events at the end of the connection. Default is false.",
+						"log_connection_end": schema.BoolAttribute{
+							MarkdownDescription: "Log events at the end of the connection.",
 							Computed:            true,
 						},
 						"send_events_to_fmc": schema.BoolAttribute{
-							MarkdownDescription: "Send events to the Firepower Management Center event viewer. Default is false.",
+							MarkdownDescription: "Send events to the Firepower Management Center event viewer.",
 							Computed:            true,
 						},
 						"send_syslog": schema.BoolAttribute{
-							MarkdownDescription: "Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging. Default is false.",
+							MarkdownDescription: "Send alerts associated with the prefilter rule to default syslog configuration in Prefilter Logging.",
 							Computed:            true,
 						},
-						"syslog_config_id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the syslog config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
+						"syslog_alert_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the syslog alert. Can be set only when `syslog_enabled` is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default policy syslog configuration in Access Control Logging applies.",
 							Computed:            true,
 						},
 						"syslog_severity": schema.StringAttribute{
 							MarkdownDescription: "Override the Severity of syslog alerts.",
 							Computed:            true,
 						},
-						"snmp_config_id": schema.StringAttribute{
-							MarkdownDescription: "UUID of the SNMP alert associated with the prefilter rule. Can be set only when either log_begin or log_end is true.",
+						"snmp_alert_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the SNMP alert associated with the prefilter rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.",
 							Computed:            true,
 						},
 					},

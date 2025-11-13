@@ -25,7 +25,7 @@ data "fmc_certificate_map" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the certificate map object.
+- `name` (String) Name of the Certificate Map object.
 
 ### Read-Only
 

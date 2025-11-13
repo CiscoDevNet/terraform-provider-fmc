@@ -14,14 +14,14 @@ This resource manages a Device. This resource is not supported in cdFMC - to reg
 
 ```terraform
 resource "fmc_device" "example" {
-  name                 = "my_device"
-  host_name            = "10.0.0.1"
-  license_capabilities = ["ESSENTIALS"]
-  registration_key     = "key1"
-  performance_tier     = "FTDv5"
-  snort_engine         = "SNORT3"
-  object_group_search  = true
-  access_policy_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  name                     = "my_device"
+  host                     = "10.0.0.1"
+  licenses                 = ["ESSENTIALS"]
+  registration_key         = "key1"
+  performance_tier         = "FTDv5"
+  snort_engine             = "SNORT3"
+  object_group_search      = true
+  access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
 
@@ -30,11 +30,11 @@ resource "fmc_device" "example" {
 
 ### Required
 
-- `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
-- `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
+- `access_control_policy_id` (String) Id of the assigned Access Control Policy.
+- `host` (String) Hostname or IP address of the device. Either the `host` or `nat_id` must be present.
+- `licenses` (Set of String) Array of strings representing the license capabilities on the managed device.
   - Choices: `ESSENTIALS`, `IPS`, `URL`, `MALWARE_DEFENSE`, `CARRIER`, `SECURE_CLIENT_PREMIER`, `SECURE_CLIENT_PREMIER_ADVANTAGE`, `SECURE_CLIENT_VPNOnly`, `BASE`, `THREAT`, `PROTECT`, `CONTROL`, `URLFilter`, `MALWARE`, `VPN`, `SSL`
-- `name` (String) User-specified name, must be unique.
+- `name` (String) Name of the device.
 - `registration_key` (String) Registration Key identical to the one previously configured on the device (`configure manager`).
 
 ### Optional
@@ -46,7 +46,7 @@ resource "fmc_device" "example" {
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search
 - `performance_tier` (String) Performance tier for the managed device.
-  - Choices: `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `FTDv100`, `Legacy`
+  - Choices: `FTDv`, `FTDv5`, `FTDv10`, `FTDv20`, `FTDv30`, `FTDv50`, `FTDv100`, `Legacy`
 - `prohibit_packet_transfer` (Boolean) Value true prohibits the device from sending packet data with events to the Firepower Management Center. Value false allows the transfer when a certain event is triggered. Not all traffic data is sent; connection events do not include a payload, only connection metadata.
 - `snort_engine` (String) SNORT engine version to be enabled.
   - Choices: `SNORT2`, `SNORT3`

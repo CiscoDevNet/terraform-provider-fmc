@@ -59,7 +59,8 @@ func (d *ExtendedACLDataSource) Metadata(_ context.Context, req datasource.Metad
 func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Extended ACL.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Extended ACL.").AddAttributeDescription("This object is deprecated. Please use `fmc_extended_access_list` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This object is deprecated. Please use `fmc_extended_access_list` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,12 +73,8 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Extended ACL.",
+				MarkdownDescription: "Name of the Extended Access List.",
 				Optional:            true,
-				Computed:            true,
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the Extended ACL.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -85,7 +82,7 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: "Ordered list of ACL's entries.",
+				MarkdownDescription: "Ordered list of Access List entries.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -94,7 +91,7 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"log_level": schema.StringAttribute{
-							MarkdownDescription: "Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.",
+							MarkdownDescription: "Logging level.",
 							Computed:            true,
 						},
 						"logging": schema.StringAttribute{
@@ -106,7 +103,7 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"source_network_literals": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent sources of traffic (literally specified).",
+							MarkdownDescription: "Set of literals that represent sources of traffic.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -122,7 +119,7 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							},
 						},
 						"destination_network_literals": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent destinations of traffic (literally specified).",
+							MarkdownDescription: "Set of literals that represent destinations of traffic.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -138,7 +135,19 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							},
 						},
 						"source_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent sources of traffic (Host, Network, Range).",
+							MarkdownDescription: "Set of objects that represent sources of traffic (Host, Network, Range, Network Group).",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the object.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"destination_network_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "Set of objects that represent destinations of traffic (Host, Network, Range, Network Group).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -161,20 +170,8 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 								},
 							},
 						},
-						"destination_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent destinations of traffic.",
-							Computed:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"id": schema.StringAttribute{
-										MarkdownDescription: "Id of the object.",
-										Computed:            true,
-									},
-								},
-							},
-						},
 						"source_port_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing source ports.",
+							MarkdownDescription: "Set of objects representing source ports or icmpv4 objects.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -186,7 +183,7 @@ func (d *ExtendedACLDataSource) Schema(ctx context.Context, req datasource.Schem
 							},
 						},
 						"destination_port_objects": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects representing destination ports.",
+							MarkdownDescription: "Set of objects representing destination ports or icmpv4 objects.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

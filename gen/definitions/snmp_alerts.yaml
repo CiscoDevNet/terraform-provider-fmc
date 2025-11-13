@@ -10,13 +10,13 @@ attributes:
     type: Map
     description: >-
       Map of SNMP Alerts. The key of the map is the name of the individual SNMP Alert.
-    map_key_example: test_snmp_alert_1
+    map_key_example: my_snmp_alerts
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed SNMP Alert.
+        description: Id of the SNMP Alert.
         exclude_example: true
         exclude_test: true
       - model_name: type

@@ -66,21 +66,25 @@ func (d *PortsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of ports. The key of the map is the name of the individual Port.",
+				MarkdownDescription: "Map of Ports. The key of the map is the name of the individual Port.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Port.",
+							MarkdownDescription: "Id of the Port object.",
 							Computed:            true,
 						},
-						"port": schema.StringAttribute{
-							MarkdownDescription: "Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.",
+						"type": schema.StringAttribute{
+							MarkdownDescription: "Type of the object; this value is always 'ProtocolPortObject'.",
 							Computed:            true,
 						},
 						"protocol": schema.StringAttribute{
 							MarkdownDescription: "IANA protocol number or Ethertype. This is handled differently for Transport and Network layer protocols. Transport layer protocols are identified by the IANA protocol number (e.g. 6 means TCP, and 17 means UDP). Network layer protocols are identified by the decimal form of the IEEE Registration Authority Ethertype (e.g. 2048 means IP).",
+							Computed:            true,
+						},
+						"port": schema.StringAttribute{
+							MarkdownDescription: "Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -89,10 +93,6 @@ func (d *PortsDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 						},
 						"overridable": schema.BoolAttribute{
 							MarkdownDescription: "Indicates whether object values can be overridden.",
-							Computed:            true,
-						},
-						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object; this value is always 'ProtocolPortObject'.",
 							Computed:            true,
 						},
 					},

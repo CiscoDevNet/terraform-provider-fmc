@@ -40,9 +40,9 @@ func TestAccFmcDeviceCluster(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "control_node_ccl_prefix", "10.10.4.0/27"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "control_node_ccl_ipv4_address", "10.10.4.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "control_node_priority", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_devices.0.data_node_device_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_devices.0.data_node_ccl_ipv4_address", "10.10.4.2"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_devices.0.data_node_priority", "2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_nodes.0.device_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_nodes.0.ccl_ipv4_address", "10.10.4.2"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_cluster.test", "data_nodes.0.priority", "2"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -116,10 +116,10 @@ func testAccFmcDeviceClusterConfig_all() string {
 	config += `	control_node_device_id = var.device_id` + "\n"
 	config += `	control_node_ccl_ipv4_address = "10.10.4.1"` + "\n"
 	config += `	control_node_priority = 1` + "\n"
-	config += `	data_devices = [{` + "\n"
-	config += `		data_node_device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `		data_node_ccl_ipv4_address = "10.10.4.2"` + "\n"
-	config += `		data_node_priority = 2` + "\n"
+	config += `	data_nodes = [{` + "\n"
+	config += `		device_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `		ccl_ipv4_address = "10.10.4.2"` + "\n"
+	config += `		priority = 2` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

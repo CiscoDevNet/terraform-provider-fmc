@@ -136,7 +136,7 @@ func (r *ChassisSubinterfaceResource) Schema(ctx context.Context, req resource.S
 			},
 			"port_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
-				Optional:            true,
+				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DATA", "DATA_SHARING"),
 				},

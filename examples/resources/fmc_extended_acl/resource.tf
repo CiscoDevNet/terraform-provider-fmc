@@ -1,6 +1,5 @@
 resource "fmc_extended_acl" "example" {
-  name        = "my_extended_acl"
-  description = "My Extended Access Control List"
+  name = "my_extended_acl"
   entries = [
     {
       action               = "DENY"
@@ -24,12 +23,12 @@ resource "fmc_extended_acl" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      source_sgt_objects = [
+      destination_network_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      destination_network_objects = [
+      source_sgt_objects = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }

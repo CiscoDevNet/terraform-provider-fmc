@@ -49,15 +49,15 @@ type DeviceSubinterface struct {
 	SecurityZoneId                        types.String                        `tfsdk:"security_zone_id"`
 	Mtu                                   types.Int64                         `tfsdk:"mtu"`
 	Priority                              types.Int64                         `tfsdk:"priority"`
-	EnableSgtPropagate                    types.Bool                          `tfsdk:"enable_sgt_propagate"`
+	SgtPropagate                          types.Bool                          `tfsdk:"sgt_propagate"`
 	InterfaceName                         types.String                        `tfsdk:"interface_name"`
 	SubInterfaceId                        types.Int64                         `tfsdk:"sub_interface_id"`
 	VlanId                                types.Int64                         `tfsdk:"vlan_id"`
 	Ipv4StaticAddress                     types.String                        `tfsdk:"ipv4_static_address"`
 	Ipv4StaticNetmask                     types.String                        `tfsdk:"ipv4_static_netmask"`
 	Ipv4AddressPoolId                     types.String                        `tfsdk:"ipv4_address_pool_id"`
-	Ipv4DhcpObtainRoute                   types.Bool                          `tfsdk:"ipv4_dhcp_obtain_route"`
-	Ipv4DhcpRouteMetric                   types.Int64                         `tfsdk:"ipv4_dhcp_route_metric"`
+	Ipv4DhcpObtainDefaultRoute            types.Bool                          `tfsdk:"ipv4_dhcp_obtain_default_route"`
+	Ipv4DhcpDefaultRouteMetric            types.Int64                         `tfsdk:"ipv4_dhcp_default_route_metric"`
 	Ipv4PppoeVpdnGroupName                types.String                        `tfsdk:"ipv4_pppoe_vpdn_group_name"`
 	Ipv4PppoeUser                         types.String                        `tfsdk:"ipv4_pppoe_user"`
 	Ipv4PppoePassword                     types.String                        `tfsdk:"ipv4_pppoe_password"`
@@ -65,26 +65,26 @@ type DeviceSubinterface struct {
 	Ipv4PppoeRouteMetric                  types.Int64                         `tfsdk:"ipv4_pppoe_route_metric"`
 	Ipv4PppoeRouteSettings                types.Bool                          `tfsdk:"ipv4_pppoe_route_settings"`
 	Ipv4PppoeStoreCredentialsInFlash      types.Bool                          `tfsdk:"ipv4_pppoe_store_credentials_in_flash"`
-	Ipv6Enable                            types.Bool                          `tfsdk:"ipv6_enable"`
+	Ipv6                                  types.Bool                          `tfsdk:"ipv6"`
 	Ipv6EnforceEui                        types.Bool                          `tfsdk:"ipv6_enforce_eui"`
 	Ipv6LinkLocalAddress                  types.String                        `tfsdk:"ipv6_link_local_address"`
-	Ipv6EnableAutoConfig                  types.Bool                          `tfsdk:"ipv6_enable_auto_config"`
+	Ipv6AutoConfig                        types.Bool                          `tfsdk:"ipv6_auto_config"`
 	Ipv6Addresses                         []DeviceSubinterfaceIpv6Addresses   `tfsdk:"ipv6_addresses"`
 	Ipv6AddressPoolId                     types.String                        `tfsdk:"ipv6_address_pool_id"`
 	Ipv6Prefixes                          []DeviceSubinterfaceIpv6Prefixes    `tfsdk:"ipv6_prefixes"`
-	Ipv6EnableDad                         types.Bool                          `tfsdk:"ipv6_enable_dad"`
+	Ipv6Dad                               types.Bool                          `tfsdk:"ipv6_dad"`
 	Ipv6DadAttempts                       types.Int64                         `tfsdk:"ipv6_dad_attempts"`
 	Ipv6NsInterval                        types.Int64                         `tfsdk:"ipv6_ns_interval"`
 	Ipv6ReachableTime                     types.Int64                         `tfsdk:"ipv6_reachable_time"`
-	Ipv6EnableRa                          types.Bool                          `tfsdk:"ipv6_enable_ra"`
+	Ipv6Ra                                types.Bool                          `tfsdk:"ipv6_ra"`
 	Ipv6RaLifeTime                        types.Int64                         `tfsdk:"ipv6_ra_life_time"`
 	Ipv6RaInterval                        types.Int64                         `tfsdk:"ipv6_ra_interval"`
 	Ipv6Dhcp                              types.Bool                          `tfsdk:"ipv6_dhcp"`
-	Ipv6DefaultRouteByDhcp                types.Bool                          `tfsdk:"ipv6_default_route_by_dhcp"`
+	Ipv6DhcpObtainDefaultRoute            types.Bool                          `tfsdk:"ipv6_dhcp_obtain_default_route"`
 	Ipv6DhcpPoolId                        types.String                        `tfsdk:"ipv6_dhcp_pool_id"`
 	Ipv6DhcpPoolType                      types.String                        `tfsdk:"ipv6_dhcp_pool_type"`
-	Ipv6EnableDhcpAddressConfig           types.Bool                          `tfsdk:"ipv6_enable_dhcp_address_config"`
-	Ipv6EnableDhcpNonaddressConfig        types.Bool                          `tfsdk:"ipv6_enable_dhcp_nonaddress_config"`
+	Ipv6DhcpAddressConfig                 types.Bool                          `tfsdk:"ipv6_dhcp_address_config"`
+	Ipv6DhcpNonaddressConfig              types.Bool                          `tfsdk:"ipv6_dhcp_nonaddress_config"`
 	Ipv6DhcpClientPdPrefixName            types.String                        `tfsdk:"ipv6_dhcp_client_pd_prefix_name"`
 	Ipv6DhcpClientPdHintPrefixes          types.String                        `tfsdk:"ipv6_dhcp_client_pd_hint_prefixes"`
 	IpBasedMonitoring                     types.Bool                          `tfsdk:"ip_based_monitoring"`
@@ -93,7 +93,7 @@ type DeviceSubinterface struct {
 	ActiveMacAddress                      types.String                        `tfsdk:"active_mac_address"`
 	StandbyMacAddress                     types.String                        `tfsdk:"standby_mac_address"`
 	ArpTableEntries                       []DeviceSubinterfaceArpTableEntries `tfsdk:"arp_table_entries"`
-	EnableAntiSpoofing                    types.Bool                          `tfsdk:"enable_anti_spoofing"`
+	AntiSpoofing                          types.Bool                          `tfsdk:"anti_spoofing"`
 	AllowFullFragmentReassembly           types.Bool                          `tfsdk:"allow_full_fragment_reassembly"`
 	OverrideDefaultFragmentSettingChain   types.Int64                         `tfsdk:"override_default_fragment_setting_chain"`
 	OverrideDefaultFragmentSettingSize    types.Int64                         `tfsdk:"override_default_fragment_setting_size"`
@@ -107,15 +107,14 @@ type DeviceSubinterfaceIpv6Addresses struct {
 }
 
 type DeviceSubinterfaceIpv6Prefixes struct {
-	Address    types.String `tfsdk:"address"`
-	Default    types.String `tfsdk:"default"`
-	EnforceEui types.Bool   `tfsdk:"enforce_eui"`
+	Address types.String `tfsdk:"address"`
+	Default types.Bool   `tfsdk:"default"`
 }
 
 type DeviceSubinterfaceArpTableEntries struct {
-	MacAddress  types.String `tfsdk:"mac_address"`
-	IpAddress   types.String `tfsdk:"ip_address"`
-	EnableAlias types.Bool   `tfsdk:"enable_alias"`
+	MacAddress types.String `tfsdk:"mac_address"`
+	IpAddress  types.String `tfsdk:"ip_address"`
+	Enabled    types.Bool   `tfsdk:"enabled"`
 }
 
 // End of section. //template:end types
@@ -161,8 +160,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Priority.IsNull() {
 		body, _ = sjson.Set(body, "priority", data.Priority.ValueInt64())
 	}
-	if !data.EnableSgtPropagate.IsNull() {
-		body, _ = sjson.Set(body, "enableSGTPropagate", data.EnableSgtPropagate.ValueBool())
+	if !data.SgtPropagate.IsNull() {
+		body, _ = sjson.Set(body, "enableSGTPropagate", data.SgtPropagate.ValueBool())
 	}
 	if !data.InterfaceName.IsNull() {
 		body, _ = sjson.Set(body, "name", data.InterfaceName.ValueString())
@@ -182,11 +181,11 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv4AddressPoolId.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.pool.id", data.Ipv4AddressPoolId.ValueString())
 	}
-	if !data.Ipv4DhcpObtainRoute.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainRoute.ValueBool())
+	if !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainDefaultRoute.ValueBool())
 	}
-	if !data.Ipv4DhcpRouteMetric.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.dhcp.dhcpRouteMetric", data.Ipv4DhcpRouteMetric.ValueInt64())
+	if !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.dhcpRouteMetric", data.Ipv4DhcpDefaultRouteMetric.ValueInt64())
 	}
 	if !data.Ipv4PppoeVpdnGroupName.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.pppoe.vpdnGroupName", data.Ipv4PppoeVpdnGroupName.ValueString())
@@ -209,17 +208,17 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv4PppoeStoreCredentialsInFlash.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.pppoe.storeCredsInFlash", data.Ipv4PppoeStoreCredentialsInFlash.ValueBool())
 	}
-	if !data.Ipv6Enable.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableIPV6", data.Ipv6Enable.ValueBool())
+	if !data.Ipv6.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableIPV6", data.Ipv6.ValueBool())
 	}
 	if !data.Ipv6EnforceEui.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enforceEUI64", data.Ipv6EnforceEui.ValueBool())
 	}
 	if !data.Ipv6LinkLocalAddress.IsNull() {
-		body, _ = sjson.Set(body, "linkLocalAddress", data.Ipv6LinkLocalAddress.ValueString())
+		body, _ = sjson.Set(body, "ipv6.linkLocalAddress", data.Ipv6LinkLocalAddress.ValueString())
 	}
-	if !data.Ipv6EnableAutoConfig.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6EnableAutoConfig.ValueBool())
+	if !data.Ipv6AutoConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
 		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
@@ -248,16 +247,13 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 				itemBody, _ = sjson.Set(itemBody, "address", item.Address.ValueString())
 			}
 			if !item.Default.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "default", item.Default.ValueString())
-			}
-			if !item.EnforceEui.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enforceEUI64", item.EnforceEui.ValueBool())
+				itemBody, _ = sjson.Set(itemBody, "default", item.Default.ValueBool())
 			}
 			body, _ = sjson.SetRaw(body, "ipv6.prefixes.-1", itemBody)
 		}
 	}
-	if !data.Ipv6EnableDad.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6EnableDad.ValueBool())
+	if !data.Ipv6Dad.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
 	}
 	if !data.Ipv6DadAttempts.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.dadAttempts", data.Ipv6DadAttempts.ValueInt64())
@@ -268,8 +264,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv6ReachableTime.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.reachableTime", data.Ipv6ReachableTime.ValueInt64())
 	}
-	if !data.Ipv6EnableRa.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6EnableRa.ValueBool())
+	if !data.Ipv6Ra.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableRA", data.Ipv6Ra.ValueBool())
 	}
 	if !data.Ipv6RaLifeTime.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.raLifeTime", data.Ipv6RaLifeTime.ValueInt64())
@@ -280,8 +276,8 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv6Dhcp.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.DHCP.enableDHCPClient", data.Ipv6Dhcp.ValueBool())
 	}
-	if !data.Ipv6DefaultRouteByDhcp.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.DHCP.obtainIPV6DefaultRouteDHCP", data.Ipv6DefaultRouteByDhcp.ValueBool())
+	if !data.Ipv6DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.DHCP.obtainIPV6DefaultRouteDHCP", data.Ipv6DhcpObtainDefaultRoute.ValueBool())
 	}
 	if !data.Ipv6DhcpPoolId.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.ipv6DHCPPool.id", data.Ipv6DhcpPoolId.ValueString())
@@ -289,11 +285,11 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 	if !data.Ipv6DhcpPoolType.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.ipv6DHCPPool.type", data.Ipv6DhcpPoolType.ValueString())
 	}
-	if !data.Ipv6EnableDhcpAddressConfig.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDHCPAddrConfig", data.Ipv6EnableDhcpAddressConfig.ValueBool())
+	if !data.Ipv6DhcpAddressConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPAddrConfig", data.Ipv6DhcpAddressConfig.ValueBool())
 	}
-	if !data.Ipv6EnableDhcpNonaddressConfig.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDHCPNonAddrConfig", data.Ipv6EnableDhcpNonaddressConfig.ValueBool())
+	if !data.Ipv6DhcpNonaddressConfig.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDHCPNonAddrConfig", data.Ipv6DhcpNonaddressConfig.ValueBool())
 	}
 	if !data.Ipv6DhcpClientPdPrefixName.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.DHCP.clientPd.prefixName", data.Ipv6DhcpClientPdPrefixName.ValueString())
@@ -308,7 +304,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "pathMonitoring.type", data.IpBasedMonitoringType.ValueString())
 	}
 	if !data.IpBasedMonitoringNextHop.IsNull() {
-		body, _ = sjson.Set(body, "monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
+		body, _ = sjson.Set(body, "pathMonitoring.monitoredIp", data.IpBasedMonitoringNextHop.ValueString())
 	}
 	if !data.ActiveMacAddress.IsNull() {
 		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
@@ -317,7 +313,7 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig.arpConfig", []any{})
+		body, _ = sjson.Set(body, "arpConfig", []any{})
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {
@@ -326,14 +322,14 @@ func (data DeviceSubinterface) toBody(ctx context.Context, state DeviceSubinterf
 			if !item.IpAddress.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipAddress", item.IpAddress.ValueString())
 			}
-			if !item.EnableAlias.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.EnableAlias.ValueBool())
+			if !item.Enabled.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.Enabled.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "arpConfig.arpConfig.-1", itemBody)
+			body, _ = sjson.SetRaw(body, "arpConfig.-1", itemBody)
 		}
 	}
-	if !data.EnableAntiSpoofing.IsNull() {
-		body, _ = sjson.Set(body, "enableAntiSpoofing", data.EnableAntiSpoofing.ValueBool())
+	if !data.AntiSpoofing.IsNull() {
+		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
 	}
 	if !data.AllowFullFragmentReassembly.IsNull() {
 		body, _ = sjson.Set(body, "fragmentReassembly", data.AllowFullFragmentReassembly.ValueBool())
@@ -406,9 +402,9 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Priority = types.Int64Null()
 	}
 	if value := res.Get("enableSGTPropagate"); value.Exists() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
+		data.SgtPropagate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSgtPropagate = types.BoolNull()
+		data.SgtPropagate = types.BoolNull()
 	}
 	if value := res.Get("name"); value.Exists() {
 		data.InterfaceName = types.StringValue(value.String())
@@ -441,14 +437,14 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv4AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() {
-		data.Ipv4DhcpRouteMetric = types.Int64Value(value.Int())
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4DhcpRouteMetric = types.Int64Null()
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
 	}
 	if value := res.Get("ipv4.pppoe.vpdnGroupName"); value.Exists() {
 		data.Ipv4PppoeVpdnGroupName = types.StringValue(value.String())
@@ -486,24 +482,24 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableIPV6"); value.Exists() {
-		data.Ipv6Enable = types.BoolValue(value.Bool())
+		data.Ipv6 = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6Enable = types.BoolNull()
+		data.Ipv6 = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enforceEUI64"); value.Exists() {
 		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
 	} else {
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
-	if value := res.Get("linkLocalAddress"); value.Exists() {
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() {
 		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
 	} else {
 		data.Ipv6LinkLocalAddress = types.StringNull()
 	}
 	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() {
-		data.Ipv6EnableAutoConfig = types.BoolValue(value.Bool())
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableAutoConfig = types.BoolNull()
+		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0)
@@ -545,23 +541,18 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 				data.Address = types.StringNull()
 			}
 			if value := res.Get("default"); value.Exists() {
-				data.Default = types.StringValue(value.String())
+				data.Default = types.BoolValue(value.Bool())
 			} else {
-				data.Default = types.StringNull()
-			}
-			if value := res.Get("enforceEUI64"); value.Exists() {
-				data.EnforceEui = types.BoolValue(value.Bool())
-			} else {
-				data.EnforceEui = types.BoolNull()
+				data.Default = types.BoolNull()
 			}
 			(*parent).Ipv6Prefixes = append((*parent).Ipv6Prefixes, data)
 			return true
 		})
 	}
 	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() {
-		data.Ipv6EnableDad = types.BoolValue(value.Bool())
+		data.Ipv6Dad = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDad = types.BoolNull()
+		data.Ipv6Dad = types.BoolNull()
 	}
 	if value := res.Get("ipv6.dadAttempts"); value.Exists() {
 		data.Ipv6DadAttempts = types.Int64Value(value.Int())
@@ -579,9 +570,9 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
 	if value := res.Get("ipv6.enableRA"); value.Exists() {
-		data.Ipv6EnableRa = types.BoolValue(value.Bool())
+		data.Ipv6Ra = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableRa = types.BoolNull()
+		data.Ipv6Ra = types.BoolNull()
 	}
 	if value := res.Get("ipv6.raLifeTime"); value.Exists() {
 		data.Ipv6RaLifeTime = types.Int64Value(value.Int())
@@ -599,9 +590,9 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6Dhcp = types.BoolNull()
 	}
 	if value := res.Get("ipv6.DHCP.obtainIPV6DefaultRouteDHCP"); value.Exists() {
-		data.Ipv6DefaultRouteByDhcp = types.BoolValue(value.Bool())
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6DefaultRouteByDhcp = types.BoolNull()
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv6.ipv6DHCPPool.id"); value.Exists() {
 		data.Ipv6DhcpPoolId = types.StringValue(value.String())
@@ -614,14 +605,14 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6DhcpPoolType = types.StringNull()
 	}
 	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() {
-		data.Ipv6EnableDhcpAddressConfig = types.BoolValue(value.Bool())
+		data.Ipv6DhcpAddressConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpAddressConfig = types.BoolNull()
+		data.Ipv6DhcpAddressConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() {
-		data.Ipv6EnableDhcpNonaddressConfig = types.BoolValue(value.Bool())
+		data.Ipv6DhcpNonaddressConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpNonaddressConfig = types.BoolNull()
+		data.Ipv6DhcpNonaddressConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.DHCP.clientPd.prefixName"); value.Exists() {
 		data.Ipv6DhcpClientPdPrefixName = types.StringValue(value.String())
@@ -643,7 +634,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.IpBasedMonitoringType = types.StringNull()
 	}
-	if value := res.Get("monitoredIp"); value.Exists() {
+	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() {
 		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
 	} else {
 		data.IpBasedMonitoringNextHop = types.StringNull()
@@ -658,7 +649,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.StandbyMacAddress = types.StringNull()
 	}
-	if value := res.Get("arpConfig.arpConfig"); value.Exists() {
+	if value := res.Get("arpConfig"); value.Exists() {
 		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
@@ -674,18 +665,18 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 				data.IpAddress = types.StringNull()
 			}
 			if value := res.Get("enableAlias"); value.Exists() {
-				data.EnableAlias = types.BoolValue(value.Bool())
+				data.Enabled = types.BoolValue(value.Bool())
 			} else {
-				data.EnableAlias = types.BoolNull()
+				data.Enabled = types.BoolValue(true)
 			}
 			(*parent).ArpTableEntries = append((*parent).ArpTableEntries, data)
 			return true
 		})
 	}
 	if value := res.Get("enableAntiSpoofing"); value.Exists() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())
@@ -768,10 +759,10 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Priority = types.Int64Null()
 	}
-	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.EnableSgtPropagate.IsNull() {
-		data.EnableSgtPropagate = types.BoolValue(value.Bool())
+	if value := res.Get("enableSGTPropagate"); value.Exists() && !data.SgtPropagate.IsNull() {
+		data.SgtPropagate = types.BoolValue(value.Bool())
 	} else {
-		data.EnableSgtPropagate = types.BoolNull()
+		data.SgtPropagate = types.BoolNull()
 	}
 	if value := res.Get("name"); value.Exists() && !data.InterfaceName.IsNull() {
 		data.InterfaceName = types.StringValue(value.String())
@@ -803,15 +794,15 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv4AddressPoolId = types.StringNull()
 	}
-	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainRoute.IsNull() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
-	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() && !data.Ipv4DhcpRouteMetric.IsNull() {
-		data.Ipv4DhcpRouteMetric = types.Int64Value(value.Int())
+	if value := res.Get("ipv4.dhcp.dhcpRouteMetric"); value.Exists() && !data.Ipv4DhcpDefaultRouteMetric.IsNull() {
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Value(value.Int())
 	} else {
-		data.Ipv4DhcpRouteMetric = types.Int64Null()
+		data.Ipv4DhcpDefaultRouteMetric = types.Int64Null()
 	}
 	if value := res.Get("ipv4.pppoe.vpdnGroupName"); value.Exists() && !data.Ipv4PppoeVpdnGroupName.IsNull() {
 		data.Ipv4PppoeVpdnGroupName = types.StringValue(value.String())
@@ -848,25 +839,25 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv4PppoeStoreCredentialsInFlash = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableIPV6"); value.Exists() && !data.Ipv6Enable.IsNull() {
-		data.Ipv6Enable = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableIPV6"); value.Exists() && !data.Ipv6.IsNull() {
+		data.Ipv6 = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6Enable = types.BoolNull()
+		data.Ipv6 = types.BoolNull()
 	}
 	if value := res.Get("ipv6.enforceEUI64"); value.Exists() && !data.Ipv6EnforceEui.IsNull() {
 		data.Ipv6EnforceEui = types.BoolValue(value.Bool())
 	} else {
 		data.Ipv6EnforceEui = types.BoolNull()
 	}
-	if value := res.Get("linkLocalAddress"); value.Exists() && !data.Ipv6LinkLocalAddress.IsNull() {
+	if value := res.Get("ipv6.linkLocalAddress"); value.Exists() && !data.Ipv6LinkLocalAddress.IsNull() {
 		data.Ipv6LinkLocalAddress = types.StringValue(value.String())
 	} else {
 		data.Ipv6LinkLocalAddress = types.StringNull()
 	}
-	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() && !data.Ipv6EnableAutoConfig.IsNull() {
-		data.Ipv6EnableAutoConfig = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableAutoConfig"); value.Exists() && !data.Ipv6AutoConfig.IsNull() {
+		data.Ipv6AutoConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableAutoConfig = types.BoolNull()
+		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
@@ -927,8 +918,8 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	for i := 0; i < len(data.Ipv6Prefixes); i++ {
-		keys := [...]string{"address", "default"}
-		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString(), data.Ipv6Prefixes[i].Default.ValueString()}
+		keys := [...]string{"address"}
+		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Prefixes[i]
@@ -968,21 +959,16 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 			data.Address = types.StringNull()
 		}
 		if value := res.Get("default"); value.Exists() && !data.Default.IsNull() {
-			data.Default = types.StringValue(value.String())
+			data.Default = types.BoolValue(value.Bool())
 		} else {
-			data.Default = types.StringNull()
-		}
-		if value := res.Get("enforceEUI64"); value.Exists() && !data.EnforceEui.IsNull() {
-			data.EnforceEui = types.BoolValue(value.Bool())
-		} else {
-			data.EnforceEui = types.BoolNull()
+			data.Default = types.BoolNull()
 		}
 		(*parent).Ipv6Prefixes[i] = data
 	}
-	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() && !data.Ipv6EnableDad.IsNull() {
-		data.Ipv6EnableDad = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() && !data.Ipv6Dad.IsNull() {
+		data.Ipv6Dad = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDad = types.BoolNull()
+		data.Ipv6Dad = types.BoolNull()
 	}
 	if value := res.Get("ipv6.dadAttempts"); value.Exists() && !data.Ipv6DadAttempts.IsNull() {
 		data.Ipv6DadAttempts = types.Int64Value(value.Int())
@@ -999,10 +985,10 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
-	if value := res.Get("ipv6.enableRA"); value.Exists() && !data.Ipv6EnableRa.IsNull() {
-		data.Ipv6EnableRa = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableRA"); value.Exists() && !data.Ipv6Ra.IsNull() {
+		data.Ipv6Ra = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableRa = types.BoolNull()
+		data.Ipv6Ra = types.BoolNull()
 	}
 	if value := res.Get("ipv6.raLifeTime"); value.Exists() && !data.Ipv6RaLifeTime.IsNull() {
 		data.Ipv6RaLifeTime = types.Int64Value(value.Int())
@@ -1019,10 +1005,10 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6Dhcp = types.BoolNull()
 	}
-	if value := res.Get("ipv6.DHCP.obtainIPV6DefaultRouteDHCP"); value.Exists() && !data.Ipv6DefaultRouteByDhcp.IsNull() {
-		data.Ipv6DefaultRouteByDhcp = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.DHCP.obtainIPV6DefaultRouteDHCP"); value.Exists() && !data.Ipv6DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6DefaultRouteByDhcp = types.BoolNull()
+		data.Ipv6DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv6.ipv6DHCPPool.id"); value.Exists() && !data.Ipv6DhcpPoolId.IsNull() {
 		data.Ipv6DhcpPoolId = types.StringValue(value.String())
@@ -1034,15 +1020,15 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Ipv6DhcpPoolType = types.StringNull()
 	}
-	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() && !data.Ipv6EnableDhcpAddressConfig.IsNull() {
-		data.Ipv6EnableDhcpAddressConfig = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDHCPAddrConfig"); value.Exists() && !data.Ipv6DhcpAddressConfig.IsNull() {
+		data.Ipv6DhcpAddressConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpAddressConfig = types.BoolNull()
+		data.Ipv6DhcpAddressConfig = types.BoolNull()
 	}
-	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() && !data.Ipv6EnableDhcpNonaddressConfig.IsNull() {
-		data.Ipv6EnableDhcpNonaddressConfig = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDHCPNonAddrConfig"); value.Exists() && !data.Ipv6DhcpNonaddressConfig.IsNull() {
+		data.Ipv6DhcpNonaddressConfig = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDhcpNonaddressConfig = types.BoolNull()
+		data.Ipv6DhcpNonaddressConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.DHCP.clientPd.prefixName"); value.Exists() && !data.Ipv6DhcpClientPdPrefixName.IsNull() {
 		data.Ipv6DhcpClientPdPrefixName = types.StringValue(value.String())
@@ -1064,7 +1050,7 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.IpBasedMonitoringType = types.StringNull()
 	}
-	if value := res.Get("monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
+	if value := res.Get("pathMonitoring.monitoredIp"); value.Exists() && !data.IpBasedMonitoringNextHop.IsNull() {
 		data.IpBasedMonitoringNextHop = types.StringValue(value.String())
 	} else {
 		data.IpBasedMonitoringNextHop = types.StringNull()
@@ -1081,14 +1067,14 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 	}
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
-		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].EnableAlias.ValueBool())}
+		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].Enabled.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
 		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig.arpConfig").ForEach(
+		parentRes.Get("arpConfig").ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1125,17 +1111,17 @@ func (data *DeviceSubinterface) fromBodyPartial(ctx context.Context, res gjson.R
 		} else {
 			data.IpAddress = types.StringNull()
 		}
-		if value := res.Get("enableAlias"); value.Exists() && !data.EnableAlias.IsNull() {
-			data.EnableAlias = types.BoolValue(value.Bool())
-		} else {
-			data.EnableAlias = types.BoolNull()
+		if value := res.Get("enableAlias"); value.Exists() && !data.Enabled.IsNull() {
+			data.Enabled = types.BoolValue(value.Bool())
+		} else if data.Enabled.ValueBool() != true {
+			data.Enabled = types.BoolNull()
 		}
 		(*parent).ArpTableEntries[i] = data
 	}
-	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.EnableAntiSpoofing.IsNull() {
-		data.EnableAntiSpoofing = types.BoolValue(value.Bool())
+	if value := res.Get("enableAntiSpoofing"); value.Exists() && !data.AntiSpoofing.IsNull() {
+		data.AntiSpoofing = types.BoolValue(value.Bool())
 	} else {
-		data.EnableAntiSpoofing = types.BoolNull()
+		data.AntiSpoofing = types.BoolNull()
 	}
 	if value := res.Get("fragmentReassembly"); value.Exists() && !data.AllowFullFragmentReassembly.IsNull() {
 		data.AllowFullFragmentReassembly = types.BoolValue(value.Bool())

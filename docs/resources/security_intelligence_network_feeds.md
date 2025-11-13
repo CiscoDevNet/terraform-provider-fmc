@@ -62,7 +62,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Security Intelligence Network Feed.
+- `id` (String) Id of the Security Intelligence Network Feed object.
 - `type` (String) Type of the object; this value is always 'SINetworkFeed'.
 
 ## Import

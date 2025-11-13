@@ -38,7 +38,7 @@ data "fmc_certificate_maps" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Certificate Map.
+- `id` (String) Id of the Certificate Map object.
 - `rules` (Attributes List) List of rules in the certificate map. (see [below for nested schema](#nestedatt--items--rules))
 - `type` (String) Type of the object; this value is always 'CertificateMap'.
 

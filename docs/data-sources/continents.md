@@ -38,5 +38,5 @@ data "fmc_continents" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Continent.
+- `id` (String) Id of the Continent object.
 - `type` (String) Type of the object; this value is always 'Continent'.

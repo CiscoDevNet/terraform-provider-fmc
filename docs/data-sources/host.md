@@ -25,11 +25,11 @@ data "fmc_host" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the host object.
+- `name` (String) Name of the Host object.
 
 ### Read-Only
 
 - `description` (String) Description of the object.
-- `ip` (String) IP of the host.
+- `ip` (String) IP of the Host.
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Host'.

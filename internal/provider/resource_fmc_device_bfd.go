@@ -107,19 +107,19 @@ func (r *DeviceBFDResource) Schema(ctx context.Context, req resource.SchemaReque
 				Required:            true,
 			},
 			"interface_logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the interface for BFD assignment if SINGLE_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical Name of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.").String,
 				Optional:            true,
 			},
 			"destination_host_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the destination host object if MULTI_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the destination host object if `hop_type` is set to MULTI_HOP.").String,
 				Optional:            true,
 			},
 			"source_host_object_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the source host object if MULTI_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the source host object if `hop_type` is set to MULTI_HOP.").String,
 				Optional:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface for BFD assignment if SINGLE_HOP selected.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.").String,
 				Optional:            true,
 			},
 			"slow_timer": schema.Int64Attribute{

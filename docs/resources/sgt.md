@@ -3,14 +3,14 @@
 page_title: "fmc_sgt Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource manages a SGT.
+  This resource manages SGT (Security Group Tag) Object.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4
 ---
 
 # fmc_sgt (Resource)
 
-This resource manages a SGT.
+This resource manages SGT (Security Group Tag) Object.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version

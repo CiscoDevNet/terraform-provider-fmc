@@ -8,21 +8,20 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of ports. The key of the map is the name of the individual Port.
+      Map of Ports. The key of the map is the name of the individual Port.
     map_key_example: my_ports
     mandatory: true
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Port.
+        description: Id of the Port object.
         exclude_example: true
         exclude_test: true
-      - model_name: port
+      - model_name: type
         type: String
-        description: >-
-          Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
-        example: "443"
+        description: Type of the object; this value is always 'ProtocolPortObject'.
+        computed: true
       - model_name: protocol
         type: String
         description: >-
@@ -32,16 +31,18 @@ attributes:
           (e.g. 2048 means IP).
         mandatory: true
         example: TCP
+      - model_name: port
+        type: String
+        description: >-
+          Port number in decimal for TCP or UDP. Otherwise a protocol-specific value.
+        example: "443"
       - model_name: description
         type: String
         description: Description of the object.
         example: "Port TCP/443 (HTTPS)"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
         description: Indicates whether object values can be overridden.
         exclude_example: true
         test_value: "true"
-      - model_name: type
-        type: String
-        description: Type of the object; this value is always 'ProtocolPortObject'.
-        computed: true

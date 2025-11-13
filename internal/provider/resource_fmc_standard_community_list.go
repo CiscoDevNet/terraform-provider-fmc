@@ -92,7 +92,7 @@ func (r *StandardCommunityListResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of entries").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of entries.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

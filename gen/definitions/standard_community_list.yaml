@@ -18,7 +18,7 @@ attributes:
     type: List
     mandatory: true
     ordered_list: true
-    description: List of entries
+    description: List of entries.
     attributes:
       - model_name: type
         type: String

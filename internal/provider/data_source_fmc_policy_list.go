@@ -102,7 +102,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"address_standard_access_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute any routes that have a destination address that is permitted by a standard access list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute any routes that have a destination address that is permitted by a standard access list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -114,7 +114,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"address_ipv4_prefix_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute any routes that have a destination address that is permitted by a prefix list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute any routes that have a destination address that is permitted by a prefix list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -126,7 +126,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"next_hop_standard_access_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute any routes that have a next hop router address passed by a standard access list. next_hop_standard_access_lists and next_hop_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute any routes that have a next hop router address passed by a standard access list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -138,7 +138,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"next_hop_ipv4_prefix_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute any routes that have a next hop router address passed by a prefix list. next_hop_standard_access_lists and next_hop_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute any routes that have a next hop router address passed by a prefix list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -150,7 +150,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"route_source_standard_access_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute routes that have been advertised by routers at the address specified by the access list. route_source_standard_access_lists and route_source_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute routes that have been advertised by routers at the address specified by the access list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -162,7 +162,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"route_source_ipv4_prefix_lists": schema.ListNestedAttribute{
-				MarkdownDescription: "Redistribute routes that have been advertised by routers at the address specified by the prefix list. route_source_standard_access_lists and route_source_ipv4_prefix_lists are mutually exclusive.",
+				MarkdownDescription: "Redistribute routes that have been advertised by routers at the address specified by the prefix list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -173,7 +173,7 @@ func (d *PolicyListDataSource) Schema(ctx context.Context, req datasource.Schema
 					},
 				},
 			},
-			"as_path_lists": schema.ListNestedAttribute{
+			"as_paths": schema.ListNestedAttribute{
 				MarkdownDescription: "Match a BGP autonomous system path.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{

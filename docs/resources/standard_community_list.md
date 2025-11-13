@@ -32,7 +32,7 @@ resource "fmc_standard_community_list" "example" {
 
 ### Required
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) List of entries. (see [below for nested schema](#nestedatt--entries))
 - `name` (String) Name of the Standard Community List object.
 
 ### Optional

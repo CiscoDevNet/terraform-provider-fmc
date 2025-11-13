@@ -70,7 +70,7 @@ func TestAccFmcChassis(t *testing.T) {
 func testAccFmcChassisConfig_minimum() string {
 	config := `resource "fmc_chassis" "test" {` + "\n"
 	config += `	name = "my_chassis"` + "\n"
-	config += `	host_name = var.chassis_addr` + "\n"
+	config += `	host = var.chassis_addr` + "\n"
 	config += `	registration_key = var.chassis_registration_key` + "\n"
 	config += `}` + "\n"
 	return config
@@ -83,7 +83,7 @@ func testAccFmcChassisConfig_minimum() string {
 func testAccFmcChassisConfig_all() string {
 	config := `resource "fmc_chassis" "test" {` + "\n"
 	config += `	name = "my_chassis"` + "\n"
-	config += `	host_name = var.chassis_addr` + "\n"
+	config += `	host = var.chassis_addr` + "\n"
 	config += `	registration_key = var.chassis_registration_key` + "\n"
 	config += `}` + "\n"
 	return config

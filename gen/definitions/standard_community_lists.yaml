@@ -17,7 +17,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Standard Community List.
+        description: Id of the Standard Community List object.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -28,7 +28,7 @@ attributes:
         type: List
         mandatory: true
         ordered_list: true
-        description: List of entries
+        description: List of entries.
         attributes:
           - model_name: type
             type: String

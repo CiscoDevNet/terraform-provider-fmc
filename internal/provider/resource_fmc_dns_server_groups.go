@@ -93,7 +93,7 @@ func (r *DNSServerGroupsResource) Schema(ctx context.Context, req resource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed DNS Server Group.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the DNS Server Group object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),

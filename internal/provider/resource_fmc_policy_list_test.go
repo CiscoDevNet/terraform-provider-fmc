@@ -134,7 +134,7 @@ func testAccFmcPolicyListConfig_all() string {
 	config += `	route_source_standard_access_lists = [{` + "\n"
 	config += `		id = fmc_standard_acl.test.id` + "\n"
 	config += `	}]` + "\n"
-	config += `	as_path_lists = [{` + "\n"
+	config += `	as_paths = [{` + "\n"
 	config += `		id = fmc_as_path.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	community_lists = [{` + "\n"

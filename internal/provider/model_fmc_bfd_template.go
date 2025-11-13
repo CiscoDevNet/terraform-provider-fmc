@@ -38,14 +38,14 @@ type BFDTemplate struct {
 	Type                             types.String `tfsdk:"type"`
 	HopType                          types.String `tfsdk:"hop_type"`
 	Echo                             types.String `tfsdk:"echo"`
-	IntervalTime                     types.String `tfsdk:"interval_time"`
-	MinTransmit                      types.Int64  `tfsdk:"min_transmit"`
-	TxRxMultiplier                   types.Int64  `tfsdk:"tx_rx_multiplier"`
-	MinReceive                       types.Int64  `tfsdk:"min_receive"`
-	AuthenticationPassword           types.String `tfsdk:"authentication_password"`
-	AuthenticationKeyId              types.Int64  `tfsdk:"authentication_key_id"`
+	IntervalType                     types.String `tfsdk:"interval_type"`
+	Multiplier                       types.Int64  `tfsdk:"multiplier"`
+	MinimumTransmit                  types.Int64  `tfsdk:"minimum_transmit"`
+	MinimumReceive                   types.Int64  `tfsdk:"minimum_receive"`
 	AuthenticationType               types.String `tfsdk:"authentication_type"`
+	AuthenticationPassword           types.String `tfsdk:"authentication_password"`
 	AuthenticationPasswordEncryption types.String `tfsdk:"authentication_password_encryption"`
+	AuthenticationKeyId              types.Int64  `tfsdk:"authentication_key_id"`
 }
 
 // End of section. //template:end types
@@ -80,29 +80,29 @@ func (data BFDTemplate) toBody(ctx context.Context, state BFDTemplate) string {
 	if !data.Echo.IsNull() {
 		body, _ = sjson.Set(body, "echo", data.Echo.ValueString())
 	}
-	if !data.IntervalTime.IsNull() {
-		body, _ = sjson.Set(body, "txRxInterval", data.IntervalTime.ValueString())
+	if !data.IntervalType.IsNull() {
+		body, _ = sjson.Set(body, "txRxInterval", data.IntervalType.ValueString())
 	}
-	if !data.MinTransmit.IsNull() {
-		body, _ = sjson.Set(body, "minTransmit", data.MinTransmit.ValueInt64())
+	if !data.Multiplier.IsNull() {
+		body, _ = sjson.Set(body, "txRxMultiplier", data.Multiplier.ValueInt64())
 	}
-	if !data.TxRxMultiplier.IsNull() {
-		body, _ = sjson.Set(body, "txRxMultiplier", data.TxRxMultiplier.ValueInt64())
+	if !data.MinimumTransmit.IsNull() {
+		body, _ = sjson.Set(body, "minTransmit", data.MinimumTransmit.ValueInt64())
 	}
-	if !data.MinReceive.IsNull() {
-		body, _ = sjson.Set(body, "minReceive", data.MinReceive.ValueInt64())
-	}
-	if !data.AuthenticationPassword.IsNull() {
-		body, _ = sjson.Set(body, "authentication.authKey", data.AuthenticationPassword.ValueString())
-	}
-	if !data.AuthenticationKeyId.IsNull() {
-		body, _ = sjson.Set(body, "authentication.authKeyId", data.AuthenticationKeyId.ValueInt64())
+	if !data.MinimumReceive.IsNull() {
+		body, _ = sjson.Set(body, "minReceive", data.MinimumReceive.ValueInt64())
 	}
 	if !data.AuthenticationType.IsNull() {
 		body, _ = sjson.Set(body, "authentication.authType", data.AuthenticationType.ValueString())
 	}
+	if !data.AuthenticationPassword.IsNull() {
+		body, _ = sjson.Set(body, "authentication.authKey", data.AuthenticationPassword.ValueString())
+	}
 	if !data.AuthenticationPasswordEncryption.IsNull() {
 		body, _ = sjson.Set(body, "authentication.pwdEncryption", data.AuthenticationPasswordEncryption.ValueString())
+	}
+	if !data.AuthenticationKeyId.IsNull() {
+		body, _ = sjson.Set(body, "authentication.authKeyId", data.AuthenticationKeyId.ValueInt64())
 	}
 	return body
 }
@@ -133,29 +133,24 @@ func (data *BFDTemplate) fromBody(ctx context.Context, res gjson.Result) {
 		data.Echo = types.StringNull()
 	}
 	if value := res.Get("txRxInterval"); value.Exists() {
-		data.IntervalTime = types.StringValue(value.String())
+		data.IntervalType = types.StringValue(value.String())
 	} else {
-		data.IntervalTime = types.StringNull()
-	}
-	if value := res.Get("minTransmit"); value.Exists() {
-		data.MinTransmit = types.Int64Value(value.Int())
-	} else {
-		data.MinTransmit = types.Int64Null()
+		data.IntervalType = types.StringNull()
 	}
 	if value := res.Get("txRxMultiplier"); value.Exists() {
-		data.TxRxMultiplier = types.Int64Value(value.Int())
+		data.Multiplier = types.Int64Value(value.Int())
 	} else {
-		data.TxRxMultiplier = types.Int64Null()
+		data.Multiplier = types.Int64Null()
+	}
+	if value := res.Get("minTransmit"); value.Exists() {
+		data.MinimumTransmit = types.Int64Value(value.Int())
+	} else {
+		data.MinimumTransmit = types.Int64Null()
 	}
 	if value := res.Get("minReceive"); value.Exists() {
-		data.MinReceive = types.Int64Value(value.Int())
+		data.MinimumReceive = types.Int64Value(value.Int())
 	} else {
-		data.MinReceive = types.Int64Null()
-	}
-	if value := res.Get("authentication.authKeyId"); value.Exists() {
-		data.AuthenticationKeyId = types.Int64Value(value.Int())
-	} else {
-		data.AuthenticationKeyId = types.Int64Null()
+		data.MinimumReceive = types.Int64Null()
 	}
 	if value := res.Get("authentication.authType"); value.Exists() {
 		data.AuthenticationType = types.StringValue(value.String())
@@ -166,6 +161,11 @@ func (data *BFDTemplate) fromBody(ctx context.Context, res gjson.Result) {
 		data.AuthenticationPasswordEncryption = types.StringValue(value.String())
 	} else {
 		data.AuthenticationPasswordEncryption = types.StringNull()
+	}
+	if value := res.Get("authentication.authKeyId"); value.Exists() {
+		data.AuthenticationKeyId = types.Int64Value(value.Int())
+	} else {
+		data.AuthenticationKeyId = types.Int64Null()
 	}
 }
 
@@ -198,30 +198,25 @@ func (data *BFDTemplate) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.Echo = types.StringNull()
 	}
-	if value := res.Get("txRxInterval"); value.Exists() && !data.IntervalTime.IsNull() {
-		data.IntervalTime = types.StringValue(value.String())
+	if value := res.Get("txRxInterval"); value.Exists() && !data.IntervalType.IsNull() {
+		data.IntervalType = types.StringValue(value.String())
 	} else {
-		data.IntervalTime = types.StringNull()
+		data.IntervalType = types.StringNull()
 	}
-	if value := res.Get("minTransmit"); value.Exists() && !data.MinTransmit.IsNull() {
-		data.MinTransmit = types.Int64Value(value.Int())
+	if value := res.Get("txRxMultiplier"); value.Exists() && !data.Multiplier.IsNull() {
+		data.Multiplier = types.Int64Value(value.Int())
 	} else {
-		data.MinTransmit = types.Int64Null()
+		data.Multiplier = types.Int64Null()
 	}
-	if value := res.Get("txRxMultiplier"); value.Exists() && !data.TxRxMultiplier.IsNull() {
-		data.TxRxMultiplier = types.Int64Value(value.Int())
+	if value := res.Get("minTransmit"); value.Exists() && !data.MinimumTransmit.IsNull() {
+		data.MinimumTransmit = types.Int64Value(value.Int())
 	} else {
-		data.TxRxMultiplier = types.Int64Null()
+		data.MinimumTransmit = types.Int64Null()
 	}
-	if value := res.Get("minReceive"); value.Exists() && !data.MinReceive.IsNull() {
-		data.MinReceive = types.Int64Value(value.Int())
+	if value := res.Get("minReceive"); value.Exists() && !data.MinimumReceive.IsNull() {
+		data.MinimumReceive = types.Int64Value(value.Int())
 	} else {
-		data.MinReceive = types.Int64Null()
-	}
-	if value := res.Get("authentication.authKeyId"); value.Exists() && !data.AuthenticationKeyId.IsNull() {
-		data.AuthenticationKeyId = types.Int64Value(value.Int())
-	} else {
-		data.AuthenticationKeyId = types.Int64Null()
+		data.MinimumReceive = types.Int64Null()
 	}
 	if value := res.Get("authentication.authType"); value.Exists() && !data.AuthenticationType.IsNull() {
 		data.AuthenticationType = types.StringValue(value.String())
@@ -232,6 +227,11 @@ func (data *BFDTemplate) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		data.AuthenticationPasswordEncryption = types.StringValue(value.String())
 	} else {
 		data.AuthenticationPasswordEncryption = types.StringNull()
+	}
+	if value := res.Get("authentication.authKeyId"); value.Exists() && !data.AuthenticationKeyId.IsNull() {
+		data.AuthenticationKeyId = types.Int64Value(value.Int())
+	} else {
+		data.AuthenticationKeyId = types.Int64Null()
 	}
 }
 

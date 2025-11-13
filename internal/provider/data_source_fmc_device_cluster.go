@@ -83,6 +83,7 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 			"cluster_key": schema.StringAttribute{
 				MarkdownDescription: "Secret key for the cluster, between 1 nd 63 characters.",
 				Computed:            true,
+				Sensitive:           true,
 			},
 			"control_node_vni_prefix": schema.StringAttribute{
 				MarkdownDescription: "Cluster Control VXLAN Network Identifier (VNI) Network",
@@ -116,20 +117,20 @@ func (d *DeviceClusterDataSource) Schema(ctx context.Context, req datasource.Sch
 				MarkdownDescription: "Priority of cluster controle node.",
 				Computed:            true,
 			},
-			"data_devices": schema.ListNestedAttribute{
+			"data_nodes": schema.ListNestedAttribute{
 				MarkdownDescription: "List of cluster data nodes.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"data_node_device_id": schema.StringAttribute{
+						"device_id": schema.StringAttribute{
 							MarkdownDescription: "Cluster Data Node device ID.",
 							Computed:            true,
 						},
-						"data_node_ccl_ipv4_address": schema.StringAttribute{
+						"ccl_ipv4_address": schema.StringAttribute{
 							MarkdownDescription: "Cluster Data Node link IPv4 address / VTEP IPv4 address.",
 							Computed:            true,
 						},
-						"data_node_priority": schema.Int64Attribute{
+						"priority": schema.Int64Attribute{
 							MarkdownDescription: "Priority of cluster data node.",
 							Computed:            true,
 						},

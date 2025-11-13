@@ -25,13 +25,13 @@ data "fmc_time_range" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object
+- `name` (String) Name of the Time Range object.
 
 ### Read-Only
 
 - `description` (String) Description of the object.
 - `end_time` (String) Date and time at which the time range object stops being effective. If not specified 'never ends' is assumed.
-- `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time. (see [below for nested schema](#nestedatt--recurrence_list))
+- `recurrence_list` (Attributes List) List of recurring intervals during which the time range is effective. These intervals are valid only between `start_time` and `end_time`. (see [below for nested schema](#nestedatt--recurrence_list))
 - `start_time` (String) Date and time at which the time range object starts being effective. If not specified 'starts now' is assumed.
 - `type` (String) Type of the object; this is always 'TimeRange'.
 
@@ -40,11 +40,11 @@ data "fmc_time_range" "example" {
 
 Read-Only:
 
-- `daily_days` (Set of String) List of days on which the time range is effective. This field must be used if recurrence_type is specified as DAILY_INTERVAL.
-- `daily_end_time` (String) Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.
-- `daily_start_time` (String) Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.
-- `range_end_day` (String) Day of week at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.
-- `range_end_time` (String) Time (in HH:MM format) at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.
-- `range_start_day` (String) Day of week at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.
-- `range_start_time` (String) Time (in HH:MM format) at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.
+- `daily_days` (Set of String) List of days on which the time range is effective. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.
+- `daily_end_time` (String) Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.
+- `daily_start_time` (String) Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.
+- `range_end_day` (String) Day of week at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.
+- `range_end_time` (String) Time (in HH:MM format) at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.
+- `range_start_day` (String) Day of week at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.
+- `range_start_time` (String) Time (in HH:MM format) at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.
 - `recurrence_type` (String) Type of the recurrence interval.

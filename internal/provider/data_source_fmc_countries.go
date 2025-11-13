@@ -72,7 +72,7 @@ func (d *CountriesDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Country.",
+							MarkdownDescription: "Id of the Country object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

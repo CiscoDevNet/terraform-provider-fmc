@@ -42,8 +42,8 @@ func TestAccDataSourceFmcAccessRule(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "destination_port_literals.0.type", "PortLiteral"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "destination_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "destination_port_literals.0.protocol", "6"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "log_end", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "application_filters.0.types.0.id", "WEBAPP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_access_rule.test", "application_filters.0.risks.0.id", "VERY_LOW"))
@@ -143,8 +143,8 @@ func testAccDataSourceFmcAccessRuleConfig() string {
 	config += `		port = "80"` + "\n"
 	config += `		protocol = "6"` + "\n"
 	config += `	}]` + "\n"
-	config += `	log_begin = true` + "\n"
-	config += `	log_end = true` + "\n"
+	config += `	log_connection_begin = true` + "\n"
+	config += `	log_connection_end = true` + "\n"
 	config += `	log_files = false` + "\n"
 	config += `	send_events_to_fmc = true` + "\n"
 	config += `	description = ""` + "\n"
@@ -213,8 +213,8 @@ func testAccNamedDataSourceFmcAccessRuleConfig() string {
 	config += `		port = "80"` + "\n"
 	config += `		protocol = "6"` + "\n"
 	config += `	}]` + "\n"
-	config += `	log_begin = true` + "\n"
-	config += `	log_end = true` + "\n"
+	config += `	log_connection_begin = true` + "\n"
+	config += `	log_connection_end = true` + "\n"
 	config += `	log_files = false` + "\n"
 	config += `	send_events_to_fmc = true` + "\n"
 	config += `	description = ""` + "\n"

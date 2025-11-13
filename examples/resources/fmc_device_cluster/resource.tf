@@ -9,11 +9,11 @@ resource "fmc_device_cluster" "example" {
   control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_ccl_ipv4_address = "10.10.4.1"
   control_node_priority         = 1
-  data_devices = [
+  data_nodes = [
     {
-      data_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      data_node_ccl_ipv4_address = "10.10.4.2"
-      data_node_priority         = 2
+      device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      ccl_ipv4_address = "10.10.4.2"
+      priority         = 2
     }
   ]
 }

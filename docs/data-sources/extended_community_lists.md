@@ -39,7 +39,7 @@ data "fmc_extended_community_lists" "example" {
 Read-Only:
 
 - `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--items--entries))
-- `id` (String) Id of the managed Extended Community List.
+- `id` (String) Id of the Extended Community List object.
 - `sub_type` (String) Subtype of the Extended Community List object.
 - `type` (String) Type of the object; this value is always 'ExtendedCommunityList'.
 
@@ -49,5 +49,5 @@ Read-Only:
 Read-Only:
 
 - `action` (String) Indicate redistribution access.
-- `regular_expression` (String) Regular expression (required if sub_type is Expanded)
-- `route_target` (String) Route target (required if sub_type is Standard)
+- `regular_expression` (String) Regular expression (required if `sub_type` is Expanded)
+- `route_target` (String) Route target (required if `sub_type` is Standard)

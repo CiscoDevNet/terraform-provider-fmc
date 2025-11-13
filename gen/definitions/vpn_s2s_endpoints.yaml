@@ -41,7 +41,7 @@ attributes:
       - model_name: extranet
         tf_name: extranet_device
         type: Bool
-        description: Is the device managed by local FMC.
+        description: Is this external device (not managed by FMC).
         example: "false"
         mandatory: true
       - model_name: ipAddress
@@ -105,11 +105,11 @@ attributes:
         data_path: [protectedNetworks]
         tf_name: protected_networks
         type: Set
-        description: Set of protected networks.
+        description: Set of protected Networks.
         attributes:
           - model_name: id
             type: String
-            description: Id of the protected network.
+            description: Id of the Network object.
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: data.fmc_network.test.id

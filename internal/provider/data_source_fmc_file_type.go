@@ -72,7 +72,7 @@ func (d *FileTypeDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the File Type. There can be only build-in File Types.",
+				MarkdownDescription: "Name of the File Type.",
 				Optional:            true,
 				Computed:            true,
 			},

@@ -34,9 +34,9 @@ type VLANTag struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
 	Name        types.String `tfsdk:"name"`
+	Type        types.String `tfsdk:"type"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
-	Type        types.String `tfsdk:"type"`
 	StartTag    types.String `tfsdk:"start_tag"`
 	EndTag      types.String `tfsdk:"end_tag"`
 }
@@ -65,13 +65,13 @@ func (data VLANTag) toBody(ctx context.Context, state VLANTag) string {
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
+	body, _ = sjson.Set(body, "type", "VlanTag")
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if !data.Overridable.IsNull() {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
-	body, _ = sjson.Set(body, "type", "VlanTag")
 	if !data.StartTag.IsNull() {
 		body, _ = sjson.Set(body, "data.startTag", data.StartTag.ValueString())
 	}
@@ -91,6 +91,11 @@ func (data *VLANTag) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("description"); value.Exists() {
 		data.Description = types.StringValue(value.String())
 	} else {
@@ -100,11 +105,6 @@ func (data *VLANTag) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
-	}
-	if value := res.Get("type"); value.Exists() {
-		data.Type = types.StringValue(value.String())
-	} else {
-		data.Type = types.StringNull()
 	}
 	if value := res.Get("data.startTag"); value.Exists() {
 		data.StartTag = types.StringValue(value.String())
@@ -132,20 +132,24 @@ func (data *VLANTag) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
-	}
-	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-		data.Type = types.StringValue(value.String())
-	} else {
-		data.Type = types.StringNull()
 	}
 	if value := res.Get("data.startTag"); value.Exists() && !data.StartTag.IsNull() {
 		data.StartTag = types.StringValue(value.String())

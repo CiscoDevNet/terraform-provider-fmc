@@ -66,21 +66,21 @@ func (d *SecurityZonesDataSource) Schema(ctx context.Context, req datasource.Sch
 				Optional:            true,
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: "Map of security zones. The key of the map is the name of the individual Security Zone.",
+				MarkdownDescription: "Map of Security Zones. The key of the map is the name of the individual Security Zone.",
 				Optional:            true,
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Security Zone.",
-							Computed:            true,
-						},
-						"interface_type": schema.StringAttribute{
-							MarkdownDescription: "The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.",
+							MarkdownDescription: "Id of the Security Zone.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: "Type of the object; this value is always 'SecurityZone'.",
+							Computed:            true,
+						},
+						"interface_type": schema.StringAttribute{
+							MarkdownDescription: "The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.",
 							Computed:            true,
 						},
 					},

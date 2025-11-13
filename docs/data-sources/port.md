@@ -25,7 +25,7 @@ data "fmc_port" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object.
+- `name` (String) Name of the Port object.
 
 ### Read-Only
 

@@ -4,11 +4,13 @@ page_title: "fmc_extended_acl Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the Extended ACL.
+  This object is deprecated. Please use fmc_extended_access_list instead.
 ---
 
 # fmc_extended_acl (Data Source)
 
 This data source reads the Extended ACL.
+This object is deprecated. Please use `fmc_extended_access_list` instead.
 
 ## Example Usage
 
@@ -25,12 +27,11 @@ data "fmc_extended_acl" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the Extended ACL.
+- `name` (String) Name of the Extended Access List.
 
 ### Read-Only
 
-- `description` (String) Description of the Extended ACL.
-- `entries` (Attributes List) Ordered list of ACL's entries. (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) Ordered list of Access List entries. (see [below for nested schema](#nestedatt--entries))
 - `type` (String) Type of the object; this value is always 'ExtendedAccessList'.
 
 <a id="nestedatt--entries"></a>
@@ -39,17 +40,17 @@ data "fmc_extended_acl" "example" {
 Read-Only:
 
 - `action` (String) Rule action.
-- `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_network_literals))
-- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic. (see [below for nested schema](#nestedatt--entries--destination_network_objects))
+- `destination_network_literals` (Attributes Set) Set of literals that represent destinations of traffic. (see [below for nested schema](#nestedatt--entries--destination_network_literals))
+- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Host, Network, Range, Network Group). (see [below for nested schema](#nestedatt--entries--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--destination_port_literals))
-- `destination_port_objects` (Attributes Set) Set of objects representing destination ports. (see [below for nested schema](#nestedatt--entries--destination_port_objects))
+- `destination_port_objects` (Attributes Set) Set of objects representing destination ports or icmpv4 objects. (see [below for nested schema](#nestedatt--entries--destination_port_objects))
 - `log_interval_seconds` (Number) Logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
-- `log_level` (String) Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
+- `log_level` (String) Logging level.
 - `logging` (String) Logging mode.
-- `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_network_literals))
-- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--source_network_objects))
+- `source_network_literals` (Attributes Set) Set of literals that represent sources of traffic. (see [below for nested schema](#nestedatt--entries--source_network_literals))
+- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, Network Group). (see [below for nested schema](#nestedatt--entries--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
-- `source_port_objects` (Attributes Set) Set of objects representing source ports. (see [below for nested schema](#nestedatt--entries--source_port_objects))
+- `source_port_objects` (Attributes Set) Set of objects representing source ports or icmpv4 objects. (see [below for nested schema](#nestedatt--entries--source_port_objects))
 - `source_sgt_objects` (Attributes Set) Set of SGT that represent tag of source traffic. (see [below for nested schema](#nestedatt--entries--source_sgt_objects))
 
 <a id="nestedatt--entries--destination_network_literals"></a>

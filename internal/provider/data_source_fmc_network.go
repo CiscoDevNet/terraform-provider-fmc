@@ -72,7 +72,7 @@ func (d *NetworkDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
+				MarkdownDescription: "Name of the Network object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -85,7 +85,7 @@ func (d *NetworkDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed:            true,
 			},
 			"prefix": schema.StringAttribute{
-				MarkdownDescription: "Prefix of the network.",
+				MarkdownDescription: "Prefix of the Network.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{

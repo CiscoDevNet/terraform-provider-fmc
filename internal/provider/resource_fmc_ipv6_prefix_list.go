@@ -93,7 +93,7 @@ func (r *IPv6PrefixListResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of entries").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of prefixes.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

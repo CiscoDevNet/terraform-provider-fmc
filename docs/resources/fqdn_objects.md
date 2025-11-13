@@ -3,14 +3,16 @@
 page_title: "fmc_fqdn_objects Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource manages FQDN Objects through bulk operations.
+  This resource manages a FQDN (Fully Qualified Domain Name) Object through bulk operations.
+  This resource is deprecated and will be removed in a future release. Please use fmc_fqdns instead.
   The following restrictions apply:
   Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
 
 # fmc_fqdn_objects (Resource)
 
-This resource manages FQDN Objects through bulk operations.
+This resource manages a FQDN (Fully Qualified Domain Name) Object through bulk operations.
+This resource is deprecated and will be removed in a future release. Please use `fmc_fqdns` instead.
 
 The following restrictions apply:
   - Minimum FMC version for bulk object deletion: `7.4`
@@ -22,7 +24,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_fqdn_objects" "example" {
   items = {
-    my_fqdn_objects = {
+    my_fqdns = {
       description    = "My FQDN 1"
       fqdn           = "www.example.com"
       dns_resolution = "IPV4_AND_IPV6"
@@ -59,11 +61,11 @@ Optional:
 - `dns_resolution` (String) Type of DNS resolution.
   - Choices: `IPV4_ONLY`, `IPV6_ONLY`, `IPV4_AND_IPV6`
   - Default value: `IPV4_AND_IPV6`
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 
-- `id` (String) Id of the managed object.
+- `id` (String) Id of the FQDN object.
 - `type` (String) Type of the object; this value is always 'FQDN'.
 
 ## Import

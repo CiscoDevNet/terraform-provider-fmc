@@ -92,7 +92,7 @@ func (r *StandardCommunityListsResource) Schema(ctx context.Context, req resourc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Standard Community List.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Standard Community List object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -106,7 +106,7 @@ func (r *StandardCommunityListsResource) Schema(ctx context.Context, req resourc
 							},
 						},
 						"entries": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of entries").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of entries.").String,
 							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

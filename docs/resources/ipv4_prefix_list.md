@@ -31,7 +31,7 @@ resource "fmc_ipv4_prefix_list" "example" {
 
 ### Required
 
-- `entries` (Attributes List) List of entries (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) List of prefixes. (see [below for nested schema](#nestedatt--entries))
 - `name` (String) Name of the IPv4 Prefix List object.
 
 ### Optional

@@ -38,5 +38,5 @@ data "fmc_application_tags" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Application Tag.
+- `id` (String) Id of the Application Tag.
 - `type` (String) Type of the object; this value is always 'ApplicationTag'.

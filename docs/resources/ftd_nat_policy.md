@@ -68,21 +68,21 @@ Required:
 
 Optional:
 
-- `destination_interface_id` (String) ID of destination security zone or interface group
-- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
+- `destination_interface_id` (String) ID of destination security zone or interface group.
+- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
-- `net_to_net` (Boolean) Net to Net Mapping
-- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface
-- `original_network_id` (String) ID of original network object (host, network or range)
-- `original_port` (Number) Original port number
-- `perform_route_lookup` (Boolean) Perform Route Lookup for Destination Interface
-- `protocol` (String) Service protocol
+- `net_to_net` (Boolean) Net to Net Mapping.
+- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
+- `original_network_id` (String) ID of original network object (Host, Network or Range).
+- `original_port` (Number) Original port number.
+- `protocol` (String) Service protocol.
   - Choices: `TCP`, `UDP`
-- `source_interface_id` (String) ID of source security zone or interface group
-- `translate_dns` (Boolean) Translate DNS replies that match this rule
-- `translated_network_id` (String) ID of translated network object (host, network or range)
-- `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address
-- `translated_port` (Number) Translated port number
+- `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
+- `source_interface_id` (String) ID of source security zone or interface group.
+- `translate_dns` (Boolean) Translate DNS replies that match this rule.
+- `translated_network_id` (String) ID of translated network object (Host, Network or Range).
+- `translated_network_is_destination_interface` (Boolean) Translate source network to destination interface address.
+- `translated_port` (Number) Translated port number.
 
 Read-Only:
 
@@ -102,26 +102,26 @@ Required:
 Optional:
 
 - `description` (String) Description of Manual NAT rule.
-- `destination_interface_id` (String) ID of destination security zone or interface group
+- `destination_interface_id` (String) ID of destination security zone or interface group.
 - `enabled` (Boolean) Indicates if the rule is enabled.
-- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface)
-- `interface_in_original_destination` (Boolean) Use interface address as original destination
-- `interface_in_translated_source` (Boolean) Translate source network to destination interface address
+- `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
+- `interface_in_original_destination` (Boolean) Use interface address as original destination.
+- `interface_in_translated_source` (Boolean) Translate source network to destination interface address.
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
-- `net_to_net` (Boolean) Net to Net Mapping
-- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface
-- `original_destination_id` (String) ID of original destination network object (host, network or range)
-- `original_destination_port_id` (String) ID of original destination port object
-- `original_source_id` (String) ID of original source network object (host, network or range)
-- `original_source_port_id` (String) ID of original source port object
-- `route_lookup` (Boolean) Perform Route Lookup for Destination Interface
-- `source_interface_id` (String) ID of source security zone or interface group
-- `translate_dns` (Boolean) Translate DNS replies that match this rule
-- `translated_destination_id` (String) ID of translated destination network object (host, network or range)
-- `translated_destination_port_id` (String) ID of translated destination port object
-- `translated_source_id` (String) ID of translated source network object (host, network or range)
-- `translated_source_port_id` (String) ID of translated source port object
-- `unidirectional` (Boolean) Whether the rule is unidirectional
+- `net_to_net` (Boolean) Net to Net Mapping.
+- `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
+- `original_destination_id` (String) ID of original destination network object (Host, Network or Range).
+- `original_destination_port_id` (String) ID of original destination port object.
+- `original_source_id` (String) ID of original source network object (Host, Network or Range).
+- `original_source_port_id` (String) ID of original source port object.
+- `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
+- `source_interface_id` (String) ID of source security zone or interface group.
+- `translate_dns` (Boolean) Translate DNS replies that match this rule.
+- `translated_destination_id` (String) ID of translated destination network object (Host, Network or Range).
+- `translated_destination_port_id` (String) ID of translated destination port object.
+- `translated_source_id` (String) ID of translated source network object (Host, Network or Range).
+- `translated_source_port_id` (String) ID of translated source port object.
+- `unidirectional` (Boolean) Whether the rule is unidirectional.
 
 Read-Only:
 

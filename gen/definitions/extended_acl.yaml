@@ -3,24 +3,21 @@ name: Extended ACL
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/extendedaccesslists
 doc_category: Objects
 minimum_version_create: "7.2"
+deprecation_message: This object is deprecated. Please use `fmc_extended_access_list` instead.
 attributes:
   - model_name: name
     type: String
-    description: Name of the Extended ACL.
+    description: Name of the Extended Access List.
     mandatory: true
     example: my_extended_acl
     data_source_query: true
-  - model_name: description
-    type: String
-    description: Description of the Extended ACL.
-    example: "My Extended Access Control List"
   - model_name: type
     type: String
     description: Type of the object; this value is always 'ExtendedAccessList'.
     computed: true
   - model_name: entries
     type: List
-    description: Ordered list of ACL's entries.
+    description: Ordered list of Access List entries.
     ordered_list: true
     mandatory: true
     min_list: 1
@@ -35,7 +32,7 @@ attributes:
         minimum_test_value: '"PERMIT"'
       - model_name: logLevel
         type: String
-        description: Logging level. Recommended to be left at INFORMATIONAL if `logging` is DEFAULT or DISABLED.
+        description: Logging level.
         enum_values:
           - EMERGENCY
           - ALERT
@@ -66,7 +63,7 @@ attributes:
       - model_name: literals
         data_path: [sourceNetworks]
         tf_name: source_network_literals
-        description: Set of objects that represent sources of traffic (literally specified).
+        description: Set of literals that represent sources of traffic.
         type: Set
         attributes:
           - model_name: value
@@ -81,7 +78,7 @@ attributes:
       - model_name: literals
         data_path: [destinationNetworks]
         tf_name: destination_network_literals
-        description: Set of objects that represent destinations of traffic (literally specified).
+        description: Set of literals that represent destinations of traffic.
         type: Set
         attributes:
           - model_name: value
@@ -96,7 +93,7 @@ attributes:
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
-        description: Set of objects that represent sources of traffic (Host, Network, Range).
+        description: Set of objects that represent sources of traffic (Host, Network, Range, Network Group).
         type: Set
         attributes:
           - model_name: id
@@ -105,6 +102,18 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_network.test.id
+      - model_name: objects
+        data_path: [destinationNetworks]
+        tf_name: destination_network_objects
+        description: Set of objects that represent destinations of traffic (Host, Network, Range, Network Group).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_host.test.id
       - model_name: objects
         data_path: [securityGroupTags]
         tf_name: source_sgt_objects
@@ -136,21 +145,9 @@ attributes:
       #       type: String
       #       example: SecurityGroupTag
       - model_name: objects
-        data_path: [destinationNetworks]
-        tf_name: destination_network_objects
-        description: Set of objects that represent destinations of traffic.
-        type: Set
-        attributes:
-          - model_name: id
-            type: String
-            description: Id of the object.
-            id: true
-            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_host.test.id
-      - model_name: objects
         data_path: [sourcePorts]
         tf_name: source_port_objects
-        description: Set of objects representing source ports.
+        description: Set of objects representing source ports or icmpv4 objects.
         type: Set
         attributes:
           - model_name: id
@@ -162,7 +159,7 @@ attributes:
       - model_name: objects
         data_path: [destinationPorts]
         tf_name: destination_port_objects
-        description: Set of objects representing destination ports.
+        description: Set of objects representing destination ports or icmpv4 objects.
         type: Set
         attributes:
           - model_name: id

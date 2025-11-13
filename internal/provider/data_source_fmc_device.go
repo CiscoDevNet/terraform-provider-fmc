@@ -72,7 +72,7 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "User-specified name, must be unique.",
+				MarkdownDescription: "Name of the device.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -80,16 +80,16 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Type of the device; this value is always 'Device'.",
 				Computed:            true,
 			},
-			"host_name": schema.StringAttribute{
-				MarkdownDescription: "Hostname or IP address of the device. Either the host_name or nat_id must be present.",
+			"host": schema.StringAttribute{
+				MarkdownDescription: "Hostname or IP address of the device. Either the `host` or `nat_id` must be present.",
 				Computed:            true,
 			},
 			"nat_id": schema.StringAttribute{
 				MarkdownDescription: "(used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.",
 				Computed:            true,
 			},
-			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: "Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory",
+			"licenses": schema.SetAttribute{
+				MarkdownDescription: "Array of strings representing the license capabilities on the managed device.",
 				ElementType:         types.StringType,
 				Computed:            true,
 			},
@@ -117,8 +117,8 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Enables Object Group Search",
 				Computed:            true,
 			},
-			"access_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.",
+			"access_control_policy_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the assigned Access Control Policy.",
 				Computed:            true,
 			},
 			"nat_policy_id": schema.StringAttribute{

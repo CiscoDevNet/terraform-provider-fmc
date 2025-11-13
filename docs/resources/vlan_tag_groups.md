@@ -22,8 +22,8 @@ The following restrictions apply:
 ```terraform
 resource "fmc_vlan_tag_groups" "example" {
   items = {
-    fmc_vlan_tag_groups = {
-      description = "My vlan tag group name"
+    vlan_tag_groups = {
+      description = "My VLAN Tag Group name"
       overridable = true
       vlan_tags = [
         {
@@ -46,7 +46,7 @@ resource "fmc_vlan_tag_groups" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of VLAN Tag Groups. The key of the map is the name of the individual VLAN Tag Group. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -67,7 +67,7 @@ Optional:
 
 - `description` (String) Description of the object.
 - `literals` (Attributes Set) Set of literal values to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--items--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:
 

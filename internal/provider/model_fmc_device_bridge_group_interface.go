@@ -36,24 +36,24 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type DeviceBridgeGroupInterface struct {
-	Id                  types.String                                   `tfsdk:"id"`
-	Domain              types.String                                   `tfsdk:"domain"`
-	DeviceId            types.String                                   `tfsdk:"device_id"`
-	Type                types.String                                   `tfsdk:"type"`
-	Name                types.String                                   `tfsdk:"name"`
-	LogicalName         types.String                                   `tfsdk:"logical_name"`
-	Description         types.String                                   `tfsdk:"description"`
-	BridgeGroupId       types.Int64                                    `tfsdk:"bridge_group_id"`
-	SelectedInterfaces  []DeviceBridgeGroupInterfaceSelectedInterfaces `tfsdk:"selected_interfaces"`
-	Ipv4StaticAddress   types.String                                   `tfsdk:"ipv4_static_address"`
-	Ipv4StaticNetmask   types.String                                   `tfsdk:"ipv4_static_netmask"`
-	Ipv4DhcpObtainRoute types.Bool                                     `tfsdk:"ipv4_dhcp_obtain_route"`
-	Ipv6Addresses       []DeviceBridgeGroupInterfaceIpv6Addresses      `tfsdk:"ipv6_addresses"`
-	Ipv6EnableDad       types.Bool                                     `tfsdk:"ipv6_enable_dad"`
-	Ipv6DadAttempts     types.Int64                                    `tfsdk:"ipv6_dad_attempts"`
-	Ipv6NsInterval      types.Int64                                    `tfsdk:"ipv6_ns_interval"`
-	Ipv6ReachableTime   types.Int64                                    `tfsdk:"ipv6_reachable_time"`
-	ArpTableEntries     []DeviceBridgeGroupInterfaceArpTableEntries    `tfsdk:"arp_table_entries"`
+	Id                         types.String                                   `tfsdk:"id"`
+	Domain                     types.String                                   `tfsdk:"domain"`
+	DeviceId                   types.String                                   `tfsdk:"device_id"`
+	Type                       types.String                                   `tfsdk:"type"`
+	Name                       types.String                                   `tfsdk:"name"`
+	LogicalName                types.String                                   `tfsdk:"logical_name"`
+	Description                types.String                                   `tfsdk:"description"`
+	BridgeGroupId              types.Int64                                    `tfsdk:"bridge_group_id"`
+	SelectedInterfaces         []DeviceBridgeGroupInterfaceSelectedInterfaces `tfsdk:"selected_interfaces"`
+	Ipv4StaticAddress          types.String                                   `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask          types.String                                   `tfsdk:"ipv4_static_netmask"`
+	Ipv4DhcpObtainDefaultRoute types.Bool                                     `tfsdk:"ipv4_dhcp_obtain_default_route"`
+	Ipv6Addresses              []DeviceBridgeGroupInterfaceIpv6Addresses      `tfsdk:"ipv6_addresses"`
+	Ipv6Dad                    types.Bool                                     `tfsdk:"ipv6_dad"`
+	Ipv6DadAttempts            types.Int64                                    `tfsdk:"ipv6_dad_attempts"`
+	Ipv6NsInterval             types.Int64                                    `tfsdk:"ipv6_ns_interval"`
+	Ipv6ReachableTime          types.Int64                                    `tfsdk:"ipv6_reachable_time"`
+	ArpTableEntries            []DeviceBridgeGroupInterfaceArpTableEntries    `tfsdk:"arp_table_entries"`
 }
 
 type DeviceBridgeGroupInterfaceSelectedInterfaces struct {
@@ -124,8 +124,8 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 	if !data.Ipv4StaticNetmask.IsNull() {
 		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
-	if !data.Ipv4DhcpObtainRoute.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainRoute.ValueBool())
+	if !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.dhcp.enableDefaultRouteDHCP", data.Ipv4DhcpObtainDefaultRoute.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
 		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
@@ -140,8 +140,8 @@ func (data DeviceBridgeGroupInterface) toBody(ctx context.Context, state DeviceB
 			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
 		}
 	}
-	if !data.Ipv6EnableDad.IsNull() {
-		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6EnableDad.ValueBool())
+	if !data.Ipv6Dad.IsNull() {
+		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
 	}
 	if !data.Ipv6DadAttempts.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.dadAttempts", data.Ipv6DadAttempts.ValueInt64())
@@ -231,9 +231,9 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
 		data.Ipv6Addresses = make([]DeviceBridgeGroupInterfaceIpv6Addresses, 0)
@@ -255,9 +255,9 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		})
 	}
 	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() {
-		data.Ipv6EnableDad = types.BoolValue(value.Bool())
+		data.Ipv6Dad = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDad = types.BoolNull()
+		data.Ipv6Dad = types.BoolNull()
 	}
 	if value := res.Get("ipv6.dadAttempts"); value.Exists() {
 		data.Ipv6DadAttempts = types.Int64Value(value.Int())
@@ -392,10 +392,10 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
-	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainRoute.IsNull() {
-		data.Ipv4DhcpObtainRoute = types.BoolValue(value.Bool())
+	if value := res.Get("ipv4.dhcp.enableDefaultRouteDHCP"); value.Exists() && !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4DhcpObtainRoute = types.BoolNull()
+		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address"}
@@ -445,10 +445,10 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 		}
 		(*parent).Ipv6Addresses[i] = data
 	}
-	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() && !data.Ipv6EnableDad.IsNull() {
-		data.Ipv6EnableDad = types.BoolValue(value.Bool())
+	if value := res.Get("ipv6.enableDADLoopback"); value.Exists() && !data.Ipv6Dad.IsNull() {
+		data.Ipv6Dad = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6EnableDad = types.BoolNull()
+		data.Ipv6Dad = types.BoolNull()
 	}
 	if value := res.Get("ipv6.dadAttempts"); value.Exists() && !data.Ipv6DadAttempts.IsNull() {
 		data.Ipv6DadAttempts = types.Int64Value(value.Int())
@@ -545,39 +545,15 @@ func (data *DeviceBridgeGroupInterface) fromBodyUnknowns(ctx context.Context, re
 
 // End of section. //template:end fromBodyUnknowns
 
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
-
-// End of section. //template:end toBodyPutDelete
-
 func (data DeviceBridgeGroupInterface) adjustBody(ctx context.Context, req string) string {
 	if len(data.SelectedInterfaces) > 0 {
 		req, _ = sjson.Set(req, "priority", 0)
 		req, _ = sjson.Set(req, "mode", "NONE")
 	}
 
-	if !data.Ipv4DhcpObtainRoute.IsNull() {
+	if !data.Ipv4DhcpObtainDefaultRoute.IsNull() {
 		req, _ = sjson.Set(req, "ipv4.dhcp.dhcpRouteMetric", 0)
 	}
 
 	return req
 }
-
-// Section below is generated&owned by "gen/generator.go". //template:begin adjustBodyBulk
-
-// End of section. //template:end adjustBodyBulk

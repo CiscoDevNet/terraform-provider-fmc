@@ -15,7 +15,7 @@ This resource manages a Chassis.
 ```terraform
 resource "fmc_chassis" "example" {
   name             = "my_chassis"
-  host_name        = "10.0.0.1"
+  host             = "10.0.0.1"
   registration_key = "key1"
 }
 ```
@@ -25,7 +25,7 @@ resource "fmc_chassis" "example" {
 
 ### Required
 
-- `host_name` (String) Hostname or IP address of the chassis.
+- `host` (String) Hostname or IP address of the chassis.
 - `name` (String) Chassis name to be used in FMC.
 - `registration_key` (String) Registration Key identical to the one previously configured on the chassis.
 

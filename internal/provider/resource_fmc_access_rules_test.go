@@ -43,8 +43,8 @@ func TestAccFmcAccessRules(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.type", "PortLiteral"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.protocol", "6"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.log_end", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.application_filters.0.types.0.id", "WEBAPP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.application_filters.0.risks.0.id", "VERY_LOW"))
@@ -159,8 +159,8 @@ func testAccFmcAccessRulesConfig_all() string {
 	config += `			port = "80"` + "\n"
 	config += `			protocol = "6"` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		log_files = false` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `		description = ""` + "\n"

@@ -85,7 +85,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				Computed:            true,
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: "List of route map entries.",
+				MarkdownDescription: "List of Route Map entries.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

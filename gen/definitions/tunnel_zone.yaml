@@ -2,7 +2,6 @@
 name: Tunnel Zone
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/tunneltags
 doc_category: Objects
-# minimum_version_create: "7.4"
 attributes:
   - model_name: name
     type: String
@@ -23,3 +22,4 @@ attributes:
     type: String
     description: Description of the object.
     example: My Tunnel Zone object
+    missing_in_response_if_set_to_empty_string: true

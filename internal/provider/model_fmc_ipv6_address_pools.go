@@ -194,7 +194,11 @@ func (data *IPv6AddressPools) fromBodyPartial(ctx context.Context, res gjson.Res
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 			data.Description = types.StringValue(value.String())
 		} else {
-			data.Description = types.StringNull()
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
 		}
 		if value := res.Get("ipv6StartAddress"); value.Exists() && !data.StartAddress.IsNull() {
 			data.StartAddress = types.StringValue(value.String())
