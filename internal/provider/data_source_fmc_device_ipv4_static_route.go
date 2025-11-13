@@ -66,6 +66,10 @@ func (d *DeviceIPv4StaticRouteDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+			},
 			"device_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the parent device.",
 				Required:            true,

@@ -121,6 +121,15 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			{{- end}}
+			{{- if .RestEndpointVrf }}
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			{{- end}}
 			{{- range  .Attributes}}
 			{{- if not .Value}}
 			"{{.TfName}}": schema.{{if isNestedListMapSet .}}{{.Type}}Nested{{else if isList .}}List{{else if isSet .}}Set{{else if eq .Type "Versions"}}List{{else if eq .Type "Version"}}Int64{{else}}{{.Type}}{{end}}Attribute{
@@ -1010,47 +1019,85 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 // Section below is generated&owned by "gen/generator.go". //template:begin import
 {{- if not .NoImport}}
 func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Parse import ID
-	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
-	{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
-	(?P<{{$attr.TfName}}>[^\s,]+),
-	{{- end -}}{{- end -}}{{- end -}}
-	{{- if .IsBulk -}}\[(?P<names>.*?)\]{{- else -}}(?P<id>[^\s,]+?){{- end -}}
-	$`)
-	match := inputPattern.FindStringSubmatch(req.ID)
-	if match == nil {
-		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>{{range $index, $attr := .Attributes}}{{if $attr.Reference}},<{{$attr.TfName}}>{{end}}{{end}},
-			{{- if .IsBulk -}}[<item1_name>,<item2_name>,...]{{- else -}}<id>{{- end -}}\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
-		resp.Diagnostics.AddError("Import error", errMsg)
-		return
-	}
+	{{- if .RestEndpointVrf}}
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<device_id>,<vrf_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n<vrf_id> is optional.\n" + fmt.Sprintf("Got: %q", req.ID)
+		parts := strings.Split(req.ID, ",")
+		if len(parts) < 2 || len(parts) > 4 {
+			resp.Diagnostics.AddError("Import error", errMsg)
+			return
+		}
 
-	// Set domain, if provided
-	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
-	}
-	
-	{{- if .IsBulk}}
-	// Generate new ID (random, does not relate to FMC in any way)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
+		for i := range parts {
+			if parts[i] == "" {
+				resp.Diagnostics.AddError("Import error", errMsg)
+				return
+			}
+		}
 
-	// Fill state with names of objects to import
-	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	itemsMap := make(map[string]{{camelCase .Name}}Items, len(names))
-	for _, v := range names {
-		itemsMap[v] = {{camelCase .Name}}Items{}
-	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
-	{{- else}}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
-	{{- end}}
+		if len(parts) == 2 {
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[0])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[1])...)
+		} else if len(parts) == 3 {
+			if err := uuid.Validate(parts[0]); err == nil {
+				// First part is UUID, so it's device_id
+				resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[0])...)
+				resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vrf_id"), parts[1])...)
+			} else {
+				// First part is domain
+				resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), parts[0])...)
+				resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[1])...)
+			}
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[2])...)
 
-	{{- if hasReference .Attributes -}}
-	{{- range $index, $attr := .Attributes -}}
-	{{- if $attr.Reference}}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("{{$attr.TfName}}"), match[inputPattern.SubexpIndex("{{$attr.TfName}}")])...)
-	{{- end -}}
-	{{- end -}}
+		} else if len(parts) == 4 {
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), parts[0])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[1])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vrf_id"), parts[2])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[3])...)
+		}
+	{{- else }}
+		// Parse import ID
+		var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?
+		{{- if hasReference .Attributes -}}{{- range $index, $attr := .Attributes -}}{{- if $attr.Reference -}}
+		(?P<{{$attr.TfName}}>[^\s,]+),
+		{{- end -}}{{- end -}}{{- end -}}
+		{{- if .IsBulk -}}\[(?P<names>.*?)\]{{- else -}}(?P<id>[^\s,]+?){{- end -}}
+		$`)
+		match := inputPattern.FindStringSubmatch(req.ID)
+		if match == nil {
+			errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>{{range $index, $attr := .Attributes}}{{if $attr.Reference}},<{{$attr.TfName}}>{{end}}{{end}},
+				{{- if .IsBulk -}}[<item1_name>,<item2_name>,...]{{- else -}}<id>{{- end -}}\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+			resp.Diagnostics.AddError("Import error", errMsg)
+			return
+		}
+
+		// Set domain, if provided
+		if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
+		}
+		
+		{{- if .IsBulk}}
+		// Generate new ID (random, does not relate to FMC in any way)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), uuid.New().String())...)
+
+		// Fill state with names of objects to import
+		names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
+		itemsMap := make(map[string]{{camelCase .Name}}Items, len(names))
+		for _, v := range names {
+			itemsMap[v] = {{camelCase .Name}}Items{}
+		}
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
+		{{- else}}
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
+		{{- end}}
+
+		{{- if hasReference .Attributes -}}
+		{{- range $index, $attr := .Attributes -}}
+		{{- if $attr.Reference}}
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("{{$attr.TfName}}"), match[inputPattern.SubexpIndex("{{$attr.TfName}}")])...)
+		{{- end -}}
+		{{- end -}}
+		{{- end}}
 	{{- end}}
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)

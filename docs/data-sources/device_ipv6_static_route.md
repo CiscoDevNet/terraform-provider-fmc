@@ -30,6 +30,7 @@ data "fmc_device_ipv6_static_route" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 

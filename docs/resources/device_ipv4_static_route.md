@@ -48,6 +48,7 @@ resource "fmc_device_ipv4_static_route" "example" {
 - `metric_value` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.
   - Range: `1`-`254`
 - `sla_monitor_id` (String) ID of SLA Monitor for Route Tracking.
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -69,5 +70,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_device_ipv4_static_route.example "<domain>,<device_id>,<id>"
+# <vrf_id> is optional.
+terraform import fmc_device_ipv4_static_route.example "<domain>,<device_id>,<vrf_id>,<id>"
 ```

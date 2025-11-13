@@ -4,11 +4,13 @@ page_title: "fmc_device_vrf_ipv6_static_route Data Source - terraform-provider-f
 subcategory: "Devices"
 description: |-
   This data source reads the Device VRF IPv6 Static Route.
+  This resource is deprecated and will be removed in a future release. Please use fmc_device_ipv6_static_route resource instead, which now supports optional vrf_id attribute.
 ---
 
 # fmc_device_vrf_ipv6_static_route (Data Source)
 
 This data source reads the Device VRF IPv6 Static Route.
+This resource is deprecated and will be removed in a future release. Please use `fmc_device_ipv6_static_route` resource instead, which now supports optional `vrf_id` attribute.
 
 ## Example Usage
 

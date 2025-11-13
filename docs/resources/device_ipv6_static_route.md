@@ -46,6 +46,7 @@ resource "fmc_device_ipv6_static_route" "example" {
   - Default value: `false`
 - `metric_value` (Number) The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.
   - Range: `1`-`254`
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -67,5 +68,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_device_ipv6_static_route.example "<domain>,<device_id>,<id>"
+# <vrf_id> is optional.
+terraform import fmc_device_ipv6_static_route.example "<domain>,<device_id>,<vrf_id>,<id>"
 ```

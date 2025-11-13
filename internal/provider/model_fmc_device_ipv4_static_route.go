@@ -37,6 +37,7 @@ import (
 type DeviceIPv4StaticRoute struct {
 	Id                   types.String                               `tfsdk:"id"`
 	Domain               types.String                               `tfsdk:"domain"`
+	VrfId                types.String                               `tfsdk:"vrf_id"`
 	DeviceId             types.String                               `tfsdk:"device_id"`
 	InterfaceLogicalName types.String                               `tfsdk:"interface_logical_name"`
 	Type                 types.String                               `tfsdk:"type"`
@@ -62,7 +63,11 @@ type DeviceIPv4StaticRouteDestinationNetworks struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceIPv4StaticRoute) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ipv4staticroutes", url.QueryEscape(data.DeviceId.ValueString()))
+	}
 }
 
 // End of section. //template:end getPath

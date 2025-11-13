@@ -4,6 +4,7 @@ no_data_source: bool(required=False) # Set to true if no data-source should be c
 no_resource: bool(required=False) # Set to true if no resource should be created
 no_import: bool(required=False) # Set to true if the resource does not support `terraform import` command
 rest_endpoint: str(required=False) # REST endpoint path
+rest_endpoint_vrf: str(required=False) # REST endpoint path for VRF-aware resources
 put_create: bool(required=False) # Set to true if the PUT request is used for create
 retrieve_id: bool(required=False) # Set to true if there is just one ID (object) possible under the API endpoint, so that this ID can be retrieved for subsequent requests
 put_delete: bool(required=False) # Set to true if the PUT request is used to delete

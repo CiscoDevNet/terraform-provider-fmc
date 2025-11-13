@@ -31,6 +31,7 @@ data "fmc_device_bgp" "example" {
 - `as_number` (String) Autonomus System (AS) number
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -39,8 +40,14 @@ data "fmc_device_bgp" "example" {
 - `ipv4_aggregate_addresses` (Attributes List) Generate aggregate address information for IPv4. (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
 - `ipv4_auto_summary` (Boolean) Summarize subnet routes into network level routes
 - `ipv4_default_information_orginate` (Boolean) Generate default route
+- `ipv4_export_global_vrf_route_map_id` (String) Leak the user-defined virtual router routes to the global virtual router based on specified Route Map. Applicable only for BGP in VRF context.
+- `ipv4_export_route_targets` (List of String) Route Target extended community to tag the source virtual router's routes with the route target value. Applicable only for BGP in VRF context.
+- `ipv4_export_user_vrf_route_map_id` (String) Filter the routes at the source virtual router before the routes are exported to other virtual routers. Applicable only for BGP in VRF context.
 - `ipv4_external_distance` (Number) Administrative route distance for external routes
 - `ipv4_filterings` (Attributes List) Filter routes or networks received in incoming BGP updates (see [below for nested schema](#nestedatt--ipv4_filterings))
+- `ipv4_import_global_vrf_route_map_id` (String) Leak the global virtual router routes to the user-defined virtual router based on the specified Route Map. Applicable only for BGP in VRF context.
+- `ipv4_import_route_targets` (List of String) Route Target extended community that you want to match for the routes to be imported. Applicable only for BGP in VRF context.
+- `ipv4_import_user_vrf_route_map_id` (String) Filter the routes at the destination virtual router. Applicable only for BGP in VRF context.
 - `ipv4_internal_distance` (Number) Administrative route distance for internal routes
 - `ipv4_learned_route_map_id` (String) Learned Route Map ID
 - `ipv4_local_distance` (Number) Administrative route distance for local routes

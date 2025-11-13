@@ -65,7 +65,8 @@ func (r *DeviceVRFIPv6StaticRouteResource) Metadata(ctx context.Context, req res
 func (r *DeviceVRFIPv6StaticRouteResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device VRF IPv6 Static Route.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device VRF IPv6 Static Route.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_ipv6_static_route` resource instead, which now supports optional `vrf_id` attribute.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_ipv6_static_route` resource instead, which now supports optional `vrf_id` attribute.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
