@@ -53,10 +53,16 @@ resource "fmc_device_bgp" "example" {
 - `ipv4_aggregate_addresses` (Attributes List) Generate aggregate address information for IPv4. (see [below for nested schema](#nestedatt--ipv4_aggregate_addresses))
 - `ipv4_auto_summary` (Boolean) Summarize subnet routes into network level routes
 - `ipv4_default_information_orginate` (Boolean) Generate default route
+- `ipv4_export_global_vrf_route_map_id` (String) Leak the user-defined virtual router routes to the global virtual router based on specified Route Map. Applicable only for BGP in VRF context.
+- `ipv4_export_route_targets` (List of String) Route Target extended community to tag the source virtual router's routes with the route target value. Applicable only for BGP in VRF context.
+- `ipv4_export_user_vrf_route_map_id` (String) Filter the routes at the source virtual router before the routes are exported to other virtual routers. Applicable only for BGP in VRF context.
 - `ipv4_external_distance` (Number) Administrative route distance for external routes
   - Range: `1`-`255`
   - Default value: `20`
 - `ipv4_filterings` (Attributes List) Filter routes or networks received in incoming BGP updates (see [below for nested schema](#nestedatt--ipv4_filterings))
+- `ipv4_import_global_vrf_route_map_id` (String) Leak the global virtual router routes to the user-defined virtual router based on the specified Route Map. Applicable only for BGP in VRF context.
+- `ipv4_import_route_targets` (List of String) Route Target extended community that you want to match for the routes to be imported. Applicable only for BGP in VRF context.
+- `ipv4_import_user_vrf_route_map_id` (String) Filter the routes at the destination virtual router. Applicable only for BGP in VRF context.
 - `ipv4_internal_distance` (Number) Administrative route distance for internal routes
   - Range: `1`-`255`
   - Default value: `200`
@@ -77,6 +83,7 @@ resource "fmc_device_bgp" "example" {
 - `ipv4_route_injections` (Attributes List) Define routes to be conditionally injected into the BGP routing table. (see [below for nested schema](#nestedatt--ipv4_route_injections))
 - `ipv4_suppress_inactive_routes` (Boolean) Suppressing advertisement of inactive routes
 - `ipv4_synchronization` (Boolean) Synchronize between BGP and IGP systems
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -289,5 +296,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_device_bgp.example "<domain>,<device_id>,<id>"
+# <vrf_id> is optional.
+terraform import fmc_device_bgp.example "<domain>,<device_id>,<vrf_id>,<id>"
 ```

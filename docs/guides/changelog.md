@@ -7,11 +7,12 @@ description: |-
 
 # Changelog
 
-## 2.0.0 (Unreleased)
+## 2.0.0-rc8 (Unreleased)
 
 - BREAKING CHANGE: `fmc_device_vrf_ipv4_static_route` is deprecated. Please use `fmc_device_ipv4_static_route`, which supports now `vrf_id` attribute.
 - BREAKING CHANGE: `fmc_device_vrf_ipv6_static_route` is deprecated. Please use `fmc_device_ipv6_static_route`, which supports now `vrf_id` attribute.
 - (Enhancement) `domain` support for importing non-bulk resources
+- (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 
 ## 2.0.0-rc7
 

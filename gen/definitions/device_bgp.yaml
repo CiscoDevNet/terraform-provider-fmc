@@ -2,6 +2,7 @@
 ---
 name: Device BGP
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bgp
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/bgp
 res_description: This resouce manages Device BGP Settings. As pre-requisite, BGP has to be enabled and AS Number assigned under BGP General Settings (fmc_device_bgp_general_settings).
 doc_category: Devices
 test_tags: [TF_VAR_device_id]
@@ -666,6 +667,51 @@ attributes:
         type: String
         description: Injected route will inherit the attributes of the aggregate route
         default_value: true
+  # BGP - IPv4 - Route Import/Export (VRF ONLY)
+  - model_name: importRouteTargets
+    tf_name: ipv4_import_route_targets
+    data_path: [addressFamilyIPv4, routeImportExport]
+    type: List
+    element_type: String
+    description: Route Target extended community that you want to match for the routes to be imported. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
+  - model_name: exportRouteTargets
+    tf_name: ipv4_export_route_targets
+    data_path: [addressFamilyIPv4, routeImportExport]
+    type: List
+    element_type: String
+    description: Route Target extended community to tag the source virtual router's routes with the route target value. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
+  - model_name: id
+    data_path: [addressFamilyIPv4, routeImportExport, globalVrfImportRouteMap]
+    tf_name: ipv4_import_global_vrf_route_map_id
+    type: String
+    description: Leak the global virtual router routes to the user-defined virtual router based on the specified Route Map. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
+  - model_name: id
+    data_path: [addressFamilyIPv4, routeImportExport, globalVrfExportRouteMap]
+    tf_name: ipv4_export_global_vrf_route_map_id
+    type: String
+    description: Leak the user-defined virtual router routes to the global virtual router based on specified Route Map. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
+  - model_name: id
+    data_path: [addressFamilyIPv4, routeImportExport, userVrfImportRouteMap]
+    tf_name: ipv4_import_user_vrf_route_map_id
+    type: String
+    description: Filter the routes at the destination virtual router. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
+  - model_name: id
+    data_path: [addressFamilyIPv4, routeImportExport, userVrfExportRouteMap]
+    tf_name: ipv4_export_user_vrf_route_map_id
+    type: String
+    description: Filter the routes at the source virtual router before the routes are exported to other virtual routers. Applicable only for BGP in VRF context.
+    exclude_test: true
+    exclude_example: true
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
