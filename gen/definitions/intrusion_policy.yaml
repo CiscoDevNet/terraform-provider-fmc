@@ -26,7 +26,7 @@ attributes:
     description: Id of the base policy.
     mandatory: true
     example: 0050568A-4E02-1ed3-0000-004294969198
-    test_value: data.fmc_intrusion_policy.test.id
+    test_value: data.fmc_intrusion_policy.builtin.id
   - model_name: inspectionMode
     type: String
     description: Inspection mode.

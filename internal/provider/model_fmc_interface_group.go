@@ -37,7 +37,7 @@ type InterfaceGroup struct {
 	Id            types.String               `tfsdk:"id"`
 	Domain        types.String               `tfsdk:"domain"`
 	Name          types.String               `tfsdk:"name"`
-	InterfaceMode types.String               `tfsdk:"interface_mode"`
+	InterfaceType types.String               `tfsdk:"interface_type"`
 	Type          types.String               `tfsdk:"type"`
 	Interfaces    []InterfaceGroupInterfaces `tfsdk:"interfaces"`
 }
@@ -70,8 +70,8 @@ func (data InterfaceGroup) toBody(ctx context.Context, state InterfaceGroup) str
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
-	if !data.InterfaceMode.IsNull() {
-		body, _ = sjson.Set(body, "interfaceMode", data.InterfaceMode.ValueString())
+	if !data.InterfaceType.IsNull() {
+		body, _ = sjson.Set(body, "interfaceMode", data.InterfaceType.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
 		body, _ = sjson.Set(body, "interfaces", []any{})
@@ -97,9 +97,9 @@ func (data *InterfaceGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("interfaceMode"); value.Exists() {
-		data.InterfaceMode = types.StringValue(value.String())
+		data.InterfaceType = types.StringValue(value.String())
 	} else {
-		data.InterfaceMode = types.StringNull()
+		data.InterfaceType = types.StringNull()
 	}
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
@@ -136,10 +136,10 @@ func (data *InterfaceGroup) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Name = types.StringNull()
 	}
-	if value := res.Get("interfaceMode"); value.Exists() && !data.InterfaceMode.IsNull() {
-		data.InterfaceMode = types.StringValue(value.String())
+	if value := res.Get("interfaceMode"); value.Exists() && !data.InterfaceType.IsNull() {
+		data.InterfaceType = types.StringValue(value.String())
 	} else {
-		data.InterfaceMode = types.StringNull()
+		data.InterfaceType = types.StringNull()
 	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())

@@ -11,6 +11,7 @@ attributes:
     example: my_interface_group
     data_source_query: true
   - model_name: interfaceMode
+    tf_name: interface_type
     type: String
     description: All interfaces' types must match the interface mode.
     enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, MANAGEMENT, LOOPBACK]

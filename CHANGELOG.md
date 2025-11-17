@@ -37,6 +37,8 @@
     - add `default_action_variable_set_id`
 - BREAKING CHANGE: `fmc_ftd_nat_policy`: Update attribute names
     - Auto nat rules: `perform_route_lookup` -> `route_lookup`
+- BREAKING CHANGE: `fmc_interface_group`: Update attribute names
+    - Auto nat rules: `interface_mode` -> `interface_type`
 - (Change): Rename `fmc_fqdn_object` to `fmc_fqdn`. `fmc_fqdn_object` will be removed in future releases
 - (Change): Rename `fmc_fqdn_objects` to `fmc_fqdns`. `fmc_fqdn_objects` will be removed in future releases
 - (Change): Rename `fmc_icmpv4_object` to `fmc_icmpv4`. `fmc_icmpv4_object` will be removed in future releases

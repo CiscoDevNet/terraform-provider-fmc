@@ -76,7 +76,7 @@ data "fmc_intrusion_policy" "builtin" {
 func testAccFmcIntrusionPolicyConfig_minimum() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
 	config += `	name = "my_intrusion_policy"` + "\n"
-	config += `	base_policy_id = data.fmc_intrusion_policy.test.id` + "\n"
+	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -89,7 +89,7 @@ func testAccFmcIntrusionPolicyConfig_all() string {
 	config := `resource "fmc_intrusion_policy" "test" {` + "\n"
 	config += `	name = "my_intrusion_policy"` + "\n"
 	config += `	description = "My IPS Policy"` + "\n"
-	config += `	base_policy_id = data.fmc_intrusion_policy.test.id` + "\n"
+	config += `	base_policy_id = data.fmc_intrusion_policy.builtin.id` + "\n"
 	config += `	inspection_mode = "PREVENTION"` + "\n"
 	config += `}` + "\n"
 	return config

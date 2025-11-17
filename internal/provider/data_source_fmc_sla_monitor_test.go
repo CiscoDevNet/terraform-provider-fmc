@@ -65,7 +65,7 @@ func TestAccDataSourceFmcSLAMonitor(t *testing.T) {
 const testAccDataSourceFmcSLAMonitorPrerequisitesConfig = `
 resource "fmc_interface_group" "test" {
   name           = "sla_monitor_interface_group"
-  interface_mode = "ROUTED"
+  interface_type = "ROUTED"
 }
 `
 
