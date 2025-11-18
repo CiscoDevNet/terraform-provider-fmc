@@ -70,14 +70,16 @@ The following table illustrates the performance difference between using individ
 Tests were performed in the following conditions:
 - FMC version: 7.7.10
 - Terraform version: 1.13.4
-- Terraform provider version: 2.0.0
+- Terraform provider version: 2.0.0-rc8
 - FMC configured with default settings and no pre-existing objects
-- Table values are approximate and may vary based on environment and conditions, like FMC load and existing objects
-- Updates are done one by one in both cases, therefore update time of a single object is mostly equal to Refresh time
+- Table values are approximate and may vary based on environment and conditions, like FMC load and number of already existing objects
+- Updates are done one by one in both cases, therefore update time equals to Refresh time (see table above) + time required for individual updates
 
 ## Limitations
 
-### Object Replacement
+There are some limitations when using bulk resources, especially when it comes to dependencies between resources.
+
+### Case 1: Object Replacement
 
 When replacing objects referenced by other resources, you may encounter dependency conflicts that require staged deployments.
 
@@ -166,7 +168,7 @@ resource "fmc_network_group" "network_group" {
 
 This two-stage approach ensures all dependencies are properly maintained throughout the replacement process.
 
-### Object Removal
+### Case 2: Object Removal
 
 When removing objects that are referenced by other resources, you cannot do it in a single step.
 
