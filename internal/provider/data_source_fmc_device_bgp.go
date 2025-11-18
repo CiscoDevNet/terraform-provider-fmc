@@ -71,6 +71,10 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+			},
 			"device_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the parent device.",
 				Required:            true,
@@ -500,6 +504,32 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 						},
 					},
 				},
+			},
+			"ipv4_import_route_targets": schema.ListAttribute{
+				MarkdownDescription: "Route Target extended community that you want to match for the routes to be imported. Applicable only for BGP in VRF context.",
+				ElementType:         types.StringType,
+				Computed:            true,
+			},
+			"ipv4_export_route_targets": schema.ListAttribute{
+				MarkdownDescription: "Route Target extended community to tag the source virtual router's routes with the route target value. Applicable only for BGP in VRF context.",
+				ElementType:         types.StringType,
+				Computed:            true,
+			},
+			"ipv4_import_global_vrf_route_map_id": schema.StringAttribute{
+				MarkdownDescription: "Leak the global virtual router routes to the user-defined virtual router based on the specified Route Map. Applicable only for BGP in VRF context.",
+				Computed:            true,
+			},
+			"ipv4_export_global_vrf_route_map_id": schema.StringAttribute{
+				MarkdownDescription: "Leak the user-defined virtual router routes to the global virtual router based on specified Route Map. Applicable only for BGP in VRF context.",
+				Computed:            true,
+			},
+			"ipv4_import_user_vrf_route_map_id": schema.StringAttribute{
+				MarkdownDescription: "Filter the routes at the destination virtual router. Applicable only for BGP in VRF context.",
+				Computed:            true,
+			},
+			"ipv4_export_user_vrf_route_map_id": schema.StringAttribute{
+				MarkdownDescription: "Filter the routes at the source virtual router before the routes are exported to other virtual routers. Applicable only for BGP in VRF context.",
+				Computed:            true,
 			},
 		},
 	}

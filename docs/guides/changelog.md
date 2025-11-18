@@ -63,6 +63,7 @@ description: |-
 - (Fix): `fmc_chassis_logical_devices`: Computed parameters are not refreshed on Update
 - (Enhancement) Add support for `fmc_network_groups` data source and import
 - (Enhancement) `domain` support for importing non-bulk resources
+- (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 
 ## 2.0.0-rc7
 
