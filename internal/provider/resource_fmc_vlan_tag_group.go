@@ -94,7 +94,7 @@ func (r *VLANTagGroupResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"vlan_tags": schema.SetNestedAttribute{

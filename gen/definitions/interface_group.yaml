@@ -6,11 +6,12 @@ test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the Interface Group object.
     mandatory: true
     example: my_interface_group
     data_source_query: true
   - model_name: interfaceMode
+    tf_name: interface_type
     type: String
     description: All interfaces' types must match the interface mode.
     enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, MANAGEMENT, LOOPBACK]

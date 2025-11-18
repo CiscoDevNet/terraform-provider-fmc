@@ -72,7 +72,7 @@ func (d *CertificateMapsDataSource) Schema(ctx context.Context, req datasource.S
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Certificate Map.",
+							MarkdownDescription: "Id of the Certificate Map object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

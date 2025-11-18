@@ -72,7 +72,7 @@ func (d *TimeRangeDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object",
+				MarkdownDescription: "Name of the Time Range object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -93,7 +93,7 @@ func (d *TimeRangeDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				Computed:            true,
 			},
 			"recurrence_list": schema.ListNestedAttribute{
-				MarkdownDescription: "List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time.",
+				MarkdownDescription: "List of recurring intervals during which the time range is effective. These intervals are valid only between `start_time` and `end_time`.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -102,31 +102,31 @@ func (d *TimeRangeDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:            true,
 						},
 						"range_start_time": schema.StringAttribute{
-							MarkdownDescription: "Time (in HH:MM format) at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.",
+							MarkdownDescription: "Time (in HH:MM format) at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.",
 							Computed:            true,
 						},
 						"range_end_time": schema.StringAttribute{
-							MarkdownDescription: "Time (in HH:MM format) at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.",
+							MarkdownDescription: "Time (in HH:MM format) at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.",
 							Computed:            true,
 						},
 						"range_start_day": schema.StringAttribute{
-							MarkdownDescription: "Day of week at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.",
+							MarkdownDescription: "Day of week at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.",
 							Computed:            true,
 						},
 						"range_end_day": schema.StringAttribute{
-							MarkdownDescription: "Day of week at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.",
+							MarkdownDescription: "Day of week at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.",
 							Computed:            true,
 						},
 						"daily_start_time": schema.StringAttribute{
-							MarkdownDescription: "Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.",
+							MarkdownDescription: "Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.",
 							Computed:            true,
 						},
 						"daily_end_time": schema.StringAttribute{
-							MarkdownDescription: "Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.",
+							MarkdownDescription: "Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.",
 							Computed:            true,
 						},
 						"daily_days": schema.SetAttribute{
-							MarkdownDescription: "List of days on which the time range is effective. This field must be used if recurrence_type is specified as DAILY_INTERVAL.",
+							MarkdownDescription: "List of days on which the time range is effective. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.",
 							ElementType:         types.StringType,
 							Computed:            true,
 						},

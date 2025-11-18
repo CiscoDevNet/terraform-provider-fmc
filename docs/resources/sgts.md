@@ -3,14 +3,14 @@
 page_title: "fmc_sgts Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This resource manages SGTs through bulk operations.
+  This resource manages SGT (Security Group Tag) Object through bulk operations.
   The following restrictions apply:
   Read operations are supported by any tested FMC versionMinimum FMC version for object management (Create/Update/Delete): 7.4Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_sgts (Resource)
 
-This resource manages SGTs through bulk operations.
+This resource manages SGT (Security Group Tag) Object through bulk operations.
 
 The following restrictions apply:
   - Read operations are supported by any tested FMC version
@@ -60,7 +60,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed SGT.
+- `id` (String) Id of the SGT.
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.
 
 ## Import

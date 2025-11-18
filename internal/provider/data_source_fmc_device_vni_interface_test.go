@@ -42,8 +42,8 @@ func TestAccDataSourceFmcDeviceVNIInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "description", "my description"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv4_static_address", "10.2.2.2"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv4_static_netmask", "24"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv6_enable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv6_enable_auto_config", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv6", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_vni_interface.test", "ipv6_auto_config", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -105,9 +105,9 @@ func testAccDataSourceFmcDeviceVNIInterfaceConfig() string {
 	config += `	security_zone_id = fmc_security_zone.test.id` + "\n"
 	config += `	ipv4_static_address = "10.2.2.2"` + "\n"
 	config += `	ipv4_static_netmask = "24"` + "\n"
-	config += `	ipv6_enable = true` + "\n"
+	config += `	ipv6 = true` + "\n"
 	config += `	ipv6_enforce_eui = true` + "\n"
-	config += `	ipv6_enable_auto_config = true` + "\n"
+	config += `	ipv6_auto_config = true` + "\n"
 	config += `	ipv6_addresses = [{` + "\n"
 	config += `		address = "2005::"` + "\n"
 	config += `		prefix = 56` + "\n"

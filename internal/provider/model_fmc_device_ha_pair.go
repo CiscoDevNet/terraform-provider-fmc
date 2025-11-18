@@ -257,11 +257,6 @@ func (data *DeviceHAPair) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.StateLinkLogicalName = types.StringNull()
 	}
-	if value := res.Get("ftdHABootstrap.statefulFailover.useIPv6Address"); value.Exists() {
-		data.StateLinkUseIpv6 = types.BoolValue(value.Bool())
-	} else {
-		data.StateLinkUseIpv6 = types.BoolNull()
-	}
 	if value := res.Get("ftdHABootstrap.statefulFailover.activeIP"); value.Exists() {
 		data.StateLinkPrimaryIp = types.StringValue(value.String())
 	} else {
@@ -402,11 +397,6 @@ func (data *DeviceHAPair) fromBodyPartial(ctx context.Context, res gjson.Result)
 		data.StateLinkLogicalName = types.StringValue(value.String())
 	} else {
 		data.StateLinkLogicalName = types.StringNull()
-	}
-	if value := res.Get("ftdHABootstrap.statefulFailover.useIPv6Address"); value.Exists() && !data.StateLinkUseIpv6.IsNull() {
-		data.StateLinkUseIpv6 = types.BoolValue(value.Bool())
-	} else {
-		data.StateLinkUseIpv6 = types.BoolNull()
 	}
 	if value := res.Get("ftdHABootstrap.statefulFailover.activeIP"); value.Exists() && !data.StateLinkPrimaryIp.IsNull() {
 		data.StateLinkPrimaryIp = types.StringValue(value.String())

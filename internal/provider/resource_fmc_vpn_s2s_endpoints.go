@@ -111,7 +111,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							},
 						},
 						"extranet_device": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Is the device managed by local FMC.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Is this external device (not managed by FMC).").String,
 							Required:            true,
 						},
 						"extranet_ip_address": schema.StringAttribute{
@@ -154,12 +154,12 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 						},
 						"protected_networks": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of protected networks.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of protected Networks.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Id of the protected network.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the Network object.").String,
 										Required:            true,
 									},
 								},

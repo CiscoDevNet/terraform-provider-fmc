@@ -40,7 +40,7 @@ Read-Only:
 
 - `default_domain` (String) Domain that will be used to append to the host names that are not fully-qualified.
 - `dns_servers` (Attributes Set) Set of DNS servers that will be part of the group. (see [below for nested schema](#nestedatt--items--dns_servers))
-- `id` (String) Id of the managed DNS Server Group.
+- `id` (String) Id of the DNS Server Group object.
 - `retries` (Number) The number of times to retry the list of DNS servers when the system does not receive a response.
 - `timeout` (Number) The number of seconds to wait before trying the next DNS server.
 - `type` (String) Type of the object; this value is always 'DNSServerGroupObject'.

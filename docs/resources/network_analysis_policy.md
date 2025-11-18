@@ -27,7 +27,7 @@ resource "fmc_network_analysis_policy" "example" {
 ### Required
 
 - `base_policy_id` (String) Id of the base policy.
-- `name` (String) Name of the policy.
+- `name` (String) Name of the Network Analysis Policy.
 
 ### Optional
 

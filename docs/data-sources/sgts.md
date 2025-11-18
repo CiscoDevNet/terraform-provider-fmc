@@ -3,12 +3,12 @@
 page_title: "fmc_sgts Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source reads the SGTs.
+  This data source reads the SGT (Security Group Tag) Object through bulk operations.
 ---
 
 # fmc_sgts (Data Source)
 
-This data source reads the SGTs.
+This data source reads the SGT (Security Group Tag) Object through bulk operations.
 
 ## Example Usage
 
@@ -39,6 +39,6 @@ data "fmc_sgts" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed SGT.
+- `id` (String) Id of the SGT.
 - `tag` (String) Security Group Tag.
 - `type` (String) Type of the object; this value is always 'SecurityGroupTag'.

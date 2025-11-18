@@ -3,12 +3,14 @@
 page_title: "fmc_standard_acl Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source reads the Standard ACL.
+  This data source reads the Standard ACL (Access Control List / Access List) Object.
+  This object is deprecated. Please use fmc_standard_access_list instead.
 ---
 
 # fmc_standard_acl (Data Source)
 
-This data source reads the Standard ACL.
+This data source reads the Standard ACL (Access Control List / Access List) Object.
+This object is deprecated. Please use `fmc_standard_access_list` instead.
 
 ## Example Usage
 
@@ -25,7 +27,7 @@ data "fmc_standard_acl" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the object.
+- `name` (String) Name of the Standard ACL object.
 
 ### Read-Only
 
@@ -38,9 +40,9 @@ data "fmc_standard_acl" "example" {
 
 Read-Only:
 
-- `action` (String) Indicates the redistribution access: PERMIT or DENY.
+- `action` (String) Action for the rule.
 - `literals` (Attributes Set) Set of literal values. (see [below for nested schema](#nestedatt--entries--literals))
-- `objects` (Attributes Set) Set of objects (Host, Network, Range). (see [below for nested schema](#nestedatt--entries--objects))
+- `objects` (Attributes Set) Set of objects (Host, Network, Network Group). (see [below for nested schema](#nestedatt--entries--objects))
 
 <a id="nestedatt--entries--literals"></a>
 ### Nested Schema for `entries.literals`
@@ -56,4 +58,4 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Id of the object.
-- `type` (String) Type of the object (such as fmc_network.this.type, etc.).
+- `type` (String) Type of the object.

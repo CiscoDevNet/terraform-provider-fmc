@@ -15,7 +15,7 @@ This resource manages an Interface Group.
 ```terraform
 resource "fmc_interface_group" "example" {
   name           = "my_interface_group"
-  interface_mode = "ROUTED"
+  interface_type = "ROUTED"
   interfaces = [
     {
       id = "0050568A-4E02-1ed3-0000-004294969198"
@@ -29,9 +29,9 @@ resource "fmc_interface_group" "example" {
 
 ### Required
 
-- `interface_mode` (String) All interfaces' types must match the interface mode.
+- `interface_type` (String) All interfaces' types must match the interface mode.
   - Choices: `PASSIVE`, `INLINE`, `SWITCHED`, `ROUTED`, `MANAGEMENT`, `LOOPBACK`
-- `name` (String) Name of the object.
+- `name` (String) Name of the Interface Group object.
 
 ### Optional
 

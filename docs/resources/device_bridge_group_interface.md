@@ -32,7 +32,7 @@ resource "fmc_device_bridge_group_interface" "example" {
       prefix  = "64"
     }
   ]
-  ipv6_enable_dad     = true
+  ipv6_dad            = true
   ipv6_dad_attempts   = 1
   ipv6_ns_interval    = 1000
   ipv6_reachable_time = 0
@@ -60,13 +60,13 @@ resource "fmc_device_bridge_group_interface" "example" {
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `ipv4_dhcp_obtain_route` (Boolean) Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The ipv4_dhcp_obtain_route must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.
+- `ipv4_dhcp_obtain_default_route` (Boolean) Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.
 - `ipv4_static_address` (String) Static IPv4 address.
 - `ipv4_static_netmask` (String) Netmask for ipv4_static_address.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `ipv6_dad` (Boolean) Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
   - Range: `0`-`600`
-- `ipv6_enable_dad` (Boolean) Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
 - `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval in Milliseconds.
   - Range: `1000`-`3600000`
 - `ipv6_reachable_time` (Number) The amount of time (in Milliseconds) that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
@@ -83,11 +83,14 @@ resource "fmc_device_bridge_group_interface" "example" {
 <a id="nestedatt--arp_table_entries"></a>
 ### Nested Schema for `arp_table_entries`
 
+Required:
+
+- `ip_address` (String) IP address for custom ARP entry
+- `mac_address` (String) MAC address for custom ARP entry in format 0123.4567.89ab.
+
 Optional:
 
 - `enable_alias` (Boolean) Enable Alias for custom ARP entry
-- `ip_address` (String) IP address for custom ARP entry
-- `mac_address` (String) MAC address for custom ARP entry in format 0123.4567.89ab.
 
 
 <a id="nestedatt--ipv6_addresses"></a>

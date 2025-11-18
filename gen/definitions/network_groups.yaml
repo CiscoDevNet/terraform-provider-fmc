@@ -1,37 +1,36 @@
 # Manual Resource - most of the resource is manual
 ---
 name: Network Groups
-no_data_source: true
-no_import: true
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
 doc_category: Objects
 minimum_version_bulk_delete: "7.4"
 res_description: This resource manages Network Groups through bulk operations.
-# is_bulk: true
+is_bulk: true
 attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of network groups. The key of the map is the name of the individual Network Group.
+      Map of Network Groups. The key of the map is the name of the individual Network Group.
     map_key_example: my_network_groups
     attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Network Group.
+        description: Id of the Network Group.
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
         description: Description of the object.
         example: "My Network Group 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: type
         type: String
         description: Type of the object; this value is always 'NetworkGroup'.
         computed: true
       - model_name: overridable
         type: Bool
-        description: Indicates whether object values can be overridden.
+        description: Whether the object values can be overridden.
         exclude_example: true
         test_value: "true"
       - model_name: network_groups
@@ -40,11 +39,11 @@ attributes:
         example: "child_group_1"
         description: >-
           Set of names (not Ids) of child Network Groups. The names must be defined in the same instance
-          of fmc_network_groups resource. This is an auxiliary way to add a child Network Group: the suggested way is
+          of `fmc_network_groups` resource. This is an auxiliary way to add a child Network Group: the suggested way is
           to instead add it inside `objects` by its Ids.
         exclude_test: true
       - model_name: objects
-        description: Set of network objects (Hosts, Networs, Ranges or FQDNs).
+        description: Set of network objects (Hosts, Networks, Ranges, FQDNs or Network Group).
         type: Set
         attributes:
           - model_name: id
@@ -53,6 +52,11 @@ attributes:
             id: true
             example: cf271be2-e80d-4033-8e1d-285f133a5f8c
             test_value: fmc_range.test.id
+          - model_name: name
+            type: String
+            description: Name of the network object.
+            example: fmc_network_object_1
+            test_value: fmc_range.test.name
           - model_name: type
             type: String
             value: AnyNonEmptyString

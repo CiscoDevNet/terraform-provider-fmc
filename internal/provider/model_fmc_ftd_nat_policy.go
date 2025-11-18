@@ -82,7 +82,7 @@ type FTDNATPolicyAutoNatRules struct {
 	OriginalNetworkId                       types.String `tfsdk:"original_network_id"`
 	OriginalPort                            types.Int64  `tfsdk:"original_port"`
 	Protocol                                types.String `tfsdk:"protocol"`
-	PerformRouteLookup                      types.Bool   `tfsdk:"perform_route_lookup"`
+	RouteLookup                             types.Bool   `tfsdk:"route_lookup"`
 	SourceInterfaceId                       types.String `tfsdk:"source_interface_id"`
 	TranslateDns                            types.Bool   `tfsdk:"translate_dns"`
 	TranslatedNetworkId                     types.String `tfsdk:"translated_network_id"`
@@ -233,8 +233,8 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "serviceProtocol", item.Protocol.ValueString())
 			}
-			if !item.PerformRouteLookup.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "routeLookup", item.PerformRouteLookup.ValueBool())
+			if !item.RouteLookup.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "routeLookup", item.RouteLookup.ValueBool())
 			}
 			if !item.SourceInterfaceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "sourceInterface.id", item.SourceInterfaceId.ValueString())
@@ -467,9 +467,9 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.Protocol = types.StringNull()
 			}
 			if value := res.Get("routeLookup"); value.Exists() {
-				data.PerformRouteLookup = types.BoolValue(value.Bool())
+				data.RouteLookup = types.BoolValue(value.Bool())
 			} else {
-				data.PerformRouteLookup = types.BoolNull()
+				data.RouteLookup = types.BoolNull()
 			}
 			if value := res.Get("sourceInterface.id"); value.Exists() {
 				data.SourceInterfaceId = types.StringValue(value.String())
@@ -754,10 +754,10 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 		} else {
 			data.Protocol = types.StringNull()
 		}
-		if value := res.Get("routeLookup"); value.Exists() && !data.PerformRouteLookup.IsNull() {
-			data.PerformRouteLookup = types.BoolValue(value.Bool())
+		if value := res.Get("routeLookup"); value.Exists() && !data.RouteLookup.IsNull() {
+			data.RouteLookup = types.BoolValue(value.Bool())
 		} else {
-			data.PerformRouteLookup = types.BoolNull()
+			data.RouteLookup = types.BoolNull()
 		}
 		if value := res.Get("sourceInterface.id"); value.Exists() && !data.SourceInterfaceId.IsNull() {
 			data.SourceInterfaceId = types.StringValue(value.String())

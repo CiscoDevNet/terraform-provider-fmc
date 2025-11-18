@@ -114,11 +114,13 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 							Optional:            true,
 						},
 						"nve_number": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("VTEP NVE number, currently must always be 1.").AddIntegerRangeDescription(1, 1).String,
+							MarkdownDescription: helpers.NewAttributeDescription("VTEP NVE number, currently must always be 1.").AddIntegerRangeDescription(1, 1).AddDefaultValueDescription("1").String,
 							Optional:            true,
+							Computed:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(1, 1),
 							},
+							Default: int64default.StaticInt64(1),
 						},
 						"encapsulation_port": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Encapsulation port number. For VXLAN suggested 4789 (default), for GENEVE suggested 6081.").AddIntegerRangeDescription(1024, 65535).AddDefaultValueDescription("4789").String,
@@ -139,18 +141,18 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 							Default: stringdefault.StaticString("VXLAN"),
 						},
 						"neighbor_discovery": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).").AddStringEnumDescription("NONE", "STATIC_PEER_IP", "STATIC_PEER_GROUP", "DEFAULT_MULTICAST_GROUP").String,
+							MarkdownDescription: helpers.NewAttributeDescription("How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a ID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).").AddStringEnumDescription("NONE", "STATIC_PEER_IP", "STATIC_PEER_GROUP", "DEFAULT_MULTICAST_GROUP").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("NONE", "STATIC_PEER_IP", "STATIC_PEER_GROUP", "DEFAULT_MULTICAST_GROUP"),
 							},
 						},
 						"neighbor_address_literal": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address. Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Used for `neighbor_discovery` STATIC_PEER_IP, where it holds any unicast IP address. Used for `neighbor_discovery` DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.").String,
 							Optional:            true,
 						},
 						"neighbor_address_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Used for neighbor_discovery STATIC_PEER_GROUP, where it holds UUID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Used for `neighbor_discovery` STATIC_PEER_GROUP, where it holds ID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).").String,
 							Optional:            true,
 						},
 					},

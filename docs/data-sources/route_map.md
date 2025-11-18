@@ -29,7 +29,7 @@ data "fmc_route_map" "example" {
 
 ### Read-Only
 
-- `entries` (Attributes List) List of route map entries. (see [below for nested schema](#nestedatt--entries))
+- `entries` (Attributes List) List of Route Map entries. (see [below for nested schema](#nestedatt--entries))
 - `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'RouteMap'.
 

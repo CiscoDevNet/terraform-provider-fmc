@@ -104,7 +104,7 @@ func (data *IntrusionPolicy) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("inspectionMode"); value.Exists() {
 		data.InspectionMode = types.StringValue(value.String())
 	} else {
-		data.InspectionMode = types.StringNull()
+		data.InspectionMode = types.StringValue("PREVENTION")
 	}
 }
 
@@ -125,7 +125,11 @@ func (data *IntrusionPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
@@ -139,7 +143,7 @@ func (data *IntrusionPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	}
 	if value := res.Get("inspectionMode"); value.Exists() && !data.InspectionMode.IsNull() {
 		data.InspectionMode = types.StringValue(value.String())
-	} else {
+	} else if data.InspectionMode.ValueString() != "PREVENTION" {
 		data.InspectionMode = types.StringNull()
 	}
 }

@@ -3,12 +3,12 @@
 page_title: "fmc_sgt Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
-  This data source reads the SGT.
+  This data source reads the SGT (Security Group Tag) Object.
 ---
 
 # fmc_sgt (Data Source)
 
-This data source reads the SGT.
+This data source reads the SGT (Security Group Tag) Object.
 
 ## Example Usage
 

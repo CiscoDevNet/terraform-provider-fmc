@@ -1,5 +1,55 @@
-## 2.0.0 (Unreleased)
+## 2.0.0-rc8 (Unreleased)
 
+- BREAKING CHANGE: `fmc_policy_list`: Update attribute name:
+    - `as_path_lists` -> `as_paths`
+- BREAKING CHANGE: `fmc_device_cluster`: Update attribute name `data_devices` to `data_nodes`.
+- BREAKING CHANGE: Range of `fmc_device_*_interface`, objects: Update attribute names
+    - `ipv4_dhcp_obtain_route` -> `ipv4_dhcp_obtain_default_route`
+    - `ipv4_dhcp_route_metric` -> `ipv4_dhcp_default_route_metric`
+    - Removed `enable` from several ipv6 related attributes
+    - `ipv6_default_route_by_dhcp` -> `ipv6_dhcp_obtain_default_route`
+    - `enable_sgt_propagate` -> `sgt_propagate`
+    - `enable_anti_spoofing` -> `anti_spoofing`
+- BREAKING CHANGE: `fmc_device`: Update attribute names
+    - `license_capabilities` -> `licenses`
+    - `access_policy_id` -> `access_control_policy_id`
+    - `host_name` -> `host`
+- BREAKING CHANGE: `fmc_chassis`: Update attribute names
+    - `host_name` -> `host`
+- BREAKING CHANGE: `fmc_chassis_logical_device` Update attribute definitions
+    - `license_capabilities` -> `licenses`
+    - `access_policy_id` -> `access_control_policy_id`
+    - Add missing `licenses` options
+- BREAKING CHANGE: `fmc_bfd_template`: Update attribute definitions
+    - `interval_time` -> `interval_type`
+    - `min_transmit` -> `minimum_transmit`
+    - `tx_rx_multiplier` -> `multiplier`
+- BREAKING CHANGE: `fmc_prefilter_policy`: Update attribute names
+    - `*log_begin` -> `*log_connection_begin`
+    - `*log_end` -> `*log_connection_end`
+    - `*snmp_config*` -> `*snmp_alert*`
+    - `*syslog_config*` -> `*syslog_alert*`
+- BREAKING CHANGE: `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Update attribute names
+    - `*log_begin` -> `*log_connection_begin`
+    - `*log_end` -> `*log_connection_end`
+    - `*snmp_config*` -> `*snmp_alert*`
+    - `*syslog_config*` -> `*syslog_alert*`
+    - add `default_action_variable_set_id`
+- BREAKING CHANGE: `fmc_ftd_nat_policy`: Update attribute names
+    - Auto nat rules: `perform_route_lookup` -> `route_lookup`
+- BREAKING CHANGE: `fmc_interface_group`: Update attribute names
+    - Auto nat rules: `interface_mode` -> `interface_type`
+- (Change): Rename `fmc_fqdn_object` to `fmc_fqdn`. `fmc_fqdn_object` will be removed in future releases
+- (Change): Rename `fmc_fqdn_objects` to `fmc_fqdns`. `fmc_fqdn_objects` will be removed in future releases
+- (Change): Rename `fmc_icmpv4_object` to `fmc_icmpv4`. `fmc_icmpv4_object` will be removed in future releases
+- (Change): Rename `fmc_icmpv4_objects` to `fmc_icmpv4s`. `fmc_icmpv4_objects` will be removed in future releases
+- (Change): Rename `fmc_icmpv6_object` to `fmc_icmpv6`. `fmc_icmpv6_object` will be removed in future releases
+- (Change): Rename `fmc_icmpv6_objects` to `fmc_icmpv6s`. `fmc_icmpv6_objects` will be removed in future releases
+- (Change): Rename `fmc_standard_acl` to `fmc_standard_access_list`. `fmc_standard_acl` will be removed in future releases
+- (Change): Rename `fmc_extended_acl` to `fmc_extended_access_list`. `fmc_extended_acl` will be removed in future releases
+- (Fix): `fmc_device`: Computed parameters are not refreshed on Update
+- (Fix): `fmc_chassis_logical_devices`: Computed parameters are not refreshed on Update
+- (Enhancement) Add support for `fmc_network_groups` data source and import
 - (Enhancement) `domain` support for importing non-bulk resources
 
 ## 2.0.0-rc7

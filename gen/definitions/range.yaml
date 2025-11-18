@@ -5,7 +5,7 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the Range object.
     mandatory: true
     example: my_range
     data_source_query: true
@@ -17,11 +17,12 @@ attributes:
     example: 10.0.0.1-10.0.0.9
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: "My range"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     exclude_example: true
     test_value: "true"
   - model_name: type

@@ -54,7 +54,8 @@ func (d *FQDNObjectsDataSource) Metadata(_ context.Context, req datasource.Metad
 func (d *FQDNObjectsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FQDN Objects.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FQDN (Fully Qualified Domain Name) Object through bulk operations.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdns` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_fqdns` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,7 +73,7 @@ func (d *FQDNObjectsDataSource) Schema(ctx context.Context, req datasource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed object.",
+							MarkdownDescription: "Id of the FQDN object.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -80,7 +81,7 @@ func (d *FQDNObjectsDataSource) Schema(ctx context.Context, req datasource.Schem
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether object values can be overridden.",
+							MarkdownDescription: "Whether the object values can be overridden.",
 							Computed:            true,
 						},
 						"fqdn": schema.StringAttribute{

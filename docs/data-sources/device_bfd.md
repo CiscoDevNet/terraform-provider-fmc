@@ -35,14 +35,14 @@ data "fmc_device_bfd" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `interface_logical_name` (String) Logical Name of the interface for BFD assignment if SINGLE_HOP selected.
+- `interface_logical_name` (String) Logical Name of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.
 
 ### Read-Only
 
 - `bfd_template_id` (String) Id of the BFD Template
-- `destination_host_object_id` (String) Id of the destination host object if MULTI_HOP selected.
+- `destination_host_object_id` (String) Id of the destination host object if `hop_type` is set to MULTI_HOP.
 - `hop_type` (String) BFD Hop type.
-- `interface_id` (String) Id of the interface for BFD assignment if SINGLE_HOP selected.
+- `interface_id` (String) Id of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.
 - `slow_timer` (Number) BFD Slow Timer value in range: 1000-30000, default: 1000
-- `source_host_object_id` (String) Id of the source host object if MULTI_HOP selected.
+- `source_host_object_id` (String) Id of the source host object if `hop_type` is set to MULTI_HOP.
 - `type` (String) Type of the object; this value is always 'BFDPolicy'

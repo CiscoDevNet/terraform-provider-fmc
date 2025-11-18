@@ -72,7 +72,7 @@ func (d *SecurityIntelligenceDNSFeedsDataSource) Schema(ctx context.Context, req
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Security Intelligence DNS Feed.",
+							MarkdownDescription: "Id of the Security Intelligence DNS Feed object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

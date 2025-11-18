@@ -72,7 +72,7 @@ func (d *TunnelZonesDataSource) Schema(ctx context.Context, req datasource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Tunnel Zone.",
+							MarkdownDescription: "Id of the Tunnel Zone.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

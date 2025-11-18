@@ -8,9 +8,9 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of vlan tag groups. The key of the map is the name of the individual VLN Tag Group.
+      Map of VLAN Tag Groups. The key of the map is the name of the individual VLAN Tag Group.
     mandatory: true
-    map_key_example: fmc_vlan_tag_groups
+    map_key_example: vlan_tag_groups
     attributes:
       - model_name: id
         type: String
@@ -25,10 +25,11 @@ attributes:
       - model_name: description
         type: String
         description: Description of the object.
-        example: "My vlan tag group name"
+        example: "My VLAN Tag Group name"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
-        description: Indicates whether object values can be overridden.
+        description: Whether the object values can be overridden.
         example: true
       - model_name: objects
         tf_name: vlan_tags

@@ -30,10 +30,10 @@ import (
 
 func TestAccDataSourceFmcNetworks(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.my_networks_object.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.my_networks_object.description", "My Network 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.my_networks_object.prefix", "10.1.1.0/24"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.my_networks_object.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.my_networks.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.my_networks.description", "My Network 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_networks.test", "items.my_networks.prefix", "10.1.1.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_networks.test", "items.my_networks.type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -56,7 +56,7 @@ func TestAccDataSourceFmcNetworks(t *testing.T) {
 
 func testAccDataSourceFmcNetworksConfig() string {
 	config := `resource "fmc_networks" "test" {` + "\n"
-	config += `	items = { "my_networks_object" = {` + "\n"
+	config += `	items = { "my_networks" = {` + "\n"
 	config += `		description = "My Network 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		prefix = "10.1.1.0/24"` + "\n"
@@ -67,7 +67,7 @@ func testAccDataSourceFmcNetworksConfig() string {
 		data "fmc_networks" "test" {
 			depends_on = [fmc_networks.test]
 			items = {
-				"my_networks_object" = {
+				"my_networks" = {
 				}
 			}
 		}

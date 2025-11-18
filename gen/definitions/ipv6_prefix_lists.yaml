@@ -17,7 +17,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed IPv6 Prefix List.
+        description: Id of the IPv6 Prefix List object.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -27,7 +27,7 @@ attributes:
       - model_name: entries
         type: List
         mandatory: true
-        description: List of entries
+        description: List of prefixes.
         ordered_list: true
         attributes:
           - model_name: action
@@ -49,6 +49,7 @@ attributes:
             max_int: 128
             example: 65
           - model_name: maxPrefixLength
+            tf_name: max_prefix_length
             type: Int64
             description: Maximum prefix length.
             min_int: 1

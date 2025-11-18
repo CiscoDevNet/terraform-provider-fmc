@@ -1,0 +1,255 @@
+---
+name: Extended Access List
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/extendedaccesslists
+doc_category: Objects
+minimum_version_create: "7.2"
+attributes:
+  - model_name: name
+    type: String
+    description: Name of the Extended Access List.
+    mandatory: true
+    example: my_extended_acl
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExtendedAccessList'.
+    computed: true
+  - model_name: entries
+    type: List
+    description: Ordered list of Access List entries.
+    ordered_list: true
+    mandatory: true
+    min_list: 1
+    max_list: 1000
+    attributes:
+      - model_name: action
+        type: String
+        description: Rule action.
+        enum_values: [PERMIT, DENY]
+        example: DENY
+        mandatory: true
+        minimum_test_value: '"PERMIT"'
+      - model_name: logLevel
+        type: String
+        description: Logging level.
+        enum_values:
+          - EMERGENCY
+          - ALERT
+          - CRITICAL
+          - ERROR
+          - WARNING
+          - NOTIFICATION
+          - INFORMATIONAL
+          - DEBUGGING
+        default_value: INFORMATIONAL
+        example: WARNING
+      - model_name: logging
+        type: String
+        description: Logging mode.
+        enum_values:
+          - PER_ACCESS_LIST_ENTRY
+          - DEFAULT
+          - DISABLED
+        example: PER_ACCESS_LIST_ENTRY
+        mandatory: true
+        minimum_test_value: '"DEFAULT"'
+      - model_name: logInterval
+        tf_name: log_interval
+        type: Int64
+        description: Logging interval in seconds. Must be left at 300 if `logging` is DEFAULT or DISABLED.
+        default_value: "300"
+        example: "120"
+      - model_name: literals
+        data_path: [sourceNetworks]
+        tf_name: source_network_literals
+        description: Set of literals that represent sources of traffic.
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            id: true
+            example: 10.1.1.0/24
+            description: IPv4 or IPv6 host or network.
+          - model_name: type
+            type: String
+            example: Network
+            description: Type of the object.
+      - model_name: literals
+        data_path: [destinationNetworks]
+        tf_name: destination_network_literals
+        description: Set of literals that represent destinations of traffic.
+        type: Set
+        attributes:
+          - model_name: value
+            type: String
+            id: true
+            example: 10.2.2.2
+            description: IPv4 or IPv6 host or network.
+          - model_name: type
+            type: String
+            example: Host
+            description: Type of the object.
+      - model_name: objects
+        data_path: [sourceNetworks]
+        tf_name: source_network_objects
+        description: Set of objects that represent sources of traffic (Host, Network, Range, Network Group).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_network.test.id
+      - model_name: objects
+        data_path: [destinationNetworks]
+        tf_name: destination_network_objects
+        description: Set of objects that represent destinations of traffic (Host, Network, Range, Network Group).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_host.test.id
+      - model_name: objects
+        data_path: [securityGroupTags]
+        tf_name: source_sgt_objects
+        description: Set of SGT that represent tag of source traffic.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_sgt.test.id
+          - model_name: type
+            type: String
+            value: SecurityGroupTag
+            exclude_example: true
+      # Possible to configure SGT litterals via API but not via GUI
+      # - model_name: literals
+      #   data_path: [securityGroupTags]
+      #   tf_name: source_sgt_literals
+      #   description: Set of SGT that represent tag of source traffic (literally specified).
+      #   type: Set
+      #   attributes:
+      #     - model_name: tag
+      #       type: String
+      #       id: true
+      #       example: 11
+      #     - model_name: type
+      #       type: String
+      #       example: SecurityGroupTag
+      - model_name: objects
+        data_path: [sourcePorts]
+        tf_name: source_port_objects
+        description: Set of objects representing source ports.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_port.test.id
+      - model_name: objects
+        data_path: [destinationPorts]
+        tf_name: destination_port_objects
+        description: Set of objects representing destination ports.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_port.test.id
+      - model_name: literals
+        data_path: [destinationPorts]
+        tf_name: destination_port_literals
+        description: Set of objects that represent destination port of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
+            mandatory: true
+            example: PortLiteral
+            description: Type of the object.
+          - model_name: port
+            type: String
+            example: "80"
+            description: Port number.
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+            description: IANA port number.
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+            description: ICMP type.
+          - model_name: code
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true
+            description: ICMP code.
+      - model_name: literals
+        data_path: [sourcePorts]
+        tf_name: source_port_literals
+        description: Set of objects that represent destination port of traffic (literally specified).
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
+            mandatory: true
+            example: PortLiteral
+            description: Type of the object.
+          - model_name: port
+            type: String
+            example: "80"
+            description: Port number.
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+            description: IANA port number.
+          - model_name: icmpType
+            type: String
+            example: "0"
+            exclude_test: true
+            description: ICMP type.
+          - model_name: code
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true
+            description: ICMP code
+
+test_prerequisites: |-
+  resource "fmc_network" "test" {
+    name   = "fmc_extended_acl_network"
+    prefix = "10.0.0.0/24"
+  }
+
+  resource "fmc_host" "test" {
+    name = "fmc_extended_acl_host"
+    ip   = "10.1.1.1"
+  }
+
+  resource "fmc_port" "test" {
+    name = "fmc_extended_acl_port"
+    protocol = "TCP"
+    port = "65000"
+  }
+
+  resource "fmc_sgt" "test" {
+    name = "fmc_extended_acl_sgt"
+    tag = "11"
+  }
