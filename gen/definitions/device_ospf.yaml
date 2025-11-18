@@ -1,0 +1,512 @@
+# Manual Resource - adjust_body
+# FMCBUG: Cannot set description
+# FMCBUG: InterArea filters
+# FMCBUG: Summary address not working
+# TODO: NSF
+---
+name: Device OSPF
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ospfv2routes
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ospfv2routes
+doc_category: Devices
+adjust_body: true
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this is always 'OspfRoute'
+    computed: true
+  - model_name: processId
+    type: Int64
+    description: OSPF process ID.
+    required: true
+    example: 1
+    test_value: 1
+    min_int: 1
+    max_int: 2
+  
+  # Advanced
+  # - model_name: description
+  #   data_path: [processConfiguration]
+  #   type: String
+  #   description: Description of the OSPF process.
+  #   example: OSPF Process 1
+  - model_name: routerId
+    data_path: [processConfiguration]
+    tf_name: router_id
+    type: String
+    description: IPv4 address used as the router ID. Leave blank for AUTOMATIC.
+    example: AUTOMATIC
+  - model_name: rfc1583Compatible
+    data_path: [processConfiguration]
+    tf_name: rfc_1583_compatible
+    type: Bool
+    description: Enable RFC 1583 compatibility.
+    example: false
+    default_value: false
+  - model_name: logType
+    data_path: [logAdjacencyChanges]
+    tf_name: log_adjacency_changes
+    type: String
+    description: Log adjacency changes type.
+    enum_values: [DEFAULT, DETAILED]
+    example: DEFAULT
+  - model_name: ignoreLsaMospf
+    data_path: [processConfiguration]
+    tf_name: ignore_lsa_mospf
+    type: Bool
+    description: Ignore LSA type 9, 10, and 11 for MOSPF.
+    example: false
+    default_value: false
+  - model_name: interArea
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_inter_area
+    type: Int64
+    description: Administrative distance for inter-area routes.
+    example: 110
+    default_value: 110
+  - model_name: intraArea
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_intra_area
+    type: Int64
+    description: Administrative distance for intra-area routes.
+    example: 110
+    default_value: 110
+  - model_name: external
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_external
+    type: Int64
+    description: Administrative distance for external routes.
+    example: 110
+    default_value: 110
+  - model_name: lsaGroup
+    data_path: [processConfiguration, timers]
+    tf_name: timer_lsa_group
+    type: Int64
+    description: LSA group timer in seconds.
+    example: 240
+    default_value: 240
+  - model_name: alwaysAdvertise
+    data_path: [processConfiguration, defaultInformationOriginate]
+    tf_name: default_route_always_advertise
+    type: Bool
+    description: Always advertise default route. When set, this enables Default Information Originate.
+    example: false
+  - model_name: metricValue
+    data_path: [processConfiguration, defaultInformationOriginate, routeMetric]
+    tf_name: default_route_metric
+    type: Int64
+    min_int: 0
+    max_int: 16777214
+    description: Metric for the default route.
+    example: 1
+  - model_name: metricType
+    data_path: [processConfiguration, defaultInformationOriginate, routeMetric]
+    tf_name: default_route_metric_type
+    type: String
+    description: Metric type for the default route.
+    enum_values: [TYPE_1, TYPE_2]
+  - model_name: id
+    data_path: [processConfiguration, defaultInformationOriginate, routeMap]
+    tf_name: default_route_route_map_id
+    type: String
+    description: Route map ID for the default route.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+
+  # Area
+  - model_name: areas
+    type: List
+    description: List of OSPF areas.
+    attributes:
+      - model_name: areaId
+        tf_name: id
+        type: String
+        description: OSPF area ID - Integer of IPv4 format.
+        example: 1
+        mandatory: true
+        id: true
+      - model_name: type
+        data_path: [areaType]
+        tf_name: type
+        type: String
+        description: OSPF area type.
+        enum_values: [normal, stub, nssa]
+        example: normal
+      - model_name: noSummary
+        data_path: [areaType]
+        tf_name: no_summary
+        type: Bool
+        description: No Summary Stub / NSSA flag.
+        exclude_example: true
+        exclude_test: true
+      - model_name: noRedistribution
+        data_path: [areaType]
+        tf_name: no_redistribution
+        type: Bool
+        description: NSSA No Redistribution flag.
+        exclude_example: true
+        exclude_test: true
+      - model_name: metricType
+        data_path: [areaType, routeMetric]
+        tf_name: default_route_metric_type
+        type: String
+        description: Default route metric type for NSSA areas.
+        enum_values: [TYPE_1, TYPE_2]
+        exclude_example: true
+        exclude_test: true
+      - model_name: metricValue
+        data_path: [areaType, routeMetric]
+        tf_name: default_route_metric
+        type: Int64
+        min_int: 0
+        max_int: 16777214
+        description: Default route metric value for NSSA areas.
+        exclude_example: true
+        exclude_test: true
+      - model_name: areaNetworks
+        tf_name: networks
+        type: List
+        description: List of networks in the OSPF area.
+        attributes:
+          - model_name: id
+            type: String
+            description: Network object ID.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            id: true
+          - model_name: name
+            type: String
+            description: Network object name.
+            example: "Office Network"
+      - model_name: authentication
+        type: String
+        enum_values: [PASSWORD, MESSAGE_DIGEST]
+        description: Area authentication type.
+        example: MESSAGE_DIGEST
+      - model_name: defaultCost
+        tf_name: default_cost
+        type: Int64
+        description: Default cost for the area.
+        example: 1
+        min_int: 0
+        max_int: 65535
+      - model_name: areaRanges
+        tf_name: ranges
+        type: List
+        description: List of area ranges.
+        attributes:
+          - model_name: id
+            data_path: [addressNetwork]
+            tf_name: network_object_id
+            type: String
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            id: true
+          - model_name: advertise
+            type: Bool
+            description: Whether to advertise this area range.
+            example: true
+      - model_name: virtualLinks
+        tf_name: virtual_links
+        type: List
+        description: List of virtual links in the OSPF area.
+        attributes:
+          - model_name: routerId
+            tf_name: peer_router_host_id
+            type: String
+            description: Host object Id representing the peer router.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            id: true
+          - model_name: helloInterval
+            tf_name: hello_interval
+            type: Int64
+            description: Hello interval in seconds.
+            example: 10
+            min_int: 1
+            max_int: 8192
+            default_value: 10
+          - model_name: transmitDelay
+            tf_name: transmit_delay
+            type: Int64
+            description: Transmit delay in seconds.
+            example: 1
+            min_int: 1
+            max_int: 8192
+            default_value: 1
+          - model_name: retransmitInterval
+            tf_name: retransmit_interval
+            type: Int64
+            description: Retransmit interval in seconds.
+            example: 5
+            min_int: 1
+            max_int: 8192
+            default_value: 5
+          - model_name: deadInterval
+            tf_name: dead_interval
+            type: Int64
+            description: Dead interval in seconds.
+            example: 40
+            min_int: 1
+            max_int: 8192
+            default_value: 40
+          - model_name: authKey
+            data_path: [authentication, passwdAuth]
+            tf_name: authentication_password
+            type: String
+            string_max_length: 8
+            sensitive: true
+            description: Password for authentication.
+            example: "ospfAuthKey"
+          - model_name: authKey
+            data_path: [authentication, areaAuth, passwdAuth]
+            tf_name: authentication_area_password
+            type: String
+            sensitive: true
+            string_max_length: 8
+            description: Password for authentication.
+            exclude_example: true
+            exclude_test: true
+          - model_name: md5AuthList
+            data_path: [authentication, areaAuth]
+            tf_name: authentication_area_md5s
+            type: List
+            description: List of MD5 authentication keys.
+            exclude_example: true
+            exclude_test: true
+            attributes:
+              - model_name: md5KeyId
+                tf_name: id
+                type: Int64
+                description: Key ID for the MD5 authentication key.
+                mandatory: true
+                id: true
+              - model_name: md5Key
+                tf_name: key
+                type: String
+                sensitive: true
+                description: MD5 authentication key.
+                example: "md5AuthKey"
+                mandatory: true
+          - model_name: md5AuthList
+            data_path: [authentication]
+            tf_name: authentication_md5s
+            type: List
+            description: List of MD5 authentication keys.
+            exclude_example: true
+            exclude_test: true
+            attributes:
+              - model_name: md5KeyId
+                tf_name: id
+                type: Int64
+                description: Key ID for the MD5 authentication key.
+                mandatory: true
+                id: true
+              - model_name: md5Key
+                tf_name: key
+                type: String
+                sensitive: true
+                description: MD5 authentication key.
+                example: "md5AuthKey"
+                mandatory: true
+          - model_name: id
+            data_path: [authentication, keyChain, authKey]
+            tf_name: authentication_key_chain_id
+            type: String
+            description: Key chain object ID for authentication.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            exclude_example: true
+            exclude_test: true
+      # InterArea
+      - model_name: filterList
+        tf_name: inter_area_filters
+        type: List
+        description: List of inter-area filters.
+        attributes:
+          - model_name: id
+            data_path: [prefixList]
+            tf_name: prefix_list_id
+            mandatory: true
+            type: String
+            id: true
+          - model_name: name
+            data_path: [prefixList]
+            tf_name: prefix_list_name
+            type: String
+          - model_name: filterDirection
+            tf_name: filter_direction
+            type: String
+            description: Filter direction.
+            enum_values: [IN, OUT]
+            mandatory: true
+
+  # Redistribution
+  - model_name: redistributeProtocols
+    tf_name: redistributions
+    type: List
+    description: List of redistribution protocols.
+    attributes:
+      - model_name: type
+        tf_name: route_type
+        type: String
+        enum_values: [RedistributeConnected, RedistributeStatic, RedistributeOSPF, RedistributeBGP, RedistributeRIP, RedistributeEIGRP]
+        example: RedistributeBGP
+        mandatory: true
+        id: true
+      - model_name: asNumber
+        tf_name: as_number
+        type: Int64
+        description: Autonomous System Number (ASN) for BGP / EIGRP redistribution.
+        example: 65001
+      - model_name: matchExternal1
+        tf_name: ospf_match_external_1
+        type: Bool
+        description: Whether to match external type 1 routes.
+        example: true
+      - model_name: matchExternal2
+        tf_name: ospf_match_external_2
+        type: Bool
+        description: Whether to match external type 2 routes.
+        example: true
+      - model_name: matchInternal
+        tf_name: ospf_match_internal
+        type: Bool
+        description: Whether to match internal routes.
+        example: true
+      - model_name: matchNssaExternal1
+        tf_name: ospf_match_nssa_external_1
+        type: Bool
+        description: Whether to match NSSA external type 1 routes.
+        example: true
+      - model_name: matchNssaExternal2
+        tf_name: ospf_match_nssa_external_2
+        type: Bool
+        description: Whether to match NSSA external type 2 routes.
+        example: true
+      - model_name: processId
+        tf_name: process_id
+        type: Int64
+        description: OSPF process ID.
+        example: 2
+      - model_name: subnets
+        type: Bool
+        description: Whether to redistribute subnets.
+        example: true
+      - model_name: metricValue
+        data_path: [routeMetric]
+        tf_name: metric
+        type: Int64
+        min_int: 0
+        max_int: 16777214
+        description: Metric for the default route.
+        example: 1
+      - model_name: metricType
+        data_path: [routeMetric]
+        tf_name: metric_type
+        type: String
+        description: Metric type for the default route.
+        enum_values: [TYPE_1, TYPE_2]
+        example: TYPE_2
+        default_value: TYPE_2
+      - model_name: tagNumber
+        tf_name: tag
+        type: Int64
+        min_int: 0
+        max_int: 4294967295
+        description: Tag number for the redistribution.
+        example: 100
+      - model_name: id
+        data_path: [routeMap]
+        tf_name: route_map_id
+        type: String
+        description: Route map ID for the redistribution.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+
+  # Filter Rules
+  - model_name: filterRules
+    tf_name: filter_rules
+    type: List
+    description: List of redistribution protocols.
+    attributes:
+      - model_name: id
+        data_path: [accessList]
+        tf_name: access_list_id
+        type: String
+        description: Access list ID for the filter rule.
+        example: 123e4567-e89b-12d3-a456-426614174000
+        mandatory: true
+        id: true
+      - model_name: type
+        tf_name: traffic_direction
+        type: String
+        description: Filter rule direction.
+        enum_values: [incomingroutefilter, outgoingroutefilter]
+        example: incomingroutefilter
+        mandatory: true
+        id: true
+      - model_name: protocol
+        tf_name: routing_process
+        type: String
+        description: Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
+        enum_values: [CONNECTED, STATIC, RIP, OSPF, EIGRP, NONE, BGP]
+        example: CONNECTED
+      - model_name: processId
+        tf_name: routing_process_id
+        type: Int64
+        description: Routing process ID for the filter rule. Applicable for OSPF, BGP, and EIGRP protocols.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: [inInterface]
+        tf_name: interface_id
+        type: String
+        description: Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.
+        example: 123e4567-e89b-12d3-a456-426614174000
+        exclude_example: true
+        exclude_test: true
+
+  # Summary Address
+  # - model_name: summaryAddresses
+  #   tf_name: summary_addresses
+  #   type: List
+  #   description: List of summary addresses.
+  #   attributes:
+  #     - model_name: id
+  #       data_path: [summaryNetwork]
+  #       tf_name: network_object_id
+  #       type: String
+  #       description: Network object ID for the summary address.
+  #       example: 123e4567-e89b-12d3-a456-426614174000
+  #       mandatory: true
+  #       id: true
+  #     - model_name: type
+  #       data_path: [summaryNetwork]
+  #       tf_name: network_object_type
+  #       type: String
+  #       description: Network object ID for the summary address.
+  #       example: 123e4567-e89b-12d3-a456-426614174000
+  #       id: true
+  #     - model_name: name
+  #       data_path: [summaryNetwork]
+  #       tf_name: network_object_name
+  #       type: String
+  #       description: Network object ID for the summary address.
+  #       example: 123e4567-e89b-12d3-a456-426614174000
+  #       id: true
+  #     - model_name: tagNumber
+  #       tf_name: tag
+  #       type: Int64
+  #       min_int: 0
+  #       max_int: 4294967295
+  #       description: Tag number for the summary address.
+  #       example: 100
+  #     - model_name: advertise
+  #       type: Bool
+  #       description: Whether to advertise this summary address.
+  #       example: true
