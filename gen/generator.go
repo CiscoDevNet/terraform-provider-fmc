@@ -100,6 +100,7 @@ type YamlConfig struct {
 	NoImport                 bool                  `yaml:"no_import"`
 	TfName                   string                `yaml:"tf_name"`
 	RestEndpoint             string                `yaml:"rest_endpoint"`
+	RestEndpointVrf          string                `yaml:"rest_endpoint_vrf"`
 	PutCreate                bool                  `yaml:"put_create"`
 	RetrieveId               bool                  `yaml:"retrieve_id"`
 	PutDelete                bool                  `yaml:"put_delete"`
