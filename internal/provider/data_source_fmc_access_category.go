@@ -76,7 +76,7 @@ func (d *AccessCategoryDataSource) Schema(ctx context.Context, req datasource.Sc
 				Required:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the category object.",
+				MarkdownDescription: "Name of the Access Category.",
 				Optional:            true,
 				Computed:            true,
 			},

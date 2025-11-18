@@ -43,5 +43,5 @@ data "fmc_file_categories" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed File Category.
+- `id` (String) Id of the File Category.
 - `type` (String) Type of the object; this value is always 'FileCategory'.

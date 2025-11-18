@@ -374,7 +374,15 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists(){{if not .ResourceId}}{{if not .ComputedRefreshValue}} && !data.{{toGoName .TfName}}.IsNull(){{end}}{{end}} {
 		data.{{toGoName .TfName}} = types.{{.Type}}Value(value.{{if eq .Type "Int64"}}Int{{else if eq .Type "Float64"}}Float{{else}}{{.Type}}{{end}}())
 	} else {{if .DefaultValue}}if data.{{toGoName .TfName}}.Value{{.Type}}() != {{if eq .Type "String"}}"{{end}}{{.DefaultValue}}{{if eq .Type "String"}}"{{end}} {{end}}{
+		{{- if .MissingInResponseIfSetToEmptyString}}
+		if !data.{{toGoName .TfName}}.IsNull() && data.{{toGoName .TfName}}.ValueString() == "" {
+			data.{{toGoName .TfName}} = types.{{.Type}}Value("")
+		} else {
+			data.{{toGoName .TfName}} = types.{{.Type}}Null()
+		}
+		{{- else}}
 		data.{{toGoName .TfName}} = types.{{.Type}}Null()
+		{{- end}}
 	}
 	{{- else if isListSet .}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() && !data.{{toGoName .TfName}}.IsNull() {

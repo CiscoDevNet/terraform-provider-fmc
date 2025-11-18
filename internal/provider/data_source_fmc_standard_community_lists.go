@@ -72,7 +72,7 @@ func (d *StandardCommunityListsDataSource) Schema(ctx context.Context, req datas
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Standard Community List.",
+							MarkdownDescription: "Id of the Standard Community List object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -80,7 +80,7 @@ func (d *StandardCommunityListsDataSource) Schema(ctx context.Context, req datas
 							Computed:            true,
 						},
 						"entries": schema.ListNestedAttribute{
-							MarkdownDescription: "List of entries",
+							MarkdownDescription: "List of entries.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{

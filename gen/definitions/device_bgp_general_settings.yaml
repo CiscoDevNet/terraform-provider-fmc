@@ -36,7 +36,7 @@ attributes:
   - model_name: maxasLimit
     tf_name: as_number_in_path_attribute
     type: Int64
-    min_int: 1
+    min_int: 0
     max_int: 254
     example: 50
     description: Range to discard routes that have as-path segments that exceed a specified value.

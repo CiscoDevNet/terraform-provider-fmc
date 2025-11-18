@@ -13,13 +13,13 @@ The FMC provider provides resources to interact with a Cisco Secure Firewall Man
 
 Resources and data sources have been tested with the following releases.
 
-| Platform | Version |
-| -------- | ------- |
-| FMC      | 7.2     |
-| FMC      | 7.4     |
-| FMC      | 7.6     |
-| FMC      | 7.7     |
-| cdFMC    |         |
+| Platform | Version  |
+| -------- | -------- |
+| FMC      | 7.2.10   |
+| FMC      | 7.4.2.3  |
+| FMC      | 7.6.2    |
+| FMC      | 7.7.10.1 |
+| cdFMC    |          |
 
 Please note that resources and data sources support depends on FMC version.
 
@@ -51,5 +51,5 @@ provider "fmc" {
 - `req_timeout` (String) Timeout for a single HTTPS request made to REST API before it is retried. This can also be set as the FMC_REQTIMEOUT environment variable. A string like `"1s"` means one second. Defaults to `"5s"`.
 - `retries` (Number) Number of retries for REST API calls. This can also be set as the FMC_RETRIES environment variable. Defaults to `3`.
 - `token` (String, Sensitive) API token for cdFMC instance. This can also be set as the FMC_TOKEN environment variable.
-- `url` (String) URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall) . This can also be set as the FMC_URL environment variable.
+- `url` (String) URL of the Cisco FMC/cdFMC instance or SCC Firewall Manager Base URI (https://api.X.security.cisco.com/firewall). This can also be set as the FMC_URL environment variable.
 - `username` (String) Username for the FMC instance. This can also be set as the FMC_USERNAME environment variable.

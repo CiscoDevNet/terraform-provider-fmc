@@ -63,7 +63,7 @@ func TestAccDataSourceFmcChassis(t *testing.T) {
 func testAccDataSourceFmcChassisConfig() string {
 	config := `resource "fmc_chassis" "test" {` + "\n"
 	config += `	name = "my_chassis"` + "\n"
-	config += `	host_name = var.chassis_addr` + "\n"
+	config += `	host = var.chassis_addr` + "\n"
 	config += `	registration_key = var.chassis_registration_key` + "\n"
 	config += `}` + "\n"
 
@@ -78,7 +78,7 @@ func testAccDataSourceFmcChassisConfig() string {
 func testAccNamedDataSourceFmcChassisConfig() string {
 	config := `resource "fmc_chassis" "test" {` + "\n"
 	config += `	name = "my_chassis"` + "\n"
-	config += `	host_name = var.chassis_addr` + "\n"
+	config += `	host = var.chassis_addr` + "\n"
 	config += `	registration_key = var.chassis_registration_key` + "\n"
 	config += `}` + "\n"
 

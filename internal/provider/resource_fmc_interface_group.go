@@ -81,10 +81,10 @@ func (r *InterfaceGroupResource) Schema(ctx context.Context, req resource.Schema
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Interface Group object.").String,
 				Required:            true,
 			},
-			"interface_mode": schema.StringAttribute{
+			"interface_type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("All interfaces' types must match the interface mode.").AddStringEnumDescription("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "MANAGEMENT", "LOOPBACK").String,
 				Required:            true,
 				Validators: []validator.String{

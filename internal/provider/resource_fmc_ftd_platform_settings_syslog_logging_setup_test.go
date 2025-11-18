@@ -74,7 +74,7 @@ resource "fmc_host" "test" {
 
 resource "fmc_interface_group" "test" {
   name           = "ftd_platform_settings_syslog_logging_setup"
-  interface_mode = "ROUTED"
+  interface_type = "ROUTED"
 }
 `
 

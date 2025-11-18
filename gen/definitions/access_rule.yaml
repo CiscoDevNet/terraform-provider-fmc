@@ -450,17 +450,19 @@ attributes:
           - UNTRUSTED_AND_UNKNOWN
         example: QUESTIONABLE_AND_UNKNOWN
   - model_name: logBegin
+    tf_name: log_connection_begin
     type: Bool
     description: >-
       Log events at the beginning of the connection. If 'MONITOR' action is
-      selected for access rule, log_begin must be false or absent.
+      selected for access rule, `log_connection_begin` must be false or absent.
     default_value: "false"
     example: "true"
   - model_name: logEnd
+    tf_name: log_connection_end
     type: Bool
     description: >-
       Log events at the end of the connection. If 'MONITOR' action is selected
-      for access rule, log_end must be true.
+      for access rule, `log_connection_end` must be true.
     default_value: "false"
     example: "true"
   - model_name: logFiles
@@ -474,7 +476,7 @@ attributes:
     type: Bool
     description: >-
       Send events to the Firepower Management Center event viewer. If 'MONITOR'
-      action is selected for access rule, send_events_to_fmc must be true.
+      action is selected for access rule, `send_events_to_fmc` must be true.
     default_value: "false"
     example: true
   - model_name: enableSyslog
@@ -486,11 +488,11 @@ attributes:
     exclude_test: true
   - model_name: id
     data_path: [syslogConfig]
-    tf_name: syslog_config_id
+    tf_name: syslog_alert_id
     type: String
     description: >-
-      Id of Syslog Config. Can be set only when send_syslog is true and either
-      log_begin or log_end is true. If not set, the default syslog configuration
+      Id of Syslog Alert. Can be set only when send_syslog is true and either
+      `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration
       in Access Control Policy Logging applies.
     example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
     exclude_test: true
@@ -510,10 +512,10 @@ attributes:
     exclude_test: true
   - model_name: id
     data_path: [snmpConfig]
-    tf_name: snmp_config_id
+    tf_name: snmp_alert_id
     type: String
     description: >-
-      Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end
+      Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end`
       is true.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true

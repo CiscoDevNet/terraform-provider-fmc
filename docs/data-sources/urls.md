@@ -15,7 +15,7 @@ This data source reads the URLs.
 ```terraform
 data "fmc_urls" "example" {
   items = {
-    "url_1" = {
+    "my_urls" = {
     }
   }
 }
@@ -27,7 +27,7 @@ data "fmc_urls" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual URL object. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of URLs. The key of the map is the name of the individual URL object. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -39,7 +39,7 @@ data "fmc_urls" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed URL object.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `id` (String) Id of the URL object.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Url'.
-- `url` (String) URL value.
+- `url` (String) The URL string.

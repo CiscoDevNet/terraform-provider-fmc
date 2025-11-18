@@ -53,7 +53,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Tunnel Zone.
+- `id` (String) Id of the Tunnel Zone.
 - `type` (String) Type of the object; this value is always 'TunnelTag'.
 
 ## Import

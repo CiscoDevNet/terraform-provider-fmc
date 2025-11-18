@@ -79,7 +79,7 @@ func (r *NetworkResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Network object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -94,7 +94,7 @@ func (r *NetworkResource) Schema(ctx context.Context, req resource.SchemaRequest
 				Optional:            true,
 			},
 			"prefix": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Prefix of the network.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Prefix of the Network.").String,
 				Required:            true,
 			},
 			"overridable": schema.BoolAttribute{

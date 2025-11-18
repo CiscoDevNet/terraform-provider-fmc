@@ -15,7 +15,7 @@ This data source reads the SNMP Alerts.
 ```terraform
 data "fmc_snmp_alerts" "example" {
   items = {
-    "test_snmp_alert_1" = {
+    "my_snmp_alerts" = {
     }
   }
 }
@@ -38,5 +38,5 @@ data "fmc_snmp_alerts" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed SNMP Alert.
+- `id` (String) Id of the SNMP Alert.
 - `type` (String) Type of the object; this value is always 'SNMPAlert'.

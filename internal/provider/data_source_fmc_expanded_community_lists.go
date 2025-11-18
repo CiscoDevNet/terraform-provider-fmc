@@ -72,7 +72,7 @@ func (d *ExpandedCommunityListsDataSource) Schema(ctx context.Context, req datas
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed Expanded Community List.",
+							MarkdownDescription: "Id of the Expanded Community List object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

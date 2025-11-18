@@ -20,7 +20,7 @@ attributes:
     example: "true"
   - model_name: entries
     type: List
-    description: List of route map entries.
+    description: List of Route Map entries.
     ordered_list: true
     mandatory: true
     attributes:

@@ -83,28 +83,16 @@ func (r *URLsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of security zones. The key of the map is the name of the individual URL object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of URLs. The key of the map is the name of the individual URL object.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed URL object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the URL object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
-						},
-						"url": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("URL value.").String,
-							Required:            true,
-						},
-						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
-							Optional:            true,
-						},
-						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
-							Optional:            true,
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Url'.").String,
@@ -112,6 +100,18 @@ func (r *URLsResource) Schema(ctx context.Context, req resource.SchemaRequest, r
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
 							},
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+							Optional:            true,
+						},
+						"url": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("The URL string.").String,
+							Required:            true,
+						},
+						"overridable": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
+							Optional:            true,
 						},
 					},
 				},

@@ -38,5 +38,5 @@ data "fmc_applications" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Application.
+- `id` (String) Id of the Application.
 - `type` (String) Type of the object; this value is always 'Application'.

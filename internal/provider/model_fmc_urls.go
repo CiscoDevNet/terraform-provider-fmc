@@ -42,10 +42,10 @@ type URLs struct {
 
 type URLsItems struct {
 	Id          types.String `tfsdk:"id"`
-	Url         types.String `tfsdk:"url"`
-	Description types.String `tfsdk:"description"`
-	Overridable types.Bool   `tfsdk:"overridable"`
 	Type        types.String `tfsdk:"type"`
+	Description types.String `tfsdk:"description"`
+	Url         types.String `tfsdk:"url"`
+	Overridable types.Bool   `tfsdk:"overridable"`
 }
 
 // End of section. //template:end types
@@ -77,11 +77,11 @@ func (data URLs) toBody(ctx context.Context, state URLs) string {
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			if !item.Url.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "url", item.Url.ValueString())
-			}
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
+			}
+			if !item.Url.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "url", item.Url.ValueString())
 			}
 			if !item.Overridable.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
@@ -122,25 +122,25 @@ func (data *URLs) fromBody(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
-		if value := res.Get("url"); value.Exists() {
-			data.Url = types.StringValue(value.String())
+		if value := res.Get("type"); value.Exists() {
+			data.Type = types.StringValue(value.String())
 		} else {
-			data.Url = types.StringNull()
+			data.Type = types.StringNull()
 		}
 		if value := res.Get("description"); value.Exists() {
 			data.Description = types.StringValue(value.String())
 		} else {
 			data.Description = types.StringNull()
 		}
+		if value := res.Get("url"); value.Exists() {
+			data.Url = types.StringValue(value.String())
+		} else {
+			data.Url = types.StringNull()
+		}
 		if value := res.Get("overridable"); value.Exists() {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		(*parent).Items[k] = data
 	}
@@ -175,25 +175,29 @@ func (data *URLs) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Id = types.StringNull()
 		}
+		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+			data.Type = types.StringValue(value.String())
+		} else {
+			data.Type = types.StringNull()
+		}
+		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
+		}
 		if value := res.Get("url"); value.Exists() && !data.Url.IsNull() {
 			data.Url = types.StringValue(value.String())
 		} else {
 			data.Url = types.StringNull()
 		}
-		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-			data.Description = types.StringValue(value.String())
-		} else {
-			data.Description = types.StringNull()
-		}
 		if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 			data.Overridable = types.BoolValue(value.Bool())
 		} else {
 			data.Overridable = types.BoolNull()
-		}
-		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
 		}
 		(*parent).Items[i] = data
 	}

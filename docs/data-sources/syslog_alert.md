@@ -25,7 +25,7 @@ data "fmc_syslog_alert" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the Syslog Alert. There is no built-in Syslog alert.
+- `name` (String) Name of the Syslog Alert.
 
 ### Read-Only
 

@@ -81,7 +81,7 @@ func (r *NetworkAnalysisPolicyResource) Schema(ctx context.Context, req resource
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Network Analysis Policy.").String,
 				Required:            true,
 			},
 			"description": schema.StringAttribute{

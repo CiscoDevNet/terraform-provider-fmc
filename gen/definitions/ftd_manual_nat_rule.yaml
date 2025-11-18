@@ -35,26 +35,26 @@ attributes:
   - model_name: natType
     tf_name: nat_type
     type: String
-    description: Type of the rule
+    description: Type of the rule.
     enum_values: [STATIC, DYNAMIC]
     example: STATIC
     mandatory: true
   - model_name: fallThrough
     tf_name: fall_through
     type: Bool
-    description: Fallthrough to Interface PAT (Destination Interface)
+    description: Fallthrough to Interface PAT (Destination Interface).
     example: false
   - model_name: interfaceInOriginalDestination
     tf_name: interface_in_original_destination
     type: Bool
-    description: Use interface address as original destination
+    description: Use interface address as original destination.
     example: false
     exclude_test: true
     exclude_example: true
   - model_name: interfaceInTranslatedSource
     tf_name: interface_in_translated_source
     type: Bool
-    description: Translate source network to destination interface address
+    description: Translate source network to destination interface address.
     example: false
     exclude_test: true
     exclude_example: true
@@ -68,20 +68,20 @@ attributes:
   - model_name: netToNet
     tf_name: net_to_net
     type: Bool
-    description: Net to Net Mapping
+    description: Net to Net Mapping.
     example: false
     exclude_example: true
     exclude_test: true
   - model_name: noProxyArp
     tf_name: no_proxy_arp
     type: Bool
-    description: Do not proxy ARP on Destination Interface
+    description: Do not proxy ARP on Destination Interface.
     example: false
     exclude_example: true
     exclude_test: true
   - model_name: unidirectional
     type: Bool
-    description: Whether the rule is unidirectional
+    description: Whether the rule is unidirectional.
     example: true
     exclude_test: true
     exclude_example: true
@@ -89,7 +89,7 @@ attributes:
     tf_name: source_interface_id
     type: String
     data_path: [sourceInterface]
-    description: ID of source security zone or interface group
+    description: ID of source security zone or interface group.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
@@ -97,7 +97,7 @@ attributes:
     tf_name: original_source_id
     type: String
     data_path: [originalSource]
-    description: ID of original source network object (host, network or range)
+    description: ID of original source network object (Host, Network or Range).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08471
     minimum_test_value: fmc_hosts.test.items.manual_nat_rule_host2.id
     test_value: fmc_hosts.test.items.manual_nat_rule_host4.id
@@ -105,7 +105,7 @@ attributes:
     tf_name: original_source_port_id
     type: String
     data_path: [originalSourcePort]
-    description: ID of original source port object
+    description: ID of original source port object.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08472
     exclude_test: true
     exclude_example: true
@@ -113,7 +113,7 @@ attributes:
     tf_name: original_destination_id
     type: String
     data_path: [originalDestination]
-    description: ID of original destination network object (host, network or range)
+    description: ID of original destination network object (Host, Network or Range).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08473
     exclude_test: true
     exclude_example: true
@@ -121,14 +121,14 @@ attributes:
     tf_name: original_destination_port_id
     type: String
     data_path: [originalDestinationPort]
-    description: ID of original destination port object
+    description: ID of original destination port object.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08474
     exclude_test: true
     exclude_example: true
   - model_name: routeLookup
     tf_name: route_lookup
     type: Bool
-    description: Perform Route Lookup for Destination Interface
+    description: Perform Route Lookup for Destination Interface.
     example: false
     exclude_example: true
     exclude_test: true
@@ -136,7 +136,7 @@ attributes:
     tf_name: destination_interface_id
     type: String
     data_path: [destinationInterface]
-    description: ID of destination security zone or interface group
+    description: ID of destination security zone or interface group.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08475
     exclude_test: true
     exclude_example: true
@@ -144,7 +144,7 @@ attributes:
     tf_name: translated_source_id
     type: String
     data_path: [translatedSource]
-    description: ID of translated source network object (host, network or range)
+    description: ID of translated source network object (Host, Network or Range).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08476
     minimum_test_value: fmc_hosts.test.items.manual_nat_rule_host1.id
     test_value: fmc_hosts.test.items.manual_nat_rule_host3.id
@@ -152,14 +152,14 @@ attributes:
     tf_name: translated_source_port_id
     type: String
     data_path: [translatedSourcePort]
-    description: ID of translated source port object
+    description: ID of translated source port object.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08477
     exclude_test: true
     exclude_example: true
   - model_name: dns
     tf_name: translate_dns
     type: Bool
-    description: Translate DNS replies that match this rule
+    description: Translate DNS replies that match this rule.
     example: false
     exclude_example: true
     exclude_test: true
@@ -167,7 +167,7 @@ attributes:
     tf_name: translated_destination_id
     type: String
     data_path: [translatedDestination]
-    description: ID of translated destination network object (host, network or range)
+    description: ID of translated destination network object (Host, Network or Range).
     example: 76d24097-41c4-4558-a4d0-a8c07ac08478
     exclude_test: true
     exclude_example: true
@@ -175,7 +175,7 @@ attributes:
     tf_name: translated_destination_port_id
     type: String
     data_path: [translatedDestinationPort]
-    description: ID of translated destination port object
+    description: ID of translated destination port object.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08479
     exclude_test: true
     exclude_example: true

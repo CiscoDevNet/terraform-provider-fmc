@@ -33,12 +33,12 @@ import (
 type Port struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
-	Port        types.String `tfsdk:"port"`
 	Name        types.String `tfsdk:"name"`
+	Type        types.String `tfsdk:"type"`
 	Protocol    types.String `tfsdk:"protocol"`
+	Port        types.String `tfsdk:"port"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
-	Type        types.String `tfsdk:"type"`
 }
 
 // End of section. //template:end types
@@ -62,14 +62,14 @@ func (data Port) toBody(ctx context.Context, state Port) string {
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if !data.Port.IsNull() {
-		body, _ = sjson.Set(body, "port", data.Port.ValueString())
-	}
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if !data.Protocol.IsNull() {
 		body, _ = sjson.Set(body, "protocol", data.Protocol.ValueString())
+	}
+	if !data.Port.IsNull() {
+		body, _ = sjson.Set(body, "port", data.Port.ValueString())
 	}
 	if !data.Description.IsNull() {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
@@ -85,20 +85,25 @@ func (data Port) toBody(ctx context.Context, state Port) string {
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *Port) fromBody(ctx context.Context, res gjson.Result) {
-	if value := res.Get("port"); value.Exists() {
-		data.Port = types.StringValue(value.String())
-	} else {
-		data.Port = types.StringNull()
-	}
 	if value := res.Get("name"); value.Exists() {
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("type"); value.Exists() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
+	}
 	if value := res.Get("protocol"); value.Exists() {
 		data.Protocol = types.StringValue(value.String())
 	} else {
 		data.Protocol = types.StringNull()
+	}
+	if value := res.Get("port"); value.Exists() {
+		data.Port = types.StringValue(value.String())
+	} else {
+		data.Port = types.StringNull()
 	}
 	if value := res.Get("description"); value.Exists() {
 		data.Description = types.StringValue(value.String())
@@ -109,11 +114,6 @@ func (data *Port) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
-	}
-	if value := res.Get("type"); value.Exists() {
-		data.Type = types.StringValue(value.String())
-	} else {
-		data.Type = types.StringNull()
 	}
 }
 
@@ -126,35 +126,39 @@ func (data *Port) fromBody(ctx context.Context, res gjson.Result) {
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *Port) fromBodyPartial(ctx context.Context, res gjson.Result) {
-	if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
-		data.Port = types.StringValue(value.String())
-	} else {
-		data.Port = types.StringNull()
-	}
 	if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+		data.Type = types.StringValue(value.String())
+	} else {
+		data.Type = types.StringNull()
 	}
 	if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
 		data.Protocol = types.StringValue(value.String())
 	} else {
 		data.Protocol = types.StringNull()
 	}
+	if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+		data.Port = types.StringValue(value.String())
+	} else {
+		data.Port = types.StringNull()
+	}
 	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 		data.Description = types.StringValue(value.String())
 	} else {
-		data.Description = types.StringNull()
+		if !data.Description.IsNull() && data.Description.ValueString() == "" {
+			data.Description = types.StringValue("")
+		} else {
+			data.Description = types.StringNull()
+		}
 	}
 	if value := res.Get("overridable"); value.Exists() && !data.Overridable.IsNull() {
 		data.Overridable = types.BoolValue(value.Bool())
 	} else {
 		data.Overridable = types.BoolNull()
-	}
-	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-		data.Type = types.StringValue(value.String())
-	} else {
-		data.Type = types.StringNull()
 	}
 }
 

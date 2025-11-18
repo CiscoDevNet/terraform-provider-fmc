@@ -51,13 +51,13 @@ data "fmc_access_rule" "example" {
 - `endpoint_device_types` (Attributes Set) Set of objects representing the source Endpoint Device Types. (see [below for nested schema](#nestedatt--endpoint_device_types))
 - `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
 - `intrusion_policy_id` (String) Id of the Intrusion Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.
-- `log_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, log_begin must be false or absent.
-- `log_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, log_end must be true.
+- `log_connection_begin` (Boolean) Log events at the beginning of the connection. If 'MONITOR' action is selected for access rule, `log_connection_begin` must be false or absent.
+- `log_connection_end` (Boolean) Log events at the end of the connection. If 'MONITOR' action is selected for access rule, `log_connection_end` must be true.
 - `log_files` (Boolean) Log file events.
 - `section` (String) The section of the policy to which the rule belongs. Either 'section' or 'category_name' can be set.
-- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, send_events_to_fmc must be true.
+- `send_events_to_fmc` (Boolean) Send events to the Firepower Management Center event viewer. If 'MONITOR' action is selected for access rule, `send_events_to_fmc` must be true.
 - `send_syslog` (Boolean) Send alerts to syslog.
-- `snmp_config_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either log_begin or log_end is true.
+- `snmp_alert_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.
 - `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic. (see [below for nested schema](#nestedatt--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--source_network_objects))
@@ -65,7 +65,7 @@ data "fmc_access_rule" "example" {
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule. (see [below for nested schema](#nestedatt--source_port_objects))
 - `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags. (see [below for nested schema](#nestedatt--source_sgt_objects))
 - `source_zones` (Attributes Set) Set of objects representing source Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--source_zones))
-- `syslog_config_id` (String) Id of Syslog Config. Can be set only when send_syslog is true and either log_begin or log_end is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
+- `syslog_alert_id` (String) Id of Syslog Alert. Can be set only when send_syslog is true and either `log_connection_begin` or `log_connection_end` is true. If not set, the default syslog configuration in Access Control Policy Logging applies.
 - `syslog_severity` (String) Override the Severity of syslog alerts.
 - `time_range_id` (String) Id of Time Range object applied to the rule.
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule. (see [below for nested schema](#nestedatt--url_categories))
