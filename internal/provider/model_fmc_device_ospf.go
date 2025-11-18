@@ -38,6 +38,7 @@ import (
 type DeviceOSPF struct {
 	Id                              types.String                `tfsdk:"id"`
 	Domain                          types.String                `tfsdk:"domain"`
+	VrfId                           types.String                `tfsdk:"vrf_id"`
 	DeviceId                        types.String                `tfsdk:"device_id"`
 	Type                            types.String                `tfsdk:"type"`
 	ProcessId                       types.Int64                 `tfsdk:"process_id"`
@@ -141,7 +142,11 @@ type DeviceOSPFAreasVirtualLinksAuthenticationMd5s struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceOSPF) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ospfv2routes", url.QueryEscape(data.DeviceId.ValueString()))
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ospfv2routes", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ospfv2routes", url.QueryEscape(data.DeviceId.ValueString()))
+	}
 }
 
 // End of section. //template:end getPath

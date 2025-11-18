@@ -128,6 +128,7 @@ resource "fmc_device_ospf" "example" {
 - `router_id` (String) IPv4 address used as the router ID. Leave blank for AUTOMATIC.
 - `timer_lsa_group` (Number) LSA group timer in seconds.
   - Default value: `240`
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
@@ -296,5 +297,6 @@ The [`terraform import` command](https://developer.hashicorp.com/terraform/cli/c
 
 ```shell
 # <domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.
-terraform import fmc_device_ospf.example "<domain>,<device_id>,<id>"
+# <vrf_id> is optional.
+terraform import fmc_device_ospf.example "<domain>,<device_id>,<vrf_id>,<id>"
 ```

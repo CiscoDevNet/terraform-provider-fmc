@@ -66,6 +66,10 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+			},
 			"device_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the parent device.",
 				Required:            true,

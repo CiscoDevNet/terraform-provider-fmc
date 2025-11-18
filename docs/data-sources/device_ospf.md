@@ -30,6 +30,7 @@ data "fmc_device_ospf" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 
