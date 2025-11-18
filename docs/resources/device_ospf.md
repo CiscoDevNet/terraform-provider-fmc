@@ -121,7 +121,6 @@ resource "fmc_device_ospf" "example" {
 - `log_adjacency_changes` (String) Log adjacency changes type.
   - Choices: `DEFAULT`, `DETAILED`
 - `process_id` (Number) OSPF process ID.
-  - Range: `1`-`2`
 - `redistributions` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility.
   - Default value: `false`

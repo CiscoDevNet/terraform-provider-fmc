@@ -106,11 +106,8 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"process_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID.").AddIntegerRangeDescription(1, 2).String,
+				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID.").String,
 				Optional:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 2),
-				},
 			},
 			"router_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address used as the router ID. Leave blank for AUTOMATIC.").String,
