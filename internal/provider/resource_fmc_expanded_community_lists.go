@@ -92,7 +92,7 @@ func (r *ExpandedCommunityListsResource) Schema(ctx context.Context, req resourc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Expanded Community List.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Expanded Community List object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),

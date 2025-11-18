@@ -88,36 +88,37 @@ func (d *BFDTemplateDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "BFD echo status.",
 				Computed:            true,
 			},
-			"interval_time": schema.StringAttribute{
+			"interval_type": schema.StringAttribute{
 				MarkdownDescription: "Interval unit of measurement of time.",
 				Computed:            true,
 			},
-			"min_transmit": schema.Int64Attribute{
-				MarkdownDescription: "BFD Minimum Transmit unit value.",
-				Computed:            true,
-			},
-			"tx_rx_multiplier": schema.Int64Attribute{
+			"multiplier": schema.Int64Attribute{
 				MarkdownDescription: "BFD Multipler value.",
 				Computed:            true,
 			},
-			"min_receive": schema.Int64Attribute{
-				MarkdownDescription: "BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds",
+			"minimum_transmit": schema.Int64Attribute{
+				MarkdownDescription: "BFD Minimum Transmit unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.",
 				Computed:            true,
 			},
-			"authentication_password": schema.StringAttribute{
-				MarkdownDescription: "Password for BFD Authentication (1-24 characters)",
-				Computed:            true,
-			},
-			"authentication_key_id": schema.Int64Attribute{
-				MarkdownDescription: "Authentication Key ID",
+			"minimum_receive": schema.Int64Attribute{
+				MarkdownDescription: "BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.",
 				Computed:            true,
 			},
 			"authentication_type": schema.StringAttribute{
 				MarkdownDescription: "Authentication type.",
 				Computed:            true,
 			},
+			"authentication_password": schema.StringAttribute{
+				MarkdownDescription: "Password for BFD Authentication",
+				Computed:            true,
+				Sensitive:           true,
+			},
 			"authentication_password_encryption": schema.StringAttribute{
 				MarkdownDescription: "Determines if `authentication_password` is encrypted",
+				Computed:            true,
+			},
+			"authentication_key_id": schema.Int64Attribute{
+				MarkdownDescription: "Authentication Key ID",
 				Computed:            true,
 			},
 		},

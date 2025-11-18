@@ -98,7 +98,7 @@ func (d *DeviceIPv4StaticRouteDataSource) Schema(ctx context.Context, req dataso
 					},
 				},
 			},
-			"metric_value": schema.Int64Attribute{
+			"metric": schema.Int64Attribute{
 				MarkdownDescription: "The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.",
 				Computed:            true,
 			},
@@ -111,7 +111,7 @@ func (d *DeviceIPv4StaticRouteDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.",
+				MarkdownDescription: "Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin network 'any-ipv4'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric` attribute.",
 				Computed:            true,
 			},
 			"sla_monitor_id": schema.StringAttribute{

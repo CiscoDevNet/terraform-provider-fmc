@@ -3,7 +3,8 @@ resource "fmc_network_group" "example" {
   description = "My Network Group 1"
   objects = [
     {
-      id = "12345678-1234-1234-1234-123456789012"
+      id   = "12345678-1234-1234-1234-123456789012"
+      name = "fmc_network_object_1"
     }
   ]
   literals = [

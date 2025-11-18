@@ -40,7 +40,7 @@ Read-Only:
 
 - `applications` (Attributes Set) Set of Applications. Either `applications` or `filters` must be specified. (see [below for nested schema](#nestedatt--items--applications))
 - `filters` (Attributes List) List of Application filtering conditions. Either `applications` or `filters` must be specified. (see [below for nested schema](#nestedatt--items--filters))
-- `id` (String) Id of the managed File Type.
+- `id` (String) Id of the Application Filter.
 - `type` (String) Type of the object; this value is always 'ApplicationFilter'.
 
 <a id="nestedatt--items--applications"></a>

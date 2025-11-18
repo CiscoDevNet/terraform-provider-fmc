@@ -53,7 +53,8 @@ type NetworkGroupsItems struct {
 }
 
 type NetworkGroupsItemsObjects struct {
-	Id types.String `tfsdk:"id"`
+	Id   types.String `tfsdk:"id"`
+	Name types.String `tfsdk:"name"`
 }
 type NetworkGroupsItemsLiterals struct {
 	Value types.String `tfsdk:"value"`
@@ -106,6 +107,9 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
+					if !childItem.Name.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
+					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
 					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
 				}
@@ -124,7 +128,7 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
 		}
 	}
-	return body
+	return gjson.Get(body, "items").String()
 }
 
 // End of section. //template:end toBody
@@ -140,7 +144,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 
 		parentRes.Get("items").ForEach(
 			func(_, v gjson.Result) bool {
-				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
+				if v.Get("name").String() == k {
 					res = v
 					return false // break ForEach
 				}
@@ -148,7 +152,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: uuid=%s, key=%v", data.Id, k))
+			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
 			delete((*parent).Items, k)
 			continue
 		}
@@ -186,6 +190,11 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 					data.Id = types.StringValue(value.String())
 				} else {
 					data.Id = types.StringNull()
+				}
+				if value := res.Get("name"); value.Exists() {
+					data.Name = types.StringValue(value.String())
+				} else {
+					data.Name = types.StringNull()
 				}
 				(*parent).Objects = append((*parent).Objects, data)
 				return true
@@ -241,7 +250,11 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
 			data.Description = types.StringValue(value.String())
 		} else {
-			data.Description = types.StringNull()
+			if !data.Description.IsNull() && data.Description.ValueString() == "" {
+				data.Description = types.StringValue("")
+			} else {
+				data.Description = types.StringNull()
+			}
 		}
 		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 			data.Type = types.StringValue(value.String())
@@ -298,6 +311,11 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 				data.Id = types.StringValue(value.String())
 			} else {
 				data.Id = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
 			}
 			(*parent).Objects[i] = data
 		}

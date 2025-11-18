@@ -83,12 +83,12 @@ func (r *RangesResource) Schema(ctx context.Context, req resource.SchemaRequest,
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of ranges. The key of the map is the name of the individual Range.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of Ranges. The key of the map is the name of the individual Range.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Range.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Range object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -99,7 +99,7 @@ func (r *RangesResource) Schema(ctx context.Context, req resource.SchemaRequest,
 							Optional:            true,
 						},
 						"overridable": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 							Optional:            true,
 						},
 						"ip_range": schema.StringAttribute{

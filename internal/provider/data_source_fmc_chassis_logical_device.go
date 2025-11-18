@@ -173,7 +173,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				MarkdownDescription: "Id of the device group.",
 				Computed:            true,
 			},
-			"access_policy_id": schema.StringAttribute{
+			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.",
 				Computed:            true,
 			},
@@ -181,7 +181,7 @@ func (d *ChassisLogicalDeviceDataSource) Schema(ctx context.Context, req datasou
 				MarkdownDescription: "Id of the platform settings.",
 				Computed:            true,
 			},
-			"license_capabilities": schema.SetAttribute{
+			"licenses": schema.SetAttribute{
 				MarkdownDescription: "License capabilities to be assigned to the device. This is used only as bootstrap configuration.",
 				ElementType:         types.StringType,
 				Computed:            true,

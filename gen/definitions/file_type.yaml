@@ -8,8 +8,7 @@ minimum_version: "7.4"
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the File Type. There can be only build-in File Types.
+    description: Name of the File Type.
     mandatory: true
     example: PDF
     data_source_query: true

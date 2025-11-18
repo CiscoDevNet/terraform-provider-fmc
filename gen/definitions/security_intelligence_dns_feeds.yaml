@@ -16,7 +16,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Security Intelligence DNS Feed.
+        description: Id of the Security Intelligence DNS Feed object.
         exclude_example: true
         exclude_test: true
       - model_name: type

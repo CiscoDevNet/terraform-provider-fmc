@@ -5,14 +5,14 @@ subcategory: "Devices"
 description: |-
   This device manages FTD HA Pair configuration.
   Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
-  On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
+  On destroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
 ---
 
 # fmc_device_ha_pair (Resource)
 
 This device manages FTD HA Pair configuration.
  Configuration (like interfaces) of the HA Pair is replicated from the primary device. Nevertheless, please make sure that the configuration of both nodes is consistent.
- On desroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
+ On destroy, the HA Pair will be broken and both devices will remain managed by FMC as standalone devices.
 
 ## Example Usage
 

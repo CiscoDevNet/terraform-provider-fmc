@@ -90,7 +90,7 @@ test_prerequisites: |-
 
   resource "fmc_interface_group" "test" {
     name           = "ftd_platform_settings_dns_ig"
-    interface_mode = "ROUTED"
+    interface_type = "ROUTED"
   }
 
   resource "fmc_dns_server_group" "test" {

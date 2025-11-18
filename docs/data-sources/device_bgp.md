@@ -82,7 +82,7 @@ Read-Only:
 Read-Only:
 
 - `access_list_id` (String) Standard Access List ID that defines which networks are to be received and which are to be suppressed in routing updates.
-- `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates
+- `direction` (String) Determine if the filter should be applied to inbound updates or outbound updates.
 - `process_id` (String) Process ID for the OSPF routing protocol.
 - `protocol` (String) Routing process for which you want to filter
 
@@ -103,7 +103,7 @@ Read-Only:
 - `description` (String) Description of the neighbor
 - `disable_connection_verification` (Boolean) Disable Connection Verification
 - `enable_address` (Boolean) Enable communication with this BGP neighbor
-- `filter_access_lists` (Attributes List) Set incoming or outgoing Access List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_access_lists))
+- `filter_access_lists` (Attributes List) Set incoming or outgoing Standard Access List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_access_lists))
 - `filter_as_paths` (Attributes List) Set incoming or outgoing AS path filter to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_as_paths))
 - `filter_maximum_prefixes` (Number) Maximum number of prefixes allowed from the neighbor
 - `filter_prefix_lists` (Attributes List) Set incoming or outgoing Prefix List to distribute BGP neighbor information. (see [below for nested schema](#nestedatt--ipv4_neighbors--filter_prefix_lists))

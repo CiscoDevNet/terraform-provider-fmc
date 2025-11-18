@@ -186,7 +186,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:            true,
 						},
 						"filter_access_lists": schema.ListNestedAttribute{
-							MarkdownDescription: "Set incoming or outgoing Access List to distribute BGP neighbor information.",
+							MarkdownDescription: "Set incoming or outgoing Standard Access List to distribute BGP neighbor information.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -411,7 +411,7 @@ func (d *DeviceBGPDataSource) Schema(ctx context.Context, req datasource.SchemaR
 							Computed:            true,
 						},
 						"direction": schema.StringAttribute{
-							MarkdownDescription: "Determine if the filter should be applied to inbound updates or outbound updates",
+							MarkdownDescription: "Determine if the filter should be applied to inbound updates or outbound updates.",
 							Computed:            true,
 						},
 						"protocol": schema.StringAttribute{

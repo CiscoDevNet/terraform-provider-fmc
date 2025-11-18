@@ -109,7 +109,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 			},
 			"interface_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the interface provided in `interface_logical_name`. The value is ignored, but the attribute itself is useful for ensuring that Terraform creates interface resource before the static route resource (and destroys the interface resource only after the static route has been destroyed).").String,
-				Required:            true,
+				Optional:            true,
 			},
 			"destination_networks": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Set of the destination networks matching this route (Host, Networks or Ranges).").String,
@@ -123,7 +123,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 					},
 				},
 			},
-			"metric_value": schema.Int64Attribute{
+			"metric": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("The cost of the route. The metric is used to compare routes among different routing protocols. The default administrative distance for static routes is 1, giving it precedence over routes discovered by dynamic routing protocols but not directly connected routes.").AddIntegerRangeDescription(1, 254).String,
 				Optional:            true,
 				Validators: []validator.Int64{
@@ -139,7 +139,7 @@ func (r *DeviceIPv6StaticRouteResource) Schema(ctx context.Context, req resource
 				Optional:            true,
 			},
 			"is_tunneled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin host 'any-ipv6'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric_value` attribute.").AddDefaultValueDescription("false").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether this route is a separate default route for VPN traffic. Should be used for default route only (such as when the destination_networks points to a builtin host 'any-ipv6'). Useful if you want VPN traffic to use a different default route than non-VPN traffic. When a tunnel terminates on the device, all traffic from it that cannot be routed using learned or static routes is sent to this route. You can configure only one default tunneled gateway per device. ECMP for tunneled traffic is not supported. This attribute conflicts with `metric` attribute.").AddDefaultValueDescription("false").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),

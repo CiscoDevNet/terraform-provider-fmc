@@ -36,6 +36,7 @@ attributes:
   - model_name: portType
     type: String
     description: Type of the port.
+    mandatory: true
     enum_values: [DATA, DATA_SHARING]
     example: DATA
   - model_name: adminState

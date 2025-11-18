@@ -31,12 +31,12 @@ import (
 
 func TestAccFmcFQDNObjects(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdn_objects.test", "items.my_fqdn_objects.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdn_objects.description", "My FQDN 1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdn_objects.overridable", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdn_objects.fqdn", "www.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdn_objects.dns_resolution", "IPV4_AND_IPV6"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdn_objects.test", "items.my_fqdn_objects.type"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdn_objects.test", "items.my_fqdns.id"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdns.description", "My FQDN 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdns.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdns.fqdn", "www.example.com"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_objects.test", "items.my_fqdns.dns_resolution", "IPV4_AND_IPV6"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_fqdn_objects.test", "items.my_fqdns.type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -66,7 +66,7 @@ func TestAccFmcFQDNObjects(t *testing.T) {
 
 func testAccFmcFQDNObjectsConfig_minimum() string {
 	config := `resource "fmc_fqdn_objects" "test" {` + "\n"
-	config += `	items = { "my_fqdn_objects" = {` + "\n"
+	config += `	items = { "my_fqdns" = {` + "\n"
 	config += `		fqdn = "www.example.com"` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -79,7 +79,7 @@ func testAccFmcFQDNObjectsConfig_minimum() string {
 
 func testAccFmcFQDNObjectsConfig_all() string {
 	config := `resource "fmc_fqdn_objects" "test" {` + "\n"
-	config += `	items = { "my_fqdn_objects" = {` + "\n"
+	config += `	items = { "my_fqdns" = {` + "\n"
 	config += `		description = "My FQDN 1"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		fqdn = "www.example.com"` + "\n"

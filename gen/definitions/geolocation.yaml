@@ -6,7 +6,7 @@ attributes:
   - model_name: name
     type: String
     mandatory: true
-    description: Name of the geolocation object.
+    description: Name of the Geolocation object.
     example: my_geolocation
     data_source_query: true
   - model_name: type
@@ -15,7 +15,7 @@ attributes:
     computed: true
   - model_name: continents
     type: List
-    description: List of continents.
+    description: List of Continents.
     attributes:
       - model_name: id
         type: Int64
@@ -24,7 +24,7 @@ attributes:
         test_value: 'data.fmc_continents.test.items["North America"].id'
   - model_name: countries
     type: List
-    description: List of countries.
+    description: List of Countries.
     attributes:
       - model_name: id
         type: Int64

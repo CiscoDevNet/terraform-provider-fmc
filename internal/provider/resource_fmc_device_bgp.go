@@ -209,11 +209,11 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 					Attributes: map[string]schema.Attribute{
 						"address": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IP address of the BGP neighbor").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"remote_as": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("AS number of the BGP neighbor").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"bfd_fallover": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("BFD Fallover").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP", "AUTO_DETECT_HOP", "NONE").AddDefaultValueDescription("NONE").String,
@@ -253,7 +253,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							Optional:            true,
 						},
 						"filter_access_lists": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Access List to distribute BGP neighbor information.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set incoming or outgoing Standard Access List to distribute BGP neighbor information.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -513,7 +513,7 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 						},
 						"network_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Network ID (desired network/host object)").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"advertise_map_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Advertise Route Map ID (select the routes to create AS_SET origin communities)").String,
@@ -540,8 +540,8 @@ func (r *DeviceBGPResource) Schema(ctx context.Context, req resource.SchemaReque
 							Required:            true,
 						},
 						"direction": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Determine if the filter should be applied to inbound updates or outbound updates").AddStringEnumDescription("incomingroutefilter", "outgoingroutefilter").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Determine if the filter should be applied to inbound updates or outbound updates.").AddStringEnumDescription("incomingroutefilter", "outgoingroutefilter").String,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("incomingroutefilter", "outgoingroutefilter"),
 							},

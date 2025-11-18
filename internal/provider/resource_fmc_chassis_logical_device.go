@@ -248,7 +248,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the device group.").String,
 				Optional:            true,
 			},
-			"access_policy_id": schema.StringAttribute{
+			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the Access Control Policy (ACP) to be assigned to the device. This is used only as bootstrap configuration.").String,
 				Required:            true,
 			},
@@ -256,13 +256,13 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the platform settings.").String,
 				Optional:            true,
 			},
-			"license_capabilities": schema.SetAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT").String,
+			"licenses": schema.SetAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("License capabilities to be assigned to the device. This is used only as bootstrap configuration.").AddStringEnumDescription("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 				Validators: []validator.Set{
 					setvalidator.ValueStringsAre(
-						stringvalidator.OneOf("MALWARE", "URLFilter", "CARRIER", "PROTECT"),
+						stringvalidator.OneOf("MALWARE", "URLFilter", "CARRIER", "PROTECT", "THREAT"),
 					),
 				},
 			},
@@ -507,6 +507,8 @@ func (r *ChassisLogicalDeviceResource) Update(ctx context.Context, req resource.
 			}
 		}
 	}
+
+	plan.fromBodyUnknowns(ctx, res)
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Update finished successfully", plan.Id.ValueString()))
 

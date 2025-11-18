@@ -72,7 +72,7 @@ func (d *GeolocationDataSource) Schema(ctx context.Context, req datasource.Schem
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the geolocation object.",
+				MarkdownDescription: "Name of the Geolocation object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,7 +81,7 @@ func (d *GeolocationDataSource) Schema(ctx context.Context, req datasource.Schem
 				Computed:            true,
 			},
 			"continents": schema.ListNestedAttribute{
-				MarkdownDescription: "List of continents.",
+				MarkdownDescription: "List of Continents.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -93,7 +93,7 @@ func (d *GeolocationDataSource) Schema(ctx context.Context, req datasource.Schem
 				},
 			},
 			"countries": schema.ListNestedAttribute{
-				MarkdownDescription: "List of countries.",
+				MarkdownDescription: "List of Countries.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

@@ -7,10 +7,9 @@ doc_category: Policies
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the SNMP Alert. There is no built-in SNMP alert.
+    description: Name of the SNMP Alert.
     mandatory: true
-    example: test_snmp_alert_1
+    example: my_snmp_alert
     data_source_query: true
   - model_name: type
     type: String

@@ -59,7 +59,8 @@ func (d *ICMPv6ObjectDataSource) Metadata(_ context.Context, req datasource.Meta
 func (d *ICMPv6ObjectDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the ICMPv6 Object.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the ICMPv6 Object.").AddAttributeDescription("This object is deprecated. Please use `fmc_icmpv6` instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This object is deprecated. Please use `fmc_icmpv6` instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{

@@ -3,10 +3,13 @@ name: Standard ACL
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/standardaccesslists
 doc_category: Objects
 minimum_version_create: "7.2"
+res_description: This resource manages Standard ACL (Access Control List / Access List) Object.
+ds_description: This data source reads the Standard ACL (Access Control List / Access List) Object.
+deprecation_message: This object is deprecated. Please use `fmc_standard_access_list` instead.
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the Standard ACL object.
     mandatory: true
     example: my_standard_acl
     data_source_query: true
@@ -14,6 +17,7 @@ attributes:
     type: String
     description: Description of the object.
     example: "My standard ACL"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: type
     type: String
     description: Type of the object; this value is always 'StandardAccessList'.
@@ -28,14 +32,14 @@ attributes:
     attributes:
       - model_name: action
         type: String
-        description: "Indicates the redistribution access: PERMIT or DENY."
+        description: Action for the rule.
         enum_values: [PERMIT, DENY]
         example: DENY
         minimum_test_value: '"PERMIT"'
         mandatory: true
       - model_name: objects
         data_path: [networks]
-        description: Set of objects (Host, Network, Range).
+        description: Set of objects (Host, Network, Network Group).
         exclude_test: true # conflict with literals below
         type: Set
         attributes:
@@ -46,7 +50,7 @@ attributes:
             exclude_example: true
           - model_name: type
             type: String
-            description: Type of the object (such as fmc_network.this.type, etc.).
+            description: Type of the object.
             exclude_example: true
       - model_name: literals
         data_path: [networks]

@@ -97,7 +97,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 				Optional:            true,
 			},
 			"entries": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of route map entries.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Route Map entries.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

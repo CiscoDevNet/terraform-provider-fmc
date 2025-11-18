@@ -35,12 +35,11 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type ExtendedACL struct {
-	Id          types.String         `tfsdk:"id"`
-	Domain      types.String         `tfsdk:"domain"`
-	Name        types.String         `tfsdk:"name"`
-	Description types.String         `tfsdk:"description"`
-	Type        types.String         `tfsdk:"type"`
-	Entries     []ExtendedACLEntries `tfsdk:"entries"`
+	Id      types.String         `tfsdk:"id"`
+	Domain  types.String         `tfsdk:"domain"`
+	Name    types.String         `tfsdk:"name"`
+	Type    types.String         `tfsdk:"type"`
+	Entries []ExtendedACLEntries `tfsdk:"entries"`
 }
 
 type ExtendedACLEntries struct {
@@ -51,8 +50,8 @@ type ExtendedACLEntries struct {
 	SourceNetworkLiterals      []ExtendedACLEntriesSourceNetworkLiterals      `tfsdk:"source_network_literals"`
 	DestinationNetworkLiterals []ExtendedACLEntriesDestinationNetworkLiterals `tfsdk:"destination_network_literals"`
 	SourceNetworkObjects       []ExtendedACLEntriesSourceNetworkObjects       `tfsdk:"source_network_objects"`
-	SourceSgtObjects           []ExtendedACLEntriesSourceSgtObjects           `tfsdk:"source_sgt_objects"`
 	DestinationNetworkObjects  []ExtendedACLEntriesDestinationNetworkObjects  `tfsdk:"destination_network_objects"`
+	SourceSgtObjects           []ExtendedACLEntriesSourceSgtObjects           `tfsdk:"source_sgt_objects"`
 	SourcePortObjects          []ExtendedACLEntriesSourcePortObjects          `tfsdk:"source_port_objects"`
 	DestinationPortObjects     []ExtendedACLEntriesDestinationPortObjects     `tfsdk:"destination_port_objects"`
 	DestinationPortLiterals    []ExtendedACLEntriesDestinationPortLiterals    `tfsdk:"destination_port_literals"`
@@ -70,10 +69,10 @@ type ExtendedACLEntriesDestinationNetworkLiterals struct {
 type ExtendedACLEntriesSourceNetworkObjects struct {
 	Id types.String `tfsdk:"id"`
 }
-type ExtendedACLEntriesSourceSgtObjects struct {
+type ExtendedACLEntriesDestinationNetworkObjects struct {
 	Id types.String `tfsdk:"id"`
 }
-type ExtendedACLEntriesDestinationNetworkObjects struct {
+type ExtendedACLEntriesSourceSgtObjects struct {
 	Id types.String `tfsdk:"id"`
 }
 type ExtendedACLEntriesSourcePortObjects struct {
@@ -121,9 +120,6 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 	}
 	if !data.Name.IsNull() {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
-	}
-	if !data.Description.IsNull() {
-		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Entries) > 0 {
 		body, _ = sjson.Set(body, "entries", []any{})
@@ -177,6 +173,16 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.objects.-1", itemChildBody)
 				}
 			}
+			if len(item.DestinationNetworkObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
+				for _, childItem := range item.DestinationNetworkObjects {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.objects.-1", itemChildBody)
+				}
+			}
 			if len(item.SourceSgtObjects) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "securityGroupTags.objects", []any{})
 				for _, childItem := range item.SourceSgtObjects {
@@ -186,16 +192,6 @@ func (data ExtendedACL) toBody(ctx context.Context, state ExtendedACL) string {
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "SecurityGroupTag")
 					itemBody, _ = sjson.SetRaw(itemBody, "securityGroupTags.objects.-1", itemChildBody)
-				}
-			}
-			if len(item.DestinationNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
-				for _, childItem := range item.DestinationNetworkObjects {
-					itemChildBody := ""
-					if !childItem.Id.IsNull() {
-						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
-					}
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.objects.-1", itemChildBody)
 				}
 			}
 			if len(item.SourcePortObjects) > 0 {
@@ -277,11 +273,6 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
-	}
-	if value := res.Get("description"); value.Exists() {
-		data.Description = types.StringValue(value.String())
-	} else {
-		data.Description = types.StringNull()
 	}
 	if value := res.Get("type"); value.Exists() {
 		data.Type = types.StringValue(value.String())
@@ -365,20 +356,6 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 					return true
 				})
 			}
-			if value := res.Get("securityGroupTags.objects"); value.Exists() {
-				data.SourceSgtObjects = make([]ExtendedACLEntriesSourceSgtObjects, 0)
-				value.ForEach(func(k, res gjson.Result) bool {
-					parent := &data
-					data := ExtendedACLEntriesSourceSgtObjects{}
-					if value := res.Get("id"); value.Exists() {
-						data.Id = types.StringValue(value.String())
-					} else {
-						data.Id = types.StringNull()
-					}
-					(*parent).SourceSgtObjects = append((*parent).SourceSgtObjects, data)
-					return true
-				})
-			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
 				data.DestinationNetworkObjects = make([]ExtendedACLEntriesDestinationNetworkObjects, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
@@ -390,6 +367,20 @@ func (data *ExtendedACL) fromBody(ctx context.Context, res gjson.Result) {
 						data.Id = types.StringNull()
 					}
 					(*parent).DestinationNetworkObjects = append((*parent).DestinationNetworkObjects, data)
+					return true
+				})
+			}
+			if value := res.Get("securityGroupTags.objects"); value.Exists() {
+				data.SourceSgtObjects = make([]ExtendedACLEntriesSourceSgtObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := ExtendedACLEntriesSourceSgtObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).SourceSgtObjects = append((*parent).SourceSgtObjects, data)
 					return true
 				})
 			}
@@ -508,11 +499,6 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
-	}
-	if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-		data.Description = types.StringValue(value.String())
-	} else {
-		data.Description = types.StringNull()
 	}
 	if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 		data.Type = types.StringValue(value.String())
@@ -693,49 +679,6 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			}
 			(*parent).SourceNetworkObjects[i] = data
 		}
-		for i := 0; i < len(data.SourceSgtObjects); i++ {
-			keys := [...]string{"id"}
-			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
-
-			parent := &data
-			data := (*parent).SourceSgtObjects[i]
-			parentRes := &res
-			var res gjson.Result
-
-			parentRes.Get("securityGroupTags.objects").ForEach(
-				func(_, v gjson.Result) bool {
-					found := false
-					for ik := range keys {
-						if v.Get(keys[ik]).String() != keyValues[ik] {
-							found = false
-							break
-						}
-						found = true
-					}
-					if found {
-						res = v
-						return false
-					}
-					return true
-				},
-			)
-			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing SourceSgtObjects[%d] = %+v",
-					i,
-					(*parent).SourceSgtObjects[i],
-				))
-				(*parent).SourceSgtObjects = slices.Delete((*parent).SourceSgtObjects, i, i+1)
-				i--
-
-				continue
-			}
-			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
-				data.Id = types.StringValue(value.String())
-			} else {
-				data.Id = types.StringNull()
-			}
-			(*parent).SourceSgtObjects[i] = data
-		}
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
@@ -778,6 +721,49 @@ func (data *ExtendedACL) fromBodyPartial(ctx context.Context, res gjson.Result) 
 				data.Id = types.StringNull()
 			}
 			(*parent).DestinationNetworkObjects[i] = data
+		}
+		for i := 0; i < len(data.SourceSgtObjects); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).SourceSgtObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("securityGroupTags.objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing SourceSgtObjects[%d] = %+v",
+					i,
+					(*parent).SourceSgtObjects[i],
+				))
+				(*parent).SourceSgtObjects = slices.Delete((*parent).SourceSgtObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).SourceSgtObjects[i] = data
 		}
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}

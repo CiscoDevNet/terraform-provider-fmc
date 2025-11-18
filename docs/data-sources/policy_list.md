@@ -30,19 +30,19 @@ data "fmc_policy_list" "example" {
 ### Read-Only
 
 - `action` (String) Select whether to allow or block access for matching conditions.
-- `address_ipv4_prefix_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a prefix list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--address_ipv4_prefix_lists))
-- `address_standard_access_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a standard access list. address_standard_access_lists and address_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--address_standard_access_lists))
-- `as_path_lists` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--as_path_lists))
+- `address_ipv4_prefix_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a prefix list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--address_ipv4_prefix_lists))
+- `address_standard_access_lists` (Attributes List) Redistribute any routes that have a destination address that is permitted by a standard access list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--address_standard_access_lists))
+- `as_paths` (Attributes List) Match a BGP autonomous system path. (see [below for nested schema](#nestedatt--as_paths))
 - `community_lists` (Attributes List) List of Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--community_lists))
 - `extended_community_lists` (Attributes List) List of Extended Community Lists. (see [below for nested schema](#nestedatt--extended_community_lists))
 - `interface_names` (List of String) List of interface names that are not in the zones.
 - `interfaces` (Attributes List) List of security zones/interface groups that contain the interfaces through which the device communicates with the management station. (see [below for nested schema](#nestedatt--interfaces))
 - `match_community_exactly` (Boolean) Match BGP community exactly with the specified community.
 - `metric` (Number) Match routes that have a specified metric. Specyfing multiple values is not supported due to FMC API bug.
-- `next_hop_ipv4_prefix_lists` (Attributes List) Redistribute any routes that have a next hop router address passed by a prefix list. next_hop_standard_access_lists and next_hop_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--next_hop_ipv4_prefix_lists))
-- `next_hop_standard_access_lists` (Attributes List) Redistribute any routes that have a next hop router address passed by a standard access list. next_hop_standard_access_lists and next_hop_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--next_hop_standard_access_lists))
-- `route_source_ipv4_prefix_lists` (Attributes List) Redistribute routes that have been advertised by routers at the address specified by the prefix list. route_source_standard_access_lists and route_source_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--route_source_ipv4_prefix_lists))
-- `route_source_standard_access_lists` (Attributes List) Redistribute routes that have been advertised by routers at the address specified by the access list. route_source_standard_access_lists and route_source_ipv4_prefix_lists are mutually exclusive. (see [below for nested schema](#nestedatt--route_source_standard_access_lists))
+- `next_hop_ipv4_prefix_lists` (Attributes List) Redistribute any routes that have a next hop router address passed by a prefix list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--next_hop_ipv4_prefix_lists))
+- `next_hop_standard_access_lists` (Attributes List) Redistribute any routes that have a next hop router address passed by a standard access list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--next_hop_standard_access_lists))
+- `route_source_ipv4_prefix_lists` (Attributes List) Redistribute routes that have been advertised by routers at the address specified by the prefix list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--route_source_ipv4_prefix_lists))
+- `route_source_standard_access_lists` (Attributes List) Redistribute routes that have been advertised by routers at the address specified by the access list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive. (see [below for nested schema](#nestedatt--route_source_standard_access_lists))
 - `tag` (Number) Match routes that have a specified security group tag. Specyfing multiple values is not supported due to FMC API bug.
 - `type` (String) Type of the object; this value is always 'PolicyList'.
 
@@ -62,8 +62,8 @@ Read-Only:
 - `id` (String) Id of the object.
 
 
-<a id="nestedatt--as_path_lists"></a>
-### Nested Schema for `as_path_lists`
+<a id="nestedatt--as_paths"></a>
+### Nested Schema for `as_paths`
 
 Read-Only:
 

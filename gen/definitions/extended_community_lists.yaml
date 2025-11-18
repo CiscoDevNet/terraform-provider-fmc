@@ -18,7 +18,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Extended Community List.
+        description: Id of the Extended Community List object.
         exclude_example: true
         exclude_test: true
       - model_name: type
@@ -46,10 +46,10 @@ attributes:
             example: PERMIT
           - model_name: routeTarget
             type: String
-            description: Route target (required if sub_type is Standard)
+            description: Route target (required if `sub_type` is Standard)
             example: "64512:1010"
           - model_name: regularExpression
             type: String
-            description: Regular expression (required if sub_type is Expanded)
+            description: Regular expression (required if `sub_type` is Expanded)
             exclude_example: true
             exclude_test: true

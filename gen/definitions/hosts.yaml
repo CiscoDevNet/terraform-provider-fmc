@@ -8,7 +8,7 @@ attributes:
   - model_name: items
     type: Map
     description: >-
-      Map of hosts. The key of the map is the name of the individual Host.
+      Map of Hosts. The key of the map is the name of the individual Host.
     map_key_example: my_hosts
     mandatory: true
     attributes:
@@ -22,16 +22,17 @@ attributes:
         type: String
         description: Description of the object.
         example: "My Host 1"
+        missing_in_response_if_set_to_empty_string: true
       - model_name: overridable
         type: Bool
-        description: Indicates whether object values can be overridden.
+        description: Whether the object values can be overridden.
         exclude_example: true
         example: "true"
       - model_name: value
         tf_name: ip
         type: String
         mandatory: true
-        description: IP of the host.
+        description: IP of the Host.
         example: 10.1.1.1
       - model_name: type
         type: String

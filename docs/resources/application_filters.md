@@ -88,7 +88,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed File Type.
+- `id` (String) Id of the Application Filter.
 - `type` (String) Type of the object; this value is always 'ApplicationFilter'.
 
 <a id="nestedatt--items--applications"></a>

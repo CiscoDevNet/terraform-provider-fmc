@@ -72,7 +72,7 @@ func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the host object.",
+				MarkdownDescription: "Name of the Host object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -85,7 +85,7 @@ func (d *HostDataSource) Schema(ctx context.Context, req datasource.SchemaReques
 				Computed:            true,
 			},
 			"ip": schema.StringAttribute{
-				MarkdownDescription: "IP of the host.",
+				MarkdownDescription: "IP of the Host.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{

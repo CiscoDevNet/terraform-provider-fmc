@@ -18,7 +18,7 @@ attributes:
     type: List
     mandatory: true
     ordered_list: true
-    description: List of entries
+    description: List of prefixes.
     attributes:
       - model_name: action
         type: String
@@ -39,6 +39,7 @@ attributes:
         max_int: 128
         example: 65
       - model_name: maxPrefixLength
+        tf_name: max_prefix_length
         type: Int64
         description: Maximum prefix length.
         min_int: 1

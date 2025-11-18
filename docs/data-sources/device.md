@@ -25,11 +25,11 @@ data "fmc_device" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) User-specified name, must be unique.
+- `name` (String) Name of the device.
 
 ### Read-Only
 
-- `access_policy_id` (String) Id of the assigned Access Control Policy. For example `fmc_access_control_policy.example.id`.
+- `access_control_policy_id` (String) Id of the assigned Access Control Policy.
 - `container_id` (String) Id of the parent container. Empty if device is Standalone.
 - `container_name` (String) Name of the parent container. Empty if device is Standalone.
 - `container_role` (String) Role of the device in the container (PRIMARY, SECONDARY) for DeviceHAPair or (Control, Data) for DeviceCluster. Empty if device is Standalone.
@@ -37,10 +37,10 @@ data "fmc_device" "example" {
 - `container_type` (String) Type of the parent container (DeviceHAPair or DeviceCluster). Empty if device is Standalone.
 - `device_group_id` (String) Id of the device group.
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
-- `host_name` (String) Hostname or IP address of the device. Either the host_name or nat_id must be present.
+- `host` (String) Hostname or IP address of the device. Either the `host` or `nat_id` must be present.
 - `is_multi_instance` (Boolean) True if the device is part of a multi-instance.
 - `is_part_of_container` (Boolean) True if the device is part of a container (DeviceHAPair or DeviceCluster).
-- `license_capabilities` (Set of String) Array of strings representing the license capabilities on the managed device. ESSENTIALS is mandatory
+- `licenses` (Set of String) Array of strings representing the license capabilities on the managed device.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 - `nat_policy_id` (String) Id of the assigned FTD NAT policy.
 - `object_group_search` (Boolean) Enables Object Group Search

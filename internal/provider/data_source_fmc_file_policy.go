@@ -73,12 +73,12 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of file policy.",
+				MarkdownDescription: "Name of file File Policy.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object",
+				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -86,15 +86,15 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"first_time_file_analysis": schema.BoolAttribute{
-				MarkdownDescription: "Analyze first-seen files while AMP cloud disposition is pending",
+				MarkdownDescription: "Analyze first-seen files while AMP cloud disposition is pending.",
 				Computed:            true,
 			},
 			"custom_detection_list": schema.BoolAttribute{
-				MarkdownDescription: "Enable custom detection list",
+				MarkdownDescription: "Enable custom detection list.",
 				Computed:            true,
 			},
 			"clean_list": schema.BoolAttribute{
-				MarkdownDescription: "Enable clean list",
+				MarkdownDescription: "Enable clean list.",
 				Computed:            true,
 			},
 			"threat_score": schema.StringAttribute{
@@ -102,19 +102,19 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"inspect_archives": schema.BoolAttribute{
-				MarkdownDescription: "Inspect Archives",
+				MarkdownDescription: "Inspect Archives.",
 				Computed:            true,
 			},
 			"block_encrypted_archives": schema.BoolAttribute{
-				MarkdownDescription: "Block encrypted archives",
+				MarkdownDescription: "Block encrypted archives.",
 				Computed:            true,
 			},
 			"block_uninspectable_archives": schema.BoolAttribute{
-				MarkdownDescription: "Block uninspectable Archives",
+				MarkdownDescription: "Block uninspectable Archives.",
 				Computed:            true,
 			},
 			"max_archive_depth": schema.Int64Attribute{
-				MarkdownDescription: "Max archive depth",
+				MarkdownDescription: "Max archive depth.",
 				Computed:            true,
 			},
 			"file_rules": schema.ListNestedAttribute{
@@ -123,7 +123,7 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of File Rule",
+							MarkdownDescription: "Id of File Rule.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
@@ -153,15 +153,15 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "The id of file category.",
+										MarkdownDescription: "Id of file category.",
 										Computed:            true,
 									},
 									"name": schema.StringAttribute{
-										MarkdownDescription: "The name of file category.",
+										MarkdownDescription: "Name of file category.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "The type of file category.",
+										MarkdownDescription: "Type of file category.",
 										Computed:            true,
 									},
 								},
@@ -173,15 +173,15 @@ func (d *FilePolicyDataSource) Schema(ctx context.Context, req datasource.Schema
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "The id of file type.",
+										MarkdownDescription: "Id of file type.",
 										Computed:            true,
 									},
 									"name": schema.StringAttribute{
-										MarkdownDescription: "The name of file type.",
+										MarkdownDescription: "Name of file type.",
 										Computed:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: "The name of file type.",
+										MarkdownDescription: "Type of file type.",
 										Computed:            true,
 									},
 								},
