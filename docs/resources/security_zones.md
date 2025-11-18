@@ -33,7 +33,7 @@ resource "fmc_security_zones" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of security zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Security Zones. The key of the map is the name of the individual Security Zone. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -53,7 +53,7 @@ Required:
 
 Read-Only:
 
-- `id` (String) Id of the managed Security Zone.
+- `id` (String) Id of the Security Zone.
 - `type` (String) Type of the object; this value is always 'SecurityZone'.
 
 ## Import

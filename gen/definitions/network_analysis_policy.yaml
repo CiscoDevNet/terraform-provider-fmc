@@ -5,7 +5,7 @@ doc_category: Policies
 attributes:
   - model_name: name
     type: String
-    description: Name of the policy.
+    description: Name of the Network Analysis Policy.
     mandatory: true
     example: my_network_analysis_policy
     data_source_query: true

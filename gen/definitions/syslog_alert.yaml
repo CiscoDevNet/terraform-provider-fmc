@@ -7,10 +7,9 @@ doc_category: Policies
 attributes:
   - model_name: name
     type: String
-    description: >-
-      Name of the Syslog Alert. There is no built-in Syslog alert.
+    description: Name of the Syslog Alert.
     mandatory: true
-    example: test_syslog_alert_1
+    example: my_syslog_alert
     data_source_query: true
   - model_name: type
     type: String

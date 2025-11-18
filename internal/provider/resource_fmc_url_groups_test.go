@@ -31,10 +31,10 @@ import (
 
 func TestAccFmcURLGroups(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_url_groups.test", "items.url_group_1.id"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.url_group_1.description", "My URL group"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_url_groups.test", "items.url_group_1.type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.url_group_1.literals.0.url", "https://www.example.com/app"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_url_groups.test", "items.my_url_groups.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_url_groups.test", "items.my_url_groups.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.my_url_groups.description", "My URL group"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_url_groups.test", "items.my_url_groups.literals.0.url", "https://www.example.com/app"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -61,7 +61,7 @@ func TestAccFmcURLGroups(t *testing.T) {
 
 const testAccFmcURLGroupsPrerequisitesConfig = `
 resource "fmc_url" "test" {
-  name        = "url_1"
+  name        = "url_groups"
   url         = "https://www.example.com/app"
 }
 `
@@ -72,7 +72,7 @@ resource "fmc_url" "test" {
 
 func testAccFmcURLGroupsConfig_minimum() string {
 	config := `resource "fmc_url_groups" "test" {` + "\n"
-	config += `	items = { "url_group_1" = {` + "\n"
+	config += `	items = { "my_url_groups" = {` + "\n"
 	config += `		urls = [{` + "\n"
 	config += `			id = fmc_url.test.id` + "\n"
 	config += `		}]` + "\n"
@@ -87,7 +87,7 @@ func testAccFmcURLGroupsConfig_minimum() string {
 
 func testAccFmcURLGroupsConfig_all() string {
 	config := `resource "fmc_url_groups" "test" {` + "\n"
-	config += `	items = { "url_group_1" = {` + "\n"
+	config += `	items = { "my_url_groups" = {` + "\n"
 	config += `		description = "My URL group"` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `		urls = [{` + "\n"

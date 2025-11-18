@@ -15,7 +15,7 @@ attributes:
       - model_name: id
         type: String
         resource_id: true
-        description: Id of the managed Tunnel Zone.
+        description: Id of the Tunnel Zone.
         exclude_example: true
         exclude_test: true
       # Type is defined twice on purpose, to be read-only attribute and to be in POST body
@@ -31,3 +31,4 @@ attributes:
         type: String
         description: Description of the object.
         example: My Tunnel Zone object
+        missing_in_response_if_set_to_empty_string: true

@@ -72,7 +72,7 @@ func (d *RangeDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the object.",
+				MarkdownDescription: "Name of the Range object.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -81,11 +81,11 @@ func (d *RangeDataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether object values can be overridden.",
+				MarkdownDescription: "Whether the object values can be overridden.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{

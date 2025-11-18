@@ -25,7 +25,7 @@ data "fmc_snmp_alert" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the SNMP Alert. There is no built-in SNMP alert.
+- `name` (String) Name of the SNMP Alert.
 
 ### Read-Only
 

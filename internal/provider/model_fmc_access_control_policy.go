@@ -39,26 +39,27 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type AccessControlPolicy struct {
-	Id                             types.String                    `tfsdk:"id"`
-	Domain                         types.String                    `tfsdk:"domain"`
-	Name                           types.String                    `tfsdk:"name"`
-	Type                           types.String                    `tfsdk:"type"`
-	Description                    types.String                    `tfsdk:"description"`
-	DefaultAction                  types.String                    `tfsdk:"default_action"`
-	DefaultActionId                types.String                    `tfsdk:"default_action_id"`
-	DefaultActionLogBegin          types.Bool                      `tfsdk:"default_action_log_begin"`
-	DefaultActionLogEnd            types.Bool                      `tfsdk:"default_action_log_end"`
-	DefaultActionSendEventsToFmc   types.Bool                      `tfsdk:"default_action_send_events_to_fmc"`
-	DefaultActionSendSyslog        types.Bool                      `tfsdk:"default_action_send_syslog"`
-	DefaultActionSyslogConfigId    types.String                    `tfsdk:"default_action_syslog_config_id"`
-	PrefilterPolicyId              types.String                    `tfsdk:"prefilter_policy_id"`
-	DefaultActionSyslogSeverity    types.String                    `tfsdk:"default_action_syslog_severity"`
-	DefaultActionSnmpConfigId      types.String                    `tfsdk:"default_action_snmp_config_id"`
-	DefaultActionIntrusionPolicyId types.String                    `tfsdk:"default_action_intrusion_policy_id"`
-	ManageCategories               types.Bool                      `tfsdk:"manage_categories"`
-	Categories                     []AccessControlPolicyCategories `tfsdk:"categories"`
-	ManageRules                    types.Bool                      `tfsdk:"manage_rules"`
-	Rules                          []AccessControlPolicyRules      `tfsdk:"rules"`
+	Id                              types.String                    `tfsdk:"id"`
+	Domain                          types.String                    `tfsdk:"domain"`
+	Name                            types.String                    `tfsdk:"name"`
+	Type                            types.String                    `tfsdk:"type"`
+	Description                     types.String                    `tfsdk:"description"`
+	DefaultAction                   types.String                    `tfsdk:"default_action"`
+	DefaultActionId                 types.String                    `tfsdk:"default_action_id"`
+	DefaultActionLogConnectionBegin types.Bool                      `tfsdk:"default_action_log_connection_begin"`
+	DefaultActionLogConnectionEnd   types.Bool                      `tfsdk:"default_action_log_connection_end"`
+	DefaultActionSendEventsToFmc    types.Bool                      `tfsdk:"default_action_send_events_to_fmc"`
+	DefaultActionSendSyslog         types.Bool                      `tfsdk:"default_action_send_syslog"`
+	DefaultActionSyslogAlertId      types.String                    `tfsdk:"default_action_syslog_alert_id"`
+	DefaultActionSyslogSeverity     types.String                    `tfsdk:"default_action_syslog_severity"`
+	DefaultActionSnmpAlertId        types.String                    `tfsdk:"default_action_snmp_alert_id"`
+	DefaultActionIntrusionPolicyId  types.String                    `tfsdk:"default_action_intrusion_policy_id"`
+	DefaultActionVariableSetId      types.String                    `tfsdk:"default_action_variable_set_id"`
+	PrefilterPolicyId               types.String                    `tfsdk:"prefilter_policy_id"`
+	ManageCategories                types.Bool                      `tfsdk:"manage_categories"`
+	Categories                      []AccessControlPolicyCategories `tfsdk:"categories"`
+	ManageRules                     types.Bool                      `tfsdk:"manage_rules"`
+	Rules                           []AccessControlPolicyRules      `tfsdk:"rules"`
 }
 
 type AccessControlPolicyCategories struct {
@@ -94,14 +95,14 @@ type AccessControlPolicyRules struct {
 	UrlLiterals                []AccessControlPolicyRulesUrlLiterals                `tfsdk:"url_literals"`
 	UrlObjects                 []AccessControlPolicyRulesUrlObjects                 `tfsdk:"url_objects"`
 	UrlCategories              []AccessControlPolicyRulesUrlCategories              `tfsdk:"url_categories"`
-	LogBegin                   types.Bool                                           `tfsdk:"log_begin"`
-	LogEnd                     types.Bool                                           `tfsdk:"log_end"`
+	LogConnectionBegin         types.Bool                                           `tfsdk:"log_connection_begin"`
+	LogConnectionEnd           types.Bool                                           `tfsdk:"log_connection_end"`
 	LogFiles                   types.Bool                                           `tfsdk:"log_files"`
 	SendEventsToFmc            types.Bool                                           `tfsdk:"send_events_to_fmc"`
 	SendSyslog                 types.Bool                                           `tfsdk:"send_syslog"`
-	SyslogConfigId             types.String                                         `tfsdk:"syslog_config_id"`
+	SyslogAlertId              types.String                                         `tfsdk:"syslog_alert_id"`
 	SyslogSeverity             types.String                                         `tfsdk:"syslog_severity"`
-	SnmpConfigId               types.String                                         `tfsdk:"snmp_config_id"`
+	SnmpAlertId                types.String                                         `tfsdk:"snmp_alert_id"`
 	Description                types.String                                         `tfsdk:"description"`
 	FilePolicyId               types.String                                         `tfsdk:"file_policy_id"`
 	IntrusionPolicyId          types.String                                         `tfsdk:"intrusion_policy_id"`
@@ -281,11 +282,11 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	if state.DefaultActionId.ValueString() != "" {
 		body, _ = sjson.Set(body, "defaultAction.id", state.DefaultActionId.ValueString())
 	}
-	if !data.DefaultActionLogBegin.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.logBegin", data.DefaultActionLogBegin.ValueBool())
+	if !data.DefaultActionLogConnectionBegin.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.logBegin", data.DefaultActionLogConnectionBegin.ValueBool())
 	}
-	if !data.DefaultActionLogEnd.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.logEnd", data.DefaultActionLogEnd.ValueBool())
+	if !data.DefaultActionLogConnectionEnd.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.logEnd", data.DefaultActionLogConnectionEnd.ValueBool())
 	}
 	if !data.DefaultActionSendEventsToFmc.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.sendEventsToFMC", data.DefaultActionSendEventsToFmc.ValueBool())
@@ -293,20 +294,23 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	if !data.DefaultActionSendSyslog.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.enableSyslog", data.DefaultActionSendSyslog.ValueBool())
 	}
-	if !data.DefaultActionSyslogConfigId.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.syslogConfig.id", data.DefaultActionSyslogConfigId.ValueString())
-	}
-	if !data.PrefilterPolicyId.IsNull() {
-		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
+	if !data.DefaultActionSyslogAlertId.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.syslogConfig.id", data.DefaultActionSyslogAlertId.ValueString())
 	}
 	if !data.DefaultActionSyslogSeverity.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.syslogSeverity", data.DefaultActionSyslogSeverity.ValueString())
 	}
-	if !data.DefaultActionSnmpConfigId.IsNull() {
-		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpConfigId.ValueString())
+	if !data.DefaultActionSnmpAlertId.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpAlertId.ValueString())
 	}
 	if !data.DefaultActionIntrusionPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "defaultAction.intrusionPolicy.id", data.DefaultActionIntrusionPolicyId.ValueString())
+	}
+	if !data.DefaultActionVariableSetId.IsNull() {
+		body, _ = sjson.Set(body, "defaultAction.variableSet.id", data.DefaultActionVariableSetId.ValueString())
+	}
+	if !data.PrefilterPolicyId.IsNull() {
+		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
 	}
 	if !data.ManageCategories.IsNull() {
 		body, _ = sjson.Set(body, "dummy_manage_categories", data.ManageCategories.ValueBool())
@@ -617,11 +621,11 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "urls.urlCategoriesWithReputation.-1", itemChildBody)
 				}
 			}
-			if !item.LogBegin.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogBegin.ValueBool())
+			if !item.LogConnectionBegin.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logBegin", item.LogConnectionBegin.ValueBool())
 			}
-			if !item.LogEnd.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogEnd.ValueBool())
+			if !item.LogConnectionEnd.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "logEnd", item.LogConnectionEnd.ValueBool())
 			}
 			if !item.LogFiles.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "logFiles", item.LogFiles.ValueBool())
@@ -632,14 +636,14 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			if !item.SendSyslog.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableSyslog", item.SendSyslog.ValueBool())
 			}
-			if !item.SyslogConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogConfigId.ValueString())
+			if !item.SyslogAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "syslogConfig.id", item.SyslogAlertId.ValueString())
 			}
 			if !item.SyslogSeverity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "syslogSeverity", item.SyslogSeverity.ValueString())
 			}
-			if !item.SnmpConfigId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpConfigId.ValueString())
+			if !item.SnmpAlertId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpAlertId.ValueString())
 			}
 			if !item.Description.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
@@ -770,14 +774,14 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 		data.DefaultActionId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.logBegin"); value.Exists() {
-		data.DefaultActionLogBegin = types.BoolValue(value.Bool())
+		data.DefaultActionLogConnectionBegin = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogBegin = types.BoolValue(false)
+		data.DefaultActionLogConnectionBegin = types.BoolValue(false)
 	}
 	if value := res.Get("defaultAction.logEnd"); value.Exists() {
-		data.DefaultActionLogEnd = types.BoolValue(value.Bool())
+		data.DefaultActionLogConnectionEnd = types.BoolValue(value.Bool())
 	} else {
-		data.DefaultActionLogEnd = types.BoolValue(false)
+		data.DefaultActionLogConnectionEnd = types.BoolValue(false)
 	}
 	if value := res.Get("defaultAction.sendEventsToFMC"); value.Exists() {
 		data.DefaultActionSendEventsToFmc = types.BoolValue(value.Bool())
@@ -790,14 +794,9 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 		data.DefaultActionSendSyslog = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() {
-		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
+		data.DefaultActionSyslogAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSyslogConfigId = types.StringNull()
-	}
-	if value := res.Get("prefilterPolicySetting.id"); value.Exists() {
-		data.PrefilterPolicyId = types.StringValue(value.String())
-	} else {
-		data.PrefilterPolicyId = types.StringNull()
+		data.DefaultActionSyslogAlertId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.syslogSeverity"); value.Exists() {
 		data.DefaultActionSyslogSeverity = types.StringValue(value.String())
@@ -805,14 +804,24 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 		data.DefaultActionSyslogSeverity = types.StringNull()
 	}
 	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() {
-		data.DefaultActionSnmpConfigId = types.StringValue(value.String())
+		data.DefaultActionSnmpAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSnmpConfigId = types.StringNull()
+		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.intrusionPolicy.id"); value.Exists() {
 		data.DefaultActionIntrusionPolicyId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionIntrusionPolicyId = types.StringNull()
+	}
+	if value := res.Get("defaultAction.variableSet.id"); value.Exists() {
+		data.DefaultActionVariableSetId = types.StringValue(value.String())
+	} else {
+		data.DefaultActionVariableSetId = types.StringNull()
+	}
+	if value := res.Get("prefilterPolicySetting.id"); value.Exists() {
+		data.PrefilterPolicyId = types.StringValue(value.String())
+	} else {
+		data.PrefilterPolicyId = types.StringNull()
 	}
 	if value := res.Get("dummy_manage_categories"); value.Exists() {
 		data.ManageCategories = types.BoolValue(value.Bool())
@@ -1249,14 +1258,14 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("logBegin"); value.Exists() {
-				data.LogBegin = types.BoolValue(value.Bool())
+				data.LogConnectionBegin = types.BoolValue(value.Bool())
 			} else {
-				data.LogBegin = types.BoolValue(false)
+				data.LogConnectionBegin = types.BoolValue(false)
 			}
 			if value := res.Get("logEnd"); value.Exists() {
-				data.LogEnd = types.BoolValue(value.Bool())
+				data.LogConnectionEnd = types.BoolValue(value.Bool())
 			} else {
-				data.LogEnd = types.BoolValue(false)
+				data.LogConnectionEnd = types.BoolValue(false)
 			}
 			if value := res.Get("logFiles"); value.Exists() {
 				data.LogFiles = types.BoolValue(value.Bool())
@@ -1274,9 +1283,9 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.SendSyslog = types.BoolValue(false)
 			}
 			if value := res.Get("syslogConfig.id"); value.Exists() {
-				data.SyslogConfigId = types.StringValue(value.String())
+				data.SyslogAlertId = types.StringValue(value.String())
 			} else {
-				data.SyslogConfigId = types.StringNull()
+				data.SyslogAlertId = types.StringNull()
 			}
 			if value := res.Get("syslogSeverity"); value.Exists() {
 				data.SyslogSeverity = types.StringValue(value.String())
@@ -1284,9 +1293,9 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.SyslogSeverity = types.StringNull()
 			}
 			if value := res.Get("snmpConfig.id"); value.Exists() {
-				data.SnmpConfigId = types.StringValue(value.String())
+				data.SnmpAlertId = types.StringValue(value.String())
 			} else {
-				data.SnmpConfigId = types.StringNull()
+				data.SnmpAlertId = types.StringNull()
 			}
 			if value := res.Get("filePolicy.id"); value.Exists() {
 				data.FilePolicyId = types.StringValue(value.String())
@@ -1455,15 +1464,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.DefaultActionId = types.StringNull()
 	}
-	if value := res.Get("defaultAction.logBegin"); value.Exists() && !data.DefaultActionLogBegin.IsNull() {
-		data.DefaultActionLogBegin = types.BoolValue(value.Bool())
-	} else if data.DefaultActionLogBegin.ValueBool() != false {
-		data.DefaultActionLogBegin = types.BoolNull()
+	if value := res.Get("defaultAction.logBegin"); value.Exists() && !data.DefaultActionLogConnectionBegin.IsNull() {
+		data.DefaultActionLogConnectionBegin = types.BoolValue(value.Bool())
+	} else if data.DefaultActionLogConnectionBegin.ValueBool() != false {
+		data.DefaultActionLogConnectionBegin = types.BoolNull()
 	}
-	if value := res.Get("defaultAction.logEnd"); value.Exists() && !data.DefaultActionLogEnd.IsNull() {
-		data.DefaultActionLogEnd = types.BoolValue(value.Bool())
-	} else if data.DefaultActionLogEnd.ValueBool() != false {
-		data.DefaultActionLogEnd = types.BoolNull()
+	if value := res.Get("defaultAction.logEnd"); value.Exists() && !data.DefaultActionLogConnectionEnd.IsNull() {
+		data.DefaultActionLogConnectionEnd = types.BoolValue(value.Bool())
+	} else if data.DefaultActionLogConnectionEnd.ValueBool() != false {
+		data.DefaultActionLogConnectionEnd = types.BoolNull()
 	}
 	if value := res.Get("defaultAction.sendEventsToFMC"); value.Exists() && !data.DefaultActionSendEventsToFmc.IsNull() {
 		data.DefaultActionSendEventsToFmc = types.BoolValue(value.Bool())
@@ -1475,30 +1484,35 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.DefaultActionSendSyslog = types.BoolNull()
 	}
-	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() && !data.DefaultActionSyslogConfigId.IsNull() {
-		data.DefaultActionSyslogConfigId = types.StringValue(value.String())
+	if value := res.Get("defaultAction.syslogConfig.id"); value.Exists() && !data.DefaultActionSyslogAlertId.IsNull() {
+		data.DefaultActionSyslogAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSyslogConfigId = types.StringNull()
-	}
-	if value := res.Get("prefilterPolicySetting.id"); value.Exists() && !data.PrefilterPolicyId.IsNull() {
-		data.PrefilterPolicyId = types.StringValue(value.String())
-	} else {
-		data.PrefilterPolicyId = types.StringNull()
+		data.DefaultActionSyslogAlertId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.syslogSeverity"); value.Exists() && !data.DefaultActionSyslogSeverity.IsNull() {
 		data.DefaultActionSyslogSeverity = types.StringValue(value.String())
 	} else {
 		data.DefaultActionSyslogSeverity = types.StringNull()
 	}
-	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() && !data.DefaultActionSnmpConfigId.IsNull() {
-		data.DefaultActionSnmpConfigId = types.StringValue(value.String())
+	if value := res.Get("defaultAction.snmpConfig.id"); value.Exists() && !data.DefaultActionSnmpAlertId.IsNull() {
+		data.DefaultActionSnmpAlertId = types.StringValue(value.String())
 	} else {
-		data.DefaultActionSnmpConfigId = types.StringNull()
+		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
 	if value := res.Get("defaultAction.intrusionPolicy.id"); value.Exists() && !data.DefaultActionIntrusionPolicyId.IsNull() {
 		data.DefaultActionIntrusionPolicyId = types.StringValue(value.String())
 	} else {
 		data.DefaultActionIntrusionPolicyId = types.StringNull()
+	}
+	if value := res.Get("defaultAction.variableSet.id"); value.Exists() && !data.DefaultActionVariableSetId.IsNull() {
+		data.DefaultActionVariableSetId = types.StringValue(value.String())
+	} else {
+		data.DefaultActionVariableSetId = types.StringNull()
+	}
+	if value := res.Get("prefilterPolicySetting.id"); value.Exists() && !data.PrefilterPolicyId.IsNull() {
+		data.PrefilterPolicyId = types.StringValue(value.String())
+	} else {
+		data.PrefilterPolicyId = types.StringNull()
 	}
 	if value := res.Get("dummy_manage_categories"); value.Exists() && !data.ManageCategories.IsNull() {
 		data.ManageCategories = types.BoolValue(value.Bool())
@@ -2532,15 +2546,15 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).UrlCategories[i] = data
 		}
-		if value := res.Get("logBegin"); value.Exists() && !data.LogBegin.IsNull() {
-			data.LogBegin = types.BoolValue(value.Bool())
-		} else if data.LogBegin.ValueBool() != false {
-			data.LogBegin = types.BoolNull()
+		if value := res.Get("logBegin"); value.Exists() && !data.LogConnectionBegin.IsNull() {
+			data.LogConnectionBegin = types.BoolValue(value.Bool())
+		} else if data.LogConnectionBegin.ValueBool() != false {
+			data.LogConnectionBegin = types.BoolNull()
 		}
-		if value := res.Get("logEnd"); value.Exists() && !data.LogEnd.IsNull() {
-			data.LogEnd = types.BoolValue(value.Bool())
-		} else if data.LogEnd.ValueBool() != false {
-			data.LogEnd = types.BoolNull()
+		if value := res.Get("logEnd"); value.Exists() && !data.LogConnectionEnd.IsNull() {
+			data.LogConnectionEnd = types.BoolValue(value.Bool())
+		} else if data.LogConnectionEnd.ValueBool() != false {
+			data.LogConnectionEnd = types.BoolNull()
 		}
 		if value := res.Get("logFiles"); value.Exists() && !data.LogFiles.IsNull() {
 			data.LogFiles = types.BoolValue(value.Bool())
@@ -2557,20 +2571,20 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else if data.SendSyslog.ValueBool() != false {
 			data.SendSyslog = types.BoolNull()
 		}
-		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogConfigId.IsNull() {
-			data.SyslogConfigId = types.StringValue(value.String())
+		if value := res.Get("syslogConfig.id"); value.Exists() && !data.SyslogAlertId.IsNull() {
+			data.SyslogAlertId = types.StringValue(value.String())
 		} else {
-			data.SyslogConfigId = types.StringNull()
+			data.SyslogAlertId = types.StringNull()
 		}
 		if value := res.Get("syslogSeverity"); value.Exists() && !data.SyslogSeverity.IsNull() {
 			data.SyslogSeverity = types.StringValue(value.String())
 		} else {
 			data.SyslogSeverity = types.StringNull()
 		}
-		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpConfigId.IsNull() {
-			data.SnmpConfigId = types.StringValue(value.String())
+		if value := res.Get("snmpConfig.id"); value.Exists() && !data.SnmpAlertId.IsNull() {
+			data.SnmpAlertId = types.StringValue(value.String())
 		} else {
-			data.SnmpConfigId = types.StringNull()
+			data.SnmpAlertId = types.StringNull()
 		}
 		if value := res.Get("filePolicy.id"); value.Exists() && !data.FilePolicyId.IsNull() {
 			data.FilePolicyId = types.StringValue(value.String())
@@ -3031,17 +3045,17 @@ func NewValidAccessControlPolicy(ctx context.Context, tfplan tfsdk.Plan) (Access
 	// Validate rules.*.action==MONITOR clash
 	for _, rule := range plan.Rules {
 		switch {
-		case rule.Action.ValueString() == "MONITOR" && rule.LogBegin.ValueBool():
-			diags.AddAttributeError(path.Root("rules"), "Cannot use log_begin=true when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+		case rule.Action.ValueString() == "MONITOR" && rule.LogConnectionBegin.ValueBool():
+			diags.AddAttributeError(path.Root("rules"), "Cannot use log_connection_begin=true when action=\"MONITOR\"",
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
-		case rule.Action.ValueString() == "MONITOR" && !rule.LogEnd.ValueBool():
-			diags.AddAttributeError(path.Root("rules"), "Cannot use log_end=false when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+		case rule.Action.ValueString() == "MONITOR" && !rule.LogConnectionEnd.ValueBool():
+			diags.AddAttributeError(path.Root("rules"), "Cannot use log_connection_end=false when action=\"MONITOR\"",
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
 		case rule.Action.ValueString() == "MONITOR" && !rule.SendEventsToFmc.ValueBool():
 			diags.AddAttributeError(path.Root("rules"), "Cannot use send_events_to_fmc=false when action=\"MONITOR\"",
-				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_begin=null/false,\n	log_end=true,\n	send_events_to_fmc=true,", rule.Name))
+				fmt.Sprintf("Rule %s has action=\"MONITOR\" so it must use:\n	log_connection_begin=null/false,\n	log_connection_end=true,\n	send_events_to_fmc=true,", rule.Name))
 			return plan, diags
 		}
 	}

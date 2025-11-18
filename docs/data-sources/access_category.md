@@ -30,7 +30,7 @@ data "fmc_access_category" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the category object.
+- `name` (String) Name of the Access Category.
 
 ### Read-Only
 

@@ -4,6 +4,7 @@ page_title: "fmc_icmpv4_objects Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This resource manages ICMPv4 Objects through bulk operations.
+  This object is deprecated. Please use fmc_icmpv4s instead.
   The following restrictions apply:
   Minimum FMC version for bulk object deletion: 7.4If FMC version does not meet the minimum version requirement for bulk operations, this resource will automatically fall back to processing operations one-by-one.Updates are always done one-by-one.
 ---
@@ -11,6 +12,7 @@ description: |-
 # fmc_icmpv4_objects (Resource)
 
 This resource manages ICMPv4 Objects through bulk operations.
+This object is deprecated. Please use `fmc_icmpv4s` instead.
 
 The following restrictions apply:
   - Minimum FMC version for bulk object deletion: `7.4`

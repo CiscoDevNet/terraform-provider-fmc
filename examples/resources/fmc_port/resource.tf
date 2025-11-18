@@ -1,6 +1,6 @@
 resource "fmc_port" "example" {
-  port        = "443"
   name        = "my_port"
   protocol    = "TCP"
+  port        = "443"
   description = "Port TCP/443 (HTTPS)"
 }

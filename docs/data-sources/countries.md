@@ -38,7 +38,7 @@ data "fmc_countries" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the managed Country.
+- `id` (String) Id of the Country object.
 - `iso2` (String) ISO2 country code.
 - `iso3` (String) ISO3 country code.
 - `type` (String) Type of the object; this value is always 'Country'.

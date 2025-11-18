@@ -22,7 +22,7 @@ resource "fmc_policy_list" "example" {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }
   ]
-  as_path_lists = [
+  as_paths = [
     {
       id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
     }

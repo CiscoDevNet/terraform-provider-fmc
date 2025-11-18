@@ -91,7 +91,7 @@ func (r *TimeRangesResource) Schema(ctx context.Context, req resource.SchemaRequ
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed Time Range.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Time Range.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
@@ -117,7 +117,7 @@ func (r *TimeRangesResource) Schema(ctx context.Context, req resource.SchemaRequ
 							Optional:            true,
 						},
 						"recurrence_list": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of recurring intervals during which the time range is effective. These intervals are valid only between start_time and end_time.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of recurring intervals during which the time range is effective. These intervals are valid only between `start_time` and `end_time`.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -129,37 +129,37 @@ func (r *TimeRangesResource) Schema(ctx context.Context, req resource.SchemaRequ
 										},
 									},
 									"range_start_time": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.").String,
 										Optional:            true,
 									},
 									"range_end_time": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.").String,
 										Optional:            true,
 									},
 									"range_start_day": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Day of week at which the time range starts being effective. This field must be used if recurrence_type is specified as RANGE.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Day of week at which the time range starts being effective. This field must be used if `recurrence_type` is specified as RANGE.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
 										Optional:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"),
 										},
 									},
 									"range_end_day": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Day of week at which the time range stops being effective. This field must be used if recurrence_type is specified as RANGE.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Day of week at which the time range stops being effective. This field must be used if `recurrence_type` is specified as RANGE.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
 										Optional:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"),
 										},
 									},
 									"daily_start_time": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range starts being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.").String,
 										Optional:            true,
 									},
 									"daily_end_time": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if recurrence_type is specified as DAILY_INTERVAL.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Time (in HH:MM format) at which the time range stops being effective on selected days. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.").String,
 										Optional:            true,
 									},
 									"daily_days": schema.SetAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("List of days on which the time range is effective. This field must be used if recurrence_type is specified as DAILY_INTERVAL.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
+										MarkdownDescription: helpers.NewAttributeDescription("List of days on which the time range is effective. This field must be used if `recurrence_type` is specified as DAILY_INTERVAL.").AddStringEnumDescription("MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN").String,
 										ElementType:         types.StringType,
 										Optional:            true,
 										Validators: []validator.Set{

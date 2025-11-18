@@ -32,11 +32,11 @@ resource "fmc_device_cluster" "example" {
   control_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   control_node_ccl_ipv4_address = "10.10.4.1"
   control_node_priority         = 1
-  data_devices = [
+  data_nodes = [
     {
-      data_node_device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      data_node_ccl_ipv4_address = "10.10.4.2"
-      data_node_priority         = 2
+      device_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      ccl_ipv4_address = "10.10.4.2"
+      priority         = 2
     }
   ]
 }
@@ -47,7 +47,7 @@ resource "fmc_device_cluster" "example" {
 
 ### Required
 
-- `cluster_key` (String) Secret key for the cluster, between 1 nd 63 characters.
+- `cluster_key` (String, Sensitive) Secret key for the cluster, between 1 nd 63 characters.
 - `control_node_ccl_ipv4_address` (String) Cluster control link IPv4 address / VTEP IPv4 address.
 - `control_node_ccl_prefix` (String) Cluster Control Link Network / Virtual Tunnel Endpoint (VTEP) Network
 - `control_node_device_id` (String) Cluster Control Node device ID.
@@ -61,7 +61,7 @@ resource "fmc_device_cluster" "example" {
 ### Optional
 
 - `control_node_vni_prefix` (String) Cluster Control VXLAN Network Identifier (VNI) Network
-- `data_devices` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_devices))
+- `data_nodes` (Attributes List) List of cluster data nodes. (see [below for nested schema](#nestedatt--data_nodes))
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only
@@ -69,14 +69,14 @@ resource "fmc_device_cluster" "example" {
 - `id` (String) Id of the object
 - `type` (String) Type of the resource; This is always `DeviceCluster`.
 
-<a id="nestedatt--data_devices"></a>
-### Nested Schema for `data_devices`
+<a id="nestedatt--data_nodes"></a>
+### Nested Schema for `data_nodes`
 
 Required:
 
-- `data_node_ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
-- `data_node_device_id` (String) Cluster Data Node device ID.
-- `data_node_priority` (Number) Priority of cluster data node.
+- `ccl_ipv4_address` (String) Cluster Data Node link IPv4 address / VTEP IPv4 address.
+- `device_id` (String) Cluster Data Node device ID.
+- `priority` (Number) Priority of cluster data node.
   - Range: `1`-`255`
 
 ## Import

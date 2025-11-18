@@ -79,20 +79,8 @@ func (r *URLResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the URL object.").String,
 				Required:            true,
-			},
-			"url": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("URL value.").String,
-				Required:            true,
-			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
-				Optional:            true,
-			},
-			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
-				Optional:            true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Url'.").String,
@@ -100,6 +88,18 @@ func (r *URLResource) Schema(ctx context.Context, req resource.SchemaRequest, re
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
+			},
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+				Optional:            true,
+			},
+			"url": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("The URL string.").String,
+				Required:            true,
+			},
+			"overridable": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
+				Optional:            true,
 			},
 		},
 	}

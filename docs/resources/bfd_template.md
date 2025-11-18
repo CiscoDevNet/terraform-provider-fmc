@@ -22,14 +22,14 @@ resource "fmc_bfd_template" "example" {
   name                               = "my_bfd_template"
   hop_type                           = "SINGLE_HOP"
   echo                               = "ENABLED"
-  interval_time                      = "MILLISECONDS"
-  min_transmit                       = 300
-  tx_rx_multiplier                   = 3
-  min_receive                        = 300
-  authentication_password            = "ThisIsMySecretPassword"
-  authentication_key_id              = 1
+  interval_type                      = "MILLISECONDS"
+  multiplier                         = 3
+  minimum_transmit                   = 300
+  minimum_receive                    = 300
   authentication_type                = "MD5"
+  authentication_password            = "ThisIsMySecretPassword"
   authentication_password_encryption = "UN_ENCRYPTED"
+  authentication_key_id              = 1
 }
 ```
 
@@ -46,7 +46,7 @@ resource "fmc_bfd_template" "example" {
 
 - `authentication_key_id` (Number) Authentication Key ID
   - Range: `0`-`255`
-- `authentication_password` (String) Password for BFD Authentication (1-24 characters)
+- `authentication_password` (String, Sensitive) Password for BFD Authentication
 - `authentication_password_encryption` (String) Determines if `authentication_password` is encrypted
   - Choices: `UN_ENCRYPTED`, `ENCRYPTED`, `NONE`
 - `authentication_type` (String) Authentication type.
@@ -54,13 +54,13 @@ resource "fmc_bfd_template" "example" {
 - `domain` (String) Name of the FMC domain
 - `echo` (String) BFD echo status.
   - Choices: `ENABLED`, `DISABLED`
-- `interval_time` (String) Interval unit of measurement of time.
+- `interval_type` (String) Interval unit of measurement of time.
   - Choices: `MILLISECONDS`, `MICROSECONDS`, `NONE`
-- `min_receive` (Number) BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds
+- `minimum_receive` (Number) BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.
   - Range: `50`-`999000`
-- `min_transmit` (Number) BFD Minimum Transmit unit value.
+- `minimum_transmit` (Number) BFD Minimum Transmit unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.
   - Range: `50`-`999000`
-- `tx_rx_multiplier` (Number) BFD Multipler value.
+- `multiplier` (Number) BFD Multipler value.
   - Range: `3`-`50`
 
 ### Read-Only

@@ -59,7 +59,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Dynamic Object.
+- `id` (String) Id of the Dynamic Object.
 - `type` (String) Type of the object; this value is always 'DynamicObject'.
 
 ## Import

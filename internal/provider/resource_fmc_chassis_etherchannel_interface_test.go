@@ -83,6 +83,7 @@ func testAccFmcChassisEtherChannelInterfaceConfig_minimum() string {
 	config := `resource "fmc_chassis_etherchannel_interface" "test" {` + "\n"
 	config += `	chassis_id = var.chassis_id` + "\n"
 	config += `	ether_channel_id = 10` + "\n"
+	config += `	port_type = "DATA"` + "\n"
 	config += `	speed = "AUTO"` + "\n"
 	config += `}` + "\n"
 	return config

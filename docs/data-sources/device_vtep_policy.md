@@ -44,8 +44,8 @@ Read-Only:
 
 - `encapsulation_port` (Number) Encapsulation port number. For VXLAN suggested 4789 (default), for GENEVE suggested 6081.
 - `encapsulation_type` (String) Encapsulation type.
-- `neighbor_address_id` (String) Used for neighbor_discovery STATIC_PEER_GROUP, where it holds UUID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
-- `neighbor_address_literal` (String) Used for neighbor_discovery STATIC_PEER_IP, where it holds any unicast IP address. Used for neighbor_discovery DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.
-- `neighbor_discovery` (String) How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a UUID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
+- `neighbor_address_id` (String) Used for `neighbor_discovery` STATIC_PEER_GROUP, where it holds ID of the network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
+- `neighbor_address_literal` (String) Used for `neighbor_discovery` STATIC_PEER_IP, where it holds any unicast IP address. Used for `neighbor_discovery` DEFAULT_MULTICAST_GROUP, where it holds IP address in range 224.0.0.0 to 239.255.255.255.
+- `neighbor_discovery` (String) How to discover addresses of the neighbor VTEPs for the VTEP-to-VTEP communication. For STATIC_PEER_IP and DEFAULT_MULTICAST_GROUP you must set `neighbor_address_literal` to a single IP address. For STATIC_PEER_GROUP you must however set `neighbor_address_id` to a ID of a network group and such network group can contain only IPv4 Hosts and IPv4 Ranges (but not Networks, etc.).
 - `nve_number` (Number) VTEP NVE number, currently must always be 1.
 - `source_interface_id` (String) Id of the source interface. It cannot refer to a subinterface.

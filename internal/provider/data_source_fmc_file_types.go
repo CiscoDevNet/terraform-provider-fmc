@@ -72,7 +72,7 @@ func (d *FileTypesDataSource) Schema(ctx context.Context, req datasource.SchemaR
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the managed File Type.",
+							MarkdownDescription: "Id of the File Type.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

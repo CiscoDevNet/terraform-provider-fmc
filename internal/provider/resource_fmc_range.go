@@ -79,7 +79,7 @@ func (r *RangeResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Range object.").String,
 				Required:            true,
 			},
 			"ip_range": schema.StringAttribute{
@@ -87,11 +87,11 @@ func (r *RangeResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Required:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"overridable": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Whether the object values can be overridden.").String,
 				Optional:            true,
 			},
 			"type": schema.StringAttribute{

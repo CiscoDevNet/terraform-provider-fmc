@@ -44,7 +44,7 @@ resource "fmc_vlan_tag_group" "example" {
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `literals` (Attributes Set) Set of literal values to be included in the VLAN Tag Group. (see [below for nested schema](#nestedatt--literals))
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 
 ### Read-Only
 

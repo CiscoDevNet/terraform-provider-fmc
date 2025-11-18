@@ -40,7 +40,7 @@ resource "fmc_port_groups" "example" {
 
 ### Required
 
-- `items` (Attributes Map) Map of port groups. The key of the map is the name of the individual Port Group. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Port Groups. The key of the map is the name of the individual Port Group. (see [below for nested schema](#nestedatt--items))
 
 ### Optional
 
@@ -55,7 +55,7 @@ resource "fmc_port_groups" "example" {
 
 Required:
 
-- `objects` (Attributes Set) (see [below for nested schema](#nestedatt--items--objects))
+- `objects` (Attributes Set) Set of Port, ICMPv4 or ICMPv4 objects, that are members of this Port Group. (see [below for nested schema](#nestedatt--items--objects))
 
 Optional:
 
@@ -64,7 +64,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the managed Port Groups.
+- `id` (String) Id of the Port Group.
 - `type` (String) Type of the object; this value is always 'PortObjectGroup'.
 
 <a id="nestedatt--items--objects"></a>
@@ -72,7 +72,8 @@ Read-Only:
 
 Required:
 
-- `type` (String) - Choices: `ProtocolPortObject`, `ICMPV6Object`, `ICMPV4Object`
+- `type` (String) Type of the port object.
+  - Choices: `ProtocolPortObject`, `ICMPV6Object`, `ICMPV4Object`
 
 Optional:
 

@@ -64,7 +64,7 @@ resource "fmc_device_loopback_interface" "example" {
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`
 
-Optional:
+Required:
 
 - `address` (String) IPv6 address without a slash and prefix.
 - `prefix` (String) Prefix width for the IPv6 address.

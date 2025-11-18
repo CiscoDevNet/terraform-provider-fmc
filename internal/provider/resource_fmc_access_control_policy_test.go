@@ -36,8 +36,8 @@ func TestAccFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_access_control_policy.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "description", "My Access Control Policy"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action", "BLOCK"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_log_end", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_log_connection_end", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "default_action_syslog_severity", "DEBUG"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "manage_categories", "true"))
@@ -55,8 +55,8 @@ func TestAccFmcAccessControlPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.destination_port_literals.0.type", "PortLiteral"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.destination_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.log_begin", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.log_end", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.log_connection_begin", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.send_events_to_fmc", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.application_filters.0.types.0.id", "WEBAPP"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_control_policy.test", "rules.0.application_filters.0.risks.0.id", "VERY_LOW"))
@@ -141,11 +141,11 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 	config += `	name = "my_access_control_policy"` + "\n"
 	config += `	description = "My Access Control Policy"` + "\n"
 	config += `	default_action = "BLOCK"` + "\n"
-	config += `	default_action_log_begin = true` + "\n"
-	config += `	default_action_log_end = false` + "\n"
+	config += `	default_action_log_connection_begin = true` + "\n"
+	config += `	default_action_log_connection_end = false` + "\n"
 	config += `	default_action_send_events_to_fmc = true` + "\n"
-	config += `	prefilter_policy_id = fmc_prefilter_policy.test.id` + "\n"
 	config += `	default_action_syslog_severity = "DEBUG"` + "\n"
+	config += `	prefilter_policy_id = fmc_prefilter_policy.test.id` + "\n"
 	config += `	manage_categories = true` + "\n"
 	config += `	categories = [{` + "\n"
 	config += `		name = "category_1"` + "\n"
@@ -187,8 +187,8 @@ func testAccFmcAccessControlPolicyConfig_all() string {
 	config += `			port = "80"` + "\n"
 	config += `			protocol = "6"` + "\n"
 	config += `		}]` + "\n"
-	config += `		log_begin = true` + "\n"
-	config += `		log_end = true` + "\n"
+	config += `		log_connection_begin = true` + "\n"
+	config += `		log_connection_end = true` + "\n"
 	config += `		log_files = false` + "\n"
 	config += `		send_events_to_fmc = true` + "\n"
 	config += `		description = ""` + "\n"
@@ -374,7 +374,7 @@ func TestAccFmcAccessControlPolicy_NewValid(t *testing.T) {
 		Config: `resource fmc_access_control_policy step15 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_end=true, send_events_to_fmc=true}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_end=true, send_events_to_fmc=true}]` + "\n" +
 			`}`,
 	}, {
 		Config: `resource fmc_access_control_policy step16 {` + "\n" +
@@ -382,21 +382,21 @@ func TestAccFmcAccessControlPolicy_NewValid(t *testing.T) {
 			`	default_action = "BLOCK"` + "\n" +
 			`	rules = [{ name = "r1", action = "MONITOR"}]` + "\n" +
 			`}`,
-		ExpectError: regexp.MustCompile(`Cannot use log_end=false when action="MONITOR"`),
+		ExpectError: regexp.MustCompile(`Cannot use log_connection_end=false when action="MONITOR"`),
 	}, {
 		Config: `resource fmc_access_control_policy step17 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_end=true, send_events_to_fmc=null}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_end=true, send_events_to_fmc=null}]` + "\n" +
 			`}`,
 		ExpectError: regexp.MustCompile(`Cannot use send_events_to_fmc=false when action="MONITOR"`),
 	}, {
 		Config: `resource fmc_access_control_policy step18 {` + "\n" +
 			`	name = "pol1"` + "\n" +
 			`	default_action = "BLOCK"` + "\n" +
-			`	rules = [{ name = "r1", action = "MONITOR", log_begin=true, log_end=true, send_events_to_fmc=true}]` + "\n" +
+			`	rules = [{ name = "r1", action = "MONITOR", log_connection_begin=true, log_connection_end=true, send_events_to_fmc=true}]` + "\n" +
 			`}`,
-		ExpectError: regexp.MustCompile(`Cannot use log_begin=true when action="MONITOR"`),
+		ExpectError: regexp.MustCompile(`Cannot use log_connection_begin=true when action="MONITOR"`),
 	}}
 
 	resource.Test(t, resource.TestCase{

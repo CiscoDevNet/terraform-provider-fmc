@@ -27,7 +27,7 @@ data "fmc_ranges" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `items` (Attributes Map) Map of ranges. The key of the map is the name of the individual Range. (see [below for nested schema](#nestedatt--items))
+- `items` (Attributes Map) Map of Ranges. The key of the map is the name of the individual Range. (see [below for nested schema](#nestedatt--items))
 
 ### Read-Only
 
@@ -39,7 +39,7 @@ data "fmc_ranges" "example" {
 Read-Only:
 
 - `description` (String) Description of the object.
-- `id` (String) Id of the managed Range.
+- `id` (String) Id of the Range object.
 - `ip_range` (String) Range of addresses, IPv4 or IPv6.
-- `overridable` (Boolean) Indicates whether object values can be overridden.
+- `overridable` (Boolean) Whether the object values can be overridden.
 - `type` (String) Type of the object; this value is always 'Range'.

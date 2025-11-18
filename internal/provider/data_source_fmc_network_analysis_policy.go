@@ -72,7 +72,7 @@ func (d *NetworkAnalysisPolicyDataSource) Schema(ctx context.Context, req dataso
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the policy.",
+				MarkdownDescription: "Name of the Network Analysis Policy.",
 				Optional:            true,
 				Computed:            true,
 			},

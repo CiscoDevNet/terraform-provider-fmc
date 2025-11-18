@@ -26,7 +26,7 @@ resource "fmc_security_zone" "example" {
 
 - `interface_type` (String) The mode of the associated interfaces, with the exception of mode ROUTED that corresponds to mode NONE of associated interfaces.
   - Choices: `PASSIVE`, `INLINE`, `SWITCHED`, `ROUTED`, `ASA`
-- `name` (String) Name of the object.
+- `name` (String) Name of the Security Zone object.
 
 ### Optional
 

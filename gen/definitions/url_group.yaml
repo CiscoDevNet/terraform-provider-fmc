@@ -5,21 +5,22 @@ doc_category: Objects
 attributes:
   - model_name: name
     type: String
-    description: Name of the object.
+    description: Name of the URL Group object.
     mandatory: true
     example: my_url_group
     data_source_query: true
-  - model_name: description
-    type: String
-    description: Description of the object.
-    example: "My URL group"
   - model_name: type
     type: String
     description: Type of the object; this value is always 'UrlGroup'.
     computed: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "My URL group"
+    missing_in_response_if_set_to_empty_string: true
   - model_name: overridable
     type: Bool
-    description: Indicates whether object values can be overridden.
+    description: Whether the object values can be overridden.
     exclude_example: true
     test_value: "true"
   - model_name: objects
@@ -45,6 +46,6 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_url" "test" {
-    name        = "fmc_url_group_url"
+    name        = "url_group_url"
     url         = "https://www.example.com/app"
   }

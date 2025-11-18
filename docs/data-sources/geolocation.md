@@ -25,12 +25,12 @@ data "fmc_geolocation" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `name` (String) Name of the geolocation object.
+- `name` (String) Name of the Geolocation object.
 
 ### Read-Only
 
-- `continents` (Attributes List) List of continents. (see [below for nested schema](#nestedatt--continents))
-- `countries` (Attributes List) List of countries. (see [below for nested schema](#nestedatt--countries))
+- `continents` (Attributes List) List of Continents. (see [below for nested schema](#nestedatt--continents))
+- `countries` (Attributes List) List of Countries. (see [below for nested schema](#nestedatt--countries))
 - `type` (String) Type of the object; this value is always 'Geolocation'.
 
 <a id="nestedatt--continents"></a>
