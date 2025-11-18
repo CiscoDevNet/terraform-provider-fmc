@@ -46,7 +46,7 @@ attributes:
         type: String
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_standard_acl.test.id
+        test_value: fmc_standard_access_list.test.id
   - model_name: ipv4PrefixListAddresses
     tf_name: address_ipv4_prefix_lists
     type: List
@@ -67,7 +67,7 @@ attributes:
         type: String
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_standard_acl.test.id
+        test_value: fmc_standard_access_list.test.id
   - model_name: ipv4PrefixListNexthops
     tf_name: next_hop_ipv4_prefix_lists
     type: List
@@ -88,7 +88,7 @@ attributes:
         type: String
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_standard_acl.test.id
+        test_value: fmc_standard_access_list.test.id
   - model_name: ipv4PrefixListRouteSources
     tf_name: route_source_ipv4_prefix_lists
     type: List
@@ -159,7 +159,7 @@ test_prerequisites: |-
     interface_type = "ROUTED"
   }
 
-  resource "fmc_standard_acl" "test" {
+  resource "fmc_standard_access_list" "test" {
     name        = "my_policy_list_std_acl"
     entries = [
       { action = "DENY", literals = [{ value = "10.1.1.0/24" }] }

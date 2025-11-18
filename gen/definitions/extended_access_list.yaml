@@ -234,22 +234,22 @@ attributes:
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
-    name   = "fmc_extended_acl_network"
+    name   = "fmc_extended_access_list_network"
     prefix = "10.0.0.0/24"
   }
 
   resource "fmc_host" "test" {
-    name = "fmc_extended_acl_host"
+    name = "fmc_extended_access_list_host"
     ip   = "10.1.1.1"
   }
 
   resource "fmc_port" "test" {
-    name = "fmc_extended_acl_port"
+    name = "fmc_extended_access_list_port"
     protocol = "TCP"
     port = "65000"
   }
 
   resource "fmc_sgt" "test" {
-    name = "fmc_extended_acl_sgt"
+    name = "fmc_extended_access_list_sgt"
     tag = "11"
   }
