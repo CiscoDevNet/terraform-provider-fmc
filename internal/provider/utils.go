@@ -45,7 +45,7 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 	var diags diag.Diagnostics
 	const atom time.Duration = 5 * time.Second
 
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
+	for i := time.Duration(0); i < 15*time.Minute; i += atom {
 		task, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(jobId), reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", fmt.Sprintf("Failed to get task status, got error: %s, %s", err, task.String()))
@@ -57,19 +57,22 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 			return diags
 		}
 		if stat != "PENDING" && stat != "RUNNING" && stat != "IN_PROGRESS" && stat != "DEPLOYING" && stat != "UNKNOWN" {
-			break
+			return diags
 		}
 		time.Sleep(atom)
 	}
-	return nil
+	diags.AddError("Timeout Error", fmt.Sprintf("Task %s did not complete within the expected time", jobId))
+	return diags
 }
 
 func FMCWaitForDeploymentToFinish(ctx context.Context, client *fmc.Client, deviceIds []string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 	const atom time.Duration = 5 * time.Second
+	var devicesUnderDeploymentIds []string
+	query := "items.#.deviceList.#.deviceUUID"
 
 Outerloop:
-	for i := time.Duration(0); i < 5*time.Minute; i += atom {
+	for i := time.Duration(0); i < 15*time.Minute; i += atom {
 		underDeployment, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/deployment/jobhistories?filter=jobType:DEPLOYMENT;status:DEPLOYING&expanded=true", reqMods...)
 		if err != nil {
 			diags.AddError("Client Error", fmt.Sprintf("Failed to read object (GET), got error: %s, %s", err, underDeployment.String()))
@@ -78,12 +81,11 @@ Outerloop:
 
 		// If there are no deployments in progress, exit
 		if !underDeployment.Get("items").Exists() {
-			break
+			return diags
 		}
 
 		// Extract IDs of devices, that are currently under deployment
-		var devicesUnderDeploymentIds []string
-		query := "items.#.deviceList.#.deviceUUID"
+		devicesUnderDeploymentIds = devicesUnderDeploymentIds[:0]
 		res := underDeployment.Get(query).Array()
 
 		for _, v := range res {
@@ -102,14 +104,15 @@ Outerloop:
 		}
 
 		// If none of the devices from provided list is under deployment, exit
-		break Outerloop
+		return diags
 	}
-	return nil
+	return diags
 }
 
 // FMCDeviceDeploy is a wrapper function that retries the deployment if requested by API response
 func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
+	var errorList strings.Builder
 
 	// Retry the deployment up to 5 times on error
 	for i := range 5 {
@@ -117,11 +120,14 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 		if !diags.HasError() {
 			break
 		}
+
 		for _, diag := range diags.Errors() {
-			//	if strings.Contains(strings.ToLower(diag.Detail()), "retry deployment") || strings.Contains(strings.ToLower(diag.Detail()), "retrying") {
-			tflog.Debug(ctx, fmt.Sprintf("%s: retrying deployment (attempt %d): %s", plan.Id.ValueString(), i, diag.Detail()))
-			//	}
+			errorList.WriteString(diag.Detail())
+			errorList.WriteString("; ")
 		}
+
+		tflog.Debug(ctx, fmt.Sprintf("%s: retrying deployment (attempt %d): %s", plan.Id.ValueString(), i, errorList.String()))
+		errorList.Reset()
 		time.Sleep(5 * time.Second)
 	}
 
