@@ -112,6 +112,7 @@ Outerloop:
 // FMCDeviceDeploy is a wrapper function that retries the deployment if requested by API response
 func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
+	var errorList strings.Builder
 
 	// Retry the deployment up to 5 times on error
 	for i := range 5 {
@@ -119,11 +120,14 @@ func FMCDeviceDeploy(ctx context.Context, client *fmc.Client, plan DeviceDeploy,
 		if !diags.HasError() {
 			break
 		}
+
 		for _, diag := range diags.Errors() {
-			//	if strings.Contains(strings.ToLower(diag.Detail()), "retry deployment") || strings.Contains(strings.ToLower(diag.Detail()), "retrying") {
-			tflog.Debug(ctx, fmt.Sprintf("%s: retrying deployment (attempt %d): %s", plan.Id.ValueString(), i, diag.Detail()))
-			//	}
+			errorList.WriteString(diag.Detail())
+			errorList.WriteString("; ")
 		}
+
+		tflog.Debug(ctx, fmt.Sprintf("%s: retrying deployment (attempt %d): %s", plan.Id.ValueString(), i, errorList.String()))
+		errorList.Reset()
 		time.Sleep(5 * time.Second)
 	}
 
