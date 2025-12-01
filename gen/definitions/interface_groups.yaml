@@ -1,0 +1,54 @@
+# Manual resource - Delete
+---
+name: Interface Groups
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/interfacegroups
+is_bulk: true
+doc_category: Objects
+minimum_version_bulk_delete: "999"
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Interface Groups. The key of the map is the name of the individual Interface Group.
+    map_key_example: my_interface_groups
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the Security Zone.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'InterfaceGroup'.
+        computed: true
+      - model_name: interfaceMode
+        tf_name: interface_type
+        type: String
+        description: All interfaces' types must match the interface mode.
+        enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, MANAGEMENT, LOOPBACK]
+        mandatory: true
+        example: ROUTED
+      - model_name: interfaces
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the interface.
+            id: true
+            example: 0050568A-4E02-1ed3-0000-004294969198
+            test_value: fmc_device_physical_interface.test.id
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id    = var.device_id
+    name         = var.interface_name
+    logical_name = "myinterface-0-1"
+    mode         = "NONE"
+    enabled      = true
+  }

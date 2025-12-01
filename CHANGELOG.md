@@ -1,3 +1,7 @@
+## 2.0.0-rc9 (Unreleased)
+
+- (Enhancement) Add support for `fmc_interface_groups` resource and data source
+
 ## 2.0.0-rc8
 
 - BREAKING CHANGE: `fmc_device_ipv4_static_route` and `fmc_device_ipv6_static_route`: attribute `metric_value` renamed to `metric`.
