@@ -17,6 +17,7 @@ attributes:
     description: All interfaces' types must match the interface mode.
     enum_values: [PASSIVE, INLINE, SWITCHED, ROUTED, MANAGEMENT, LOOPBACK]
     mandatory: true
+    requires_replace: true
     example: ROUTED
   - model_name: type
     type: String

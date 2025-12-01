@@ -93,7 +93,7 @@ func (r *InterfaceGroupsResource) Schema(ctx context.Context, req resource.Schem
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the Security Zone.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								planmodifiers.ConditionalUseStateForUnknownString("interface_type"),
 							},
 						},
 						"type": schema.StringAttribute{
@@ -259,11 +259,12 @@ func (r *InterfaceGroupsResource) Update(ctx context.Context, req resource.Updat
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+	// Get objects that need to be replaced due to `requires_replace` flag
+	toBeReplaced := plan.findObjectsToBeReplaced(ctx, state)
 
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
-	var toDelete InterfaceGroups
-	toDelete.Items = make(map[string]InterfaceGroupsItems, len(state.Items))
+	toDelete := toBeReplaced.Clone()
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -294,8 +295,8 @@ func (r *InterfaceGroupsResource) Update(ctx context.Context, req resource.Updat
 
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
-	var toCreate InterfaceGroups
-	toCreate.Items = make(map[string]InterfaceGroupsItems, len(plan.Items))
+	toCreate := toBeReplaced.Clone()
+	toCreate.clearItemsIds(ctx)
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -321,7 +322,12 @@ func (r *InterfaceGroupsResource) Update(ctx context.Context, req resource.Updat
 	var toUpdate InterfaceGroups
 	toUpdate.Items = make(map[string]InterfaceGroupsItems, len(plan.Items))
 
-	for _, valueState := range state.Items {
+	for tmp, valueState := range state.Items {
+		// Check if the ID from state is on toBeReplaced list
+		if _, ok := toBeReplaced.Items[tmp]; ok {
+			// If it is, skip it as it was handled by delete/create processes
+			continue
+		}
 
 		// Check if the ID from plan exists on list of ID owned by state
 		if keyState, ok := planOwnedIDs[valueState.Id.ValueString()]; ok {
