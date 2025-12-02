@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc9 (Unreleased)
+
+- (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
+
 ## 2.0.0-rc8
 
 - BREAKING CHANGE: `fmc_device_ipv4_static_route` and `fmc_device_ipv6_static_route`: attribute `metric_value` renamed to `metric`.
@@ -63,7 +67,6 @@ description: |-
 - (Fix): `fmc_chassis_logical_devices`: Computed parameters are not refreshed on Update
 - (Enhancement) Add support for `fmc_network_groups` data source and import
 - (Enhancement) `domain` support for importing non-bulk resources
-- (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 
 ## 2.0.0-rc7
 
