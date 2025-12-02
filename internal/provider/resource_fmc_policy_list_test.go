@@ -76,7 +76,7 @@ resource "fmc_security_zone" "test" {
   interface_type = "ROUTED"
 }
 
-resource "fmc_standard_acl" "test" {
+resource "fmc_standard_access_list" "test" {
   name        = "my_policy_list_std_acl"
   entries = [
     { action = "DENY", literals = [{ value = "10.1.1.0/24" }] }
@@ -126,13 +126,13 @@ func testAccFmcPolicyListConfig_all() string {
 	config += `	}]` + "\n"
 	config += `	interface_names = [var.interface_name]` + "\n"
 	config += `	address_standard_access_lists = [{` + "\n"
-	config += `		id = fmc_standard_acl.test.id` + "\n"
+	config += `		id = fmc_standard_access_list.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	next_hop_standard_access_lists = [{` + "\n"
-	config += `		id = fmc_standard_acl.test.id` + "\n"
+	config += `		id = fmc_standard_access_list.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	route_source_standard_access_lists = [{` + "\n"
-	config += `		id = fmc_standard_acl.test.id` + "\n"
+	config += `		id = fmc_standard_access_list.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `	as_paths = [{` + "\n"
 	config += `		id = fmc_as_path.test.id` + "\n"

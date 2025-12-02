@@ -53,7 +53,7 @@ attributes:
         mandatory: true
         id: true
         example: 5a9f2d3c-08d1-11e6-b939-00155d0a1eb1
-        test_value: fmc_icmpv4_object.test.id
+        test_value: fmc_icmpv4.test.id
       - model_name: id
         data_path: [network, object]
         tf_name: source_network_object_id
@@ -112,7 +112,7 @@ test_prerequisites: |-
     interface_type = "ROUTED"
   }
 
-  resource "fmc_icmpv4_object" "test" {
+  resource "fmc_icmpv4" "test" {
     icmp_type   = 3
     code        = 0
     name        = "ftd_platform_settings_icmp_access_icmp1"
