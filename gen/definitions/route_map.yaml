@@ -61,7 +61,7 @@ attributes:
             description: Id of the Access List.
             mandatory: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_standard_acl.test.id
+            test_value: fmc_standard_access_list.test.id
             id: true
           - model_name: type
             type: String
@@ -95,7 +95,7 @@ attributes:
             type: String
             description: Id of the Access List.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_standard_acl.test.id
+            test_value: fmc_standard_access_list.test.id
             mandatory: true
             id: true
           - model_name: type
@@ -130,7 +130,7 @@ attributes:
             type: String
             description: Id of the Access List.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-            test_value: fmc_standard_acl.test.id
+            test_value: fmc_standard_access_list.test.id
             id: true
             mandatory: true
           - model_name: type
@@ -160,7 +160,7 @@ attributes:
         type: String
         description: Match routes based on the route address using IPv6 Extended Access Lists.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_extended_acl.test.id
+        test_value: fmc_extended_access_list.test.id
       - model_name: id
         data_path: [ipv6PrefixListAddresses.0]
         tf_name: match_ipv6_address_prefix_list_id
@@ -175,7 +175,7 @@ attributes:
         type: String
         description: Match routes based on the next hop address of a route using IPv6 Extended Access Lists.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_extended_acl.test.id
+        test_value: fmc_extended_access_list.test.id
       - model_name: id
         data_path: [ipv6PrefixListNexthops.0]
         tf_name: match_ipv6_next_hop_prefix_list_id
@@ -190,7 +190,7 @@ attributes:
         type: String
         description: Match routes based on the advertising source address of the route using IPv6 Extended Access Lists.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: fmc_extended_acl.test.id
+        test_value: fmc_extended_access_list.test.id
       - model_name: id
         data_path: [ipv6PrefixListRouteSources.0]
         tf_name: match_ipv6_route_source_prefix_list_id
@@ -446,15 +446,15 @@ test_prerequisites: |-
     interface_type = "ROUTED"
   }
 
-  resource "fmc_standard_acl" "test" {
+  resource "fmc_standard_access_list" "test" {
     name        = "my_route_map_std_acl"
     entries = [
       { action = "DENY", literals = [{ value = "10.1.1.0/24" }] }
     ]
   }
 
-  resource "fmc_extended_acl" "test" {
-    name        = "my_route_map_extended_acl"
+  resource "fmc_extended_access_list" "test" {
+    name        = "my_route_map_extended_access_list"
     entries = [
       {
         log_level                    = "WARNING"

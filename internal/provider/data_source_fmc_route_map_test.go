@@ -86,15 +86,15 @@ resource "fmc_security_zone" "test" {
   interface_type = "ROUTED"
 }
 
-resource "fmc_standard_acl" "test" {
+resource "fmc_standard_access_list" "test" {
   name        = "my_route_map_std_acl"
   entries = [
     { action = "DENY", literals = [{ value = "10.1.1.0/24" }] }
   ]
 }
 
-resource "fmc_extended_acl" "test" {
-  name        = "my_route_map_extended_acl"
+resource "fmc_extended_access_list" "test" {
+  name        = "my_route_map_extended_access_list"
   entries = [
     {
       log_level                    = "WARNING"
@@ -147,20 +147,20 @@ func testAccDataSourceFmcRouteMapConfig() string {
 	config += `		}]` + "\n"
 	config += `		match_interface_names = ["outside"]` + "\n"
 	config += `		match_ipv4_address_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_ipv4_next_hop_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_ipv4_route_source_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
-	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
-	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
+	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
+	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
+	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_bgp_as_path_lists = [{` + "\n"
 	config += `			id = fmc_as_path.test.id` + "\n"
 	config += `		}]` + "\n"
@@ -216,20 +216,20 @@ func testAccNamedDataSourceFmcRouteMapConfig() string {
 	config += `		}]` + "\n"
 	config += `		match_interface_names = ["outside"]` + "\n"
 	config += `		match_ipv4_address_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_ipv4_next_hop_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_ipv4_route_source_access_lists = [{` + "\n"
-	config += `			id = fmc_standard_acl.test.id` + "\n"
+	config += `			id = fmc_standard_access_list.test.id` + "\n"
 	config += `			type = "StandardAccessList"` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
-	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
-	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_acl.test.id` + "\n"
+	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
+	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
+	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_bgp_as_path_lists = [{` + "\n"
 	config += `			id = fmc_as_path.test.id` + "\n"
 	config += `		}]` + "\n"

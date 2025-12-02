@@ -68,7 +68,7 @@ resource "fmc_security_zone" "test" {
   interface_type = "ROUTED"
 }
 
-resource "fmc_icmpv4_object" "test" {
+resource "fmc_icmpv4" "test" {
   icmp_type   = 3
   code        = 0
   name        = "ftd_platform_settings_icmp_access_icmp1"
@@ -89,7 +89,7 @@ func testAccFmcFTDPlatformSettingsICMPAccessConfig_all() string {
 	config += `	burst_size = 1` + "\n"
 	config += `	configurations = [{` + "\n"
 	config += `		action = "Permit"` + "\n"
-	config += `		icmp_service_object_id = fmc_icmpv4_object.test.id` + "\n"
+	config += `		icmp_service_object_id = fmc_icmpv4.test.id` + "\n"
 	config += `		source_network_object_id = fmc_host.test.id` + "\n"
 	config += `		interface_objects = [{` + "\n"
 	config += `			id = fmc_security_zone.test.id` + "\n"

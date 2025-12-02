@@ -1,4 +1,8 @@
-## 2.0.0-rc8 (Unreleased)
+## 2.0.0-rc9 (Unreleased)
+
+- (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
+
+## 2.0.0-rc8
 
 - BREAKING CHANGE: `fmc_device_ipv4_static_route` and `fmc_device_ipv6_static_route`: attribute `metric_value` renamed to `metric`.
 - (Change): `fmc_device_vrf_ipv4_static_route` is deprecated. Please use `fmc_device_ipv4_static_route`, which now supports `vrf_id` attribute.
