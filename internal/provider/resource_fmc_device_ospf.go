@@ -67,7 +67,7 @@ func (r *DeviceOSPFResource) Metadata(ctx context.Context, req resource.Metadata
 func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device OSPF.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Device OSPF.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.6").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -107,7 +107,7 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 			},
 			"process_id": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.").AddIntegerRangeDescription(1, 300).String,
-				Optional:            true,
+				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 300),
 				},
@@ -591,6 +591,12 @@ func (r *DeviceOSPFResource) Configure(_ context.Context, req resource.Configure
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *DeviceOSPFResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionDeviceOSPF) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device OSPF creation, minumum required version is 7.6", r.client.FMCVersion))
+		return
+	}
 	var plan DeviceOSPF
 
 	// Read plan
@@ -631,6 +637,11 @@ func (r *DeviceOSPFResource) Create(ctx context.Context, req resource.CreateRequ
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *DeviceOSPFResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionDeviceOSPF) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device OSPF, minimum required version is 7.6", r.client.FMCVersion))
+		return
+	}
 	var state DeviceOSPF
 
 	// Read state

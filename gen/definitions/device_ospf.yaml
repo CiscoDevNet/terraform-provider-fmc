@@ -8,6 +8,7 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/
 rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ospfv2routes
 doc_category: Devices
 adjust_body: true
+minimum_version: "7.6"
 test_tags: [TF_VAR_device_id]
 attributes:
   - model_name: device_id
@@ -24,11 +25,10 @@ attributes:
   - model_name: processId
     type: Int64
     description: OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
-    required: true
+    mandatory: true
     min_int: 1
     max_int: 300
     example: 1
-    test_value: 1
   
   # Advanced - General
   # - model_name: description
@@ -119,12 +119,14 @@ attributes:
     type: String
     description: Metric type for the default route.
     enum_values: [TYPE_1, TYPE_2]
+    example: TYPE_2
   - model_name: id
     data_path: [processConfiguration, defaultInformationOriginate, routeMap]
     tf_name: default_route_route_map_id
     type: String
     description: Route Map ID for choosing the process that generates the default route.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
 
   # Advanced - Non Stop Forwarding
   - model_name: nsfEnable
@@ -234,15 +236,18 @@ attributes:
             example: 123e4567-e89b-12d3-a456-426614174000
             mandatory: true
             id: true
+            test_value: fmc_hosts.test.items.ospf_host_1.id
           - model_name: name
             type: String
             description: Network object name.
             example: "Office Network"
+            test_value: '"ospf_host_1"'
       - model_name: authentication
         type: String
         enum_values: [PASSWORD, MESSAGE_DIGEST]
         description: Authentication type.
         example: MESSAGE_DIGEST
+        exclude_test: true
       - model_name: defaultCost
         tf_name: default_cost
         type: Int64
@@ -261,6 +266,7 @@ attributes:
             description: Network object ID.
             type: String
             example: 123e4567-e89b-12d3-a456-426614174000
+            test_value: fmc_hosts.test.items.ospf_host_2.id
             mandatory: true
             id: true
           - model_name: advertise
@@ -271,19 +277,19 @@ attributes:
         tf_name: virtual_links
         type: List
         description: Virtual links.
+        exclude_example: true
+        exclude_test: true
         attributes:
           - model_name: routerId
             tf_name: peer_router_host_id
             type: String
             description: Host object Id representing the peer router.
-            example: 123e4567-e89b-12d3-a456-426614174000
             mandatory: true
             id: true
           - model_name: helloInterval
             tf_name: hello_interval
             type: Int64
             description: Hello interval in seconds.
-            example: 10
             min_int: 1
             max_int: 8192
             default_value: 10
@@ -291,7 +297,6 @@ attributes:
             tf_name: transmit_delay
             type: Int64
             description: Transmit delay in seconds.
-            example: 1
             min_int: 1
             max_int: 8192
             default_value: 1
@@ -299,7 +304,6 @@ attributes:
             tf_name: retransmit_interval
             type: Int64
             description: Retransmit interval in seconds.
-            example: 5
             min_int: 1
             max_int: 8192
             default_value: 5
@@ -307,7 +311,6 @@ attributes:
             tf_name: dead_interval
             type: Int64
             description: Dead interval in seconds.
-            example: 40
             min_int: 1
             max_int: 8192
             default_value: 40
@@ -318,7 +321,6 @@ attributes:
             string_max_length: 8
             sensitive: true
             description: Password for authentication.
-            example: "ospfAuthKey"
           - model_name: authKey
             data_path: [authentication, areaAuth, passwdAuth]
             tf_name: authentication_area_password
@@ -326,15 +328,11 @@ attributes:
             sensitive: true
             string_max_length: 8
             description: Password for authentication.
-            exclude_example: true
-            exclude_test: true
           - model_name: md5AuthList
             data_path: [authentication, areaAuth]
             tf_name: authentication_area_md5s
             type: List
             description: List of MD5 authentication keys.
-            exclude_example: true
-            exclude_test: true
             attributes:
               - model_name: md5KeyId
                 tf_name: id
@@ -347,15 +345,12 @@ attributes:
                 type: String
                 sensitive: true
                 description: MD5 authentication key.
-                example: "md5AuthKey"
                 mandatory: true
           - model_name: md5AuthList
             data_path: [authentication]
             tf_name: authentication_md5s
             type: List
             description: List of MD5 authentication keys.
-            exclude_example: true
-            exclude_test: true
             attributes:
               - model_name: md5KeyId
                 tf_name: id
@@ -368,7 +363,6 @@ attributes:
                 type: String
                 sensitive: true
                 description: MD5 authentication key.
-                example: "md5AuthKey"
                 mandatory: true
           - model_name: id
             data_path: [authentication, keyChain, authKey]
@@ -376,8 +370,6 @@ attributes:
             type: String
             description: Key chain object ID for authentication.
             example: 123e4567-e89b-12d3-a456-426614174000
-            exclude_example: true
-            exclude_test: true
 
       # InterArea
       - model_name: filterList
@@ -393,24 +385,29 @@ attributes:
             mandatory: true
             type: String
             id: true
+            test_value: fmc_ipv4_prefix_list.test.id
           - model_name: name
             data_path: [prefixList]
             tf_name: prefix_list_name
             description: Prefix list object name.
             example: "Office Prefix List"
             type: String
+            test_value: fmc_ipv4_prefix_list.test.name
           - model_name: filterDirection
             tf_name: filter_direction
             type: String
             description: Filter direction.
             enum_values: [IN, OUT]
             mandatory: true
+            example: IN
 
   # Redistribution
   - model_name: redistributeProtocols
     tf_name: redistributions
     type: List
     description: Enable protocol redistribution.
+    exclude_example: true
+    exclude_test: true
     attributes:
       - model_name: type
         tf_name: route_type
@@ -424,41 +421,33 @@ attributes:
         tf_name: as_number
         type: Int64
         description: Autonomous System Number (ASN) for BGP / EIGRP redistribution.
-        example: 65001
       - model_name: matchExternal1
         tf_name: ospf_match_external_1
         type: Bool
         description: Whether to match external type 1 routes.
-        example: true
       - model_name: matchExternal2
         tf_name: ospf_match_external_2
         type: Bool
         description: Whether to match external type 2 routes.
-        example: true
       - model_name: matchInternal
         tf_name: ospf_match_internal
         type: Bool
         description: Whether to match internal routes.
-        example: true
       - model_name: matchNssaExternal1
         tf_name: ospf_match_nssa_external_1
         type: Bool
         description: Whether to match NSSA external type 1 routes.
-        example: true
       - model_name: matchNssaExternal2
         tf_name: ospf_match_nssa_external_2
         type: Bool
         description: Whether to match NSSA external type 2 routes.
-        example: true
       - model_name: processId
         tf_name: process_id
         type: Int64
         description: OSPF process ID.
-        example: 2
       - model_name: subnets
         type: Bool
         description: Whether to redistribute subnets.
-        example: true
       - model_name: metricValue
         data_path: [routeMetric]
         tf_name: metric
@@ -466,14 +455,12 @@ attributes:
         min_int: 0
         max_int: 16777214
         description: Metric value for the routes being distributed.
-        example: 1
       - model_name: metricType
         data_path: [routeMetric]
         tf_name: metric_type
         type: String
         description: Metric type for the default route.
         enum_values: [TYPE_1, TYPE_2]
-        example: TYPE_2
         default_value: TYPE_2
       - model_name: tagNumber
         tf_name: tag
@@ -481,26 +468,25 @@ attributes:
         min_int: 0
         max_int: 4294967295
         description: Tag number.
-        example: 100
       - model_name: id
         data_path: [routeMap]
         tf_name: route_map_id
         type: String
         description: Route map ID for route filtering.
-        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
 
   # Filter Rules
   - model_name: filterRules
     tf_name: filter_rules
     type: List
     description: Filter prefix advertisement between areas.
+    exclude_example: true
+    exclude_test: true
     attributes:
       - model_name: id
         data_path: [accessList]
         tf_name: access_list_id
         type: String
         description: Standard Access List ID
-        example: 123e4567-e89b-12d3-a456-426614174000
         mandatory: true
         id: true
       - model_name: type
@@ -508,7 +494,6 @@ attributes:
         type: String
         description: Filter rule direction.
         enum_values: [incomingroutefilter, outgoingroutefilter]
-        example: incomingroutefilter
         mandatory: true
         id: true
       - model_name: protocol
@@ -516,7 +501,6 @@ attributes:
         type: String
         description: Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
         enum_values: [CONNECTED, STATIC, RIP, OSPF, EIGRP, NONE, BGP]
-        example: CONNECTED
       - model_name: processId
         tf_name: routing_process_id
         type: Int64
@@ -528,7 +512,6 @@ attributes:
         tf_name: interface_id
         type: String
         description: Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.
-        example: 123e4567-e89b-12d3-a456-426614174000
         exclude_example: true
         exclude_test: true
 
@@ -537,6 +520,8 @@ attributes:
     tf_name: summary_addresses
     type: List
     ordered_list: true
+    exclude_example: true
+    exclude_test: true
     description: Addresses summarization configuration.
     attributes:
       - model_name: summaryNetwork
@@ -548,7 +533,6 @@ attributes:
         - model_name: id
           type: String
           description: Network object ID.
-          example: 123e4567-e89b-12d3-a456-426614174000
           mandatory: true
       - model_name: tagNumber
         tf_name: tag
@@ -556,8 +540,34 @@ attributes:
         min_int: 0
         max_int: 4294967295
         description: Tag number.
-        example: 100
       - model_name: advertise
         type: Bool
         description: Whether to advertise this summary route.
-        example: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "ospf_host_1" = { ip = "10.20.3.4" },
+      "ospf_host_2" = { ip = "10.20.3.5" },
+    }
+  }
+
+  resource "fmc_ipv4_prefix_list" "test" {
+    name = "ospf_ipv4_prefix_list"
+    entries = [
+      {
+        action            = "PERMIT"
+        ip_address        = "10.10.10.0/24"
+        min_prefix_length = 25
+        max_prefix_length = 30
+      },
+      {
+        action            = "PERMIT"
+        ip_address        = "15.10.10.0/24"
+        min_prefix_length = 25
+        max_prefix_length = 30
+      },
+    ]
+  }

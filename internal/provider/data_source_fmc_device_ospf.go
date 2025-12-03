@@ -55,7 +55,7 @@ func (d *DeviceOSPFDataSource) Metadata(_ context.Context, req datasource.Metada
 func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device OSPF.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device OSPF.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.6").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -455,6 +455,12 @@ func (d *DeviceOSPFDataSource) Configure(_ context.Context, req datasource.Confi
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *DeviceOSPFDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionDeviceOSPF) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Device OSPF, minimum required version is 7.6", d.client.FMCVersion))
+		return
+	}
 	var config DeviceOSPF
 
 	// Read config

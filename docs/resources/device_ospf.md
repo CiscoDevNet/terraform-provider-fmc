@@ -4,11 +4,16 @@ page_title: "fmc_device_ospf Resource - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This resource manages a Device OSPF.
+  The following restrictions apply:
+  Minimum FMC version: 7.6
 ---
 
 # fmc_device_ospf (Resource)
 
 This resource manages a Device OSPF.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.6`
 
 ## Example Usage
 
@@ -26,7 +31,7 @@ resource "fmc_device_ospf" "example" {
   timer_lsa_group                    = 240
   default_route_always_advertise     = false
   default_route_metric               = 1
-  default_route_metric_type          = ""
+  default_route_metric_type          = "TYPE_2"
   default_route_route_map_id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   areas = [
     {
@@ -46,58 +51,13 @@ resource "fmc_device_ospf" "example" {
           advertise         = true
         }
       ]
-      virtual_links = [
-        {
-          peer_router_host_id     = "123e4567-e89b-12d3-a456-426614174000"
-          hello_interval          = 10
-          transmit_delay          = 1
-          retransmit_interval     = 5
-          dead_interval           = 40
-          authentication_password = "ospfAuthKey"
-        }
-      ]
       inter_area_filters = [
         {
           prefix_list_id   = "123e4567-e89b-12d3-a456-426614174000"
           prefix_list_name = "Office Prefix List"
-          filter_direction = ""
+          filter_direction = "IN"
         }
       ]
-    }
-  ]
-  redistributions = [
-    {
-      route_type                 = "RedistributeBGP"
-      as_number                  = 65001
-      ospf_match_external_1      = true
-      ospf_match_external_2      = true
-      ospf_match_internal        = true
-      ospf_match_nssa_external_1 = true
-      ospf_match_nssa_external_2 = true
-      process_id                 = 2
-      subnets                    = true
-      metric                     = 1
-      metric_type                = "TYPE_2"
-      tag                        = 100
-      route_map_id               = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-    }
-  ]
-  filter_rules = [
-    {
-      access_list_id    = "123e4567-e89b-12d3-a456-426614174000"
-      traffic_direction = "incomingroutefilter"
-      routing_process   = "CONNECTED"
-    }
-  ]
-  summary_addresses = [
-    {
-      networks = [
-        {
-          id = "123e4567-e89b-12d3-a456-426614174000"
-        }
-      ]
-      tag       = 100
-      advertise = true
     }
   ]
 }
@@ -109,6 +69,8 @@ resource "fmc_device_ospf" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
+- `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
+  - Range: `1`-`300`
 
 ### Optional
 
@@ -142,8 +104,6 @@ resource "fmc_device_ospf" "example" {
 - `non_stop_forwarding_restart_interval` (Number) Length of graceful restart interval (seconds).
   - Range: `1`-`1800`
 - `non_stop_forwarding_strict_mode` (Boolean) IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
-- `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
-  - Range: `1`-`300`
 - `redistributions` (Attributes List) Enable protocol redistribution. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility as the method used to calculate summary route costs.
   - Default value: `false`

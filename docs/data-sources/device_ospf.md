@@ -4,11 +4,16 @@ page_title: "fmc_device_ospf Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This data source reads the Device OSPF.
+  The following restrictions apply:
+  Minimum FMC version: 7.6
 ---
 
 # fmc_device_ospf (Data Source)
 
 This data source reads the Device OSPF.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.6`
 
 ## Example Usage
 

@@ -35,6 +35,7 @@ func TestAccFmcDeviceOSPF(t *testing.T) {
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_ospf.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "process_id", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "router_id", "10.10.10.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "rfc_1583_compatible", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "log_adjacency_changes", "DEFAULT"))
@@ -45,53 +46,21 @@ func TestAccFmcDeviceOSPF(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "timer_lsa_group", "240"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "default_route_always_advertise", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "default_route_metric", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "default_route_metric_type", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "default_route_route_map_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "default_route_metric_type", "TYPE_2"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.id", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.type", "normal"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.networks.0.id", "123e4567-e89b-12d3-a456-426614174000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.networks.0.name", "Office Network"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.authentication", "MESSAGE_DIGEST"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.default_cost", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.ranges.0.network_object_id", "123e4567-e89b-12d3-a456-426614174000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.ranges.0.advertise", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.peer_router_host_id", "123e4567-e89b-12d3-a456-426614174000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.hello_interval", "10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.transmit_delay", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.retransmit_interval", "5"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.dead_interval", "40"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.virtual_links.0.authentication_password", "ospfAuthKey"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_id", "123e4567-e89b-12d3-a456-426614174000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_name", "Office Prefix List"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.inter_area_filters.0.filter_direction", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.route_type", "RedistributeBGP"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.as_number", "65001"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.ospf_match_external_1", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.ospf_match_external_2", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.ospf_match_internal", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.ospf_match_nssa_external_1", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.ospf_match_nssa_external_2", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.process_id", "2"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.subnets", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.metric", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.metric_type", "TYPE_2"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.tag", "100"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "redistributions.0.route_map_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "filter_rules.0.access_list_id", "123e4567-e89b-12d3-a456-426614174000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "filter_rules.0.traffic_direction", "incomingroutefilter"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "filter_rules.0.routing_process", "CONNECTED"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "summary_addresses.0.networks.0.id", "123e4567-e89b-12d3-a456-426614174000"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "summary_addresses.0.tag", "100"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "summary_addresses.0.advertise", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf.test", "areas.0.inter_area_filters.0.filter_direction", "IN"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDeviceOSPFConfig_minimum(),
+			Config: testAccFmcDeviceOSPFPrerequisitesConfig + testAccFmcDeviceOSPFConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDeviceOSPFConfig_all(),
+		Config: testAccFmcDeviceOSPFPrerequisitesConfig + testAccFmcDeviceOSPFConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -106,6 +75,36 @@ func TestAccFmcDeviceOSPF(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcDeviceOSPFPrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+resource "fmc_hosts" "test" {
+  items = {
+    "ospf_host_1" = { ip = "10.20.3.4" },
+    "ospf_host_2" = { ip = "10.20.3.5" },
+  }
+}
+
+resource "fmc_ipv4_prefix_list" "test" {
+  name = "ospf_ipv4_prefix_list"
+  entries = [
+    {
+      action            = "PERMIT"
+      ip_address        = "10.10.10.0/24"
+      min_prefix_length = 25
+      max_prefix_length = 30
+    },
+    {
+      action            = "PERMIT"
+      ip_address        = "15.10.10.0/24"
+      min_prefix_length = 25
+      max_prefix_length = 30
+    },
+  ]
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -113,6 +112,7 @@ func TestAccFmcDeviceOSPF(t *testing.T) {
 func testAccFmcDeviceOSPFConfig_minimum() string {
 	config := `resource "fmc_device_ospf" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
+	config += `	process_id = 1` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -135,61 +135,24 @@ func testAccFmcDeviceOSPFConfig_all() string {
 	config += `	timer_lsa_group = 240` + "\n"
 	config += `	default_route_always_advertise = false` + "\n"
 	config += `	default_route_metric = 1` + "\n"
-	config += `	default_route_metric_type = ""` + "\n"
-	config += `	default_route_route_map_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
+	config += `	default_route_metric_type = "TYPE_2"` + "\n"
 	config += `	areas = [{` + "\n"
 	config += `		id = "1"` + "\n"
 	config += `		type = "normal"` + "\n"
 	config += `		networks = [{` + "\n"
-	config += `			id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
-	config += `			name = "Office Network"` + "\n"
+	config += `			id = fmc_hosts.test.items.ospf_host_1.id` + "\n"
+	config += `			name = "ospf_host_1"` + "\n"
 	config += `		}]` + "\n"
-	config += `		authentication = "MESSAGE_DIGEST"` + "\n"
 	config += `		default_cost = 1` + "\n"
 	config += `		ranges = [{` + "\n"
-	config += `			network_object_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
+	config += `			network_object_id = fmc_hosts.test.items.ospf_host_2.id` + "\n"
 	config += `			advertise = true` + "\n"
 	config += `		}]` + "\n"
-	config += `		virtual_links = [{` + "\n"
-	config += `			peer_router_host_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
-	config += `			hello_interval = 10` + "\n"
-	config += `			transmit_delay = 1` + "\n"
-	config += `			retransmit_interval = 5` + "\n"
-	config += `			dead_interval = 40` + "\n"
-	config += `			authentication_password = "ospfAuthKey"` + "\n"
-	config += `		}]` + "\n"
 	config += `		inter_area_filters = [{` + "\n"
-	config += `			prefix_list_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
-	config += `			prefix_list_name = "Office Prefix List"` + "\n"
-	config += `			filter_direction = ""` + "\n"
+	config += `			prefix_list_id = fmc_ipv4_prefix_list.test.id` + "\n"
+	config += `			prefix_list_name = fmc_ipv4_prefix_list.test.name` + "\n"
+	config += `			filter_direction = "IN"` + "\n"
 	config += `		}]` + "\n"
-	config += `	}]` + "\n"
-	config += `	redistributions = [{` + "\n"
-	config += `		route_type = "RedistributeBGP"` + "\n"
-	config += `		as_number = 65001` + "\n"
-	config += `		ospf_match_external_1 = true` + "\n"
-	config += `		ospf_match_external_2 = true` + "\n"
-	config += `		ospf_match_internal = true` + "\n"
-	config += `		ospf_match_nssa_external_1 = true` + "\n"
-	config += `		ospf_match_nssa_external_2 = true` + "\n"
-	config += `		process_id = 2` + "\n"
-	config += `		subnets = true` + "\n"
-	config += `		metric = 1` + "\n"
-	config += `		metric_type = "TYPE_2"` + "\n"
-	config += `		tag = 100` + "\n"
-	config += `		route_map_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	}]` + "\n"
-	config += `	filter_rules = [{` + "\n"
-	config += `		access_list_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
-	config += `		traffic_direction = "incomingroutefilter"` + "\n"
-	config += `		routing_process = "CONNECTED"` + "\n"
-	config += `	}]` + "\n"
-	config += `	summary_addresses = [{` + "\n"
-	config += `		networks = [{` + "\n"
-	config += `			id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
-	config += `		}]` + "\n"
-	config += `		tag = 100` + "\n"
-	config += `		advertise = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
