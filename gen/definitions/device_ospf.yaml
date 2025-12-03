@@ -1,7 +1,7 @@
 # FMCBUG CSCws31723 FMC API: OSPF endpoints are unstable
+# FMCBUG CSCws32971 FMC API: OSPF interArea filterLists does not accept valid configuration
+# FMCBUG CSCws33022 FMC API: OSPF description field missing
 # Manual Resource - adjust_body
-# FMCBUG: Cannot set description
-# FMCBUG: InterArea filters
 # TODO: NSF
 ---
 name: Device OSPF
