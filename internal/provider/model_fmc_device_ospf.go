@@ -36,27 +36,28 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type DeviceOSPF struct {
-	Id                              types.String                `tfsdk:"id"`
-	Domain                          types.String                `tfsdk:"domain"`
-	VrfId                           types.String                `tfsdk:"vrf_id"`
-	DeviceId                        types.String                `tfsdk:"device_id"`
-	Type                            types.String                `tfsdk:"type"`
-	ProcessId                       types.Int64                 `tfsdk:"process_id"`
-	RouterId                        types.String                `tfsdk:"router_id"`
-	Rfc1583Compatible               types.Bool                  `tfsdk:"rfc_1583_compatible"`
-	LogAdjacencyChanges             types.String                `tfsdk:"log_adjacency_changes"`
-	IgnoreLsaMospf                  types.Bool                  `tfsdk:"ignore_lsa_mospf"`
-	AdministrativeDistanceInterArea types.Int64                 `tfsdk:"administrative_distance_inter_area"`
-	AdministrativeDistanceIntraArea types.Int64                 `tfsdk:"administrative_distance_intra_area"`
-	AdministrativeDistanceExternal  types.Int64                 `tfsdk:"administrative_distance_external"`
-	TimerLsaGroup                   types.Int64                 `tfsdk:"timer_lsa_group"`
-	DefaultRouteAlwaysAdvertise     types.Bool                  `tfsdk:"default_route_always_advertise"`
-	DefaultRouteMetric              types.Int64                 `tfsdk:"default_route_metric"`
-	DefaultRouteMetricType          types.String                `tfsdk:"default_route_metric_type"`
-	DefaultRouteRouteMapId          types.String                `tfsdk:"default_route_route_map_id"`
-	Areas                           []DeviceOSPFAreas           `tfsdk:"areas"`
-	Redistributions                 []DeviceOSPFRedistributions `tfsdk:"redistributions"`
-	FilterRules                     []DeviceOSPFFilterRules     `tfsdk:"filter_rules"`
+	Id                              types.String                 `tfsdk:"id"`
+	Domain                          types.String                 `tfsdk:"domain"`
+	VrfId                           types.String                 `tfsdk:"vrf_id"`
+	DeviceId                        types.String                 `tfsdk:"device_id"`
+	Type                            types.String                 `tfsdk:"type"`
+	ProcessId                       types.Int64                  `tfsdk:"process_id"`
+	RouterId                        types.String                 `tfsdk:"router_id"`
+	Rfc1583Compatible               types.Bool                   `tfsdk:"rfc_1583_compatible"`
+	LogAdjacencyChanges             types.String                 `tfsdk:"log_adjacency_changes"`
+	IgnoreLsaMospf                  types.Bool                   `tfsdk:"ignore_lsa_mospf"`
+	AdministrativeDistanceInterArea types.Int64                  `tfsdk:"administrative_distance_inter_area"`
+	AdministrativeDistanceIntraArea types.Int64                  `tfsdk:"administrative_distance_intra_area"`
+	AdministrativeDistanceExternal  types.Int64                  `tfsdk:"administrative_distance_external"`
+	TimerLsaGroup                   types.Int64                  `tfsdk:"timer_lsa_group"`
+	DefaultRouteAlwaysAdvertise     types.Bool                   `tfsdk:"default_route_always_advertise"`
+	DefaultRouteMetric              types.Int64                  `tfsdk:"default_route_metric"`
+	DefaultRouteMetricType          types.String                 `tfsdk:"default_route_metric_type"`
+	DefaultRouteRouteMapId          types.String                 `tfsdk:"default_route_route_map_id"`
+	Areas                           []DeviceOSPFAreas            `tfsdk:"areas"`
+	Redistributions                 []DeviceOSPFRedistributions  `tfsdk:"redistributions"`
+	FilterRules                     []DeviceOSPFFilterRules      `tfsdk:"filter_rules"`
+	SummaryAddresses                []DeviceOSPFSummaryAddresses `tfsdk:"summary_addresses"`
 }
 
 type DeviceOSPFAreas struct {
@@ -98,6 +99,12 @@ type DeviceOSPFFilterRules struct {
 	InterfaceId      types.String `tfsdk:"interface_id"`
 }
 
+type DeviceOSPFSummaryAddresses struct {
+	Networks  []DeviceOSPFSummaryAddressesNetworks `tfsdk:"networks"`
+	Tag       types.Int64                          `tfsdk:"tag"`
+	Advertise types.Bool                           `tfsdk:"advertise"`
+}
+
 type DeviceOSPFAreasNetworks struct {
 	Id   types.String `tfsdk:"id"`
 	Name types.String `tfsdk:"name"`
@@ -122,6 +129,10 @@ type DeviceOSPFAreasInterAreaFilters struct {
 	PrefixListId    types.String `tfsdk:"prefix_list_id"`
 	PrefixListName  types.String `tfsdk:"prefix_list_name"`
 	FilterDirection types.String `tfsdk:"filter_direction"`
+}
+
+type DeviceOSPFSummaryAddressesNetworks struct {
+	Id types.String `tfsdk:"id"`
 }
 
 type DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s struct {
@@ -393,6 +404,29 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 				itemBody, _ = sjson.Set(itemBody, "inInterface.id", item.InterfaceId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "filterRules.-1", itemBody)
+		}
+	}
+	if len(data.SummaryAddresses) > 0 {
+		body, _ = sjson.Set(body, "summaryAddresses", []any{})
+		for _, item := range data.SummaryAddresses {
+			itemBody := ""
+			if len(item.Networks) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "summaryNetwork", []any{})
+				for _, childItem := range item.Networks {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "summaryNetwork.-1", itemChildBody)
+				}
+			}
+			if !item.Tag.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "tagNumber", item.Tag.ValueInt64())
+			}
+			if !item.Advertise.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "advertise", item.Advertise.ValueBool())
+			}
+			body, _ = sjson.SetRaw(body, "summaryAddresses.-1", itemBody)
 		}
 	}
 	return body
@@ -776,6 +810,39 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.InterfaceId = types.StringNull()
 			}
 			(*parent).FilterRules = append((*parent).FilterRules, data)
+			return true
+		})
+	}
+	if value := res.Get("summaryAddresses"); value.Exists() {
+		data.SummaryAddresses = make([]DeviceOSPFSummaryAddresses, 0)
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceOSPFSummaryAddresses{}
+			if value := res.Get("summaryNetwork"); value.Exists() {
+				data.Networks = make([]DeviceOSPFSummaryAddressesNetworks, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := DeviceOSPFSummaryAddressesNetworks{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					(*parent).Networks = append((*parent).Networks, data)
+					return true
+				})
+			}
+			if value := res.Get("tagNumber"); value.Exists() {
+				data.Tag = types.Int64Value(value.Int())
+			} else {
+				data.Tag = types.Int64Null()
+			}
+			if value := res.Get("advertise"); value.Exists() {
+				data.Advertise = types.BoolValue(value.Bool())
+			} else {
+				data.Advertise = types.BoolNull()
+			}
+			(*parent).SummaryAddresses = append((*parent).SummaryAddresses, data)
 			return true
 		})
 	}
@@ -1427,6 +1494,76 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).FilterRules[i] = data
 	}
+	{
+		l := len(res.Get("summaryAddresses").Array())
+		tflog.Debug(ctx, fmt.Sprintf("summaryAddresses array resizing from %d to %d", len(data.SummaryAddresses), l))
+		for i := len(data.SummaryAddresses); i < l; i++ {
+			data.SummaryAddresses = append(data.SummaryAddresses, DeviceOSPFSummaryAddresses{})
+		}
+		if len(data.SummaryAddresses) > l {
+			data.SummaryAddresses = data.SummaryAddresses[:l]
+		}
+	}
+	for i := range data.SummaryAddresses {
+		parent := &data
+		data := (*parent).SummaryAddresses[i]
+		parentRes := &res
+		res := parentRes.Get(fmt.Sprintf("summaryAddresses.%d", i))
+		for i := 0; i < len(data.Networks); i++ {
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.Networks[i].Id.ValueString()}
+
+			parent := &data
+			data := (*parent).Networks[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("summaryNetwork").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing Networks[%d] = %+v",
+					i,
+					(*parent).Networks[i],
+				))
+				(*parent).Networks = slices.Delete((*parent).Networks, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			(*parent).Networks[i] = data
+		}
+		if value := res.Get("tagNumber"); value.Exists() && !data.Tag.IsNull() {
+			data.Tag = types.Int64Value(value.Int())
+		} else {
+			data.Tag = types.Int64Null()
+		}
+		if value := res.Get("advertise"); value.Exists() && !data.Advertise.IsNull() {
+			data.Advertise = types.BoolValue(value.Bool())
+		} else {
+			data.Advertise = types.BoolNull()
+		}
+		(*parent).SummaryAddresses[i] = data
+	}
 }
 
 // End of section. //template:end fromBodyPartial
@@ -1448,15 +1585,14 @@ func (data *DeviceOSPF) fromBodyUnknowns(ctx context.Context, res gjson.Result) 
 // End of section. //template:end fromBodyUnknowns
 
 func (data DeviceOSPF) adjustBody(ctx context.Context, req string) string {
-	req, _ = sjson.Set(req, "enableProcess", fmt.Sprintf("PROCESS_%v", data.ProcessId.ValueInt64()))
+	// odd -> 1, even -> 2
+	req, _ = sjson.Set(req, "enableProcess", fmt.Sprintf("PROCESS_%v", 2-data.ProcessId.ValueInt64()%2))
 	if len(data.Redistributions) > 0 {
 		for i, item := range data.Redistributions {
 			if item.RouteType.ValueString() == "RedistributeOSPF" {
-				var peerProcesId int64 = 1
-				if data.ProcessId.ValueInt64() == 1 {
-					peerProcesId = 2
-				}
-				req, _ = sjson.Set(req, fmt.Sprintf("redistributeProtocols.%d.processId", i), peerProcesId)
+				// pairing consecutive numbers (1<>2, 3<>4):
+				var peerProcessId = ((data.ProcessId.ValueInt64() - 1) ^ 1) + 1
+				req, _ = sjson.Set(req, fmt.Sprintf("redistributeProtocols.%d.processId", i), peerProcessId)
 			}
 		}
 	}

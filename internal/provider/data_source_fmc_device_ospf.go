@@ -79,7 +79,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"process_id": schema.Int64Attribute{
-				MarkdownDescription: "OSPF process ID.",
+				MarkdownDescription: "OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.",
 				Computed:            true,
 			},
 			"router_id": schema.StringAttribute{
@@ -381,6 +381,34 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 						},
 						"interface_id": schema.StringAttribute{
 							MarkdownDescription: "Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.",
+							Computed:            true,
+						},
+					},
+				},
+			},
+			"summary_addresses": schema.ListNestedAttribute{
+				MarkdownDescription: "List of summary addresses.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"networks": schema.ListNestedAttribute{
+							MarkdownDescription: "Summary Networks.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Network object ID for the summary address.",
+										Computed:            true,
+									},
+								},
+							},
+						},
+						"tag": schema.Int64Attribute{
+							MarkdownDescription: "Tag number for the summary address.",
+							Computed:            true,
+						},
+						"advertise": schema.BoolAttribute{
+							MarkdownDescription: "Whether to advertise this summary address.",
 							Computed:            true,
 						},
 					},

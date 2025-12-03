@@ -106,8 +106,11 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"process_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.").AddIntegerRangeDescription(1, 300).String,
 				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 300),
+				},
 			},
 			"router_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address used as the router ID. Leave blank for AUTOMATIC.").String,
@@ -493,6 +496,37 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 						},
 						"interface_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.").String,
+							Optional:            true,
+						},
+					},
+				},
+			},
+			"summary_addresses": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("List of summary addresses.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"networks": schema.ListNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Summary Networks.").String,
+							Required:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Network object ID for the summary address.").String,
+										Required:            true,
+									},
+								},
+							},
+						},
+						"tag": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Tag number for the summary address.").AddIntegerRangeDescription(0, 4294967295).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(0, 4294967295),
+							},
+						},
+						"advertise": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to advertise this summary address.").String,
 							Optional:            true,
 						},
 					},

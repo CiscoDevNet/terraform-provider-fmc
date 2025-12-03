@@ -1,7 +1,7 @@
+# FMCBUG CSCws31723 FMC API: OSPF endpoints are unstable
 # Manual Resource - adjust_body
 # FMCBUG: Cannot set description
 # FMCBUG: InterArea filters
-# FMCBUG: Summary address not working
 # TODO: NSF
 ---
 name: Device OSPF
@@ -24,8 +24,10 @@ attributes:
     computed: true
   - model_name: processId
     type: Int64
-    description: OSPF process ID.
+    description: OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
     required: true
+    min_int: 1
+    max_int: 300
     example: 1
     test_value: 1
   
@@ -470,41 +472,31 @@ attributes:
         exclude_test: true
 
   # Summary Address
-  # - model_name: summaryAddresses
-  #   tf_name: summary_addresses
-  #   type: List
-  #   description: List of summary addresses.
-  #   attributes:
-  #     - model_name: id
-  #       data_path: [summaryNetwork]
-  #       tf_name: network_object_id
-  #       type: String
-  #       description: Network object ID for the summary address.
-  #       example: 123e4567-e89b-12d3-a456-426614174000
-  #       mandatory: true
-  #       id: true
-  #     - model_name: type
-  #       data_path: [summaryNetwork]
-  #       tf_name: network_object_type
-  #       type: String
-  #       description: Network object ID for the summary address.
-  #       example: 123e4567-e89b-12d3-a456-426614174000
-  #       id: true
-  #     - model_name: name
-  #       data_path: [summaryNetwork]
-  #       tf_name: network_object_name
-  #       type: String
-  #       description: Network object ID for the summary address.
-  #       example: 123e4567-e89b-12d3-a456-426614174000
-  #       id: true
-  #     - model_name: tagNumber
-  #       tf_name: tag
-  #       type: Int64
-  #       min_int: 0
-  #       max_int: 4294967295
-  #       description: Tag number for the summary address.
-  #       example: 100
-  #     - model_name: advertise
-  #       type: Bool
-  #       description: Whether to advertise this summary address.
-  #       example: true
+  - model_name: summaryAddresses
+    tf_name: summary_addresses
+    type: List
+    ordered_list: true
+    description: List of summary addresses.
+    attributes:
+      - model_name: summaryNetwork
+        tf_name: networks
+        type: List
+        description: Summary Networks.
+        mandatory: true
+        attributes:
+        - model_name: id
+          type: String
+          description: Network object ID for the summary address.
+          example: 123e4567-e89b-12d3-a456-426614174000
+          mandatory: true
+      - model_name: tagNumber
+        tf_name: tag
+        type: Int64
+        min_int: 0
+        max_int: 4294967295
+        description: Tag number for the summary address.
+        example: 100
+      - model_name: advertise
+        type: Bool
+        description: Whether to advertise this summary address.
+        example: true

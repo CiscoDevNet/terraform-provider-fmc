@@ -80,6 +80,9 @@ func TestAccDataSourceFmcDeviceOSPF(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "filter_rules.0.access_list_id", "123e4567-e89b-12d3-a456-426614174000"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "filter_rules.0.traffic_direction", "incomingroutefilter"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "filter_rules.0.routing_process", "CONNECTED"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "summary_addresses.0.networks.0.id", "123e4567-e89b-12d3-a456-426614174000"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "summary_addresses.0.tag", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "summary_addresses.0.advertise", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -162,6 +165,13 @@ func testAccDataSourceFmcDeviceOSPFConfig() string {
 	config += `		access_list_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
 	config += `		traffic_direction = "incomingroutefilter"` + "\n"
 	config += `		routing_process = "CONNECTED"` + "\n"
+	config += `	}]` + "\n"
+	config += `	summary_addresses = [{` + "\n"
+	config += `		networks = [{` + "\n"
+	config += `			id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
+	config += `		}]` + "\n"
+	config += `		tag = 100` + "\n"
+	config += `		advertise = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

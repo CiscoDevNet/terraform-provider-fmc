@@ -89,6 +89,17 @@ resource "fmc_device_ospf" "example" {
       routing_process   = "CONNECTED"
     }
   ]
+  summary_addresses = [
+    {
+      networks = [
+        {
+          id = "123e4567-e89b-12d3-a456-426614174000"
+        }
+      ]
+      tag       = 100
+      advertise = true
+    }
+  ]
 }
 ```
 
@@ -120,11 +131,13 @@ resource "fmc_device_ospf" "example" {
   - Default value: `false`
 - `log_adjacency_changes` (String) Log adjacency changes type.
   - Choices: `DEFAULT`, `DETAILED`
-- `process_id` (Number) OSPF process ID.
+- `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
+  - Range: `1`-`300`
 - `redistributions` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility.
   - Default value: `false`
 - `router_id` (String) IPv4 address used as the router ID. Leave blank for AUTOMATIC.
+- `summary_addresses` (Attributes List) List of summary addresses. (see [below for nested schema](#nestedatt--summary_addresses))
 - `timer_lsa_group` (Number) LSA group timer in seconds.
   - Default value: `240`
 - `vrf_id` (String) Id of the parent VRF.
@@ -287,6 +300,27 @@ Optional:
 - `subnets` (Boolean) Whether to redistribute subnets.
 - `tag` (Number) Tag number for the redistribution.
   - Range: `0`-`4294967295`
+
+
+<a id="nestedatt--summary_addresses"></a>
+### Nested Schema for `summary_addresses`
+
+Required:
+
+- `networks` (Attributes List) Summary Networks. (see [below for nested schema](#nestedatt--summary_addresses--networks))
+
+Optional:
+
+- `advertise` (Boolean) Whether to advertise this summary address.
+- `tag` (Number) Tag number for the summary address.
+  - Range: `0`-`4294967295`
+
+<a id="nestedatt--summary_addresses--networks"></a>
+### Nested Schema for `summary_addresses.networks`
+
+Required:
+
+- `id` (String) Network object ID for the summary address.
 
 ## Import
 

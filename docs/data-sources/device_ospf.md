@@ -45,10 +45,11 @@ data "fmc_device_ospf" "example" {
 - `filter_rules` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--filter_rules))
 - `ignore_lsa_mospf` (Boolean) Ignore LSA type 9, 10, and 11 for MOSPF.
 - `log_adjacency_changes` (String) Log adjacency changes type.
-- `process_id` (Number) OSPF process ID.
+- `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
 - `redistributions` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility.
 - `router_id` (String) IPv4 address used as the router ID. Leave blank for AUTOMATIC.
+- `summary_addresses` (Attributes List) List of summary addresses. (see [below for nested schema](#nestedatt--summary_addresses))
 - `timer_lsa_group` (Number) LSA group timer in seconds.
 - `type` (String) Type of the object; this is always 'OspfRoute'
 
@@ -164,3 +165,20 @@ Read-Only:
 - `route_type` (String)
 - `subnets` (Boolean) Whether to redistribute subnets.
 - `tag` (Number) Tag number for the redistribution.
+
+
+<a id="nestedatt--summary_addresses"></a>
+### Nested Schema for `summary_addresses`
+
+Read-Only:
+
+- `advertise` (Boolean) Whether to advertise this summary address.
+- `networks` (Attributes List) Summary Networks. (see [below for nested schema](#nestedatt--summary_addresses--networks))
+- `tag` (Number) Tag number for the summary address.
+
+<a id="nestedatt--summary_addresses--networks"></a>
+### Nested Schema for `summary_addresses.networks`
+
+Read-Only:
+
+- `id` (String) Network object ID for the summary address.
