@@ -1,7 +1,7 @@
 resource "fmc_device_ospf" "example" {
   device_id                          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   process_id                         = 1
-  router_id                          = "AUTOMATIC"
+  router_id                          = "10.10.10.1"
   rfc_1583_compatible                = false
   log_adjacency_changes              = "DEFAULT"
   ignore_lsa_mospf                   = false
@@ -43,8 +43,8 @@ resource "fmc_device_ospf" "example" {
       ]
       inter_area_filters = [
         {
-          prefix_list_id   = ""
-          prefix_list_name = ""
+          prefix_list_id   = "123e4567-e89b-12d3-a456-426614174000"
+          prefix_list_name = "Office Prefix List"
           filter_direction = ""
         }
       ]

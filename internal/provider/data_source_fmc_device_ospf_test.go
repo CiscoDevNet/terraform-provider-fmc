@@ -35,7 +35,7 @@ func TestAccDataSourceFmcDeviceOSPF(t *testing.T) {
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_device_ospf.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "router_id", "AUTOMATIC"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "router_id", "10.10.10.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "rfc_1583_compatible", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "log_adjacency_changes", "DEFAULT"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "ignore_lsa_mospf", "false"))
@@ -61,8 +61,8 @@ func TestAccDataSourceFmcDeviceOSPF(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.virtual_links.0.retransmit_interval", "5"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.virtual_links.0.dead_interval", "40"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.virtual_links.0.authentication_password", "ospfAuthKey"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_id", ""))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_name", ""))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_id", "123e4567-e89b-12d3-a456-426614174000"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.inter_area_filters.0.prefix_list_name", "Office Prefix List"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "areas.0.inter_area_filters.0.filter_direction", ""))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "redistributions.0.route_type", "RedistributeBGP"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_ospf.test", "redistributions.0.as_number", "65001"))
@@ -107,7 +107,7 @@ func testAccDataSourceFmcDeviceOSPFConfig() string {
 	config := `resource "fmc_device_ospf" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	process_id = 1` + "\n"
-	config += `	router_id = "AUTOMATIC"` + "\n"
+	config += `	router_id = "10.10.10.1"` + "\n"
 	config += `	rfc_1583_compatible = false` + "\n"
 	config += `	log_adjacency_changes = "DEFAULT"` + "\n"
 	config += `	ignore_lsa_mospf = false` + "\n"
@@ -141,8 +141,8 @@ func testAccDataSourceFmcDeviceOSPFConfig() string {
 	config += `			authentication_password = "ospfAuthKey"` + "\n"
 	config += `		}]` + "\n"
 	config += `		inter_area_filters = [{` + "\n"
-	config += `			prefix_list_id = ""` + "\n"
-	config += `			prefix_list_name = ""` + "\n"
+	config += `			prefix_list_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
+	config += `			prefix_list_name = "Office Prefix List"` + "\n"
 	config += `			filter_direction = ""` + "\n"
 	config += `		}]` + "\n"
 	config += `	}]` + "\n"

@@ -36,28 +36,34 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type DeviceOSPF struct {
-	Id                              types.String                 `tfsdk:"id"`
-	Domain                          types.String                 `tfsdk:"domain"`
-	VrfId                           types.String                 `tfsdk:"vrf_id"`
-	DeviceId                        types.String                 `tfsdk:"device_id"`
-	Type                            types.String                 `tfsdk:"type"`
-	ProcessId                       types.Int64                  `tfsdk:"process_id"`
-	RouterId                        types.String                 `tfsdk:"router_id"`
-	Rfc1583Compatible               types.Bool                   `tfsdk:"rfc_1583_compatible"`
-	LogAdjacencyChanges             types.String                 `tfsdk:"log_adjacency_changes"`
-	IgnoreLsaMospf                  types.Bool                   `tfsdk:"ignore_lsa_mospf"`
-	AdministrativeDistanceInterArea types.Int64                  `tfsdk:"administrative_distance_inter_area"`
-	AdministrativeDistanceIntraArea types.Int64                  `tfsdk:"administrative_distance_intra_area"`
-	AdministrativeDistanceExternal  types.Int64                  `tfsdk:"administrative_distance_external"`
-	TimerLsaGroup                   types.Int64                  `tfsdk:"timer_lsa_group"`
-	DefaultRouteAlwaysAdvertise     types.Bool                   `tfsdk:"default_route_always_advertise"`
-	DefaultRouteMetric              types.Int64                  `tfsdk:"default_route_metric"`
-	DefaultRouteMetricType          types.String                 `tfsdk:"default_route_metric_type"`
-	DefaultRouteRouteMapId          types.String                 `tfsdk:"default_route_route_map_id"`
-	Areas                           []DeviceOSPFAreas            `tfsdk:"areas"`
-	Redistributions                 []DeviceOSPFRedistributions  `tfsdk:"redistributions"`
-	FilterRules                     []DeviceOSPFFilterRules      `tfsdk:"filter_rules"`
-	SummaryAddresses                []DeviceOSPFSummaryAddresses `tfsdk:"summary_addresses"`
+	Id                               types.String                 `tfsdk:"id"`
+	Domain                           types.String                 `tfsdk:"domain"`
+	VrfId                            types.String                 `tfsdk:"vrf_id"`
+	DeviceId                         types.String                 `tfsdk:"device_id"`
+	Type                             types.String                 `tfsdk:"type"`
+	ProcessId                        types.Int64                  `tfsdk:"process_id"`
+	RouterId                         types.String                 `tfsdk:"router_id"`
+	Rfc1583Compatible                types.Bool                   `tfsdk:"rfc_1583_compatible"`
+	LogAdjacencyChanges              types.String                 `tfsdk:"log_adjacency_changes"`
+	IgnoreLsaMospf                   types.Bool                   `tfsdk:"ignore_lsa_mospf"`
+	AdministrativeDistanceInterArea  types.Int64                  `tfsdk:"administrative_distance_inter_area"`
+	AdministrativeDistanceIntraArea  types.Int64                  `tfsdk:"administrative_distance_intra_area"`
+	AdministrativeDistanceExternal   types.Int64                  `tfsdk:"administrative_distance_external"`
+	TimerLsaGroup                    types.Int64                  `tfsdk:"timer_lsa_group"`
+	DefaultRouteAlwaysAdvertise      types.Bool                   `tfsdk:"default_route_always_advertise"`
+	DefaultRouteMetric               types.Int64                  `tfsdk:"default_route_metric"`
+	DefaultRouteMetricType           types.String                 `tfsdk:"default_route_metric_type"`
+	DefaultRouteRouteMapId           types.String                 `tfsdk:"default_route_route_map_id"`
+	NonStopForwarding                types.Bool                   `tfsdk:"non_stop_forwarding"`
+	NonStopForwardingMechanism       types.String                 `tfsdk:"non_stop_forwarding_mechanism"`
+	NonStopForwardingHelperMode      types.Bool                   `tfsdk:"non_stop_forwarding_helper_mode"`
+	NonStopForwardingRestartInterval types.Int64                  `tfsdk:"non_stop_forwarding_restart_interval"`
+	NonStopForwardingCapability      types.Bool                   `tfsdk:"non_stop_forwarding_capability"`
+	NonStopForwardingStrictMode      types.Bool                   `tfsdk:"non_stop_forwarding_strict_mode"`
+	Areas                            []DeviceOSPFAreas            `tfsdk:"areas"`
+	Redistributions                  []DeviceOSPFRedistributions  `tfsdk:"redistributions"`
+	FilterRules                      []DeviceOSPFFilterRules      `tfsdk:"filter_rules"`
+	SummaryAddresses                 []DeviceOSPFSummaryAddresses `tfsdk:"summary_addresses"`
 }
 
 type DeviceOSPFAreas struct {
@@ -207,6 +213,24 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 	}
 	if !data.DefaultRouteRouteMapId.IsNull() {
 		body, _ = sjson.Set(body, "processConfiguration.defaultInformationOriginate.routeMap.id", data.DefaultRouteRouteMapId.ValueString())
+	}
+	if !data.NonStopForwarding.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfEnable", data.NonStopForwarding.ValueBool())
+	}
+	if !data.NonStopForwardingMechanism.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfMechanism", data.NonStopForwardingMechanism.ValueString())
+	}
+	if !data.NonStopForwardingHelperMode.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfHelper", data.NonStopForwardingHelperMode.ValueBool())
+	}
+	if !data.NonStopForwardingRestartInterval.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfRestartIntraval", data.NonStopForwardingRestartInterval.ValueInt64())
+	}
+	if !data.NonStopForwardingCapability.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfCapability", data.NonStopForwardingCapability.ValueBool())
+	}
+	if !data.NonStopForwardingStrictMode.IsNull() {
+		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfEnforceGlobal", data.NonStopForwardingStrictMode.ValueBool())
 	}
 	if len(data.Areas) > 0 {
 		body, _ = sjson.Set(body, "areas", []any{})
@@ -506,6 +530,36 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultRouteRouteMapId = types.StringValue(value.String())
 	} else {
 		data.DefaultRouteRouteMapId = types.StringNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfEnable"); value.Exists() {
+		data.NonStopForwarding = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwarding = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfMechanism"); value.Exists() {
+		data.NonStopForwardingMechanism = types.StringValue(value.String())
+	} else {
+		data.NonStopForwardingMechanism = types.StringNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfHelper"); value.Exists() {
+		data.NonStopForwardingHelperMode = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingHelperMode = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfRestartIntraval"); value.Exists() {
+		data.NonStopForwardingRestartInterval = types.Int64Value(value.Int())
+	} else {
+		data.NonStopForwardingRestartInterval = types.Int64Null()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfCapability"); value.Exists() {
+		data.NonStopForwardingCapability = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingCapability = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfEnforceGlobal"); value.Exists() {
+		data.NonStopForwardingStrictMode = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingStrictMode = types.BoolNull()
 	}
 	if value := res.Get("areas"); value.Exists() {
 		data.Areas = make([]DeviceOSPFAreas, 0)
@@ -926,6 +980,36 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data.DefaultRouteRouteMapId = types.StringValue(value.String())
 	} else {
 		data.DefaultRouteRouteMapId = types.StringNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfEnable"); value.Exists() && !data.NonStopForwarding.IsNull() {
+		data.NonStopForwarding = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwarding = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfMechanism"); value.Exists() && !data.NonStopForwardingMechanism.IsNull() {
+		data.NonStopForwardingMechanism = types.StringValue(value.String())
+	} else {
+		data.NonStopForwardingMechanism = types.StringNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfHelper"); value.Exists() && !data.NonStopForwardingHelperMode.IsNull() {
+		data.NonStopForwardingHelperMode = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingHelperMode = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfRestartIntraval"); value.Exists() && !data.NonStopForwardingRestartInterval.IsNull() {
+		data.NonStopForwardingRestartInterval = types.Int64Value(value.Int())
+	} else {
+		data.NonStopForwardingRestartInterval = types.Int64Null()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfCapability"); value.Exists() && !data.NonStopForwardingCapability.IsNull() {
+		data.NonStopForwardingCapability = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingCapability = types.BoolNull()
+	}
+	if value := res.Get("processConfiguration.nsfGracefulRestart.nsfEnforceGlobal"); value.Exists() && !data.NonStopForwardingStrictMode.IsNull() {
+		data.NonStopForwardingStrictMode = types.BoolValue(value.Bool())
+	} else {
+		data.NonStopForwardingStrictMode = types.BoolNull()
 	}
 	for i := 0; i < len(data.Areas); i++ {
 		keys := [...]string{"areaId"}

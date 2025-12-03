@@ -83,19 +83,19 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"router_id": schema.StringAttribute{
-				MarkdownDescription: "IPv4 address used as the router ID. Leave blank for AUTOMATIC.",
+				MarkdownDescription: "IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.",
 				Computed:            true,
 			},
 			"rfc_1583_compatible": schema.BoolAttribute{
-				MarkdownDescription: "Enable RFC 1583 compatibility.",
+				MarkdownDescription: "Enable RFC 1583 compatibility as the method used to calculate summary route costs.",
 				Computed:            true,
 			},
 			"log_adjacency_changes": schema.StringAttribute{
-				MarkdownDescription: "Log adjacency changes type.",
+				MarkdownDescription: "Log adjacency changes.",
 				Computed:            true,
 			},
 			"ignore_lsa_mospf": schema.BoolAttribute{
-				MarkdownDescription: "Ignore LSA type 9, 10, and 11 for MOSPF.",
+				MarkdownDescription: "Suppresses syslog messages when the route receives unsupported LSA Type 6 multicast OSPF (MOSPF) packets.",
 				Computed:            true,
 			},
 			"administrative_distance_inter_area": schema.Int64Attribute{
@@ -111,11 +111,11 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"timer_lsa_group": schema.Int64Attribute{
-				MarkdownDescription: "LSA group timer in seconds.",
+				MarkdownDescription: "Interval in seconds at which LSAs are collected into a group and refreshed, check summed, or aged.",
 				Computed:            true,
 			},
 			"default_route_always_advertise": schema.BoolAttribute{
-				MarkdownDescription: "Always advertise default route. When set, this enables Default Information Originate.",
+				MarkdownDescription: "Always advertise default route. When configure to any value, enables Default Information Originate as well.",
 				Computed:            true,
 			},
 			"default_route_metric": schema.Int64Attribute{
@@ -127,28 +127,52 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"default_route_route_map_id": schema.StringAttribute{
-				MarkdownDescription: "Route map ID for the default route.",
+				MarkdownDescription: "Route Map ID for choosing the process that generates the default route.",
+				Computed:            true,
+			},
+			"non_stop_forwarding": schema.BoolAttribute{
+				MarkdownDescription: "Enable Non-Stop Forwarding (NSF).",
+				Computed:            true,
+			},
+			"non_stop_forwarding_mechanism": schema.StringAttribute{
+				MarkdownDescription: "Non-Stop Forwarding mechanism.",
+				Computed:            true,
+			},
+			"non_stop_forwarding_helper_mode": schema.BoolAttribute{
+				MarkdownDescription: "Enable Non-Stop Forwarding helper mode.",
+				Computed:            true,
+			},
+			"non_stop_forwarding_restart_interval": schema.Int64Attribute{
+				MarkdownDescription: "Length of graceful restart interval (seconds).",
+				Computed:            true,
+			},
+			"non_stop_forwarding_capability": schema.BoolAttribute{
+				MarkdownDescription: "Enable Non-Stop Forwarding capability.",
+				Computed:            true,
+			},
+			"non_stop_forwarding_strict_mode": schema.BoolAttribute{
+				MarkdownDescription: "IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected",
 				Computed:            true,
 			},
 			"areas": schema.ListNestedAttribute{
-				MarkdownDescription: "List of OSPF areas.",
+				MarkdownDescription: "OSPF areas.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "OSPF area ID - Integer of IPv4 format.",
+							MarkdownDescription: "Area ID in either Integer or IPv4 format.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "OSPF area type.",
+							MarkdownDescription: "Area type.",
 							Computed:            true,
 						},
 						"no_summary": schema.BoolAttribute{
-							MarkdownDescription: "No Summary Stub / NSSA flag.",
+							MarkdownDescription: "No Summary flag for Stub / NSSA areas.",
 							Computed:            true,
 						},
 						"no_redistribution": schema.BoolAttribute{
-							MarkdownDescription: "NSSA No Redistribution flag.",
+							MarkdownDescription: "No Redistribution flag for NSSA areas.",
 							Computed:            true,
 						},
 						"default_route_metric_type": schema.StringAttribute{
@@ -160,7 +184,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"networks": schema.ListNestedAttribute{
-							MarkdownDescription: "List of networks in the OSPF area.",
+							MarkdownDescription: "Area networks.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -176,7 +200,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							},
 						},
 						"authentication": schema.StringAttribute{
-							MarkdownDescription: "Area authentication type.",
+							MarkdownDescription: "Authentication type.",
 							Computed:            true,
 						},
 						"default_cost": schema.Int64Attribute{
@@ -184,12 +208,12 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"ranges": schema.ListNestedAttribute{
-							MarkdownDescription: "List of area ranges.",
+							MarkdownDescription: "Ranges.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"network_object_id": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Network object ID.",
 										Computed:            true,
 									},
 									"advertise": schema.BoolAttribute{
@@ -200,7 +224,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							},
 						},
 						"virtual_links": schema.ListNestedAttribute{
-							MarkdownDescription: "List of virtual links in the OSPF area.",
+							MarkdownDescription: "Virtual links.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -276,16 +300,16 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							},
 						},
 						"inter_area_filters": schema.ListNestedAttribute{
-							MarkdownDescription: "List of inter-area filters.",
+							MarkdownDescription: "Inter-area filters.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"prefix_list_id": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Prefix list object ID.",
 										Computed:            true,
 									},
 									"prefix_list_name": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Prefix list object name.",
 										Computed:            true,
 									},
 									"filter_direction": schema.StringAttribute{
@@ -299,12 +323,12 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"redistributions": schema.ListNestedAttribute{
-				MarkdownDescription: "List of redistribution protocols.",
+				MarkdownDescription: "Enable protocol redistribution.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"route_type": schema.StringAttribute{
-							MarkdownDescription: "",
+							MarkdownDescription: "Protocol to redistribute.",
 							Computed:            true,
 						},
 						"as_number": schema.Int64Attribute{
@@ -340,7 +364,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"metric": schema.Int64Attribute{
-							MarkdownDescription: "Metric for the default route.",
+							MarkdownDescription: "Metric value for the routes being distributed.",
 							Computed:            true,
 						},
 						"metric_type": schema.StringAttribute{
@@ -348,23 +372,23 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							Computed:            true,
 						},
 						"tag": schema.Int64Attribute{
-							MarkdownDescription: "Tag number for the redistribution.",
+							MarkdownDescription: "Tag number.",
 							Computed:            true,
 						},
 						"route_map_id": schema.StringAttribute{
-							MarkdownDescription: "Route map ID for the redistribution.",
+							MarkdownDescription: "Route map ID for route filtering.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"filter_rules": schema.ListNestedAttribute{
-				MarkdownDescription: "List of redistribution protocols.",
+				MarkdownDescription: "Filter prefix advertisement between areas.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"access_list_id": schema.StringAttribute{
-							MarkdownDescription: "Access list ID for the filter rule.",
+							MarkdownDescription: "Standard Access List ID",
 							Computed:            true,
 						},
 						"traffic_direction": schema.StringAttribute{
@@ -387,7 +411,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"summary_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: "List of summary addresses.",
+				MarkdownDescription: "Addresses summarization configuration.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -397,18 +421,18 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
-										MarkdownDescription: "Network object ID for the summary address.",
+										MarkdownDescription: "Network object ID.",
 										Computed:            true,
 									},
 								},
 							},
 						},
 						"tag": schema.Int64Attribute{
-							MarkdownDescription: "Tag number for the summary address.",
+							MarkdownDescription: "Tag number.",
 							Computed:            true,
 						},
 						"advertise": schema.BoolAttribute{
-							MarkdownDescription: "Whether to advertise this summary address.",
+							MarkdownDescription: "Whether to advertise this summary route.",
 							Computed:            true,
 						},
 					},

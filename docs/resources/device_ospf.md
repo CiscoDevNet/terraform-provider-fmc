@@ -16,7 +16,7 @@ This resource manages a Device OSPF.
 resource "fmc_device_ospf" "example" {
   device_id                          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   process_id                         = 1
-  router_id                          = "AUTOMATIC"
+  router_id                          = "10.10.10.1"
   rfc_1583_compatible                = false
   log_adjacency_changes              = "DEFAULT"
   ignore_lsa_mospf                   = false
@@ -58,8 +58,8 @@ resource "fmc_device_ospf" "example" {
       ]
       inter_area_filters = [
         {
-          prefix_list_id   = ""
-          prefix_list_name = ""
+          prefix_list_id   = "123e4567-e89b-12d3-a456-426614174000"
+          prefix_list_name = "Office Prefix List"
           filter_direction = ""
         }
       ]
@@ -113,32 +113,44 @@ resource "fmc_device_ospf" "example" {
 ### Optional
 
 - `administrative_distance_external` (Number) Administrative distance for external routes.
+  - Range: `1`-`254`
   - Default value: `110`
 - `administrative_distance_inter_area` (Number) Administrative distance for inter-area routes.
+  - Range: `1`-`254`
   - Default value: `110`
 - `administrative_distance_intra_area` (Number) Administrative distance for intra-area routes.
+  - Range: `1`-`254`
   - Default value: `110`
-- `areas` (Attributes List) List of OSPF areas. (see [below for nested schema](#nestedatt--areas))
-- `default_route_always_advertise` (Boolean) Always advertise default route. When set, this enables Default Information Originate.
+- `areas` (Attributes List) OSPF areas. (see [below for nested schema](#nestedatt--areas))
+- `default_route_always_advertise` (Boolean) Always advertise default route. When configure to any value, enables Default Information Originate as well.
 - `default_route_metric` (Number) Metric for the default route.
   - Range: `0`-`16777214`
 - `default_route_metric_type` (String) Metric type for the default route.
   - Choices: `TYPE_1`, `TYPE_2`
-- `default_route_route_map_id` (String) Route map ID for the default route.
+- `default_route_route_map_id` (String) Route Map ID for choosing the process that generates the default route.
 - `domain` (String) Name of the FMC domain
-- `filter_rules` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--filter_rules))
-- `ignore_lsa_mospf` (Boolean) Ignore LSA type 9, 10, and 11 for MOSPF.
+- `filter_rules` (Attributes List) Filter prefix advertisement between areas. (see [below for nested schema](#nestedatt--filter_rules))
+- `ignore_lsa_mospf` (Boolean) Suppresses syslog messages when the route receives unsupported LSA Type 6 multicast OSPF (MOSPF) packets.
   - Default value: `false`
-- `log_adjacency_changes` (String) Log adjacency changes type.
+- `log_adjacency_changes` (String) Log adjacency changes.
   - Choices: `DEFAULT`, `DETAILED`
+- `non_stop_forwarding` (Boolean) Enable Non-Stop Forwarding (NSF).
+- `non_stop_forwarding_capability` (Boolean) Enable Non-Stop Forwarding capability.
+- `non_stop_forwarding_helper_mode` (Boolean) Enable Non-Stop Forwarding helper mode.
+- `non_stop_forwarding_mechanism` (String) Non-Stop Forwarding mechanism.
+  - Choices: `CISCO`, `IETF`, `NONE`
+- `non_stop_forwarding_restart_interval` (Number) Length of graceful restart interval (seconds).
+  - Range: `1`-`1800`
+- `non_stop_forwarding_strict_mode` (Boolean) IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
 - `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
   - Range: `1`-`300`
-- `redistributions` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--redistributions))
-- `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility.
+- `redistributions` (Attributes List) Enable protocol redistribution. (see [below for nested schema](#nestedatt--redistributions))
+- `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility as the method used to calculate summary route costs.
   - Default value: `false`
-- `router_id` (String) IPv4 address used as the router ID. Leave blank for AUTOMATIC.
-- `summary_addresses` (Attributes List) List of summary addresses. (see [below for nested schema](#nestedatt--summary_addresses))
-- `timer_lsa_group` (Number) LSA group timer in seconds.
+- `router_id` (String) IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
+- `summary_addresses` (Attributes List) Addresses summarization configuration. (see [below for nested schema](#nestedatt--summary_addresses))
+- `timer_lsa_group` (Number) Interval in seconds at which LSAs are collected into a group and refreshed, check summed, or aged.
+  - Range: `10`-`1800`
   - Default value: `240`
 - `vrf_id` (String) Id of the parent VRF.
 
@@ -152,11 +164,11 @@ resource "fmc_device_ospf" "example" {
 
 Required:
 
-- `id` (String) OSPF area ID - Integer of IPv4 format.
+- `id` (String) Area ID in either Integer or IPv4 format.
 
 Optional:
 
-- `authentication` (String) Area authentication type.
+- `authentication` (String) Authentication type.
   - Choices: `PASSWORD`, `MESSAGE_DIGEST`
 - `default_cost` (Number) Default cost for the area.
   - Range: `0`-`65535`
@@ -164,14 +176,14 @@ Optional:
   - Range: `0`-`16777214`
 - `default_route_metric_type` (String) Default route metric type for NSSA areas.
   - Choices: `TYPE_1`, `TYPE_2`
-- `inter_area_filters` (Attributes List) List of inter-area filters. (see [below for nested schema](#nestedatt--areas--inter_area_filters))
-- `networks` (Attributes List) List of networks in the OSPF area. (see [below for nested schema](#nestedatt--areas--networks))
-- `no_redistribution` (Boolean) NSSA No Redistribution flag.
-- `no_summary` (Boolean) No Summary Stub / NSSA flag.
-- `ranges` (Attributes List) List of area ranges. (see [below for nested schema](#nestedatt--areas--ranges))
-- `type` (String) OSPF area type.
+- `inter_area_filters` (Attributes List) Inter-area filters. (see [below for nested schema](#nestedatt--areas--inter_area_filters))
+- `networks` (Attributes List) Area networks. (see [below for nested schema](#nestedatt--areas--networks))
+- `no_redistribution` (Boolean) No Redistribution flag for NSSA areas.
+- `no_summary` (Boolean) No Summary flag for Stub / NSSA areas.
+- `ranges` (Attributes List) Ranges. (see [below for nested schema](#nestedatt--areas--ranges))
+- `type` (String) Area type.
   - Choices: `normal`, `stub`, `nssa`
-- `virtual_links` (Attributes List) List of virtual links in the OSPF area. (see [below for nested schema](#nestedatt--areas--virtual_links))
+- `virtual_links` (Attributes List) Virtual links. (see [below for nested schema](#nestedatt--areas--virtual_links))
 
 <a id="nestedatt--areas--inter_area_filters"></a>
 ### Nested Schema for `areas.inter_area_filters`
@@ -180,11 +192,11 @@ Required:
 
 - `filter_direction` (String) Filter direction.
   - Choices: `IN`, `OUT`
-- `prefix_list_id` (String)
+- `prefix_list_id` (String) Prefix list object ID.
 
 Optional:
 
-- `prefix_list_name` (String)
+- `prefix_list_name` (String) Prefix list object name.
 
 
 <a id="nestedatt--areas--networks"></a>
@@ -204,7 +216,7 @@ Optional:
 
 Required:
 
-- `network_object_id` (String)
+- `network_object_id` (String) Network object ID.
 
 Optional:
 
@@ -263,7 +275,7 @@ Required:
 
 Required:
 
-- `access_list_id` (String) Access list ID for the filter rule.
+- `access_list_id` (String) Standard Access List ID
 - `traffic_direction` (String) Filter rule direction.
   - Choices: `incomingroutefilter`, `outgoingroutefilter`
 
@@ -280,12 +292,13 @@ Optional:
 
 Required:
 
-- `route_type` (String) - Choices: `RedistributeConnected`, `RedistributeStatic`, `RedistributeOSPF`, `RedistributeBGP`, `RedistributeRIP`, `RedistributeEIGRP`
+- `route_type` (String) Protocol to redistribute.
+  - Choices: `RedistributeConnected`, `RedistributeStatic`, `RedistributeOSPF`, `RedistributeBGP`, `RedistributeRIP`, `RedistributeEIGRP`
 
 Optional:
 
 - `as_number` (Number) Autonomous System Number (ASN) for BGP / EIGRP redistribution.
-- `metric` (Number) Metric for the default route.
+- `metric` (Number) Metric value for the routes being distributed.
   - Range: `0`-`16777214`
 - `metric_type` (String) Metric type for the default route.
   - Choices: `TYPE_1`, `TYPE_2`
@@ -296,9 +309,9 @@ Optional:
 - `ospf_match_nssa_external_1` (Boolean) Whether to match NSSA external type 1 routes.
 - `ospf_match_nssa_external_2` (Boolean) Whether to match NSSA external type 2 routes.
 - `process_id` (Number) OSPF process ID.
-- `route_map_id` (String) Route map ID for the redistribution.
+- `route_map_id` (String) Route map ID for route filtering.
 - `subnets` (Boolean) Whether to redistribute subnets.
-- `tag` (Number) Tag number for the redistribution.
+- `tag` (Number) Tag number.
   - Range: `0`-`4294967295`
 
 
@@ -311,8 +324,8 @@ Required:
 
 Optional:
 
-- `advertise` (Boolean) Whether to advertise this summary address.
-- `tag` (Number) Tag number for the summary address.
+- `advertise` (Boolean) Whether to advertise this summary route.
+- `tag` (Number) Tag number.
   - Range: `0`-`4294967295`
 
 <a id="nestedatt--summary_addresses--networks"></a>
@@ -320,7 +333,7 @@ Optional:
 
 Required:
 
-- `id` (String) Network object ID for the summary address.
+- `id` (String) Network object ID.
 
 ## Import
 

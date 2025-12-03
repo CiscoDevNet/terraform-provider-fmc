@@ -37,20 +37,26 @@ data "fmc_device_ospf" "example" {
 - `administrative_distance_external` (Number) Administrative distance for external routes.
 - `administrative_distance_inter_area` (Number) Administrative distance for inter-area routes.
 - `administrative_distance_intra_area` (Number) Administrative distance for intra-area routes.
-- `areas` (Attributes List) List of OSPF areas. (see [below for nested schema](#nestedatt--areas))
-- `default_route_always_advertise` (Boolean) Always advertise default route. When set, this enables Default Information Originate.
+- `areas` (Attributes List) OSPF areas. (see [below for nested schema](#nestedatt--areas))
+- `default_route_always_advertise` (Boolean) Always advertise default route. When configure to any value, enables Default Information Originate as well.
 - `default_route_metric` (Number) Metric for the default route.
 - `default_route_metric_type` (String) Metric type for the default route.
-- `default_route_route_map_id` (String) Route map ID for the default route.
-- `filter_rules` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--filter_rules))
-- `ignore_lsa_mospf` (Boolean) Ignore LSA type 9, 10, and 11 for MOSPF.
-- `log_adjacency_changes` (String) Log adjacency changes type.
+- `default_route_route_map_id` (String) Route Map ID for choosing the process that generates the default route.
+- `filter_rules` (Attributes List) Filter prefix advertisement between areas. (see [below for nested schema](#nestedatt--filter_rules))
+- `ignore_lsa_mospf` (Boolean) Suppresses syslog messages when the route receives unsupported LSA Type 6 multicast OSPF (MOSPF) packets.
+- `log_adjacency_changes` (String) Log adjacency changes.
+- `non_stop_forwarding` (Boolean) Enable Non-Stop Forwarding (NSF).
+- `non_stop_forwarding_capability` (Boolean) Enable Non-Stop Forwarding capability.
+- `non_stop_forwarding_helper_mode` (Boolean) Enable Non-Stop Forwarding helper mode.
+- `non_stop_forwarding_mechanism` (String) Non-Stop Forwarding mechanism.
+- `non_stop_forwarding_restart_interval` (Number) Length of graceful restart interval (seconds).
+- `non_stop_forwarding_strict_mode` (Boolean) IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
 - `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
-- `redistributions` (Attributes List) List of redistribution protocols. (see [below for nested schema](#nestedatt--redistributions))
-- `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility.
-- `router_id` (String) IPv4 address used as the router ID. Leave blank for AUTOMATIC.
-- `summary_addresses` (Attributes List) List of summary addresses. (see [below for nested schema](#nestedatt--summary_addresses))
-- `timer_lsa_group` (Number) LSA group timer in seconds.
+- `redistributions` (Attributes List) Enable protocol redistribution. (see [below for nested schema](#nestedatt--redistributions))
+- `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility as the method used to calculate summary route costs.
+- `router_id` (String) IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
+- `summary_addresses` (Attributes List) Addresses summarization configuration. (see [below for nested schema](#nestedatt--summary_addresses))
+- `timer_lsa_group` (Number) Interval in seconds at which LSAs are collected into a group and refreshed, check summed, or aged.
 - `type` (String) Type of the object; this is always 'OspfRoute'
 
 <a id="nestedatt--areas"></a>
@@ -58,18 +64,18 @@ data "fmc_device_ospf" "example" {
 
 Read-Only:
 
-- `authentication` (String) Area authentication type.
+- `authentication` (String) Authentication type.
 - `default_cost` (Number) Default cost for the area.
 - `default_route_metric` (Number) Default route metric value for NSSA areas.
 - `default_route_metric_type` (String) Default route metric type for NSSA areas.
-- `id` (String) OSPF area ID - Integer of IPv4 format.
-- `inter_area_filters` (Attributes List) List of inter-area filters. (see [below for nested schema](#nestedatt--areas--inter_area_filters))
-- `networks` (Attributes List) List of networks in the OSPF area. (see [below for nested schema](#nestedatt--areas--networks))
-- `no_redistribution` (Boolean) NSSA No Redistribution flag.
-- `no_summary` (Boolean) No Summary Stub / NSSA flag.
-- `ranges` (Attributes List) List of area ranges. (see [below for nested schema](#nestedatt--areas--ranges))
-- `type` (String) OSPF area type.
-- `virtual_links` (Attributes List) List of virtual links in the OSPF area. (see [below for nested schema](#nestedatt--areas--virtual_links))
+- `id` (String) Area ID in either Integer or IPv4 format.
+- `inter_area_filters` (Attributes List) Inter-area filters. (see [below for nested schema](#nestedatt--areas--inter_area_filters))
+- `networks` (Attributes List) Area networks. (see [below for nested schema](#nestedatt--areas--networks))
+- `no_redistribution` (Boolean) No Redistribution flag for NSSA areas.
+- `no_summary` (Boolean) No Summary flag for Stub / NSSA areas.
+- `ranges` (Attributes List) Ranges. (see [below for nested schema](#nestedatt--areas--ranges))
+- `type` (String) Area type.
+- `virtual_links` (Attributes List) Virtual links. (see [below for nested schema](#nestedatt--areas--virtual_links))
 
 <a id="nestedatt--areas--inter_area_filters"></a>
 ### Nested Schema for `areas.inter_area_filters`
@@ -77,8 +83,8 @@ Read-Only:
 Read-Only:
 
 - `filter_direction` (String) Filter direction.
-- `prefix_list_id` (String)
-- `prefix_list_name` (String)
+- `prefix_list_id` (String) Prefix list object ID.
+- `prefix_list_name` (String) Prefix list object name.
 
 
 <a id="nestedatt--areas--networks"></a>
@@ -96,7 +102,7 @@ Read-Only:
 Read-Only:
 
 - `advertise` (Boolean) Whether to advertise this area range.
-- `network_object_id` (String)
+- `network_object_id` (String) Network object ID.
 
 
 <a id="nestedatt--areas--virtual_links"></a>
@@ -140,7 +146,7 @@ Read-Only:
 
 Read-Only:
 
-- `access_list_id` (String) Access list ID for the filter rule.
+- `access_list_id` (String) Standard Access List ID
 - `interface_id` (String) Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.
 - `routing_process` (String) Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
 - `routing_process_id` (Number) Routing process ID for the filter rule. Applicable for OSPF, BGP, and EIGRP protocols.
@@ -153,7 +159,7 @@ Read-Only:
 Read-Only:
 
 - `as_number` (Number) Autonomous System Number (ASN) for BGP / EIGRP redistribution.
-- `metric` (Number) Metric for the default route.
+- `metric` (Number) Metric value for the routes being distributed.
 - `metric_type` (String) Metric type for the default route.
 - `ospf_match_external_1` (Boolean) Whether to match external type 1 routes.
 - `ospf_match_external_2` (Boolean) Whether to match external type 2 routes.
@@ -161,10 +167,10 @@ Read-Only:
 - `ospf_match_nssa_external_1` (Boolean) Whether to match NSSA external type 1 routes.
 - `ospf_match_nssa_external_2` (Boolean) Whether to match NSSA external type 2 routes.
 - `process_id` (Number) OSPF process ID.
-- `route_map_id` (String) Route map ID for the redistribution.
-- `route_type` (String)
+- `route_map_id` (String) Route map ID for route filtering.
+- `route_type` (String) Protocol to redistribute.
 - `subnets` (Boolean) Whether to redistribute subnets.
-- `tag` (Number) Tag number for the redistribution.
+- `tag` (Number) Tag number.
 
 
 <a id="nestedatt--summary_addresses"></a>
@@ -172,13 +178,13 @@ Read-Only:
 
 Read-Only:
 
-- `advertise` (Boolean) Whether to advertise this summary address.
+- `advertise` (Boolean) Whether to advertise this summary route.
 - `networks` (Attributes List) Summary Networks. (see [below for nested schema](#nestedatt--summary_addresses--networks))
-- `tag` (Number) Tag number for the summary address.
+- `tag` (Number) Tag number.
 
 <a id="nestedatt--summary_addresses--networks"></a>
 ### Nested Schema for `summary_addresses.networks`
 
 Read-Only:
 
-- `id` (String) Network object ID for the summary address.
+- `id` (String) Network object ID.
