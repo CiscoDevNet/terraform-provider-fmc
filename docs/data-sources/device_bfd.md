@@ -36,6 +36,7 @@ data "fmc_device_bfd" "example" {
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
 - `interface_logical_name` (String) Logical Name of the interface for BFD assignment if `hop_type` is set to SINGLE_HOP.
+- `vrf_id` (String) Id of the parent VRF.
 
 ### Read-Only
 

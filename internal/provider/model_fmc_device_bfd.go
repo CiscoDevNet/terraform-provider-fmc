@@ -36,6 +36,7 @@ import (
 type DeviceBFD struct {
 	Id                      types.String `tfsdk:"id"`
 	Domain                  types.String `tfsdk:"domain"`
+	VrfId                   types.String `tfsdk:"vrf_id"`
 	DeviceId                types.String `tfsdk:"device_id"`
 	Type                    types.String `tfsdk:"type"`
 	HopType                 types.String `tfsdk:"hop_type"`
@@ -57,7 +58,11 @@ var minFMCVersionDeviceBFD = version.Must(version.NewVersion("7.4"))
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceBFD) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bfdpolicies", url.QueryEscape(data.DeviceId.ValueString()))
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/bfdpolicies", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bfdpolicies", url.QueryEscape(data.DeviceId.ValueString()))
+	}
 }
 
 // End of section. //template:end getPath
