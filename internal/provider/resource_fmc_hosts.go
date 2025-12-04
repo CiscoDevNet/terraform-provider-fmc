@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
 	"github.com/hashicorp/terraform-plugin-framework/path"
@@ -91,7 +90,7 @@ func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the Host object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -110,7 +109,7 @@ func (r *HostsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'Host'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 					},

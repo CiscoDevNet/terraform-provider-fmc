@@ -296,7 +296,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 								{{- end }}
 								{{- end}}
 								{{- else}}
-								planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+								{{snakeCase .Type}}planmodifier.UseNonNullStateForUnknown(),
 								{{- end}}
 							},
 							{{- else if and .RequiresReplace (not $.IsBulk)}}
@@ -380,7 +380,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 											{{snakeCase .Type}}planmodifier.RequiresReplace(),
 											{{end}}
 											{{- if and .Computed (not .ComputedRefreshValue)}}
-											planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+											{{snakeCase .Type}}planmodifier.UseNonNullStateForUnknown(),
 											{{end}}
 										},
 										{{- end}}
@@ -466,7 +466,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 														{{snakeCase .Type}}planmodifier.RequiresReplace(),
 														{{end}}
 														{{- if and .Computed (not .ComputedRefreshValue)}}
-														planmodifiers.UseStateForUnknownKeepNonNullState{{toGoName .Type}}(),
+														{{snakeCase .Type}}planmodifier.UseNonNullStateForUnknown(),
 														{{end}}
 													},
 													{{- end}}
