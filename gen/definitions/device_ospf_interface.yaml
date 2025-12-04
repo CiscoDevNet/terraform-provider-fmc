@@ -24,6 +24,7 @@ attributes:
     type: String
     description: ID of the interface associated with this OSPF interface.
     example: 123e4567-e89b-12d3-a456-426614174000
+    test_value: fmc_device_physical_interface.test.id
     mandatory: true
   - model_name: packetCost
     data_path: [ospfProtocolConfiguration]
@@ -177,3 +178,14 @@ attributes:
     description: Key chain object ID for authentication.
     exclude_example: true
     exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id = var.device_id
+    name      = var.interface_name
+    mode      = "NONE"
+    logical_name = "OSPF_Interface"
+  }

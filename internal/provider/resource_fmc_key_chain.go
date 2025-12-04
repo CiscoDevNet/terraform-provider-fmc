@@ -98,7 +98,7 @@ func (r *KeyChainResource) Schema(ctx context.Context, req resource.SchemaReques
 			},
 			"keys": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Keys").String,
-				Optional:            true,
+				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{

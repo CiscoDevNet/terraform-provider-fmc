@@ -76,6 +76,10 @@ func TestAccFmcKeyChain(t *testing.T) {
 func testAccFmcKeyChainConfig_minimum() string {
 	config := `resource "fmc_key_chain" "test" {` + "\n"
 	config += `	name = "my_key_chain"` + "\n"
+	config += `	keys = [{` + "\n"
+	config += `		id = 1` + "\n"
+	config += `		key = "my_secret_key"` + "\n"
+	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
 }

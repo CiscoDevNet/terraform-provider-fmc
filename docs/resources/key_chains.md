@@ -58,10 +58,13 @@ resource "fmc_key_chains" "example" {
 <a id="nestedatt--items"></a>
 ### Nested Schema for `items`
 
+Required:
+
+- `keys` (Attributes List) Keys (see [below for nested schema](#nestedatt--items--keys))
+
 Optional:
 
 - `description` (String) Description of the object.
-- `keys` (Attributes List) Keys (see [below for nested schema](#nestedatt--items--keys))
 
 Read-Only:
 

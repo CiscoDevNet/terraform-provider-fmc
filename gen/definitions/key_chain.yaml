@@ -24,6 +24,7 @@ attributes:
   - model_name: keys
     description: Keys
     type: List
+    mandatory: true
     attributes:
       - model_name: keyId
         tf_name: id

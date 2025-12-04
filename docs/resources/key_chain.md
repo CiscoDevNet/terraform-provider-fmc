@@ -36,13 +36,13 @@ resource "fmc_key_chain" "example" {
 
 ### Required
 
+- `keys` (Attributes List) Keys (see [below for nested schema](#nestedatt--keys))
 - `name` (String) Name of the Key Chain object.
 
 ### Optional
 
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `keys` (Attributes List) Keys (see [below for nested schema](#nestedatt--keys))
 
 ### Read-Only
 

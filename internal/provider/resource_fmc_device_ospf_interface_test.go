@@ -35,7 +35,6 @@ func TestAccFmcDeviceOSPFInterface(t *testing.T) {
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_ospf_interface.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf_interface.test", "interface_id", "123e4567-e89b-12d3-a456-426614174000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf_interface.test", "default_cost", "10"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf_interface.test", "priority", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_ospf_interface.test", "mtu_missmatch_ignore", "false"))
@@ -50,11 +49,11 @@ func TestAccFmcDeviceOSPFInterface(t *testing.T) {
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcDeviceOSPFInterfaceConfig_minimum(),
+			Config: testAccFmcDeviceOSPFInterfacePrerequisitesConfig + testAccFmcDeviceOSPFInterfaceConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcDeviceOSPFInterfaceConfig_all(),
+		Config: testAccFmcDeviceOSPFInterfacePrerequisitesConfig + testAccFmcDeviceOSPFInterfaceConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -69,6 +68,19 @@ func TestAccFmcDeviceOSPFInterface(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcDeviceOSPFInterfacePrerequisitesConfig = `
+variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+resource "fmc_device_physical_interface" "test" {
+  device_id = var.device_id
+  name      = var.interface_name
+  mode      = "NONE"
+  logical_name = "OSPF_Interface"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -76,7 +88,7 @@ func TestAccFmcDeviceOSPFInterface(t *testing.T) {
 func testAccFmcDeviceOSPFInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_ospf_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
-	config += `	interface_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
+	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -88,7 +100,7 @@ func testAccFmcDeviceOSPFInterfaceConfig_minimum() string {
 func testAccFmcDeviceOSPFInterfaceConfig_all() string {
 	config := `resource "fmc_device_ospf_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
-	config += `	interface_id = "123e4567-e89b-12d3-a456-426614174000"` + "\n"
+	config += `	interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	default_cost = 10` + "\n"
 	config += `	priority = 1` + "\n"
 	config += `	mtu_missmatch_ignore = false` + "\n"
