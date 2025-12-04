@@ -544,6 +544,27 @@ attributes:
         type: Bool
         description: Whether to advertise this summary route.
 
+  # Neighbors
+  - model_name: neighbors
+    tf_name: neighbors
+    type: List
+    description: Neighbors.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: id
+        data_path: [neighborInterface]
+        tf_name: interface_id
+        type: String
+        description: Id of interface associated with the neighbor, which needs to be configured as OSPF interface (`fmc_device_ospf_interface`).
+        mandatory: true
+      - model_name: id
+        data_path: [ipAddress]
+        tf_name: neighbor_host_id
+        type: String
+        description: Id of Host object representing the neighbor.
+        mandatory: true
+
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 

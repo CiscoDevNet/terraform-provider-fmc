@@ -11,6 +11,7 @@ description: |-
 
 - (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 - (Enhancement) Add support for `fmc_device_ospf`
+- (Enhancement) Add support for `fmc_device_ospf_interface`
 
 ## 2.0.0-rc8
 

@@ -50,6 +50,7 @@ data "fmc_device_ospf" "example" {
 - `filter_rules` (Attributes List) Filter prefix advertisement between areas. (see [below for nested schema](#nestedatt--filter_rules))
 - `ignore_lsa_mospf` (Boolean) Suppresses syslog messages when the route receives unsupported LSA Type 6 multicast OSPF (MOSPF) packets.
 - `log_adjacency_changes` (String) Log adjacency changes.
+- `neighbors` (Attributes List) Neighbors. (see [below for nested schema](#nestedatt--neighbors))
 - `non_stop_forwarding` (Boolean) Enable Non-Stop Forwarding (NSF).
 - `non_stop_forwarding_capability` (Boolean) Enable Non-Stop Forwarding capability.
 - `non_stop_forwarding_helper_mode` (Boolean) Enable Non-Stop Forwarding helper mode.
@@ -156,6 +157,15 @@ Read-Only:
 - `routing_process` (String) Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
 - `routing_process_id` (Number) Routing process ID for the filter rule. Applicable for OSPF, BGP, and EIGRP protocols.
 - `traffic_direction` (String) Filter rule direction.
+
+
+<a id="nestedatt--neighbors"></a>
+### Nested Schema for `neighbors`
+
+Read-Only:
+
+- `interface_id` (String) Id of interface associated with the neighbor, which needs to be configured as OSPF interface (`fmc_device_ospf_interface`).
+- `neighbor_host_id` (String) Id of Host object representing the neighbor.
 
 
 <a id="nestedatt--redistributions"></a>

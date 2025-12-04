@@ -65,6 +65,7 @@ type DeviceOSPF struct {
 	Redistributions                  []DeviceOSPFRedistributions  `tfsdk:"redistributions"`
 	FilterRules                      []DeviceOSPFFilterRules      `tfsdk:"filter_rules"`
 	SummaryAddresses                 []DeviceOSPFSummaryAddresses `tfsdk:"summary_addresses"`
+	Neighbors                        []DeviceOSPFNeighbors        `tfsdk:"neighbors"`
 }
 
 type DeviceOSPFAreas struct {
@@ -110,6 +111,11 @@ type DeviceOSPFSummaryAddresses struct {
 	Networks  []DeviceOSPFSummaryAddressesNetworks `tfsdk:"networks"`
 	Tag       types.Int64                          `tfsdk:"tag"`
 	Advertise types.Bool                           `tfsdk:"advertise"`
+}
+
+type DeviceOSPFNeighbors struct {
+	InterfaceId    types.String `tfsdk:"interface_id"`
+	NeighborHostId types.String `tfsdk:"neighbor_host_id"`
 }
 
 type DeviceOSPFAreasNetworks struct {
@@ -453,6 +459,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 				itemBody, _ = sjson.Set(itemBody, "advertise", item.Advertise.ValueBool())
 			}
 			body, _ = sjson.SetRaw(body, "summaryAddresses.-1", itemBody)
+		}
+	}
+	if len(data.Neighbors) > 0 {
+		body, _ = sjson.Set(body, "neighbors", []any{})
+		for _, item := range data.Neighbors {
+			itemBody := ""
+			if !item.InterfaceId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "neighborInterface.id", item.InterfaceId.ValueString())
+			}
+			if !item.NeighborHostId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.NeighborHostId.ValueString())
+			}
+			body, _ = sjson.SetRaw(body, "neighbors.-1", itemBody)
 		}
 	}
 	return body
@@ -899,6 +918,25 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.Advertise = types.BoolNull()
 			}
 			(*parent).SummaryAddresses = append((*parent).SummaryAddresses, data)
+			return true
+		})
+	}
+	if value := res.Get("neighbors"); value.Exists() {
+		data.Neighbors = make([]DeviceOSPFNeighbors, 0)
+		value.ForEach(func(k, res gjson.Result) bool {
+			parent := &data
+			data := DeviceOSPFNeighbors{}
+			if value := res.Get("neighborInterface.id"); value.Exists() {
+				data.InterfaceId = types.StringValue(value.String())
+			} else {
+				data.InterfaceId = types.StringNull()
+			}
+			if value := res.Get("ipAddress.id"); value.Exists() {
+				data.NeighborHostId = types.StringValue(value.String())
+			} else {
+				data.NeighborHostId = types.StringNull()
+			}
+			(*parent).Neighbors = append((*parent).Neighbors, data)
 			return true
 		})
 	}
@@ -1649,6 +1687,54 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			data.Advertise = types.BoolNull()
 		}
 		(*parent).SummaryAddresses[i] = data
+	}
+	for i := 0; i < len(data.Neighbors); i++ {
+		keys := [...]string{"neighborInterface.id", "ipAddress.id"}
+		keyValues := [...]string{data.Neighbors[i].InterfaceId.ValueString(), data.Neighbors[i].NeighborHostId.ValueString()}
+
+		parent := &data
+		data := (*parent).Neighbors[i]
+		parentRes := &res
+		var res gjson.Result
+
+		parentRes.Get("neighbors").ForEach(
+			func(_, v gjson.Result) bool {
+				found := false
+				for ik := range keys {
+					if v.Get(keys[ik]).String() != keyValues[ik] {
+						found = false
+						break
+					}
+					found = true
+				}
+				if found {
+					res = v
+					return false
+				}
+				return true
+			},
+		)
+		if !res.Exists() {
+			tflog.Debug(ctx, fmt.Sprintf("removing Neighbors[%d] = %+v",
+				i,
+				(*parent).Neighbors[i],
+			))
+			(*parent).Neighbors = slices.Delete((*parent).Neighbors, i, i+1)
+			i--
+
+			continue
+		}
+		if value := res.Get("neighborInterface.id"); value.Exists() && !data.InterfaceId.IsNull() {
+			data.InterfaceId = types.StringValue(value.String())
+		} else {
+			data.InterfaceId = types.StringNull()
+		}
+		if value := res.Get("ipAddress.id"); value.Exists() && !data.NeighborHostId.IsNull() {
+			data.NeighborHostId = types.StringValue(value.String())
+		} else {
+			data.NeighborHostId = types.StringNull()
+		}
+		(*parent).Neighbors[i] = data
 	}
 }
 

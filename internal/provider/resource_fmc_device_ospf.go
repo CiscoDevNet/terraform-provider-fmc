@@ -574,6 +574,22 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 					},
 				},
 			},
+			"neighbors": schema.ListNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Neighbors.").String,
+				Optional:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"interface_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of interface associated with the neighbor, which needs to be configured as OSPF interface (`fmc_device_ospf_interface`).").String,
+							Required:            true,
+						},
+						"neighbor_host_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Host object representing the neighbor.").String,
+							Required:            true,
+						},
+					},
+				},
+			},
 		},
 	}
 }

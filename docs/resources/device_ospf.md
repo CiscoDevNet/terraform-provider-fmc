@@ -96,6 +96,7 @@ resource "fmc_device_ospf" "example" {
   - Default value: `false`
 - `log_adjacency_changes` (String) Log adjacency changes.
   - Choices: `DEFAULT`, `DETAILED`
+- `neighbors` (Attributes List) Neighbors. (see [below for nested schema](#nestedatt--neighbors))
 - `non_stop_forwarding` (Boolean) Enable Non-Stop Forwarding (NSF).
 - `non_stop_forwarding_capability` (Boolean) Enable Non-Stop Forwarding capability.
 - `non_stop_forwarding_helper_mode` (Boolean) Enable Non-Stop Forwarding helper mode.
@@ -245,6 +246,15 @@ Optional:
 - `routing_process` (String) Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
   - Choices: `CONNECTED`, `STATIC`, `RIP`, `OSPF`, `EIGRP`, `NONE`, `BGP`
 - `routing_process_id` (Number) Routing process ID for the filter rule. Applicable for OSPF, BGP, and EIGRP protocols.
+
+
+<a id="nestedatt--neighbors"></a>
+### Nested Schema for `neighbors`
+
+Required:
+
+- `interface_id` (String) Id of interface associated with the neighbor, which needs to be configured as OSPF interface (`fmc_device_ospf_interface`).
+- `neighbor_host_id` (String) Id of Host object representing the neighbor.
 
 
 <a id="nestedatt--redistributions"></a>
