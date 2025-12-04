@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/tidwall/gjson"
@@ -37,6 +38,7 @@ import (
 type DeviceBGP struct {
 	Id                             types.String                      `tfsdk:"id"`
 	Domain                         types.String                      `tfsdk:"domain"`
+	VrfId                          types.String                      `tfsdk:"vrf_id"`
 	DeviceId                       types.String                      `tfsdk:"device_id"`
 	Name                           types.String                      `tfsdk:"name"`
 	Type                           types.String                      `tfsdk:"type"`
@@ -60,6 +62,12 @@ type DeviceBGP struct {
 	Ipv4Networks                   []DeviceBGPIpv4Networks           `tfsdk:"ipv4_networks"`
 	Ipv4Redistributions            []DeviceBGPIpv4Redistributions    `tfsdk:"ipv4_redistributions"`
 	Ipv4RouteInjections            []DeviceBGPIpv4RouteInjections    `tfsdk:"ipv4_route_injections"`
+	Ipv4ImportRouteTargets         types.List                        `tfsdk:"ipv4_import_route_targets"`
+	Ipv4ExportRouteTargets         types.List                        `tfsdk:"ipv4_export_route_targets"`
+	Ipv4ImportGlobalVrfRouteMapId  types.String                      `tfsdk:"ipv4_import_global_vrf_route_map_id"`
+	Ipv4ExportGlobalVrfRouteMapId  types.String                      `tfsdk:"ipv4_export_global_vrf_route_map_id"`
+	Ipv4ImportUserVrfRouteMapId    types.String                      `tfsdk:"ipv4_import_user_vrf_route_map_id"`
+	Ipv4ExportUserVrfRouteMapId    types.String                      `tfsdk:"ipv4_export_user_vrf_route_map_id"`
 }
 
 type DeviceBGPIpv4Neighbors struct {
@@ -173,7 +181,11 @@ type DeviceBGPIpv4NeighborsRoutesAdvertiseMaps struct {
 // Section below is generated&owned by "gen/generator.go". //template:begin getPath
 
 func (data DeviceBGP) getPath() string {
-	return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bgp", url.QueryEscape(data.DeviceId.ValueString()))
+	if data.VrfId.ValueString() != "" {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/bgp", url.QueryEscape(data.DeviceId.ValueString()), url.QueryEscape(data.VrfId.ValueString()))
+	} else {
+		return fmt.Sprintf("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/bgp", url.QueryEscape(data.DeviceId.ValueString()))
+	}
 }
 
 // End of section. //template:end getPath
@@ -501,6 +513,28 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			}
 			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.injectMaps.-1", itemBody)
 		}
+	}
+	if !data.Ipv4ImportRouteTargets.IsNull() {
+		var values []string
+		data.Ipv4ImportRouteTargets.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.importRouteTargets", values)
+	}
+	if !data.Ipv4ExportRouteTargets.IsNull() {
+		var values []string
+		data.Ipv4ExportRouteTargets.ElementsAs(ctx, &values, false)
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.exportRouteTargets", values)
+	}
+	if !data.Ipv4ImportGlobalVrfRouteMapId.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.globalVrfImportRouteMap.id", data.Ipv4ImportGlobalVrfRouteMapId.ValueString())
+	}
+	if !data.Ipv4ExportGlobalVrfRouteMapId.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.globalVrfExportRouteMap.id", data.Ipv4ExportGlobalVrfRouteMapId.ValueString())
+	}
+	if !data.Ipv4ImportUserVrfRouteMapId.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.userVrfImportRouteMap.id", data.Ipv4ImportUserVrfRouteMapId.ValueString())
+	}
+	if !data.Ipv4ExportUserVrfRouteMapId.IsNull() {
+		body, _ = sjson.Set(body, "addressFamilyIPv4.routeImportExport.userVrfExportRouteMap.id", data.Ipv4ExportUserVrfRouteMapId.ValueString())
 	}
 	return body
 }
@@ -1028,6 +1062,36 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 			(*parent).Ipv4RouteInjections = append((*parent).Ipv4RouteInjections, data)
 			return true
 		})
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.importRouteTargets"); value.Exists() {
+		data.Ipv4ImportRouteTargets = helpers.GetStringList(value.Array())
+	} else {
+		data.Ipv4ImportRouteTargets = types.ListNull(types.StringType)
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.exportRouteTargets"); value.Exists() {
+		data.Ipv4ExportRouteTargets = helpers.GetStringList(value.Array())
+	} else {
+		data.Ipv4ExportRouteTargets = types.ListNull(types.StringType)
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.globalVrfImportRouteMap.id"); value.Exists() {
+		data.Ipv4ImportGlobalVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ImportGlobalVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.globalVrfExportRouteMap.id"); value.Exists() {
+		data.Ipv4ExportGlobalVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ExportGlobalVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.userVrfImportRouteMap.id"); value.Exists() {
+		data.Ipv4ImportUserVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ImportUserVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.userVrfExportRouteMap.id"); value.Exists() {
+		data.Ipv4ExportUserVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ExportUserVrfRouteMapId = types.StringNull()
 	}
 }
 
@@ -1877,6 +1941,36 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			data.InheritAttributes = types.StringNull()
 		}
 		(*parent).Ipv4RouteInjections[i] = data
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.importRouteTargets"); value.Exists() && !data.Ipv4ImportRouteTargets.IsNull() {
+		data.Ipv4ImportRouteTargets = helpers.GetStringList(value.Array())
+	} else {
+		data.Ipv4ImportRouteTargets = types.ListNull(types.StringType)
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.exportRouteTargets"); value.Exists() && !data.Ipv4ExportRouteTargets.IsNull() {
+		data.Ipv4ExportRouteTargets = helpers.GetStringList(value.Array())
+	} else {
+		data.Ipv4ExportRouteTargets = types.ListNull(types.StringType)
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.globalVrfImportRouteMap.id"); value.Exists() && !data.Ipv4ImportGlobalVrfRouteMapId.IsNull() {
+		data.Ipv4ImportGlobalVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ImportGlobalVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.globalVrfExportRouteMap.id"); value.Exists() && !data.Ipv4ExportGlobalVrfRouteMapId.IsNull() {
+		data.Ipv4ExportGlobalVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ExportGlobalVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.userVrfImportRouteMap.id"); value.Exists() && !data.Ipv4ImportUserVrfRouteMapId.IsNull() {
+		data.Ipv4ImportUserVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ImportUserVrfRouteMapId = types.StringNull()
+	}
+	if value := res.Get("addressFamilyIPv4.routeImportExport.userVrfExportRouteMap.id"); value.Exists() && !data.Ipv4ExportUserVrfRouteMapId.IsNull() {
+		data.Ipv4ExportUserVrfRouteMapId = types.StringValue(value.String())
+	} else {
+		data.Ipv4ExportUserVrfRouteMapId = types.StringNull()
 	}
 }
 
