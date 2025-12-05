@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -94,7 +93,7 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed ICMPv4 object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -105,15 +104,12 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether object values can be overridden.").String,
 							Optional:            true,
 						},
-						"icmp_type": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).").AddIntegerRangeDescription(0, 255).String,
+						"icmp_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type number, or `Any` for any type.").String,
 							Optional:            true,
-							Validators: []validator.Int64{
-								int64validator.Between(0, 255),
-							},
 						},
 						"code": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Code number subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 255),
@@ -123,7 +119,7 @@ func (r *ICMPv4ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPV4Object'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 					},

@@ -90,6 +90,9 @@ func (r *InterfaceGroupResource) Schema(ctx context.Context, req resource.Schema
 				Validators: []validator.String{
 					stringvalidator.OneOf("PASSIVE", "INLINE", "SWITCHED", "ROUTED", "MANAGEMENT", "LOOPBACK"),
 				},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'InterfaceGroup'.").String,

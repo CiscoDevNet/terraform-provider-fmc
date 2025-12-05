@@ -16,7 +16,7 @@ This object is deprecated. Please use `fmc_icmpv6` instead.
 
 ```terraform
 resource "fmc_icmpv6_object" "example" {
-  icmp_type   = 1
+  icmp_type   = "1"
   code        = 3
   name        = "my_icmpv6_object"
   description = "ICMPv6 address unreachable response, type 1, code 3"
@@ -32,12 +32,11 @@ resource "fmc_icmpv6_object" "example" {
 
 ### Optional
 
-- `code` (Number) ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
+- `code` (Number) Code number subordinate to the given `icmp_type`.
   - Range: `0`-`255`
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
-  - Range: `0`-`255`
+- `icmp_type` (String) Type number, or `Any` for any type.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 
 ### Read-Only

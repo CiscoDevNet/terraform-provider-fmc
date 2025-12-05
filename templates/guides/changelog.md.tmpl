@@ -9,10 +9,14 @@ description: |-
 
 ## 2.0.0-rc9 (Unreleased)
 
+- (Fix) Change type of `icmp_type` to string in multiple resources
+- (Enhancement) Add support for `fmc_interface_groups` resource and data source
 - (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 - (Enhancement) Add support for `fmc_device_ospf`
 - (Enhancement) Add support for `fmc_device_ospf_interface`
 - (Enhancement) Add support for `fmc_key_chain` and `fmc_key_chains`
+- (Enhancement) `fmc_device_bfd`: Add support for `vrf_id`
+
 ## 2.0.0-rc8
 
 - BREAKING CHANGE: `fmc_device_ipv4_static_route` and `fmc_device_ipv6_static_route`: attribute `metric_value` renamed to `metric`.

@@ -40,9 +40,9 @@ data "fmc_icmpv6_objects" "example" {
 
 Read-Only:
 
-- `code` (Number) ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.
+- `code` (Number) Code number subordinate to the given `icmp_type`.
 - `description` (String) Description of the object.
-- `icmp_type` (Number) ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).
+- `icmp_type` (String) Type number, or `Any` for any type.
 - `id` (String) Id of the managed ICMPv6 object.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'ICMPV6Object'.

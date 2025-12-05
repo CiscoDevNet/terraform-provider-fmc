@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -94,18 +93,15 @@ func (r *ICMPv6ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed ICMPv6 object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
-						"icmp_type": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).").AddIntegerRangeDescription(0, 255).String,
+						"icmp_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type number, or `Any` for any type.").String,
 							Optional:            true,
-							Validators: []validator.Int64{
-								int64validator.Between(0, 255),
-							},
 						},
 						"code": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
+							MarkdownDescription: helpers.NewAttributeDescription("Code number subordinate to the given `icmp_type`.").AddIntegerRangeDescription(0, 255).String,
 							Optional:            true,
 							Validators: []validator.Int64{
 								int64validator.Between(0, 255),
@@ -123,7 +119,7 @@ func (r *ICMPv6ObjectsResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPV6Object'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 					},

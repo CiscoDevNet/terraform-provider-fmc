@@ -44,7 +44,7 @@ type ICMPv4ObjectsItems struct {
 	Id          types.String `tfsdk:"id"`
 	Description types.String `tfsdk:"description"`
 	Overridable types.Bool   `tfsdk:"overridable"`
-	IcmpType    types.Int64  `tfsdk:"icmp_type"`
+	IcmpType    types.String `tfsdk:"icmp_type"`
 	Code        types.Int64  `tfsdk:"code"`
 	Type        types.String `tfsdk:"type"`
 }
@@ -85,7 +85,7 @@ func (data ICMPv4Objects) toBody(ctx context.Context, state ICMPv4Objects) strin
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if !item.IcmpType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "icmpType", item.IcmpType.ValueInt64())
+				itemBody, _ = sjson.Set(itemBody, "icmpType", item.IcmpType.ValueString())
 			}
 			if !item.Code.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "code", item.Code.ValueInt64())
@@ -137,9 +137,9 @@ func (data *ICMPv4Objects) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("icmpType"); value.Exists() {
-			data.IcmpType = types.Int64Value(value.Int())
+			data.IcmpType = types.StringValue(value.String())
 		} else {
-			data.IcmpType = types.Int64Null()
+			data.IcmpType = types.StringNull()
 		}
 		if value := res.Get("code"); value.Exists() {
 			data.Code = types.Int64Value(value.Int())
@@ -195,9 +195,9 @@ func (data *ICMPv4Objects) fromBodyPartial(ctx context.Context, res gjson.Result
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
-			data.IcmpType = types.Int64Value(value.Int())
+			data.IcmpType = types.StringValue(value.String())
 		} else {
-			data.IcmpType = types.Int64Null()
+			data.IcmpType = types.StringNull()
 		}
 		if value := res.Get("code"); value.Exists() && !data.Code.IsNull() {
 			data.Code = types.Int64Value(value.Int())

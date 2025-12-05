@@ -72,12 +72,12 @@ func (d *ICMPv6ObjectDataSource) Schema(ctx context.Context, req datasource.Sche
 				MarkdownDescription: "Name of the FMC domain",
 				Optional:            true,
 			},
-			"icmp_type": schema.Int64Attribute{
-				MarkdownDescription: "ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).",
+			"icmp_type": schema.StringAttribute{
+				MarkdownDescription: "Type number, or `Any` for any type.",
 				Computed:            true,
 			},
 			"code": schema.Int64Attribute{
-				MarkdownDescription: "ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.",
+				MarkdownDescription: "Code number subordinate to the given `icmp_type`.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{

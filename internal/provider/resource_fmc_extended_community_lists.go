@@ -102,7 +102,7 @@ func (r *ExtendedCommunityListsResource) Schema(ctx context.Context, req resourc
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ExtendedCommunityList'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"sub_type": schema.StringAttribute{
