@@ -1,0 +1,98 @@
+---
+name: Key Chains
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/keychains
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Key Chains. The key of the map is the name of the individual Key Chain.
+    map_key_example: my_key_chains
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the Key Chain object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'KeyChainObject'.
+        computed: true
+      - model_name: type
+        type: String
+        value: KeyChainObject
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: My Host object
+        missing_in_response_if_set_to_empty_string: true
+      - model_name: keys
+        description: Keys
+        type: List
+        mandatory: true
+        attributes:
+          - model_name: keyId
+            tf_name: id
+            description: Key ID.
+            type: Int64
+            example: 1
+            min_int: 0
+            max_int: 255
+            mandatory: true
+            id: true
+          - model_name: cryptoKeyString
+            data_path: [authString]
+            tf_name: key
+            description: Crypto key string.
+            type: String
+            example: my_secret_key
+            mandatory: true
+          - model_name: cryptoEncryptionType
+            data_path: [authString]
+            type: String
+            value: PLAINTEXT
+          - model_name: authAlgorithm
+            type: String
+            value: md5
+          - model_name: startLifeTimeValue
+            data_path: [acceptLifeTime]
+            tf_name: accept_lifetime_start
+            description: Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.
+            type: String
+            example: '2025-08-25T12:14:23'
+          - model_name: endLifetimeType
+            data_path: [acceptLifeTime]
+            tf_name: accept_lifetime_end_type
+            description: Type of end time for key acceptance lifetime.
+            type: String
+            enum_values: [INFINITE, DURATION, DATETIME]
+            example: DATETIME
+          - model_name: endLifeTimeValue
+            data_path: [acceptLifeTime]
+            tf_name: accept_lifetime_end
+            description: End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
+            type: String
+            example: '2026-08-25T12:14:23'
+          - model_name: startLifeTimeValue
+            data_path: [sendLifeTime]
+            tf_name: send_lifetime_start
+            description: Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.
+            type: String
+            example: '2025-08-25T12:14:23'
+          - model_name: endLifetimeType
+            data_path: [sendLifeTime]
+            tf_name: send_lifetime_end_type
+            description: Type of end time for key send lifetime.
+            type: String
+            enum_values: [INFINITE, DURATION, DATETIME]
+            example: DURATION
+          - model_name: endLifeTimeValue
+            data_path: [sendLifeTime]
+            tf_name: send_lifetime_end
+            description: End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
+            type: String
+            example: '172800'

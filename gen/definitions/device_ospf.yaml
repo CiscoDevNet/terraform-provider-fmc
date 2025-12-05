@@ -1,0 +1,594 @@
+# FMCBUG CSCws31723 FMC API: OSPF endpoints are unstable
+# FMCBUG CSCws32971 FMC API: OSPF interArea filterLists does not accept valid configuration
+# FMCBUG CSCws33022 FMC API: OSPF description field missing
+# Manual Resource - adjust_body
+---
+name: Device OSPF
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ospfv2routes
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ospfv2routes
+doc_category: Devices
+adjust_body: true
+minimum_version: "7.6"
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this is always 'OspfRoute'
+    computed: true
+  - model_name: processId
+    type: Int64
+    description: OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
+    mandatory: true
+    example: 1
+
+  # Advanced - General
+  # - model_name: description
+  #   data_path: [processConfiguration]
+  #   type: String
+  #   description: Description of the OSPF process.
+  #   example: OSPF Process 1
+  - model_name: routerId
+    data_path: [processConfiguration]
+    tf_name: router_id
+    type: String
+    description: IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
+    example: 10.10.10.1
+  - model_name: rfc1583Compatible
+    data_path: [processConfiguration]
+    tf_name: rfc_1583_compatible
+    type: Bool
+    description: Enable RFC 1583 compatibility as the method used to calculate summary route costs.
+    example: false
+    default_value: false
+  - model_name: logType
+    data_path: [logAdjacencyChanges]
+    tf_name: log_adjacency_changes
+    type: String
+    description: Log adjacency changes.
+    enum_values: [DEFAULT, DETAILED]
+    example: DEFAULT
+  - model_name: ignoreLsaMospf
+    data_path: [processConfiguration]
+    tf_name: ignore_lsa_mospf
+    type: Bool
+    description: Suppresses syslog messages when the route receives unsupported LSA Type 6 multicast OSPF (MOSPF) packets.
+    example: false
+    default_value: false
+  - model_name: interArea
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_inter_area
+    type: Int64
+    description: Administrative distance for inter-area routes.
+    min_int: 1
+    max_int: 254
+    example: 110
+    default_value: 110
+  - model_name: intraArea
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_intra_area
+    type: Int64
+    description: Administrative distance for intra-area routes.
+    min_int: 1
+    max_int: 254
+    example: 110
+    default_value: 110
+  - model_name: external
+    data_path: [processConfiguration, administrativeDistance]
+    tf_name: administrative_distance_external
+    type: Int64
+    description: Administrative distance for external routes.
+    min_int: 1
+    max_int: 254
+    example: 110
+    default_value: 110
+  - model_name: lsaGroup
+    data_path: [processConfiguration, timers]
+    tf_name: timer_lsa_group
+    type: Int64
+    description: Interval in seconds at which LSAs are collected into a group and refreshed, check summed, or aged.
+    min_int: 10
+    max_int: 1800
+    example: 240
+    default_value: 240
+  - model_name: alwaysAdvertise
+    data_path: [processConfiguration, defaultInformationOriginate]
+    tf_name: default_route_always_advertise
+    type: Bool
+    description: Always advertise default route. Enables Default Information Originate when set.
+    example: false
+  - model_name: metricValue
+    data_path: [processConfiguration, defaultInformationOriginate, routeMetric]
+    tf_name: default_route_metric
+    type: Int64
+    min_int: 0
+    max_int: 16777214
+    description: Metric for the default route.
+    example: 1
+  - model_name: metricType
+    data_path: [processConfiguration, defaultInformationOriginate, routeMetric]
+    tf_name: default_route_metric_type
+    type: String
+    description: Metric type for the default route.
+    enum_values: [TYPE_1, TYPE_2]
+    example: TYPE_2
+  - model_name: id
+    data_path: [processConfiguration, defaultInformationOriginate, routeMap]
+    tf_name: default_route_route_map_id
+    type: String
+    description: Route Map ID for choosing the process that generates the default route.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+
+  # Advanced - Non Stop Forwarding
+  - model_name: nsfEnable
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding
+    type: Bool
+    description: Enable Non-Stop Forwarding (NSF).
+    exclude_example: true
+    exclude_test: true
+  - model_name: nsfMechanism
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding_mechanism
+    type: String
+    description: Non-Stop Forwarding mechanism.
+    enum_values: [ CISCO, IETF, NONE ]
+    exclude_example: true
+    exclude_test: true
+  - model_name: nsfHelper
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding_helper_mode
+    type: Bool
+    description: Enable Non-Stop Forwarding helper mode.
+    exclude_example: true
+    exclude_test: true
+  - model_name: nsfRestartIntraval
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding_restart_interval
+    type: Int64
+    min_int: 1
+    max_int: 1800
+    description: Length of graceful restart interval (seconds).
+    exclude_example: true
+    exclude_test: true  
+  - model_name: nsfCapability
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding_capability
+    type: Bool
+    description: Enable Non-Stop Forwarding capability.
+    exclude_example: true
+    exclude_test: true    
+  - model_name: nsfEnforceGlobal
+    data_path: [processConfiguration, nsfGracefulRestart]
+    tf_name: non_stop_forwarding_strict_mode
+    description: Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).
+    type: Bool
+    exclude_example: true
+    exclude_test: true     
+
+  # Area
+  - model_name: areas
+    type: List
+    description: Areas.
+    attributes:
+      - model_name: areaId
+        tf_name: id
+        type: String
+        description: Area ID in either Integer or IPv4 format.
+        example: 1
+        mandatory: true
+        id: true
+      - model_name: type
+        data_path: [areaType]
+        tf_name: type
+        type: String
+        description: Area type.
+        enum_values: [normal, stub, nssa]
+        mandatory: true
+        example: normal
+      - model_name: noSummary
+        data_path: [areaType]
+        tf_name: no_summary
+        type: Bool
+        description: No Summary flag for Stub / NSSA areas.
+        exclude_example: true
+        exclude_test: true
+      - model_name: noRedistribution
+        data_path: [areaType]
+        tf_name: no_redistribution
+        type: Bool
+        description: No Redistribution flag for NSSA areas.
+        exclude_example: true
+        exclude_test: true
+      - model_name: metricType
+        data_path: [areaType, routeMetric]
+        tf_name: default_route_metric_type
+        type: String
+        description: Default route metric type for NSSA areas.
+        enum_values: [TYPE_1, TYPE_2]
+        exclude_example: true
+        exclude_test: true
+      - model_name: metricValue
+        data_path: [areaType, routeMetric]
+        tf_name: default_route_metric
+        type: Int64
+        min_int: 0
+        max_int: 16777214
+        description: Default route metric value for NSSA areas.
+        exclude_example: true
+        exclude_test: true
+      - model_name: areaNetworks
+        tf_name: networks
+        type: List
+        description: Area networks.
+        mandatory: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Network object ID.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            id: true
+            test_value: fmc_hosts.test.items.ospf_host_1.id
+          - model_name: name
+            type: String
+            description: Network object name.
+            example: "Office Network"
+            test_value: '"ospf_host_1"'
+      - model_name: authentication
+        type: String
+        enum_values: [PASSWORD, MESSAGE_DIGEST]
+        description: Authentication type.
+        example: MESSAGE_DIGEST
+        exclude_test: true
+      - model_name: defaultCost
+        tf_name: default_cost
+        type: Int64
+        description: Default cost for the area.
+        example: 1
+        min_int: 0
+        max_int: 65535
+      - model_name: areaRanges
+        tf_name: ranges
+        type: List
+        description: Ranges.
+        attributes:
+          - model_name: id
+            data_path: [addressNetwork]
+            tf_name: network_object_id
+            description: Network object ID.
+            type: String
+            example: 123e4567-e89b-12d3-a456-426614174000
+            test_value: fmc_hosts.test.items.ospf_host_2.id
+            mandatory: true
+            id: true
+          - model_name: advertise
+            type: Bool
+            description: Whether to advertise this area range.
+            example: true
+      - model_name: virtualLinks
+        tf_name: virtual_links
+        type: List
+        description: Virtual links.
+        exclude_example: true
+        exclude_test: true
+        attributes:
+          - model_name: routerId
+            tf_name: peer_router_host_id
+            type: String
+            description: Host object Id representing the peer router.
+            mandatory: true
+            id: true
+          - model_name: helloInterval
+            tf_name: hello_interval
+            type: Int64
+            description: Hello interval in seconds.
+            min_int: 1
+            max_int: 8192
+            default_value: 10
+          - model_name: transmitDelay
+            tf_name: transmit_delay
+            type: Int64
+            description: Transmit delay in seconds.
+            min_int: 1
+            max_int: 8192
+            default_value: 1
+          - model_name: retransmitInterval
+            tf_name: retransmit_interval
+            type: Int64
+            description: Retransmit interval in seconds.
+            min_int: 1
+            max_int: 8192
+            default_value: 5
+          - model_name: deadInterval
+            tf_name: dead_interval
+            type: Int64
+            description: Dead interval in seconds.
+            min_int: 1
+            max_int: 8192
+            default_value: 40
+          - model_name: authKey
+            data_path: [authentication, passwdAuth]
+            tf_name: authentication_password
+            type: String
+            string_max_length: 8
+            sensitive: true
+            description: Password for authentication.
+          - model_name: authKey
+            data_path: [authentication, areaAuth, passwdAuth]
+            tf_name: authentication_area_password
+            type: String
+            sensitive: true
+            string_max_length: 8
+            description: Password for area authentication.
+          - model_name: md5AuthList
+            data_path: [authentication, areaAuth]
+            tf_name: authentication_area_md5s
+            type: List
+            description: Area MD5 authentication keys.
+            attributes:
+              - model_name: md5KeyId
+                tf_name: id
+                type: Int64
+                description: Key ID.
+                mandatory: true
+                id: true
+              - model_name: md5Key
+                tf_name: key
+                type: String
+                sensitive: true
+                description: MD5 authentication key.
+                mandatory: true
+          - model_name: md5AuthList
+            data_path: [authentication]
+            tf_name: authentication_md5s
+            type: List
+            description: MD5 authentication keys.
+            attributes:
+              - model_name: md5KeyId
+                tf_name: id
+                type: Int64
+                description: Key ID.
+                mandatory: true
+                id: true
+              - model_name: md5Key
+                tf_name: key
+                type: String
+                sensitive: true
+                description: MD5 authentication key.
+                mandatory: true
+          - model_name: id
+            data_path: [authentication, keyChain, authKey]
+            tf_name: authentication_key_chain_id
+            type: String
+            description: Key chain object ID for authentication.
+            example: 123e4567-e89b-12d3-a456-426614174000
+
+      # InterArea
+      - model_name: filterList
+        tf_name: inter_area_filters
+        type: List
+        description: Inter-area filters.
+        attributes:
+          - model_name: id
+            data_path: [prefixList]
+            tf_name: prefix_list_id
+            description: Prefix list object ID.
+            example: 123e4567-e89b-12d3-a456-426614174000
+            mandatory: true
+            type: String
+            id: true
+            test_value: fmc_ipv4_prefix_list.test.id
+          - model_name: name
+            data_path: [prefixList]
+            tf_name: prefix_list_name
+            description: Prefix list object name.
+            example: "Office Prefix List"
+            type: String
+            test_value: fmc_ipv4_prefix_list.test.name
+          - model_name: filterDirection
+            tf_name: filter_direction
+            type: String
+            description: Filter direction.
+            enum_values: [IN, OUT]
+            mandatory: true
+            example: IN
+
+  # Redistribution
+  - model_name: redistributeProtocols
+    tf_name: redistributions
+    type: List
+    description: Redistributions.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: type
+        tf_name: redistribute_protocol
+        type: String
+        enum_values: [RedistributeConnected, RedistributeStatic, RedistributeOSPF, RedistributeBGP, RedistributeRIP, RedistributeEIGRP]
+        description: Protocol to redistribute.
+        example: RedistributeBGP
+        mandatory: true
+        id: true
+      - model_name: asNumber
+        tf_name: as_number
+        type: Int64
+        description: Autonomous System Number (ASN) for BGP / EIGRP redistribution.
+      - model_name: matchExternal1
+        tf_name: match_external_1
+        type: Bool
+        description: Whether to match OSPF external type 1 routes.
+      - model_name: matchExternal2
+        tf_name: match_external_2
+        type: Bool
+        description: Whether to match OSPF external type 2 routes.
+      - model_name: matchInternal
+        tf_name: match_internal
+        type: Bool
+        description: Whether to match OSPF internal routes.
+      - model_name: matchNssaExternal1
+        tf_name: match_nssa_external_1
+        type: Bool
+        description: Whether to match OSPF NSSA external type 1 routes.
+      - model_name: matchNssaExternal2
+        tf_name: match_nssa_external_2
+        type: Bool
+        description: Whether to match OSPF NSSA external type 2 routes.
+      - model_name: processId
+        tf_name: process_id
+        type: Int64
+        description: OSPF process ID.
+      - model_name: subnets
+        type: Bool
+        description: Whether to redistribute subnets.
+      - model_name: metricValue
+        data_path: [routeMetric]
+        tf_name: metric
+        type: Int64
+        min_int: 0
+        max_int: 16777214
+        description: Metric value for the routes being distributed.
+      - model_name: metricType
+        data_path: [routeMetric]
+        tf_name: metric_type
+        type: String
+        description: Metric type for the default route.
+        enum_values: [TYPE_1, TYPE_2]
+        default_value: TYPE_2
+      - model_name: tagNumber
+        tf_name: tag
+        type: Int64
+        min_int: 0
+        max_int: 4294967295
+        description: Tag number.
+      - model_name: id
+        data_path: [routeMap]
+        tf_name: route_map_id
+        type: String
+        description: Route map ID for route filtering.
+
+  # Filter Rules
+  - model_name: filterRules
+    tf_name: filter_rules
+    type: List
+    description: Filter prefix advertisement between areas.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: id
+        data_path: [accessList]
+        tf_name: access_list_id
+        type: String
+        description: Standard Access List ID
+        mandatory: true
+        id: true
+      - model_name: type
+        tf_name: traffic_direction
+        type: String
+        description: Filter rule direction.
+        enum_values: [incomingroutefilter, outgoingroutefilter]
+        mandatory: true
+        id: true
+      - model_name: protocol
+        tf_name: routing_process
+        type: String
+        description: Protocol for the filter rule. Applicable only for `outgoingroutefilter` direction.
+        enum_values: [CONNECTED, STATIC, RIP, OSPF, EIGRP, NONE, BGP]
+      - model_name: processId
+        tf_name: routing_process_id
+        type: Int64
+        description: Routing process ID for the filter rule. Applicable for OSPF, BGP, and EIGRP protocols.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: [inInterface]
+        tf_name: interface_id
+        type: String
+        description: Interface ID for the filter rule. Applicable only for `incomingroutefilter` direction.
+        exclude_example: true
+        exclude_test: true
+
+  # Summary Address
+  - model_name: summaryAddresses
+    tf_name: summary_addresses
+    type: List
+    ordered_list: true
+    exclude_example: true
+    exclude_test: true
+    description: Addresses summarization configuration.
+    attributes:
+      - model_name: summaryNetwork
+        tf_name: networks
+        type: List
+        description: Summary Networks.
+        mandatory: true
+        attributes:
+        - model_name: id
+          type: String
+          description: Network object ID.
+          mandatory: true
+      - model_name: tagNumber
+        tf_name: tag
+        type: Int64
+        min_int: 0
+        max_int: 4294967295
+        description: Tag number.
+      - model_name: advertise
+        type: Bool
+        description: Whether to advertise this summary route.
+
+  # Neighbors
+  - model_name: neighbors
+    tf_name: neighbors
+    type: List
+    description: Neighbors.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: id
+        data_path: [neighborInterface]
+        tf_name: interface_id
+        type: String
+        description: Id of interface associated with the neighbor, which needs to be configured as OSPF interface (`fmc_device_ospf_interface`).
+        mandatory: true
+      - model_name: id
+        data_path: [ipAddress]
+        tf_name: neighbor_host_id
+        type: String
+        description: Id of Host object representing the neighbor.
+        mandatory: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "ospf_host_1" = { ip = "10.20.3.4" },
+      "ospf_host_2" = { ip = "10.20.3.5" },
+    }
+  }
+
+  resource "fmc_ipv4_prefix_list" "test" {
+    name = "ospf_ipv4_prefix_list"
+    entries = [
+      {
+        action            = "PERMIT"
+        ip_address        = "10.10.10.0/24"
+        min_prefix_length = 25
+        max_prefix_length = 30
+      },
+      {
+        action            = "PERMIT"
+        ip_address        = "15.10.10.0/24"
+        min_prefix_length = 25
+        max_prefix_length = 30
+      },
+    ]
+  }

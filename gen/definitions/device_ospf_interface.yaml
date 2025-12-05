@@ -1,0 +1,192 @@
+# FMCBUG filterOutgoingLSA field is broken in FMC API
+---
+name: Device OSPF Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ospfinterface
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ospfinterface
+doc_category: Devices
+minimum_version: "7.6"
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this is always 'OspfInterface'
+    computed: true
+  - model_name: id
+    data_path: [deviceInterface]
+    tf_name: interface_id
+    type: String
+    description: ID of the device interface.
+    example: 123e4567-e89b-12d3-a456-426614174000
+    test_value: fmc_device_physical_interface.test.id
+    mandatory: true
+  - model_name: packetCost
+    data_path: [ospfProtocolConfiguration]
+    tf_name: default_cost
+    type: Int64
+    description: Cost of sending a packet through the interface.
+    min_int: 1
+    max_int: 65535
+    example: 10
+    default_value: 10
+  - model_name: priority
+    data_path: [ospfProtocolConfiguration]
+    tf_name: priority
+    type: Int64
+    description: Designated router for a network.
+    min_int: 0
+    max_int: 255
+    example: 1
+    default_value: 1
+  - model_name: ignoreMtuMismatch
+    data_path: [ospfProtocolConfiguration]
+    tf_name: mtu_missmatch_ignore
+    type: Bool
+    description: Ignore MTU mismatch on the interface.
+    example: false
+  # - model_name: filterOutgoingLSA
+  #   data_path: [ospfProtocolConfiguration]
+  #   tf_name: database_filter
+  #   type: Bool
+  #   description: Filter outgoing LSA interface during synchronization and flooding.
+  #   example: false
+  - model_name: helloInterval
+    data_path: [ospfProtocolConfiguration, ospfInterval, helloInterval]
+    tf_name: hello_interval
+    type: Int64
+    description: Interval, in seconds, between hello packets sent on an interface.
+    min_int: 1
+    max_int: 8192
+    example: 10
+    default_value: 10
+  - model_name: transmitDelay
+    data_path: [ospfProtocolConfiguration]
+    tf_name: transmit_delay
+    type: Int64
+    description: Estimated time in seconds to send an LSA packet on the interface.
+    min_int: 1
+    max_int: 65535
+    example: 1
+    default_value: 1
+  - model_name: retransmitInterval
+    data_path: [ospfProtocolConfiguration]
+    tf_name: retransmit_interval
+    type: Int64
+    description: Time in seconds between LSA retransmissions for adjacencies that belong to the interface.
+    min_int: 1
+    max_int: 65535
+    example: 5
+    default_value: 5
+  - model_name: deadInterval
+    data_path: [ospfProtocolConfiguration, ospfInterval, helloInterval]
+    tf_name: dead_interval
+    type: Int64
+    description: Time period in seconds for which hello packets must not be seen before neighbors indicate that the router is down.
+    min_int: 1
+    max_int: 65535
+    example: 40
+    default_value: 40
+  - model_name: helloMultiplier
+    data_path: [ospfProtocolConfiguration, ospfInterval, helloMultiplier]
+    tf_name: hello_multiplier
+    type: Int64
+    description: Number of Hello packets to be sent per second.
+    min_int: 3
+    max_int: 20
+    example: 4
+  - model_name: ptpNonBroadcast
+    data_path: [ospfProtocolConfiguration]
+    tf_name: point_to_point
+    type: Bool
+    description: Configure the interface as point-to-point non-broadcast.
+    example: false
+  - model_name: enableBFD
+    data_path: [ospfProtocolConfiguration]
+    tf_name: bfd
+    type: Bool
+    description: Enable Bidirectional Forwarding Detection (BFD) on the interface.
+    example: false
+
+  # Authentication
+  - model_name: authKey
+    data_path: [ospfProtocolConfiguration, ospfAuthentication, passwdAuth]
+    tf_name: authentication_password
+    type: String
+    string_max_length: 8
+    sensitive: true
+    description: Password for authentication.
+    exclude_example: true
+    exclude_test: true
+  - model_name: authKey
+    data_path: [ospfProtocolConfiguration, ospfAuthentication, areaAuth, passwdAuth]
+    tf_name: authentication_area_password
+    type: String
+    sensitive: true
+    string_max_length: 8
+    description: Password for area authentication.
+    exclude_example: true
+    exclude_test: true
+  - model_name: md5AuthList
+    data_path: [ospfProtocolConfiguration, ospfAuthentication, areaAuth]
+    tf_name: authentication_area_md5s
+    type: List
+    description: Area MD5 authentication keys.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: md5KeyId
+        tf_name: id
+        type: Int64
+        description: Key ID.
+        mandatory: true
+        id: true
+      - model_name: md5Key
+        tf_name: key
+        type: String
+        sensitive: true
+        description: MD5 authentication key.
+        mandatory: true
+  - model_name: md5AuthList
+    data_path: [ospfProtocolConfiguration, ospfAuthentication]
+    tf_name: authentication_md5s
+    type: List
+    description: MD5 authentication keys.
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: md5KeyId
+        tf_name: id
+        type: Int64
+        description: Key ID.
+        mandatory: true
+        id: true
+      - model_name: md5Key
+        tf_name: key
+        type: String
+        sensitive: true
+        description: MD5 authentication key.
+        mandatory: true
+  - model_name: id
+    data_path: [ospfProtocolConfiguration, ospfAuthentication, keyChain, authKey]
+    tf_name: authentication_key_chain_id
+    type: String
+    description: Key chain object ID for authentication.
+    exclude_example: true
+    exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id = var.device_id
+    name      = var.interface_name
+    mode      = "NONE"
+    logical_name = "OSPF_Interface"
+  }
