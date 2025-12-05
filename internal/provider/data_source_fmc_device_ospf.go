@@ -115,7 +115,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"default_route_always_advertise": schema.BoolAttribute{
-				MarkdownDescription: "Always advertise default route. When configure to any value, enables Default Information Originate as well.",
+				MarkdownDescription: "Always advertise default route. Enables Default Information Originate when set.",
 				Computed:            true,
 			},
 			"default_route_metric": schema.Int64Attribute{
@@ -151,11 +151,11 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"non_stop_forwarding_strict_mode": schema.BoolAttribute{
-				MarkdownDescription: "IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected",
+				MarkdownDescription: "Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).",
 				Computed:            true,
 			},
 			"areas": schema.ListNestedAttribute{
-				MarkdownDescription: "OSPF areas.",
+				MarkdownDescription: "Areas.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -254,17 +254,17 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 										Sensitive:           true,
 									},
 									"authentication_area_password": schema.StringAttribute{
-										MarkdownDescription: "Password for authentication.",
+										MarkdownDescription: "Password for area authentication.",
 										Computed:            true,
 										Sensitive:           true,
 									},
 									"authentication_area_md5s": schema.ListNestedAttribute{
-										MarkdownDescription: "List of MD5 authentication keys.",
+										MarkdownDescription: "Area MD5 authentication keys.",
 										Computed:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"id": schema.Int64Attribute{
-													MarkdownDescription: "Key ID for the MD5 authentication key.",
+													MarkdownDescription: "Key ID.",
 													Computed:            true,
 												},
 												"key": schema.StringAttribute{
@@ -276,12 +276,12 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 										},
 									},
 									"authentication_md5s": schema.ListNestedAttribute{
-										MarkdownDescription: "List of MD5 authentication keys.",
+										MarkdownDescription: "MD5 authentication keys.",
 										Computed:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"id": schema.Int64Attribute{
-													MarkdownDescription: "Key ID for the MD5 authentication key.",
+													MarkdownDescription: "Key ID.",
 													Computed:            true,
 												},
 												"key": schema.StringAttribute{
@@ -323,11 +323,11 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"redistributions": schema.ListNestedAttribute{
-				MarkdownDescription: "Enable protocol redistribution.",
+				MarkdownDescription: "Redistributions.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"route_type": schema.StringAttribute{
+						"redistribute_protocol": schema.StringAttribute{
 							MarkdownDescription: "Protocol to redistribute.",
 							Computed:            true,
 						},
@@ -335,24 +335,24 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 							MarkdownDescription: "Autonomous System Number (ASN) for BGP / EIGRP redistribution.",
 							Computed:            true,
 						},
-						"ospf_match_external_1": schema.BoolAttribute{
-							MarkdownDescription: "Whether to match external type 1 routes.",
+						"match_external_1": schema.BoolAttribute{
+							MarkdownDescription: "Whether to match OSPF external type 1 routes.",
 							Computed:            true,
 						},
-						"ospf_match_external_2": schema.BoolAttribute{
-							MarkdownDescription: "Whether to match external type 2 routes.",
+						"match_external_2": schema.BoolAttribute{
+							MarkdownDescription: "Whether to match OSPF external type 2 routes.",
 							Computed:            true,
 						},
-						"ospf_match_internal": schema.BoolAttribute{
-							MarkdownDescription: "Whether to match internal routes.",
+						"match_internal": schema.BoolAttribute{
+							MarkdownDescription: "Whether to match OSPF internal routes.",
 							Computed:            true,
 						},
-						"ospf_match_nssa_external_1": schema.BoolAttribute{
-							MarkdownDescription: "Whether to match NSSA external type 1 routes.",
+						"match_nssa_external_1": schema.BoolAttribute{
+							MarkdownDescription: "Whether to match OSPF NSSA external type 1 routes.",
 							Computed:            true,
 						},
-						"ospf_match_nssa_external_2": schema.BoolAttribute{
-							MarkdownDescription: "Whether to match NSSA external type 2 routes.",
+						"match_nssa_external_2": schema.BoolAttribute{
+							MarkdownDescription: "Whether to match OSPF NSSA external type 2 routes.",
 							Computed:            true,
 						},
 						"process_id": schema.Int64Attribute{

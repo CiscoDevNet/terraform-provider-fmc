@@ -48,11 +48,11 @@ Read-Only:
 
 Read-Only:
 
-- `accept_lifetime_end` (String) End time for key acceptance lifetime.
+- `accept_lifetime_end` (String) End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
 - `accept_lifetime_end_type` (String) Type of end time for key acceptance lifetime.
-- `accept_lifetime_start` (String) Start time for key acceptance lifetime.
+- `accept_lifetime_start` (String) Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.
 - `id` (Number) Key ID.
 - `key` (String) Crypto key string.
-- `send_lifetime_end` (String) End time for key send lifetime.
+- `send_lifetime_end` (String) End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
 - `send_lifetime_end_type` (String) Type of end time for key send lifetime.
-- `send_lifetime_start` (String) Start time for key send lifetime.
+- `send_lifetime_start` (String) Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.

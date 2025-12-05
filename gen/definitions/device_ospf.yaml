@@ -26,10 +26,8 @@ attributes:
     type: Int64
     description: OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
     mandatory: true
-    min_int: 1
-    max_int: 300
     example: 1
-  
+
   # Advanced - General
   # - model_name: description
   #   data_path: [processConfiguration]
@@ -103,7 +101,7 @@ attributes:
     data_path: [processConfiguration, defaultInformationOriginate]
     tf_name: default_route_always_advertise
     type: Bool
-    description: Always advertise default route. When configure to any value, enables Default Information Originate as well.
+    description: Always advertise default route. Enables Default Information Originate when set.
     example: false
   - model_name: metricValue
     data_path: [processConfiguration, defaultInformationOriginate, routeMetric]
@@ -170,7 +168,7 @@ attributes:
   - model_name: nsfEnforceGlobal
     data_path: [processConfiguration, nsfGracefulRestart]
     tf_name: non_stop_forwarding_strict_mode
-    description: IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
+    description: Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).
     type: Bool
     exclude_example: true
     exclude_test: true     
@@ -178,7 +176,7 @@ attributes:
   # Area
   - model_name: areas
     type: List
-    description: OSPF areas.
+    description: Areas.
     attributes:
       - model_name: areaId
         tf_name: id
@@ -193,6 +191,7 @@ attributes:
         type: String
         description: Area type.
         enum_values: [normal, stub, nssa]
+        mandatory: true
         example: normal
       - model_name: noSummary
         data_path: [areaType]
@@ -229,6 +228,7 @@ attributes:
         tf_name: networks
         type: List
         description: Area networks.
+        mandatory: true
         attributes:
           - model_name: id
             type: String
@@ -327,17 +327,17 @@ attributes:
             type: String
             sensitive: true
             string_max_length: 8
-            description: Password for authentication.
+            description: Password for area authentication.
           - model_name: md5AuthList
             data_path: [authentication, areaAuth]
             tf_name: authentication_area_md5s
             type: List
-            description: List of MD5 authentication keys.
+            description: Area MD5 authentication keys.
             attributes:
               - model_name: md5KeyId
                 tf_name: id
                 type: Int64
-                description: Key ID for the MD5 authentication key.
+                description: Key ID.
                 mandatory: true
                 id: true
               - model_name: md5Key
@@ -350,12 +350,12 @@ attributes:
             data_path: [authentication]
             tf_name: authentication_md5s
             type: List
-            description: List of MD5 authentication keys.
+            description: MD5 authentication keys.
             attributes:
               - model_name: md5KeyId
                 tf_name: id
                 type: Int64
-                description: Key ID for the MD5 authentication key.
+                description: Key ID.
                 mandatory: true
                 id: true
               - model_name: md5Key
@@ -405,12 +405,12 @@ attributes:
   - model_name: redistributeProtocols
     tf_name: redistributions
     type: List
-    description: Enable protocol redistribution.
+    description: Redistributions.
     exclude_example: true
     exclude_test: true
     attributes:
       - model_name: type
-        tf_name: route_type
+        tf_name: redistribute_protocol
         type: String
         enum_values: [RedistributeConnected, RedistributeStatic, RedistributeOSPF, RedistributeBGP, RedistributeRIP, RedistributeEIGRP]
         description: Protocol to redistribute.
@@ -422,25 +422,25 @@ attributes:
         type: Int64
         description: Autonomous System Number (ASN) for BGP / EIGRP redistribution.
       - model_name: matchExternal1
-        tf_name: ospf_match_external_1
+        tf_name: match_external_1
         type: Bool
-        description: Whether to match external type 1 routes.
+        description: Whether to match OSPF external type 1 routes.
       - model_name: matchExternal2
-        tf_name: ospf_match_external_2
+        tf_name: match_external_2
         type: Bool
-        description: Whether to match external type 2 routes.
+        description: Whether to match OSPF external type 2 routes.
       - model_name: matchInternal
-        tf_name: ospf_match_internal
+        tf_name: match_internal
         type: Bool
-        description: Whether to match internal routes.
+        description: Whether to match OSPF internal routes.
       - model_name: matchNssaExternal1
-        tf_name: ospf_match_nssa_external_1
+        tf_name: match_nssa_external_1
         type: Bool
-        description: Whether to match NSSA external type 1 routes.
+        description: Whether to match OSPF NSSA external type 1 routes.
       - model_name: matchNssaExternal2
-        tf_name: ospf_match_nssa_external_2
+        tf_name: match_nssa_external_2
         type: Bool
-        description: Whether to match NSSA external type 2 routes.
+        description: Whether to match OSPF NSSA external type 2 routes.
       - model_name: processId
         tf_name: process_id
         type: Int64

@@ -84,19 +84,19 @@ type DeviceOSPFAreas struct {
 }
 
 type DeviceOSPFRedistributions struct {
-	RouteType              types.String `tfsdk:"route_type"`
-	AsNumber               types.Int64  `tfsdk:"as_number"`
-	OspfMatchExternal1     types.Bool   `tfsdk:"ospf_match_external_1"`
-	OspfMatchExternal2     types.Bool   `tfsdk:"ospf_match_external_2"`
-	OspfMatchInternal      types.Bool   `tfsdk:"ospf_match_internal"`
-	OspfMatchNssaExternal1 types.Bool   `tfsdk:"ospf_match_nssa_external_1"`
-	OspfMatchNssaExternal2 types.Bool   `tfsdk:"ospf_match_nssa_external_2"`
-	ProcessId              types.Int64  `tfsdk:"process_id"`
-	Subnets                types.Bool   `tfsdk:"subnets"`
-	Metric                 types.Int64  `tfsdk:"metric"`
-	MetricType             types.String `tfsdk:"metric_type"`
-	Tag                    types.Int64  `tfsdk:"tag"`
-	RouteMapId             types.String `tfsdk:"route_map_id"`
+	RedistributeProtocol types.String `tfsdk:"redistribute_protocol"`
+	AsNumber             types.Int64  `tfsdk:"as_number"`
+	MatchExternal1       types.Bool   `tfsdk:"match_external_1"`
+	MatchExternal2       types.Bool   `tfsdk:"match_external_2"`
+	MatchInternal        types.Bool   `tfsdk:"match_internal"`
+	MatchNssaExternal1   types.Bool   `tfsdk:"match_nssa_external_1"`
+	MatchNssaExternal2   types.Bool   `tfsdk:"match_nssa_external_2"`
+	ProcessId            types.Int64  `tfsdk:"process_id"`
+	Subnets              types.Bool   `tfsdk:"subnets"`
+	Metric               types.Int64  `tfsdk:"metric"`
+	MetricType           types.String `tfsdk:"metric_type"`
+	Tag                  types.Int64  `tfsdk:"tag"`
+	RouteMapId           types.String `tfsdk:"route_map_id"`
 }
 
 type DeviceOSPFFilterRules struct {
@@ -374,26 +374,26 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 		body, _ = sjson.Set(body, "redistributeProtocols", []any{})
 		for _, item := range data.Redistributions {
 			itemBody := ""
-			if !item.RouteType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.RouteType.ValueString())
+			if !item.RedistributeProtocol.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "type", item.RedistributeProtocol.ValueString())
 			}
 			if !item.AsNumber.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "asNumber", item.AsNumber.ValueInt64())
 			}
-			if !item.OspfMatchExternal1.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "matchExternal1", item.OspfMatchExternal1.ValueBool())
+			if !item.MatchExternal1.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "matchExternal1", item.MatchExternal1.ValueBool())
 			}
-			if !item.OspfMatchExternal2.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "matchExternal2", item.OspfMatchExternal2.ValueBool())
+			if !item.MatchExternal2.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "matchExternal2", item.MatchExternal2.ValueBool())
 			}
-			if !item.OspfMatchInternal.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "matchInternal", item.OspfMatchInternal.ValueBool())
+			if !item.MatchInternal.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "matchInternal", item.MatchInternal.ValueBool())
 			}
-			if !item.OspfMatchNssaExternal1.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "matchNssaExternal1", item.OspfMatchNssaExternal1.ValueBool())
+			if !item.MatchNssaExternal1.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "matchNssaExternal1", item.MatchNssaExternal1.ValueBool())
 			}
-			if !item.OspfMatchNssaExternal2.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "matchNssaExternal2", item.OspfMatchNssaExternal2.ValueBool())
+			if !item.MatchNssaExternal2.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "matchNssaExternal2", item.MatchNssaExternal2.ValueBool())
 			}
 			if !item.ProcessId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "processId", item.ProcessId.ValueInt64())
@@ -786,9 +786,9 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 			parent := &data
 			data := DeviceOSPFRedistributions{}
 			if value := res.Get("type"); value.Exists() {
-				data.RouteType = types.StringValue(value.String())
+				data.RedistributeProtocol = types.StringValue(value.String())
 			} else {
-				data.RouteType = types.StringNull()
+				data.RedistributeProtocol = types.StringNull()
 			}
 			if value := res.Get("asNumber"); value.Exists() {
 				data.AsNumber = types.Int64Value(value.Int())
@@ -796,29 +796,29 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.AsNumber = types.Int64Null()
 			}
 			if value := res.Get("matchExternal1"); value.Exists() {
-				data.OspfMatchExternal1 = types.BoolValue(value.Bool())
+				data.MatchExternal1 = types.BoolValue(value.Bool())
 			} else {
-				data.OspfMatchExternal1 = types.BoolNull()
+				data.MatchExternal1 = types.BoolNull()
 			}
 			if value := res.Get("matchExternal2"); value.Exists() {
-				data.OspfMatchExternal2 = types.BoolValue(value.Bool())
+				data.MatchExternal2 = types.BoolValue(value.Bool())
 			} else {
-				data.OspfMatchExternal2 = types.BoolNull()
+				data.MatchExternal2 = types.BoolNull()
 			}
 			if value := res.Get("matchInternal"); value.Exists() {
-				data.OspfMatchInternal = types.BoolValue(value.Bool())
+				data.MatchInternal = types.BoolValue(value.Bool())
 			} else {
-				data.OspfMatchInternal = types.BoolNull()
+				data.MatchInternal = types.BoolNull()
 			}
 			if value := res.Get("matchNssaExternal1"); value.Exists() {
-				data.OspfMatchNssaExternal1 = types.BoolValue(value.Bool())
+				data.MatchNssaExternal1 = types.BoolValue(value.Bool())
 			} else {
-				data.OspfMatchNssaExternal1 = types.BoolNull()
+				data.MatchNssaExternal1 = types.BoolNull()
 			}
 			if value := res.Get("matchNssaExternal2"); value.Exists() {
-				data.OspfMatchNssaExternal2 = types.BoolValue(value.Bool())
+				data.MatchNssaExternal2 = types.BoolValue(value.Bool())
 			} else {
-				data.OspfMatchNssaExternal2 = types.BoolNull()
+				data.MatchNssaExternal2 = types.BoolNull()
 			}
 			if value := res.Get("processId"); value.Exists() {
 				data.ProcessId = types.Int64Value(value.Int())
@@ -1454,7 +1454,7 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	}
 	for i := 0; i < len(data.Redistributions); i++ {
 		keys := [...]string{"type"}
-		keyValues := [...]string{data.Redistributions[i].RouteType.ValueString()}
+		keyValues := [...]string{data.Redistributions[i].RedistributeProtocol.ValueString()}
 
 		parent := &data
 		data := (*parent).Redistributions[i]
@@ -1488,40 +1488,40 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("type"); value.Exists() && !data.RouteType.IsNull() {
-			data.RouteType = types.StringValue(value.String())
+		if value := res.Get("type"); value.Exists() && !data.RedistributeProtocol.IsNull() {
+			data.RedistributeProtocol = types.StringValue(value.String())
 		} else {
-			data.RouteType = types.StringNull()
+			data.RedistributeProtocol = types.StringNull()
 		}
 		if value := res.Get("asNumber"); value.Exists() && !data.AsNumber.IsNull() {
 			data.AsNumber = types.Int64Value(value.Int())
 		} else {
 			data.AsNumber = types.Int64Null()
 		}
-		if value := res.Get("matchExternal1"); value.Exists() && !data.OspfMatchExternal1.IsNull() {
-			data.OspfMatchExternal1 = types.BoolValue(value.Bool())
+		if value := res.Get("matchExternal1"); value.Exists() && !data.MatchExternal1.IsNull() {
+			data.MatchExternal1 = types.BoolValue(value.Bool())
 		} else {
-			data.OspfMatchExternal1 = types.BoolNull()
+			data.MatchExternal1 = types.BoolNull()
 		}
-		if value := res.Get("matchExternal2"); value.Exists() && !data.OspfMatchExternal2.IsNull() {
-			data.OspfMatchExternal2 = types.BoolValue(value.Bool())
+		if value := res.Get("matchExternal2"); value.Exists() && !data.MatchExternal2.IsNull() {
+			data.MatchExternal2 = types.BoolValue(value.Bool())
 		} else {
-			data.OspfMatchExternal2 = types.BoolNull()
+			data.MatchExternal2 = types.BoolNull()
 		}
-		if value := res.Get("matchInternal"); value.Exists() && !data.OspfMatchInternal.IsNull() {
-			data.OspfMatchInternal = types.BoolValue(value.Bool())
+		if value := res.Get("matchInternal"); value.Exists() && !data.MatchInternal.IsNull() {
+			data.MatchInternal = types.BoolValue(value.Bool())
 		} else {
-			data.OspfMatchInternal = types.BoolNull()
+			data.MatchInternal = types.BoolNull()
 		}
-		if value := res.Get("matchNssaExternal1"); value.Exists() && !data.OspfMatchNssaExternal1.IsNull() {
-			data.OspfMatchNssaExternal1 = types.BoolValue(value.Bool())
+		if value := res.Get("matchNssaExternal1"); value.Exists() && !data.MatchNssaExternal1.IsNull() {
+			data.MatchNssaExternal1 = types.BoolValue(value.Bool())
 		} else {
-			data.OspfMatchNssaExternal1 = types.BoolNull()
+			data.MatchNssaExternal1 = types.BoolNull()
 		}
-		if value := res.Get("matchNssaExternal2"); value.Exists() && !data.OspfMatchNssaExternal2.IsNull() {
-			data.OspfMatchNssaExternal2 = types.BoolValue(value.Bool())
+		if value := res.Get("matchNssaExternal2"); value.Exists() && !data.MatchNssaExternal2.IsNull() {
+			data.MatchNssaExternal2 = types.BoolValue(value.Bool())
 		} else {
-			data.OspfMatchNssaExternal2 = types.BoolNull()
+			data.MatchNssaExternal2 = types.BoolNull()
 		}
 		if value := res.Get("processId"); value.Exists() && !data.ProcessId.IsNull() {
 			data.ProcessId = types.Int64Value(value.Int())
@@ -1761,7 +1761,7 @@ func (data DeviceOSPF) adjustBody(ctx context.Context, req string) string {
 	req, _ = sjson.Set(req, "enableProcess", fmt.Sprintf("PROCESS_%v", 2-data.ProcessId.ValueInt64()%2))
 	if len(data.Redistributions) > 0 {
 		for i, item := range data.Redistributions {
-			if item.RouteType.ValueString() == "RedistributeOSPF" {
+			if item.RedistributeProtocol.ValueString() == "RedistributeOSPF" {
 				// pairing consecutive numbers (1<>2, 3<>4):
 				var peerProcessId = ((data.ProcessId.ValueInt64() - 1) ^ 1) + 1
 				req, _ = sjson.Set(req, fmt.Sprintf("redistributeProtocols.%d.processId", i), peerProcessId)

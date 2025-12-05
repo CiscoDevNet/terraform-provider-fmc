@@ -106,11 +106,8 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"process_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.").AddIntegerRangeDescription(1, 300).String,
+				MarkdownDescription: helpers.NewAttributeDescription("OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.").String,
 				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 300),
-				},
 			},
 			"router_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.").String,
@@ -172,7 +169,7 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Default: int64default.StaticInt64(240),
 			},
 			"default_route_always_advertise": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Always advertise default route. When configure to any value, enables Default Information Originate as well.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Always advertise default route. Enables Default Information Originate when set.").String,
 				Optional:            true,
 			},
 			"default_route_metric": schema.Int64Attribute{
@@ -220,11 +217,11 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				Optional:            true,
 			},
 			"non_stop_forwarding_strict_mode": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).").String,
 				Optional:            true,
 			},
 			"areas": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("OSPF areas.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Areas.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -234,7 +231,7 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Area type.").AddStringEnumDescription("normal", "stub", "nssa").String,
-							Optional:            true,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("normal", "stub", "nssa"),
 							},
@@ -263,7 +260,7 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 						},
 						"networks": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Area networks.").String,
-							Optional:            true,
+							Required:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
@@ -361,7 +358,7 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 										Sensitive: true,
 									},
 									"authentication_area_password": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Password for authentication.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Password for area authentication.").String,
 										Optional:            true,
 										Validators: []validator.String{
 											stringvalidator.LengthBetween(0, 8),
@@ -369,12 +366,12 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 										Sensitive: true,
 									},
 									"authentication_area_md5s": schema.ListNestedAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("List of MD5 authentication keys.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Area MD5 authentication keys.").String,
 										Optional:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"id": schema.Int64Attribute{
-													MarkdownDescription: helpers.NewAttributeDescription("Key ID for the MD5 authentication key.").String,
+													MarkdownDescription: helpers.NewAttributeDescription("Key ID.").String,
 													Required:            true,
 												},
 												"key": schema.StringAttribute{
@@ -386,12 +383,12 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 										},
 									},
 									"authentication_md5s": schema.ListNestedAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("List of MD5 authentication keys.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("MD5 authentication keys.").String,
 										Optional:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
 												"id": schema.Int64Attribute{
-													MarkdownDescription: helpers.NewAttributeDescription("Key ID for the MD5 authentication key.").String,
+													MarkdownDescription: helpers.NewAttributeDescription("Key ID.").String,
 													Required:            true,
 												},
 												"key": schema.StringAttribute{
@@ -436,11 +433,11 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"redistributions": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable protocol redistribution.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Redistributions.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"route_type": schema.StringAttribute{
+						"redistribute_protocol": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Protocol to redistribute.").AddStringEnumDescription("RedistributeConnected", "RedistributeStatic", "RedistributeOSPF", "RedistributeBGP", "RedistributeRIP", "RedistributeEIGRP").String,
 							Required:            true,
 							Validators: []validator.String{
@@ -451,24 +448,24 @@ func (r *DeviceOSPFResource) Schema(ctx context.Context, req resource.SchemaRequ
 							MarkdownDescription: helpers.NewAttributeDescription("Autonomous System Number (ASN) for BGP / EIGRP redistribution.").String,
 							Optional:            true,
 						},
-						"ospf_match_external_1": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to match external type 1 routes.").String,
+						"match_external_1": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to match OSPF external type 1 routes.").String,
 							Optional:            true,
 						},
-						"ospf_match_external_2": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to match external type 2 routes.").String,
+						"match_external_2": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to match OSPF external type 2 routes.").String,
 							Optional:            true,
 						},
-						"ospf_match_internal": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to match internal routes.").String,
+						"match_internal": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to match OSPF internal routes.").String,
 							Optional:            true,
 						},
-						"ospf_match_nssa_external_1": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to match NSSA external type 1 routes.").String,
+						"match_nssa_external_1": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to match OSPF NSSA external type 1 routes.").String,
 							Optional:            true,
 						},
-						"ospf_match_nssa_external_2": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to match NSSA external type 2 routes.").String,
+						"match_nssa_external_2": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Whether to match OSPF NSSA external type 2 routes.").String,
 							Optional:            true,
 						},
 						"process_id": schema.Int64Attribute{

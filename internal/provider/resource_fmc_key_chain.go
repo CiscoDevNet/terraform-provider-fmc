@@ -113,7 +113,7 @@ func (r *KeyChainResource) Schema(ctx context.Context, req resource.SchemaReques
 							Required:            true,
 						},
 						"accept_lifetime_start": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Start time for key acceptance lifetime.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.").String,
 							Optional:            true,
 						},
 						"accept_lifetime_end_type": schema.StringAttribute{
@@ -124,11 +124,11 @@ func (r *KeyChainResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"accept_lifetime_end": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("End time for key acceptance lifetime.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).").String,
 							Optional:            true,
 						},
 						"send_lifetime_start": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Start time for key send lifetime.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.").String,
 							Optional:            true,
 						},
 						"send_lifetime_end_type": schema.StringAttribute{
@@ -139,7 +139,7 @@ func (r *KeyChainResource) Schema(ctx context.Context, req resource.SchemaReques
 							},
 						},
 						"send_lifetime_end": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("End time for key send lifetime.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).").String,
 							Optional:            true,
 						},
 					},

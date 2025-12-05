@@ -39,17 +39,17 @@ data "fmc_device_ospf_interface" "example" {
 
 ### Read-Only
 
-- `authentication_area_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_area_md5s))
-- `authentication_area_password` (String, Sensitive) Password for authentication.
+- `authentication_area_md5s` (Attributes List) Area MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_area_md5s))
+- `authentication_area_password` (String, Sensitive) Password for area authentication.
 - `authentication_key_chain_id` (String) Key chain object ID for authentication.
-- `authentication_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_md5s))
+- `authentication_md5s` (Attributes List) MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_md5s))
 - `authentication_password` (String, Sensitive) Password for authentication.
 - `bfd` (Boolean) Enable Bidirectional Forwarding Detection (BFD) on the interface.
 - `dead_interval` (Number) Time period in seconds for which hello packets must not be seen before neighbors indicate that the router is down.
 - `default_cost` (Number) Cost of sending a packet through the interface.
 - `hello_interval` (Number) Interval, in seconds, between hello packets sent on an interface.
 - `hello_multiplier` (Number) Number of Hello packets to be sent per second.
-- `interface_id` (String) ID of the interface associated with this OSPF interface.
+- `interface_id` (String) ID of the device interface.
 - `mtu_missmatch_ignore` (Boolean) Ignore MTU mismatch on the interface.
 - `point_to_point` (Boolean) Configure the interface as point-to-point non-broadcast.
 - `priority` (Number) Designated router for a network.
@@ -62,7 +62,7 @@ data "fmc_device_ospf_interface" "example" {
 
 Read-Only:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -71,5 +71,5 @@ Read-Only:
 
 Read-Only:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.

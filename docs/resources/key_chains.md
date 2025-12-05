@@ -31,8 +31,8 @@ resource "fmc_key_chains" "example" {
           accept_lifetime_end_type = "DATETIME"
           accept_lifetime_end      = "2026-08-25T12:14:23"
           send_lifetime_start      = "2025-08-25T12:14:23"
-          send_lifetime_end_type   = "DATETIME"
-          send_lifetime_end        = "2026-08-25T12:14:23"
+          send_lifetime_end_type   = "DURATION"
+          send_lifetime_end        = "172800"
         }
       ]
     }
@@ -82,14 +82,14 @@ Required:
 
 Optional:
 
-- `accept_lifetime_end` (String) End time for key acceptance lifetime.
+- `accept_lifetime_end` (String) End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
 - `accept_lifetime_end_type` (String) Type of end time for key acceptance lifetime.
   - Choices: `INFINITE`, `DURATION`, `DATETIME`
-- `accept_lifetime_start` (String) Start time for key acceptance lifetime.
-- `send_lifetime_end` (String) End time for key send lifetime.
+- `accept_lifetime_start` (String) Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.
+- `send_lifetime_end` (String) End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
 - `send_lifetime_end_type` (String) Type of end time for key send lifetime.
   - Choices: `INFINITE`, `DURATION`, `DATETIME`
-- `send_lifetime_start` (String) Start time for key send lifetime.
+- `send_lifetime_start` (String) Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.
 
 ## Import
 

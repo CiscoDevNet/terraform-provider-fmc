@@ -61,7 +61,7 @@ attributes:
           - model_name: startLifeTimeValue
             data_path: [acceptLifeTime]
             tf_name: accept_lifetime_start
-            description: Start time for key acceptance lifetime.
+            description: Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.
             type: String
             example: '2025-08-25T12:14:23'
           - model_name: endLifetimeType
@@ -74,13 +74,13 @@ attributes:
           - model_name: endLifeTimeValue
             data_path: [acceptLifeTime]
             tf_name: accept_lifetime_end
-            description: End time for key acceptance lifetime.
+            description: End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
             type: String
             example: '2026-08-25T12:14:23'
           - model_name: startLifeTimeValue
             data_path: [sendLifeTime]
             tf_name: send_lifetime_start
-            description: Start time for key send lifetime.
+            description: Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.
             type: String
             example: '2025-08-25T12:14:23'
           - model_name: endLifetimeType
@@ -89,10 +89,10 @@ attributes:
             description: Type of end time for key send lifetime.
             type: String
             enum_values: [INFINITE, DURATION, DATETIME]
-            example: DATETIME
+            example: DURATION
           - model_name: endLifeTimeValue
             data_path: [sendLifeTime]
             tf_name: send_lifetime_end
-            description: End time for key send lifetime.
+            description: End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).
             type: String
-            example: '2026-08-25T12:14:23'
+            example: '172800'

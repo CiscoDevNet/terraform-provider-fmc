@@ -40,14 +40,14 @@ resource "fmc_device_ospf_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `interface_id` (String) ID of the interface associated with this OSPF interface.
+- `interface_id` (String) ID of the device interface.
 
 ### Optional
 
-- `authentication_area_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_area_md5s))
-- `authentication_area_password` (String, Sensitive) Password for authentication.
+- `authentication_area_md5s` (Attributes List) Area MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_area_md5s))
+- `authentication_area_password` (String, Sensitive) Password for area authentication.
 - `authentication_key_chain_id` (String) Key chain object ID for authentication.
-- `authentication_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_md5s))
+- `authentication_md5s` (Attributes List) MD5 authentication keys. (see [below for nested schema](#nestedatt--authentication_md5s))
 - `authentication_password` (String, Sensitive) Password for authentication.
 - `bfd` (Boolean) Enable Bidirectional Forwarding Detection (BFD) on the interface.
 - `dead_interval` (Number) Time period in seconds for which hello packets must not be seen before neighbors indicate that the router is down.
@@ -85,7 +85,7 @@ resource "fmc_device_ospf_interface" "example" {
 
 Required:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -94,7 +94,7 @@ Required:
 
 Required:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 ## Import

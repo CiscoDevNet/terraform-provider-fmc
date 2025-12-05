@@ -104,7 +104,7 @@ func (r *DeviceOSPFInterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the interface associated with this OSPF interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of the device interface.").String,
 				Required:            true,
 			},
 			"default_cost": schema.Int64Attribute{
@@ -189,7 +189,7 @@ func (r *DeviceOSPFInterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"authentication_area_password": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Password for authentication.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Password for area authentication.").String,
 				Optional:            true,
 				Sensitive:           true,
 				Validators: []validator.String{
@@ -197,12 +197,12 @@ func (r *DeviceOSPFInterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"authentication_area_md5s": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of MD5 authentication keys.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Area MD5 authentication keys.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Key ID for the MD5 authentication key.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Key ID.").String,
 							Required:            true,
 						},
 						"key": schema.StringAttribute{
@@ -214,12 +214,12 @@ func (r *DeviceOSPFInterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"authentication_md5s": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of MD5 authentication keys.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("MD5 authentication keys.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Key ID for the MD5 authentication key.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Key ID.").String,
 							Required:            true,
 						},
 						"key": schema.StringAttribute{

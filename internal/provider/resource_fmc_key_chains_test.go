@@ -40,8 +40,8 @@ func TestAccFmcKeyChains(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.accept_lifetime_end_type", "DATETIME"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.accept_lifetime_end", "2026-08-25T12:14:23"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.send_lifetime_start", "2025-08-25T12:14:23"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.send_lifetime_end_type", "DATETIME"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.send_lifetime_end", "2026-08-25T12:14:23"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.send_lifetime_end_type", "DURATION"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_key_chains.test", "items.my_key_chains.keys.0.send_lifetime_end", "172800"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -96,8 +96,8 @@ func testAccFmcKeyChainsConfig_all() string {
 	config += `			accept_lifetime_end_type = "DATETIME"` + "\n"
 	config += `			accept_lifetime_end = "2026-08-25T12:14:23"` + "\n"
 	config += `			send_lifetime_start = "2025-08-25T12:14:23"` + "\n"
-	config += `			send_lifetime_end_type = "DATETIME"` + "\n"
-	config += `			send_lifetime_end = "2026-08-25T12:14:23"` + "\n"
+	config += `			send_lifetime_end_type = "DURATION"` + "\n"
+	config += `			send_lifetime_end = "172800"` + "\n"
 	config += `		}]` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"

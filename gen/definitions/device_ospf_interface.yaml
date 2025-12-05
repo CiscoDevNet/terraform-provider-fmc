@@ -22,7 +22,7 @@ attributes:
     data_path: [deviceInterface]
     tf_name: interface_id
     type: String
-    description: ID of the interface associated with this OSPF interface.
+    description: ID of the device interface.
     example: 123e4567-e89b-12d3-a456-426614174000
     test_value: fmc_device_physical_interface.test.id
     mandatory: true
@@ -112,6 +112,7 @@ attributes:
     type: Bool
     description: Enable Bidirectional Forwarding Detection (BFD) on the interface.
     example: false
+
   # Authentication
   - model_name: authKey
     data_path: [ospfProtocolConfiguration, ospfAuthentication, passwdAuth]
@@ -128,21 +129,21 @@ attributes:
     type: String
     sensitive: true
     string_max_length: 8
-    description: Password for authentication.
+    description: Password for area authentication.
     exclude_example: true
     exclude_test: true
   - model_name: md5AuthList
     data_path: [ospfProtocolConfiguration, ospfAuthentication, areaAuth]
     tf_name: authentication_area_md5s
     type: List
-    description: List of MD5 authentication keys.
+    description: Area MD5 authentication keys.
     exclude_example: true
     exclude_test: true
     attributes:
       - model_name: md5KeyId
         tf_name: id
         type: Int64
-        description: Key ID for the MD5 authentication key.
+        description: Key ID.
         mandatory: true
         id: true
       - model_name: md5Key
@@ -155,14 +156,14 @@ attributes:
     data_path: [ospfProtocolConfiguration, ospfAuthentication]
     tf_name: authentication_md5s
     type: List
-    description: List of MD5 authentication keys.
+    description: MD5 authentication keys.
     exclude_example: true
     exclude_test: true
     attributes:
       - model_name: md5KeyId
         tf_name: id
         type: Int64
-        description: Key ID for the MD5 authentication key.
+        description: Key ID.
         mandatory: true
         id: true
       - model_name: md5Key

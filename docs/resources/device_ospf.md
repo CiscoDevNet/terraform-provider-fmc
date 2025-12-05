@@ -70,7 +70,6 @@ resource "fmc_device_ospf" "example" {
 
 - `device_id` (String) Id of the parent device.
 - `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
-  - Range: `1`-`300`
 
 ### Optional
 
@@ -83,8 +82,8 @@ resource "fmc_device_ospf" "example" {
 - `administrative_distance_intra_area` (Number) Administrative distance for intra-area routes.
   - Range: `1`-`254`
   - Default value: `110`
-- `areas` (Attributes List) OSPF areas. (see [below for nested schema](#nestedatt--areas))
-- `default_route_always_advertise` (Boolean) Always advertise default route. When configure to any value, enables Default Information Originate as well.
+- `areas` (Attributes List) Areas. (see [below for nested schema](#nestedatt--areas))
+- `default_route_always_advertise` (Boolean) Always advertise default route. Enables Default Information Originate when set.
 - `default_route_metric` (Number) Metric for the default route.
   - Range: `0`-`16777214`
 - `default_route_metric_type` (String) Metric type for the default route.
@@ -104,8 +103,8 @@ resource "fmc_device_ospf" "example" {
   - Choices: `CISCO`, `IETF`, `NONE`
 - `non_stop_forwarding_restart_interval` (Number) Length of graceful restart interval (seconds).
   - Range: `1`-`1800`
-- `non_stop_forwarding_strict_mode` (Boolean) IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
-- `redistributions` (Attributes List) Enable protocol redistribution. (see [below for nested schema](#nestedatt--redistributions))
+- `non_stop_forwarding_strict_mode` (Boolean) Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).
+- `redistributions` (Attributes List) Redistributions. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility as the method used to calculate summary route costs.
   - Default value: `false`
 - `router_id` (String) IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
@@ -126,6 +125,9 @@ resource "fmc_device_ospf" "example" {
 Required:
 
 - `id` (String) Area ID in either Integer or IPv4 format.
+- `networks` (Attributes List) Area networks. (see [below for nested schema](#nestedatt--areas--networks))
+- `type` (String) Area type.
+  - Choices: `normal`, `stub`, `nssa`
 
 Optional:
 
@@ -138,13 +140,22 @@ Optional:
 - `default_route_metric_type` (String) Default route metric type for NSSA areas.
   - Choices: `TYPE_1`, `TYPE_2`
 - `inter_area_filters` (Attributes List) Inter-area filters. (see [below for nested schema](#nestedatt--areas--inter_area_filters))
-- `networks` (Attributes List) Area networks. (see [below for nested schema](#nestedatt--areas--networks))
 - `no_redistribution` (Boolean) No Redistribution flag for NSSA areas.
 - `no_summary` (Boolean) No Summary flag for Stub / NSSA areas.
 - `ranges` (Attributes List) Ranges. (see [below for nested schema](#nestedatt--areas--ranges))
-- `type` (String) Area type.
-  - Choices: `normal`, `stub`, `nssa`
 - `virtual_links` (Attributes List) Virtual links. (see [below for nested schema](#nestedatt--areas--virtual_links))
+
+<a id="nestedatt--areas--networks"></a>
+### Nested Schema for `areas.networks`
+
+Required:
+
+- `id` (String) Network object ID.
+
+Optional:
+
+- `name` (String) Network object name.
+
 
 <a id="nestedatt--areas--inter_area_filters"></a>
 ### Nested Schema for `areas.inter_area_filters`
@@ -158,18 +169,6 @@ Required:
 Optional:
 
 - `prefix_list_name` (String) Prefix list object name.
-
-
-<a id="nestedatt--areas--networks"></a>
-### Nested Schema for `areas.networks`
-
-Required:
-
-- `id` (String) Network object ID.
-
-Optional:
-
-- `name` (String) Network object name.
 
 
 <a id="nestedatt--areas--ranges"></a>
@@ -193,10 +192,10 @@ Required:
 
 Optional:
 
-- `authentication_area_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_area_md5s))
-- `authentication_area_password` (String, Sensitive) Password for authentication.
+- `authentication_area_md5s` (Attributes List) Area MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_area_md5s))
+- `authentication_area_password` (String, Sensitive) Password for area authentication.
 - `authentication_key_chain_id` (String) Key chain object ID for authentication.
-- `authentication_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_md5s))
+- `authentication_md5s` (Attributes List) MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_md5s))
 - `authentication_password` (String, Sensitive) Password for authentication.
 - `dead_interval` (Number) Dead interval in seconds.
   - Range: `1`-`8192`
@@ -216,7 +215,7 @@ Optional:
 
 Required:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -225,7 +224,7 @@ Required:
 
 Required:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -262,22 +261,22 @@ Required:
 
 Required:
 
-- `route_type` (String) Protocol to redistribute.
+- `redistribute_protocol` (String) Protocol to redistribute.
   - Choices: `RedistributeConnected`, `RedistributeStatic`, `RedistributeOSPF`, `RedistributeBGP`, `RedistributeRIP`, `RedistributeEIGRP`
 
 Optional:
 
 - `as_number` (Number) Autonomous System Number (ASN) for BGP / EIGRP redistribution.
+- `match_external_1` (Boolean) Whether to match OSPF external type 1 routes.
+- `match_external_2` (Boolean) Whether to match OSPF external type 2 routes.
+- `match_internal` (Boolean) Whether to match OSPF internal routes.
+- `match_nssa_external_1` (Boolean) Whether to match OSPF NSSA external type 1 routes.
+- `match_nssa_external_2` (Boolean) Whether to match OSPF NSSA external type 2 routes.
 - `metric` (Number) Metric value for the routes being distributed.
   - Range: `0`-`16777214`
 - `metric_type` (String) Metric type for the default route.
   - Choices: `TYPE_1`, `TYPE_2`
   - Default value: `TYPE_2`
-- `ospf_match_external_1` (Boolean) Whether to match external type 1 routes.
-- `ospf_match_external_2` (Boolean) Whether to match external type 2 routes.
-- `ospf_match_internal` (Boolean) Whether to match internal routes.
-- `ospf_match_nssa_external_1` (Boolean) Whether to match NSSA external type 1 routes.
-- `ospf_match_nssa_external_2` (Boolean) Whether to match NSSA external type 2 routes.
 - `process_id` (Number) OSPF process ID.
 - `route_map_id` (String) Route map ID for route filtering.
 - `subnets` (Boolean) Whether to redistribute subnets.

@@ -39,8 +39,8 @@ func TestAccDataSourceFmcKeyChain(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.accept_lifetime_end_type", "DATETIME"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.accept_lifetime_end", "2026-08-25T12:14:23"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.send_lifetime_start", "2025-08-25T12:14:23"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.send_lifetime_end_type", "DATETIME"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.send_lifetime_end", "2026-08-25T12:14:23"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.send_lifetime_end_type", "DURATION"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.send_lifetime_end", "172800"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -76,8 +76,8 @@ func testAccDataSourceFmcKeyChainConfig() string {
 	config += `		accept_lifetime_end_type = "DATETIME"` + "\n"
 	config += `		accept_lifetime_end = "2026-08-25T12:14:23"` + "\n"
 	config += `		send_lifetime_start = "2025-08-25T12:14:23"` + "\n"
-	config += `		send_lifetime_end_type = "DATETIME"` + "\n"
-	config += `		send_lifetime_end = "2026-08-25T12:14:23"` + "\n"
+	config += `		send_lifetime_end_type = "DURATION"` + "\n"
+	config += `		send_lifetime_end = "172800"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
@@ -100,8 +100,8 @@ func testAccNamedDataSourceFmcKeyChainConfig() string {
 	config += `		accept_lifetime_end_type = "DATETIME"` + "\n"
 	config += `		accept_lifetime_end = "2026-08-25T12:14:23"` + "\n"
 	config += `		send_lifetime_start = "2025-08-25T12:14:23"` + "\n"
-	config += `		send_lifetime_end_type = "DATETIME"` + "\n"
-	config += `		send_lifetime_end = "2026-08-25T12:14:23"` + "\n"
+	config += `		send_lifetime_end_type = "DURATION"` + "\n"
+	config += `		send_lifetime_end = "172800"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

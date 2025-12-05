@@ -98,7 +98,7 @@ func (d *KeyChainDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"accept_lifetime_start": schema.StringAttribute{
-							MarkdownDescription: "Start time for key acceptance lifetime.",
+							MarkdownDescription: "Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.",
 							Computed:            true,
 						},
 						"accept_lifetime_end_type": schema.StringAttribute{
@@ -106,11 +106,11 @@ func (d *KeyChainDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"accept_lifetime_end": schema.StringAttribute{
-							MarkdownDescription: "End time for key acceptance lifetime.",
+							MarkdownDescription: "End time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).",
 							Computed:            true,
 						},
 						"send_lifetime_start": schema.StringAttribute{
-							MarkdownDescription: "Start time for key send lifetime.",
+							MarkdownDescription: "Start time for key send lifetime in YYYY-MM-DDTHH:mm:ss format.",
 							Computed:            true,
 						},
 						"send_lifetime_end_type": schema.StringAttribute{
@@ -118,7 +118,7 @@ func (d *KeyChainDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							Computed:            true,
 						},
 						"send_lifetime_end": schema.StringAttribute{
-							MarkdownDescription: "End time for key send lifetime.",
+							MarkdownDescription: "End time for key send lifetime in YYYY-MM-DDTHH:mm:ss format (`DATETIME`) or duration in seconds (`DURATION`).",
 							Computed:            true,
 						},
 					},

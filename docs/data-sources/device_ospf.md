@@ -42,8 +42,8 @@ data "fmc_device_ospf" "example" {
 - `administrative_distance_external` (Number) Administrative distance for external routes.
 - `administrative_distance_inter_area` (Number) Administrative distance for inter-area routes.
 - `administrative_distance_intra_area` (Number) Administrative distance for intra-area routes.
-- `areas` (Attributes List) OSPF areas. (see [below for nested schema](#nestedatt--areas))
-- `default_route_always_advertise` (Boolean) Always advertise default route. When configure to any value, enables Default Information Originate as well.
+- `areas` (Attributes List) Areas. (see [below for nested schema](#nestedatt--areas))
+- `default_route_always_advertise` (Boolean) Always advertise default route. Enables Default Information Originate when set.
 - `default_route_metric` (Number) Metric for the default route.
 - `default_route_metric_type` (String) Metric type for the default route.
 - `default_route_route_map_id` (String) Route Map ID for choosing the process that generates the default route.
@@ -56,9 +56,9 @@ data "fmc_device_ospf" "example" {
 - `non_stop_forwarding_helper_mode` (Boolean) Enable Non-Stop Forwarding helper mode.
 - `non_stop_forwarding_mechanism` (String) Non-Stop Forwarding mechanism.
 - `non_stop_forwarding_restart_interval` (Number) Length of graceful restart interval (seconds).
-- `non_stop_forwarding_strict_mode` (Boolean) IETF Strict Link State advertisement checking or Cisco Cancel NSF restart when non-NSF-aware neighboring networking devices are detected
+- `non_stop_forwarding_strict_mode` (Boolean) Strict Link State advertisement checking (`IETF` mechanism) or Cancel NSF restart when non-NSF-aware neighboring networking devices are detected (`CISCO` mechanism).
 - `process_id` (Number) OSPF process ID. The numbers 1 and 2 are reserved for the OSPF Process IDs in global VRF. The next two numbers, 3 and 4, are allocated to the two OSPF Process IDs in the first user-defined VRFs. This incremental pattern continues whenever OSPF is enabled in the next user-defined VRF.
-- `redistributions` (Attributes List) Enable protocol redistribution. (see [below for nested schema](#nestedatt--redistributions))
+- `redistributions` (Attributes List) Redistributions. (see [below for nested schema](#nestedatt--redistributions))
 - `rfc_1583_compatible` (Boolean) Enable RFC 1583 compatibility as the method used to calculate summary route costs.
 - `router_id` (String) IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
 - `summary_addresses` (Attributes List) Addresses summarization configuration. (see [below for nested schema](#nestedatt--summary_addresses))
@@ -116,10 +116,10 @@ Read-Only:
 
 Read-Only:
 
-- `authentication_area_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_area_md5s))
-- `authentication_area_password` (String, Sensitive) Password for authentication.
+- `authentication_area_md5s` (Attributes List) Area MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_area_md5s))
+- `authentication_area_password` (String, Sensitive) Password for area authentication.
 - `authentication_key_chain_id` (String) Key chain object ID for authentication.
-- `authentication_md5s` (Attributes List) List of MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_md5s))
+- `authentication_md5s` (Attributes List) MD5 authentication keys. (see [below for nested schema](#nestedatt--areas--virtual_links--authentication_md5s))
 - `authentication_password` (String, Sensitive) Password for authentication.
 - `dead_interval` (Number) Dead interval in seconds.
 - `hello_interval` (Number) Hello interval in seconds.
@@ -132,7 +132,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -141,7 +141,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (Number) Key ID for the MD5 authentication key.
+- `id` (Number) Key ID.
 - `key` (String, Sensitive) MD5 authentication key.
 
 
@@ -174,16 +174,16 @@ Read-Only:
 Read-Only:
 
 - `as_number` (Number) Autonomous System Number (ASN) for BGP / EIGRP redistribution.
+- `match_external_1` (Boolean) Whether to match OSPF external type 1 routes.
+- `match_external_2` (Boolean) Whether to match OSPF external type 2 routes.
+- `match_internal` (Boolean) Whether to match OSPF internal routes.
+- `match_nssa_external_1` (Boolean) Whether to match OSPF NSSA external type 1 routes.
+- `match_nssa_external_2` (Boolean) Whether to match OSPF NSSA external type 2 routes.
 - `metric` (Number) Metric value for the routes being distributed.
 - `metric_type` (String) Metric type for the default route.
-- `ospf_match_external_1` (Boolean) Whether to match external type 1 routes.
-- `ospf_match_external_2` (Boolean) Whether to match external type 2 routes.
-- `ospf_match_internal` (Boolean) Whether to match internal routes.
-- `ospf_match_nssa_external_1` (Boolean) Whether to match NSSA external type 1 routes.
-- `ospf_match_nssa_external_2` (Boolean) Whether to match NSSA external type 2 routes.
 - `process_id` (Number) OSPF process ID.
+- `redistribute_protocol` (String) Protocol to redistribute.
 - `route_map_id` (String) Route map ID for route filtering.
-- `route_type` (String) Protocol to redistribute.
 - `subnets` (Boolean) Whether to redistribute subnets.
 - `tag` (Number) Tag number.
 

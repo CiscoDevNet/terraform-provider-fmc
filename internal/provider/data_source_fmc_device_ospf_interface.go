@@ -79,7 +79,7 @@ func (d *DeviceOSPFInterfaceDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the interface associated with this OSPF interface.",
+				MarkdownDescription: "ID of the device interface.",
 				Computed:            true,
 			},
 			"default_cost": schema.Int64Attribute{
@@ -128,17 +128,17 @@ func (d *DeviceOSPFInterfaceDataSource) Schema(ctx context.Context, req datasour
 				Sensitive:           true,
 			},
 			"authentication_area_password": schema.StringAttribute{
-				MarkdownDescription: "Password for authentication.",
+				MarkdownDescription: "Password for area authentication.",
 				Computed:            true,
 				Sensitive:           true,
 			},
 			"authentication_area_md5s": schema.ListNestedAttribute{
-				MarkdownDescription: "List of MD5 authentication keys.",
+				MarkdownDescription: "Area MD5 authentication keys.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: "Key ID for the MD5 authentication key.",
+							MarkdownDescription: "Key ID.",
 							Computed:            true,
 						},
 						"key": schema.StringAttribute{
@@ -150,12 +150,12 @@ func (d *DeviceOSPFInterfaceDataSource) Schema(ctx context.Context, req datasour
 				},
 			},
 			"authentication_md5s": schema.ListNestedAttribute{
-				MarkdownDescription: "List of MD5 authentication keys.",
+				MarkdownDescription: "MD5 authentication keys.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: "Key ID for the MD5 authentication key.",
+							MarkdownDescription: "Key ID.",
 							Computed:            true,
 						},
 						"key": schema.StringAttribute{
