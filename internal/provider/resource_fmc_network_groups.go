@@ -509,6 +509,12 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 				continue
 			}
 
+			// Check if the object was not already deleted
+			if state.Items[gn].Id.IsNull() {
+				delete(state.Items, gn)
+				continue
+			}
+
 			deleting := state.Items[gn].Id.ValueString()
 			tflog.Debug(ctx, fmt.Sprintf("%s: Subresource %s: Beginning Delete", deleting, gn))
 
@@ -532,6 +538,12 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 			gn := delSeq[i].name
 			if _, found := plan.Items[gn]; !found {
 				// item not present in plan, so it is to be deleted
+
+				// Check if the object was not already deleted
+				if state.Items[gn].Id.IsNull() {
+					delete(state.Items, gn)
+					continue
+				}
 
 				// Prepare URL filter for bulk delete.
 				idsToRemove.WriteString(url.QueryEscape(state.Items[gn].Id.ValueString()) + ",")
