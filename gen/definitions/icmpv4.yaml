@@ -19,16 +19,12 @@ attributes:
     example: "ICMPv4 network unreachable response, type 3, code 0"
     missing_in_response_if_set_to_empty_string: true
   - model_name: icmpType
-    type: Int64
-    description: ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
+    type: String
+    description: Type number, or `Any` for any type.
     example: "3"
-    min_int: 0
-    max_int: 255
   - model_name: code
     type: Int64
-    description: >-
-      ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate
-      to the given `icmp_type`.
+    description: Code number subordinate to the given `icmp_type`.
     min_int: 0
     max_int: 255
     example: "0"

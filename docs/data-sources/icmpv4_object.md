@@ -31,8 +31,8 @@ data "fmc_icmpv4_object" "example" {
 
 ### Read-Only
 
-- `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
+- `code` (Number) Code number subordinate to the given `icmp_type`.
 - `description` (String) Description of the object.
-- `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
+- `icmp_type` (String) Type number, or `Any` for any type.
 - `overridable` (Boolean) Indicates whether object values can be overridden.
 - `type` (String) Type of the object; this value is always 'ICMPV4Object'.

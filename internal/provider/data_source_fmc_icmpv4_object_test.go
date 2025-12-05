@@ -61,7 +61,7 @@ func TestAccDataSourceFmcICMPv4Object(t *testing.T) {
 
 func testAccDataSourceFmcICMPv4ObjectConfig() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
-	config += `	icmp_type = 3` + "\n"
+	config += `	icmp_type = "3"` + "\n"
 	config += `	code = 0` + "\n"
 	config += `	name = "my_icmpv4_object"` + "\n"
 	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
@@ -78,7 +78,7 @@ func testAccDataSourceFmcICMPv4ObjectConfig() string {
 
 func testAccNamedDataSourceFmcICMPv4ObjectConfig() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
-	config += `	icmp_type = 3` + "\n"
+	config += `	icmp_type = "3"` + "\n"
 	config += `	code = 0` + "\n"
 	config += `	name = "my_icmpv4_object"` + "\n"
 	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"

@@ -83,12 +83,12 @@ func (d *ICMPv6sDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 							MarkdownDescription: "Description of the object.",
 							Computed:            true,
 						},
-						"icmp_type": schema.Int64Attribute{
-							MarkdownDescription: "ICMPv6 [type number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml).",
+						"icmp_type": schema.StringAttribute{
+							MarkdownDescription: "Type number, or `Any` for any type.",
 							Computed:            true,
 						},
 						"code": schema.Int64Attribute{
-							MarkdownDescription: "ICMPv6 [code number](https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml) subordinate to the given `icmp_type`.",
+							MarkdownDescription: "Code number subordinate to the given `icmp_type`.",
 							Computed:            true,
 						},
 						"overridable": schema.BoolAttribute{

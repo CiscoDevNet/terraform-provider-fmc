@@ -61,7 +61,7 @@ func TestAccDataSourceFmcICMPv6Object(t *testing.T) {
 
 func testAccDataSourceFmcICMPv6ObjectConfig() string {
 	config := `resource "fmc_icmpv6_object" "test" {` + "\n"
-	config += `	icmp_type = 1` + "\n"
+	config += `	icmp_type = "1"` + "\n"
 	config += `	code = 3` + "\n"
 	config += `	name = "my_icmpv6_object"` + "\n"
 	config += `	description = "ICMPv6 address unreachable response, type 1, code 3"` + "\n"
@@ -78,7 +78,7 @@ func testAccDataSourceFmcICMPv6ObjectConfig() string {
 
 func testAccNamedDataSourceFmcICMPv6ObjectConfig() string {
 	config := `resource "fmc_icmpv6_object" "test" {` + "\n"
-	config += `	icmp_type = 1` + "\n"
+	config += `	icmp_type = "1"` + "\n"
 	config += `	code = 3` + "\n"
 	config += `	name = "my_icmpv6_object"` + "\n"
 	config += `	description = "ICMPv6 address unreachable response, type 1, code 3"` + "\n"

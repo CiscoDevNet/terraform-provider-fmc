@@ -80,7 +80,7 @@ func testAccFmcICMPv4ObjectConfig_minimum() string {
 
 func testAccFmcICMPv4ObjectConfig_all() string {
 	config := `resource "fmc_icmpv4_object" "test" {` + "\n"
-	config += `	icmp_type = 3` + "\n"
+	config += `	icmp_type = "3"` + "\n"
 	config += `	code = 0` + "\n"
 	config += `	name = "my_icmpv4_object"` + "\n"
 	config += `	description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"

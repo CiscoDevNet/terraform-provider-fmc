@@ -9,6 +9,7 @@ description: |-
 
 ## 2.0.0-rc9 (Unreleased)
 
+- (Fix) Change type of `icmp_type` to string in multiple resources
 - (Enhancement) Add support for `fmc_interface_groups` resource and data source
 - (Enhancement) `fmc_device_bgp`: Add support for `vrf_id` and VRF specific attributes
 - (Enhancement) `fmc_device_bfd`: Add support for `vrf_id`
