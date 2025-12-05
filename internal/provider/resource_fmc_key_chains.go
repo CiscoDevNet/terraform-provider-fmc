@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -94,14 +93,14 @@ func (r *KeyChainsResource) Schema(ctx context.Context, req resource.SchemaReque
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the Key Chain object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'KeyChainObject'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
