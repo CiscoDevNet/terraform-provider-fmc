@@ -58,7 +58,7 @@ func TestAccDataSourceFmcICMPv6Objects(t *testing.T) {
 func testAccDataSourceFmcICMPv6ObjectsConfig() string {
 	config := `resource "fmc_icmpv6_objects" "test" {` + "\n"
 	config += `	items = { "my_icmpv6_objects" = {` + "\n"
-	config += `		icmp_type = 1` + "\n"
+	config += `		icmp_type = "1"` + "\n"
 	config += `		code = 3` + "\n"
 	config += `		description = "ICMPv6 address unreachable response, type 1, code 3"` + "\n"
 	config += `		overridable = true` + "\n"

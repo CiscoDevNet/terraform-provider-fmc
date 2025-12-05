@@ -80,7 +80,7 @@ func testAccFmcICMPv4sConfig_all() string {
 	config := `resource "fmc_icmpv4s" "test" {` + "\n"
 	config += `	items = { "my_icmpv4_objects" = {` + "\n"
 	config += `		description = "ICMPv4 network unreachable response, type 3, code 0"` + "\n"
-	config += `		icmp_type = 3` + "\n"
+	config += `		icmp_type = "3"` + "\n"
 	config += `		code = 0` + "\n"
 	config += `		overridable = true` + "\n"
 	config += `	}}` + "\n"

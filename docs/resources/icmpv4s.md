@@ -24,7 +24,7 @@ resource "fmc_icmpv4s" "example" {
   items = {
     my_icmpv4_objects = {
       description = "ICMPv4 network unreachable response, type 3, code 0"
-      icmp_type   = 3
+      icmp_type   = "3"
       code        = 0
     }
   }
@@ -51,11 +51,10 @@ resource "fmc_icmpv4s" "example" {
 
 Optional:
 
-- `code` (Number) ICMPv4 [code number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml) subordinate to the given `icmp_type`.
+- `code` (Number) Code number subordinate to the given `icmp_type`.
   - Range: `0`-`255`
 - `description` (String) Description of the object.
-- `icmp_type` (Number) ICMPv4 [type number](https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml).
-  - Range: `0`-`255`
+- `icmp_type` (String) Type number, or `Any` for any type.
 - `overridable` (Boolean) Whether the object values can be overridden.
 
 Read-Only:

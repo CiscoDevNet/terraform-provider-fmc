@@ -33,7 +33,7 @@ import (
 type ICMPv6Object struct {
 	Id          types.String `tfsdk:"id"`
 	Domain      types.String `tfsdk:"domain"`
-	IcmpType    types.Int64  `tfsdk:"icmp_type"`
+	IcmpType    types.String `tfsdk:"icmp_type"`
 	Code        types.Int64  `tfsdk:"code"`
 	Name        types.String `tfsdk:"name"`
 	Description types.String `tfsdk:"description"`
@@ -63,7 +63,7 @@ func (data ICMPv6Object) toBody(ctx context.Context, state ICMPv6Object) string 
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if !data.IcmpType.IsNull() {
-		body, _ = sjson.Set(body, "icmpType", data.IcmpType.ValueInt64())
+		body, _ = sjson.Set(body, "icmpType", data.IcmpType.ValueString())
 	}
 	if !data.Code.IsNull() {
 		body, _ = sjson.Set(body, "code", data.Code.ValueInt64())
@@ -86,9 +86,9 @@ func (data ICMPv6Object) toBody(ctx context.Context, state ICMPv6Object) string 
 
 func (data *ICMPv6Object) fromBody(ctx context.Context, res gjson.Result) {
 	if value := res.Get("icmpType"); value.Exists() {
-		data.IcmpType = types.Int64Value(value.Int())
+		data.IcmpType = types.StringValue(value.String())
 	} else {
-		data.IcmpType = types.Int64Null()
+		data.IcmpType = types.StringNull()
 	}
 	if value := res.Get("code"); value.Exists() {
 		data.Code = types.Int64Value(value.Int())
@@ -127,9 +127,9 @@ func (data *ICMPv6Object) fromBody(ctx context.Context, res gjson.Result) {
 // "managed" elements, instead of all elements.
 func (data *ICMPv6Object) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
-		data.IcmpType = types.Int64Value(value.Int())
+		data.IcmpType = types.StringValue(value.String())
 	} else {
-		data.IcmpType = types.Int64Null()
+		data.IcmpType = types.StringNull()
 	}
 	if value := res.Get("code"); value.Exists() && !data.Code.IsNull() {
 		data.Code = types.Int64Value(value.Int())
