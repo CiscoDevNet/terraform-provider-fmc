@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -94,14 +93,14 @@ func (r *IPv4AddressPoolsResource) Schema(ctx context.Context, req resource.Sche
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the IPv4 Address Pool object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPv4AddressPool'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{

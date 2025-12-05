@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/setvalidator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -96,7 +95,7 @@ func (r *IKEv2IPsecProposalsResource) Schema(ctx context.Context, req resource.S
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the IKEv2 IPSec Proposal object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -107,7 +106,7 @@ func (r *IKEv2IPsecProposalsResource) Schema(ctx context.Context, req resource.S
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IKEv2IPsecProposal'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"esp_encryptions": schema.SetAttribute{

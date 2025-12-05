@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -94,7 +93,7 @@ func (r *FQDNsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the FQDN object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
@@ -122,7 +121,7 @@ func (r *FQDNsResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FQDN'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 					},

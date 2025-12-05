@@ -27,7 +27,6 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -93,14 +92,14 @@ func (r *ICMPv4sResource) Schema(ctx context.Context, req resource.SchemaRequest
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the ICMPv4 object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ICMPV4Object'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								planmodifiers.UseStateForUnknownKeepNonNullStateString(),
+								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
 						"description": schema.StringAttribute{
