@@ -7,7 +7,7 @@ description: |-
 
 # Changelog
 
-## 2.0.0-rc9 (Unreleased)
+## 2.0.0-rc9
 
 - (Fix) Change type of `icmp_type` to string in multiple resources
 - (Enhancement) Add support for `fmc_interface_groups` resource and data source
