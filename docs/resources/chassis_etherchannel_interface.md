@@ -67,9 +67,12 @@ resource "fmc_chassis_etherchannel_interface" "example" {
 <a id="nestedatt--selected_interfaces"></a>
 ### Nested Schema for `selected_interfaces`
 
-Optional:
+Required:
 
 - `id` (String) Id of the object.
+
+Optional:
+
 - `name` (String) Name of the selected interface
 
 ## Import

@@ -74,6 +74,7 @@ func testAccFmcChassisPhysicalInterfaceConfig_minimum() string {
 	config := `resource "fmc_chassis_physical_interface" "test" {` + "\n"
 	config += `	chassis_id = var.chassis_id` + "\n"
 	config += `	name = "Ethernet1/1"` + "\n"
+	config += `	port_type = "DATA"` + "\n"
 	config += `	speed = "AUTO"` + "\n"
 	config += `}` + "\n"
 	return config

@@ -94,8 +94,8 @@ func (r *ChassisResource) Schema(ctx context.Context, req resource.SchemaRequest
 				},
 			},
 			"host": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the chassis.").String,
-				Required:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.").String,
+				Optional:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},

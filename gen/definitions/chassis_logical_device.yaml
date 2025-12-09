@@ -169,6 +169,7 @@ attributes:
         type: String
         description: Id of the interface.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        mandatory: true
   # Device Management
   - model_name: id
     data_path: [deviceRegistration, deviceGroup]

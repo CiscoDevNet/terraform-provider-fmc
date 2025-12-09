@@ -26,16 +26,11 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -47,26 +42,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &ChassisEtherChannelInterfaceResource{}
-	_ resource.ResourceWithImportState = &ChassisEtherChannelInterfaceResource{}
+	_ resource.Resource                = &ResourceProfileResource{}
+	_ resource.ResourceWithImportState = &ResourceProfileResource{}
 )
 
-func NewChassisEtherChannelInterfaceResource() resource.Resource {
-	return &ChassisEtherChannelInterfaceResource{}
+func NewResourceProfileResource() resource.Resource {
+	return &ResourceProfileResource{}
 }
 
-type ChassisEtherChannelInterfaceResource struct {
+type ResourceProfileResource struct {
 	client *fmc.Client
 }
 
-func (r *ChassisEtherChannelInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_chassis_etherchannel_interface"
+func (r *ResourceProfileResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_resource_profile"
 }
 
-func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *ResourceProfileResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis EtherChannel Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Resource Profile.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -83,106 +78,30 @@ func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req r
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"chassis_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent chassis.").String,
+			"name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Network object.").String,
 				Required:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.RequiresReplace(),
-				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object, this is always 'EtherChannelInterface'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ResourceProfile'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the etherchannel interface in format `Port-channel<ether_channel_id>`.").String,
-				Computed:            true,
-				PlanModifiers: []planmodifier.String{
-					stringplanmodifier.UseStateForUnknown(),
-				},
+			"description": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+				Optional:            true,
 			},
-			"ether_channel_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Ether Channel ID").AddIntegerRangeDescription(1, 48).String,
+			"number_of_cpus": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Number of CPUs.").String,
 				Required:            true,
-				Validators: []validator.Int64{
-					int64validator.Between(1, 48),
-				},
-				PlanModifiers: []planmodifier.Int64{
-					int64planmodifier.RequiresReplace(),
-				},
-			},
-			"port_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("DATA", "DATA_SHARING"),
-				},
-			},
-			"admin_state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Administrative state of the interface.").AddStringEnumDescription("ENABLED", "DISABLED").AddDefaultValueDescription("ENABLED").String,
-				Optional:            true,
-				Computed:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("ENABLED", "DISABLED"),
-				},
-				Default: stringdefault.StaticString("ENABLED"),
-			},
-			"selected_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing physical interfaces.").String,
-				Optional:            true,
-				NestedObject: schema.NestedAttributeObject{
-					Attributes: map[string]schema.Attribute{
-						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Required:            true,
-						},
-						"name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface").String,
-							Optional:            true,
-						},
-					},
-				},
-			},
-			"auto_negotiation": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables auto negotiation of duplex and speed.").String,
-				Optional:            true,
-			},
-			"duplex": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface duplex mode.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "FULL", "HALF"),
-				},
-			},
-			"speed": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface speed.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP"),
-				},
-			},
-			"lacp_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Link Aggregation Control Protocol (LACP) mode.").AddStringEnumDescription("ACTIVE", "ON", "PASSIVE").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("ACTIVE", "ON", "PASSIVE"),
-				},
-			},
-			"lacp_rate": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Link Aggregation Control Protocol (LACP) rate.").AddStringEnumDescription("DEFAULT", "FAST", "NORMAL").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("DEFAULT", "FAST", "NORMAL"),
-				},
 			},
 		},
 	}
 }
 
-func (r *ChassisEtherChannelInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *ResourceProfileResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -194,8 +113,14 @@ func (r *ChassisEtherChannelInterfaceResource) Configure(_ context.Context, req 
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *ChassisEtherChannelInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan ChassisEtherChannelInterface
+func (r *ResourceProfileResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateResourceProfile) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Resource Profile creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
+	var plan ResourceProfile
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -212,7 +137,7 @@ func (r *ChassisEtherChannelInterfaceResource) Create(ctx context.Context, req r
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, ChassisEtherChannelInterface{})
+	body := plan.toBody(ctx, ResourceProfile{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -233,8 +158,8 @@ func (r *ChassisEtherChannelInterfaceResource) Create(ctx context.Context, req r
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *ChassisEtherChannelInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state ChassisEtherChannelInterface
+func (r *ResourceProfileResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state ResourceProfile
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -285,8 +210,8 @@ func (r *ChassisEtherChannelInterfaceResource) Read(ctx context.Context, req res
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *ChassisEtherChannelInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state ChassisEtherChannelInterface
+func (r *ResourceProfileResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state ResourceProfile
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -325,8 +250,8 @@ func (r *ChassisEtherChannelInterfaceResource) Update(ctx context.Context, req r
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *ChassisEtherChannelInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state ChassisEtherChannelInterface
+func (r *ResourceProfileResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state ResourceProfile
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -355,12 +280,12 @@ func (r *ChassisEtherChannelInterfaceResource) Delete(ctx context.Context, req r
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *ChassisEtherChannelInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *ResourceProfileResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
-	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<chassis_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
 	if match == nil {
-		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<chassis_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
 		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
@@ -370,9 +295,20 @@ func (r *ChassisEtherChannelInterfaceResource) ImportState(ctx context.Context, 
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("chassis_id"), match[inputPattern.SubexpIndex("chassis_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

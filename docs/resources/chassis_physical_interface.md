@@ -29,6 +29,8 @@ resource "fmc_chassis_physical_interface" "example" {
 
 - `chassis_id` (String) Id of the parent chassis.
 - `name` (String) Name of the interface; it must already be present on the chassis.
+- `port_type` (String) Type of the port.
+  - Choices: `DATA`, `DATA_SHARING`
 - `speed` (String) Interface speed.
   - Choices: `AUTO`, `TEN_MBPS`, `HUNDRED_MBPS`, `ONE_GBPS`, `TEN_GBPS`, `TWENTY_FIVE_GBPS`, `FORTY_GBPS`, `HUNDRED_GBPS`, `TWO_HUNDRED_GBPS`, `FOUR_HUNDRED_GBPS`, `DETECT_SFP`
 
@@ -43,8 +45,6 @@ resource "fmc_chassis_physical_interface" "example" {
   - Choices: `AUTO`, `FULL`, `HALF`
 - `fec_mode` (String) Forward Error Correction (FEC) mode.
   - Choices: `AUTO`, `CL108RS`, `CL74FC`, `CL91RS`, `DISABLE`
-- `port_type` (String) Type of the port.
-  - Choices: `DATA`, `DATA_SHARING`
 
 ### Read-Only
 

@@ -53,13 +53,14 @@ attributes:
         type: String
         description: Id of the object.
         id: true
+        mandatory: true
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-        test_value: data.fmc_device_physical_interface.test.id
+        test_value: data.fmc_chassis_physical_interface.test.id
       - model_name: name
         type: String
         description: Name of the selected interface
         example: "Ethernet1/1"
-        test_value: data.fmc_device_physical_interface.test.name
+        test_value: data.fmc_chassis_physical_interface.test.name
   # Configuration
   - model_name: autoNegState
     type: Bool
@@ -93,7 +94,6 @@ attributes:
     description: Link Aggregation Control Protocol (LACP) rate.
     enum_values: [DEFAULT, FAST, NORMAL]
     example: DEFAULT
-
 
 test_prerequisites: |-
   variable "chassis_id" { default = null } // tests will set $TF_VAR_chassis_id

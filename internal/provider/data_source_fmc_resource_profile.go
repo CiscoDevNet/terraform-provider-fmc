@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &ChassisDataSource{}
-	_ datasource.DataSourceWithConfigure = &ChassisDataSource{}
+	_ datasource.DataSource              = &ResourceProfileDataSource{}
+	_ datasource.DataSourceWithConfigure = &ResourceProfileDataSource{}
 )
 
-func NewChassisDataSource() datasource.DataSource {
-	return &ChassisDataSource{}
+func NewResourceProfileDataSource() datasource.DataSource {
+	return &ResourceProfileDataSource{}
 }
 
-type ChassisDataSource struct {
+type ResourceProfileDataSource struct {
 	client *fmc.Client
 }
 
-func (d *ChassisDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_chassis"
+func (d *ResourceProfileDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_resource_profile"
 }
 
-func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *ResourceProfileDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Chassis.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Resource Profile.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,34 +72,26 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Chassis name to be used in FMC.",
+				MarkdownDescription: "Name of the Network object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the device; this value is always 'FMCManagedChassis'.",
+				MarkdownDescription: "Type of the object; this value is always 'ResourceProfile'.",
 				Computed:            true,
 			},
-			"host": schema.StringAttribute{
-				MarkdownDescription: "Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.",
+			"description": schema.StringAttribute{
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
-			"registration_key": schema.StringAttribute{
-				MarkdownDescription: "Registration Key identical to the one previously configured on the chassis.",
-				Computed:            true,
-			},
-			"device_group_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the device group the chassis should belong to.",
-				Computed:            true,
-			},
-			"nat_id": schema.StringAttribute{
-				MarkdownDescription: "(used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.",
+			"number_of_cpus": schema.Int64Attribute{
+				MarkdownDescription: "Number of CPUs.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *ChassisDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *ResourceProfileDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -108,7 +100,7 @@ func (d *ChassisDataSource) ConfigValidators(ctx context.Context) []datasource.C
 	}
 }
 
-func (d *ChassisDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *ResourceProfileDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -120,8 +112,8 @@ func (d *ChassisDataSource) Configure(_ context.Context, req datasource.Configur
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *ChassisDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config Chassis
+func (d *ResourceProfileDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config ResourceProfile
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -149,7 +141,7 @@ func (d *ChassisDataSource) Read(ctx context.Context, req datasource.ReadRequest
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("chassisName").String() {
+					if config.Name.ValueString() == v.Get("name").String() {
 						config.Id = types.StringValue(v.Get("id").String())
 						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueString(), config.Id.ValueString()))
 						return false

@@ -29,26 +29,25 @@ import (
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
-func TestAccFmcChassis(t *testing.T) {
-	if os.Getenv("TF_VAR_chassis_registration_key") == "" {
-		t.Skip("skipping test, set environment variable TF_VAR_chassis_registration_key")
-	}
+func TestAccFmcResourceProfile(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_chassis.test", "name", "my_chassis"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_chassis.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_resource_profile.test", "name", "my_network"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_resource_profile.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_resource_profile.test", "description", "My Resource Profile object"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_resource_profile.test", "number_of_cpus", "10"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcChassisConfig_minimum(),
+			Config: testAccFmcResourceProfileConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcChassisConfig_all(),
+		Config: testAccFmcResourceProfileConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 	steps = append(steps, resource.TestStep{
-		ResourceName: "fmc_chassis.test",
+		ResourceName: "fmc_resource_profile.test",
 		ImportState:  true,
 	})
 
@@ -67,10 +66,10 @@ func TestAccFmcChassis(t *testing.T) {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
 
-func testAccFmcChassisConfig_minimum() string {
-	config := `resource "fmc_chassis" "test" {` + "\n"
-	config += `	name = "my_chassis"` + "\n"
-	config += `	registration_key = var.chassis_registration_key` + "\n"
+func testAccFmcResourceProfileConfig_minimum() string {
+	config := `resource "fmc_resource_profile" "test" {` + "\n"
+	config += `	name = "my_network"` + "\n"
+	config += `	number_of_cpus = 10` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -79,11 +78,11 @@ func testAccFmcChassisConfig_minimum() string {
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
 
-func testAccFmcChassisConfig_all() string {
-	config := `resource "fmc_chassis" "test" {` + "\n"
-	config += `	name = "my_chassis"` + "\n"
-	config += `	host = var.chassis_addr` + "\n"
-	config += `	registration_key = var.chassis_registration_key` + "\n"
+func testAccFmcResourceProfileConfig_all() string {
+	config := `resource "fmc_resource_profile" "test" {` + "\n"
+	config += `	name = "my_network"` + "\n"
+	config += `	description = "My Resource Profile object"` + "\n"
+	config += `	number_of_cpus = 10` + "\n"
 	config += `}` + "\n"
 	return config
 }

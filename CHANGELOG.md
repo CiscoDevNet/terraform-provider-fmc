@@ -1,3 +1,8 @@
+## 2.0.0-rc10 (Unreleased)
+
+- (Fix) Updated `required` flag for several attributs in multiple resources
+- (Enhancement) Add `fmc_resource_profile` resource and data source
+
 ## 2.0.0-rc9
 
 - (Fix) Change type of `icmp_type` to string in multiple resources
