@@ -98,6 +98,7 @@ func testAccFmcChassisLogicalDeviceConfig_minimum() string {
 	config += `	resource_profile_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	resource_profile_name = "my_resource_profile"` + "\n"
 	config += `	assigned_interfaces = [{` + "\n"
+	config += `		id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `	}]` + "\n"
 	config += `	access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
 	config += `}` + "\n"

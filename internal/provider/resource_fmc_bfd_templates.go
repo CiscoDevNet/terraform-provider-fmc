@@ -27,6 +27,7 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/planmodifiers"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
@@ -50,26 +51,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &IPv6PrefixListsResource{}
-	_ resource.ResourceWithImportState = &IPv6PrefixListsResource{}
+	_ resource.Resource                = &BFDTemplatesResource{}
+	_ resource.ResourceWithImportState = &BFDTemplatesResource{}
 )
 
-func NewIPv6PrefixListsResource() resource.Resource {
-	return &IPv6PrefixListsResource{}
+func NewBFDTemplatesResource() resource.Resource {
+	return &BFDTemplatesResource{}
 }
 
-type IPv6PrefixListsResource struct {
+type BFDTemplatesResource struct {
 	client *fmc.Client
 }
 
-func (r *IPv6PrefixListsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ipv6_prefix_lists"
+func (r *BFDTemplatesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_bfd_templates"
 }
 
-func (r *IPv6PrefixListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *BFDTemplatesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages IPv6 Prefix Lists through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages BFD Templates through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -87,55 +88,93 @@ func (r *IPv6PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 				},
 			},
 			"items": schema.MapNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Map of IPv6 Prefix Lists. The key of the map is the name of the individual IPv6 Prefix List.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Map of BFD Templates. The key of the map is the name of the individual BFD Template.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the IPv6 Prefix List object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the BFD Template object.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
-								stringplanmodifier.UseNonNullStateForUnknown(),
+								planmodifiers.ConditionalUseStateForUnknownString("hop_type"),
 							},
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IPV6PrefixList'.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'BFDTemplate'.").String,
 							Computed:            true,
 							PlanModifiers: []planmodifier.String{
 								stringplanmodifier.UseNonNullStateForUnknown(),
 							},
 						},
-						"entries": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of prefixes.").String,
+						"hop_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Hop type.").AddStringEnumDescription("SINGLE_HOP", "MULTI_HOP").String,
 							Required:            true,
-							NestedObject: schema.NestedAttributeObject{
-								Attributes: map[string]schema.Attribute{
-									"action": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Action to take.").AddStringEnumDescription("PERMIT", "DENY").String,
-										Required:            true,
-										Validators: []validator.String{
-											stringvalidator.OneOf("PERMIT", "DENY"),
-										},
-									},
-									"prefix": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("IPv6 address with prefix length.").String,
-										Required:            true,
-									},
-									"min_prefix_length": schema.Int64Attribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Minimum prefix length.").AddIntegerRangeDescription(1, 128).String,
-										Optional:            true,
-										Validators: []validator.Int64{
-											int64validator.Between(1, 128),
-										},
-									},
-									"max_prefix_length": schema.Int64Attribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Maximum prefix length.").AddIntegerRangeDescription(1, 128).String,
-										Optional:            true,
-										Validators: []validator.Int64{
-											int64validator.Between(1, 128),
-										},
-									},
-								},
+							Validators: []validator.String{
+								stringvalidator.OneOf("SINGLE_HOP", "MULTI_HOP"),
+							},
+						},
+						"echo": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("BFD echo status.").AddStringEnumDescription("ENABLED", "DISABLED").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("ENABLED", "DISABLED"),
+							},
+						},
+						"interval_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Interval unit of measurement of time.").AddStringEnumDescription("MILLISECONDS", "MICROSECONDS", "NONE").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("MILLISECONDS", "MICROSECONDS", "NONE"),
+							},
+						},
+						"multiplier": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("BFD Multipler value.").AddIntegerRangeDescription(3, 50).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(3, 50),
+							},
+						},
+						"minimum_transmit": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Transmit unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.").AddIntegerRangeDescription(50, 999000).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(50, 999000),
+							},
+						},
+						"minimum_receive": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds.").AddIntegerRangeDescription(50, 999000).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(50, 999000),
+							},
+						},
+						"authentication_type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Authentication type.").AddStringEnumDescription("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("MD5", "METICULOUSMD5", "METICULOUSSHA1", "SHA1", "NONE"),
+							},
+						},
+						"authentication_password": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Password for BFD Authentication").String,
+							Optional:            true,
+							Sensitive:           true,
+							Validators: []validator.String{
+								stringvalidator.LengthBetween(0, 28),
+							},
+						},
+						"authentication_password_encryption": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Determines if `authentication_password` is encrypted").AddStringEnumDescription("UN_ENCRYPTED", "ENCRYPTED", "NONE").String,
+							Optional:            true,
+							Validators: []validator.String{
+								stringvalidator.OneOf("UN_ENCRYPTED", "ENCRYPTED", "NONE"),
+							},
+						},
+						"authentication_key_id": schema.Int64Attribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Authentication Key ID").AddIntegerRangeDescription(0, 255).String,
+							Optional:            true,
+							Validators: []validator.Int64{
+								int64validator.Between(0, 255),
 							},
 						},
 					},
@@ -145,7 +184,7 @@ func (r *IPv6PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 	}
 }
 
-func (r *IPv6PrefixListsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *BFDTemplatesResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -157,8 +196,14 @@ func (r *IPv6PrefixListsResource) Configure(_ context.Context, req resource.Conf
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *IPv6PrefixListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan IPv6PrefixLists
+func (r *BFDTemplatesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBFDTemplates) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support BFD Templates creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
+	var plan BFDTemplates
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -180,7 +225,7 @@ func (r *IPv6PrefixListsResource) Create(ctx context.Context, req resource.Creat
 	// Create random ID to track bulk resource. This does not relate to FMC in any way
 	state.Id = types.StringValue(uuid.New().String())
 	// Erase all Items, those will be filled in after creation
-	state.Items = make(map[string]IPv6PrefixListsItems, len(plan.Items))
+	state.Items = make(map[string]BFDTemplatesItems, len(plan.Items))
 	// Creation process is put in a separate function, as that same proces will be needed with `Update`
 	plan, diags = r.createSubresources(ctx, state, plan, reqMods...)
 	resp.Diagnostics.Append(diags...)
@@ -204,8 +249,13 @@ func (r *IPv6PrefixListsResource) Create(ctx context.Context, req resource.Creat
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *IPv6PrefixListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state IPv6PrefixLists
+func (r *BFDTemplatesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBFDTemplates) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support BFD Templates, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
+	var state BFDTemplates
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -253,8 +303,8 @@ func (r *IPv6PrefixListsResource) Read(ctx context.Context, req resource.ReadReq
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *IPv6PrefixListsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state IPv6PrefixLists
+func (r *BFDTemplatesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state BFDTemplates
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -275,11 +325,12 @@ func (r *IPv6PrefixListsResource) Update(ctx context.Context, req resource.Updat
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
+	// Get objects that need to be replaced due to `requires_replace` flag
+	toBeReplaced := plan.findObjectsToBeReplaced(ctx, state)
 
 	// DELETE
 	// Delete objects (that are present in state, but missing in plan)
-	var toDelete IPv6PrefixLists
-	toDelete.Items = make(map[string]IPv6PrefixListsItems, len(state.Items))
+	toDelete := toBeReplaced.Clone()
 	planOwnedIDs := make(map[string]string, len(plan.Items))
 
 	// Prepare list of ID that are in plan
@@ -310,8 +361,8 @@ func (r *IPv6PrefixListsResource) Update(ctx context.Context, req resource.Updat
 
 	// CREATE
 	// Create new objects (objects that have missing IDs in plan)
-	var toCreate IPv6PrefixLists
-	toCreate.Items = make(map[string]IPv6PrefixListsItems, len(plan.Items))
+	toCreate := toBeReplaced.Clone()
+	toCreate.clearItemsIds(ctx)
 	// Scan plan for items with no ID
 	for k, v := range plan.Items {
 		if v.Id.IsUnknown() || v.Id.IsNull() {
@@ -334,10 +385,15 @@ func (r *IPv6PrefixListsResource) Update(ctx context.Context, req resource.Updat
 	// UPDATE
 	// Update objects (objects that have different definition in plan and state)
 	var notEqual bool
-	var toUpdate IPv6PrefixLists
-	toUpdate.Items = make(map[string]IPv6PrefixListsItems, len(plan.Items))
+	var toUpdate BFDTemplates
+	toUpdate.Items = make(map[string]BFDTemplatesItems, len(plan.Items))
 
-	for _, valueState := range state.Items {
+	for tmp, valueState := range state.Items {
+		// Check if the ID from state is on toBeReplaced list
+		if _, ok := toBeReplaced.Items[tmp]; ok {
+			// If it is, skip it as it was handled by delete/create processes
+			continue
+		}
 
 		// Check if the ID from plan exists on list of ID owned by state
 		if keyState, ok := planOwnedIDs[valueState.Id.ValueString()]; ok {
@@ -381,8 +437,8 @@ func (r *IPv6PrefixListsResource) Update(ctx context.Context, req resource.Updat
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *IPv6PrefixListsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state IPv6PrefixLists
+func (r *BFDTemplatesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state BFDTemplates
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -418,7 +474,7 @@ func (r *IPv6PrefixListsResource) Delete(ctx context.Context, req resource.Delet
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *IPv6PrefixListsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *BFDTemplatesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?\[(?P<names>.*?)\]$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -437,9 +493,9 @@ func (r *IPv6PrefixListsResource) ImportState(ctx context.Context, req resource.
 
 	// Fill state with names of objects to import
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
-	itemsMap := make(map[string]IPv6PrefixListsItems, len(names))
+	itemsMap := make(map[string]BFDTemplatesItems, len(names))
 	for _, v := range names {
-		itemsMap[v] = IPv6PrefixListsItems{}
+		itemsMap[v] = BFDTemplatesItems{}
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 
@@ -451,17 +507,16 @@ func (r *IPv6PrefixListsResource) ImportState(ctx context.Context, req resource.
 // Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
 // createSubresources takes list of objects, splits them into bulks and creates them
 // We want to save the state after each create event, to be able track already created resources
-func (r *IPv6PrefixListsResource) createSubresources(ctx context.Context, state, plan IPv6PrefixLists, reqMods ...func(*fmc.Req)) (IPv6PrefixLists, diag.Diagnostics) {
+func (r *BFDTemplatesResource) createSubresources(ctx context.Context, state, plan BFDTemplates, reqMods ...func(*fmc.Req)) (BFDTemplates, diag.Diagnostics) {
 	// Check if FMC version supports bulk creates
-	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateIPv6PrefixLists) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (IPv6 Prefix Lists)", state.Id.ValueString()))
-		var tmpObject IPv6PrefixLists
-		tmpObject.Items = make(map[string]IPv6PrefixListsItems, 1)
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkCreateBFDTemplates) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one creation mode (BFD Templates)", state.Id.ValueString()))
+		var tmpObject BFDTemplates
+		tmpObject.Items = make(map[string]BFDTemplatesItems, 1)
 		for k, v := range plan.Items {
 			tmpObject.Items[k] = v
 
 			body := tmpObject.toBodyNonBulk(ctx, state)
-			body = tmpObject.adjustBody(ctx, body)
 			res, err := r.client.Post(state.getPath(), body, reqMods...)
 			if err != nil {
 				return state, diag.Diagnostics{
@@ -485,10 +540,10 @@ func (r *IPv6PrefixListsResource) createSubresources(ctx context.Context, state,
 		}
 	} else {
 		var idx = 0
-		var bulk IPv6PrefixLists
-		bulk.Items = make(map[string]IPv6PrefixListsItems, bulkSizeCreate)
+		var bulk BFDTemplates
+		bulk.Items = make(map[string]BFDTemplatesItems, bulkSizeCreate)
 
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (IPv6 Prefix Lists)", state.Id.ValueString()))
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk creation mode (BFD Templates)", state.Id.ValueString()))
 
 		// iterate over all items
 		for k, v := range plan.Items {
@@ -502,8 +557,7 @@ func (r *IPv6PrefixListsResource) createSubresources(ctx context.Context, state,
 			if idx%bulkSizeCreate == 0 || idx == len(plan.Items) {
 
 				// Parse body of the request to string
-				body := bulk.toBody(ctx, IPv6PrefixLists{})
-				body = bulk.adjustBodyBulk(ctx, body)
+				body := bulk.toBody(ctx, BFDTemplates{})
 
 				// Execute request
 				urlPath := state.getPath() + "?bulk=true"
@@ -519,7 +573,7 @@ func (r *IPv6PrefixListsResource) createSubresources(ctx context.Context, state,
 				maps.Copy(state.Items, bulk.Items)
 
 				// Clear bulk item for next run
-				bulk.Items = make(map[string]IPv6PrefixListsItems, bulkSizeCreate)
+				bulk.Items = make(map[string]BFDTemplatesItems, bulkSizeCreate)
 			}
 		}
 	}
@@ -531,12 +585,12 @@ func (r *IPv6PrefixListsResource) createSubresources(ctx context.Context, state,
 
 // Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
 // deleteSubresources takes list of objects and deletes them either in bulk, or one-by-one, depending on FMC version
-func (r *IPv6PrefixListsResource) deleteSubresources(ctx context.Context, state, plan IPv6PrefixLists, reqMods ...func(*fmc.Req)) (IPv6PrefixLists, diag.Diagnostics) {
+func (r *BFDTemplatesResource) deleteSubresources(ctx context.Context, state, plan BFDTemplates, reqMods ...func(*fmc.Req)) (BFDTemplates, diag.Diagnostics) {
 	objectsToRemove := plan.Clone()
 
 	// Check if FMC version supports bulk deletes
-	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteIPv6PrefixLists) {
-		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (IPv6 Prefix Lists)", state.Id.ValueString()))
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionBulkDeleteBFDTemplates) {
+		tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one deletion mode (BFD Templates)", state.Id.ValueString()))
 		for k, v := range objectsToRemove.Items {
 			// Check if the object was not already deleted
 			if v.Id.IsNull() {
@@ -556,7 +610,7 @@ func (r *IPv6PrefixListsResource) deleteSubresources(ctx context.Context, state,
 			delete(state.Items, k)
 		}
 	} else {
-		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (IPv6 Prefix Lists)", state.Id.ValueString()))
+		tflog.Debug(ctx, fmt.Sprintf("%s: Bulk deletion mode (BFD Templates)", state.Id.ValueString()))
 
 		var idx = 0
 
@@ -609,17 +663,16 @@ func (r *IPv6PrefixListsResource) deleteSubresources(ctx context.Context, state,
 // Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
 
 // updateSubresources take elements one-by-one and updates them, as bulks are not supported
-func (r *IPv6PrefixListsResource) updateSubresources(ctx context.Context, state, plan IPv6PrefixLists, reqMods ...func(*fmc.Req)) (IPv6PrefixLists, diag.Diagnostics) {
-	var tmpObject IPv6PrefixLists
-	tmpObject.Items = make(map[string]IPv6PrefixListsItems, 1)
+func (r *BFDTemplatesResource) updateSubresources(ctx context.Context, state, plan BFDTemplates, reqMods ...func(*fmc.Req)) (BFDTemplates, diag.Diagnostics) {
+	var tmpObject BFDTemplates
+	tmpObject.Items = make(map[string]BFDTemplatesItems, 1)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (IPv6 Prefix Lists)", state.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: One-by-one update mode (BFD Templates)", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
-		body = tmpObject.adjustBody(ctx, body)
 		urlPath := state.getPath() + "/" + url.QueryEscape(v.Id.ValueString())
 		res, err := r.client.Put(urlPath, body, reqMods...)
 		if err != nil {

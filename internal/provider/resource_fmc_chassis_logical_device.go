@@ -239,7 +239,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},

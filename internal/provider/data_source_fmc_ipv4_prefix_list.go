@@ -89,7 +89,7 @@ func (d *IPv4PrefixListDataSource) Schema(ctx context.Context, req datasource.Sc
 							MarkdownDescription: "Action to take.",
 							Computed:            true,
 						},
-						"ip_address": schema.StringAttribute{
+						"prefix": schema.StringAttribute{
 							MarkdownDescription: "IPv4 address with prefix length.",
 							Computed:            true,
 						},

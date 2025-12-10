@@ -27,6 +27,7 @@ attributes:
         enum_values: [PERMIT, DENY]
         example: PERMIT
       - model_name: ipAddress
+        tf_name: prefix
         type: String
         mandatory: true
         description: IPv4 address with prefix length.

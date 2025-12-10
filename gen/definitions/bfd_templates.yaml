@@ -1,0 +1,105 @@
+---
+name: BFD Templates
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/bfdtemplates
+doc_category: Objects
+is_bulk: true
+minimum_version: "7.4"
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of BFD Templates. The key of the map is the name of the individual BFD Template.
+    map_key_example: my_bfd_templates
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the BFD Template object.
+        exclude_example: true
+        exclude_test: true
+      # Type is mentioned twice on purpose. We want this field as readable, but also as readonly attribute
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'BFDTemplate'.
+        value: BFDTemplate
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'BFDTemplate'.
+        computed: true
+      - model_name: hopType
+        type: String
+        mandatory: true
+        description: Hop type.
+        enum_values: [SINGLE_HOP, MULTI_HOP]
+        example: "SINGLE_HOP"
+        requires_replace: true
+      - model_name: echo
+        type: String
+        description: BFD echo status.
+        enum_values: [ENABLED, DISABLED]
+        example: "ENABLED"
+      
+      # Interval
+      - model_name: txRxInterval
+        tf_name: interval_type
+        type: String
+        description: Interval unit of measurement of time.
+        enum_values: [MILLISECONDS, MICROSECONDS, NONE]
+        example: MILLISECONDS
+      - model_name: txRxMultiplier
+        tf_name: multiplier
+        type: Int64
+        description: BFD Multipler value.
+        min_int: 3
+        max_int: 50
+        example: 3
+      - model_name: minTransmit
+        tf_name: minimum_transmit
+        type: Int64
+        description: "BFD Minimum Transmit unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds."
+        min_int: 50
+        max_int: 999000
+        example: 300
+      - model_name: minReceive
+        tf_name: minimum_receive
+        type: Int64
+        description: "BFD Minimum Receive unit value in ranges: 50-999 miliseconds, 50000-999000 microseconds."
+        min_int: 50
+        max_int: 999000
+        example: 300
+      
+      # Authentication
+      - model_name: authType
+        tf_name: authentication_type
+        data_path: [authentication]
+        type: String
+        description: Authentication type.
+        example: "MD5"
+        enum_values: [MD5, METICULOUSMD5, METICULOUSSHA1, SHA1, NONE]
+      - model_name: authKey
+        tf_name: authentication_password
+        data_path: [authentication]
+        type: String
+        description: "Password for BFD Authentication"
+        string_max_length: 28
+        example: "ThisIsMySecretPassword"
+        write_only: true
+        sensitive: true
+      - model_name: pwdEncryption
+        tf_name: authentication_password_encryption
+        data_path: [authentication]
+        type: String
+        description: Determines if `authentication_password` is encrypted
+        example: "UN_ENCRYPTED"
+        enum_values: [UN_ENCRYPTED, ENCRYPTED, NONE]
+      - model_name: authKeyId
+        tf_name: authentication_key_id
+        data_path: [authentication]
+        type: Int64
+        description: Authentication Key ID
+        min_int: 0
+        max_int: 255
+        example: "1"

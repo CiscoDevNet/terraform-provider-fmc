@@ -1,7 +1,9 @@
 ## 2.0.0-rc10 (Unreleased)
 
+- BREAKING CHANGE: `fmc_*_prefix_list`: Rename attribute `ip_address` to `prefix`
 - (Fix) Updated `required` flag for several attributs in multiple resources
 - (Enhancement) Add `fmc_resource_profile` resource and data source
+- (Enhancement) Add `fmc_bfd_templates` resource and data source
 
 ## 2.0.0-rc9
 

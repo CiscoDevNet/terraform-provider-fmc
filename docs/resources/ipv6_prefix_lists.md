@@ -26,7 +26,7 @@ resource "fmc_ipv6_prefix_lists" "example" {
       entries = [
         {
           action            = "PERMIT"
-          ip_address        = "2001:1::/64"
+          prefix            = "2001:1::/64"
           min_prefix_length = 65
           max_prefix_length = 120
         }
@@ -70,7 +70,7 @@ Required:
 
 - `action` (String) Action to take.
   - Choices: `PERMIT`, `DENY`
-- `ip_address` (String) IPv6 address with prefix length.
+- `prefix` (String) IPv6 address with prefix length.
 
 Optional:
 

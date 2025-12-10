@@ -34,7 +34,7 @@ func TestAccFmcIPv6PrefixLists(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.entries.0.action", "PERMIT"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.entries.0.ip_address", "2001:1::/64"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.entries.0.prefix", "2001:1::/64"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.entries.0.min_prefix_length", "65"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ipv6_prefix_lists.test", "items.my_ipv6_prefix_lists.entries.0.max_prefix_length", "120"))
 
@@ -69,7 +69,7 @@ func testAccFmcIPv6PrefixListsConfig_minimum() string {
 	config += `	items = { "my_ipv6_prefix_lists" = {` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
-	config += `			ip_address = "2001:1::/64"` + "\n"
+	config += `			prefix = "2001:1::/64"` + "\n"
 	config += `		}]` + "\n"
 	config += `	}}` + "\n"
 	config += `}` + "\n"
@@ -85,7 +85,7 @@ func testAccFmcIPv6PrefixListsConfig_all() string {
 	config += `	items = { "my_ipv6_prefix_lists" = {` + "\n"
 	config += `		entries = [{` + "\n"
 	config += `			action = "PERMIT"` + "\n"
-	config += `			ip_address = "2001:1::/64"` + "\n"
+	config += `			prefix = "2001:1::/64"` + "\n"
 	config += `			min_prefix_length = 65` + "\n"
 	config += `			max_prefix_length = 120` + "\n"
 	config += `		}]` + "\n"
