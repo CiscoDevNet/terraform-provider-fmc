@@ -100,127 +100,127 @@ func (r *PolicyListResource) Schema(ctx context.Context, req resource.SchemaRequ
 					stringvalidator.OneOf("PERMIT", "DENY"),
 				},
 			},
-			"interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of security zones/interface groups that contain the interfaces through which the device communicates with the management station.").String,
+			"interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Security zones/interface groups that contain the interfaces through which the device communicates with the management station.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"interface_names": schema.ListAttribute{
+			"interface_names": schema.SetAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of interface names that are not in the zones.").String,
 				ElementType:         types.StringType,
 				Optional:            true,
 			},
-			"address_standard_access_lists": schema.ListNestedAttribute{
+			"address_standard_access_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute any routes that have a destination address that is permitted by a standard access list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"address_ipv4_prefix_lists": schema.ListNestedAttribute{
+			"address_ipv4_prefix_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute any routes that have a destination address that is permitted by a prefix list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"next_hop_standard_access_lists": schema.ListNestedAttribute{
+			"next_hop_standard_access_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute any routes that have a next hop router address passed by a standard access list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"next_hop_ipv4_prefix_lists": schema.ListNestedAttribute{
+			"next_hop_ipv4_prefix_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute any routes that have a next hop router address passed by a prefix list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"route_source_standard_access_lists": schema.ListNestedAttribute{
+			"route_source_standard_access_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute routes that have been advertised by routers at the address specified by the access list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"route_source_ipv4_prefix_lists": schema.ListNestedAttribute{
+			"route_source_ipv4_prefix_lists": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Redistribute routes that have been advertised by routers at the address specified by the prefix list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"as_paths": schema.ListNestedAttribute{
+			"as_paths": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Match a BGP autonomous system path.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"community_lists": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of Standard/Expanded Community Lists.").String,
+			"community_lists": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Standard/Expanded Community Lists.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
 			},
-			"extended_community_lists": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of Extended Community Lists.").String,
+			"extended_community_lists": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Extended Community Lists.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
