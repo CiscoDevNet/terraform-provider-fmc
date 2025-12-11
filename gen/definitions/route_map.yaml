@@ -1,3 +1,4 @@
+# FMCBUG: CSCwp73412  Route Map is missing attribute for Match the specified community exactly
 ---
 name: Route Map
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/routemaps
@@ -233,7 +234,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
-      # FMCBUG: CSCwp73412  Route Map is missing attribute for Match the specified community exactly
+      # FMCBUG: CSCwp73412 
       # - model_name: ???
       #   tf_name: match_bgp_match_community_exactly
       #   type: Bool

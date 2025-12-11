@@ -114,6 +114,9 @@ func (r *DeviceHAPairMonitoringResource) Schema(ctx context.Context, req resourc
 			"ipv4_standby_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.").String,
 				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
 			},
 			"ipv4_netmask": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 Network Mask assigned on the interface.").String,
