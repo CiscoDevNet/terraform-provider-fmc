@@ -59,12 +59,12 @@ type RouteMapEntries struct {
 	MatchIpv6NextHopPrefixListId                    types.String                                     `tfsdk:"match_ipv6_next_hop_prefix_list_id"`
 	MatchIpv6RouteSourceExtendedAccessListId        types.String                                     `tfsdk:"match_ipv6_route_source_extended_access_list_id"`
 	MatchIpv6RouteSourcePrefixListId                types.String                                     `tfsdk:"match_ipv6_route_source_prefix_list_id"`
-	MatchBgpAsPathLists                             []RouteMapEntriesMatchBgpAsPathLists             `tfsdk:"match_bgp_as_path_lists"`
+	MatchBgpAsPaths                                 []RouteMapEntriesMatchBgpAsPaths                 `tfsdk:"match_bgp_as_paths"`
 	MatchBgpCommunityLists                          []RouteMapEntriesMatchBgpCommunityLists          `tfsdk:"match_bgp_community_lists"`
 	MatchBgpExtendedCommunityLists                  []RouteMapEntriesMatchBgpExtendedCommunityLists  `tfsdk:"match_bgp_extended_community_lists"`
 	MatchBgpPolicyLists                             []RouteMapEntriesMatchBgpPolicyLists             `tfsdk:"match_bgp_policy_lists"`
-	MatchMetricRouteValues                          types.List                                       `tfsdk:"match_metric_route_values"`
-	MatchTagValues                                  types.List                                       `tfsdk:"match_tag_values"`
+	MatchRouteMetrics                               types.List                                       `tfsdk:"match_route_metrics"`
+	MatchTags                                       types.List                                       `tfsdk:"match_tags"`
 	MatchRouteTypeExternal1                         types.Bool                                       `tfsdk:"match_route_type_external_1"`
 	MatchRouteTypeExternal2                         types.Bool                                       `tfsdk:"match_route_type_external_2"`
 	MatchRouteTypeInternal                          types.Bool                                       `tfsdk:"match_route_type_internal"`
@@ -89,10 +89,10 @@ type RouteMapEntries struct {
 	SetBgpWeight                                    types.Int64                                      `tfsdk:"set_bgp_weight"`
 	SetBgpOrigin                                    types.String                                     `tfsdk:"set_bgp_origin"`
 	SetBgpIpv4NextHop                               types.String                                     `tfsdk:"set_bgp_ipv4_next_hop"`
-	SetBgpIpv4NextHopSpecificIp                     types.List                                       `tfsdk:"set_bgp_ipv4_next_hop_specific_ip"`
+	SetBgpIpv4NextHopSpecificIps                    types.List                                       `tfsdk:"set_bgp_ipv4_next_hop_specific_ips"`
 	SetBgpIpv4PrefixListId                          types.String                                     `tfsdk:"set_bgp_ipv4_prefix_list_id"`
 	SetBgpIpv6NextHop                               types.String                                     `tfsdk:"set_bgp_ipv6_next_hop"`
-	SetBgpIpv6NextHopSpecificIp                     types.List                                       `tfsdk:"set_bgp_ipv6_next_hop_specific_ip"`
+	SetBgpIpv6NextHopSpecificIps                    types.List                                       `tfsdk:"set_bgp_ipv6_next_hop_specific_ips"`
 	SetBgpIpv6PrefixListId                          types.String                                     `tfsdk:"set_bgp_ipv6_prefix_list_id"`
 }
 
@@ -123,7 +123,7 @@ type RouteMapEntriesMatchIpv4RouteSourcePrefixLists struct {
 	Id   types.String `tfsdk:"id"`
 	Type types.String `tfsdk:"type"`
 }
-type RouteMapEntriesMatchBgpAsPathLists struct {
+type RouteMapEntriesMatchBgpAsPaths struct {
 	Id types.String `tfsdk:"id"`
 }
 type RouteMapEntriesMatchBgpCommunityLists struct {
@@ -281,9 +281,9 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 			if !item.MatchIpv6RouteSourcePrefixListId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipv6PrefixListRouteSources.0.id", item.MatchIpv6RouteSourcePrefixListId.ValueString())
 			}
-			if len(item.MatchBgpAsPathLists) > 0 {
+			if len(item.MatchBgpAsPaths) > 0 {
 				itemBody, _ = sjson.Set(itemBody, "asPathLists", []any{})
-				for _, childItem := range item.MatchBgpAsPathLists {
+				for _, childItem := range item.MatchBgpAsPaths {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
@@ -321,14 +321,14 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "policyLists.-1", itemChildBody)
 				}
 			}
-			if !item.MatchMetricRouteValues.IsNull() {
+			if !item.MatchRouteMetrics.IsNull() {
 				var values []int64
-				item.MatchMetricRouteValues.ElementsAs(ctx, &values, false)
+				item.MatchRouteMetrics.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "metricRouteValues", values)
 			}
-			if !item.MatchTagValues.IsNull() {
+			if !item.MatchTags.IsNull() {
 				var values []int64
-				item.MatchTagValues.ElementsAs(ctx, &values, false)
+				item.MatchTags.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "tagValues", values)
 			}
 			if !item.MatchRouteTypeExternal1.IsNull() {
@@ -405,9 +405,9 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 			if !item.SetBgpIpv4NextHop.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "nextHopIPV4Setting", item.SetBgpIpv4NextHop.ValueString())
 			}
-			if !item.SetBgpIpv4NextHopSpecificIp.IsNull() {
+			if !item.SetBgpIpv4NextHopSpecificIps.IsNull() {
 				var values []string
-				item.SetBgpIpv4NextHopSpecificIp.ElementsAs(ctx, &values, false)
+				item.SetBgpIpv4NextHopSpecificIps.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "specificIPsIPV4Setting", values)
 			}
 			if !item.SetBgpIpv4PrefixListId.IsNull() {
@@ -416,9 +416,9 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 			if !item.SetBgpIpv6NextHop.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "nextHopIPV6Setting", item.SetBgpIpv6NextHop.ValueString())
 			}
-			if !item.SetBgpIpv6NextHopSpecificIp.IsNull() {
+			if !item.SetBgpIpv6NextHopSpecificIps.IsNull() {
 				var values []string
-				item.SetBgpIpv6NextHopSpecificIp.ElementsAs(ctx, &values, false)
+				item.SetBgpIpv6NextHopSpecificIps.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "specificIPsIPV6Setting", values)
 			}
 			if !item.SetBgpIpv6PrefixListId.IsNull() {
@@ -567,16 +567,16 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.MatchIpv6RouteSourcePrefixListId = types.StringNull()
 			}
 			if value := res.Get("asPathLists"); value.Exists() {
-				data.MatchBgpAsPathLists = make([]RouteMapEntriesMatchBgpAsPathLists, 0)
+				data.MatchBgpAsPaths = make([]RouteMapEntriesMatchBgpAsPaths, 0)
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
-					data := RouteMapEntriesMatchBgpAsPathLists{}
+					data := RouteMapEntriesMatchBgpAsPaths{}
 					if value := res.Get("id"); value.Exists() {
 						data.Id = types.StringValue(value.String())
 					} else {
 						data.Id = types.StringNull()
 					}
-					(*parent).MatchBgpAsPathLists = append((*parent).MatchBgpAsPathLists, data)
+					(*parent).MatchBgpAsPaths = append((*parent).MatchBgpAsPaths, data)
 					return true
 				})
 			}
@@ -623,14 +623,14 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("metricRouteValues"); value.Exists() {
-				data.MatchMetricRouteValues = helpers.GetInt64List(value.Array())
+				data.MatchRouteMetrics = helpers.GetInt64List(value.Array())
 			} else {
-				data.MatchMetricRouteValues = types.ListNull(types.Int64Type)
+				data.MatchRouteMetrics = types.ListNull(types.Int64Type)
 			}
 			if value := res.Get("tagValues"); value.Exists() {
-				data.MatchTagValues = helpers.GetInt64List(value.Array())
+				data.MatchTags = helpers.GetInt64List(value.Array())
 			} else {
-				data.MatchTagValues = types.ListNull(types.Int64Type)
+				data.MatchTags = types.ListNull(types.Int64Type)
 			}
 			if value := res.Get("routeTypeExternal1"); value.Exists() {
 				data.MatchRouteTypeExternal1 = types.BoolValue(value.Bool())
@@ -753,9 +753,9 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.SetBgpIpv4NextHop = types.StringNull()
 			}
 			if value := res.Get("specificIPsIPV4Setting"); value.Exists() {
-				data.SetBgpIpv4NextHopSpecificIp = helpers.GetStringList(value.Array())
+				data.SetBgpIpv4NextHopSpecificIps = helpers.GetStringList(value.Array())
 			} else {
-				data.SetBgpIpv4NextHopSpecificIp = types.ListNull(types.StringType)
+				data.SetBgpIpv4NextHopSpecificIps = types.ListNull(types.StringType)
 			}
 			if value := res.Get("prefixListIPV4Setting.id"); value.Exists() {
 				data.SetBgpIpv4PrefixListId = types.StringValue(value.String())
@@ -768,9 +768,9 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.SetBgpIpv6NextHop = types.StringNull()
 			}
 			if value := res.Get("specificIPsIPV6Setting"); value.Exists() {
-				data.SetBgpIpv6NextHopSpecificIp = helpers.GetStringList(value.Array())
+				data.SetBgpIpv6NextHopSpecificIps = helpers.GetStringList(value.Array())
 			} else {
-				data.SetBgpIpv6NextHopSpecificIp = types.ListNull(types.StringType)
+				data.SetBgpIpv6NextHopSpecificIps = types.ListNull(types.StringType)
 			}
 			if value := res.Get("prefixListIPV6Setting.id"); value.Exists() {
 				data.SetBgpIpv6PrefixListId = types.StringValue(value.String())
@@ -1049,12 +1049,12 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.MatchIpv6RouteSourcePrefixListId = types.StringNull()
 		}
-		for i := 0; i < len(data.MatchBgpAsPathLists); i++ {
+		for i := 0; i < len(data.MatchBgpAsPaths); i++ {
 			keys := [...]string{"id"}
-			keyValues := [...]string{data.MatchBgpAsPathLists[i].Id.ValueString()}
+			keyValues := [...]string{data.MatchBgpAsPaths[i].Id.ValueString()}
 
 			parent := &data
-			data := (*parent).MatchBgpAsPathLists[i]
+			data := (*parent).MatchBgpAsPaths[i]
 			parentRes := &res
 			var res gjson.Result
 
@@ -1076,11 +1076,11 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				},
 			)
 			if !res.Exists() {
-				tflog.Debug(ctx, fmt.Sprintf("removing MatchBgpAsPathLists[%d] = %+v",
+				tflog.Debug(ctx, fmt.Sprintf("removing MatchBgpAsPaths[%d] = %+v",
 					i,
-					(*parent).MatchBgpAsPathLists[i],
+					(*parent).MatchBgpAsPaths[i],
 				))
-				(*parent).MatchBgpAsPathLists = slices.Delete((*parent).MatchBgpAsPathLists, i, i+1)
+				(*parent).MatchBgpAsPaths = slices.Delete((*parent).MatchBgpAsPaths, i, i+1)
 				i--
 
 				continue
@@ -1090,7 +1090,7 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else {
 				data.Id = types.StringNull()
 			}
-			(*parent).MatchBgpAsPathLists[i] = data
+			(*parent).MatchBgpAsPaths[i] = data
 		}
 		for i := 0; i < len(data.MatchBgpCommunityLists); i++ {
 			keys := [...]string{"id"}
@@ -1221,15 +1221,15 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchBgpPolicyLists[i] = data
 		}
-		if value := res.Get("metricRouteValues"); value.Exists() && !data.MatchMetricRouteValues.IsNull() {
-			data.MatchMetricRouteValues = helpers.GetInt64List(value.Array())
+		if value := res.Get("metricRouteValues"); value.Exists() && !data.MatchRouteMetrics.IsNull() {
+			data.MatchRouteMetrics = helpers.GetInt64List(value.Array())
 		} else {
-			data.MatchMetricRouteValues = types.ListNull(types.Int64Type)
+			data.MatchRouteMetrics = types.ListNull(types.Int64Type)
 		}
-		if value := res.Get("tagValues"); value.Exists() && !data.MatchTagValues.IsNull() {
-			data.MatchTagValues = helpers.GetInt64List(value.Array())
+		if value := res.Get("tagValues"); value.Exists() && !data.MatchTags.IsNull() {
+			data.MatchTags = helpers.GetInt64List(value.Array())
 		} else {
-			data.MatchTagValues = types.ListNull(types.Int64Type)
+			data.MatchTags = types.ListNull(types.Int64Type)
 		}
 		if value := res.Get("routeTypeExternal1"); value.Exists() && !data.MatchRouteTypeExternal1.IsNull() {
 			data.MatchRouteTypeExternal1 = types.BoolValue(value.Bool())
@@ -1351,10 +1351,10 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.SetBgpIpv4NextHop = types.StringNull()
 		}
-		if value := res.Get("specificIPsIPV4Setting"); value.Exists() && !data.SetBgpIpv4NextHopSpecificIp.IsNull() {
-			data.SetBgpIpv4NextHopSpecificIp = helpers.GetStringList(value.Array())
+		if value := res.Get("specificIPsIPV4Setting"); value.Exists() && !data.SetBgpIpv4NextHopSpecificIps.IsNull() {
+			data.SetBgpIpv4NextHopSpecificIps = helpers.GetStringList(value.Array())
 		} else {
-			data.SetBgpIpv4NextHopSpecificIp = types.ListNull(types.StringType)
+			data.SetBgpIpv4NextHopSpecificIps = types.ListNull(types.StringType)
 		}
 		if value := res.Get("prefixListIPV4Setting.id"); value.Exists() && !data.SetBgpIpv4PrefixListId.IsNull() {
 			data.SetBgpIpv4PrefixListId = types.StringValue(value.String())
@@ -1366,10 +1366,10 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.SetBgpIpv6NextHop = types.StringNull()
 		}
-		if value := res.Get("specificIPsIPV6Setting"); value.Exists() && !data.SetBgpIpv6NextHopSpecificIp.IsNull() {
-			data.SetBgpIpv6NextHopSpecificIp = helpers.GetStringList(value.Array())
+		if value := res.Get("specificIPsIPV6Setting"); value.Exists() && !data.SetBgpIpv6NextHopSpecificIps.IsNull() {
+			data.SetBgpIpv6NextHopSpecificIps = helpers.GetStringList(value.Array())
 		} else {
-			data.SetBgpIpv6NextHopSpecificIp = types.ListNull(types.StringType)
+			data.SetBgpIpv6NextHopSpecificIps = types.ListNull(types.StringType)
 		}
 		if value := res.Get("prefixListIPV6Setting.id"); value.Exists() && !data.SetBgpIpv6PrefixListId.IsNull() {
 			data.SetBgpIpv6PrefixListId = types.StringValue(value.String())

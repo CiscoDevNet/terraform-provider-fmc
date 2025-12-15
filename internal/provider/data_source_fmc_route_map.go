@@ -230,7 +230,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "Match routes based on the advertising source address of the route using IPv6 Prefix Lists.",
 							Computed:            true,
 						},
-						"match_bgp_as_path_lists": schema.ListNestedAttribute{
+						"match_bgp_as_paths": schema.ListNestedAttribute{
 							MarkdownDescription: "Match a BGP Autonomous System (AS) path with the specified path access list.",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -278,12 +278,12 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 								},
 							},
 						},
-						"match_metric_route_values": schema.ListAttribute{
+						"match_route_metrics": schema.ListAttribute{
 							MarkdownDescription: "List of Metric values to match.",
 							ElementType:         types.Int64Type,
 							Computed:            true,
 						},
-						"match_tag_values": schema.ListAttribute{
+						"match_tags": schema.ListAttribute{
 							MarkdownDescription: "List of Tag values to match.",
 							ElementType:         types.Int64Type,
 							Computed:            true,
@@ -385,7 +385,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "Set the next hop IPv4 address.",
 							Computed:            true,
 						},
-						"set_bgp_ipv4_next_hop_specific_ip": schema.ListAttribute{
+						"set_bgp_ipv4_next_hop_specific_ips": schema.ListAttribute{
 							MarkdownDescription: "Set the next hop IPv4 address.",
 							ElementType:         types.StringType,
 							Computed:            true,
@@ -398,7 +398,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 							MarkdownDescription: "Set the next hop IPv6 address.",
 							Computed:            true,
 						},
-						"set_bgp_ipv6_next_hop_specific_ip": schema.ListAttribute{
+						"set_bgp_ipv6_next_hop_specific_ips": schema.ListAttribute{
 							MarkdownDescription: "Set the next hop IPv6 address.",
 							ElementType:         types.StringType,
 							Computed:            true,
