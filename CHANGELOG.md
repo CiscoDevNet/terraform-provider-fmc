@@ -11,6 +11,7 @@
 - (Enhancement) Add `fmc_resource_profile` resource and data source
 - (Enhancement) Add `fmc_bfd_templates` resource and data source
 - (Enhancement) Add `fmc_policy_lists` resource and data source
+- (Enhancement) Add `fmc_geolocations` resource and data source
 
 ## 2.0.0-rc9
 

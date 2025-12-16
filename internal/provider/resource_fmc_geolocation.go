@@ -95,8 +95,8 @@ func (r *GeolocationResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed continent.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Continent.").String,
+							Required:            true,
 						},
 					},
 				},
@@ -107,8 +107,8 @@ func (r *GeolocationResource) Schema(ctx context.Context, req resource.SchemaReq
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the managed country.").String,
-							Optional:            true,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Country.").String,
+							Required:            true,
 						},
 					},
 				},

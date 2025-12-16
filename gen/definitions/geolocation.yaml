@@ -19,7 +19,8 @@ attributes:
     attributes:
       - model_name: id
         type: Int64
-        description: Id of the managed continent.
+        description: Id of the Continent.
+        mandatory: true
         example: 6
         test_value: 'data.fmc_continents.test.items["North America"].id'
   - model_name: countries
@@ -28,7 +29,8 @@ attributes:
     attributes:
       - model_name: id
         type: Int64
-        description: Id of the managed country.
+        description: Id of the Country.
+        mandatory: true
         example: 616
         test_value: 'data.fmc_countries.test.items["Poland"].id'
 

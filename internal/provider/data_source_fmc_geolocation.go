@@ -86,7 +86,7 @@ func (d *GeolocationDataSource) Schema(ctx context.Context, req datasource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: "Id of the managed continent.",
+							MarkdownDescription: "Id of the Continent.",
 							Computed:            true,
 						},
 					},
@@ -98,7 +98,7 @@ func (d *GeolocationDataSource) Schema(ctx context.Context, req datasource.Schem
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.Int64Attribute{
-							MarkdownDescription: "Id of the managed country.",
+							MarkdownDescription: "Id of the Country.",
 							Computed:            true,
 						},
 					},

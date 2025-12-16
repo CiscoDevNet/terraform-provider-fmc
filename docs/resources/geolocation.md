@@ -49,17 +49,17 @@ resource "fmc_geolocation" "example" {
 <a id="nestedatt--continents"></a>
 ### Nested Schema for `continents`
 
-Optional:
+Required:
 
-- `id` (Number) Id of the managed continent.
+- `id` (Number) Id of the Continent.
 
 
 <a id="nestedatt--countries"></a>
 ### Nested Schema for `countries`
 
-Optional:
+Required:
 
-- `id` (Number) Id of the managed country.
+- `id` (Number) Id of the Country.
 
 ## Import
 
