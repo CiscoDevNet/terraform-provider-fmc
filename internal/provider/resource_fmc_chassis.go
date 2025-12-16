@@ -157,10 +157,14 @@ func (r *ChassisResource) Create(ctx context.Context, req resource.CreateRequest
 	// Need to wait some time, before task.id is available
 	time.Sleep(5 * time.Second)
 
-	taskID := res.Get("metadata.task.id").String()
-	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID))
+	taskID := res.Get("metadata.task.id")
+	if !taskID.Exists() {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve task ID for async operation, output: %s", res.String()))
+		return
+	}
+	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", plan.Id.ValueString(), taskID.String()))
 
-	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID.String(), reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
