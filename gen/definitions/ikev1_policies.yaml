@@ -35,6 +35,7 @@ attributes:
         min_int: 1
         max_int: 65535
       - model_name: encryption
+        tf_name: encryption_algorithm
         type: String
         description: IKEv1 Encryption algorithm.
         enum_values: [DES, 3DES, AES-128, AES-192, AES-256]

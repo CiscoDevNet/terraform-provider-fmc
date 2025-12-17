@@ -35,7 +35,7 @@ func TestAccFmcIKEv1Policies(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.description", "IKEv1 Policy 1"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_ikev1_policies.test", "items.my_ikev1_policies.type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.priority", "10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.encryption", "AES-192"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.encryption_algorithm", "AES-192"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.hash", "SHA"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.dh_group", "14"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_ikev1_policies.test", "items.my_ikev1_policies.lifetime", "86400"))
@@ -71,7 +71,7 @@ func testAccFmcIKEv1PoliciesConfig_minimum() string {
 	config := `resource "fmc_ikev1_policies" "test" {` + "\n"
 	config += `	items = { "my_ikev1_policies" = {` + "\n"
 	config += `		priority = 10` + "\n"
-	config += `		encryption = "AES-192"` + "\n"
+	config += `		encryption_algorithm = "AES-192"` + "\n"
 	config += `		hash = "SHA"` + "\n"
 	config += `		dh_group = "14"` + "\n"
 	config += `		lifetime = 86400` + "\n"
@@ -90,7 +90,7 @@ func testAccFmcIKEv1PoliciesConfig_all() string {
 	config += `	items = { "my_ikev1_policies" = {` + "\n"
 	config += `		description = "IKEv1 Policy 1"` + "\n"
 	config += `		priority = 10` + "\n"
-	config += `		encryption = "AES-192"` + "\n"
+	config += `		encryption_algorithm = "AES-192"` + "\n"
 	config += `		hash = "SHA"` + "\n"
 	config += `		dh_group = "14"` + "\n"
 	config += `		lifetime = 86400` + "\n"

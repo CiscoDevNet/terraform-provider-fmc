@@ -25,7 +25,7 @@ resource "fmc_ikev1_policies" "example" {
     my_ikev1_policies = {
       description           = "IKEv1 Policy 1"
       priority              = 10
-      encryption            = "AES-192"
+      encryption_algorithm  = "AES-192"
       hash                  = "SHA"
       dh_group              = "14"
       lifetime              = 86400
@@ -59,7 +59,7 @@ Required:
   - Choices: `Certificate`, `Preshared Key`
 - `dh_group` (String) Diffie-Hellman group.
   - Choices: `1`, `2`, `5`, `14`
-- `encryption` (String) IKEv1 Encryption algorithm.
+- `encryption_algorithm` (String) IKEv1 Encryption algorithm.
   - Choices: `DES`, `3DES`, `AES-128`, `AES-192`, `AES-256`
 - `hash` (String) IKEv1 Hash algorithm.
   - Choices: `SHA`, `MD5`

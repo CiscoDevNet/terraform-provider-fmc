@@ -6,12 +6,10 @@
     - `match_tag_values` to `match_tags`
     - `match_metric_route_values` to `match_route_metrics`
     - `set_bgp_*_next_hop_specific_ip` to `set_bgp_*_next_hop_specific_ips`
+- BREAKING CHANGE: `fmc_ikev1_policies`: Rename attribute `encryption` to `encryption_algorithm`
 - (Fix) Updated `required` flag for several attributs in multiple resources
 - (Fix) `fmc_chassis_logical_device`: Deletion would fail if registered device is under deployment
-- (Enhancement) Add `fmc_resource_profile` resource and data source
-- (Enhancement) Add `fmc_bfd_templates` resource and data source
-- (Enhancement) Add `fmc_policy_lists` resource and data source
-- (Enhancement) Add `fmc_geolocations` resource and data source
+- (Enhancement) Add multiple bulk/non-bulk variants of already existing resources and data sources
 
 ## 2.0.0-rc9
 

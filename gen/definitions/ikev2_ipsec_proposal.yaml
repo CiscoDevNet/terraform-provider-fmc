@@ -1,0 +1,35 @@
+---
+name: IKEv2 IPsec Proposal
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ikev2ipsecproposals
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the IKEv2 IPsec Proposal object.
+    example: my_ikev2_ipsec_proposal
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "IKEv2 IPsec Proposal 1"
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IKEv2IPsecProposal'.
+    computed: true
+  - model_name: encryptionAlgorithms
+    tf_name: esp_encryptions
+    type: Set
+    element_type: String
+    description: IKEv2 Encryption algorithms.
+    example: AES-256
+    mandatory: true
+    enum_values: [DES, 3DES, AES, AES-192, AES-256, AES-GCM, AES-GCM-192, AES-GCM-256, AES-GMAC, AES-GMAC-192, AES-GMAC-256, "NULL"]
+  - model_name: integrityAlgorithms
+    tf_name: esp_hashes
+    type: Set
+    element_type: String
+    description: IKEv2 Hash algorithms.
+    example: SHA-256
+    mandatory: true
+    enum_values: [MD5, "NULL", SHA-1, SHA-256, SHA-384, SHA-512]
