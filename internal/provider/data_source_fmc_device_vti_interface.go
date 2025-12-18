@@ -128,11 +128,11 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "VTI interface IPSec mode",
 				Computed:            true,
 			},
-			"ipv4_address": schema.StringAttribute{
+			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: "IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},
-			"ipv4_netmask": schema.StringAttribute{
+			"ipv4_static_netmask": schema.StringAttribute{
 				MarkdownDescription: "Netmask (width) for IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},

@@ -42,8 +42,8 @@ func TestAccFmcDeviceVTIInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "priority", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_id", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_mode", "ipv4"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_address", "10.10.10.10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_static_address", "10.10.10.10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_static_netmask", "24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring_type", "PEER_IPV4"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring_peer_ip", "10.10.10.100"))
@@ -103,8 +103,8 @@ func testAccFmcDeviceVTIInterfaceConfig_minimum() string {
 	config += `	tunnel_source_interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	tunnel_source_interface_name = fmc_device_physical_interface.test.name` + "\n"
 	config += `	tunnel_mode = "ipv4"` + "\n"
-	config += `	ipv4_address = "10.10.10.10"` + "\n"
-	config += `	ipv4_netmask = "24"` + "\n"
+	config += `	ipv4_static_address = "10.10.10.10"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -126,8 +126,8 @@ func testAccFmcDeviceVTIInterfaceConfig_all() string {
 	config += `	tunnel_source_interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	tunnel_source_interface_name = fmc_device_physical_interface.test.name` + "\n"
 	config += `	tunnel_mode = "ipv4"` + "\n"
-	config += `	ipv4_address = "10.10.10.10"` + "\n"
-	config += `	ipv4_netmask = "24"` + "\n"
+	config += `	ipv4_static_address = "10.10.10.10"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ip_based_monitoring = true` + "\n"
 	config += `	ip_based_monitoring_type = "PEER_IPV4"` + "\n"
 	config += `	ip_based_monitoring_peer_ip = "10.10.10.100"` + "\n"

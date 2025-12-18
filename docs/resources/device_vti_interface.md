@@ -30,8 +30,8 @@ resource "fmc_device_vti_interface" "example" {
   tunnel_source_interface_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   tunnel_source_interface_name      = "GigabitEthernet0/1"
   tunnel_mode                       = "ipv4"
-  ipv4_address                      = "10.10.10.10"
-  ipv4_netmask                      = "24"
+  ipv4_static_address               = "10.10.10.10"
+  ipv4_static_netmask               = "24"
   ip_based_monitoring               = true
   ip_based_monitoring_type          = "PEER_IPV4"
   ip_based_monitoring_peer_ip       = "10.10.10.100"
@@ -68,8 +68,8 @@ resource "fmc_device_vti_interface" "example" {
 - `ip_based_monitoring_peer_ip` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) Peer IP address version.
   - Choices: `PEER_IPV4`, `PEER_IPV6`
-- `ipv4_address` (String) IPv4 address for local VTI tunnel end.
-- `ipv4_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
+- `ipv4_static_address` (String) IPv4 address for local VTI tunnel end.
+- `ipv4_static_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
 - `ipv6_address` (String) IPv6 address for local VTI tunnel end.
 - `ipv6_prefix` (String) Prefix length for IPv6 address for local VTI tunnel end.
 - `priority` (Number) Priority to load balance the traffic across multiple VTIs.

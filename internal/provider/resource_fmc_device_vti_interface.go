@@ -168,11 +168,11 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 					stringvalidator.OneOf("ipv4", "ipv6"),
 				},
 			},
-			"ipv4_address": schema.StringAttribute{
+			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
-			"ipv4_netmask": schema.StringAttribute{
+			"ipv4_static_netmask": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},

@@ -108,14 +108,14 @@ attributes:
     mandatory: true
   - model_name: address
     data_path: [ipv4, static]
-    tf_name: ipv4_address
+    tf_name: ipv4_static_address
     type: String
     description: IPv4 address for local VTI tunnel end.
     example: "10.10.10.10"
     minimum_test_value: '"10.10.10.10"'
   - model_name: netmask
     data_path: [ipv4, static]
-    tf_name: ipv4_netmask
+    tf_name: ipv4_static_netmask
     type: String
     description: Netmask (width) for IPv4 address for local VTI tunnel end.
     example: "24"
