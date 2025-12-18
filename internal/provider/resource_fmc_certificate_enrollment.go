@@ -97,10 +97,10 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 				Optional:            true,
 			},
 			"enrollment_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Certificate enrollment type.").AddStringEnumDescription("SCEP", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Certificate enrollment type.").AddStringEnumDescription("SCEP", "ACME", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12").String,
 				Required:            true,
 				Validators: []validator.String{
-					stringvalidator.OneOf("SCEP", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"),
+					stringvalidator.OneOf("SCEP", "ACME", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"),
 				},
 			},
 			"validation_usage_ipsec_client": schema.BoolAttribute{
@@ -192,6 +192,52 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 				Optional:            true,
 				Sensitive:           true,
 			},
+			"acme_enrollment_url": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ACME enrollment CA server URL.").String,
+				Optional:            true,
+			},
+			"acme_authentication_protocol": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ACME authentication protocol.").AddStringEnumDescription("HTTP01").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("HTTP01"),
+				},
+			},
+			"acme_authentication_interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.").String,
+				Optional:            true,
+			},
+			"acme_authentication_interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.").String,
+				Optional:            true,
+			},
+			"acme_source_interface_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.").String,
+				Optional:            true,
+			},
+			"acme_source_interface_name": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.").String,
+				Optional:            true,
+			},
+			"acme_ca_only_certificate_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of manually installed CA-only certificate that authenticates the ACME server.").String,
+				Optional:            true,
+			},
+			"acme_auto_enrollment": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable enable automatic enrollment of the ACME certificates based on the configured lifetime.").String,
+				Optional:            true,
+			},
+			"acme_auto_enrollment_lifetime": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("").AddIntegerRangeDescription(10, 99).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(10, 99),
+				},
+			},
+			"acme_auto_enrollment_key_regeneration": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Regenerate a new key for each ACME enrollment.").String,
+				Optional:            true,
+			},
 			"certificate_include_fqdn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Include the device's fully qualified domain name (FQDN) in the certificate request").AddStringEnumDescription("DEVICE_HOSTNAME", "NONE", "CUSTOM", "DEFAULT").String,
 				Optional:            true,
@@ -201,6 +247,10 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 			},
 			"certificate_custom_fqdn": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Device's custom FQDN to be included in the certificate.").String,
+				Optional:            true,
+			},
+			"certificate_alternate_fqdn": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Alternate FQDN.").String,
 				Optional:            true,
 			},
 			"certificate_include_device_ip": schema.StringAttribute{
@@ -265,7 +315,7 @@ func (r *CertificateEnrollmentResource) Schema(ctx context.Context, req resource
 				MarkdownDescription: helpers.NewAttributeDescription("Obtain the revocation lists distribution URL from the certificate.").String,
 				Optional:            true,
 			},
-			"crl_static_urls_list": schema.ListAttribute{
+			"crl_static_urls": schema.ListAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Static URL list for certificate revocation.").String,
 				ElementType:         types.StringType,
 				Optional:            true,

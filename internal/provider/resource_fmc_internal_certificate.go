@@ -91,14 +91,14 @@ func (r *InternalCertificateResource) Schema(ctx context.Context, req resource.S
 			},
 			"certificate": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Certificate in PEM, DER, or PKCS#7 format.").String,
-				Optional:            true,
+				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"private_key": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Private key in PEM, DER, or PKCS#7 format.").String,
-				Optional:            true,
+				Required:            true,
 				Sensitive:           true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),

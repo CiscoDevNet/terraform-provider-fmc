@@ -20,7 +20,7 @@ resource "fmc_certificate_enrollment" "example" {
   key_size                                                           = "CertKey_2048"
   ignore_ipsec_key_usage                                             = false
   crl_use_distribution_point_from_the_certificate                    = true
-  crl_static_urls_list                                               = ["http://example.com/crl.pem"]
+  crl_static_urls                                                    = ["http://example.com/crl.pem"]
   ocsp_url                                                           = "http://example.com/ocsp"
   revocation_evaluation_priority                                     = "CRL"
   consider_certificate_valid_if_revocation_information_not_reachable = false

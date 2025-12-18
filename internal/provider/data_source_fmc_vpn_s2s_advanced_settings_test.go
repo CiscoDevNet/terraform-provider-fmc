@@ -43,6 +43,7 @@ func TestAccDataSourceFmcVPNS2SAdvancedSettings(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "ikev2_number_of_sas_allowed_in_negotiation", "90"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "ipsec_fragmentation_before_encryption", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "ipsec_path_maximum_transmission_unit_aging_reset_interval", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "spoke_to_spoke_connectivity_through_hub", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "nat_keepalive_message_traversal", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "nat_keepalive_message_traversal_interval", "20"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_s2s_advanced_settings.test", "bypass_access_control_policy_for_decrypted_traffic", "false"))
@@ -97,6 +98,7 @@ func testAccDataSourceFmcVPNS2SAdvancedSettingsConfig() string {
 	config += `	ikev2_maximum_number_of_sas_allowed = 50` + "\n"
 	config += `	ipsec_fragmentation_before_encryption = true` + "\n"
 	config += `	ipsec_path_maximum_transmission_unit_aging_reset_interval = 30` + "\n"
+	config += `	spoke_to_spoke_connectivity_through_hub = false` + "\n"
 	config += `	nat_keepalive_message_traversal = true` + "\n"
 	config += `	nat_keepalive_message_traversal_interval = 20` + "\n"
 	config += `	bypass_access_control_policy_for_decrypted_traffic = false` + "\n"

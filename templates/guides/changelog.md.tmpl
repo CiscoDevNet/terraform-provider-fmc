@@ -16,9 +16,12 @@ description: |-
     - `match_metric_route_values` to `match_route_metrics`
     - `set_bgp_*_next_hop_specific_ip` to `set_bgp_*_next_hop_specific_ips`
 - BREAKING CHANGE: `fmc_ikev1_policies`: Rename attribute `encryption` to `encryption_algorithm`
+- BREAKING CHANGE: `fmc_certificate_enrollment`: Rename attribute `crl_static_urls_list` to `crl_static_urls`
 - (Fix) Updated `required` flag for several attributs in multiple resources
 - (Fix) `fmc_chassis_logical_device`: Deletion would fail if registered device is under deployment
 - (Enhancement) Add multiple bulk/non-bulk variants of already existing resources and data sources
+- (Enhancement) `fmc_certificate_enrollment`: Add support for ACME
+- (Enhancement) `fmc_vpn_s2s_advanced_settings`: Add two missing attributes
 
 ## 2.0.0-rc9
 

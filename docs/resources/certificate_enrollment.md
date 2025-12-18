@@ -41,7 +41,7 @@ resource "fmc_certificate_enrollment" "example" {
   key_size                                                           = "CertKey_2048"
   ignore_ipsec_key_usage                                             = false
   crl_use_distribution_point_from_the_certificate                    = true
-  crl_static_urls_list                                               = ["http://example.com/crl.pem"]
+  crl_static_urls                                                    = ["http://example.com/crl.pem"]
   ocsp_url                                                           = "http://example.com/ocsp"
   revocation_evaluation_priority                                     = "CRL"
   consider_certificate_valid_if_revocation_information_not_reachable = false
@@ -54,11 +54,23 @@ resource "fmc_certificate_enrollment" "example" {
 ### Required
 
 - `enrollment_type` (String) Certificate enrollment type.
-  - Choices: `SCEP`, `EST`, `MANUAL`, `SELF_SIGNED_CERTFICATE`, `PKCS12`
+  - Choices: `SCEP`, `ACME`, `EST`, `MANUAL`, `SELF_SIGNED_CERTFICATE`, `PKCS12`
 - `name` (String) Name of the Certificate Enrollment object.
 
 ### Optional
 
+- `acme_authentication_interface_id` (String) ID of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.
+- `acme_authentication_interface_name` (String) Name of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.
+- `acme_authentication_protocol` (String) ACME authentication protocol.
+  - Choices: `HTTP01`
+- `acme_auto_enrollment` (Boolean) Enable enable automatic enrollment of the ACME certificates based on the configured lifetime.
+- `acme_auto_enrollment_key_regeneration` (Boolean) Regenerate a new key for each ACME enrollment.
+- `acme_auto_enrollment_lifetime` (Number) - Range: `10`-`99`
+- `acme_ca_only_certificate_id` (String) ID of manually installed CA-only certificate that authenticates the ACME server.
+- `acme_enrollment_url` (String) ACME enrollment CA server URL.
+- `acme_source_interface_id` (String) ID of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.
+- `acme_source_interface_name` (String) Name of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.
+- `certificate_alternate_fqdn` (String) Alternate FQDN.
 - `certificate_common_name` (String) Common Name (CN) for the certificate.
 - `certificate_country_code` (String) Country Code (C) for the certificate.
 - `certificate_custom_fqdn` (String) Device's custom FQDN to be included in the certificate.
@@ -72,7 +84,7 @@ resource "fmc_certificate_enrollment" "example" {
 - `certificate_organizational_unit` (String) Organizational Unit (OU) for the certificate.
 - `certificate_state` (String) State (ST) for the certificate.
 - `consider_certificate_valid_if_revocation_information_not_reachable` (Boolean) Consider the certificate valid if revocation information can not be reached.
-- `crl_static_urls_list` (List of String) Static URL list for certificate revocation.
+- `crl_static_urls` (List of String) Static URL list for certificate revocation.
 - `crl_use_distribution_point_from_the_certificate` (Boolean) Obtain the revocation lists distribution URL from the certificate.
 - `description` (String) Description of the Certificate Enrollment object.
 - `domain` (String) Name of the FMC domain

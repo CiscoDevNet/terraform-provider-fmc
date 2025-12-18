@@ -53,6 +53,8 @@ data "fmc_vpn_s2s_advanced_settings" "example" {
 - `ipsec_path_maximum_transmission_unit_aging_reset_interval` (Number) Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.
 - `nat_keepalive_message_traversal` (Boolean) Enable NAT keepalive message traversal.
 - `nat_keepalive_message_traversal_interval` (Number) NAT keepalive message traversal interval in seconds.
+- `sgt_propagation_over_vti` (Boolean) Enable SGT propagation over VTI.
+- `spoke_to_spoke_connectivity_through_hub` (Boolean) Enable spoke-to-spoke connectivity through hub.
 - `type` (String) Type of the object; this value is always 'AdvancedSetting'.
 - `vpn_idle_timeout` (Boolean) Enable VPN idle timeout monitoring.
 - `vpn_idle_timeout_value` (Number) VPN idle timeout in minutes.

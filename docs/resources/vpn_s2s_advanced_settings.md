@@ -27,6 +27,7 @@ resource "fmc_vpn_s2s_advanced_settings" "example" {
   ikev2_number_of_sas_allowed_in_negotiation                          = 90
   ipsec_fragmentation_before_encryption                               = true
   ipsec_path_maximum_transmission_unit_aging_reset_interval           = 30
+  spoke_to_spoke_connectivity_through_hub                             = false
   nat_keepalive_message_traversal                                     = true
   nat_keepalive_message_traversal_interval                            = 20
   vpn_idle_timeout                                                    = true
@@ -79,6 +80,8 @@ resource "fmc_vpn_s2s_advanced_settings" "example" {
 - `nat_keepalive_message_traversal` (Boolean) Enable NAT keepalive message traversal.
 - `nat_keepalive_message_traversal_interval` (Number) NAT keepalive message traversal interval in seconds.
   - Range: `10`-`3600`
+- `sgt_propagation_over_vti` (Boolean) Enable SGT propagation over VTI.
+- `spoke_to_spoke_connectivity_through_hub` (Boolean) Enable spoke-to-spoke connectivity through hub.
 - `vpn_idle_timeout` (Boolean) Enable VPN idle timeout monitoring.
 - `vpn_idle_timeout_value` (Number) VPN idle timeout in minutes.
   - Range: `1`-`35791394`

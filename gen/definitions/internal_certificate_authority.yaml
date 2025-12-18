@@ -19,11 +19,13 @@ attributes:
     type: String
     description: Certificate in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
+    mandatory: true
     requires_replace: true
   - model_name: privateKey
     type: String
     description: Private key in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: AES-128-CBC,D55(...)\\n-----END RSA PRIVATE KEY-----"
+    mandatory: true
     requires_replace: true
     sensitive: true
     write_only: true

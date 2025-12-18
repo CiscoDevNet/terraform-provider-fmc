@@ -174,6 +174,10 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 					int64validator.Between(10, 30),
 				},
 			},
+			"spoke_to_spoke_connectivity_through_hub": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable spoke-to-spoke connectivity through hub.").String,
+				Optional:            true,
+			},
 			"nat_keepalive_message_traversal": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable NAT keepalive message traversal.").String,
 				Optional:            true,
@@ -195,6 +199,10 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 				Validators: []validator.Int64{
 					int64validator.Between(1, 35791394),
 				},
+			},
+			"sgt_propagation_over_vti": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable SGT propagation over VTI.").String,
+				Optional:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable bypass access control traffic for decrypted traffic (sysopt permit-vpn).").String,

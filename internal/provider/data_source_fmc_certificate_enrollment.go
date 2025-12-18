@@ -171,12 +171,56 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				Computed:            true,
 				Sensitive:           true,
 			},
+			"acme_enrollment_url": schema.StringAttribute{
+				MarkdownDescription: "ACME enrollment CA server URL.",
+				Computed:            true,
+			},
+			"acme_authentication_protocol": schema.StringAttribute{
+				MarkdownDescription: "ACME authentication protocol.",
+				Computed:            true,
+			},
+			"acme_authentication_interface_id": schema.StringAttribute{
+				MarkdownDescription: "ID of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.",
+				Computed:            true,
+			},
+			"acme_authentication_interface_name": schema.StringAttribute{
+				MarkdownDescription: "Name of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.",
+				Computed:            true,
+			},
+			"acme_source_interface_id": schema.StringAttribute{
+				MarkdownDescription: "ID of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.",
+				Computed:            true,
+			},
+			"acme_source_interface_name": schema.StringAttribute{
+				MarkdownDescription: "Name of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.",
+				Computed:            true,
+			},
+			"acme_ca_only_certificate_id": schema.StringAttribute{
+				MarkdownDescription: "ID of manually installed CA-only certificate that authenticates the ACME server.",
+				Computed:            true,
+			},
+			"acme_auto_enrollment": schema.BoolAttribute{
+				MarkdownDescription: "Enable enable automatic enrollment of the ACME certificates based on the configured lifetime.",
+				Computed:            true,
+			},
+			"acme_auto_enrollment_lifetime": schema.Int64Attribute{
+				MarkdownDescription: "",
+				Computed:            true,
+			},
+			"acme_auto_enrollment_key_regeneration": schema.BoolAttribute{
+				MarkdownDescription: "Regenerate a new key for each ACME enrollment.",
+				Computed:            true,
+			},
 			"certificate_include_fqdn": schema.StringAttribute{
 				MarkdownDescription: "Include the device's fully qualified domain name (FQDN) in the certificate request",
 				Computed:            true,
 			},
 			"certificate_custom_fqdn": schema.StringAttribute{
 				MarkdownDescription: "Device's custom FQDN to be included in the certificate.",
+				Computed:            true,
+			},
+			"certificate_alternate_fqdn": schema.StringAttribute{
+				MarkdownDescription: "Alternate FQDN.",
 				Computed:            true,
 			},
 			"certificate_include_device_ip": schema.StringAttribute{
@@ -235,7 +279,7 @@ func (d *CertificateEnrollmentDataSource) Schema(ctx context.Context, req dataso
 				MarkdownDescription: "Obtain the revocation lists distribution URL from the certificate.",
 				Computed:            true,
 			},
-			"crl_static_urls_list": schema.ListAttribute{
+			"crl_static_urls": schema.ListAttribute{
 				MarkdownDescription: "Static URL list for certificate revocation.",
 				ElementType:         types.StringType,
 				Computed:            true,

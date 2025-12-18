@@ -25,14 +25,14 @@ resource "fmc_internal_certificate" "example" {
 
 ### Required
 
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `name` (String) Name of the Internal Certificate object.
+- `private_key` (String, Sensitive) Private key in PEM, DER, or PKCS#7 format.
 
 ### Optional
 
-- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `domain` (String) Name of the FMC domain
 - `password` (String, Sensitive) Private key password.
-- `private_key` (String, Sensitive) Private key in PEM, DER, or PKCS#7 format.
 
 ### Read-Only
 
