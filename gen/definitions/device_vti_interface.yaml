@@ -34,7 +34,7 @@ attributes:
     example: STATIC
     mandatory: true
     requires_replace: true
-    write_only: true # for FMCVERSION <= 7.2
+    # write_only: true # for FMCVERSION <= 7.2
   - model_name: ifname
     tf_name: logical_name
     type: String

@@ -167,6 +167,11 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("tunnelType"); value.Exists() {
+		data.TunnelType = types.StringValue(value.String())
+	} else {
+		data.TunnelType = types.StringNull()
+	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
 	} else {
@@ -287,6 +292,11 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("tunnelType"); value.Exists() && !data.TunnelType.IsNull() {
+		data.TunnelType = types.StringValue(value.String())
+	} else {
+		data.TunnelType = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())

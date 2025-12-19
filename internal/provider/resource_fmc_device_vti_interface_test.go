@@ -36,6 +36,7 @@ func TestAccFmcDeviceVTIInterface(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vti_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vti_interface.test", "name"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_type", "STATIC"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "logical_name", "my_vti_interface"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "description", "My VTI"))
