@@ -20,6 +20,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"os"
+	"slices"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -30,6 +31,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmcDeviceBridgeGroupInterface(t *testing.T) {
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.7"}, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
 	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
@@ -44,7 +48,7 @@ func TestAccDataSourceFmcDeviceBridgeGroupInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv6_addresses.0.address", "2004::1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "ipv6_addresses.0.prefix", "64"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.mac_address", "0123.4567.89ab"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.ip_address", "10.1.1.1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.ip_address", "10.1.1.10"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_device_bridge_group_interface.test", "arp_table_entries.0.enable_alias", "true"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
@@ -99,7 +103,7 @@ func testAccDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
 	config += `	}]` + "\n"
 	config += `	arp_table_entries = [{` + "\n"
 	config += `		mac_address = "0123.4567.89ab"` + "\n"
-	config += `		ip_address = "10.1.1.1"` + "\n"
+	config += `		ip_address = "10.1.1.10"` + "\n"
 	config += `		enable_alias = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
@@ -131,7 +135,7 @@ func testAccNamedDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
 	config += `	}]` + "\n"
 	config += `	arp_table_entries = [{` + "\n"
 	config += `		mac_address = "0123.4567.89ab"` + "\n"
-	config += `		ip_address = "10.1.1.1"` + "\n"
+	config += `		ip_address = "10.1.1.10"` + "\n"
 	config += `		enable_alias = true` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"

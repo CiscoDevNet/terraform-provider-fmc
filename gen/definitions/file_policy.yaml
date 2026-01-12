@@ -6,8 +6,8 @@ name: File Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/filepolicies
 doc_category: Policies
 minimum_version_create: "7.4"
+skip_test_for_versions: ["7.7"]
 res_description: This resource manages File Policy with corresponding rules.
-skip_test: true # Due to FMCBUG CSCwr16023
 attributes:
   - model_name: name
     type: String

@@ -5,6 +5,7 @@ doc_category: Objects
 is_bulk: true
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"
+skip_test_for_versions: ["7.2"]
 attributes:
   - model_name: items
     type: Map

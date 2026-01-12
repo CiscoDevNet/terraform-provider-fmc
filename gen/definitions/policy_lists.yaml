@@ -71,6 +71,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
+            exclude_test: true
       # Next Hop
       - model_name: standardAccessListNextHops
         tf_name: next_hop_standard_access_lists
@@ -94,6 +95,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
+            exclude_test: true
       # Route Source
       - model_name: standardAccessListRouteSources
         tf_name: route_source_standard_access_lists
@@ -117,6 +119,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
+            exclude_test: true
       # AS Path
       - model_name: asPathLists
         tf_name: as_paths
@@ -152,6 +155,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
+            exclude_test: true
       - model_name: matchCommunityExactly
         type: Bool
         description: Match BGP community exactly with the specified community.

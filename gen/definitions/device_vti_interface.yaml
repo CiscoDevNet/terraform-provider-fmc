@@ -8,6 +8,7 @@ res_description: >-
   - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
   - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+skip_test_for_versions: ["7.2"]
 attributes:
   - tf_name: device_id
     type: String

@@ -39,7 +39,7 @@ resource "fmc_device_bridge_group_interface" "example" {
   arp_table_entries = [
     {
       mac_address  = "0123.4567.89ab"
-      ip_address   = "10.1.1.1"
+      ip_address   = "10.1.1.10"
       enable_alias = true
     }
   ]

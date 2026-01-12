@@ -116,6 +116,7 @@ type YamlConfig struct {
 	ExcludeTest              bool                  `yaml:"exclude_test"`
 	SkipTest                 bool                  `yaml:"skip_test"`
 	SkipMinimumTest          bool                  `yaml:"skip_minimum_test"`
+	SkipTestForVersions      []string              `yaml:"skip_test_for_versions"`
 	Attributes               []YamlConfigAttribute `yaml:"attributes"`
 	TestTags                 []string              `yaml:"test_tags"`
 	TestPrerequisites        string                `yaml:"test_prerequisites"`

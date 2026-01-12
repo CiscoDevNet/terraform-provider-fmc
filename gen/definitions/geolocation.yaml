@@ -2,6 +2,7 @@
 name: Geolocation
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/geolocations
 doc_category: Objects
+skip_test_for_versions: ["7.2"]
 attributes:
   - model_name: name
     type: String

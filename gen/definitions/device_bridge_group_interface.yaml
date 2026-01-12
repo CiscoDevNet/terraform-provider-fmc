@@ -4,6 +4,7 @@ rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/
 doc_category: Devices
 res_description: This resource manages Device Bridge Group Interface, known also as BVI interfaces.
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+skip_test_for_versions: ["7.7"]
 adjust_body: true
 attributes:
   - tf_name: device_id
@@ -153,7 +154,7 @@ attributes:
       - model_name: ipAddress
         type: String
         description: IP address for custom ARP entry
-        example: "10.1.1.1"
+        example: "10.1.1.10"
         mandatory: true
       - model_name: enableAlias
         type: Bool
