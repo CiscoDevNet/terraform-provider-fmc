@@ -40,27 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &DeviceVTIInterfaceDataSource{}
-	_ datasource.DataSourceWithConfigure = &DeviceVTIInterfaceDataSource{}
+	_ datasource.DataSource              = &DeviceVirtualTunnelInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceVirtualTunnelInterfaceDataSource{}
 )
 
-func NewDeviceVTIInterfaceDataSource() datasource.DataSource {
-	return &DeviceVTIInterfaceDataSource{}
+func NewDeviceVirtualTunnelInterfaceDataSource() datasource.DataSource {
+	return &DeviceVirtualTunnelInterfaceDataSource{}
 }
 
-type DeviceVTIInterfaceDataSource struct {
+type DeviceVirtualTunnelInterfaceDataSource struct {
 	client *fmc.Client
 }
 
-func (d *DeviceVTIInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_vti_interface"
+func (d *DeviceVirtualTunnelInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_virtual_tunnel_interface"
 }
 
-func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device VTI Interface.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
-		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Virtual Tunnel Interface.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -172,7 +171,7 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 		},
 	}
 }
-func (d *DeviceVTIInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *DeviceVirtualTunnelInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -181,7 +180,7 @@ func (d *DeviceVTIInterfaceDataSource) ConfigValidators(ctx context.Context) []d
 	}
 }
 
-func (d *DeviceVTIInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *DeviceVirtualTunnelInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -193,8 +192,8 @@ func (d *DeviceVTIInterfaceDataSource) Configure(_ context.Context, req datasour
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *DeviceVTIInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config DeviceVTIInterface
+func (d *DeviceVirtualTunnelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceVirtualTunnelInterface
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

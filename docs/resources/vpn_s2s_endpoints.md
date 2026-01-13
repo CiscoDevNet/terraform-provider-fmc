@@ -23,15 +23,15 @@ resource "fmc_vpn_s2s_endpoints" "example" {
   vpn_s2s_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   items = {
     my_ftd_01 = {
-      peer_type                   = "PEER"
-      extranet_device             = false
-      device_id                   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      interface_id                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      interface_ipv6_address      = "2001:db8::1"
-      interface_public_ip_address = "10.1.1.1"
-      connection_type             = "BIDIRECTIONAL"
-      allow_incoming_ikev2_routes = false
-      send_vti_ip_to_peer         = false
+      peer_type                                = "PEER"
+      extranet_device                          = false
+      device_id                                = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      interface_id                             = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+      interface_ipv6_address                   = "2001:db8::1"
+      interface_public_ip_address              = "10.1.1.1"
+      connection_type                          = "BIDIRECTIONAL"
+      allow_incoming_ikev2_routes              = false
+      send_virtual_tunnel_interface_ip_to_peer = false
       protected_networks = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
@@ -94,12 +94,12 @@ Optional:
 - `nat_exemption` (Boolean) Enable NAT exemption.
 - `nat_exemption_inside_interface_id` (String) Id of the inside Security Zone for NAT Exemption identification.
 - `nat_traversal` (Boolean) Enable NAT traversal.
-- `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
+- `override_remote_vpn_filter_access_list_id` (String) Id of the Extended Access List to override VPN filter on the Hub.
 - `protected_networks` (Attributes Set) Set of protected Networks. (see [below for nested schema](#nestedatt--items--protected_networks))
-- `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
+- `protected_networks_access_list_id` (String) Id of the Extended Access List that defines protected networks.
 - `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
-- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
-- `vpn_filter_acl_id` (String) Id of the VPN filter ACL.
+- `send_virtual_tunnel_interface_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
+- `vpn_filter_access_list_id` (String) Id of the VPN filter Extended Access List.
 
 Read-Only:
 

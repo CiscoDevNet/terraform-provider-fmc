@@ -13,13 +13,14 @@ The FMC provider provides resources to interact with a Cisco Secure Firewall Man
 
 Resources and data sources have been tested with the following releases.
 
-| Platform | Version  |
-| -------- | -------- |
-| FMC      | 7.2.10   |
-| FMC      | 7.4.2.3  |
-| FMC      | 7.6.2    |
-| FMC      | 7.7.10.1 |
-| cdFMC    |          |
+| Platform | Version |
+| -------- | ------- |
+| FMC      | 7.2.10  |
+| FMC      | 7.4.4   |
+| FMC      | 7.6.2   |
+| FMC      | 7.7.11  |
+| FMC      | 10.0.0  |
+| cdFMC    |         |
 
 Please note that resources and data sources support depends on FMC version.
 

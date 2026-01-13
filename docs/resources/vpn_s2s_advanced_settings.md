@@ -80,7 +80,7 @@ resource "fmc_vpn_s2s_advanced_settings" "example" {
 - `nat_keepalive_message_traversal` (Boolean) Enable NAT keepalive message traversal.
 - `nat_keepalive_message_traversal_interval` (Number) NAT keepalive message traversal interval in seconds.
   - Range: `10`-`3600`
-- `sgt_propagation_over_vti` (Boolean) Enable SGT propagation over VTI.
+- `sgt_propagation_over_virtual_tunnel_interface` (Boolean) Enable SGT propagation over Virtual Tunnel Interface (VTI).
 - `spoke_to_spoke_connectivity_through_hub` (Boolean) Enable spoke-to-spoke connectivity through hub.
 - `vpn_idle_timeout` (Boolean) Enable VPN idle timeout monitoring.
 - `vpn_idle_timeout_value` (Number) VPN idle timeout in minutes.

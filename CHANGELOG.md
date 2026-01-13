@@ -9,12 +9,13 @@
 - BREAKING CHANGE: `fmc_ikev1_policies`: Rename attribute `encryption` to `encryption_algorithm`
 - BREAKING CHANGE: `fmc_certificate_enrollment`: Rename attribute `crl_static_urls_list` to `crl_static_urls`
 - BREAKING CHANGE: `fmc_device_vti_interface`: Rename attribute `ipv4_address/netmask` to `ipv4_static_address/netmask`
-- (Change) `fmc_ftd_platform_settings_syslog_settings_syslog_id`: Adjusted to platforms with fix for CSCwr26361 (FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted)
+- BREAKING CHANGE: Rename `fmc_device_vti_interface` to `fmc_device_virtual_tunnel_interface`
+- (Change) `fmc_ftd_platform_settings_syslog_settings_syslog_id`: Adjusted to versions with fix for CSCwr26361 (FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted)
 - (Fix) Updated `required` flag for several attributs in multiple resources
 - (Fix) `fmc_chassis_logical_device`: Deletion would fail if registered device is under deployment
 - (Enhancement) Add multiple bulk/non-bulk variants of already existing resources and data sources
 - (Enhancement) `fmc_certificate_enrollment`: Add support for ACME
-- (Enhancement) `fmc_vpn_s2s_advanced_settings`: Add two missing attributes
+- (Enhancement) `fmc_vpn_s2s_advanced_settings`: Add missing attributes
 
 ## 2.0.0-rc9
 

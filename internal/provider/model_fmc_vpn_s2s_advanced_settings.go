@@ -55,7 +55,7 @@ type VPNS2SAdvancedSettings struct {
 	NatKeepaliveMessageTraversalInterval                       types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
 	VpnIdleTimeout                                             types.Bool   `tfsdk:"vpn_idle_timeout"`
 	VpnIdleTimeoutValue                                        types.Int64  `tfsdk:"vpn_idle_timeout_value"`
-	SgtPropagationOverVti                                      types.Bool   `tfsdk:"sgt_propagation_over_vti"`
+	SgtPropagationOverVirtualTunnelInterface                   types.Bool   `tfsdk:"sgt_propagation_over_virtual_tunnel_interface"`
 	BypassAccessControlPolicyForDecryptedTraffic               types.Bool   `tfsdk:"bypass_access_control_policy_for_decrypted_traffic"`
 	CertUseCertificateMapConfiguredInEndpointToDetermineTunnel types.Bool   `tfsdk:"cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel"`
 	CertUseOuToDetermineTunnel                                 types.Bool   `tfsdk:"cert_use_ou_to_determine_tunnel"`
@@ -138,8 +138,8 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	if !data.VpnIdleTimeoutValue.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes", data.VpnIdleTimeoutValue.ValueInt64())
 	}
-	if !data.SgtPropagationOverVti.IsNull() {
-		body, _ = sjson.Set(body, "advancedTunnelSetting.enableSGTPropagationOverVTI", data.SgtPropagationOverVti.ValueBool())
+	if !data.SgtPropagationOverVirtualTunnelInterface.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.enableSGTPropagationOverVTI", data.SgtPropagationOverVirtualTunnelInterface.ValueBool())
 	}
 	if !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
@@ -260,9 +260,9 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
 	if value := res.Get("advancedTunnelSetting.enableSGTPropagationOverVTI"); value.Exists() {
-		data.SgtPropagationOverVti = types.BoolValue(value.Bool())
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolValue(value.Bool())
 	} else {
-		data.SgtPropagationOverVti = types.BoolNull()
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
@@ -395,10 +395,10 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.VpnIdleTimeoutValue = types.Int64Null()
 	}
-	if value := res.Get("advancedTunnelSetting.enableSGTPropagationOverVTI"); value.Exists() && !data.SgtPropagationOverVti.IsNull() {
-		data.SgtPropagationOverVti = types.BoolValue(value.Bool())
+	if value := res.Get("advancedTunnelSetting.enableSGTPropagationOverVTI"); value.Exists() && !data.SgtPropagationOverVirtualTunnelInterface.IsNull() {
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolValue(value.Bool())
 	} else {
-		data.SgtPropagationOverVti = types.BoolNull()
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() && !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
@@ -444,22 +444,6 @@ func (data *VPNS2SAdvancedSettings) fromBodyUnknowns(ctx context.Context, res gj
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
 

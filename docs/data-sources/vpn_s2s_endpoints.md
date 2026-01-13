@@ -62,13 +62,13 @@ Read-Only:
 - `nat_exemption` (Boolean) Enable NAT exemption.
 - `nat_exemption_inside_interface_id` (String) Id of the inside Security Zone for NAT Exemption identification.
 - `nat_traversal` (Boolean) Enable NAT traversal.
-- `override_remote_vpn_filter_acl_id` (String) Id of the ACL to override VPN filter on the Hub.
+- `override_remote_vpn_filter_access_list_id` (String) Id of the Extended Access List to override VPN filter on the Hub.
 - `peer_type` (String) Role of the device in the topology.
 - `protected_networks` (Attributes Set) Set of protected Networks. (see [below for nested schema](#nestedatt--items--protected_networks))
-- `protected_networks_acl_id` (String) Id of the ACL that defines protected networks.
+- `protected_networks_access_list_id` (String) Id of the Extended Access List that defines protected networks.
 - `reverse_route_injection` (Boolean) Enable Reverse Route Injection (RRI).
-- `send_vti_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
-- `vpn_filter_acl_id` (String) Id of the VPN filter ACL.
+- `send_virtual_tunnel_interface_ip_to_peer` (Boolean) Send Virtual Tunnel Interface IP to the peers.
+- `vpn_filter_access_list_id` (String) Id of the VPN filter Extended Access List.
 
 <a id="nestedatt--items--protected_networks"></a>
 ### Nested Schema for `items.protected_networks`

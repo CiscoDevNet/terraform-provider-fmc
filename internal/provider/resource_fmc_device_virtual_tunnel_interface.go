@@ -47,27 +47,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &DeviceVTIInterfaceResource{}
-	_ resource.ResourceWithImportState = &DeviceVTIInterfaceResource{}
+	_ resource.Resource                = &DeviceVirtualTunnelInterfaceResource{}
+	_ resource.ResourceWithImportState = &DeviceVirtualTunnelInterfaceResource{}
 )
 
-func NewDeviceVTIInterfaceResource() resource.Resource {
-	return &DeviceVTIInterfaceResource{}
+func NewDeviceVirtualTunnelInterfaceResource() resource.Resource {
+	return &DeviceVirtualTunnelInterfaceResource{}
 }
 
-type DeviceVTIInterfaceResource struct {
+type DeviceVirtualTunnelInterfaceResource struct {
 	client *fmc.Client
 }
 
-func (r *DeviceVTIInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_device_vti_interface"
+func (r *DeviceVirtualTunnelInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_virtual_tunnel_interface"
 }
 
-func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceVirtualTunnelInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
-		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -216,7 +215,7 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 	}
 }
 
-func (r *DeviceVTIInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceVirtualTunnelInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -226,8 +225,8 @@ func (r *DeviceVTIInterfaceResource) Configure(_ context.Context, req resource.C
 
 // End of section. //template:end model
 
-func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan DeviceVTIInterface
+func (r *DeviceVirtualTunnelInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceVirtualTunnelInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -244,7 +243,7 @@ func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.Cr
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, DeviceVTIInterface{})
+	body := plan.toBody(ctx, DeviceVirtualTunnelInterface{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -277,8 +276,8 @@ func (r *DeviceVTIInterfaceResource) Create(ctx context.Context, req resource.Cr
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *DeviceVTIInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state DeviceVTIInterface
+func (r *DeviceVirtualTunnelInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceVirtualTunnelInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -329,8 +328,8 @@ func (r *DeviceVTIInterfaceResource) Read(ctx context.Context, req resource.Read
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *DeviceVTIInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state DeviceVTIInterface
+func (r *DeviceVirtualTunnelInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceVirtualTunnelInterface
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -369,8 +368,8 @@ func (r *DeviceVTIInterfaceResource) Update(ctx context.Context, req resource.Up
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *DeviceVTIInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state DeviceVTIInterface
+func (r *DeviceVirtualTunnelInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceVirtualTunnelInterface
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -399,7 +398,7 @@ func (r *DeviceVTIInterfaceResource) Delete(ctx context.Context, req resource.De
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *DeviceVTIInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *DeviceVirtualTunnelInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<device_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -420,3 +419,15 @@ func (r *DeviceVTIInterfaceResource) ImportState(ctx context.Context, req resour
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

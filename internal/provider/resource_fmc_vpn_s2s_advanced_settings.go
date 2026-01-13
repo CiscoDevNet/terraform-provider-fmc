@@ -200,8 +200,8 @@ func (r *VPNS2SAdvancedSettingsResource) Schema(ctx context.Context, req resourc
 					int64validator.Between(1, 35791394),
 				},
 			},
-			"sgt_propagation_over_vti": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable SGT propagation over VTI.").String,
+			"sgt_propagation_over_virtual_tunnel_interface": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable SGT propagation over Virtual Tunnel Interface (VTI).").String,
 				Optional:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{

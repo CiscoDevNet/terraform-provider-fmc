@@ -173,9 +173,9 @@ attributes:
   # TrustSec Settings
   - model_name: enableSGTPropagationOverVTI
     data_path: [advancedTunnelSetting]
-    tf_name: sgt_propagation_over_vti
+    tf_name: sgt_propagation_over_virtual_tunnel_interface
     type: Bool
-    description: Enable SGT propagation over VTI.
+    description: Enable SGT propagation over Virtual Tunnel Interface (VTI).
     exclude_example: true
     exclude_test: true
 

@@ -146,8 +146,8 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "VPN idle timeout in minutes.",
 				Computed:            true,
 			},
-			"sgt_propagation_over_vti": schema.BoolAttribute{
-				MarkdownDescription: "Enable SGT propagation over VTI.",
+			"sgt_propagation_over_virtual_tunnel_interface": schema.BoolAttribute{
+				MarkdownDescription: "Enable SGT propagation over Virtual Tunnel Interface (VTI).",
 				Computed:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{
