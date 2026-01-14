@@ -116,7 +116,7 @@ func (r *IKEv1PoliciesResource) Schema(ctx context.Context, req resource.SchemaR
 								int64validator.Between(1, 65535),
 							},
 						},
-						"encryption": schema.StringAttribute{
+						"encryption_algorithm": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("IKEv1 Encryption algorithm.").AddStringEnumDescription("DES", "3DES", "AES-128", "AES-192", "AES-256").String,
 							Required:            true,
 							Validators: []validator.String{

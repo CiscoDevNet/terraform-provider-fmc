@@ -1,3 +1,4 @@
+# FMCBUG CSCws69692 - Group Policies with WINS Servers cannot be created
 # Manual resource - create, delete
 ---
 name: Group Policy
@@ -80,14 +81,16 @@ attributes:
     type: String
     description: Id of host object that represents primary WINS server.
     example: 12345678-1234-1234-1234-123458
-    test_value: fmc_hosts.test.items["group_policy_host_3"].id
+    # test_value: fmc_hosts.test.items["group_policy_host_3"].id # due to CSCws69692
+    exclude_test: true
   - model_name: id
     data_path: ["generalSettings", "secondaryWINSServer"]
     tf_name: secondary_wins_server_host_id
     type: String
     description: Id of host object that represents secondary WINS server.
     example: 12345678-1234-1234-1234-123459
-    test_value: fmc_hosts.test.items["group_policy_host_4"].id
+    # test_value: fmc_hosts.test.items["group_policy_host_4"].id # due to CSCws69692
+    exclude_test: true
   - model_name: id
     data_path: ["generalSettings", "addressAssignment", "dhcpScope"]
     tf_name: dhcp_network_scope_network_object_id

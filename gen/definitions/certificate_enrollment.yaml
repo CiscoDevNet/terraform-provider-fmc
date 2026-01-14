@@ -32,7 +32,7 @@ attributes:
   - model_name: enrollmentType
     type: String
     mandatory: true
-    enum_values: ["SCEP", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"]
+    enum_values: ["SCEP", "ACME", "EST", "MANUAL", "SELF_SIGNED_CERTFICATE", "PKCS12"]
     description: Certificate enrollment type.
     example: SELF_SIGNED_CERTFICATE
     test_value: '"PKCS12"'
@@ -198,6 +198,80 @@ attributes:
     sensitive: true
     write_only: true
 
+  # CA Information - ACME
+  - model_name: enrollmentUrl
+    data_path: ["acmeContent"]
+    tf_name: acme_enrollment_url
+    type: String
+    description: ACME enrollment CA server URL.
+    exclude_example: true
+    exclude_test: true
+  - model_name: authProtocol
+    data_path: ["acmeContent"]
+    tf_name: acme_authentication_protocol
+    type: String
+    enum_values: ["HTTP01"]
+    description: ACME authentication protocol.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: ["acmeContent", "authInterface"]
+    tf_name: acme_authentication_interface_id
+    type: String
+    description: ID of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.
+    exclude_example: true
+    exclude_test: true
+  - model_name: name
+    data_path: ["acmeContent", "authInterface"]
+    tf_name: acme_authentication_interface_name
+    type: String
+    description: Name of security zone or interface group that has the interface through which the ACME server communicates with the device to verify ownership of the domain.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: ["acmeContent", "sourceInterface"]
+    tf_name: acme_source_interface_id
+    type: String
+    description: ID of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.
+    exclude_example: true
+    exclude_test: true
+  - model_name: name
+    data_path: ["acmeContent", "sourceInterface"]
+    tf_name: acme_source_interface_name
+    type: String
+    description: Name of security zone or interface group that has the interface through which the device interacts with the ACME server to request and receive the enrolled ACME certificate.
+    exclude_example: true
+    exclude_test: true
+  - model_name: id
+    data_path: ["acmeContent", "authCertificateRef"]
+    tf_name: acme_ca_only_certificate_id
+    type: String
+    description: ID of manually installed CA-only certificate that authenticates the ACME server.
+    exclude_example: true
+    exclude_test: true
+  - model_name: autoEnrollEnabled
+    data_path: ["acmeContent"]
+    tf_name: acme_auto_enrollment
+    type: Bool
+    description: Enable enable automatic enrollment of the ACME certificates based on the configured lifetime.
+    exclude_example: true
+    exclude_test: true
+  - model_name: autoEnrollLifePct
+    data_path: ["acmeContent"]
+    tf_name: acme_auto_enrollment_lifetime
+    type: Int64
+    min_int: 10
+    max_int: 99
+    exclude_example: true
+    exclude_test: true
+  - model_name: keyRegenEnabled
+    data_path: ["acmeContent"]
+    tf_name: acme_auto_enrollment_key_regeneration
+    type: Bool
+    description: Regenerate a new key for each ACME enrollment.
+    exclude_example: true
+    exclude_test: true
+
   # Certificate Parameters
   - model_name: includeFQDN
     data_path: ["certificateParameters"]
@@ -212,6 +286,13 @@ attributes:
     tf_name: certificate_custom_fqdn
     type: String
     description: Device's custom FQDN to be included in the certificate.
+    exclude_example: true
+    exclude_test: true
+  - model_name: altFQDN
+    data_path: ["certificateParameters"]
+    tf_name: certificate_alternate_fqdn
+    type: String
+    description: Alternate FQDN.
     exclude_example: true
     exclude_test: true
   - model_name: includeDeviceIp
@@ -334,7 +415,7 @@ attributes:
   #   example: true
   - model_name: certRevocationStaticUrlList
     data_path: ["revocation", "certRevocationListContent"]
-    tf_name: crl_static_urls_list
+    tf_name: crl_static_urls
     type: List
     element_type: String
     description: Static URL list for certificate revocation.

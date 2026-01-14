@@ -117,7 +117,7 @@ func (r *IPv4PrefixListsResource) Schema(ctx context.Context, req resource.Schem
 											stringvalidator.OneOf("PERMIT", "DENY"),
 										},
 									},
-									"ip_address": schema.StringAttribute{
+									"prefix": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("IPv4 address with prefix length.").String,
 										Required:            true,
 									},

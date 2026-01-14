@@ -1,3 +1,5 @@
+# FMCBUG: CSCwp73412 Route Map is missing attribute for Match the specified community exactly
+# FMCBUG: CSCwp73411 Route Map's IPv4 Access Lists not present in GET requests
 ---
 name: Route Map
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/routemaps
@@ -200,7 +202,7 @@ attributes:
         exclude_test: true
       # Match clauses - BGP
       - model_name: asPathLists
-        tf_name: match_bgp_as_path_lists
+        tf_name: match_bgp_as_paths
         type: List
         description: Match a BGP Autonomous System (AS) path with the specified path access list.
         attributes:
@@ -210,6 +212,7 @@ attributes:
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_as_path.test.id
             mandatory: true
+            id: true
       # Match clauses - Community Lists
       - model_name: communityLists
         tf_name: match_bgp_community_lists
@@ -233,7 +236,7 @@ attributes:
             type: String
             description: Id of the object.
             mandatory: true
-      # FMCBUG: CSCwp73412  Route Map is missing attribute for Match the specified community exactly
+      # FMCBUG: CSCwp73412 
       # - model_name: ???
       #   tf_name: match_bgp_match_community_exactly
       #   type: Bool
@@ -253,13 +256,13 @@ attributes:
             mandatory: true
       # Match clauses - Other
       - model_name: metricRouteValues
-        tf_name: match_metric_route_values
+        tf_name: match_route_metrics
         type: List
         element_type: Int64
         description: List of Metric values to match.
         example: 100
       - model_name: tagValues
-        tf_name: match_tag_values
+        tf_name: match_tags
         type: List
         element_type: Int64
         description: List of Tag values to match.
@@ -405,7 +408,7 @@ attributes:
         exclude_example: true
         exclude_test: true
       - model_name: specificIPsIPV4Setting
-        tf_name: set_bgp_ipv4_next_hop_specific_ip
+        tf_name: set_bgp_ipv4_next_hop_specific_ips
         type: List
         element_type: String
         description: Set the next hop IPv4 address.
@@ -426,7 +429,7 @@ attributes:
         exclude_example: true
         exclude_test: true
       - model_name: specificIPsIPV6Setting
-        tf_name: set_bgp_ipv6_next_hop_specific_ip
+        tf_name: set_bgp_ipv6_next_hop_specific_ips
         type: List
         element_type: String
         description: Set the next hop IPv6 address.

@@ -12,6 +12,7 @@ resource "fmc_vpn_s2s_advanced_settings" "example" {
   ikev2_number_of_sas_allowed_in_negotiation                          = 90
   ipsec_fragmentation_before_encryption                               = true
   ipsec_path_maximum_transmission_unit_aging_reset_interval           = 30
+  spoke_to_spoke_connectivity_through_hub                             = false
   nat_keepalive_message_traversal                                     = true
   nat_keepalive_message_traversal_interval                            = 20
   vpn_idle_timeout                                                    = true

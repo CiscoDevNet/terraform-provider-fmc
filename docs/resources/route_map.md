@@ -46,7 +46,7 @@ resource "fmc_route_map" "example" {
       match_ipv6_address_extended_access_list_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       match_ipv6_next_hop_extended_access_list_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       match_ipv6_route_source_extended_access_list_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      match_bgp_as_path_lists = [
+      match_bgp_as_paths = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
@@ -61,8 +61,8 @@ resource "fmc_route_map" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      match_metric_route_values                              = [100]
-      match_tag_values                                       = [110]
+      match_route_metrics                                    = [100]
+      match_tags                                             = [110]
       match_route_type_external_1                            = true
       match_route_type_external_2                            = true
       match_route_type_internal                              = true
@@ -118,7 +118,7 @@ Required:
 
 Optional:
 
-- `match_bgp_as_path_lists` (Attributes List) Match a BGP Autonomous System (AS) path with the specified path access list. (see [below for nested schema](#nestedatt--entries--match_bgp_as_path_lists))
+- `match_bgp_as_paths` (Attributes List) Match a BGP Autonomous System (AS) path with the specified path access list. (see [below for nested schema](#nestedatt--entries--match_bgp_as_paths))
 - `match_bgp_community_lists` (Attributes List) Match a BGP Community with Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_community_lists))
 - `match_bgp_extended_community_lists` (Attributes List) Match a BGP Community with Extended Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_extended_community_lists))
 - `match_bgp_policy_lists` (Attributes List) Evaluate and process a BGP Policy Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_policy_lists))
@@ -135,7 +135,7 @@ Optional:
 - `match_ipv6_next_hop_prefix_list_id` (String) Match routes based on the next hop address of a route using IPv6 Prefix Lists.
 - `match_ipv6_route_source_extended_access_list_id` (String) Match routes based on the advertising source address of the route using IPv6 Extended Access Lists.
 - `match_ipv6_route_source_prefix_list_id` (String) Match routes based on the advertising source address of the route using IPv6 Prefix Lists.
-- `match_metric_route_values` (List of Number) List of Metric values to match.
+- `match_route_metrics` (List of Number) List of Metric values to match.
 - `match_route_type_external_1` (Boolean) Match external type 1 routes.
 - `match_route_type_external_2` (Boolean) Match external type 2 routes.
 - `match_route_type_internal` (Boolean) Match internal routes.
@@ -143,7 +143,7 @@ Optional:
 - `match_route_type_nssa_external_1` (Boolean) Match NSSA external type 1 routes.
 - `match_route_type_nssa_external_2` (Boolean) Match NSSA external type 2 routes.
 - `match_security_zones` (Attributes List) Match traffic based on the ingress/egress Security Zones. (see [below for nested schema](#nestedatt--entries--match_security_zones))
-- `match_tag_values` (List of Number) List of Tag values to match.
+- `match_tags` (List of Number) List of Tag values to match.
 - `set_bgp_as_path_convert_route_tag_into_as_path` (Boolean) Convert the tag of a route into an Autonomous System (AS) path.
 - `set_bgp_as_path_prepend` (List of Number) Prepend an arbitrary Autonomous System (AS) path to BGP routes.
 - `set_bgp_as_path_prepend_last_as` (Number) Number of times to prepend the AS path with the last AS number.
@@ -160,11 +160,11 @@ Optional:
   - Range: `1`-`4294967295`
 - `set_bgp_ipv4_next_hop` (String) Set the next hop IPv4 address.
   - Choices: `USE_PEER_ADDRESS`, `SPECIFIC_IP`
-- `set_bgp_ipv4_next_hop_specific_ip` (List of String) Set the next hop IPv4 address.
+- `set_bgp_ipv4_next_hop_specific_ips` (List of String) Set the next hop IPv4 address.
 - `set_bgp_ipv4_prefix_list_id` (String) Set the prefix list for IPv4.
 - `set_bgp_ipv6_next_hop` (String) Set the next hop IPv6 address.
   - Choices: `USE_PEER_ADDRESS`, `SPECIFIC_IP`
-- `set_bgp_ipv6_next_hop_specific_ip` (List of String) Set the next hop IPv6 address.
+- `set_bgp_ipv6_next_hop_specific_ips` (List of String) Set the next hop IPv6 address.
 - `set_bgp_ipv6_prefix_list_id` (String) Set the prefix list for IPv6.
 - `set_bgp_local_preference` (Number) Set the local preference value.
   - Range: `1`-`4294967295`
@@ -177,8 +177,8 @@ Optional:
 - `set_metric_type` (String) Specify the type of metric for the destination routing protocol.
   - Choices: `INTERNAL`, `TYPE_1`, `TYPE_2`
 
-<a id="nestedatt--entries--match_bgp_as_path_lists"></a>
-### Nested Schema for `entries.match_bgp_as_path_lists`
+<a id="nestedatt--entries--match_bgp_as_paths"></a>
+### Nested Schema for `entries.match_bgp_as_paths`
 
 Required:
 

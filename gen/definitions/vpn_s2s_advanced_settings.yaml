@@ -128,6 +128,14 @@ attributes:
     max_int: 30
     example: 30
 
+  # Tunnel - Tunnel Options
+  - model_name: enableSpokeToSpokeConnectivityThroughHub
+    data_path: [advancedTunnelSetting]
+    tf_name: spoke_to_spoke_connectivity_through_hub
+    type: Bool
+    description: Enable spoke-to-spoke connectivity through hub.
+    example: "false"
+
   # Tunnel - NAT Settings
   - model_name: enabled
     data_path: [advancedTunnelSetting, natKeepaliveMessageTraversal]
@@ -160,6 +168,15 @@ attributes:
     min_int: 1
     max_int: 35791394
     example: 25
+    exclude_test: true
+  
+  # TrustSec Settings
+  - model_name: enableSGTPropagationOverVTI
+    data_path: [advancedTunnelSetting]
+    tf_name: sgt_propagation_over_virtual_tunnel_interface
+    type: Bool
+    description: Enable SGT propagation over Virtual Tunnel Interface (VTI).
+    exclude_example: true
     exclude_test: true
 
   # Tunnel - Access Control for VPN Traffic

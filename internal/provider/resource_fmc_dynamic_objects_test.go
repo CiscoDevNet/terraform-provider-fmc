@@ -20,6 +20,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"os"
+	"slices"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -30,6 +31,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDynamicObjects(t *testing.T) {
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.4", "CDFMC"}, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_dynamic_objects.test", "items.dynamic_object_1.id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_dynamic_objects.test", "items.dynamic_object_1.type"))
@@ -89,6 +93,10 @@ func testAccFmcDynamicObjectsConfig_all() string {
 // End of section. //template:end testAccConfigAll
 
 func TestAccFmcDynamicObjects_Sequential(t *testing.T) {
+
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.4", "CDFMC"}, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
 
 	step_01 := `resource "fmc_dynamic_objects" "test" {` + "\n" +
 		`	items = {` + "\n" +

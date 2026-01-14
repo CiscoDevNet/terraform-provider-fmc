@@ -109,7 +109,7 @@ resource "fmc_chassis_logical_device" "example" {
 <a id="nestedatt--assigned_interfaces"></a>
 ### Nested Schema for `assigned_interfaces`
 
-Optional:
+Required:
 
 - `id` (String) Id of the interface.
 

@@ -58,8 +58,19 @@ type CertificateEnrollment struct {
 	ManualCaCertificate                                         types.String `tfsdk:"manual_ca_certificate"`
 	Pkcs12Certificate                                           types.String `tfsdk:"pkcs12_certificate"`
 	Pkcs12CertificatePassphrase                                 types.String `tfsdk:"pkcs12_certificate_passphrase"`
+	AcmeEnrollmentUrl                                           types.String `tfsdk:"acme_enrollment_url"`
+	AcmeAuthenticationProtocol                                  types.String `tfsdk:"acme_authentication_protocol"`
+	AcmeAuthenticationInterfaceId                               types.String `tfsdk:"acme_authentication_interface_id"`
+	AcmeAuthenticationInterfaceName                             types.String `tfsdk:"acme_authentication_interface_name"`
+	AcmeSourceInterfaceId                                       types.String `tfsdk:"acme_source_interface_id"`
+	AcmeSourceInterfaceName                                     types.String `tfsdk:"acme_source_interface_name"`
+	AcmeCaOnlyCertificateId                                     types.String `tfsdk:"acme_ca_only_certificate_id"`
+	AcmeAutoEnrollment                                          types.Bool   `tfsdk:"acme_auto_enrollment"`
+	AcmeAutoEnrollmentLifetime                                  types.Int64  `tfsdk:"acme_auto_enrollment_lifetime"`
+	AcmeAutoEnrollmentKeyRegeneration                           types.Bool   `tfsdk:"acme_auto_enrollment_key_regeneration"`
 	CertificateIncludeFqdn                                      types.String `tfsdk:"certificate_include_fqdn"`
 	CertificateCustomFqdn                                       types.String `tfsdk:"certificate_custom_fqdn"`
+	CertificateAlternateFqdn                                    types.String `tfsdk:"certificate_alternate_fqdn"`
 	CertificateIncludeDeviceIp                                  types.String `tfsdk:"certificate_include_device_ip"`
 	CertificateCommonName                                       types.String `tfsdk:"certificate_common_name"`
 	CertificateOrganizationalUnit                               types.String `tfsdk:"certificate_organizational_unit"`
@@ -74,7 +85,7 @@ type CertificateEnrollment struct {
 	KeySize                                                     types.String `tfsdk:"key_size"`
 	IgnoreIpsecKeyUsage                                         types.Bool   `tfsdk:"ignore_ipsec_key_usage"`
 	CrlUseDistributionPointFromTheCertificate                   types.Bool   `tfsdk:"crl_use_distribution_point_from_the_certificate"`
-	CrlStaticUrlsList                                           types.List   `tfsdk:"crl_static_urls_list"`
+	CrlStaticUrls                                               types.List   `tfsdk:"crl_static_urls"`
 	OcspUrl                                                     types.String `tfsdk:"ocsp_url"`
 	RevocationEvaluationPriority                                types.String `tfsdk:"revocation_evaluation_priority"`
 	ConsiderCertificateValidIfRevocationInformationNotReachable types.Bool   `tfsdk:"consider_certificate_valid_if_revocation_information_not_reachable"`
@@ -171,11 +182,44 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.Pkcs12CertificatePassphrase.IsNull() {
 		body, _ = sjson.Set(body, "pkcs12Content.passPhrase", data.Pkcs12CertificatePassphrase.ValueString())
 	}
+	if !data.AcmeEnrollmentUrl.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.enrollmentUrl", data.AcmeEnrollmentUrl.ValueString())
+	}
+	if !data.AcmeAuthenticationProtocol.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.authProtocol", data.AcmeAuthenticationProtocol.ValueString())
+	}
+	if !data.AcmeAuthenticationInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.authInterface.id", data.AcmeAuthenticationInterfaceId.ValueString())
+	}
+	if !data.AcmeAuthenticationInterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.authInterface.name", data.AcmeAuthenticationInterfaceName.ValueString())
+	}
+	if !data.AcmeSourceInterfaceId.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.sourceInterface.id", data.AcmeSourceInterfaceId.ValueString())
+	}
+	if !data.AcmeSourceInterfaceName.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.sourceInterface.name", data.AcmeSourceInterfaceName.ValueString())
+	}
+	if !data.AcmeCaOnlyCertificateId.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.authCertificateRef.id", data.AcmeCaOnlyCertificateId.ValueString())
+	}
+	if !data.AcmeAutoEnrollment.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.autoEnrollEnabled", data.AcmeAutoEnrollment.ValueBool())
+	}
+	if !data.AcmeAutoEnrollmentLifetime.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.autoEnrollLifePct", data.AcmeAutoEnrollmentLifetime.ValueInt64())
+	}
+	if !data.AcmeAutoEnrollmentKeyRegeneration.IsNull() {
+		body, _ = sjson.Set(body, "acmeContent.keyRegenEnabled", data.AcmeAutoEnrollmentKeyRegeneration.ValueBool())
+	}
 	if !data.CertificateIncludeFqdn.IsNull() {
 		body, _ = sjson.Set(body, "certificateParameters.includeFQDN", data.CertificateIncludeFqdn.ValueString())
 	}
 	if !data.CertificateCustomFqdn.IsNull() {
 		body, _ = sjson.Set(body, "certificateParameters.customFqdn", data.CertificateCustomFqdn.ValueString())
+	}
+	if !data.CertificateAlternateFqdn.IsNull() {
+		body, _ = sjson.Set(body, "certificateParameters.altFQDN", data.CertificateAlternateFqdn.ValueString())
 	}
 	if !data.CertificateIncludeDeviceIp.IsNull() {
 		body, _ = sjson.Set(body, "certificateParameters.includeDeviceIp", data.CertificateIncludeDeviceIp.ValueString())
@@ -219,9 +263,9 @@ func (data CertificateEnrollment) toBody(ctx context.Context, state CertificateE
 	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() {
 		body, _ = sjson.Set(body, "revocation.certRevocationListContent.enableCertRevocationListDistributionPoint", data.CrlUseDistributionPointFromTheCertificate.ValueBool())
 	}
-	if !data.CrlStaticUrlsList.IsNull() {
+	if !data.CrlStaticUrls.IsNull() {
 		var values []string
-		data.CrlStaticUrlsList.ElementsAs(ctx, &values, false)
+		data.CrlStaticUrls.ElementsAs(ctx, &values, false)
 		body, _ = sjson.Set(body, "revocation.certRevocationListContent.certRevocationStaticUrlList", values)
 	}
 	if !data.OcspUrl.IsNull() {
@@ -341,6 +385,56 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 	} else {
 		data.Pkcs12Certificate = types.StringNull()
 	}
+	if value := res.Get("acmeContent.enrollmentUrl"); value.Exists() {
+		data.AcmeEnrollmentUrl = types.StringValue(value.String())
+	} else {
+		data.AcmeEnrollmentUrl = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authProtocol"); value.Exists() {
+		data.AcmeAuthenticationProtocol = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationProtocol = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authInterface.id"); value.Exists() {
+		data.AcmeAuthenticationInterfaceId = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationInterfaceId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authInterface.name"); value.Exists() {
+		data.AcmeAuthenticationInterfaceName = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationInterfaceName = types.StringNull()
+	}
+	if value := res.Get("acmeContent.sourceInterface.id"); value.Exists() {
+		data.AcmeSourceInterfaceId = types.StringValue(value.String())
+	} else {
+		data.AcmeSourceInterfaceId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.sourceInterface.name"); value.Exists() {
+		data.AcmeSourceInterfaceName = types.StringValue(value.String())
+	} else {
+		data.AcmeSourceInterfaceName = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authCertificateRef.id"); value.Exists() {
+		data.AcmeCaOnlyCertificateId = types.StringValue(value.String())
+	} else {
+		data.AcmeCaOnlyCertificateId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.autoEnrollEnabled"); value.Exists() {
+		data.AcmeAutoEnrollment = types.BoolValue(value.Bool())
+	} else {
+		data.AcmeAutoEnrollment = types.BoolNull()
+	}
+	if value := res.Get("acmeContent.autoEnrollLifePct"); value.Exists() {
+		data.AcmeAutoEnrollmentLifetime = types.Int64Value(value.Int())
+	} else {
+		data.AcmeAutoEnrollmentLifetime = types.Int64Null()
+	}
+	if value := res.Get("acmeContent.keyRegenEnabled"); value.Exists() {
+		data.AcmeAutoEnrollmentKeyRegeneration = types.BoolValue(value.Bool())
+	} else {
+		data.AcmeAutoEnrollmentKeyRegeneration = types.BoolNull()
+	}
 	if value := res.Get("certificateParameters.includeFQDN"); value.Exists() {
 		data.CertificateIncludeFqdn = types.StringValue(value.String())
 	} else {
@@ -350,6 +444,11 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.CertificateCustomFqdn = types.StringValue(value.String())
 	} else {
 		data.CertificateCustomFqdn = types.StringNull()
+	}
+	if value := res.Get("certificateParameters.altFQDN"); value.Exists() {
+		data.CertificateAlternateFqdn = types.StringValue(value.String())
+	} else {
+		data.CertificateAlternateFqdn = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.includeDeviceIp"); value.Exists() {
 		data.CertificateIncludeDeviceIp = types.StringValue(value.String())
@@ -422,9 +521,9 @@ func (data *CertificateEnrollment) fromBody(ctx context.Context, res gjson.Resul
 		data.CrlUseDistributionPointFromTheCertificate = types.BoolNull()
 	}
 	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() {
-		data.CrlStaticUrlsList = helpers.GetStringList(value.Array())
+		data.CrlStaticUrls = helpers.GetStringList(value.Array())
 	} else {
-		data.CrlStaticUrlsList = types.ListNull(types.StringType)
+		data.CrlStaticUrls = types.ListNull(types.StringType)
 	}
 	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl"); value.Exists() {
 		data.OcspUrl = types.StringValue(value.String())
@@ -552,6 +651,56 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Pkcs12Certificate = types.StringNull()
 	}
+	if value := res.Get("acmeContent.enrollmentUrl"); value.Exists() && !data.AcmeEnrollmentUrl.IsNull() {
+		data.AcmeEnrollmentUrl = types.StringValue(value.String())
+	} else {
+		data.AcmeEnrollmentUrl = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authProtocol"); value.Exists() && !data.AcmeAuthenticationProtocol.IsNull() {
+		data.AcmeAuthenticationProtocol = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationProtocol = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authInterface.id"); value.Exists() && !data.AcmeAuthenticationInterfaceId.IsNull() {
+		data.AcmeAuthenticationInterfaceId = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationInterfaceId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authInterface.name"); value.Exists() && !data.AcmeAuthenticationInterfaceName.IsNull() {
+		data.AcmeAuthenticationInterfaceName = types.StringValue(value.String())
+	} else {
+		data.AcmeAuthenticationInterfaceName = types.StringNull()
+	}
+	if value := res.Get("acmeContent.sourceInterface.id"); value.Exists() && !data.AcmeSourceInterfaceId.IsNull() {
+		data.AcmeSourceInterfaceId = types.StringValue(value.String())
+	} else {
+		data.AcmeSourceInterfaceId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.sourceInterface.name"); value.Exists() && !data.AcmeSourceInterfaceName.IsNull() {
+		data.AcmeSourceInterfaceName = types.StringValue(value.String())
+	} else {
+		data.AcmeSourceInterfaceName = types.StringNull()
+	}
+	if value := res.Get("acmeContent.authCertificateRef.id"); value.Exists() && !data.AcmeCaOnlyCertificateId.IsNull() {
+		data.AcmeCaOnlyCertificateId = types.StringValue(value.String())
+	} else {
+		data.AcmeCaOnlyCertificateId = types.StringNull()
+	}
+	if value := res.Get("acmeContent.autoEnrollEnabled"); value.Exists() && !data.AcmeAutoEnrollment.IsNull() {
+		data.AcmeAutoEnrollment = types.BoolValue(value.Bool())
+	} else {
+		data.AcmeAutoEnrollment = types.BoolNull()
+	}
+	if value := res.Get("acmeContent.autoEnrollLifePct"); value.Exists() && !data.AcmeAutoEnrollmentLifetime.IsNull() {
+		data.AcmeAutoEnrollmentLifetime = types.Int64Value(value.Int())
+	} else {
+		data.AcmeAutoEnrollmentLifetime = types.Int64Null()
+	}
+	if value := res.Get("acmeContent.keyRegenEnabled"); value.Exists() && !data.AcmeAutoEnrollmentKeyRegeneration.IsNull() {
+		data.AcmeAutoEnrollmentKeyRegeneration = types.BoolValue(value.Bool())
+	} else {
+		data.AcmeAutoEnrollmentKeyRegeneration = types.BoolNull()
+	}
 	if value := res.Get("certificateParameters.includeFQDN"); value.Exists() && !data.CertificateIncludeFqdn.IsNull() {
 		data.CertificateIncludeFqdn = types.StringValue(value.String())
 	} else {
@@ -561,6 +710,11 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 		data.CertificateCustomFqdn = types.StringValue(value.String())
 	} else {
 		data.CertificateCustomFqdn = types.StringNull()
+	}
+	if value := res.Get("certificateParameters.altFQDN"); value.Exists() && !data.CertificateAlternateFqdn.IsNull() {
+		data.CertificateAlternateFqdn = types.StringValue(value.String())
+	} else {
+		data.CertificateAlternateFqdn = types.StringNull()
 	}
 	if value := res.Get("certificateParameters.includeDeviceIp"); value.Exists() && !data.CertificateIncludeDeviceIp.IsNull() {
 		data.CertificateIncludeDeviceIp = types.StringValue(value.String())
@@ -632,10 +786,10 @@ func (data *CertificateEnrollment) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.CrlUseDistributionPointFromTheCertificate = types.BoolNull()
 	}
-	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() && !data.CrlStaticUrlsList.IsNull() {
-		data.CrlStaticUrlsList = helpers.GetStringList(value.Array())
+	if value := res.Get("revocation.certRevocationListContent.certRevocationStaticUrlList"); value.Exists() && !data.CrlStaticUrls.IsNull() {
+		data.CrlStaticUrls = helpers.GetStringList(value.Array())
 	} else {
-		data.CrlStaticUrlsList = types.ListNull(types.StringType)
+		data.CrlStaticUrls = types.ListNull(types.StringType)
 	}
 	if value := res.Get("revocation.onlineCertificateStatusProtocolContent.onlineCertificateStatusProtocolUrl"); value.Exists() && !data.OcspUrl.IsNull() {
 		data.OcspUrl = types.StringValue(value.String())
@@ -675,12 +829,12 @@ func (data *CertificateEnrollment) fromBodyUnknowns(ctx context.Context, res gjs
 func (data CertificateEnrollment) adjustBody(ctx context.Context, req string) string {
 
 	// Enable CRL if either distribution point or static URLs are provided
-	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() || !data.CrlStaticUrlsList.IsNull() {
+	if !data.CrlUseDistributionPointFromTheCertificate.IsNull() || !data.CrlStaticUrls.IsNull() {
 		req, _ = sjson.Set(req, "revocation.certRevocationListContent.enableCertRevocationList", "true")
 	}
 
 	// If CRL static URLs are provided, enable static CRL
-	if !data.CrlStaticUrlsList.IsNull() {
+	if !data.CrlStaticUrls.IsNull() {
 		req, _ = sjson.Set(req, "revocation.certRevocationListContent.enableStaticCertRevocationList", "true")
 	}
 

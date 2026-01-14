@@ -20,6 +20,7 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"os"
+	"slices"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -30,20 +31,24 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAcc
 
 func TestAccFmcDeviceVTIInterface(t *testing.T) {
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.2"}, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
 	if os.Getenv("TF_VAR_device_id") == "" || os.Getenv("TF_VAR_interface_name") == "" {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id and TF_VAR_interface_name")
 	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vti_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_vti_interface.test", "name"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_type", "STATIC"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "logical_name", "my_vti_interface"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "description", "My VTI"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "priority", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_id", "100"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "tunnel_mode", "ipv4"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_address", "10.10.10.10"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_netmask", "24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_static_address", "10.10.10.10"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ipv4_static_netmask", "24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring_type", "PEER_IPV4"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_vti_interface.test", "ip_based_monitoring_peer_ip", "10.10.10.100"))
@@ -103,8 +108,8 @@ func testAccFmcDeviceVTIInterfaceConfig_minimum() string {
 	config += `	tunnel_source_interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	tunnel_source_interface_name = fmc_device_physical_interface.test.name` + "\n"
 	config += `	tunnel_mode = "ipv4"` + "\n"
-	config += `	ipv4_address = "10.10.10.10"` + "\n"
-	config += `	ipv4_netmask = "24"` + "\n"
+	config += `	ipv4_static_address = "10.10.10.10"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `}` + "\n"
 	return config
 }
@@ -126,8 +131,8 @@ func testAccFmcDeviceVTIInterfaceConfig_all() string {
 	config += `	tunnel_source_interface_id = fmc_device_physical_interface.test.id` + "\n"
 	config += `	tunnel_source_interface_name = fmc_device_physical_interface.test.name` + "\n"
 	config += `	tunnel_mode = "ipv4"` + "\n"
-	config += `	ipv4_address = "10.10.10.10"` + "\n"
-	config += `	ipv4_netmask = "24"` + "\n"
+	config += `	ipv4_static_address = "10.10.10.10"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
 	config += `	ip_based_monitoring = true` + "\n"
 	config += `	ip_based_monitoring_type = "PEER_IPV4"` + "\n"
 	config += `	ip_based_monitoring_peer_ip = "10.10.10.100"` + "\n"

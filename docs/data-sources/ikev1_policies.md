@@ -41,7 +41,7 @@ Read-Only:
 - `authentication_method` (String) Authentication method.
 - `description` (String) Description of the object.
 - `dh_group` (String) Diffie-Hellman group.
-- `encryption` (String) IKEv1 Encryption algorithm.
+- `encryption_algorithm` (String) IKEv1 Encryption algorithm.
 - `hash` (String) IKEv1 Hash algorithm.
 - `id` (String) Id of the IKEv1 Policy object.
 - `lifetime` (Number) Lifetime in seconds.

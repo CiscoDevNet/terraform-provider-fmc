@@ -43,6 +43,7 @@ attributes:
     type: String
     description: Standby IPv4 address. It has to be in the same subnet as primaty IP configured on the interface.
     example: 10.1.1.2
+    requires_replace: true
   - model_name: activeIPv4Mask
     tf_name: ipv4_netmask
     data_path: [ipv4Configuration]

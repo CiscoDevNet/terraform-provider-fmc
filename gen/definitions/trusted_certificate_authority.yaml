@@ -22,3 +22,4 @@ attributes:
     description: Certificate in PEM, DER, or PKCS#7 format.
     example: "-----BEGIN CERTIFICATE-----\\nMII(...)\\n-----END CERTIFICATE-----"
     requires_replace: true
+    mandatory: true

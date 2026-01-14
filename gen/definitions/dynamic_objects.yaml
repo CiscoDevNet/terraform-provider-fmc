@@ -1,9 +1,11 @@
+# Manual resource - Sequential test
 ---
 name: Dynamic Objects
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/dynamicobjects
 res_description: This resource manages Dynamic Objects through bulk operations.
 doc_category: Objects
 is_bulk: true
+skip_test_for_versions: ["7.4", "CDFMC"]
 attributes:
   - model_name: items
     type: Map

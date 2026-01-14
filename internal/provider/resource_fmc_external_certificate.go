@@ -94,7 +94,7 @@ func (r *ExternalCertificateResource) Schema(ctx context.Context, req resource.S
 			},
 			"certificate": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Certificate in PEM, DER, or PKCS#7 format.").String,
-				Optional:            true,
+				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},

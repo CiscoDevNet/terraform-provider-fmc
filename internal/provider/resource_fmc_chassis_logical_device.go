@@ -239,7 +239,7 @@ func (r *ChassisLogicalDeviceResource) Schema(ctx context.Context, req resource.
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface.").String,
-							Optional:            true,
+							Required:            true,
 						},
 					},
 				},
@@ -536,13 +536,14 @@ func (r *ChassisLogicalDeviceResource) Delete(ctx context.Context, req resource.
 	// Try to unregister the device first
 	if state.DeviceId.ValueString() != "" {
 		for range 5 {
-			_, err := r.client.Delete("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.DeviceId.ValueString()), reqMods...)
+			res, err := r.client.Delete("/api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/"+url.QueryEscape(state.DeviceId.ValueString()), reqMods...)
 			if err != nil {
-				if strings.Contains(strings.ToLower(err.Error()), "error retrieving device from database") {
+				if strings.Contains(strings.ToLower(res.Raw), "error retrieving device from database") {
 					// Device is not registered, break the loop
 					break
 				}
-				if strings.Contains(strings.ToLower(err.Error()), "deployment is in progress") {
+
+				if strings.Contains(strings.ToLower(res.Raw), "deployment is in progress") {
 					// Deployment is in progress, wait and try again
 					tflog.Debug(ctx, fmt.Sprintf("%s: Device is still being deployed, waiting...", state.Id.ValueString()))
 					diags := FMCWaitForDeploymentToFinish(ctx, r.client, []string{state.DeviceId.ValueString()}, reqMods)

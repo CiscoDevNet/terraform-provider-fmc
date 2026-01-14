@@ -245,7 +245,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 							MarkdownDescription: helpers.NewAttributeDescription("Match routes based on the advertising source address of the route using IPv6 Prefix Lists.").String,
 							Optional:            true,
 						},
-						"match_bgp_as_path_lists": schema.ListNestedAttribute{
+						"match_bgp_as_paths": schema.ListNestedAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Match a BGP Autonomous System (AS) path with the specified path access list.").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
@@ -293,12 +293,12 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								},
 							},
 						},
-						"match_metric_route_values": schema.ListAttribute{
+						"match_route_metrics": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("List of Metric values to match.").String,
 							ElementType:         types.Int64Type,
 							Optional:            true,
 						},
-						"match_tag_values": schema.ListAttribute{
+						"match_tags": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("List of Tag values to match.").String,
 							ElementType:         types.Int64Type,
 							Optional:            true,
@@ -424,7 +424,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								stringvalidator.OneOf("USE_PEER_ADDRESS", "SPECIFIC_IP"),
 							},
 						},
-						"set_bgp_ipv4_next_hop_specific_ip": schema.ListAttribute{
+						"set_bgp_ipv4_next_hop_specific_ips": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv4 address.").String,
 							ElementType:         types.StringType,
 							Optional:            true,
@@ -440,7 +440,7 @@ func (r *RouteMapResource) Schema(ctx context.Context, req resource.SchemaReques
 								stringvalidator.OneOf("USE_PEER_ADDRESS", "SPECIFIC_IP"),
 							},
 						},
-						"set_bgp_ipv6_next_hop_specific_ip": schema.ListAttribute{
+						"set_bgp_ipv6_next_hop_specific_ips": schema.ListAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Set the next hop IPv6 address.").String,
 							ElementType:         types.StringType,
 							Optional:            true,

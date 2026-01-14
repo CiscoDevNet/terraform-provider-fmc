@@ -31,7 +31,7 @@ resource "fmc_route_map" "example" {
       match_ipv6_address_extended_access_list_id      = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       match_ipv6_next_hop_extended_access_list_id     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
       match_ipv6_route_source_extended_access_list_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-      match_bgp_as_path_lists = [
+      match_bgp_as_paths = [
         {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
@@ -46,8 +46,8 @@ resource "fmc_route_map" "example" {
           id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
         }
       ]
-      match_metric_route_values                              = [100]
-      match_tag_values                                       = [110]
+      match_route_metrics                                    = [100]
+      match_tags                                             = [110]
       match_route_type_external_1                            = true
       match_route_type_external_2                            = true
       match_route_type_internal                              = true

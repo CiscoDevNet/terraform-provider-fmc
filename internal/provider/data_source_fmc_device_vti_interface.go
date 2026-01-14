@@ -59,7 +59,8 @@ func (d *DeviceVTIInterfaceDataSource) Metadata(_ context.Context, req datasourc
 func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device VTI Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device VTI Interface.").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -128,11 +129,11 @@ func (d *DeviceVTIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "VTI interface IPSec mode",
 				Computed:            true,
 			},
-			"ipv4_address": schema.StringAttribute{
+			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: "IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},
-			"ipv4_netmask": schema.StringAttribute{
+			"ipv4_static_netmask": schema.StringAttribute{
 				MarkdownDescription: "Netmask (width) for IPv4 address for local VTI tunnel end.",
 				Computed:            true,
 			},

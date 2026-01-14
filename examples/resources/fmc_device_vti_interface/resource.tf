@@ -10,8 +10,8 @@ resource "fmc_device_vti_interface" "example" {
   tunnel_source_interface_id        = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   tunnel_source_interface_name      = "GigabitEthernet0/1"
   tunnel_mode                       = "ipv4"
-  ipv4_address                      = "10.10.10.10"
-  ipv4_netmask                      = "24"
+  ipv4_static_address               = "10.10.10.10"
+  ipv4_static_netmask               = "24"
   ip_based_monitoring               = true
   ip_based_monitoring_type          = "PEER_IPV4"
   ip_based_monitoring_peer_ip       = "10.10.10.100"

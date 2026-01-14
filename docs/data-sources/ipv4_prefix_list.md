@@ -38,6 +38,6 @@ data "fmc_ipv4_prefix_list" "example" {
 Read-Only:
 
 - `action` (String) Action to take.
-- `ip_address` (String) IPv4 address with prefix length.
 - `max_prefix_length` (Number) Maximum prefix length.
 - `min_prefix_length` (Number) Minimum prefix length.
+- `prefix` (String) IPv4 address with prefix length.

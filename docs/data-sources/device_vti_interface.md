@@ -4,11 +4,13 @@ page_title: "fmc_device_vti_interface Data Source - terraform-provider-fmc"
 subcategory: "Devices"
 description: |-
   This data source reads the Device VTI Interface.
+  This resource is deprecated and will be removed in a future release. Please use fmc_device_virtual_tunnel_interface resource instead.
 ---
 
 # fmc_device_vti_interface (Data Source)
 
 This data source reads the Device VTI Interface.
+This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.
 
 ## Example Usage
 
@@ -42,8 +44,8 @@ data "fmc_device_vti_interface" "example" {
 - `ip_based_monitoring` (Boolean) Enable IP based Monitoring.
 - `ip_based_monitoring_peer_ip` (String) IP address to monitor.
 - `ip_based_monitoring_type` (String) Peer IP address version.
-- `ipv4_address` (String) IPv4 address for local VTI tunnel end.
-- `ipv4_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
+- `ipv4_static_address` (String) IPv4 address for local VTI tunnel end.
+- `ipv4_static_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
 - `ipv6_address` (String) IPv6 address for local VTI tunnel end.
 - `ipv6_prefix` (String) Prefix length for IPv6 address for local VTI tunnel end.
 - `logical_name` (String) Logical name of the VTI interface.

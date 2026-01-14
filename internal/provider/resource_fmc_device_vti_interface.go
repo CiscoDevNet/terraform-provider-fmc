@@ -66,7 +66,8 @@ func (r *DeviceVTIInterfaceResource) Metadata(ctx context.Context, req resource.
 func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This device manages Device Virtual Tunnel Interface (VTI) configuration.\n The following applies:\n - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n").AddAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
+		DeprecationMessage:  helpers.NewAttributeDescription("This resource is deprecated and will be removed in a future release. Please use `fmc_device_virtual_tunnel_interface` resource instead.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -168,11 +169,11 @@ func (r *DeviceVTIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 					stringvalidator.OneOf("ipv4", "ipv6"),
 				},
 			},
-			"ipv4_address": schema.StringAttribute{
+			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},
-			"ipv4_netmask": schema.StringAttribute{
+			"ipv4_static_netmask": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for IPv4 address for local VTI tunnel end.").String,
 				Optional:            true,
 			},

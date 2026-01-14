@@ -25,8 +25,7 @@ attributes:
   - model_name: chassisHostName
     type: String
     tf_name: host
-    description: Hostname or IP address of the chassis.
-    mandatory: true
+    description: Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.
     example: 10.0.0.1
     test_value: var.chassis_addr
     requires_replace: true

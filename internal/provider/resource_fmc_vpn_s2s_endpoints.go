@@ -148,7 +148,7 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							MarkdownDescription: helpers.NewAttributeDescription("Allow incoming IKEv2 routes.").String,
 							Optional:            true,
 						},
-						"send_vti_ip_to_peer": schema.BoolAttribute{
+						"send_virtual_tunnel_interface_ip_to_peer": schema.BoolAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Send Virtual Tunnel Interface IP to the peers.").String,
 							Optional:            true,
 						},
@@ -164,8 +164,8 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 								},
 							},
 						},
-						"protected_networks_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the ACL that defines protected networks.").String,
+						"protected_networks_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Extended Access List that defines protected networks.").String,
 							Optional:            true,
 						},
 						"nat_traversal": schema.BoolAttribute{
@@ -195,12 +195,12 @@ func (r *VPNS2SEndpointsResource) Schema(ctx context.Context, req resource.Schem
 							MarkdownDescription: helpers.NewAttributeDescription("Value of the local identity (applicable only for types KEYID and EMAILID).").String,
 							Optional:            true,
 						},
-						"vpn_filter_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the VPN filter ACL.").String,
+						"vpn_filter_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the VPN filter Extended Access List.").String,
 							Optional:            true,
 						},
-						"override_remote_vpn_filter_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the ACL to override VPN filter on the Hub.").String,
+						"override_remote_vpn_filter_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Extended Access List to override VPN filter on the Hub.").String,
 							Optional:            true,
 						},
 						"backup_interface_id": schema.StringAttribute{

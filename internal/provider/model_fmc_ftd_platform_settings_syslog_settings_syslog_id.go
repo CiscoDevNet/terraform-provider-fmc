@@ -153,11 +153,3 @@ func (data *FTDPlatformSettingsSyslogSettingsSyslogID) fromBodyUnknowns(ctx cont
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-func (data FTDPlatformSettingsSyslogSettingsSyslogID) adjustBody(ctx context.Context, req string) string {
-	// FMCBUG CSCwr26361 FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted
-	if !data.Enabled.IsNull() {
-		req, _ = sjson.Set(req, "enabled", !data.Enabled.ValueBool())
-	}
-	return req
-}

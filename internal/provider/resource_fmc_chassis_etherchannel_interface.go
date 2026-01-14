@@ -137,7 +137,7 @@ func (r *ChassisEtherChannelInterfaceResource) Schema(ctx context.Context, req r
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
-							Optional:            true,
+							Required:            true,
 						},
 						"name": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface").String,

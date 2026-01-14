@@ -35,8 +35,8 @@ func TestAccDataSourceFmcRouteMap(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "overridable", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.action", "PERMIT"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_interface_names.0", "outside"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_metric_route_values.0", "100"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_tag_values.0", "110"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_route_metrics.0", "100"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_tags.0", "110"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_route_type_external_1", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_route_type_external_2", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_route_map.test", "entries.0.match_route_type_internal", "true"))
@@ -161,7 +161,7 @@ func testAccDataSourceFmcRouteMapConfig() string {
 	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
-	config += `		match_bgp_as_path_lists = [{` + "\n"
+	config += `		match_bgp_as_paths = [{` + "\n"
 	config += `			id = fmc_as_path.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_bgp_community_lists = [{` + "\n"
@@ -170,8 +170,8 @@ func testAccDataSourceFmcRouteMapConfig() string {
 	config += `		match_bgp_policy_lists = [{` + "\n"
 	config += `			id = fmc_policy_list.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_metric_route_values = [100]` + "\n"
-	config += `		match_tag_values = [110]` + "\n"
+	config += `		match_route_metrics = [100]` + "\n"
+	config += `		match_tags = [110]` + "\n"
 	config += `		match_route_type_external_1 = true` + "\n"
 	config += `		match_route_type_external_2 = true` + "\n"
 	config += `		match_route_type_internal = true` + "\n"
@@ -230,7 +230,7 @@ func testAccNamedDataSourceFmcRouteMapConfig() string {
 	config += `		match_ipv6_address_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_ipv6_next_hop_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
 	config += `		match_ipv6_route_source_extended_access_list_id = fmc_extended_access_list.test.id` + "\n"
-	config += `		match_bgp_as_path_lists = [{` + "\n"
+	config += `		match_bgp_as_paths = [{` + "\n"
 	config += `			id = fmc_as_path.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		match_bgp_community_lists = [{` + "\n"
@@ -239,8 +239,8 @@ func testAccNamedDataSourceFmcRouteMapConfig() string {
 	config += `		match_bgp_policy_lists = [{` + "\n"
 	config += `			id = fmc_policy_list.test.id` + "\n"
 	config += `		}]` + "\n"
-	config += `		match_metric_route_values = [100]` + "\n"
-	config += `		match_tag_values = [110]` + "\n"
+	config += `		match_route_metrics = [100]` + "\n"
+	config += `		match_tags = [110]` + "\n"
 	config += `		match_route_type_external_1 = true` + "\n"
 	config += `		match_route_type_external_2 = true` + "\n"
 	config += `		match_route_type_internal = true` + "\n"

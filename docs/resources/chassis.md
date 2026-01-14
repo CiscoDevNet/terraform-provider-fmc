@@ -25,7 +25,6 @@ resource "fmc_chassis" "example" {
 
 ### Required
 
-- `host` (String) Hostname or IP address of the chassis.
 - `name` (String) Chassis name to be used in FMC.
 - `registration_key` (String) Registration Key identical to the one previously configured on the chassis.
 
@@ -33,6 +32,7 @@ resource "fmc_chassis" "example" {
 
 - `device_group_id` (String) Id of the device group the chassis should belong to.
 - `domain` (String) Name of the FMC domain
+- `host` (String) Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.
 - `nat_id` (String) (used for device registration behind NAT) If the device to be registered and the Firepower Management Center are separated by network address translation (NAT), set a unique string identifier.
 
 ### Read-Only

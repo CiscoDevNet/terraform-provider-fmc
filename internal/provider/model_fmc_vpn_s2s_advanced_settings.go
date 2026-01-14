@@ -50,10 +50,12 @@ type VPNS2SAdvancedSettings struct {
 	Ikev2MaximumNumberOfSasAllowed                             types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed"`
 	IpsecFragmentationBeforeEncryption                         types.Bool   `tfsdk:"ipsec_fragmentation_before_encryption"`
 	IpsecPathMaximumTransmissionUnitAgingResetInterval         types.Int64  `tfsdk:"ipsec_path_maximum_transmission_unit_aging_reset_interval"`
+	SpokeToSpokeConnectivityThroughHub                         types.Bool   `tfsdk:"spoke_to_spoke_connectivity_through_hub"`
 	NatKeepaliveMessageTraversal                               types.Bool   `tfsdk:"nat_keepalive_message_traversal"`
 	NatKeepaliveMessageTraversalInterval                       types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
 	VpnIdleTimeout                                             types.Bool   `tfsdk:"vpn_idle_timeout"`
 	VpnIdleTimeoutValue                                        types.Int64  `tfsdk:"vpn_idle_timeout_value"`
+	SgtPropagationOverVirtualTunnelInterface                   types.Bool   `tfsdk:"sgt_propagation_over_virtual_tunnel_interface"`
 	BypassAccessControlPolicyForDecryptedTraffic               types.Bool   `tfsdk:"bypass_access_control_policy_for_decrypted_traffic"`
 	CertUseCertificateMapConfiguredInEndpointToDetermineTunnel types.Bool   `tfsdk:"cert_use_certificate_map_configured_in_endpoint_to_determine_tunnel"`
 	CertUseOuToDetermineTunnel                                 types.Bool   `tfsdk:"cert_use_ou_to_determine_tunnel"`
@@ -121,6 +123,9 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	if !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		body, _ = sjson.Set(body, "advancedIpsecSetting.maximumTransmissionUnitAging.resetIntervalMinutes", data.IpsecPathMaximumTransmissionUnitAgingResetInterval.ValueInt64())
 	}
+	if !data.SpokeToSpokeConnectivityThroughHub.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.enableSpokeToSpokeConnectivityThroughHub", data.SpokeToSpokeConnectivityThroughHub.ValueBool())
+	}
 	if !data.NatKeepaliveMessageTraversal.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.natKeepaliveMessageTraversal.enabled", data.NatKeepaliveMessageTraversal.ValueBool())
 	}
@@ -132,6 +137,9 @@ func (data VPNS2SAdvancedSettings) toBody(ctx context.Context, state VPNS2SAdvan
 	}
 	if !data.VpnIdleTimeoutValue.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.vpnIdleTimeout.timeoutMinutes", data.VpnIdleTimeoutValue.ValueInt64())
+	}
+	if !data.SgtPropagationOverVirtualTunnelInterface.IsNull() {
+		body, _ = sjson.Set(body, "advancedTunnelSetting.enableSGTPropagationOverVTI", data.SgtPropagationOverVirtualTunnelInterface.ValueBool())
 	}
 	if !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
 		body, _ = sjson.Set(body, "advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
@@ -226,6 +234,11 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 	} else {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Null()
 	}
+	if value := res.Get("advancedTunnelSetting.enableSpokeToSpokeConnectivityThroughHub"); value.Exists() {
+		data.SpokeToSpokeConnectivityThroughHub = types.BoolValue(value.Bool())
+	} else {
+		data.SpokeToSpokeConnectivityThroughHub = types.BoolNull()
+	}
 	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.enabled"); value.Exists() {
 		data.NatKeepaliveMessageTraversal = types.BoolValue(value.Bool())
 	} else {
@@ -245,6 +258,11 @@ func (data *VPNS2SAdvancedSettings) fromBody(ctx context.Context, res gjson.Resu
 		data.VpnIdleTimeoutValue = types.Int64Value(value.Int())
 	} else {
 		data.VpnIdleTimeoutValue = types.Int64Null()
+	}
+	if value := res.Get("advancedTunnelSetting.enableSGTPropagationOverVTI"); value.Exists() {
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolValue(value.Bool())
+	} else {
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
@@ -352,6 +370,11 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Null()
 	}
+	if value := res.Get("advancedTunnelSetting.enableSpokeToSpokeConnectivityThroughHub"); value.Exists() && !data.SpokeToSpokeConnectivityThroughHub.IsNull() {
+		data.SpokeToSpokeConnectivityThroughHub = types.BoolValue(value.Bool())
+	} else {
+		data.SpokeToSpokeConnectivityThroughHub = types.BoolNull()
+	}
 	if value := res.Get("advancedTunnelSetting.natKeepaliveMessageTraversal.enabled"); value.Exists() && !data.NatKeepaliveMessageTraversal.IsNull() {
 		data.NatKeepaliveMessageTraversal = types.BoolValue(value.Bool())
 	} else {
@@ -371,6 +394,11 @@ func (data *VPNS2SAdvancedSettings) fromBodyPartial(ctx context.Context, res gjs
 		data.VpnIdleTimeoutValue = types.Int64Value(value.Int())
 	} else {
 		data.VpnIdleTimeoutValue = types.Int64Null()
+	}
+	if value := res.Get("advancedTunnelSetting.enableSGTPropagationOverVTI"); value.Exists() && !data.SgtPropagationOverVirtualTunnelInterface.IsNull() {
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolValue(value.Bool())
+	} else {
+		data.SgtPropagationOverVirtualTunnelInterface = types.BoolNull()
 	}
 	if value := res.Get("advancedTunnelSetting.bypassAccessControlTrafficForDecryptedTraffic"); value.Exists() && !data.BypassAccessControlPolicyForDecryptedTraffic.IsNull() {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(value.Bool())
@@ -416,22 +444,6 @@ func (data *VPNS2SAdvancedSettings) fromBodyUnknowns(ctx context.Context, res gj
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-// Section below is generated&owned by "gen/generator.go". //template:begin Clone
-
-// End of section. //template:end Clone
-
-// Section below is generated&owned by "gen/generator.go". //template:begin toBodyNonBulk
-
-// End of section. //template:end toBodyNonBulk
-
-// Section below is generated&owned by "gen/generator.go". //template:begin findObjectsToBeReplaced
-
-// End of section. //template:end findObjectsToBeReplaced
-
-// Section below is generated&owned by "gen/generator.go". //template:begin clearItemIds
-
-// End of section. //template:end clearItemIds
 
 // Section below is generated&owned by "gen/generator.go". //template:begin toBodyPutDelete
 

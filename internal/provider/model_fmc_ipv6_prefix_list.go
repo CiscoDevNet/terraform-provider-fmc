@@ -42,7 +42,7 @@ type IPv6PrefixList struct {
 
 type IPv6PrefixListEntries struct {
 	Action          types.String `tfsdk:"action"`
-	IpAddress       types.String `tfsdk:"ip_address"`
+	Prefix          types.String `tfsdk:"prefix"`
 	MinPrefixLength types.Int64  `tfsdk:"min_prefix_length"`
 	MaxPrefixLength types.Int64  `tfsdk:"max_prefix_length"`
 }
@@ -78,8 +78,8 @@ func (data IPv6PrefixList) toBody(ctx context.Context, state IPv6PrefixList) str
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
-			if !item.IpAddress.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "ipAddress", item.IpAddress.ValueString())
+			if !item.Prefix.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "ipAddress", item.Prefix.ValueString())
 			}
 			if !item.MinPrefixLength.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "minPrefixLenth", item.MinPrefixLength.ValueInt64())
@@ -119,9 +119,9 @@ func (data *IPv6PrefixList) fromBody(ctx context.Context, res gjson.Result) {
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("ipAddress"); value.Exists() {
-				data.IpAddress = types.StringValue(value.String())
+				data.Prefix = types.StringValue(value.String())
 			} else {
-				data.IpAddress = types.StringNull()
+				data.Prefix = types.StringNull()
 			}
 			if value := res.Get("minPrefixLenth"); value.Exists() {
 				data.MinPrefixLength = types.Int64Value(value.Int())
@@ -178,10 +178,10 @@ func (data *IPv6PrefixList) fromBodyPartial(ctx context.Context, res gjson.Resul
 		} else {
 			data.Action = types.StringNull()
 		}
-		if value := res.Get("ipAddress"); value.Exists() && !data.IpAddress.IsNull() {
-			data.IpAddress = types.StringValue(value.String())
+		if value := res.Get("ipAddress"); value.Exists() && !data.Prefix.IsNull() {
+			data.Prefix = types.StringValue(value.String())
 		} else {
-			data.IpAddress = types.StringNull()
+			data.Prefix = types.StringNull()
 		}
 		if value := res.Get("minPrefixLenth"); value.Exists() && !data.MinPrefixLength.IsNull() {
 			data.MinPrefixLength = types.Int64Value(value.Int())

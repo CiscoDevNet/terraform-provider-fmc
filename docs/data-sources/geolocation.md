@@ -38,7 +38,7 @@ data "fmc_geolocation" "example" {
 
 Read-Only:
 
-- `id` (Number) Id of the managed continent.
+- `id` (Number) Id of the Continent.
 
 
 <a id="nestedatt--countries"></a>
@@ -46,4 +46,4 @@ Read-Only:
 
 Read-Only:
 
-- `id` (Number) Id of the managed country.
+- `id` (Number) Id of the Country.

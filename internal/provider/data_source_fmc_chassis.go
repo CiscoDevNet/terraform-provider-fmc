@@ -81,7 +81,7 @@ func (d *ChassisDataSource) Schema(ctx context.Context, req datasource.SchemaReq
 				Computed:            true,
 			},
 			"host": schema.StringAttribute{
-				MarkdownDescription: "Hostname or IP address of the chassis.",
+				MarkdownDescription: "Hostname or IP address of the chassis. Either `host` or `nat_id` must be provided.",
 				Computed:            true,
 			},
 			"registration_key": schema.StringAttribute{

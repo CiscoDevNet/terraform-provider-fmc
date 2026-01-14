@@ -45,7 +45,7 @@ type IKEv1PoliciesItems struct {
 	Description          types.String `tfsdk:"description"`
 	Type                 types.String `tfsdk:"type"`
 	Priority             types.Int64  `tfsdk:"priority"`
-	Encryption           types.String `tfsdk:"encryption"`
+	EncryptionAlgorithm  types.String `tfsdk:"encryption_algorithm"`
 	Hash                 types.String `tfsdk:"hash"`
 	DhGroup              types.String `tfsdk:"dh_group"`
 	Lifetime             types.Int64  `tfsdk:"lifetime"`
@@ -88,8 +88,8 @@ func (data IKEv1Policies) toBody(ctx context.Context, state IKEv1Policies) strin
 			if !item.Priority.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "priority", item.Priority.ValueInt64())
 			}
-			if !item.Encryption.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "encryption", item.Encryption.ValueString())
+			if !item.EncryptionAlgorithm.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "encryption", item.EncryptionAlgorithm.ValueString())
 			}
 			if !item.Hash.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "hash", item.Hash.ValueString())
@@ -155,9 +155,9 @@ func (data *IKEv1Policies) fromBody(ctx context.Context, res gjson.Result) {
 			data.Priority = types.Int64Null()
 		}
 		if value := res.Get("encryption"); value.Exists() {
-			data.Encryption = types.StringValue(value.String())
+			data.EncryptionAlgorithm = types.StringValue(value.String())
 		} else {
-			data.Encryption = types.StringNull()
+			data.EncryptionAlgorithm = types.StringNull()
 		}
 		if value := res.Get("hash"); value.Exists() {
 			data.Hash = types.StringValue(value.String())
@@ -227,10 +227,10 @@ func (data *IKEv1Policies) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.Priority = types.Int64Null()
 		}
-		if value := res.Get("encryption"); value.Exists() && !data.Encryption.IsNull() {
-			data.Encryption = types.StringValue(value.String())
+		if value := res.Get("encryption"); value.Exists() && !data.EncryptionAlgorithm.IsNull() {
+			data.EncryptionAlgorithm = types.StringValue(value.String())
 		} else {
-			data.Encryption = types.StringNull()
+			data.EncryptionAlgorithm = types.StringNull()
 		}
 		if value := res.Get("hash"); value.Exists() && !data.Hash.IsNull() {
 			data.Hash = types.StringValue(value.String())

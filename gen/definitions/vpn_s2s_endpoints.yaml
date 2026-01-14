@@ -95,7 +95,7 @@ attributes:
         example: "false"
         exclude_test: true
       - model_name: sendTunnelInterfaceIpToPeer
-        tf_name: send_vti_ip_to_peer
+        tf_name: send_virtual_tunnel_interface_ip_to_peer
         type: Bool
         description: Send Virtual Tunnel Interface IP to the peers.
         example: "false"
@@ -116,9 +116,9 @@ attributes:
             mandatory: true
       - model_name: id
         data_path: [protectedNetworks, acl]
-        tf_name: protected_networks_acl_id
+        tf_name: protected_networks_access_list_id
         type: String
-        description: Id of the ACL that defines protected networks.
+        description: Id of the Extended Access List that defines protected networks.
         exclude_example: true
         exclude_test: true
       - model_name: enableNatTraversal
@@ -165,9 +165,9 @@ attributes:
         example: me@cisco.com
       - model_name: id
         data_path: [vpnFilterAcl]
-        tf_name: vpn_filter_acl_id
+        tf_name: vpn_filter_access_list_id
         type: String
-        description: Id of the VPN filter ACL.
+        description: Id of the VPN filter Extended Access List.
         exclude_example: true
         exclude_test: true
       # - model_name: overrideRemoteVpnFilter
@@ -177,9 +177,9 @@ attributes:
       #  example: "false"
       - model_name: id
         data_path: [remoteVpnFilterAclObject]
-        tf_name: override_remote_vpn_filter_acl_id
+        tf_name: override_remote_vpn_filter_access_list_id
         type: String
-        description: Id of the ACL to override VPN filter on the Hub.
+        description: Id of the Extended Access List to override VPN filter on the Hub.
         exclude_example: true
         exclude_test: true
       # Backup Interface

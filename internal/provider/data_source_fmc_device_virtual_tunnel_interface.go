@@ -1,0 +1,258 @@
+// Copyright © 2023 Cisco Systems, Inc. and its affiliates.
+// All rights reserved.
+//
+// Licensed under the Mozilla Public License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://mozilla.org/MPL/2.0/
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: MPL-2.0
+
+package provider
+
+// Section below is generated&owned by "gen/generator.go". //template:begin imports
+import (
+	"context"
+	"fmt"
+	"net/url"
+
+	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
+	"github.com/hashicorp/terraform-plugin-framework/datasource"
+	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/types"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
+)
+
+// End of section. //template:end imports
+
+// Section below is generated&owned by "gen/generator.go". //template:begin model
+
+// Ensure the implementation satisfies the expected interfaces.
+var (
+	_ datasource.DataSource              = &DeviceVirtualTunnelInterfaceDataSource{}
+	_ datasource.DataSourceWithConfigure = &DeviceVirtualTunnelInterfaceDataSource{}
+)
+
+func NewDeviceVirtualTunnelInterfaceDataSource() datasource.DataSource {
+	return &DeviceVirtualTunnelInterfaceDataSource{}
+}
+
+type DeviceVirtualTunnelInterfaceDataSource struct {
+	client *fmc.Client
+}
+
+func (d *DeviceVirtualTunnelInterfaceDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_virtual_tunnel_interface"
+}
+
+func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+	resp.Schema = schema.Schema{
+		// This description is used by the documentation generator and the language server.
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Virtual Tunnel Interface.").String,
+
+		Attributes: map[string]schema.Attribute{
+			"id": schema.StringAttribute{
+				MarkdownDescription: "Id of the object",
+				Optional:            true,
+				Computed:            true,
+			},
+			"domain": schema.StringAttribute{
+				MarkdownDescription: "Name of the FMC domain",
+				Optional:            true,
+			},
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the parent device.",
+				Required:            true,
+			},
+			"type": schema.StringAttribute{
+				MarkdownDescription: "Type of the object; this value is always 'VTIInterface'.",
+				Computed:            true,
+			},
+			"name": schema.StringAttribute{
+				MarkdownDescription: "Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).",
+				Optional:            true,
+				Computed:            true,
+			},
+			"tunnel_type": schema.StringAttribute{
+				MarkdownDescription: "Type of the VTI interface.",
+				Computed:            true,
+			},
+			"logical_name": schema.StringAttribute{
+				MarkdownDescription: "Logical name of the VTI interface.",
+				Computed:            true,
+			},
+			"enabled": schema.BoolAttribute{
+				MarkdownDescription: "Enable the interface.",
+				Computed:            true,
+			},
+			"description": schema.StringAttribute{
+				MarkdownDescription: "Description of the object.",
+				Computed:            true,
+			},
+			"security_zone_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the assigned security zone.",
+				Computed:            true,
+			},
+			"priority": schema.Int64Attribute{
+				MarkdownDescription: "Priority to load balance the traffic across multiple VTIs.",
+				Computed:            true,
+			},
+			"tunnel_id": schema.Int64Attribute{
+				MarkdownDescription: "Tunnel ID (for Static) or Template ID (for Dynamic).",
+				Computed:            true,
+			},
+			"tunnel_source_interface_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the interface that is used as the tunnel source.",
+				Computed:            true,
+			},
+			"tunnel_source_interface_name": schema.StringAttribute{
+				MarkdownDescription: "Name of the interface that is used as the tunnel source.",
+				Computed:            true,
+			},
+			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
+				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.",
+				Computed:            true,
+			},
+			"tunnel_mode": schema.StringAttribute{
+				MarkdownDescription: "VTI interface IPSec mode",
+				Computed:            true,
+			},
+			"ipv4_static_address": schema.StringAttribute{
+				MarkdownDescription: "IPv4 address for local VTI tunnel end.",
+				Computed:            true,
+			},
+			"ipv4_static_netmask": schema.StringAttribute{
+				MarkdownDescription: "Netmask (width) for IPv4 address for local VTI tunnel end.",
+				Computed:            true,
+			},
+			"ipv6_address": schema.StringAttribute{
+				MarkdownDescription: "IPv6 address for local VTI tunnel end.",
+				Computed:            true,
+			},
+			"ipv6_prefix": schema.StringAttribute{
+				MarkdownDescription: "Prefix length for IPv6 address for local VTI tunnel end.",
+				Computed:            true,
+			},
+			"borrow_ip_interface_id": schema.StringAttribute{
+				MarkdownDescription: "Id of the interface to borrow IP address from (IP Unnumbered).",
+				Computed:            true,
+			},
+			"borrow_ip_interface_name": schema.StringAttribute{
+				MarkdownDescription: "Name of the interface to borrow IP address from (IP Unnumbered).",
+				Computed:            true,
+			},
+			"ip_based_monitoring": schema.BoolAttribute{
+				MarkdownDescription: "Enable IP based Monitoring.",
+				Computed:            true,
+			},
+			"ip_based_monitoring_type": schema.StringAttribute{
+				MarkdownDescription: "Peer IP address version.",
+				Computed:            true,
+			},
+			"ip_based_monitoring_peer_ip": schema.StringAttribute{
+				MarkdownDescription: "IP address to monitor.",
+				Computed:            true,
+			},
+			"http_based_application_monitoring": schema.BoolAttribute{
+				MarkdownDescription: "Enable HTTP based Application Monitoring.",
+				Computed:            true,
+			},
+		},
+	}
+}
+func (d *DeviceVirtualTunnelInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+	return []datasource.ConfigValidator{
+		datasourcevalidator.ExactlyOneOf(
+			path.MatchRoot("id"),
+			path.MatchRoot("name"),
+		),
+	}
+}
+
+func (d *DeviceVirtualTunnelInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+	if req.ProviderData == nil {
+		return
+	}
+
+	d.client = req.ProviderData.(*FmcProviderData).Client
+}
+
+// End of section. //template:end model
+
+// Section below is generated&owned by "gen/generator.go". //template:begin read
+
+func (d *DeviceVirtualTunnelInterfaceDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config DeviceVirtualTunnelInterface
+
+	// Read config
+	diags := req.Config.Get(ctx, &config)
+	resp.Diagnostics.Append(diags...)
+	if resp.Diagnostics.HasError() {
+		return
+	}
+
+	// Set request domain if provided
+	reqMods := [](func(*fmc.Req)){}
+	if !config.Domain.IsNull() && config.Domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(config.Domain.ValueString()))
+	}
+
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+	if config.Id.IsNull() && !config.Name.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.Name.ValueString() == v.Get("name").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
+			return
+		}
+	}
+	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
+	res, err := d.client.Get(urlPath, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+		return
+	}
+
+	config.fromBody(ctx, res)
+
+	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
+
+	diags = resp.State.Set(ctx, &config)
+	resp.Diagnostics.Append(diags...)
+}
+
+// End of section. //template:end read

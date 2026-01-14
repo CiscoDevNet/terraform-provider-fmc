@@ -126,6 +126,10 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.",
 				Computed:            true,
 			},
+			"spoke_to_spoke_connectivity_through_hub": schema.BoolAttribute{
+				MarkdownDescription: "Enable spoke-to-spoke connectivity through hub.",
+				Computed:            true,
+			},
 			"nat_keepalive_message_traversal": schema.BoolAttribute{
 				MarkdownDescription: "Enable NAT keepalive message traversal.",
 				Computed:            true,
@@ -140,6 +144,10 @@ func (d *VPNS2SAdvancedSettingsDataSource) Schema(ctx context.Context, req datas
 			},
 			"vpn_idle_timeout_value": schema.Int64Attribute{
 				MarkdownDescription: "VPN idle timeout in minutes.",
+				Computed:            true,
+			},
+			"sgt_propagation_over_virtual_tunnel_interface": schema.BoolAttribute{
+				MarkdownDescription: "Enable SGT propagation over Virtual Tunnel Interface (VTI).",
 				Computed:            true,
 			},
 			"bypass_access_control_policy_for_decrypted_traffic": schema.BoolAttribute{

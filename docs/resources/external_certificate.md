@@ -24,11 +24,11 @@ resource "fmc_external_certificate" "example" {
 
 ### Required
 
+- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `name` (String) Name of the External Certificate object.
 
 ### Optional
 
-- `certificate` (String) Certificate in PEM, DER, or PKCS#7 format.
 - `domain` (String) Name of the FMC domain
 
 ### Read-Only

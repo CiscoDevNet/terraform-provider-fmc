@@ -1,0 +1,60 @@
+---
+name: IKEv1 Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ikev1policies
+doc_category: Objects
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the IKEv1 Policy object.
+    example: my_ikev1_policy
+    data_source_query: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: "IKEv1 Policy 1"
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IKEv1Policy'.
+    computed: true
+  - model_name: priority
+    type: Int64
+    description: Priority of the IKEv1 Policy.
+    example: 10
+    mandatory: true
+    min_int: 1
+    max_int: 65535
+  - model_name: encryption
+    tf_name: encryption_algorithm
+    type: String
+    description: IKEv1 Encryption algorithm.
+    enum_values: [DES, 3DES, AES-128, AES-192, AES-256]
+    example: AES-192
+    mandatory: true
+  - model_name: hash
+    type: String
+    description: IKEv1 Hash algorithm.
+    enum_values: [SHA, MD5]
+    example: SHA
+    mandatory: true
+  - model_name: diffieHellmanGroup
+    type: String
+    tf_name: dh_group
+    description: Diffie-Hellman group.
+    enum_values: ["1", "2", "5", "14"]
+    example: 14
+    mandatory: true
+  - model_name: lifetimeInSeconds
+    tf_name: lifetime
+    type: Int64
+    description: Lifetime in seconds.
+    example: 86400
+    mandatory: true
+    min_int: 120
+    max_int: 2147483647
+  - model_name: authenticationMethod
+    type: String
+    description: Authentication method.
+    enum_values: [Certificate, Preshared Key]
+    example: Preshared Key
+    mandatory: true

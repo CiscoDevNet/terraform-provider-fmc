@@ -87,7 +87,7 @@ func (d *IKEv1PoliciesDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "Priority of the IKEv1 Policy.",
 							Computed:            true,
 						},
-						"encryption": schema.StringAttribute{
+						"encryption_algorithm": schema.StringAttribute{
 							MarkdownDescription: "IKEv1 Encryption algorithm.",
 							Computed:            true,
 						},

@@ -8,6 +8,10 @@ res_description: >-
   - Ipv4 address configured on tunnel source interface is taken by default. This can be overriden by tunnel_source_interface_ipv6_address.\n
   - Either IPv4 or IPv6 or borrow_ip_interface is required, which needs to match with ipsec_tunnel_mode.\n
 test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+skip_test_for_versions: ["7.2"]
+deprecation_message: >-
+  This resource is deprecated and will be removed in a future release.
+  Please use `fmc_device_virtual_tunnel_interface` resource instead.
 attributes:
   - tf_name: device_id
     type: String
@@ -34,7 +38,7 @@ attributes:
     example: STATIC
     mandatory: true
     requires_replace: true
-    write_only: true # for FMCVERSION <= 7.2
+    # write_only: true # for FMCVERSION <= 7.2
   - model_name: ifname
     tf_name: logical_name
     type: String
@@ -108,14 +112,14 @@ attributes:
     mandatory: true
   - model_name: address
     data_path: [ipv4, static]
-    tf_name: ipv4_address
+    tf_name: ipv4_static_address
     type: String
     description: IPv4 address for local VTI tunnel end.
     example: "10.10.10.10"
     minimum_test_value: '"10.10.10.10"'
   - model_name: netmask
     data_path: [ipv4, static]
-    tf_name: ipv4_netmask
+    tf_name: ipv4_static_netmask
     type: String
     description: Netmask (width) for IPv4 address for local VTI tunnel end.
     example: "24"

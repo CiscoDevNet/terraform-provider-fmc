@@ -30,6 +30,11 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
+	{{- if len .SkipTestForVersions}}
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{ {{- range $i, $e := .SkipTestForVersions}}{{if $i}}, {{end}}"{{$e}}"{{- end}} }, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
+	{{- end}}
 	{{- if len .TestTags}}
 	if {{range $i, $e := .TestTags}}{{if $i}} || {{end}}os.Getenv("{{$e}}") == ""{{end}} {
         t.Skip("skipping test, set environment variable {{range $i, $e := .TestTags}}{{if $i}} and {{end}}{{$e}}{{end}}")

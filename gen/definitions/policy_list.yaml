@@ -1,3 +1,4 @@
+# FMCBUG CSCwp64302 Policy List's tag/metric does not accept coma separated values
 ---
 name: Policy List
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/policylists
@@ -22,16 +23,17 @@ attributes:
     example: PERMIT
   # Interfaces
   - model_name: interfaces
-    type: List
-    description: List of security zones/interface groups that contain the interfaces through which the device communicates with the management station.
+    type: Set
+    description: Security zones/interface groups that contain the interfaces through which the device communicates with the management station.
     attributes:
       - model_name: id
         type: String
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_security_zone.test.id
+        mandatory: true
   - model_name: interfaceNames
-    type: List
+    type: Set
     description: List of interface names that are not in the zones.
     element_type: String
     example: "GigabitEthernet0/1"
@@ -39,7 +41,7 @@ attributes:
   # Address
   - model_name: standardAccessListAddresses
     tf_name: address_standard_access_lists
-    type: List
+    type: Set
     description: Redistribute any routes that have a destination address that is permitted by a standard access list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.
     attributes:
       - model_name: id
@@ -47,9 +49,10 @@ attributes:
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_standard_access_list.test.id
+        mandatory: true
   - model_name: ipv4PrefixListAddresses
     tf_name: address_ipv4_prefix_lists
-    type: List
+    type: Set
     description: Redistribute any routes that have a destination address that is permitted by a prefix list. `address_standard_access_lists` and `address_ipv4_prefix_lists` are mutually exclusive.
     exclude_example: true
     exclude_test: true
@@ -57,10 +60,11 @@ attributes:
       - model_name: id
         type: String
         description: Id of the object.
+        mandatory: true
   # Next Hop
   - model_name: standardAccessListNextHops
     tf_name: next_hop_standard_access_lists
-    type: List
+    type: Set
     description: Redistribute any routes that have a next hop router address passed by a standard access list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.
     attributes:
       - model_name: id
@@ -68,9 +72,10 @@ attributes:
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_standard_access_list.test.id
+        mandatory: true
   - model_name: ipv4PrefixListNexthops
     tf_name: next_hop_ipv4_prefix_lists
-    type: List
+    type: Set
     description: Redistribute any routes that have a next hop router address passed by a prefix list. `next_hop_standard_access_lists` and `next_hop_ipv4_prefix_lists` are mutually exclusive.
     exclude_example: true
     exclude_test: true
@@ -78,10 +83,11 @@ attributes:
       - model_name: id
         type: String
         description: Id of the object.
+        mandatory: true
   # Route Source
   - model_name: standardAccessListRouteSources
     tf_name: route_source_standard_access_lists
-    type: List
+    type: Set
     description: Redistribute routes that have been advertised by routers at the address specified by the access list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.
     attributes:
       - model_name: id
@@ -89,9 +95,10 @@ attributes:
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_standard_access_list.test.id
+        mandatory: true
   - model_name: ipv4PrefixListRouteSources
     tf_name: route_source_ipv4_prefix_lists
-    type: List
+    type: Set
     description: Redistribute routes that have been advertised by routers at the address specified by the prefix list. `route_source_standard_access_lists` and `route_source_ipv4_prefix_lists` are mutually exclusive.
     exclude_test: true
     exclude_example: true
@@ -99,10 +106,11 @@ attributes:
       - model_name: id
         type: String
         description: Id of the object.
+        mandatory: true
   # AS Path
   - model_name: asPathLists
     tf_name: as_paths
-    type: List
+    type: Set
     description: Match a BGP autonomous system path.
     attributes:
       - model_name: id
@@ -110,41 +118,42 @@ attributes:
         description: Id of object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_as_path.test.id
+        mandatory: true
   # Community Rule
   - model_name: communityLists
     tf_name: community_lists
-    type: List
-    description: List of Standard/Expanded Community Lists.
+    type: Set
+    description: Standard/Expanded Community Lists.
     attributes:
       - model_name: id
         type: String
         description: Id of the object.
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         test_value: fmc_standard_community_list.test.id
+        mandatory: true
   - model_name: extendedCommunityLists
     tf_name: extended_community_lists
-    type: List
-    description: List of Extended Community Lists.
+    type: Set
+    description: Extended Community Lists.
     exclude_test: true
     exclude_example: true
     attributes:
       - model_name: id
         type: String
         description: Id of the object.
+        mandatory: true
   - model_name: matchCommunityExactly
     type: Bool
     description: Match BGP community exactly with the specified community.
     example: "true"
   # Metric and Tag
   - model_name: metric
-    # FMCBUG CSCwp64302 Policy List's tag/metric does not accept coma separated values
     type: Int64
     description: Match routes that have a specified metric. Specyfing multiple values is not supported due to FMC API bug.
     min_int: 0
     max_int: 4294967295
     example: 100
   - model_name: tag
-    # FMCBUG CSCwp64302 Policy List's tag/metric does not accept coma separated values
     type: Int64
     description: Match routes that have a specified security group tag. Specyfing multiple values is not supported due to FMC API bug.
     min_int: 1

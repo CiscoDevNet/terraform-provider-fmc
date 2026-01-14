@@ -140,8 +140,6 @@ func testAccFmcGroupPolicyConfig_all() string {
 	config += `	banner = "Welcome to the VPN Connection."` + "\n"
 	config += `	primary_dns_server_host_id = fmc_hosts.test.items["group_policy_host_1"].id` + "\n"
 	config += `	secondary_dns_server_host_id = fmc_hosts.test.items["group_policy_host_2"].id` + "\n"
-	config += `	primary_wins_server_host_id = fmc_hosts.test.items["group_policy_host_3"].id` + "\n"
-	config += `	secondary_wins_server_host_id = fmc_hosts.test.items["group_policy_host_4"].id` + "\n"
 	config += `	dhcp_network_scope_network_object_id = fmc_networks.test.items["group_policy_network_1"].id` + "\n"
 	config += `	default_domain = "example.com"` + "\n"
 	config += `	ipv4_split_tunnel_policy = "TUNNEL_ALL"` + "\n"

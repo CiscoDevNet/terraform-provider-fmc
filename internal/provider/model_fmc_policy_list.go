@@ -41,7 +41,7 @@ type PolicyList struct {
 	Type                           types.String                               `tfsdk:"type"`
 	Action                         types.String                               `tfsdk:"action"`
 	Interfaces                     []PolicyListInterfaces                     `tfsdk:"interfaces"`
-	InterfaceNames                 types.List                                 `tfsdk:"interface_names"`
+	InterfaceNames                 types.Set                                  `tfsdk:"interface_names"`
 	AddressStandardAccessLists     []PolicyListAddressStandardAccessLists     `tfsdk:"address_standard_access_lists"`
 	AddressIpv4PrefixLists         []PolicyListAddressIpv4PrefixLists         `tfsdk:"address_ipv4_prefix_lists"`
 	NextHopStandardAccessLists     []PolicyListNextHopStandardAccessLists     `tfsdk:"next_hop_standard_access_lists"`
@@ -275,9 +275,9 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("interfaceNames"); value.Exists() {
-		data.InterfaceNames = helpers.GetStringList(value.Array())
+		data.InterfaceNames = helpers.GetStringSet(value.Array())
 	} else {
-		data.InterfaceNames = types.ListNull(types.StringType)
+		data.InterfaceNames = types.SetNull(types.StringType)
 	}
 	if value := res.Get("standardAccessListAddresses"); value.Exists() {
 		data.AddressStandardAccessLists = make([]PolicyListAddressStandardAccessLists, 0)
@@ -490,9 +490,9 @@ func (data *PolicyList) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		(*parent).Interfaces[i] = data
 	}
 	if value := res.Get("interfaceNames"); value.Exists() && !data.InterfaceNames.IsNull() {
-		data.InterfaceNames = helpers.GetStringList(value.Array())
+		data.InterfaceNames = helpers.GetStringSet(value.Array())
 	} else {
-		data.InterfaceNames = types.ListNull(types.StringType)
+		data.InterfaceNames = types.SetNull(types.StringType)
 	}
 	for i := 0; i < len(data.AddressStandardAccessLists); i++ {
 		keys := [...]string{"id"}

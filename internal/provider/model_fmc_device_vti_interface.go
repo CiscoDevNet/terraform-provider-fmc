@@ -49,8 +49,8 @@ type DeviceVTIInterface struct {
 	TunnelSourceInterfaceName        types.String `tfsdk:"tunnel_source_interface_name"`
 	TunnelSourceInterfaceIpv6Address types.String `tfsdk:"tunnel_source_interface_ipv6_address"`
 	TunnelMode                       types.String `tfsdk:"tunnel_mode"`
-	Ipv4Address                      types.String `tfsdk:"ipv4_address"`
-	Ipv4Netmask                      types.String `tfsdk:"ipv4_netmask"`
+	Ipv4StaticAddress                types.String `tfsdk:"ipv4_static_address"`
+	Ipv4StaticNetmask                types.String `tfsdk:"ipv4_static_netmask"`
 	Ipv6Address                      types.String `tfsdk:"ipv6_address"`
 	Ipv6Prefix                       types.String `tfsdk:"ipv6_prefix"`
 	BorrowIpInterfaceId              types.String `tfsdk:"borrow_ip_interface_id"`
@@ -119,11 +119,11 @@ func (data DeviceVTIInterface) toBody(ctx context.Context, state DeviceVTIInterf
 	if !data.TunnelMode.IsNull() {
 		body, _ = sjson.Set(body, "ipsecMode", data.TunnelMode.ValueString())
 	}
-	if !data.Ipv4Address.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4Address.ValueString())
+	if !data.Ipv4StaticAddress.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.address", data.Ipv4StaticAddress.ValueString())
 	}
-	if !data.Ipv4Netmask.IsNull() {
-		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4Netmask.ValueString())
+	if !data.Ipv4StaticNetmask.IsNull() {
+		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
 	if !data.Ipv6Address.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.addresses.0.address", data.Ipv6Address.ValueString())
@@ -166,6 +166,11 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Name = types.StringValue(value.String())
 	} else {
 		data.Name = types.StringNull()
+	}
+	if value := res.Get("tunnelType"); value.Exists() {
+		data.TunnelType = types.StringValue(value.String())
+	} else {
+		data.TunnelType = types.StringNull()
 	}
 	if value := res.Get("ifname"); value.Exists() {
 		data.LogicalName = types.StringValue(value.String())
@@ -218,14 +223,14 @@ func (data *DeviceVTIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.TunnelMode = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.address"); value.Exists() {
-		data.Ipv4Address = types.StringValue(value.String())
+		data.Ipv4StaticAddress = types.StringValue(value.String())
 	} else {
-		data.Ipv4Address = types.StringNull()
+		data.Ipv4StaticAddress = types.StringNull()
 	}
 	if value := res.Get("ipv4.static.netmask"); value.Exists() {
-		data.Ipv4Netmask = types.StringValue(value.String())
+		data.Ipv4StaticNetmask = types.StringValue(value.String())
 	} else {
-		data.Ipv4Netmask = types.StringNull()
+		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv6.addresses.0.address"); value.Exists() {
 		data.Ipv6Address = types.StringValue(value.String())
@@ -288,6 +293,11 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.Name = types.StringNull()
 	}
+	if value := res.Get("tunnelType"); value.Exists() && !data.TunnelType.IsNull() {
+		data.TunnelType = types.StringValue(value.String())
+	} else {
+		data.TunnelType = types.StringNull()
+	}
 	if value := res.Get("ifname"); value.Exists() && !data.LogicalName.IsNull() {
 		data.LogicalName = types.StringValue(value.String())
 	} else {
@@ -338,15 +348,15 @@ func (data *DeviceVTIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.TunnelMode = types.StringNull()
 	}
-	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4Address.IsNull() {
-		data.Ipv4Address = types.StringValue(value.String())
+	if value := res.Get("ipv4.static.address"); value.Exists() && !data.Ipv4StaticAddress.IsNull() {
+		data.Ipv4StaticAddress = types.StringValue(value.String())
 	} else {
-		data.Ipv4Address = types.StringNull()
+		data.Ipv4StaticAddress = types.StringNull()
 	}
-	if value := res.Get("ipv4.static.netmask"); value.Exists() && !data.Ipv4Netmask.IsNull() {
-		data.Ipv4Netmask = types.StringValue(value.String())
+	if value := res.Get("ipv4.static.netmask"); value.Exists() && !data.Ipv4StaticNetmask.IsNull() {
+		data.Ipv4StaticNetmask = types.StringValue(value.String())
 	} else {
-		data.Ipv4Netmask = types.StringNull()
+		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv6.addresses.0.address"); value.Exists() && !data.Ipv6Address.IsNull() {
 		data.Ipv6Address = types.StringValue(value.String())

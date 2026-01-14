@@ -43,12 +43,28 @@ var deploymentMu sync.Mutex
 
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
-	const atom time.Duration = 5 * time.Second
+	const atom time.Duration = 10 * time.Second
+	const maxWait time.Duration = 15 * time.Minute
+	var task gjson.Result
+	var err error
+	var taskUrl string = "/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/" + url.QueryEscape(jobId)
 
-	for i := time.Duration(0); i < 15*time.Minute; i += atom {
-		task, err := client.Get("/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/"+url.QueryEscape(jobId), reqMods...)
+	for i := time.Duration(0); i < maxWait; i += atom {
+		task, err = client.Get(taskUrl, reqMods...)
+		if err == nil {
+			break
+		}
+	}
+
+	if err != nil {
+		diags.AddError("Client Error", fmt.Sprintf("Failed to get task (id %s) status after %v minutes. Seems that the task did not start, got error: %s, %s", jobId, maxWait.Minutes(), err, task.String()))
+		return diags
+	}
+
+	for i := time.Duration(0); i < maxWait; i += atom {
+		task, err = client.Get(taskUrl, reqMods...)
 		if err != nil {
-			diags.AddError("Client Error", fmt.Sprintf("Failed to get task status, got error: %s, %s", err, task.String()))
+			diags.AddError("Client Error", fmt.Sprintf("Failed to get task (id %s) status, got error: %s, %s", jobId, err, task.String()))
 			return diags
 		}
 		stat := strings.ToUpper(task.Get("status").String())
