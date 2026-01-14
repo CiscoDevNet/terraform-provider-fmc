@@ -162,7 +162,7 @@ func TestAccFmcDeviceVirtualTunnelInterface_DynamicInterface(t *testing.T) {
 	step_01 := `resource "fmc_device_virtual_tunnel_interface" "test-dynamic" {
 					device_id                    = fmc_device_physical_interface.test.device_id
 					tunnel_type                  = "DYNAMIC"
-					logical_name                 = "my_vti_interface_static_dynamic"
+					logical_name                 = "my_vti_interface_dynamic"
 					tunnel_id                    = 150
 					tunnel_source_interface_id   = fmc_device_physical_interface.test.id
 					tunnel_source_interface_name = fmc_device_physical_interface.test.name
@@ -176,7 +176,7 @@ func TestAccFmcDeviceVirtualTunnelInterface_DynamicInterface(t *testing.T) {
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-dynamic", "type"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-dynamic", "name"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "tunnel_type", "DYNAMIC"))
-	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "logical_name", "my_vti_interface_static_dynamic"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "logical_name", "my_vti_interface_dynamic"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "tunnel_id", "150"))
 
 	var steps []resource.TestStep
@@ -206,7 +206,7 @@ func TestAccFmcDeviceVirtualTunnelInterface_StaticAndDynamicInterface(t *testing
 	prerequisites := `resource "fmc_device_loopback_interface" "test" {
 					device_id           = fmc_device_physical_interface.test.device_id
 					loopback_id         = 10
-					logical_name        = "my_loopback_virtual_tunnel_interface"
+					logical_name        = "my_loopback_vti"
 					ipv4_static_address = "10.19.10.1"
 					ipv4_static_netmask = "255.255.255.0"
 				}
@@ -215,19 +215,19 @@ func TestAccFmcDeviceVirtualTunnelInterface_StaticAndDynamicInterface(t *testing
 	step_01 := `resource "fmc_device_virtual_tunnel_interface" "test-static" {
 					device_id                    = fmc_device_physical_interface.test.device_id
 					tunnel_type                  = "STATIC"
-					logical_name                 = "my_vti_interface_static"
+					logical_name                 = "my_vti_interface2_static"
 					tunnel_id                    = 200
 					tunnel_source_interface_id   = fmc_device_physical_interface.test.id
 					tunnel_source_interface_name = fmc_device_physical_interface.test.name
 					tunnel_mode                  = "ipv4"
-					ipv4_address                 = "10.1.1.3"
-					ipv4_netmask                 = "255.255.255.0"
+					ipv4_static_address          = "10.1.1.3"
+					ipv4_static_netmask          = "255.255.255.0"
 				}
 
 				resource "fmc_device_virtual_tunnel_interface" "test-dynamic" {
 					device_id                    = fmc_device_physical_interface.test.device_id
 					tunnel_type                  = "DYNAMIC"
-					logical_name                 = "my_vti_interface_static_dynamic"
+					logical_name                 = "my_vti_interface2_dynamic"
 					tunnel_id                    = 200
 					tunnel_source_interface_id   = fmc_device_physical_interface.test.id
 					tunnel_source_interface_name = fmc_device_physical_interface.test.name
@@ -241,12 +241,12 @@ func TestAccFmcDeviceVirtualTunnelInterface_StaticAndDynamicInterface(t *testing
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-static", "type"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-static", "name"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-static", "tunnel_type", "STATIC"))
-	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-static", "logical_name", "my_vti_interface_static"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-static", "logical_name", "my_vti_interface2_static"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-static", "tunnel_id", "200"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-dynamic", "type"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttrSet("fmc_device_virtual_tunnel_interface.test-dynamic", "name"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "tunnel_type", "DYNAMIC"))
-	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "logical_name", "my_vti_interface_static_dynamic"))
+	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "logical_name", "my_vti_interface2_dynamic"))
 	checks_step01 = append(checks_step01, resource.TestCheckResourceAttr("fmc_device_virtual_tunnel_interface.test-dynamic", "tunnel_id", "200"))
 
 	var steps []resource.TestStep
