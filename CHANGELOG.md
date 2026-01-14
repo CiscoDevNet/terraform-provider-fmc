@@ -1,4 +1,4 @@
-## 2.0.0-rc10 (Unreleased)
+## 2.0.0-rc10
 
 - BREAKING CHANGE: `fmc_*_prefix_list`: Rename attribute `ip_address` to `prefix`
 - BREAKING CHANGE: `fmc_route_map`: Rename attributes:
