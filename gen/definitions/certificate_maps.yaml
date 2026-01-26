@@ -36,6 +36,7 @@ attributes:
             enum_values: [SUBJECT, ALTERNATIVE_SUBJECT, ISSUER, EXTENDED_KEY_USAGE]
             description: Certificate field to match the rule.
             example: SUBJECT
+            mandatory: true
           - model_name: component
             type: String
             enum_values:
@@ -63,12 +64,15 @@ attributes:
               ]
             description: Component of the certificate field to match the rule.
             example: COMMON_NAME
+            mandatory: true
           - model_name: operator
             type: String
             enum_values: [EQUALS, CONTAINS, DOES_NOT_EQUAL, DOES_NOT_CONTAIN]
             example: EQUALS
             description: Operator to use for matching the rule.
+            mandatory: true
           - model_name: value
             type: String
             description: Value to match in the rule.
             example: cisco.com
+            mandatory: true

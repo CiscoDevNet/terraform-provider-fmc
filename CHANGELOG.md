@@ -1,3 +1,7 @@
+## 2.0.0-rc.11
+
+- (Fix) Updated `required` flag for several attributs in multiple resources
+
 ## 2.0.0-rc10
 
 - BREAKING CHANGE: `fmc_*_prefix_list`: Rename attribute `ip_address` to `prefix`
