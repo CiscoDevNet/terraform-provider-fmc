@@ -1,5 +1,10 @@
 ## 2.0.0-rc.11
 
+- BREAKING CHANGE: `fmc_group_policy`: Rename attributes:
+    - `*_acl_*` to `*_access_list_*`
+    - `*_dpd_*` to `*_dead_peer_detection_*`
+    - `dhcp_network_scope_network_object_id` to `ipv4_dhcp_network_scope_network_object_id`
+    - `split_dns_domain_list` to `dns_request_split_tunnel_domains`
 - (Fix) Updated `required` flag for several attributs in multiple resources
 
 ## 2.0.0-rc10

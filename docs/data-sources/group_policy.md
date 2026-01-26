@@ -30,23 +30,24 @@ data "fmc_group_policy" "example" {
 ### Read-Only
 
 - `access_hours_time_range_id` (String) ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.
-- `banner` (String) Banner text to be displayed to users.
+- `banner` (String) Banner text to be displayed to users. In case of a line spanning more than 497 characters, split the line into multiple lines.
 - `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.
-- `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
-- `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
-- `client_firewall_private_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
-- `client_firewall_public_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `client_dead_peer_detection` (Boolean) Enable VPN client Dead Peer Detection (DPD).
+- `client_dead_peer_detection_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
+- `client_firewall_private_network_rules_access_list_id` (String) Id of Extended Access List to configure firewall settings for the VPN client's platform.
+- `client_firewall_public_network_rules_access_list_id` (String) Id of Extended Access List to configure firewall settings for the VPN client's platform.
 - `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
-- `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
+- `dns_request_split_tunnel_domains` (String) Up to 10, comma separated domains for split DNS requests.
 - `dns_request_split_tunnel_policy` (String) Define if DNS requests should be send over the tunnel or not.
 - `dtls_compression` (String) DTLS compression method for the connection.
-- `gateway_dpd` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
-- `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
+- `gateway_dead_peer_detection` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
+- `gateway_dead_peer_detection_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
 - `idle_timeout` (Number) VPN idle timeout in minutes.
 - `idle_timeout_alert_interval` (Number) Interval of time before idle time is reached to display a message to the user.
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
 - `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
+- `ipv4_dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
 - `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
 - `ipv6_split_tunnel_policy` (String) IPv6 split tunnel policy.
 - `keep_alive_messages` (Boolean) Enable Keepalive Messages between Secure Client and VPN gateway.
@@ -66,14 +67,13 @@ data "fmc_group_policy" "example" {
 - `secure_client_modules` (Attributes List) List of Secure Client Modules to be enabled. (see [below for nested schema](#nestedatt--secure_client_modules))
 - `secure_client_profile_id` (String) ID of the Secure Client Profile.
 - `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user.
-- `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
-- `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
-- `split_tunnel_acl_type` (String) Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
+- `split_tunnel_access_list_id` (String) Id of Standard (for IPv4) or Extended (for IPv4 or IPv6) Access List used for split tunnel configuration.
+- `split_tunnel_access_list_type` (String) Type of Access List used for split tunnel configuration. Mandatory, when `split_tunnel_access_list_id` is set.
 - `ssl_compression` (String) SSL compression method for the connection.
 - `ssl_rekey` (Boolean) Enables the client to rekey the connection.
 - `ssl_rekey_interval` (Number) Interval for SSL rekeying in minutes.
 - `ssl_rekey_method` (String) Method to use for SSL rekeying.
-- `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
+- `traffic_filter_access_list_id` (String) Id of Extended Access List that determine whether to allow or block tunneled data packets coming through the VPN connection.
 - `type` (String) Type of the object; this value is always 'GroupPolicy'.
 
 <a id="nestedatt--ipv4_address_pools"></a>
