@@ -90,11 +90,11 @@ attributes:
         tf_name: selected_interfaces
         type: List
         mandatory: true
-        description: Security zones or interface groups that contain interfaces through which the device communicates.
+        description: Security Zones or Interface Groups that contain interfaces through which the device communicates.
         attributes:
           - model_name: id
             type: String
-            description: Id of the security zone or interface group object.
+            description: Id of the Security Zone or Interface Group object.
             example: 12345678-1234-1234-1234-123456789012
             test_value: fmc_interface_group.test.id
             mandatory: true
