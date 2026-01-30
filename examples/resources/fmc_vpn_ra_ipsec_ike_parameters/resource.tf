@@ -7,6 +7,7 @@ resource "fmc_vpn_ra_ipsec_ike_parameters" "example" {
   ikev2_threshold_to_challenge_incoming_cookies             = 50
   ikev2_number_of_sas_allowed_in_negotiation                = 90
   ikev2_maximum_number_of_sas_allowed                       = 50
+  ipsec_path_maximum_transmission_unit_aging                = true
   ipsec_path_maximum_transmission_unit_aging_reset_interval = 30
   nat_keepalive_message_traversal                           = true
   nat_keepalive_message_traversal_interval                  = 20

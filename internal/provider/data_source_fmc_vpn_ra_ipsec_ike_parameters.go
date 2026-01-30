@@ -104,8 +104,12 @@ func (d *VPNRAIPSecIKEParametersDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Maximum number of Security Associations (SAs) allowed.",
 				Computed:            true,
 			},
+			"ipsec_path_maximum_transmission_unit_aging": schema.BoolAttribute{
+				MarkdownDescription: "Enable path maximum transmission unit aging.",
+				Computed:            true,
+			},
 			"ipsec_path_maximum_transmission_unit_aging_reset_interval": schema.Int64Attribute{
-				MarkdownDescription: "Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.",
+				MarkdownDescription: "Enter the number of minutes at which the Path Maximum Transmission Unit (PMTU) value of an SA is reset to its original value.",
 				Computed:            true,
 			},
 			"nat_keepalive_message_traversal": schema.BoolAttribute{

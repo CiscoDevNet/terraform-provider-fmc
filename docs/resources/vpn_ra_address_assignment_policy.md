@@ -3,12 +3,12 @@
 page_title: "fmc_vpn_ra_address_assignment_policy Resource - terraform-provider-fmc"
 subcategory: "VPN"
 description: |-
-  This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.
+  This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policy.
 ---
 
 # fmc_vpn_ra_address_assignment_policy (Resource)
 
-This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.
+This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policy.
 
 ## Example Usage
 
@@ -17,10 +17,10 @@ resource "fmc_vpn_ra_address_assignment_policy" "example" {
   vpn_ra_id                                 = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   ipv4_use_authorization_server             = true
   ipv4_use_dhcp                             = true
-  ipv4_internal_address_pool                = true
+  ipv4_use_internal_address_pool            = true
   ipv4_internal_address_pool_reuse_interval = 0
   ipv6_use_authorization_server             = true
-  ipv6_internal_address_pool                = true
+  ipv6_use_internal_address_pool            = true
 }
 ```
 
@@ -34,8 +34,6 @@ resource "fmc_vpn_ra_address_assignment_policy" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ipv4_internal_address_pool` (Boolean) Use internal address pool for IPv4 address assignment.
-  - Default value: `true`
 - `ipv4_internal_address_pool_reuse_interval` (Number) Interval in seconds for reusing IPv4 addresses.
   - Range: `0`-`480`
   - Default value: `0`
@@ -43,9 +41,11 @@ resource "fmc_vpn_ra_address_assignment_policy" "example" {
   - Default value: `true`
 - `ipv4_use_dhcp` (Boolean) Use DHCP for IPv4 address assignment.
   - Default value: `true`
-- `ipv6_internal_address_pool` (Boolean) Use internal address pool for IPv6 address assignment.
+- `ipv4_use_internal_address_pool` (Boolean) Use internal address pool for IPv4 address assignment.
   - Default value: `true`
 - `ipv6_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm).
+  - Default value: `true`
+- `ipv6_use_internal_address_pool` (Boolean) Use internal address pool for IPv6 address assignment.
   - Default value: `true`
 
 ### Read-Only

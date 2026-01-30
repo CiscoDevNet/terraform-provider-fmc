@@ -38,7 +38,7 @@ attributes:
   - model_name: imagesAndIcons
     tf_name: icons_and_images
     type: List
-    description: Configure icons and images for the secure client customization.
+    description: Configure icons and images for the Secure Client customization.
     attributes:
       - model_name: id
         type: String
@@ -47,7 +47,7 @@ attributes:
         mandatory: true
   - model_name: scripts
     type: List
-    description: Configure Secure Client customization scripts.
+    description: Configure Secure Client Customization scripts.
     attributes:
       - model_name: id
         type: String
@@ -56,7 +56,7 @@ attributes:
         mandatory: true
   - model_name: binaries
     type: List
-    description: Configure Secure Client Binary executable modules on device.
+    description: Configure Secure Client Customization Binary executable modules on device.
     attributes:
       - model_name: id
         type: String
@@ -66,7 +66,7 @@ attributes:
   - model_name: customizedInstallerTransforms
     tf_name: custom_installer_transforms
     type: List
-    description: Configure Secure Client customized installer transforms on device.
+    description: Configure Secure Client Customization customized installer transforms on device.
     attributes:
       - model_name: id
         type: String

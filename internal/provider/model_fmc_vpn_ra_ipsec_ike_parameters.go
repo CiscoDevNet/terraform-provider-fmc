@@ -44,6 +44,7 @@ type VPNRAIPSecIKEParameters struct {
 	Ikev2ThresholdToChallengeIncomingCookies           types.Int64  `tfsdk:"ikev2_threshold_to_challenge_incoming_cookies"`
 	Ikev2NumberOfSasAllowedInNegotiation               types.Int64  `tfsdk:"ikev2_number_of_sas_allowed_in_negotiation"`
 	Ikev2MaximumNumberOfSasAllowed                     types.Int64  `tfsdk:"ikev2_maximum_number_of_sas_allowed"`
+	IpsecPathMaximumTransmissionUnitAging              types.Bool   `tfsdk:"ipsec_path_maximum_transmission_unit_aging"`
 	IpsecPathMaximumTransmissionUnitAgingResetInterval types.Int64  `tfsdk:"ipsec_path_maximum_transmission_unit_aging_reset_interval"`
 	NatKeepaliveMessageTraversal                       types.Bool   `tfsdk:"nat_keepalive_message_traversal"`
 	NatKeepaliveMessageTraversalInterval               types.Int64  `tfsdk:"nat_keepalive_message_traversal_interval"`
@@ -91,6 +92,9 @@ func (data VPNRAIPSecIKEParameters) toBody(ctx context.Context, state VPNRAIPSec
 	}
 	if !data.Ikev2MaximumNumberOfSasAllowed.IsNull() {
 		body, _ = sjson.Set(body, "ikev2settings.maximumNumberOfSAsAllowed", data.Ikev2MaximumNumberOfSasAllowed.ValueInt64())
+	}
+	if !data.IpsecPathMaximumTransmissionUnitAging.IsNull() {
+		body, _ = sjson.Set(body, "ipsecsettings.maximumTransmissionUnitAging.enabled", data.IpsecPathMaximumTransmissionUnitAging.ValueBool())
 	}
 	if !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		body, _ = sjson.Set(body, "ipsecsettings.maximumTransmissionUnitAging.resetIntervalMinutes", data.IpsecPathMaximumTransmissionUnitAgingResetInterval.ValueInt64())
@@ -148,6 +152,11 @@ func (data *VPNRAIPSecIKEParameters) fromBody(ctx context.Context, res gjson.Res
 		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Value(value.Int())
 	} else {
 		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Null()
+	}
+	if value := res.Get("ipsecsettings.maximumTransmissionUnitAging.enabled"); value.Exists() {
+		data.IpsecPathMaximumTransmissionUnitAging = types.BoolValue(value.Bool())
+	} else {
+		data.IpsecPathMaximumTransmissionUnitAging = types.BoolNull()
 	}
 	if value := res.Get("ipsecsettings.maximumTransmissionUnitAging.resetIntervalMinutes"); value.Exists() {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Value(value.Int())
@@ -215,6 +224,11 @@ func (data *VPNRAIPSecIKEParameters) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ikev2MaximumNumberOfSasAllowed = types.Int64Null()
 	}
+	if value := res.Get("ipsecsettings.maximumTransmissionUnitAging.enabled"); value.Exists() && !data.IpsecPathMaximumTransmissionUnitAging.IsNull() {
+		data.IpsecPathMaximumTransmissionUnitAging = types.BoolValue(value.Bool())
+	} else {
+		data.IpsecPathMaximumTransmissionUnitAging = types.BoolNull()
+	}
 	if value := res.Get("ipsecsettings.maximumTransmissionUnitAging.resetIntervalMinutes"); value.Exists() && !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
 		data.IpsecPathMaximumTransmissionUnitAgingResetInterval = types.Int64Value(value.Int())
 	} else {
@@ -249,10 +263,3 @@ func (data *VPNRAIPSecIKEParameters) fromBodyUnknowns(ctx context.Context, res g
 }
 
 // End of section. //template:end fromBodyUnknowns
-
-func (data VPNRAIPSecIKEParameters) adjustBody(ctx context.Context, req string) string {
-	if !data.IpsecPathMaximumTransmissionUnitAgingResetInterval.IsNull() {
-		req, _ = sjson.Set(req, "ipsecsettings.maximumTransmissionUnitAging.enabled", true)
-	}
-	return req
-}

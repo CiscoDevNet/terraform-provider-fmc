@@ -298,14 +298,14 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 										Required:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Enable the alias.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Enable the Alias.").String,
 										Optional:            true,
 									},
 								},
 							},
 						},
 						"alias_urls": schema.ListNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("List of Alias URLs (group URLs).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("List of Alias URLs (Group URLs).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -314,7 +314,7 @@ func (r *VPNRAConnectionProfilesResource) Schema(ctx context.Context, req resour
 										Required:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Enable the alias.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Enable the Alias.").String,
 										Optional:            true,
 									},
 								},

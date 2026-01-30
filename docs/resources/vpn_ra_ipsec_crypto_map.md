@@ -42,19 +42,20 @@ resource "fmc_vpn_ra_ipsec_crypto_map" "example" {
 ### Required
 
 - `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals. (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
-- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
-- `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
-  - Range: `120`-`2147483647`
+- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.
 - `vpn_ra_id` (String) Id of the parent VPN RA Configuration.
 
 ### Optional
 
 - `client_services` (Boolean) Enable Client Services.
-- `client_services_port` (Number) Port for Client Services.
+- `client_services_port` (Number) Client Services Port Number.
   - Range: `1`-`65535`
 - `do_not_fragment_policy` (String) Policy for handling Do Not Fragment (DNF) packets.
   - Choices: `SET`, `COPY`, `CLEAR`, `NONE`
 - `domain` (String) Name of the FMC domain
+- `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
+  - Range: `120`-`2147483647`
+  - Default value: `28800`
 - `lifetime_size` (Number) Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.
   - Range: `10`-`2147483647`
 - `perfect_forward_secrecy` (Boolean) Enable IPSEC Perfect Forward Secrecy (PFS).

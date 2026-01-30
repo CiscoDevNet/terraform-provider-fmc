@@ -101,12 +101,12 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"access_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: "List of interfaces that will support incoming Remote Access VPN connections.",
+				MarkdownDescription: "List of Security Zones or Interface Groups that will support incoming Remote Access VPN connections.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of Interface Group or Security Zone.",
+							MarkdownDescription: "Id of Security Zone or Interface Group.",
 							Computed:            true,
 						},
 						"protocol_ipsec_ikev2": schema.BoolAttribute{
@@ -132,11 +132,11 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				MarkdownDescription: "Allow Users to select connection profile while logging in.",
 				Computed:            true,
 			},
-			"web_access_port_number": schema.Int64Attribute{
+			"web_access_port": schema.Int64Attribute{
 				MarkdownDescription: "Web Access Port Number.",
 				Computed:            true,
 			},
-			"dtls_port_number": schema.Int64Attribute{
+			"dtls_port": schema.Int64Attribute{
 				MarkdownDescription: "DTLS Port Number.",
 				Computed:            true,
 			},
@@ -194,7 +194,7 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of group policy.",
+							MarkdownDescription: "Id of Group Policy.",
 							Computed:            true,
 						},
 					},
@@ -209,12 +209,12 @@ func (d *VPNRADataSource) Schema(ctx context.Context, req datasource.SchemaReque
 				Computed:            true,
 			},
 			"ikev2_policies": schema.ListNestedAttribute{
-				MarkdownDescription: "List of IKEv2 policies.",
+				MarkdownDescription: "List of IKEv2 Policies.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of IKEv2 policy.",
+							MarkdownDescription: "Id of IKEv2 Policy.",
 							Computed:            true,
 						},
 					},

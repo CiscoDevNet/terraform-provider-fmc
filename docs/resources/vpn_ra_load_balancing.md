@@ -19,7 +19,7 @@ resource "fmc_vpn_ra_load_balancing" "example" {
   ipv4_group_address                      = "192.168.1.1"
   ipv6_group_address                      = "2001:db8::1"
   interface_id                            = "76d24097-41c4-4558-a4d0"
-  udp_port_number                         = 9023
+  port                                    = 9023
   ipsec                                   = true
   ipsec_encryption_key                    = "my-secret-key"
   send_fqdn_to_peer_devices_instead_of_ip = false
@@ -32,9 +32,9 @@ resource "fmc_vpn_ra_load_balancing" "example" {
 
 ### Required
 
-- `interface_id` (String) Id of the communication interface which the director and members use to communicate.
+- `interface_id` (String) Id of the Security Zone or Interface Group which the director and members use to communicate.
 - `ipv4_group_address` (String) IPv4 Group Address.
-- `udp_port_number` (Number) UDP Port for communication between the director and members in a group. The default port is 9023.
+- `port` (Number) UDP Port for communication between the director and members in a group. The default port is 9023.
   - Range: `1`-`65535`
 - `vpn_ra_id` (String) Id of the parent VPN RA Topology.
 

@@ -29,17 +29,17 @@ data "fmc_vpn_ra" "example" {
 
 ### Read-Only
 
-- `access_interfaces` (Attributes List) List of interfaces that will support incoming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
+- `access_interfaces` (Attributes List) List of Security Zones or Interface Groups that will support incoming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
 - `address_assignment_policy_id` (String) Id of Address Assignment Policy.
 - `allow_users_to_select_connection_profile` (Boolean) Allow Users to select connection profile while logging in.
 - `bypass_access_control_policy_for_decrypted_traffic` (Boolean) Bypass Access Control policy for decrypted traffic (sysopt permit-vpn).
 - `certificate_map_id` (String) Id of Certificate Map.
 - `description` (String) Description of the object.
-- `dtls_port_number` (Number) DTLS Port Number.
+- `dtls_port` (Number) DTLS Port Number.
 - `dynamic_access_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `external_browser_package_id` (String) Id of Secure Client External Browser Package.
 - `group_policies` (Attributes List) List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
-- `ikev2_policies` (Attributes List) List of IKEv2 policies. (see [below for nested schema](#nestedatt--ikev2_policies))
+- `ikev2_policies` (Attributes List) List of IKEv2 Policies. (see [below for nested schema](#nestedatt--ikev2_policies))
 - `ipsec_ike_parameters_id` (String) Id of IPsec/IKEv2 parameters.
 - `ipsec_ikev2_identity_certificate_id` (String) Id of IPsec IKEv2 Identity Certificate.
 - `ldap_attribute_map_id` (String) Id of LDAP Attribute Mapping.
@@ -52,14 +52,14 @@ data "fmc_vpn_ra" "example" {
 - `service_access_object_id` (String) Id of the Service Access object.
 - `ssl_global_identity_certificate_id` (String) Id of SSL Global Identity Certificate.
 - `type` (String) Type of the object; this value is always 'RAVpn'.
-- `web_access_port_number` (Number) Web Access Port Number.
+- `web_access_port` (Number) Web Access Port Number.
 
 <a id="nestedatt--access_interfaces"></a>
 ### Nested Schema for `access_interfaces`
 
 Read-Only:
 
-- `id` (String) Id of Interface Group or Security Zone.
+- `id` (String) Id of Security Zone or Interface Group.
 - `interface_specific_certificate_id` (String) Id of interface specific identity certificate.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2.
 - `protocol_ssl` (Boolean) Enable SSL.
@@ -71,7 +71,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Id of group policy.
+- `id` (String) Id of Group Policy.
 
 
 <a id="nestedatt--ikev2_policies"></a>
@@ -79,7 +79,7 @@ Read-Only:
 
 Read-Only:
 
-- `id` (String) Id of IKEv2 policy.
+- `id` (String) Id of IKEv2 Policy.
 
 
 <a id="nestedatt--secure_client_images"></a>

@@ -15,8 +15,8 @@ resource "fmc_vpn_ra" "example" {
     }
   ]
   allow_users_to_select_connection_profile           = true
-  web_access_port_number                             = 443
-  dtls_port_number                                   = 443
+  web_access_port                                    = 443
+  dtls_port                                          = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"
   ipsec_ikev2_identity_certificate_id                = "12345678-1234-1234-1234-123456"
   service_access_object_id                           = "12345678-1234-1234-1234-123456"

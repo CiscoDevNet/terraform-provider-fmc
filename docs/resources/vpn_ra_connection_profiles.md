@@ -102,7 +102,7 @@ Optional:
 - `accounting_server_id` (String) Id of the RADIUS accounting server.
 - `accounting_server_type` (String) Type of the RADIUS accounting server (`RadiusServerGroup`).
 - `alias_names` (Attributes List) List of Alias Names. (see [below for nested schema](#nestedatt--items--alias_names))
-- `alias_urls` (Attributes List) List of Alias URLs (group URLs). (see [below for nested schema](#nestedatt--items--alias_urls))
+- `alias_urls` (Attributes List) List of Alias URLs (Group URLs). (see [below for nested schema](#nestedatt--items--alias_urls))
 - `allow_connection_only_if_user_exists_in_authorization_database` (Boolean) Allow connection only if the username of client exists in the authorization database.
 - `authorization_server_id` (String) Id of the authorization RADIUS Server Group or Realm.
 - `authorization_server_type` (String) Type of the authorization RADIUS Server Group or Realm, like `RadiusServerGroup` or `Realm`.
@@ -153,7 +153,7 @@ Required:
 
 Optional:
 
-- `enabled` (Boolean) Enable the alias.
+- `enabled` (Boolean) Enable the Alias.
 
 
 <a id="nestedatt--items--alias_urls"></a>
@@ -165,7 +165,7 @@ Required:
 
 Optional:
 
-- `enabled` (Boolean) Enable the alias.
+- `enabled` (Boolean) Enable the Alias.
 
 
 <a id="nestedatt--items--dhcp_servers"></a>

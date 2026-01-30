@@ -30,12 +30,12 @@ data "fmc_vpn_ra_ipsec_crypto_map" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
-- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
+- `interface_id` (String) Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.
 
 ### Read-Only
 
 - `client_services` (Boolean) Enable Client Services.
-- `client_services_port` (Number) Port for Client Services.
+- `client_services_port` (Number) Client Services Port Number.
 - `do_not_fragment_policy` (String) Policy for handling Do Not Fragment (DNF) packets.
 - `ikev2_ipsec_proposals` (Attributes List) List of IKEv2 IPSec proposals. (see [below for nested schema](#nestedatt--ikev2_ipsec_proposals))
 - `lifetime_duration` (Number) Number of seconds a security association exists before expiring.
