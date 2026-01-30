@@ -63,13 +63,13 @@ attributes:
             description: Maps value in the LDAP user or group attribute to the value of a Cisco attribute for the selected name mapping.
             attributes:
               - model_name: ldapValue
-                tf_name: ldap_value
+                tf_name: ldap_attribute_value
                 type: String
                 description: Value of the LDAP attribute.
                 mandatory: true
                 example: ldap_value_example
               - model_name: ciscoValue
-                tf_name: cisco_value
+                tf_name: cisco_attribute_value
                 type: String
                 description: Value of the Cisco attribute.
                 mandatory: true

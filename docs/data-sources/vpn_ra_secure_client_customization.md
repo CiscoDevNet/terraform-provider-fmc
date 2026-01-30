@@ -33,12 +33,12 @@ data "fmc_vpn_ra_secure_client_customization" "example" {
 
 ### Read-Only
 
-- `binaries` (Attributes List) Configure Secure Client Binary executable modules on device. (see [below for nested schema](#nestedatt--binaries))
-- `custom_installer_transforms` (Attributes List) Configure Secure Client customized installer transforms on device. (see [below for nested schema](#nestedatt--custom_installer_transforms))
+- `binaries` (Attributes List) Configure Secure Client Customization Binary executable modules on device. (see [below for nested schema](#nestedatt--binaries))
+- `custom_installer_transforms` (Attributes List) Configure Secure Client Customization customized installer transforms on device. (see [below for nested schema](#nestedatt--custom_installer_transforms))
 - `gui_and_text_messages` (Attributes List) Configure language translation tables. (see [below for nested schema](#nestedatt--gui_and_text_messages))
-- `icons_and_images` (Attributes List) Configure icons and images for the secure client customization. (see [below for nested schema](#nestedatt--icons_and_images))
+- `icons_and_images` (Attributes List) Configure icons and images for the Secure Client customization. (see [below for nested schema](#nestedatt--icons_and_images))
 - `localized_installer_transforms` (Attributes List) Configure Secure Client localized installer transforms on device. (see [below for nested schema](#nestedatt--localized_installer_transforms))
-- `scripts` (Attributes List) Configure Secure Client customization scripts. (see [below for nested schema](#nestedatt--scripts))
+- `scripts` (Attributes List) Configure Secure Client Customization scripts. (see [below for nested schema](#nestedatt--scripts))
 - `type` (String) Type of the object; this value is always 'RaVpnSecureClientCustomization'.
 
 <a id="nestedatt--binaries"></a>

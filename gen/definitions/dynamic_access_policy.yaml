@@ -51,7 +51,7 @@ attributes:
   #       example: Welcome
   #     - model_name: id
   #       data_path: [networkACL]
-  #       tf_name: extended_acl_id
+  #       tf_name: extended_access_list_id
   #       type: String
   #       description: ID of the Extended ACL object to be applied on traffic.
   #       example: 87654321-4321-4321-4321-2109876543ba

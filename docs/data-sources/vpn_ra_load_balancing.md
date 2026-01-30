@@ -35,11 +35,11 @@ data "fmc_vpn_ra_load_balancing" "example" {
 
 - `enabled` (Boolean) Enable load balancing for VPN RA.
 - `ikev2_redirect_phase` (String) Phase during which the redirection occurs in IKEv2.
-- `interface_id` (String) Id of the communication interface which the director and members use to communicate.
+- `interface_id` (String) Id of the Security Zone or Interface Group which the director and members use to communicate.
 - `ipsec` (Boolean) Enable encryption between the director and members.
 - `ipsec_encryption_key` (String, Sensitive) Encryption key for the IPsec tunnel.
 - `ipv4_group_address` (String) IPv4 Group Address.
 - `ipv6_group_address` (String) IPv6 Group Address.
+- `port` (Number) UDP Port for communication between the director and members in a group. The default port is 9023.
 - `send_fqdn_to_peer_devices_instead_of_ip` (Boolean) Enable redirection using a Fully Qualified Domain Name (FQDN) instead of an IP address.
 - `type` (String) Type of the object; this value is always 'LoadBalanacing'.
-- `udp_port_number` (Number) UDP Port for communication between the director and members in a group. The default port is 9023.

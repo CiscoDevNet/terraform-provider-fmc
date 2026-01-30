@@ -119,12 +119,12 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				Optional:            true,
 			},
 			"access_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of interfaces that will support incoming Remote Access VPN connections.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Security Zones or Interface Groups that will support incoming Remote Access VPN connections.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of Interface Group or Security Zone.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Security Zone or Interface Group.").String,
 							Required:            true,
 						},
 						"protocol_ipsec_ikev2": schema.BoolAttribute{
@@ -150,13 +150,13 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				MarkdownDescription: helpers.NewAttributeDescription("Allow Users to select connection profile while logging in.").String,
 				Optional:            true,
 			},
-			"web_access_port_number": schema.Int64Attribute{
+			"web_access_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Web Access Port Number.").AddDefaultValueDescription("443").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             int64default.StaticInt64(443),
 			},
-			"dtls_port_number": schema.Int64Attribute{
+			"dtls_port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("DTLS Port Number.").AddDefaultValueDescription("443").String,
 				Optional:            true,
 				Computed:            true,
@@ -230,7 +230,7 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of group policy.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Group Policy.").String,
 							Required:            true,
 						},
 					},
@@ -251,12 +251,12 @@ func (r *VPNRAResource) Schema(ctx context.Context, req resource.SchemaRequest, 
 				},
 			},
 			"ikev2_policies": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of IKEv2 policies.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of IKEv2 Policies.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of IKEv2 policy.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of IKEv2 Policy.").String,
 							Required:            true,
 						},
 					},

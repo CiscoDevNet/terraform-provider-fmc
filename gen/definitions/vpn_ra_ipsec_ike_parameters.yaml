@@ -8,7 +8,6 @@ res_description: This resource manages FTD Remote Access (RA) Virtual Private Ne
 put_create: true
 retrieve_id: true
 no_delete: true
-adjust_body: true
 skip_test: true
 doc_category: VPN
 attributes:
@@ -85,18 +84,18 @@ attributes:
   #   type: Bool
   #   description: Enable fragmentation before encryption.
   #   example: "true"
-  # - model_name: enabled
-  #  data_path: [ipsecsettings, maximumTransmissionUnitAging]
-  #  tf_name: ipsec_enable_path_maximum_transmission_unit_aging
-  #  type: Bool
-  #  description: Enable path maximum transmission unit aging.
-  #  example: "false"
+  - model_name: enabled
+    data_path: [ipsecsettings, maximumTransmissionUnitAging]
+    tf_name: ipsec_path_maximum_transmission_unit_aging
+    type: Bool
+    description: Enable path maximum transmission unit aging.
+    example: "true"
   - model_name: resetIntervalMinutes
     data_path: [ipsecsettings, maximumTransmissionUnitAging]
     tf_name: ipsec_path_maximum_transmission_unit_aging_reset_interval
     type: Int64
     description: >-
-     Enter the number of minutes at which the Path Maximum Transission Unit (PMTU)
+     Enter the number of minutes at which the Path Maximum Transmission Unit (PMTU)
      value of an SA is reset to its original value.
     min_int: 10
     max_int: 30

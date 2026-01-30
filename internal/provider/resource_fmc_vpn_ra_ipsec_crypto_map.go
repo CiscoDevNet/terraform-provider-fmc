@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -98,7 +99,7 @@ func (r *VPNRAIPSecCryptoMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.").String,
 				Required:            true,
 			},
 			"ikev2_ipsec_proposals": schema.ListNestedAttribute{
@@ -122,7 +123,7 @@ func (r *VPNRAIPSecCryptoMapResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"client_services_port": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Port for Client Services.").AddIntegerRangeDescription(1, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Client Services Port Number.").AddIntegerRangeDescription(1, 65535).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 65535),
@@ -140,11 +141,13 @@ func (r *VPNRAIPSecCryptoMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"lifetime_duration": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Number of seconds a security association exists before expiring.").AddIntegerRangeDescription(120, 2147483647).String,
-				Required:            true,
+				MarkdownDescription: helpers.NewAttributeDescription("Number of seconds a security association exists before expiring.").AddIntegerRangeDescription(120, 2147483647).AddDefaultValueDescription("28800").String,
+				Optional:            true,
+				Computed:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(120, 2147483647),
 				},
+				Default: int64default.StaticInt64(28800),
 			},
 			"lifetime_size": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Volume of traffic (in kilobytes) that can pass between IPsec peers using a given security association before it expires.").AddIntegerRangeDescription(10, 2147483647).String,

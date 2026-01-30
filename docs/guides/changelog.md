@@ -7,6 +7,29 @@ description: |-
 
 # Changelog
 
+## 2.0.0-rc.11
+
+- BREAKING CHANGE: `fmc_vpn_ra_address_assignment_policy`: Rename attributes:
+    - `ipv4_internal_address_pool` to `ipv4_use_internal_address_pool`
+    - `ipv6_internal_address_pool` to `ipv6_use_internal_address_pool`
+- BREAKING CHANGE: `fmc_radius_server_group`: Rename attributes:
+    - `*_acl_*` to `*_access_list_*`
+- BREAKING CHANGE: `fmc_vpn_ra_ldap_attribute_map`: Renamed attributes:
+    - `cisco_value` to `cisco_attribute_value`
+    - `ldap_value` to `ldap_attribute_value`
+- BREAKING CHANGE: `fmc_vpn_load_balancing`: Rename attributes:
+    - `udp_port_number` to `port`
+- BREAKING CHANGE: `fmc_vpn_ra`: Rename attributes:
+    - `dtls_port_number` to `dtls_port`
+    - `web_access_port_number` to `web_access_port`
+- BREAKING CHANGE: `fmc_group_policy`: Rename attributes:
+    - `*_acl_*` to `*_access_list_*`
+    - `*_dpd_*` to `*_dead_peer_detection_*`
+    - `dhcp_network_scope_network_object_id` to `ipv4_dhcp_network_scope_network_object_id`
+    - `split_dns_domain_list` to `dns_request_split_tunnel_domains`
+- (Fix) Updated `required` flag for several attributs in multiple resources
+- (Fix) `fmc_vpn_ra_ipsec_ike_parameters`: Added `ipsec_path_maximum_transmission_unit_aging` attribute
+
 ## 2.0.0-rc10
 
 - BREAKING CHANGE: `fmc_*_prefix_list`: Rename attribute `ip_address` to `prefix`

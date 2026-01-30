@@ -354,12 +354,12 @@ attributes:
           - model_name: enabled
             tf_name: enabled
             type: Bool
-            description: Enable the alias.
+            description: Enable the Alias.
             example: true
       - model_name: groupUrl
         tf_name: alias_urls
         type: List
-        description: List of Alias URLs (group URLs).
+        description: List of Alias URLs (Group URLs).
         exclude_example: true
         attributes:
           - model_name: id
@@ -373,5 +373,5 @@ attributes:
           - model_name: enabled
             tf_name: enabled
             type: Bool
-            description: Enable the alias.
+            description: Enable the Alias.
             example: true

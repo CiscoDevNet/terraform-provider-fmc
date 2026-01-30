@@ -58,5 +58,5 @@ Read-Only:
 
 Read-Only:
 
-- `cisco_value` (String) Value of the Cisco attribute.
-- `ldap_value` (String) Value of the LDAP attribute.
+- `cisco_attribute_value` (String) Value of the Cisco attribute.
+- `ldap_attribute_value` (String) Value of the LDAP attribute.

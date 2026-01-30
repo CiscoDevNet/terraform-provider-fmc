@@ -194,7 +194,7 @@ func (data *VPNRAIPSecCryptoMap) fromBody(ctx context.Context, res gjson.Result)
 	if value := res.Get("lifeTimeSeconds"); value.Exists() {
 		data.LifetimeDuration = types.Int64Value(value.Int())
 	} else {
-		data.LifetimeDuration = types.Int64Null()
+		data.LifetimeDuration = types.Int64Value(28800)
 	}
 	if value := res.Get("lifeTimeKilobytes"); value.Exists() {
 		data.LifetimeSize = types.Int64Value(value.Int())
@@ -322,7 +322,7 @@ func (data *VPNRAIPSecCryptoMap) fromBodyPartial(ctx context.Context, res gjson.
 	}
 	if value := res.Get("lifeTimeSeconds"); value.Exists() && !data.LifetimeDuration.IsNull() {
 		data.LifetimeDuration = types.Int64Value(value.Int())
-	} else {
+	} else if data.LifetimeDuration.ValueInt64() != 28800 {
 		data.LifetimeDuration = types.Int64Null()
 	}
 	if value := res.Get("lifeTimeKilobytes"); value.Exists() && !data.LifetimeSize.IsNull() {

@@ -67,7 +67,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Metadata(ctx context.Context, req
 func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policies.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Client Address Assignment Policy.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -110,7 +110,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req r
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"ipv4_internal_address_pool": schema.BoolAttribute{
+			"ipv4_use_internal_address_pool": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use internal address pool for IPv4 address assignment.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
@@ -131,7 +131,7 @@ func (r *VPNRAAddressAssignmentPolicyResource) Schema(ctx context.Context, req r
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"ipv6_internal_address_pool": schema.BoolAttribute{
+			"ipv6_use_internal_address_pool": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Use internal address pool for IPv6 address assignment.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,

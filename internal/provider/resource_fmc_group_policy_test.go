@@ -41,17 +41,17 @@ func TestAccFmcGroupPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ipv4_split_tunnel_policy", "TUNNEL_ALL"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ipv6_split_tunnel_policy", "TUNNEL_ALL"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "dns_request_split_tunnel_policy", "TUNNEL_SPECIFIED_DOMAINS"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "split_dns_domain_list", "example.com,example.org"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "dns_request_split_tunnel_domains", "example.com,example.org"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ssl_compression", "DISABLED"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "dtls_compression", "DISABLED"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "mtu_size", "1406"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ignore_df_bit", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "keep_alive_messages", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "keep_alive_messages_interval", "20"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "gateway_dpd", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "gateway_dpd_interval", "30"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "client_dpd", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "client_dpd_interval", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "gateway_dead_peer_detection", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "gateway_dead_peer_detection_interval", "30"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "client_dead_peer_detection", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "client_dead_peer_detection_interval", "30"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "client_bypass_protocol", "false"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ssl_rekey", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_group_policy.test", "ssl_rekey_method", "NEW_TUNNEL"))
@@ -140,22 +140,22 @@ func testAccFmcGroupPolicyConfig_all() string {
 	config += `	banner = "Welcome to the VPN Connection."` + "\n"
 	config += `	primary_dns_server_host_id = fmc_hosts.test.items["group_policy_host_1"].id` + "\n"
 	config += `	secondary_dns_server_host_id = fmc_hosts.test.items["group_policy_host_2"].id` + "\n"
-	config += `	dhcp_network_scope_network_object_id = fmc_networks.test.items["group_policy_network_1"].id` + "\n"
+	config += `	ipv4_dhcp_network_scope_network_object_id = fmc_networks.test.items["group_policy_network_1"].id` + "\n"
 	config += `	default_domain = "example.com"` + "\n"
 	config += `	ipv4_split_tunnel_policy = "TUNNEL_ALL"` + "\n"
 	config += `	ipv6_split_tunnel_policy = "TUNNEL_ALL"` + "\n"
 	config += `	dns_request_split_tunnel_policy = "TUNNEL_SPECIFIED_DOMAINS"` + "\n"
-	config += `	split_dns_domain_list = "example.com,example.org"` + "\n"
+	config += `	dns_request_split_tunnel_domains = "example.com,example.org"` + "\n"
 	config += `	ssl_compression = "DISABLED"` + "\n"
 	config += `	dtls_compression = "DISABLED"` + "\n"
 	config += `	mtu_size = 1406` + "\n"
 	config += `	ignore_df_bit = true` + "\n"
 	config += `	keep_alive_messages = true` + "\n"
 	config += `	keep_alive_messages_interval = 20` + "\n"
-	config += `	gateway_dpd = true` + "\n"
-	config += `	gateway_dpd_interval = 30` + "\n"
-	config += `	client_dpd = true` + "\n"
-	config += `	client_dpd_interval = 30` + "\n"
+	config += `	gateway_dead_peer_detection = true` + "\n"
+	config += `	gateway_dead_peer_detection_interval = 30` + "\n"
+	config += `	client_dead_peer_detection = true` + "\n"
+	config += `	client_dead_peer_detection_interval = 30` + "\n"
 	config += `	client_bypass_protocol = false` + "\n"
 	config += `	ssl_rekey = true` + "\n"
 	config += `	ssl_rekey_method = "NEW_TUNNEL"` + "\n"

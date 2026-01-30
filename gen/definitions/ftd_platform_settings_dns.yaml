@@ -21,7 +21,7 @@ attributes:
     computed: true
   # DNS Settings
   - model_name: dnsServerGroups
-    tf_name: server_groups
+    tf_name: dns_server_groups
     type: List
     description: List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default.
     attributes:
@@ -29,7 +29,7 @@ attributes:
         data_path: [dnsServerGroup]
         tf_name: id
         type: String
-        description: ID of the DNS server group object.
+        description: ID of the DNS Server Group object.
         id: true
         example: 12345678-1234-1234-1234-123456789012
         test_value: fmc_dns_server_group.test.id
@@ -61,11 +61,11 @@ attributes:
     example: 240
   - model_name: interfaceObjects
     type: List
-    description: List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.
+    description: List of Security Zones or Interface Groups to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.
     attributes:
       - model_name: id
         type: String
-        description: ID of the interface object (Security Zone or Interface Group).
+        description: ID of the Security Zone or Interface Group object.
         id: true
         mandatory: true
         example: 12345678-1234-1234-1234-123456789012
@@ -73,7 +73,7 @@ attributes:
       - model_name: type
         type: String
         mandatory: true
-        description: Type of the interface object.
+        description: Type of the Security Zone or Interface Group object.
         example: SecurityZone
         enum_values: [SecurityZone, InterfaceGroup]
         test_value: fmc_interface_group.test.type

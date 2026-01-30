@@ -95,13 +95,13 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"server_groups": schema.ListNestedAttribute{
+			"dns_server_groups": schema.ListNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the DNS server group object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the DNS Server Group object.").String,
 							Optional:            true,
 						},
 						"is_default": schema.BoolAttribute{
@@ -131,16 +131,16 @@ func (r *FTDPlatformSettingsDNSResource) Schema(ctx context.Context, req resourc
 				},
 			},
 			"interface_objects": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Security Zones or Interface Groups to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the interface object (Security Zone or Interface Group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the Security Zone or Interface Group object.").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the interface object.").AddStringEnumDescription("SecurityZone", "InterfaceGroup").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the Security Zone or Interface Group object.").AddStringEnumDescription("SecurityZone", "InterfaceGroup").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("SecurityZone", "InterfaceGroup"),

@@ -66,7 +66,7 @@ Read-Only:
 <a id="nestedatt--items--rules"></a>
 ### Nested Schema for `items.rules`
 
-Optional:
+Required:
 
 - `component` (String) Component of the certificate field to match the rule.
   - Choices: `WHOLE_FIELD`, `COUNTRY`, `COMMON_NAME`, `DN_QUALIFIER`, `EMAIL_ADDRESS`, `GENERATIONAL_QUALIFIER`, `GIVEN_NAME`, `INITIALS`, `LOCALITY`, `NAME`, `ORGANISATION`, `ORGANISATIONAL_UNIT`, `SERIAL_NUMBER`, `SURNAME`, `STATE_PROVINCE`, `TITLE`, `USER_ID`, `UNSTRUCTURED_NAME`, `IP_ADDRESS`, `DOMAIN_COMPONENT`

@@ -9,8 +9,8 @@ resource "fmc_vpn_ra_ldap_attribute_map" "example" {
           cisco_attribute_name = "Access-Hours"
           value_maps = [
             {
-              ldap_value  = "ldap_value_example"
-              cisco_value = "cisco_value_example"
+              ldap_attribute_value  = "ldap_value_example"
+              cisco_attribute_value = "cisco_value_example"
             }
           ]
         }

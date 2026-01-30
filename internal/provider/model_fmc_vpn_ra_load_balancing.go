@@ -41,7 +41,7 @@ type VPNRALoadBalancing struct {
 	Ipv4GroupAddress                 types.String `tfsdk:"ipv4_group_address"`
 	Ipv6GroupAddress                 types.String `tfsdk:"ipv6_group_address"`
 	InterfaceId                      types.String `tfsdk:"interface_id"`
-	UdpPortNumber                    types.Int64  `tfsdk:"udp_port_number"`
+	Port                             types.Int64  `tfsdk:"port"`
 	Ipsec                            types.Bool   `tfsdk:"ipsec"`
 	IpsecEncryptionKey               types.String `tfsdk:"ipsec_encryption_key"`
 	SendFqdnToPeerDevicesInsteadOfIp types.Bool   `tfsdk:"send_fqdn_to_peer_devices_instead_of_ip"`
@@ -82,8 +82,8 @@ func (data VPNRALoadBalancing) toBody(ctx context.Context, state VPNRALoadBalanc
 	if !data.InterfaceId.IsNull() {
 		body, _ = sjson.Set(body, "groupSettings.communicationInterface.id", data.InterfaceId.ValueString())
 	}
-	if !data.UdpPortNumber.IsNull() {
-		body, _ = sjson.Set(body, "groupSettings.communicationUdpPort", data.UdpPortNumber.ValueInt64())
+	if !data.Port.IsNull() {
+		body, _ = sjson.Set(body, "groupSettings.communicationUdpPort", data.Port.ValueInt64())
 	}
 	if !data.Ipsec.IsNull() {
 		body, _ = sjson.Set(body, "groupSettings.ipsecEncryption.enable", data.Ipsec.ValueBool())
@@ -131,9 +131,9 @@ func (data *VPNRALoadBalancing) fromBody(ctx context.Context, res gjson.Result) 
 		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("groupSettings.communicationUdpPort"); value.Exists() {
-		data.UdpPortNumber = types.Int64Value(value.Int())
+		data.Port = types.Int64Value(value.Int())
 	} else {
-		data.UdpPortNumber = types.Int64Null()
+		data.Port = types.Int64Null()
 	}
 	if value := res.Get("groupSettings.ipsecEncryption.enable"); value.Exists() {
 		data.Ipsec = types.BoolValue(value.Bool())
@@ -186,10 +186,10 @@ func (data *VPNRALoadBalancing) fromBodyPartial(ctx context.Context, res gjson.R
 	} else {
 		data.InterfaceId = types.StringNull()
 	}
-	if value := res.Get("groupSettings.communicationUdpPort"); value.Exists() && !data.UdpPortNumber.IsNull() {
-		data.UdpPortNumber = types.Int64Value(value.Int())
+	if value := res.Get("groupSettings.communicationUdpPort"); value.Exists() && !data.Port.IsNull() {
+		data.Port = types.Int64Value(value.Int())
 	} else {
-		data.UdpPortNumber = types.Int64Null()
+		data.Port = types.Int64Null()
 	}
 	if value := res.Get("groupSettings.ipsecEncryption.enable"); value.Exists() && !data.Ipsec.IsNull() {
 		data.Ipsec = types.BoolValue(value.Bool())
