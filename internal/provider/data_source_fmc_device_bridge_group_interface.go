@@ -85,7 +85,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical name of the Brige Group interface.",
+				MarkdownDescription: "Logical name of the Bridge Group interface.",
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -97,16 +97,16 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"selected_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: "List of interfaces that are part of the bridge group.",
+				MarkdownDescription: "List of Device interfaces that are part of the Bridge Group.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the interface",
+							MarkdownDescription: "Id of the Device Interface",
 							Computed:            true,
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: "Name of the interface",
+							MarkdownDescription: "Name of the Device Interface",
 							Computed:            true,
 						},
 					},
@@ -117,11 +117,11 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask for ipv4_static_address.",
+				MarkdownDescription: "Netmask for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
-				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.",
+				MarkdownDescription: "Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using `ipv4_static_address`. DHCP is not supported when firewall is in transparent mode.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
