@@ -84,7 +84,7 @@ func (d *VPNRAAddressAssignmentPolicyDataSource) Schema(ctx context.Context, req
 				MarkdownDescription: "Use DHCP for IPv4 address assignment.",
 				Computed:            true,
 			},
-			"ipv4_internal_address_pool": schema.BoolAttribute{
+			"ipv4_use_internal_address_pool": schema.BoolAttribute{
 				MarkdownDescription: "Use internal address pool for IPv4 address assignment.",
 				Computed:            true,
 			},
@@ -96,7 +96,7 @@ func (d *VPNRAAddressAssignmentPolicyDataSource) Schema(ctx context.Context, req
 				MarkdownDescription: "Use authorization server (Only for RADIUS or Realm).",
 				Computed:            true,
 			},
-			"ipv6_internal_address_pool": schema.BoolAttribute{
+			"ipv6_use_internal_address_pool": schema.BoolAttribute{
 				MarkdownDescription: "Use internal address pool for IPv6 address assignment.",
 				Computed:            true,
 			},

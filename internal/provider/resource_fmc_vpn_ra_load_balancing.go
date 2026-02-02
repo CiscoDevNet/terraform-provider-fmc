@@ -110,10 +110,10 @@ func (r *VPNRALoadBalancingResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the communication interface which the director and members use to communicate.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Security Zone or Interface Group which the director and members use to communicate.").String,
 				Required:            true,
 			},
-			"udp_port_number": schema.Int64Attribute{
+			"port": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("UDP Port for communication between the director and members in a group. The default port is 9023.").AddIntegerRangeDescription(1, 65535).String,
 				Required:            true,
 				Validators: []validator.Int64{

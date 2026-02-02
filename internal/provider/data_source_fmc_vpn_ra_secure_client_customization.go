@@ -89,7 +89,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				},
 			},
 			"icons_and_images": schema.ListNestedAttribute{
-				MarkdownDescription: "Configure icons and images for the secure client customization.",
+				MarkdownDescription: "Configure icons and images for the Secure Client customization.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -101,7 +101,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				},
 			},
 			"scripts": schema.ListNestedAttribute{
-				MarkdownDescription: "Configure Secure Client customization scripts.",
+				MarkdownDescription: "Configure Secure Client Customization scripts.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -113,7 +113,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				},
 			},
 			"binaries": schema.ListNestedAttribute{
-				MarkdownDescription: "Configure Secure Client Binary executable modules on device.",
+				MarkdownDescription: "Configure Secure Client Customization Binary executable modules on device.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -125,7 +125,7 @@ func (d *VPNRASecureClientCustomizationDataSource) Schema(ctx context.Context, r
 				},
 			},
 			"custom_installer_transforms": schema.ListNestedAttribute{
-				MarkdownDescription: "Configure Secure Client customized installer transforms on device.",
+				MarkdownDescription: "Configure Secure Client Customization customized installer transforms on device.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

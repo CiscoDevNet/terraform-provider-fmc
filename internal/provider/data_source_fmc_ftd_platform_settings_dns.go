@@ -75,13 +75,13 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 				MarkdownDescription: "Type of the object; this value is always 'DNSSetting'.",
 				Computed:            true,
 			},
-			"server_groups": schema.ListNestedAttribute{
+			"dns_server_groups": schema.ListNestedAttribute{
 				MarkdownDescription: "List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the DNS server group object.",
+							MarkdownDescription: "ID of the DNS Server Group object.",
 							Computed:            true,
 						},
 						"is_default": schema.BoolAttribute{
@@ -105,16 +105,16 @@ func (d *FTDPlatformSettingsDNSDataSource) Schema(ctx context.Context, req datas
 				Computed:            true,
 			},
 			"interface_objects": schema.ListNestedAttribute{
-				MarkdownDescription: "List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.",
+				MarkdownDescription: "List of Security Zones or Interface Groups to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "ID of the interface object (Security Zone or Interface Group).",
+							MarkdownDescription: "ID of the Security Zone or Interface Group object.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the interface object.",
+							MarkdownDescription: "Type of the Security Zone or Interface Group object.",
 							Computed:            true,
 						},
 					},

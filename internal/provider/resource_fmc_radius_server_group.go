@@ -143,8 +143,8 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 					int64validator.Between(1024, 65535),
 				},
 			},
-			"merge_downloadable_acl_order": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Placement order of the downloadable ACL with the Cisco AV pair ACL.").AddStringEnumDescription("MERGE_DACL_BEFORE_AV_PAIR_ACL", "MERGE_DACL_AFTER_AV_PAIR_ACL").String,
+			"merge_downloadable_access_list_order": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Placement order of the downloadable Access List with the Cisco AV pair Access List.").AddStringEnumDescription("MERGE_DACL_BEFORE_AV_PAIR_ACL", "MERGE_DACL_AFTER_AV_PAIR_ACL").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("MERGE_DACL_BEFORE_AV_PAIR_ACL", "MERGE_DACL_AFTER_AV_PAIR_ACL"),
@@ -204,11 +204,11 @@ func (r *RadiusServerGroupResource) Schema(ctx context.Context, req resource.Sch
 							Default:             booldefault.StaticBool(true),
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Security Zone ID or Interface Group ID for the RADIUS server communication.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of Security Zone or Interface Group for the RADIUS server communication.").String,
 							Optional:            true,
 						},
-						"redirect_acl_id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("ID of the redirect extended ACL.").String,
+						"redirect_access_list_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the redirect Extended Access List.").String,
 							Optional:            true,
 						},
 					},

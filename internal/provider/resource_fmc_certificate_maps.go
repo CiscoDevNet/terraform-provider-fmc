@@ -111,28 +111,28 @@ func (r *CertificateMapsResource) Schema(ctx context.Context, req resource.Schem
 								Attributes: map[string]schema.Attribute{
 									"field": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Certificate field to match the rule.").AddStringEnumDescription("SUBJECT", "ALTERNATIVE_SUBJECT", "ISSUER", "EXTENDED_KEY_USAGE").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("SUBJECT", "ALTERNATIVE_SUBJECT", "ISSUER", "EXTENDED_KEY_USAGE"),
 										},
 									},
 									"component": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Component of the certificate field to match the rule.").AddStringEnumDescription("WHOLE_FIELD", "COUNTRY", "COMMON_NAME", "DN_QUALIFIER", "EMAIL_ADDRESS", "GENERATIONAL_QUALIFIER", "GIVEN_NAME", "INITIALS", "LOCALITY", "NAME", "ORGANISATION", "ORGANISATIONAL_UNIT", "SERIAL_NUMBER", "SURNAME", "STATE_PROVINCE", "TITLE", "USER_ID", "UNSTRUCTURED_NAME", "IP_ADDRESS", "DOMAIN_COMPONENT").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("WHOLE_FIELD", "COUNTRY", "COMMON_NAME", "DN_QUALIFIER", "EMAIL_ADDRESS", "GENERATIONAL_QUALIFIER", "GIVEN_NAME", "INITIALS", "LOCALITY", "NAME", "ORGANISATION", "ORGANISATIONAL_UNIT", "SERIAL_NUMBER", "SURNAME", "STATE_PROVINCE", "TITLE", "USER_ID", "UNSTRUCTURED_NAME", "IP_ADDRESS", "DOMAIN_COMPONENT"),
 										},
 									},
 									"operator": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Operator to use for matching the rule.").AddStringEnumDescription("EQUALS", "CONTAINS", "DOES_NOT_EQUAL", "DOES_NOT_CONTAIN").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("EQUALS", "CONTAINS", "DOES_NOT_EQUAL", "DOES_NOT_CONTAIN"),
 										},
 									},
 									"value": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Value to match in the rule.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},

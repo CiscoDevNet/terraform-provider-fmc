@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcFTDPlatformSettingsDNS(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_platform_settings_dns.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "server_groups.0.is_default", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "dns_server_groups.0.is_default", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "expire_entry_timer", "1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "poll_timer", "240"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_platform_settings_dns.test", "use_management_interface", "true"))
@@ -78,7 +78,7 @@ resource "fmc_dns_server_group" "test" {
 func testAccDataSourceFmcFTDPlatformSettingsDNSConfig() string {
 	config := `resource "fmc_ftd_platform_settings_dns" "test" {` + "\n"
 	config += `	ftd_platform_settings_id = fmc_ftd_platform_settings.test.id` + "\n"
-	config += `	server_groups = [{` + "\n"
+	config += `	dns_server_groups = [{` + "\n"
 	config += `		id = fmc_dns_server_group.test.id` + "\n"
 	config += `		is_default = true` + "\n"
 	config += `	}]` + "\n"

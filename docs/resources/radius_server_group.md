@@ -14,16 +14,16 @@ This resource manages a Radius Server Group.
 
 ```terraform
 resource "fmc_radius_server_group" "example" {
-  name                            = "my_radius_server_group"
-  description                     = "My RADIUS Server Group object"
-  group_accounting_mode           = "SINGLE"
-  retry_interval                  = 10
-  ad_realm_id                     = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  authorize_only                  = true
-  interim_account_update_interval = 24
-  dynamic_authorization           = true
-  dynamic_authorization_port      = 1700
-  merge_downloadable_acl_order    = "MERGE_DACL_BEFORE_AV_PAIR_ACL"
+  name                                 = "my_radius_server_group"
+  description                          = "My RADIUS Server Group object"
+  group_accounting_mode                = "SINGLE"
+  retry_interval                       = 10
+  ad_realm_id                          = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  authorize_only                       = true
+  interim_account_update_interval      = 24
+  dynamic_authorization                = true
+  dynamic_authorization_port           = 1700
+  merge_downloadable_access_list_order = "MERGE_DACL_BEFORE_AV_PAIR_ACL"
   radius_servers = [
     {
       hostname                        = "10.10.10.10"
@@ -60,7 +60,7 @@ resource "fmc_radius_server_group" "example" {
   - Default value: `SINGLE`
 - `interim_account_update_interval` (Number) Interval (in hours) for interim accounting updates.
   - Range: `1`-`120`
-- `merge_downloadable_acl_order` (String) Placement order of the downloadable ACL with the Cisco AV pair ACL.
+- `merge_downloadable_access_list_order` (String) Placement order of the downloadable Access List with the Cisco AV pair Access List.
   - Choices: `MERGE_DACL_BEFORE_AV_PAIR_ACL`, `MERGE_DACL_AFTER_AV_PAIR_ACL`
 - `retry_interval` (Number) Retry interval (in seconds) for the request.
   - Range: `1`-`10`
@@ -87,10 +87,10 @@ Optional:
 - `authentication_port` (Number) Port number for the RADIUS authentication services.
   - Range: `1`-`65535`
   - Default value: `1812`
-- `interface_id` (String) Security Zone ID or Interface Group ID for the RADIUS server communication.
+- `interface_id` (String) Id of Security Zone or Interface Group for the RADIUS server communication.
 - `message_authenticator` (Boolean) Enables RADIUS Server-Enabled Message Authenticator.
   - Default value: `true`
-- `redirect_acl_id` (String) ID of the redirect extended ACL.
+- `redirect_access_list_id` (String) Id of the redirect Extended Access List.
 - `timeout` (Number) Timeout (in seconds) for the RADIUS server.
   - Range: `1`-`300`
   - Default value: `10`

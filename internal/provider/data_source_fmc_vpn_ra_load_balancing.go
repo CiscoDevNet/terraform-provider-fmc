@@ -89,10 +89,10 @@ func (d *VPNRALoadBalancingDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the communication interface which the director and members use to communicate.",
+				MarkdownDescription: "Id of the Security Zone or Interface Group which the director and members use to communicate.",
 				Computed:            true,
 			},
-			"udp_port_number": schema.Int64Attribute{
+			"port": schema.Int64Attribute{
 				MarkdownDescription: "UDP Port for communication between the director and members in a group. The default port is 9023.",
 				Computed:            true,
 			},

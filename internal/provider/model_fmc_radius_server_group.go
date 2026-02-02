@@ -34,20 +34,20 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type RadiusServerGroup struct {
-	Id                           types.String                     `tfsdk:"id"`
-	Domain                       types.String                     `tfsdk:"domain"`
-	Name                         types.String                     `tfsdk:"name"`
-	Type                         types.String                     `tfsdk:"type"`
-	Description                  types.String                     `tfsdk:"description"`
-	GroupAccountingMode          types.String                     `tfsdk:"group_accounting_mode"`
-	RetryInterval                types.Int64                      `tfsdk:"retry_interval"`
-	AdRealmId                    types.String                     `tfsdk:"ad_realm_id"`
-	AuthorizeOnly                types.Bool                       `tfsdk:"authorize_only"`
-	InterimAccountUpdateInterval types.Int64                      `tfsdk:"interim_account_update_interval"`
-	DynamicAuthorization         types.Bool                       `tfsdk:"dynamic_authorization"`
-	DynamicAuthorizationPort     types.Int64                      `tfsdk:"dynamic_authorization_port"`
-	MergeDownloadableAclOrder    types.String                     `tfsdk:"merge_downloadable_acl_order"`
-	RadiusServers                []RadiusServerGroupRadiusServers `tfsdk:"radius_servers"`
+	Id                               types.String                     `tfsdk:"id"`
+	Domain                           types.String                     `tfsdk:"domain"`
+	Name                             types.String                     `tfsdk:"name"`
+	Type                             types.String                     `tfsdk:"type"`
+	Description                      types.String                     `tfsdk:"description"`
+	GroupAccountingMode              types.String                     `tfsdk:"group_accounting_mode"`
+	RetryInterval                    types.Int64                      `tfsdk:"retry_interval"`
+	AdRealmId                        types.String                     `tfsdk:"ad_realm_id"`
+	AuthorizeOnly                    types.Bool                       `tfsdk:"authorize_only"`
+	InterimAccountUpdateInterval     types.Int64                      `tfsdk:"interim_account_update_interval"`
+	DynamicAuthorization             types.Bool                       `tfsdk:"dynamic_authorization"`
+	DynamicAuthorizationPort         types.Int64                      `tfsdk:"dynamic_authorization_port"`
+	MergeDownloadableAccessListOrder types.String                     `tfsdk:"merge_downloadable_access_list_order"`
+	RadiusServers                    []RadiusServerGroupRadiusServers `tfsdk:"radius_servers"`
 }
 
 type RadiusServerGroupRadiusServers struct {
@@ -59,7 +59,7 @@ type RadiusServerGroupRadiusServers struct {
 	Timeout                     types.Int64  `tfsdk:"timeout"`
 	UseRoutingToSelectInterface types.Bool   `tfsdk:"use_routing_to_select_interface"`
 	InterfaceId                 types.String `tfsdk:"interface_id"`
-	RedirectAclId               types.String `tfsdk:"redirect_acl_id"`
+	RedirectAccessListId        types.String `tfsdk:"redirect_access_list_id"`
 }
 
 // End of section. //template:end types
@@ -110,8 +110,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 	if !data.DynamicAuthorizationPort.IsNull() {
 		body, _ = sjson.Set(body, "dynamicAuthorizationPort", data.DynamicAuthorizationPort.ValueInt64())
 	}
-	if !data.MergeDownloadableAclOrder.IsNull() {
-		body, _ = sjson.Set(body, "mergeDaclPlacementOrder", data.MergeDownloadableAclOrder.ValueString())
+	if !data.MergeDownloadableAccessListOrder.IsNull() {
+		body, _ = sjson.Set(body, "mergeDaclPlacementOrder", data.MergeDownloadableAccessListOrder.ValueString())
 	}
 	if len(data.RadiusServers) > 0 {
 		body, _ = sjson.Set(body, "radiusServers", []any{})
@@ -141,8 +141,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 			if !item.InterfaceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "interface.id", item.InterfaceId.ValueString())
 			}
-			if !item.RedirectAclId.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "redirectACL.id", item.RedirectAclId.ValueString())
+			if !item.RedirectAccessListId.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "redirectACL.id", item.RedirectAccessListId.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "radiusServers.-1", itemBody)
 		}
@@ -206,9 +206,9 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.DynamicAuthorizationPort = types.Int64Null()
 	}
 	if value := res.Get("mergeDaclPlacementOrder"); value.Exists() {
-		data.MergeDownloadableAclOrder = types.StringValue(value.String())
+		data.MergeDownloadableAccessListOrder = types.StringValue(value.String())
 	} else {
-		data.MergeDownloadableAclOrder = types.StringNull()
+		data.MergeDownloadableAccessListOrder = types.StringNull()
 	}
 	if value := res.Get("radiusServers"); value.Exists() {
 		data.RadiusServers = make([]RadiusServerGroupRadiusServers, 0)
@@ -251,9 +251,9 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 				data.InterfaceId = types.StringNull()
 			}
 			if value := res.Get("redirectACL.id"); value.Exists() {
-				data.RedirectAclId = types.StringValue(value.String())
+				data.RedirectAccessListId = types.StringValue(value.String())
 			} else {
-				data.RedirectAclId = types.StringNull()
+				data.RedirectAccessListId = types.StringNull()
 			}
 			(*parent).RadiusServers = append((*parent).RadiusServers, data)
 			return true
@@ -320,10 +320,10 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.DynamicAuthorizationPort = types.Int64Null()
 	}
-	if value := res.Get("mergeDaclPlacementOrder"); value.Exists() && !data.MergeDownloadableAclOrder.IsNull() {
-		data.MergeDownloadableAclOrder = types.StringValue(value.String())
+	if value := res.Get("mergeDaclPlacementOrder"); value.Exists() && !data.MergeDownloadableAccessListOrder.IsNull() {
+		data.MergeDownloadableAccessListOrder = types.StringValue(value.String())
 	} else {
-		data.MergeDownloadableAclOrder = types.StringNull()
+		data.MergeDownloadableAccessListOrder = types.StringNull()
 	}
 	for i := 0; i < len(data.RadiusServers); i++ {
 		keys := [...]string{"host"}
@@ -396,10 +396,10 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 		} else {
 			data.InterfaceId = types.StringNull()
 		}
-		if value := res.Get("redirectACL.id"); value.Exists() && !data.RedirectAclId.IsNull() {
-			data.RedirectAclId = types.StringValue(value.String())
+		if value := res.Get("redirectACL.id"); value.Exists() && !data.RedirectAccessListId.IsNull() {
+			data.RedirectAccessListId = types.StringValue(value.String())
 		} else {
-			data.RedirectAclId = types.StringNull()
+			data.RedirectAccessListId = types.StringNull()
 		}
 		(*parent).RadiusServers[i] = data
 	}
@@ -438,7 +438,7 @@ func (data RadiusServerGroup) adjustBody(ctx context.Context, req string) string
 		req, _ = sjson.Delete(req, "dynamicAuthorizationPort")
 	}
 
-	if !data.MergeDownloadableAclOrder.IsNull() {
+	if !data.MergeDownloadableAccessListOrder.IsNull() {
 		req, _ = sjson.Set(req, "enableMergeDacl", "true")
 	}
 

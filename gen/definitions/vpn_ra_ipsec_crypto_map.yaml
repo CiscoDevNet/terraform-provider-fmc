@@ -30,7 +30,7 @@ attributes:
     mandatory: true
     description: >-
       Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied.
-      The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.
+      The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     data_source_query: true
   - model_name: ikev2IpsecProposals
@@ -58,7 +58,7 @@ attributes:
   - model_name: clientServicesPort
     tf_name: client_services_port
     type: Int64
-    description: Port for Client Services.
+    description: Client Services Port Number.
     min_int: 1
     max_int: 65535
     example: 443
@@ -79,10 +79,10 @@ attributes:
     tf_name: lifetime_duration
     type: Int64
     description: Number of seconds a security association exists before expiring.
-    mandatory: true
     min_int: 120
     max_int: 2147483647
     example: 28800
+    default_value: 28800
   - model_name: lifeTimeKilobytes
     tf_name: lifetime_size
     type: Int64

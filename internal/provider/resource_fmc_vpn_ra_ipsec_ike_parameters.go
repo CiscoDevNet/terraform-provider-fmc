@@ -137,8 +137,12 @@ func (r *VPNRAIPSecIKEParametersResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Maximum number of Security Associations (SAs) allowed.").String,
 				Optional:            true,
 			},
+			"ipsec_path_maximum_transmission_unit_aging": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable path maximum transmission unit aging.").String,
+				Optional:            true,
+			},
 			"ipsec_path_maximum_transmission_unit_aging_reset_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enter the number of minutes at which the Path Maximum Transission Unit (PMTU) value of an SA is reset to its original value.").AddIntegerRangeDescription(10, 30).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enter the number of minutes at which the Path Maximum Transmission Unit (PMTU) value of an SA is reset to its original value.").AddIntegerRangeDescription(10, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(10, 30),
@@ -232,7 +236,6 @@ func (r *VPNRAIPSecIKEParametersResource) Create(ctx context.Context, req resour
 
 	// Create object
 	body := plan.toBody(ctx, VPNRAIPSecIKEParameters{})
-	body = plan.adjustBody(ctx, body)
 	urlPath := plan.getPath() + "/" + url.PathEscape(plan.Id.ValueString())
 	for range 5 {
 		res, err = r.client.Put(urlPath, body, reqMods...)
@@ -344,7 +347,6 @@ func (r *VPNRAIPSecIKEParametersResource) Update(ctx context.Context, req resour
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	body = plan.adjustBody(ctx, body)
 	// FMCBUG CSCwq61583 FMC API: RAVPN sub-endpoints are unstable
 	var res fmc.Res
 	var err error

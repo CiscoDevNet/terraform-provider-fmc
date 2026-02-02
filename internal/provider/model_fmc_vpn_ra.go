@@ -45,8 +45,8 @@ type VPNRA struct {
 	DynamicAccessPolicyId                        types.String              `tfsdk:"dynamic_access_policy_id"`
 	AccessInterfaces                             []VPNRAAccessInterfaces   `tfsdk:"access_interfaces"`
 	AllowUsersToSelectConnectionProfile          types.Bool                `tfsdk:"allow_users_to_select_connection_profile"`
-	WebAccessPortNumber                          types.Int64               `tfsdk:"web_access_port_number"`
-	DtlsPortNumber                               types.Int64               `tfsdk:"dtls_port_number"`
+	WebAccessPort                                types.Int64               `tfsdk:"web_access_port"`
+	DtlsPort                                     types.Int64               `tfsdk:"dtls_port"`
 	SslGlobalIdentityCertificateId               types.String              `tfsdk:"ssl_global_identity_certificate_id"`
 	IpsecIkev2IdentityCertificateId              types.String              `tfsdk:"ipsec_ikev2_identity_certificate_id"`
 	ServiceAccessObjectId                        types.String              `tfsdk:"service_access_object_id"`
@@ -148,11 +148,11 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 	if !data.AllowUsersToSelectConnectionProfile.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.allowConnectionProfileSelection", data.AllowUsersToSelectConnectionProfile.ValueBool())
 	}
-	if !data.WebAccessPortNumber.IsNull() {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.webPort", data.WebAccessPortNumber.ValueInt64())
+	if !data.WebAccessPort.IsNull() {
+		body, _ = sjson.Set(body, "accessInterfaceSettings.webPort", data.WebAccessPort.ValueInt64())
 	}
-	if !data.DtlsPortNumber.IsNull() {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.dtlsPort", data.DtlsPortNumber.ValueInt64())
+	if !data.DtlsPort.IsNull() {
+		body, _ = sjson.Set(body, "accessInterfaceSettings.dtlsPort", data.DtlsPort.ValueInt64())
 	}
 	if !data.SslGlobalIdentityCertificateId.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.sslIdCertificate.id", data.SslGlobalIdentityCertificateId.ValueString())
@@ -285,14 +285,14 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.AllowUsersToSelectConnectionProfile = types.BoolNull()
 	}
 	if value := res.Get("accessInterfaceSettings.webPort"); value.Exists() {
-		data.WebAccessPortNumber = types.Int64Value(value.Int())
+		data.WebAccessPort = types.Int64Value(value.Int())
 	} else {
-		data.WebAccessPortNumber = types.Int64Value(443)
+		data.WebAccessPort = types.Int64Value(443)
 	}
 	if value := res.Get("accessInterfaceSettings.dtlsPort"); value.Exists() {
-		data.DtlsPortNumber = types.Int64Value(value.Int())
+		data.DtlsPort = types.Int64Value(value.Int())
 	} else {
-		data.DtlsPortNumber = types.Int64Value(443)
+		data.DtlsPort = types.Int64Value(443)
 	}
 	if value := res.Get("accessInterfaceSettings.sslIdCertificate.id"); value.Exists() {
 		data.SslGlobalIdentityCertificateId = types.StringValue(value.String())
@@ -510,15 +510,15 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.AllowUsersToSelectConnectionProfile = types.BoolNull()
 	}
-	if value := res.Get("accessInterfaceSettings.webPort"); value.Exists() && !data.WebAccessPortNumber.IsNull() {
-		data.WebAccessPortNumber = types.Int64Value(value.Int())
-	} else if data.WebAccessPortNumber.ValueInt64() != 443 {
-		data.WebAccessPortNumber = types.Int64Null()
+	if value := res.Get("accessInterfaceSettings.webPort"); value.Exists() && !data.WebAccessPort.IsNull() {
+		data.WebAccessPort = types.Int64Value(value.Int())
+	} else if data.WebAccessPort.ValueInt64() != 443 {
+		data.WebAccessPort = types.Int64Null()
 	}
-	if value := res.Get("accessInterfaceSettings.dtlsPort"); value.Exists() && !data.DtlsPortNumber.IsNull() {
-		data.DtlsPortNumber = types.Int64Value(value.Int())
-	} else if data.DtlsPortNumber.ValueInt64() != 443 {
-		data.DtlsPortNumber = types.Int64Null()
+	if value := res.Get("accessInterfaceSettings.dtlsPort"); value.Exists() && !data.DtlsPort.IsNull() {
+		data.DtlsPort = types.Int64Value(value.Int())
+	} else if data.DtlsPort.ValueInt64() != 443 {
+		data.DtlsPort = types.Int64Null()
 	}
 	if value := res.Get("accessInterfaceSettings.sslIdCertificate.id"); value.Exists() && !data.SslGlobalIdentityCertificateId.IsNull() {
 		data.SslGlobalIdentityCertificateId = types.StringValue(value.String())

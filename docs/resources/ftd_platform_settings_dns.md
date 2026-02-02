@@ -20,7 +20,7 @@ The following restrictions apply:
 ```terraform
 resource "fmc_ftd_platform_settings_dns" "example" {
   ftd_platform_settings_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  server_groups = [
+  dns_server_groups = [
     {
       id         = "12345678-1234-1234-1234-123456789012"
       is_default = true
@@ -47,13 +47,13 @@ resource "fmc_ftd_platform_settings_dns" "example" {
 
 ### Optional
 
+- `dns_server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--dns_server_groups))
 - `domain` (String) Name of the FMC domain
 - `expire_entry_timer` (Number) Minimum time-to-live (TTL) for the DNS entry (in minutes).
   - Range: `1`-`65535`
-- `interface_objects` (Attributes List) List of interface objects (Security Zones or Interface Groups) to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution. (see [below for nested schema](#nestedatt--interface_objects))
+- `interface_objects` (Attributes List) List of Security Zones or Interface Groups to be used for DNS resolution. If not specified, the device uses all interfaces for DNS resolution. (see [below for nested schema](#nestedatt--interface_objects))
 - `poll_timer` (Number) Time limit after which the device queries the DNS server to resolve the name.
   - Range: `1`-`65535`
-- `server_groups` (Attributes List) List of DNS servers that will be used by device. It is mandatory to define at least one DNS server group marked as default. (see [below for nested schema](#nestedatt--server_groups))
 - `use_management_interface` (Boolean) Enable lookup via management/diagnostic interface.
 
 ### Read-Only
@@ -61,24 +61,24 @@ resource "fmc_ftd_platform_settings_dns" "example" {
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'DNSSetting'.
 
+<a id="nestedatt--dns_server_groups"></a>
+### Nested Schema for `dns_server_groups`
+
+Optional:
+
+- `filter_domains` (List of String) Mandatory for non-default groups. The group will be used for DNS resolutions for these domains only.
+- `id` (String) ID of the DNS Server Group object.
+- `is_default` (Boolean) Set DNS server group as default. Any DNS resolution request that does not match the filters for other groups will be resolved using the servers in this group.
+
+
 <a id="nestedatt--interface_objects"></a>
 ### Nested Schema for `interface_objects`
 
 Required:
 
-- `id` (String) ID of the interface object (Security Zone or Interface Group).
-- `type` (String) Type of the interface object.
+- `id` (String) ID of the Security Zone or Interface Group object.
+- `type` (String) Type of the Security Zone or Interface Group object.
   - Choices: `SecurityZone`, `InterfaceGroup`
-
-
-<a id="nestedatt--server_groups"></a>
-### Nested Schema for `server_groups`
-
-Optional:
-
-- `filter_domains` (List of String) Mandatory for non-default groups. The group will be used for DNS resolutions for these domains only.
-- `id` (String) ID of the DNS server group object.
-- `is_default` (Boolean) Set DNS server group as default. Any DNS resolution request that does not match the filters for other groups will be resolved using the servers in this group.
 
 ## Import
 

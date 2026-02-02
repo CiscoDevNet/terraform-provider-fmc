@@ -63,7 +63,7 @@ func (r *VPNRACertificateMapResource) Metadata(ctx context.Context, req resource
 func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Certificate Maps.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages FTD Remote Access (RA) Virtual Private Networks (VPNs) Certificate Map.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -95,7 +95,7 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"use_alias_url": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Use Alias URL (Group URL) if Alias URL and Certificate Map match different Connection Profiles.").String,
 				Optional:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{
@@ -103,7 +103,7 @@ func (r *VPNRACertificateMapResource) Schema(ctx context.Context, req resource.S
 				Optional:            true,
 			},
 			"certificate_to_connection_profile_mappings": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Mapping of certificates to connection profiles.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Mapping of Certificates to Connection Profiles.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

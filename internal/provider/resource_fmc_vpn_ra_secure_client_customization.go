@@ -107,7 +107,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 				},
 			},
 			"icons_and_images": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Configure icons and images for the secure client customization.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Configure icons and images for the Secure Client customization.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -119,7 +119,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 				},
 			},
 			"scripts": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client customization scripts.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client Customization scripts.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -131,7 +131,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 				},
 			},
 			"binaries": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client Binary executable modules on device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client Customization Binary executable modules on device.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -143,7 +143,7 @@ func (r *VPNRASecureClientCustomizationResource) Schema(ctx context.Context, req
 				},
 			},
 			"custom_installer_transforms": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client customized installer transforms on device.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Configure Secure Client Customization customized installer transforms on device.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

@@ -52,11 +52,11 @@ attributes:
     data_path: [dnsServers]
     tf_name: trusted_dns_servers_objects
     type: Set
-    description: Trusted DNS servers - host objects.
+    description: Trusted DNS servers - Host objects.
     attributes:
       - model_name: id
         type: String
-        description: Id of the host object.
+        description: Id of the Host object.
         example: 12345678-1234-1234-1234-123456
         test_value: fmc_host.test.id
 

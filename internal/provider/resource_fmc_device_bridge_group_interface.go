@@ -103,7 +103,7 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the Brige Group interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Logical name of the Bridge Group interface.").String,
 				Optional:            true,
 			},
 			"description": schema.StringAttribute{
@@ -121,16 +121,16 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				},
 			},
 			"selected_interfaces": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of interfaces that are part of the bridge group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Device interfaces that are part of the Bridge Group.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Device Interface").String,
 							Required:            true,
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the Device Interface").String,
 							Required:            true,
 						},
 					},
@@ -141,11 +141,11 @@ func (r *DeviceBridgeGroupInterfaceResource) Schema(ctx context.Context, req res
 				Optional:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask for `ipv4_static_address`.").String,
 				Optional:            true,
 			},
 			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address. DHCP is not supported when firewall is in transparent mode.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Value `false` indicates to enable DHCPv4 without obtaining default route. Value `true` indicates to enable DHCPv4 and obtain the default route. The `ipv4_dhcp_obtain_default_route` must not be set when using `ipv4_static_address`. DHCP is not supported when firewall is in transparent mode.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{

@@ -39,10 +39,10 @@ type VPNRAAddressAssignmentPolicy struct {
 	Type                                 types.String `tfsdk:"type"`
 	Ipv4UseAuthorizationServer           types.Bool   `tfsdk:"ipv4_use_authorization_server"`
 	Ipv4UseDhcp                          types.Bool   `tfsdk:"ipv4_use_dhcp"`
-	Ipv4InternalAddressPool              types.Bool   `tfsdk:"ipv4_internal_address_pool"`
+	Ipv4UseInternalAddressPool           types.Bool   `tfsdk:"ipv4_use_internal_address_pool"`
 	Ipv4InternalAddressPoolReuseInterval types.Int64  `tfsdk:"ipv4_internal_address_pool_reuse_interval"`
 	Ipv6UseAuthorizationServer           types.Bool   `tfsdk:"ipv6_use_authorization_server"`
-	Ipv6InternalAddressPool              types.Bool   `tfsdk:"ipv6_internal_address_pool"`
+	Ipv6UseInternalAddressPool           types.Bool   `tfsdk:"ipv6_use_internal_address_pool"`
 }
 
 // End of section. //template:end types
@@ -73,8 +73,8 @@ func (data VPNRAAddressAssignmentPolicy) toBody(ctx context.Context, state VPNRA
 	if !data.Ipv4UseDhcp.IsNull() {
 		body, _ = sjson.Set(body, "useDHCP", data.Ipv4UseDhcp.ValueBool())
 	}
-	if !data.Ipv4InternalAddressPool.IsNull() {
-		body, _ = sjson.Set(body, "useInternalAddressPoolForIPv4", data.Ipv4InternalAddressPool.ValueBool())
+	if !data.Ipv4UseInternalAddressPool.IsNull() {
+		body, _ = sjson.Set(body, "useInternalAddressPoolForIPv4", data.Ipv4UseInternalAddressPool.ValueBool())
 	}
 	if !data.Ipv4InternalAddressPoolReuseInterval.IsNull() {
 		body, _ = sjson.Set(body, "ipAddressReuseInterval", data.Ipv4InternalAddressPoolReuseInterval.ValueInt64())
@@ -82,8 +82,8 @@ func (data VPNRAAddressAssignmentPolicy) toBody(ctx context.Context, state VPNRA
 	if !data.Ipv6UseAuthorizationServer.IsNull() {
 		body, _ = sjson.Set(body, "useAuthorizationServerForIPv6", data.Ipv6UseAuthorizationServer.ValueBool())
 	}
-	if !data.Ipv6InternalAddressPool.IsNull() {
-		body, _ = sjson.Set(body, "useInternalAddressPoolForIPv6", data.Ipv6InternalAddressPool.ValueBool())
+	if !data.Ipv6UseInternalAddressPool.IsNull() {
+		body, _ = sjson.Set(body, "useInternalAddressPoolForIPv6", data.Ipv6UseInternalAddressPool.ValueBool())
 	}
 	return body
 }
@@ -109,9 +109,9 @@ func (data *VPNRAAddressAssignmentPolicy) fromBody(ctx context.Context, res gjso
 		data.Ipv4UseDhcp = types.BoolValue(true)
 	}
 	if value := res.Get("useInternalAddressPoolForIPv4"); value.Exists() {
-		data.Ipv4InternalAddressPool = types.BoolValue(value.Bool())
+		data.Ipv4UseInternalAddressPool = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv4InternalAddressPool = types.BoolValue(true)
+		data.Ipv4UseInternalAddressPool = types.BoolValue(true)
 	}
 	if value := res.Get("ipAddressReuseInterval"); value.Exists() {
 		data.Ipv4InternalAddressPoolReuseInterval = types.Int64Value(value.Int())
@@ -124,9 +124,9 @@ func (data *VPNRAAddressAssignmentPolicy) fromBody(ctx context.Context, res gjso
 		data.Ipv6UseAuthorizationServer = types.BoolValue(true)
 	}
 	if value := res.Get("useInternalAddressPoolForIPv6"); value.Exists() {
-		data.Ipv6InternalAddressPool = types.BoolValue(value.Bool())
+		data.Ipv6UseInternalAddressPool = types.BoolValue(value.Bool())
 	} else {
-		data.Ipv6InternalAddressPool = types.BoolValue(true)
+		data.Ipv6UseInternalAddressPool = types.BoolValue(true)
 	}
 }
 
@@ -154,10 +154,10 @@ func (data *VPNRAAddressAssignmentPolicy) fromBodyPartial(ctx context.Context, r
 	} else if data.Ipv4UseDhcp.ValueBool() != true {
 		data.Ipv4UseDhcp = types.BoolNull()
 	}
-	if value := res.Get("useInternalAddressPoolForIPv4"); value.Exists() && !data.Ipv4InternalAddressPool.IsNull() {
-		data.Ipv4InternalAddressPool = types.BoolValue(value.Bool())
-	} else if data.Ipv4InternalAddressPool.ValueBool() != true {
-		data.Ipv4InternalAddressPool = types.BoolNull()
+	if value := res.Get("useInternalAddressPoolForIPv4"); value.Exists() && !data.Ipv4UseInternalAddressPool.IsNull() {
+		data.Ipv4UseInternalAddressPool = types.BoolValue(value.Bool())
+	} else if data.Ipv4UseInternalAddressPool.ValueBool() != true {
+		data.Ipv4UseInternalAddressPool = types.BoolNull()
 	}
 	if value := res.Get("ipAddressReuseInterval"); value.Exists() && !data.Ipv4InternalAddressPoolReuseInterval.IsNull() {
 		data.Ipv4InternalAddressPoolReuseInterval = types.Int64Value(value.Int())
@@ -169,10 +169,10 @@ func (data *VPNRAAddressAssignmentPolicy) fromBodyPartial(ctx context.Context, r
 	} else if data.Ipv6UseAuthorizationServer.ValueBool() != true {
 		data.Ipv6UseAuthorizationServer = types.BoolNull()
 	}
-	if value := res.Get("useInternalAddressPoolForIPv6"); value.Exists() && !data.Ipv6InternalAddressPool.IsNull() {
-		data.Ipv6InternalAddressPool = types.BoolValue(value.Bool())
-	} else if data.Ipv6InternalAddressPool.ValueBool() != true {
-		data.Ipv6InternalAddressPool = types.BoolNull()
+	if value := res.Get("useInternalAddressPoolForIPv6"); value.Exists() && !data.Ipv6UseInternalAddressPool.IsNull() {
+		data.Ipv6UseInternalAddressPool = types.BoolValue(value.Bool())
+	} else if data.Ipv6UseInternalAddressPool.ValueBool() != true {
+		data.Ipv6UseInternalAddressPool = types.BoolNull()
 	}
 }
 

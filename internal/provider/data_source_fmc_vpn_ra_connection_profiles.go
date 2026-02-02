@@ -259,14 +259,14 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 										Computed:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: "Enable the alias.",
+										MarkdownDescription: "Enable the Alias.",
 										Computed:            true,
 									},
 								},
 							},
 						},
 						"alias_urls": schema.ListNestedAttribute{
-							MarkdownDescription: "List of Alias URLs (group URLs).",
+							MarkdownDescription: "List of Alias URLs (Group URLs).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -275,7 +275,7 @@ func (d *VPNRAConnectionProfilesDataSource) Schema(ctx context.Context, req data
 										Computed:            true,
 									},
 									"enabled": schema.BoolAttribute{
-										MarkdownDescription: "Enable the alias.",
+										MarkdownDescription: "Enable the Alias.",
 										Computed:            true,
 									},
 								},

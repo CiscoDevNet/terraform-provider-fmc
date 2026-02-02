@@ -101,12 +101,12 @@ func (d *FTDPlatformSettingsTrustedDNSServersDataSource) Schema(ctx context.Cont
 				Computed:            true,
 			},
 			"trusted_dns_servers_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "Trusted DNS servers - host objects.",
+				MarkdownDescription: "Trusted DNS servers - Host objects.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the host object.",
+							MarkdownDescription: "Id of the Host object.",
 							Computed:            true,
 						},
 					},

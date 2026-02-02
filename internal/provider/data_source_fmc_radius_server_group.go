@@ -112,8 +112,8 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 				MarkdownDescription: "Port number for the RADIUS dynamic authorization services.",
 				Computed:            true,
 			},
-			"merge_downloadable_acl_order": schema.StringAttribute{
-				MarkdownDescription: "Placement order of the downloadable ACL with the Cisco AV pair ACL.",
+			"merge_downloadable_access_list_order": schema.StringAttribute{
+				MarkdownDescription: "Placement order of the downloadable Access List with the Cisco AV pair Access List.",
 				Computed:            true,
 			},
 			"radius_servers": schema.ListNestedAttribute{
@@ -151,11 +151,11 @@ func (d *RadiusServerGroupDataSource) Schema(ctx context.Context, req datasource
 							Computed:            true,
 						},
 						"interface_id": schema.StringAttribute{
-							MarkdownDescription: "Security Zone ID or Interface Group ID for the RADIUS server communication.",
+							MarkdownDescription: "Id of Security Zone or Interface Group for the RADIUS server communication.",
 							Computed:            true,
 						},
-						"redirect_acl_id": schema.StringAttribute{
-							MarkdownDescription: "ID of the redirect extended ACL.",
+						"redirect_access_list_id": schema.StringAttribute{
+							MarkdownDescription: "Id of the redirect Extended Access List.",
 							Computed:            true,
 						},
 					},

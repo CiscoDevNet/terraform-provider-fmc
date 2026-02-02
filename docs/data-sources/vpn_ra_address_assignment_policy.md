@@ -33,10 +33,10 @@ data "fmc_vpn_ra_address_assignment_policy" "example" {
 
 ### Read-Only
 
-- `ipv4_internal_address_pool` (Boolean) Use internal address pool for IPv4 address assignment.
 - `ipv4_internal_address_pool_reuse_interval` (Number) Interval in seconds for reusing IPv4 addresses.
 - `ipv4_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm).
 - `ipv4_use_dhcp` (Boolean) Use DHCP for IPv4 address assignment.
-- `ipv6_internal_address_pool` (Boolean) Use internal address pool for IPv6 address assignment.
+- `ipv4_use_internal_address_pool` (Boolean) Use internal address pool for IPv4 address assignment.
 - `ipv6_use_authorization_server` (Boolean) Use authorization server (Only for RADIUS or Realm).
+- `ipv6_use_internal_address_pool` (Boolean) Use internal address pool for IPv6 address assignment.
 - `type` (String) Type of the object; this value is always 'RaVpnAddressAssignmentSetting'.

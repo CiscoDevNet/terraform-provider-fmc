@@ -121,11 +121,11 @@ func (r *VPNRALDAPAttributeMapResource) Schema(ctx context.Context, req resource
 										Optional:            true,
 										NestedObject: schema.NestedAttributeObject{
 											Attributes: map[string]schema.Attribute{
-												"ldap_value": schema.StringAttribute{
+												"ldap_attribute_value": schema.StringAttribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Value of the LDAP attribute.").String,
 													Required:            true,
 												},
-												"cisco_value": schema.StringAttribute{
+												"cisco_attribute_value": schema.StringAttribute{
 													MarkdownDescription: helpers.NewAttributeDescription("Value of the Cisco attribute.").String,
 													Required:            true,
 												},

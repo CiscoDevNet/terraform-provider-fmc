@@ -105,7 +105,7 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				},
 			},
 			"banner": schema.StringAttribute{
-				MarkdownDescription: "Banner text to be displayed to users.",
+				MarkdownDescription: "Banner text to be displayed to users. In case of a line spanning more than 497 characters, split the line into multiple lines.",
 				Computed:            true,
 			},
 			"primary_dns_server_host_id": schema.StringAttribute{
@@ -124,7 +124,7 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Id of host object that represents secondary WINS server.",
 				Computed:            true,
 			},
-			"dhcp_network_scope_network_object_id": schema.StringAttribute{
+			"ipv4_dhcp_network_scope_network_object_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the Network Object used to determine the DHCP scope.",
 				Computed:            true,
 			},
@@ -140,19 +140,19 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "IPv6 split tunnel policy.",
 				Computed:            true,
 			},
-			"split_tunnel_acl_id": schema.StringAttribute{
-				MarkdownDescription: "Id of standard or extended ACL used for split tunnel configuration.",
+			"split_tunnel_access_list_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Standard (for IPv4) or Extended (for IPv4 or IPv6) Access List used for split tunnel configuration.",
 				Computed:            true,
 			},
-			"split_tunnel_acl_type": schema.StringAttribute{
-				MarkdownDescription: "Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.",
+			"split_tunnel_access_list_type": schema.StringAttribute{
+				MarkdownDescription: "Type of Access List used for split tunnel configuration. Mandatory, when `split_tunnel_access_list_id` is set.",
 				Computed:            true,
 			},
 			"dns_request_split_tunnel_policy": schema.StringAttribute{
 				MarkdownDescription: "Define if DNS requests should be send over the tunnel or not.",
 				Computed:            true,
 			},
-			"split_dns_domain_list": schema.StringAttribute{
+			"dns_request_split_tunnel_domains": schema.StringAttribute{
 				MarkdownDescription: "Up to 10, comma separated domains for split DNS requests.",
 				Computed:            true,
 			},
@@ -208,19 +208,19 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Keepalive message interval in seconds.",
 				Computed:            true,
 			},
-			"gateway_dpd": schema.BoolAttribute{
+			"gateway_dead_peer_detection": schema.BoolAttribute{
 				MarkdownDescription: "Enable VPN secure gateway Dead Peer Detection (DPD).",
 				Computed:            true,
 			},
-			"gateway_dpd_interval": schema.Int64Attribute{
+			"gateway_dead_peer_detection_interval": schema.Int64Attribute{
 				MarkdownDescription: "VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.",
 				Computed:            true,
 			},
-			"client_dpd": schema.BoolAttribute{
+			"client_dead_peer_detection": schema.BoolAttribute{
 				MarkdownDescription: "Enable VPN client Dead Peer Detection (DPD).",
 				Computed:            true,
 			},
-			"client_dpd_interval": schema.Int64Attribute{
+			"client_dead_peer_detection_interval": schema.Int64Attribute{
 				MarkdownDescription: "VPN client Dead Peer Detection (DPD) messages interval in seconds.",
 				Computed:            true,
 			},
@@ -240,12 +240,12 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 				MarkdownDescription: "Interval for SSL rekeying in minutes.",
 				Computed:            true,
 			},
-			"client_firewall_private_network_rules_acl_id": schema.StringAttribute{
-				MarkdownDescription: "Id of extended ACL to configure firewall settings for the VPN client's platform.",
+			"client_firewall_private_network_rules_access_list_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Extended Access List to configure firewall settings for the VPN client's platform.",
 				Computed:            true,
 			},
-			"client_firewall_public_network_rules_acl_id": schema.StringAttribute{
-				MarkdownDescription: "Id of extended ACL to configure firewall settings for the VPN client's platform.",
+			"client_firewall_public_network_rules_access_list_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Extended Access List to configure firewall settings for the VPN client's platform.",
 				Computed:            true,
 			},
 			"secure_client_custom_attributes": schema.ListNestedAttribute{
@@ -260,8 +260,8 @@ func (d *GroupPolicyDataSource) Schema(ctx context.Context, req datasource.Schem
 					},
 				},
 			},
-			"traffic_filter_acl_id": schema.StringAttribute{
-				MarkdownDescription: "Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.",
+			"traffic_filter_access_list_id": schema.StringAttribute{
+				MarkdownDescription: "Id of Extended Access List that determine whether to allow or block tunneled data packets coming through the VPN connection.",
 				Computed:            true,
 			},
 			"restrict_vpn_to_vlan": schema.Int64Attribute{

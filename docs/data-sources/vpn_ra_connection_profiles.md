@@ -46,7 +46,7 @@ Read-Only:
 - `accounting_server_id` (String) Id of the RADIUS accounting server.
 - `accounting_server_type` (String) Type of the RADIUS accounting server (`RadiusServerGroup`).
 - `alias_names` (Attributes List) List of Alias Names. (see [below for nested schema](#nestedatt--items--alias_names))
-- `alias_urls` (Attributes List) List of Alias URLs (group URLs). (see [below for nested schema](#nestedatt--items--alias_urls))
+- `alias_urls` (Attributes List) List of Alias URLs (Group URLs). (see [below for nested schema](#nestedatt--items--alias_urls))
 - `allow_connection_only_if_user_exists_in_authorization_database` (Boolean) Allow connection only if the username of client exists in the authorization database.
 - `authentication_method` (String) User authentication method.
 - `authorization_server_id` (String) Id of the authorization RADIUS Server Group or Realm.
@@ -88,7 +88,7 @@ Read-Only:
 
 Read-Only:
 
-- `enabled` (Boolean) Enable the alias.
+- `enabled` (Boolean) Enable the Alias.
 - `name` (String) Name of the Alias.
 
 
@@ -97,7 +97,7 @@ Read-Only:
 
 Read-Only:
 
-- `enabled` (Boolean) Enable the alias.
+- `enabled` (Boolean) Enable the Alias.
 - `url_object_id` (String) Id of the URL object.
 
 

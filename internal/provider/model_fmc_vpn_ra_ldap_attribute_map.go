@@ -54,8 +54,8 @@ type VPNRALDAPAttributeMapRealmsAttributeMaps struct {
 }
 
 type VPNRALDAPAttributeMapRealmsAttributeMapsValueMaps struct {
-	LdapValue  types.String `tfsdk:"ldap_value"`
-	CiscoValue types.String `tfsdk:"cisco_value"`
+	LdapAttributeValue  types.String `tfsdk:"ldap_attribute_value"`
+	CiscoAttributeValue types.String `tfsdk:"cisco_attribute_value"`
 }
 
 // End of section. //template:end types
@@ -101,11 +101,11 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 						itemChildBody, _ = sjson.Set(itemChildBody, "valueMappings", []any{})
 						for _, childChildItem := range childItem.ValueMaps {
 							itemChildChildBody := ""
-							if !childChildItem.LdapValue.IsNull() {
-								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ldapValue", childChildItem.LdapValue.ValueString())
+							if !childChildItem.LdapAttributeValue.IsNull() {
+								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ldapValue", childChildItem.LdapAttributeValue.ValueString())
 							}
-							if !childChildItem.CiscoValue.IsNull() {
-								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ciscoValue", childChildItem.CiscoValue.ValueString())
+							if !childChildItem.CiscoAttributeValue.IsNull() {
+								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ciscoValue", childChildItem.CiscoAttributeValue.ValueString())
 							}
 							itemChildBody, _ = sjson.SetRaw(itemChildBody, "valueMappings.-1", itemChildChildBody)
 						}
@@ -160,14 +160,14 @@ func (data *VPNRALDAPAttributeMap) fromBody(ctx context.Context, res gjson.Resul
 							parent := &data
 							data := VPNRALDAPAttributeMapRealmsAttributeMapsValueMaps{}
 							if value := res.Get("ldapValue"); value.Exists() {
-								data.LdapValue = types.StringValue(value.String())
+								data.LdapAttributeValue = types.StringValue(value.String())
 							} else {
-								data.LdapValue = types.StringNull()
+								data.LdapAttributeValue = types.StringNull()
 							}
 							if value := res.Get("ciscoValue"); value.Exists() {
-								data.CiscoValue = types.StringValue(value.String())
+								data.CiscoAttributeValue = types.StringValue(value.String())
 							} else {
-								data.CiscoValue = types.StringNull()
+								data.CiscoAttributeValue = types.StringNull()
 							}
 							(*parent).ValueMaps = append((*parent).ValueMaps, data)
 							return true
@@ -286,7 +286,7 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 			}
 			for i := 0; i < len(data.ValueMaps); i++ {
 				keys := [...]string{"ldapValue", "ciscoValue"}
-				keyValues := [...]string{data.ValueMaps[i].LdapValue.ValueString(), data.ValueMaps[i].CiscoValue.ValueString()}
+				keyValues := [...]string{data.ValueMaps[i].LdapAttributeValue.ValueString(), data.ValueMaps[i].CiscoAttributeValue.ValueString()}
 
 				parent := &data
 				data := (*parent).ValueMaps[i]
@@ -320,15 +320,15 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 
 					continue
 				}
-				if value := res.Get("ldapValue"); value.Exists() && !data.LdapValue.IsNull() {
-					data.LdapValue = types.StringValue(value.String())
+				if value := res.Get("ldapValue"); value.Exists() && !data.LdapAttributeValue.IsNull() {
+					data.LdapAttributeValue = types.StringValue(value.String())
 				} else {
-					data.LdapValue = types.StringNull()
+					data.LdapAttributeValue = types.StringNull()
 				}
-				if value := res.Get("ciscoValue"); value.Exists() && !data.CiscoValue.IsNull() {
-					data.CiscoValue = types.StringValue(value.String())
+				if value := res.Get("ciscoValue"); value.Exists() && !data.CiscoAttributeValue.IsNull() {
+					data.CiscoAttributeValue = types.StringValue(value.String())
 				} else {
-					data.CiscoValue = types.StringNull()
+					data.CiscoAttributeValue = types.StringNull()
 				}
 				(*parent).ValueMaps[i] = data
 			}

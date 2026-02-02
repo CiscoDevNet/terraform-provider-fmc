@@ -23,19 +23,19 @@ resource "fmc_group_policy" "example" {
       id = "12345678-1234-1234-1234-123456"
     }
   ]
-  banner                               = "Welcome to the VPN Connection."
-  primary_dns_server_host_id           = "12345678-1234-1234-1234-123456"
-  secondary_dns_server_host_id         = "12345678-1234-1234-1234-123457"
-  primary_wins_server_host_id          = "12345678-1234-1234-1234-123458"
-  secondary_wins_server_host_id        = "12345678-1234-1234-1234-123459"
-  dhcp_network_scope_network_object_id = "12345678-1234-1234-1234-123460"
-  default_domain                       = "example.com"
-  ipv4_split_tunnel_policy             = "TUNNEL_ALL"
-  ipv6_split_tunnel_policy             = "TUNNEL_ALL"
-  dns_request_split_tunnel_policy      = "TUNNEL_SPECIFIED_DOMAINS"
-  split_dns_domain_list                = "example.com,example.org"
-  secure_client_profile_id             = "12345678-1234-1234-1234-123456"
-  secure_client_management_profile_id  = "12345678-1234-1234-1234-123456"
+  banner                                    = "Welcome to the VPN Connection."
+  primary_dns_server_host_id                = "12345678-1234-1234-1234-123456"
+  secondary_dns_server_host_id              = "12345678-1234-1234-1234-123457"
+  primary_wins_server_host_id               = "12345678-1234-1234-1234-123458"
+  secondary_wins_server_host_id             = "12345678-1234-1234-1234-123459"
+  ipv4_dhcp_network_scope_network_object_id = "12345678-1234-1234-1234-123460"
+  default_domain                            = "example.com"
+  ipv4_split_tunnel_policy                  = "TUNNEL_ALL"
+  ipv6_split_tunnel_policy                  = "TUNNEL_ALL"
+  dns_request_split_tunnel_policy           = "TUNNEL_SPECIFIED_DOMAINS"
+  dns_request_split_tunnel_domains          = "example.com,example.org"
+  secure_client_profile_id                  = "12345678-1234-1234-1234-123456"
+  secure_client_management_profile_id       = "12345678-1234-1234-1234-123456"
   secure_client_modules = [
     {
       type            = "UMBRELLA_ROAMING"
@@ -43,28 +43,28 @@ resource "fmc_group_policy" "example" {
       download_module = true
     }
   ]
-  ssl_compression                              = "DISABLED"
-  dtls_compression                             = "DISABLED"
-  mtu_size                                     = 1406
-  ignore_df_bit                                = true
-  keep_alive_messages                          = true
-  keep_alive_messages_interval                 = 20
-  gateway_dpd                                  = true
-  gateway_dpd_interval                         = 30
-  client_dpd                                   = true
-  client_dpd_interval                          = 30
-  client_bypass_protocol                       = false
-  ssl_rekey                                    = true
-  ssl_rekey_method                             = "NEW_TUNNEL"
-  ssl_rekey_interval                           = 60
-  client_firewall_private_network_rules_acl_id = "12345678-1234-1234-1234-123456"
-  client_firewall_public_network_rules_acl_id  = "12345678-1234-1234-1234-123456"
+  ssl_compression                                      = "DISABLED"
+  dtls_compression                                     = "DISABLED"
+  mtu_size                                             = 1406
+  ignore_df_bit                                        = true
+  keep_alive_messages                                  = true
+  keep_alive_messages_interval                         = 20
+  gateway_dead_peer_detection                          = true
+  gateway_dead_peer_detection_interval                 = 30
+  client_dead_peer_detection                           = true
+  client_dead_peer_detection_interval                  = 30
+  client_bypass_protocol                               = false
+  ssl_rekey                                            = true
+  ssl_rekey_method                                     = "NEW_TUNNEL"
+  ssl_rekey_interval                                   = 60
+  client_firewall_private_network_rules_access_list_id = "12345678-1234-1234-1234-123456"
+  client_firewall_public_network_rules_access_list_id  = "12345678-1234-1234-1234-123456"
   secure_client_custom_attributes = [
     {
       id = "12345678-1234-1234-1234-123456"
     }
   ]
-  traffic_filter_acl_id                  = "12345678-1234-1234-1234-123456"
+  traffic_filter_access_list_id          = "12345678-1234-1234-1234-123456"
   restrict_vpn_to_vlan                   = 100
   access_hours_time_range_id             = "12345678-1234-1234-1234-123456"
   simultaneous_logins_per_user           = 3
@@ -85,27 +85,27 @@ resource "fmc_group_policy" "example" {
 ### Optional
 
 - `access_hours_time_range_id` (String) ID of Time Range object that specifies when this group policy is available to be applied to a remote access user.
-- `banner` (String) Banner text to be displayed to users.
+- `banner` (String) Banner text to be displayed to users. In case of a line spanning more than 497 characters, split the line into multiple lines.
 - `client_bypass_protocol` (Boolean) Drop network traffic for which the headend did not assign an IP address. Applicable if headend assigned only IPv4 or only IPv6 address.
-- `client_dpd` (Boolean) Enable VPN client Dead Peer Detection (DPD).
+- `client_dead_peer_detection` (Boolean) Enable VPN client Dead Peer Detection (DPD).
   - Default value: `true`
-- `client_dpd_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
+- `client_dead_peer_detection_interval` (Number) VPN client Dead Peer Detection (DPD) messages interval in seconds.
   - Range: `5`-`3600`
   - Default value: `30`
-- `client_firewall_private_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
-- `client_firewall_public_network_rules_acl_id` (String) Id of extended ACL to configure firewall settings for the VPN client's platform.
+- `client_firewall_private_network_rules_access_list_id` (String) Id of Extended Access List to configure firewall settings for the VPN client's platform.
+- `client_firewall_public_network_rules_access_list_id` (String) Id of Extended Access List to configure firewall settings for the VPN client's platform.
 - `default_domain` (String) Name of the default domain.
 - `description` (String) Description of the object.
-- `dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
+- `dns_request_split_tunnel_domains` (String) Up to 10, comma separated domains for split DNS requests.
 - `dns_request_split_tunnel_policy` (String) Define if DNS requests should be send over the tunnel or not.
   - Choices: `USE_SPLIT_TUNNEL_SETTING`, `TUNNEL_ALL`, `TUNNEL_SPECIFIED_DOMAINS`
   - Default value: `USE_SPLIT_TUNNEL_SETTING`
 - `domain` (String) Name of the FMC domain
 - `dtls_compression` (String) DTLS compression method for the connection.
   - Choices: `DISABLED`, `LZS`
-- `gateway_dpd` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
+- `gateway_dead_peer_detection` (Boolean) Enable VPN secure gateway Dead Peer Detection (DPD).
   - Default value: `true`
-- `gateway_dpd_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
+- `gateway_dead_peer_detection_interval` (Number) VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
   - Range: `5`-`3600`
   - Default value: `30`
 - `idle_timeout` (Number) VPN idle timeout in minutes.
@@ -114,6 +114,7 @@ resource "fmc_group_policy" "example" {
   - Range: `1`-`30`
 - `ignore_df_bit` (Boolean) Whether to ignore the Don't Fragment bit in packets.
 - `ipv4_address_pools` (Attributes List) List of IPv4 Address Pools for address assignment. (see [below for nested schema](#nestedatt--ipv4_address_pools))
+- `ipv4_dhcp_network_scope_network_object_id` (String) Id of the Network Object used to determine the DHCP scope.
 - `ipv4_split_tunnel_policy` (String) IPv4 split tunnel policy.
   - Choices: `TUNNEL_ALL`, `TUNNEL_SPECIFIED`, `EXCLUDE_SPECIFIED_OVER_TUNNEL`
   - Default value: `TUNNEL_ALL`
@@ -148,9 +149,8 @@ resource "fmc_group_policy" "example" {
 - `secure_client_profile_id` (String) ID of the Secure Client Profile.
 - `simultaneous_logins_per_user` (Number) Maximum number of simultaneous logins allowed for a user.
   - Range: `0`-`2147483647`
-- `split_dns_domain_list` (String) Up to 10, comma separated domains for split DNS requests.
-- `split_tunnel_acl_id` (String) Id of standard or extended ACL used for split tunnel configuration.
-- `split_tunnel_acl_type` (String) Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
+- `split_tunnel_access_list_id` (String) Id of Standard (for IPv4) or Extended (for IPv4 or IPv6) Access List used for split tunnel configuration.
+- `split_tunnel_access_list_type` (String) Type of Access List used for split tunnel configuration. Mandatory, when `split_tunnel_access_list_id` is set.
   - Choices: `StandardAccessList`, `ExtendedAccessList`
 - `ssl_compression` (String) SSL compression method for the connection.
   - Choices: `DISABLED`, `DEFLATE`, `LZS`
@@ -159,7 +159,7 @@ resource "fmc_group_policy" "example" {
   - Range: `4`-`10080`
 - `ssl_rekey_method` (String) Method to use for SSL rekeying.
   - Choices: `NEW_TUNNEL`, `EXISTING_TUNNEL`
-- `traffic_filter_acl_id` (String) Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
+- `traffic_filter_access_list_id` (String) Id of Extended Access List that determine whether to allow or block tunneled data packets coming through the VPN connection.
 
 ### Read-Only
 

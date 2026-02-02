@@ -30,8 +30,8 @@ resource "fmc_vpn_ra" "example" {
     }
   ]
   allow_users_to_select_connection_profile           = true
-  web_access_port_number                             = 443
-  dtls_port_number                                   = 443
+  web_access_port                                    = 443
+  dtls_port                                          = 443
   ssl_global_identity_certificate_id                 = "12345678-1234-1234-1234-123456"
   ipsec_ikev2_identity_certificate_id                = "12345678-1234-1234-1234-123456"
   service_access_object_id                           = "12345678-1234-1234-1234-123456"
@@ -61,7 +61,7 @@ resource "fmc_vpn_ra" "example" {
 
 ### Required
 
-- `access_interfaces` (Attributes List) List of interfaces that will support incoming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
+- `access_interfaces` (Attributes List) List of Security Zones or Interface Groups that will support incoming Remote Access VPN connections. (see [below for nested schema](#nestedatt--access_interfaces))
 - `group_policies` (Attributes List) List of Group Policies associated with the VPN. It is mandatory to include at least 'DfltGrpPolicy' in the list. (see [below for nested schema](#nestedatt--group_policies))
 - `name` (String) Name of the VPN Remote Access (RA) Configuration.
 
@@ -72,11 +72,11 @@ resource "fmc_vpn_ra" "example" {
   - Default value: `false`
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `dtls_port_number` (Number) DTLS Port Number.
+- `dtls_port` (Number) DTLS Port Number.
   - Default value: `443`
 - `dynamic_access_policy_id` (String) Id of Dynamic Access Policy (DAP).
 - `external_browser_package_id` (String) Id of Secure Client External Browser Package.
-- `ikev2_policies` (Attributes List) List of IKEv2 policies. (see [below for nested schema](#nestedatt--ikev2_policies))
+- `ikev2_policies` (Attributes List) List of IKEv2 Policies. (see [below for nested schema](#nestedatt--ikev2_policies))
 - `ipsec_ikev2_identity_certificate_id` (String) Id of IPsec IKEv2 Identity Certificate.
 - `local_realm_id` (String) Id of local realm server. This can be set only after relevant connection profiles are configured.
 - `protocol_ipsec_ikev2` (Boolean) Enable IPsec IKEv2 protocol.
@@ -86,7 +86,7 @@ resource "fmc_vpn_ra" "example" {
 - `secure_client_images` (Attributes List) List of Secure Client images. (see [below for nested schema](#nestedatt--secure_client_images))
 - `service_access_object_id` (String) Id of the Service Access object.
 - `ssl_global_identity_certificate_id` (String) Id of SSL Global Identity Certificate.
-- `web_access_port_number` (Number) Web Access Port Number.
+- `web_access_port` (Number) Web Access Port Number.
   - Default value: `443`
 
 ### Read-Only
@@ -105,7 +105,7 @@ resource "fmc_vpn_ra" "example" {
 
 Required:
 
-- `id` (String) Id of Interface Group or Security Zone.
+- `id` (String) Id of Security Zone or Interface Group.
 
 Optional:
 
@@ -120,7 +120,7 @@ Optional:
 
 Required:
 
-- `id` (String) Id of group policy.
+- `id` (String) Id of Group Policy.
 
 
 <a id="nestedatt--ikev2_policies"></a>
@@ -128,7 +128,7 @@ Required:
 
 Required:
 
-- `id` (String) Id of IKEv2 policy.
+- `id` (String) Id of IKEv2 Policy.
 
 
 <a id="nestedatt--secure_client_images"></a>

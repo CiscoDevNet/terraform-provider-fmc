@@ -29,7 +29,7 @@ attributes:
   - model_name: ifname
     tf_name: logical_name
     type: String
-    description: Logical name of the Brige Group interface.
+    description: Logical name of the Bridge Group interface.
     example: my_bridge_group_interface
   - model_name: description
     type: String
@@ -45,17 +45,17 @@ attributes:
     requires_replace: true
   - model_name: selectedInterfaces
     type: List
-    description: List of interfaces that are part of the bridge group.
+    description: List of Device interfaces that are part of the Bridge Group.
     attributes:
       - model_name: id
         type: String
-        description: Id of the interface
+        description: Id of the Device Interface
         example: 76d24097-41c4-4558-a4d0-a8c07ac08470
         mandatory: true
         test_value: data.fmc_device_physical_interface.test.id
       - model_name: name
         type: String
-        description: Name of the interface
+        description: Name of the Device Interface
         example: GigabitEthernet0/0
         mandatory: true
         test_value: data.fmc_device_physical_interface.test.name
@@ -71,7 +71,7 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask for ipv4_static_address.
+    description: Netmask for `ipv4_static_address`.
     example: "24"
 
   # IPv4 - DHCP
@@ -82,7 +82,7 @@ attributes:
     description: >-
       Value `false` indicates to enable DHCPv4 without obtaining default route.
       Value `true` indicates to enable DHCPv4 and obtain the default route.
-      The `ipv4_dhcp_obtain_default_route` must not be set when using ipv4_static_address.
+      The `ipv4_dhcp_obtain_default_route` must not be set when using `ipv4_static_address`.
       DHCP is not supported when firewall is in transparent mode.
     exclude_example: true
     exclude_test: true

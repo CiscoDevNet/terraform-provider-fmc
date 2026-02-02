@@ -41,14 +41,14 @@ type FTDPlatformSettingsDNS struct {
 	Domain                 types.String                             `tfsdk:"domain"`
 	FtdPlatformSettingsId  types.String                             `tfsdk:"ftd_platform_settings_id"`
 	Type                   types.String                             `tfsdk:"type"`
-	ServerGroups           []FTDPlatformSettingsDNSServerGroups     `tfsdk:"server_groups"`
+	DnsServerGroups        []FTDPlatformSettingsDNSDnsServerGroups  `tfsdk:"dns_server_groups"`
 	ExpireEntryTimer       types.Int64                              `tfsdk:"expire_entry_timer"`
 	PollTimer              types.Int64                              `tfsdk:"poll_timer"`
 	InterfaceObjects       []FTDPlatformSettingsDNSInterfaceObjects `tfsdk:"interface_objects"`
 	UseManagementInterface types.Bool                               `tfsdk:"use_management_interface"`
 }
 
-type FTDPlatformSettingsDNSServerGroups struct {
+type FTDPlatformSettingsDNSDnsServerGroups struct {
 	Id            types.String `tfsdk:"id"`
 	IsDefault     types.Bool   `tfsdk:"is_default"`
 	FilterDomains types.List   `tfsdk:"filter_domains"`
@@ -81,9 +81,9 @@ func (data FTDPlatformSettingsDNS) toBody(ctx context.Context, state FTDPlatform
 	if data.Id.ValueString() != "" {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
-	if len(data.ServerGroups) > 0 {
+	if len(data.DnsServerGroups) > 0 {
 		body, _ = sjson.Set(body, "dnsServerGroups", []any{})
-		for _, item := range data.ServerGroups {
+		for _, item := range data.DnsServerGroups {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "dnsServerGroup.id", item.Id.ValueString())
@@ -135,10 +135,10 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("dnsServerGroups"); value.Exists() {
-		data.ServerGroups = make([]FTDPlatformSettingsDNSServerGroups, 0)
+		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
-			data := FTDPlatformSettingsDNSServerGroups{}
+			data := FTDPlatformSettingsDNSDnsServerGroups{}
 			if value := res.Get("dnsServerGroup.id"); value.Exists() {
 				data.Id = types.StringValue(value.String())
 			} else {
@@ -154,7 +154,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 			} else {
 				data.FilterDomains = types.ListNull(types.StringType)
 			}
-			(*parent).ServerGroups = append((*parent).ServerGroups, data)
+			(*parent).DnsServerGroups = append((*parent).DnsServerGroups, data)
 			return true
 		})
 	}
@@ -208,12 +208,12 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Type = types.StringNull()
 	}
-	for i := 0; i < len(data.ServerGroups); i++ {
+	for i := 0; i < len(data.DnsServerGroups); i++ {
 		keys := [...]string{"dnsServerGroup.id"}
-		keyValues := [...]string{data.ServerGroups[i].Id.ValueString()}
+		keyValues := [...]string{data.DnsServerGroups[i].Id.ValueString()}
 
 		parent := &data
-		data := (*parent).ServerGroups[i]
+		data := (*parent).DnsServerGroups[i]
 		parentRes := &res
 		var res gjson.Result
 
@@ -235,11 +235,11 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 			},
 		)
 		if !res.Exists() {
-			tflog.Debug(ctx, fmt.Sprintf("removing ServerGroups[%d] = %+v",
+			tflog.Debug(ctx, fmt.Sprintf("removing DnsServerGroups[%d] = %+v",
 				i,
-				(*parent).ServerGroups[i],
+				(*parent).DnsServerGroups[i],
 			))
-			(*parent).ServerGroups = slices.Delete((*parent).ServerGroups, i, i+1)
+			(*parent).DnsServerGroups = slices.Delete((*parent).DnsServerGroups, i, i+1)
 			i--
 
 			continue
@@ -259,7 +259,7 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 		} else {
 			data.FilterDomains = types.ListNull(types.StringType)
 		}
-		(*parent).ServerGroups[i] = data
+		(*parent).DnsServerGroups[i] = data
 	}
 	if value := res.Get("expiryTimerInMins"); value.Exists() && !data.ExpireEntryTimer.IsNull() {
 		data.ExpireEntryTimer = types.Int64Value(value.Int())

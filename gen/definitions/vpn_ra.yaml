@@ -63,7 +63,7 @@ attributes:
   - model_name: interfaceSettings
     data_path: [accessInterfaceSettings]
     tf_name: access_interfaces
-    description: List of interfaces that will support incoming Remote Access VPN connections.
+    description: List of Security Zones or Interface Groups that will support incoming Remote Access VPN connections.
     mandatory: true
     type: List
     attributes:
@@ -73,7 +73,7 @@ attributes:
         tf_name: id
         id: true
         mandatory: true
-        description: Id of Interface Group or Security Zone.
+        description: Id of Security Zone or Interface Group.
         example: 12345678-1234-1234-1234-123456789012
         test_value: fmc_security_zone.test.id
       - model_name: enableIPSecIkev2
@@ -123,14 +123,14 @@ attributes:
   #   example: true
   - model_name: webPort
     data_path: [accessInterfaceSettings]
-    tf_name: web_access_port_number
+    tf_name: web_access_port
     type: Int64
     description: Web Access Port Number.
     example: 443
     default_value: 443
   - model_name: dtlsPort
     data_path: [accessInterfaceSettings]
-    tf_name: dtls_port_number
+    tf_name: dtls_port
     type: Int64
     description: DTLS Port Number.
     example: 443
@@ -164,7 +164,7 @@ attributes:
     example: "false"
     default_value: false
 
-  # Advenced - Security Client Images
+  # Advanced - Secure Client Images
   - model_name: anyConnectClientImages
     tf_name: secure_client_images
     type: List
@@ -192,7 +192,7 @@ attributes:
     example: 12345678-1234-1234-1234-123456789012
     exclude_test: true
 
-  # Advenced - Secure Client Customization
+  # Advanced - Secure Client Customization
   # Configuration managed by another endpoint
   - model_name: id
     data_path: [secureClientCustomizationSettings]
@@ -202,7 +202,7 @@ attributes:
     computed: true
     exclude_test: true # FMCVERSION <= 7.2
 
-  # Advenced - Address Assignment Policy
+  # Advanced - Address Assignment Policy
   # Configuration managed by another endpoint
   - model_name: id
     data_path: [addressAssignmentSettings]
@@ -211,7 +211,7 @@ attributes:
     type: String
     computed: true
 
-  # Advenced - Certificate Maps
+  # Advanced - Certificate Maps
   # Configuration managed by another endpoint
   - model_name: id
     data_path: [certificateMapSettings]
@@ -229,7 +229,7 @@ attributes:
     attributes:
       - model_name: id
         type: String
-        description: Id of group policy.
+        description: Id of Group Policy.
         example: 12345678-1234-1234-1234-1234567890aa
         mandatory: true
         test_value: data.fmc_group_policy.test.id
@@ -264,11 +264,11 @@ attributes:
   - model_name: ikev2Policies
     tf_name: ikev2_policies
     type: List
-    description: List of IKEv2 policies.
+    description: List of IKEv2 Policies.
     attributes:
       - model_name: id
         type: String
-        description: Id of IKEv2 policy.
+        description: Id of IKEv2 Policy.
         example: 12345678-1234-1234-1234-123456789012
         mandatory: true
         test_value: fmc_ikev2_policies.test.items.ravpn_ikev2_policy1.id

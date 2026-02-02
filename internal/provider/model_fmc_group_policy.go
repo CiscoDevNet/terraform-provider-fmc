@@ -34,55 +34,55 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type GroupPolicy struct {
-	Id                                     types.String                              `tfsdk:"id"`
-	Domain                                 types.String                              `tfsdk:"domain"`
-	Name                                   types.String                              `tfsdk:"name"`
-	Type                                   types.String                              `tfsdk:"type"`
-	Description                            types.String                              `tfsdk:"description"`
-	ProtocolSsl                            types.Bool                                `tfsdk:"protocol_ssl"`
-	ProtocolIpsecIkev2                     types.Bool                                `tfsdk:"protocol_ipsec_ikev2"`
-	Ipv4AddressPools                       []GroupPolicyIpv4AddressPools             `tfsdk:"ipv4_address_pools"`
-	Banner                                 types.String                              `tfsdk:"banner"`
-	PrimaryDnsServerHostId                 types.String                              `tfsdk:"primary_dns_server_host_id"`
-	SecondaryDnsServerHostId               types.String                              `tfsdk:"secondary_dns_server_host_id"`
-	PrimaryWinsServerHostId                types.String                              `tfsdk:"primary_wins_server_host_id"`
-	SecondaryWinsServerHostId              types.String                              `tfsdk:"secondary_wins_server_host_id"`
-	DhcpNetworkScopeNetworkObjectId        types.String                              `tfsdk:"dhcp_network_scope_network_object_id"`
-	DefaultDomain                          types.String                              `tfsdk:"default_domain"`
-	Ipv4SplitTunnelPolicy                  types.String                              `tfsdk:"ipv4_split_tunnel_policy"`
-	Ipv6SplitTunnelPolicy                  types.String                              `tfsdk:"ipv6_split_tunnel_policy"`
-	SplitTunnelAclId                       types.String                              `tfsdk:"split_tunnel_acl_id"`
-	SplitTunnelAclType                     types.String                              `tfsdk:"split_tunnel_acl_type"`
-	DnsRequestSplitTunnelPolicy            types.String                              `tfsdk:"dns_request_split_tunnel_policy"`
-	SplitDnsDomainList                     types.String                              `tfsdk:"split_dns_domain_list"`
-	SecureClientProfileId                  types.String                              `tfsdk:"secure_client_profile_id"`
-	SecureClientManagementProfileId        types.String                              `tfsdk:"secure_client_management_profile_id"`
-	SecureClientModules                    []GroupPolicySecureClientModules          `tfsdk:"secure_client_modules"`
-	SslCompression                         types.String                              `tfsdk:"ssl_compression"`
-	DtlsCompression                        types.String                              `tfsdk:"dtls_compression"`
-	MtuSize                                types.Int64                               `tfsdk:"mtu_size"`
-	IgnoreDfBit                            types.Bool                                `tfsdk:"ignore_df_bit"`
-	KeepAliveMessages                      types.Bool                                `tfsdk:"keep_alive_messages"`
-	KeepAliveMessagesInterval              types.Int64                               `tfsdk:"keep_alive_messages_interval"`
-	GatewayDpd                             types.Bool                                `tfsdk:"gateway_dpd"`
-	GatewayDpdInterval                     types.Int64                               `tfsdk:"gateway_dpd_interval"`
-	ClientDpd                              types.Bool                                `tfsdk:"client_dpd"`
-	ClientDpdInterval                      types.Int64                               `tfsdk:"client_dpd_interval"`
-	ClientBypassProtocol                   types.Bool                                `tfsdk:"client_bypass_protocol"`
-	SslRekey                               types.Bool                                `tfsdk:"ssl_rekey"`
-	SslRekeyMethod                         types.String                              `tfsdk:"ssl_rekey_method"`
-	SslRekeyInterval                       types.Int64                               `tfsdk:"ssl_rekey_interval"`
-	ClientFirewallPrivateNetworkRulesAclId types.String                              `tfsdk:"client_firewall_private_network_rules_acl_id"`
-	ClientFirewallPublicNetworkRulesAclId  types.String                              `tfsdk:"client_firewall_public_network_rules_acl_id"`
-	SecureClientCustomAttributes           []GroupPolicySecureClientCustomAttributes `tfsdk:"secure_client_custom_attributes"`
-	TrafficFilterAclId                     types.String                              `tfsdk:"traffic_filter_acl_id"`
-	RestrictVpnToVlan                      types.Int64                               `tfsdk:"restrict_vpn_to_vlan"`
-	AccessHoursTimeRangeId                 types.String                              `tfsdk:"access_hours_time_range_id"`
-	SimultaneousLoginsPerUser              types.Int64                               `tfsdk:"simultaneous_logins_per_user"`
-	MaximumConnectionTime                  types.Int64                               `tfsdk:"maximum_connection_time"`
-	MaximumConnectionTimeAlertInterval     types.Int64                               `tfsdk:"maximum_connection_time_alert_interval"`
-	IdleTimeout                            types.Int64                               `tfsdk:"idle_timeout"`
-	IdleTimeoutAlertInterval               types.Int64                               `tfsdk:"idle_timeout_alert_interval"`
+	Id                                            types.String                              `tfsdk:"id"`
+	Domain                                        types.String                              `tfsdk:"domain"`
+	Name                                          types.String                              `tfsdk:"name"`
+	Type                                          types.String                              `tfsdk:"type"`
+	Description                                   types.String                              `tfsdk:"description"`
+	ProtocolSsl                                   types.Bool                                `tfsdk:"protocol_ssl"`
+	ProtocolIpsecIkev2                            types.Bool                                `tfsdk:"protocol_ipsec_ikev2"`
+	Ipv4AddressPools                              []GroupPolicyIpv4AddressPools             `tfsdk:"ipv4_address_pools"`
+	Banner                                        types.String                              `tfsdk:"banner"`
+	PrimaryDnsServerHostId                        types.String                              `tfsdk:"primary_dns_server_host_id"`
+	SecondaryDnsServerHostId                      types.String                              `tfsdk:"secondary_dns_server_host_id"`
+	PrimaryWinsServerHostId                       types.String                              `tfsdk:"primary_wins_server_host_id"`
+	SecondaryWinsServerHostId                     types.String                              `tfsdk:"secondary_wins_server_host_id"`
+	Ipv4DhcpNetworkScopeNetworkObjectId           types.String                              `tfsdk:"ipv4_dhcp_network_scope_network_object_id"`
+	DefaultDomain                                 types.String                              `tfsdk:"default_domain"`
+	Ipv4SplitTunnelPolicy                         types.String                              `tfsdk:"ipv4_split_tunnel_policy"`
+	Ipv6SplitTunnelPolicy                         types.String                              `tfsdk:"ipv6_split_tunnel_policy"`
+	SplitTunnelAccessListId                       types.String                              `tfsdk:"split_tunnel_access_list_id"`
+	SplitTunnelAccessListType                     types.String                              `tfsdk:"split_tunnel_access_list_type"`
+	DnsRequestSplitTunnelPolicy                   types.String                              `tfsdk:"dns_request_split_tunnel_policy"`
+	DnsRequestSplitTunnelDomains                  types.String                              `tfsdk:"dns_request_split_tunnel_domains"`
+	SecureClientProfileId                         types.String                              `tfsdk:"secure_client_profile_id"`
+	SecureClientManagementProfileId               types.String                              `tfsdk:"secure_client_management_profile_id"`
+	SecureClientModules                           []GroupPolicySecureClientModules          `tfsdk:"secure_client_modules"`
+	SslCompression                                types.String                              `tfsdk:"ssl_compression"`
+	DtlsCompression                               types.String                              `tfsdk:"dtls_compression"`
+	MtuSize                                       types.Int64                               `tfsdk:"mtu_size"`
+	IgnoreDfBit                                   types.Bool                                `tfsdk:"ignore_df_bit"`
+	KeepAliveMessages                             types.Bool                                `tfsdk:"keep_alive_messages"`
+	KeepAliveMessagesInterval                     types.Int64                               `tfsdk:"keep_alive_messages_interval"`
+	GatewayDeadPeerDetection                      types.Bool                                `tfsdk:"gateway_dead_peer_detection"`
+	GatewayDeadPeerDetectionInterval              types.Int64                               `tfsdk:"gateway_dead_peer_detection_interval"`
+	ClientDeadPeerDetection                       types.Bool                                `tfsdk:"client_dead_peer_detection"`
+	ClientDeadPeerDetectionInterval               types.Int64                               `tfsdk:"client_dead_peer_detection_interval"`
+	ClientBypassProtocol                          types.Bool                                `tfsdk:"client_bypass_protocol"`
+	SslRekey                                      types.Bool                                `tfsdk:"ssl_rekey"`
+	SslRekeyMethod                                types.String                              `tfsdk:"ssl_rekey_method"`
+	SslRekeyInterval                              types.Int64                               `tfsdk:"ssl_rekey_interval"`
+	ClientFirewallPrivateNetworkRulesAccessListId types.String                              `tfsdk:"client_firewall_private_network_rules_access_list_id"`
+	ClientFirewallPublicNetworkRulesAccessListId  types.String                              `tfsdk:"client_firewall_public_network_rules_access_list_id"`
+	SecureClientCustomAttributes                  []GroupPolicySecureClientCustomAttributes `tfsdk:"secure_client_custom_attributes"`
+	TrafficFilterAccessListId                     types.String                              `tfsdk:"traffic_filter_access_list_id"`
+	RestrictVpnToVlan                             types.Int64                               `tfsdk:"restrict_vpn_to_vlan"`
+	AccessHoursTimeRangeId                        types.String                              `tfsdk:"access_hours_time_range_id"`
+	SimultaneousLoginsPerUser                     types.Int64                               `tfsdk:"simultaneous_logins_per_user"`
+	MaximumConnectionTime                         types.Int64                               `tfsdk:"maximum_connection_time"`
+	MaximumConnectionTimeAlertInterval            types.Int64                               `tfsdk:"maximum_connection_time_alert_interval"`
+	IdleTimeout                                   types.Int64                               `tfsdk:"idle_timeout"`
+	IdleTimeoutAlertInterval                      types.Int64                               `tfsdk:"idle_timeout_alert_interval"`
 }
 
 type GroupPolicyIpv4AddressPools struct {
@@ -158,8 +158,8 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.SecondaryWinsServerHostId.IsNull() {
 		body, _ = sjson.Set(body, "generalSettings.secondaryWINSServer.id", data.SecondaryWinsServerHostId.ValueString())
 	}
-	if !data.DhcpNetworkScopeNetworkObjectId.IsNull() {
-		body, _ = sjson.Set(body, "generalSettings.addressAssignment.dhcpScope.id", data.DhcpNetworkScopeNetworkObjectId.ValueString())
+	if !data.Ipv4DhcpNetworkScopeNetworkObjectId.IsNull() {
+		body, _ = sjson.Set(body, "generalSettings.addressAssignment.dhcpScope.id", data.Ipv4DhcpNetworkScopeNetworkObjectId.ValueString())
 	}
 	if !data.DefaultDomain.IsNull() {
 		body, _ = sjson.Set(body, "generalSettings.addressAssignment.defaultDomainName", data.DefaultDomain.ValueString())
@@ -170,17 +170,17 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.Ipv6SplitTunnelPolicy.IsNull() {
 		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.ipv6SplitTunnelPolicy", data.Ipv6SplitTunnelPolicy.ValueString())
 	}
-	if !data.SplitTunnelAclId.IsNull() {
-		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitTunnelACL.id", data.SplitTunnelAclId.ValueString())
+	if !data.SplitTunnelAccessListId.IsNull() {
+		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitTunnelACL.id", data.SplitTunnelAccessListId.ValueString())
 	}
-	if !data.SplitTunnelAclType.IsNull() {
-		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitTunnelACL.type", data.SplitTunnelAclType.ValueString())
+	if !data.SplitTunnelAccessListType.IsNull() {
+		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitTunnelACL.type", data.SplitTunnelAccessListType.ValueString())
 	}
 	if !data.DnsRequestSplitTunnelPolicy.IsNull() {
 		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitDNSRequestPolicy", data.DnsRequestSplitTunnelPolicy.ValueString())
 	}
-	if !data.SplitDnsDomainList.IsNull() {
-		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitDNSDomainList", data.SplitDnsDomainList.ValueString())
+	if !data.DnsRequestSplitTunnelDomains.IsNull() {
+		body, _ = sjson.Set(body, "generalSettings.splitTunnelSettings.splitDNSDomainList", data.DnsRequestSplitTunnelDomains.ValueString())
 	}
 	if !data.SecureClientProfileId.IsNull() {
 		body, _ = sjson.Set(body, "anyConnectSettings.vpnClientProfile.id", data.SecureClientProfileId.ValueString())
@@ -222,17 +222,17 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.KeepAliveMessagesInterval.IsNull() {
 		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.keepAliveMessageInterval", data.KeepAliveMessagesInterval.ValueInt64())
 	}
-	if !data.GatewayDpd.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.enableGatewayDPD", data.GatewayDpd.ValueBool())
+	if !data.GatewayDeadPeerDetection.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.enableGatewayDPD", data.GatewayDeadPeerDetection.ValueBool())
 	}
-	if !data.GatewayDpdInterval.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.gatewayDPDInterval", data.GatewayDpdInterval.ValueInt64())
+	if !data.GatewayDeadPeerDetectionInterval.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.gatewayDPDInterval", data.GatewayDeadPeerDetectionInterval.ValueInt64())
 	}
-	if !data.ClientDpd.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.enableClientDPD", data.ClientDpd.ValueBool())
+	if !data.ClientDeadPeerDetection.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.enableClientDPD", data.ClientDeadPeerDetection.ValueBool())
 	}
-	if !data.ClientDpdInterval.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientDPDInterval", data.ClientDpdInterval.ValueInt64())
+	if !data.ClientDeadPeerDetectionInterval.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientDPDInterval", data.ClientDeadPeerDetectionInterval.ValueInt64())
 	}
 	if !data.ClientBypassProtocol.IsNull() {
 		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.bypassUnsupportProtocol", data.ClientBypassProtocol.ValueBool())
@@ -246,11 +246,11 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 	if !data.SslRekeyInterval.IsNull() {
 		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.rekeyInterval", data.SslRekeyInterval.ValueInt64())
 	}
-	if !data.ClientFirewallPrivateNetworkRulesAclId.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPrivateNetworkRules.id", data.ClientFirewallPrivateNetworkRulesAclId.ValueString())
+	if !data.ClientFirewallPrivateNetworkRulesAccessListId.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPrivateNetworkRules.id", data.ClientFirewallPrivateNetworkRulesAccessListId.ValueString())
 	}
-	if !data.ClientFirewallPublicNetworkRulesAclId.IsNull() {
-		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id", data.ClientFirewallPublicNetworkRulesAclId.ValueString())
+	if !data.ClientFirewallPublicNetworkRulesAccessListId.IsNull() {
+		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id", data.ClientFirewallPublicNetworkRulesAccessListId.ValueString())
 	}
 	if len(data.SecureClientCustomAttributes) > 0 {
 		body, _ = sjson.Set(body, "anyConnectSettings.customAttributes", []any{})
@@ -262,8 +262,8 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 			body, _ = sjson.SetRaw(body, "anyConnectSettings.customAttributes.-1", itemBody)
 		}
 	}
-	if !data.TrafficFilterAclId.IsNull() {
-		body, _ = sjson.Set(body, "advancedSettings.vpnTrafficFilterACL.id", data.TrafficFilterAclId.ValueString())
+	if !data.TrafficFilterAccessListId.IsNull() {
+		body, _ = sjson.Set(body, "advancedSettings.vpnTrafficFilterACL.id", data.TrafficFilterAccessListId.ValueString())
 	}
 	if !data.RestrictVpnToVlan.IsNull() {
 		body, _ = sjson.Set(body, "advancedSettings.restrictVPNToVLANId", data.RestrictVpnToVlan.ValueInt64())
@@ -359,9 +359,9 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.SecondaryWinsServerHostId = types.StringNull()
 	}
 	if value := res.Get("generalSettings.addressAssignment.dhcpScope.id"); value.Exists() {
-		data.DhcpNetworkScopeNetworkObjectId = types.StringValue(value.String())
+		data.Ipv4DhcpNetworkScopeNetworkObjectId = types.StringValue(value.String())
 	} else {
-		data.DhcpNetworkScopeNetworkObjectId = types.StringNull()
+		data.Ipv4DhcpNetworkScopeNetworkObjectId = types.StringNull()
 	}
 	if value := res.Get("generalSettings.addressAssignment.defaultDomainName"); value.Exists() {
 		data.DefaultDomain = types.StringValue(value.String())
@@ -379,14 +379,14 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv6SplitTunnelPolicy = types.StringValue("TUNNEL_ALL")
 	}
 	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.id"); value.Exists() {
-		data.SplitTunnelAclId = types.StringValue(value.String())
+		data.SplitTunnelAccessListId = types.StringValue(value.String())
 	} else {
-		data.SplitTunnelAclId = types.StringNull()
+		data.SplitTunnelAccessListId = types.StringNull()
 	}
 	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.type"); value.Exists() {
-		data.SplitTunnelAclType = types.StringValue(value.String())
+		data.SplitTunnelAccessListType = types.StringValue(value.String())
 	} else {
-		data.SplitTunnelAclType = types.StringNull()
+		data.SplitTunnelAccessListType = types.StringNull()
 	}
 	if value := res.Get("generalSettings.splitTunnelSettings.splitDNSRequestPolicy"); value.Exists() {
 		data.DnsRequestSplitTunnelPolicy = types.StringValue(value.String())
@@ -394,9 +394,9 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.DnsRequestSplitTunnelPolicy = types.StringValue("USE_SPLIT_TUNNEL_SETTING")
 	}
 	if value := res.Get("generalSettings.splitTunnelSettings.splitDNSDomainList"); value.Exists() {
-		data.SplitDnsDomainList = types.StringValue(value.String())
+		data.DnsRequestSplitTunnelDomains = types.StringValue(value.String())
 	} else {
-		data.SplitDnsDomainList = types.StringNull()
+		data.DnsRequestSplitTunnelDomains = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.vpnClientProfile.id"); value.Exists() {
 		data.SecureClientProfileId = types.StringValue(value.String())
@@ -463,24 +463,24 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.KeepAliveMessagesInterval = types.Int64Value(20)
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.enableGatewayDPD"); value.Exists() {
-		data.GatewayDpd = types.BoolValue(value.Bool())
+		data.GatewayDeadPeerDetection = types.BoolValue(value.Bool())
 	} else {
-		data.GatewayDpd = types.BoolValue(true)
+		data.GatewayDeadPeerDetection = types.BoolValue(true)
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.gatewayDPDInterval"); value.Exists() {
-		data.GatewayDpdInterval = types.Int64Value(value.Int())
+		data.GatewayDeadPeerDetectionInterval = types.Int64Value(value.Int())
 	} else {
-		data.GatewayDpdInterval = types.Int64Value(30)
+		data.GatewayDeadPeerDetectionInterval = types.Int64Value(30)
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.enableClientDPD"); value.Exists() {
-		data.ClientDpd = types.BoolValue(value.Bool())
+		data.ClientDeadPeerDetection = types.BoolValue(value.Bool())
 	} else {
-		data.ClientDpd = types.BoolValue(true)
+		data.ClientDeadPeerDetection = types.BoolValue(true)
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.clientDPDInterval"); value.Exists() {
-		data.ClientDpdInterval = types.Int64Value(value.Int())
+		data.ClientDeadPeerDetectionInterval = types.Int64Value(value.Int())
 	} else {
-		data.ClientDpdInterval = types.Int64Value(30)
+		data.ClientDeadPeerDetectionInterval = types.Int64Value(30)
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.bypassUnsupportProtocol"); value.Exists() {
 		data.ClientBypassProtocol = types.BoolValue(value.Bool())
@@ -503,14 +503,14 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.SslRekeyInterval = types.Int64Null()
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPrivateNetworkRules.id"); value.Exists() {
-		data.ClientFirewallPrivateNetworkRulesAclId = types.StringValue(value.String())
+		data.ClientFirewallPrivateNetworkRulesAccessListId = types.StringValue(value.String())
 	} else {
-		data.ClientFirewallPrivateNetworkRulesAclId = types.StringNull()
+		data.ClientFirewallPrivateNetworkRulesAccessListId = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id"); value.Exists() {
-		data.ClientFirewallPublicNetworkRulesAclId = types.StringValue(value.String())
+		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringValue(value.String())
 	} else {
-		data.ClientFirewallPublicNetworkRulesAclId = types.StringNull()
+		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.customAttributes"); value.Exists() {
 		data.SecureClientCustomAttributes = make([]GroupPolicySecureClientCustomAttributes, 0)
@@ -527,9 +527,9 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("advancedSettings.vpnTrafficFilterACL.id"); value.Exists() {
-		data.TrafficFilterAclId = types.StringValue(value.String())
+		data.TrafficFilterAccessListId = types.StringValue(value.String())
 	} else {
-		data.TrafficFilterAclId = types.StringNull()
+		data.TrafficFilterAccessListId = types.StringNull()
 	}
 	if value := res.Get("advancedSettings.restrictVPNToVLANId"); value.Exists() {
 		data.RestrictVpnToVlan = types.Int64Value(value.Int())
@@ -670,10 +670,10 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.SecondaryWinsServerHostId = types.StringNull()
 	}
-	if value := res.Get("generalSettings.addressAssignment.dhcpScope.id"); value.Exists() && !data.DhcpNetworkScopeNetworkObjectId.IsNull() {
-		data.DhcpNetworkScopeNetworkObjectId = types.StringValue(value.String())
+	if value := res.Get("generalSettings.addressAssignment.dhcpScope.id"); value.Exists() && !data.Ipv4DhcpNetworkScopeNetworkObjectId.IsNull() {
+		data.Ipv4DhcpNetworkScopeNetworkObjectId = types.StringValue(value.String())
 	} else {
-		data.DhcpNetworkScopeNetworkObjectId = types.StringNull()
+		data.Ipv4DhcpNetworkScopeNetworkObjectId = types.StringNull()
 	}
 	if value := res.Get("generalSettings.addressAssignment.defaultDomainName"); value.Exists() && !data.DefaultDomain.IsNull() {
 		data.DefaultDomain = types.StringValue(value.String())
@@ -690,25 +690,25 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else if data.Ipv6SplitTunnelPolicy.ValueString() != "TUNNEL_ALL" {
 		data.Ipv6SplitTunnelPolicy = types.StringNull()
 	}
-	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.id"); value.Exists() && !data.SplitTunnelAclId.IsNull() {
-		data.SplitTunnelAclId = types.StringValue(value.String())
+	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.id"); value.Exists() && !data.SplitTunnelAccessListId.IsNull() {
+		data.SplitTunnelAccessListId = types.StringValue(value.String())
 	} else {
-		data.SplitTunnelAclId = types.StringNull()
+		data.SplitTunnelAccessListId = types.StringNull()
 	}
-	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.type"); value.Exists() && !data.SplitTunnelAclType.IsNull() {
-		data.SplitTunnelAclType = types.StringValue(value.String())
+	if value := res.Get("generalSettings.splitTunnelSettings.splitTunnelACL.type"); value.Exists() && !data.SplitTunnelAccessListType.IsNull() {
+		data.SplitTunnelAccessListType = types.StringValue(value.String())
 	} else {
-		data.SplitTunnelAclType = types.StringNull()
+		data.SplitTunnelAccessListType = types.StringNull()
 	}
 	if value := res.Get("generalSettings.splitTunnelSettings.splitDNSRequestPolicy"); value.Exists() && !data.DnsRequestSplitTunnelPolicy.IsNull() {
 		data.DnsRequestSplitTunnelPolicy = types.StringValue(value.String())
 	} else if data.DnsRequestSplitTunnelPolicy.ValueString() != "USE_SPLIT_TUNNEL_SETTING" {
 		data.DnsRequestSplitTunnelPolicy = types.StringNull()
 	}
-	if value := res.Get("generalSettings.splitTunnelSettings.splitDNSDomainList"); value.Exists() && !data.SplitDnsDomainList.IsNull() {
-		data.SplitDnsDomainList = types.StringValue(value.String())
+	if value := res.Get("generalSettings.splitTunnelSettings.splitDNSDomainList"); value.Exists() && !data.DnsRequestSplitTunnelDomains.IsNull() {
+		data.DnsRequestSplitTunnelDomains = types.StringValue(value.String())
 	} else {
-		data.SplitDnsDomainList = types.StringNull()
+		data.DnsRequestSplitTunnelDomains = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.vpnClientProfile.id"); value.Exists() && !data.SecureClientProfileId.IsNull() {
 		data.SecureClientProfileId = types.StringValue(value.String())
@@ -803,25 +803,25 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else if data.KeepAliveMessagesInterval.ValueInt64() != 20 {
 		data.KeepAliveMessagesInterval = types.Int64Null()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.enableGatewayDPD"); value.Exists() && !data.GatewayDpd.IsNull() {
-		data.GatewayDpd = types.BoolValue(value.Bool())
-	} else if data.GatewayDpd.ValueBool() != true {
-		data.GatewayDpd = types.BoolNull()
+	if value := res.Get("anyConnectSettings.connectionSettings.enableGatewayDPD"); value.Exists() && !data.GatewayDeadPeerDetection.IsNull() {
+		data.GatewayDeadPeerDetection = types.BoolValue(value.Bool())
+	} else if data.GatewayDeadPeerDetection.ValueBool() != true {
+		data.GatewayDeadPeerDetection = types.BoolNull()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.gatewayDPDInterval"); value.Exists() && !data.GatewayDpdInterval.IsNull() {
-		data.GatewayDpdInterval = types.Int64Value(value.Int())
-	} else if data.GatewayDpdInterval.ValueInt64() != 30 {
-		data.GatewayDpdInterval = types.Int64Null()
+	if value := res.Get("anyConnectSettings.connectionSettings.gatewayDPDInterval"); value.Exists() && !data.GatewayDeadPeerDetectionInterval.IsNull() {
+		data.GatewayDeadPeerDetectionInterval = types.Int64Value(value.Int())
+	} else if data.GatewayDeadPeerDetectionInterval.ValueInt64() != 30 {
+		data.GatewayDeadPeerDetectionInterval = types.Int64Null()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.enableClientDPD"); value.Exists() && !data.ClientDpd.IsNull() {
-		data.ClientDpd = types.BoolValue(value.Bool())
-	} else if data.ClientDpd.ValueBool() != true {
-		data.ClientDpd = types.BoolNull()
+	if value := res.Get("anyConnectSettings.connectionSettings.enableClientDPD"); value.Exists() && !data.ClientDeadPeerDetection.IsNull() {
+		data.ClientDeadPeerDetection = types.BoolValue(value.Bool())
+	} else if data.ClientDeadPeerDetection.ValueBool() != true {
+		data.ClientDeadPeerDetection = types.BoolNull()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.clientDPDInterval"); value.Exists() && !data.ClientDpdInterval.IsNull() {
-		data.ClientDpdInterval = types.Int64Value(value.Int())
-	} else if data.ClientDpdInterval.ValueInt64() != 30 {
-		data.ClientDpdInterval = types.Int64Null()
+	if value := res.Get("anyConnectSettings.connectionSettings.clientDPDInterval"); value.Exists() && !data.ClientDeadPeerDetectionInterval.IsNull() {
+		data.ClientDeadPeerDetectionInterval = types.Int64Value(value.Int())
+	} else if data.ClientDeadPeerDetectionInterval.ValueInt64() != 30 {
+		data.ClientDeadPeerDetectionInterval = types.Int64Null()
 	}
 	if value := res.Get("anyConnectSettings.connectionSettings.bypassUnsupportProtocol"); value.Exists() && !data.ClientBypassProtocol.IsNull() {
 		data.ClientBypassProtocol = types.BoolValue(value.Bool())
@@ -843,15 +843,15 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.SslRekeyInterval = types.Int64Null()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPrivateNetworkRules.id"); value.Exists() && !data.ClientFirewallPrivateNetworkRulesAclId.IsNull() {
-		data.ClientFirewallPrivateNetworkRulesAclId = types.StringValue(value.String())
+	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPrivateNetworkRules.id"); value.Exists() && !data.ClientFirewallPrivateNetworkRulesAccessListId.IsNull() {
+		data.ClientFirewallPrivateNetworkRulesAccessListId = types.StringValue(value.String())
 	} else {
-		data.ClientFirewallPrivateNetworkRulesAclId = types.StringNull()
+		data.ClientFirewallPrivateNetworkRulesAccessListId = types.StringNull()
 	}
-	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id"); value.Exists() && !data.ClientFirewallPublicNetworkRulesAclId.IsNull() {
-		data.ClientFirewallPublicNetworkRulesAclId = types.StringValue(value.String())
+	if value := res.Get("anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id"); value.Exists() && !data.ClientFirewallPublicNetworkRulesAccessListId.IsNull() {
+		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringValue(value.String())
 	} else {
-		data.ClientFirewallPublicNetworkRulesAclId = types.StringNull()
+		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringNull()
 	}
 	for i := 0; i < len(data.SecureClientCustomAttributes); i++ {
 		keys := [...]string{"customAttributeObject.id"}
@@ -896,10 +896,10 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 		}
 		(*parent).SecureClientCustomAttributes[i] = data
 	}
-	if value := res.Get("advancedSettings.vpnTrafficFilterACL.id"); value.Exists() && !data.TrafficFilterAclId.IsNull() {
-		data.TrafficFilterAclId = types.StringValue(value.String())
+	if value := res.Get("advancedSettings.vpnTrafficFilterACL.id"); value.Exists() && !data.TrafficFilterAccessListId.IsNull() {
+		data.TrafficFilterAccessListId = types.StringValue(value.String())
 	} else {
-		data.TrafficFilterAclId = types.StringNull()
+		data.TrafficFilterAccessListId = types.StringNull()
 	}
 	if value := res.Get("advancedSettings.restrictVPNToVLANId"); value.Exists() && !data.RestrictVpnToVlan.IsNull() {
 		data.RestrictVpnToVlan = types.Int64Value(value.Int())

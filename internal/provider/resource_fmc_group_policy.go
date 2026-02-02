@@ -128,10 +128,10 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"banner": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Banner text to be displayed to users.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Banner text to be displayed to users. In case of a line spanning more than 497 characters, split the line into multiple lines.").String,
 				Optional:            true,
 				Validators: []validator.String{
-					stringvalidator.LengthBetween(0, 491),
+					stringvalidator.LengthBetween(0, 3999),
 				},
 			},
 			"primary_dns_server_host_id": schema.StringAttribute{
@@ -150,7 +150,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				MarkdownDescription: helpers.NewAttributeDescription("Id of host object that represents secondary WINS server.").String,
 				Optional:            true,
 			},
-			"dhcp_network_scope_network_object_id": schema.StringAttribute{
+			"ipv4_dhcp_network_scope_network_object_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the Network Object used to determine the DHCP scope.").String,
 				Optional:            true,
 			},
@@ -176,12 +176,12 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 				Default: stringdefault.StaticString("TUNNEL_ALL"),
 			},
-			"split_tunnel_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of standard or extended ACL used for split tunnel configuration.").String,
+			"split_tunnel_access_list_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Standard (for IPv4) or Extended (for IPv4 or IPv6) Access List used for split tunnel configuration.").String,
 				Optional:            true,
 			},
-			"split_tunnel_acl_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.").AddStringEnumDescription("StandardAccessList", "ExtendedAccessList").String,
+			"split_tunnel_access_list_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Type of Access List used for split tunnel configuration. Mandatory, when `split_tunnel_access_list_id` is set.").AddStringEnumDescription("StandardAccessList", "ExtendedAccessList").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("StandardAccessList", "ExtendedAccessList"),
@@ -196,7 +196,7 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 				Default: stringdefault.StaticString("USE_SPLIT_TUNNEL_SETTING"),
 			},
-			"split_dns_domain_list": schema.StringAttribute{
+			"dns_request_split_tunnel_domains": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Up to 10, comma separated domains for split DNS requests.").String,
 				Optional:            true,
 				Validators: []validator.String{
@@ -278,13 +278,13 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 				Default: int64default.StaticInt64(20),
 			},
-			"gateway_dpd": schema.BoolAttribute{
+			"gateway_dead_peer_detection": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable VPN secure gateway Dead Peer Detection (DPD).").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"gateway_dpd_interval": schema.Int64Attribute{
+			"gateway_dead_peer_detection_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.").AddIntegerRangeDescription(5, 3600).AddDefaultValueDescription("30").String,
 				Optional:            true,
 				Computed:            true,
@@ -293,13 +293,13 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 				Default: int64default.StaticInt64(30),
 			},
-			"client_dpd": schema.BoolAttribute{
+			"client_dead_peer_detection": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enable VPN client Dead Peer Detection (DPD).").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),
 			},
-			"client_dpd_interval": schema.Int64Attribute{
+			"client_dead_peer_detection_interval": schema.Int64Attribute{
 				MarkdownDescription: helpers.NewAttributeDescription("VPN client Dead Peer Detection (DPD) messages interval in seconds.").AddIntegerRangeDescription(5, 3600).AddDefaultValueDescription("30").String,
 				Optional:            true,
 				Computed:            true,
@@ -330,12 +330,12 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 					int64validator.Between(4, 10080),
 				},
 			},
-			"client_firewall_private_network_rules_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of extended ACL to configure firewall settings for the VPN client's platform.").String,
+			"client_firewall_private_network_rules_access_list_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Extended Access List to configure firewall settings for the VPN client's platform.").String,
 				Optional:            true,
 			},
-			"client_firewall_public_network_rules_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of extended ACL to configure firewall settings for the VPN client's platform.").String,
+			"client_firewall_public_network_rules_access_list_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Extended Access List to configure firewall settings for the VPN client's platform.").String,
 				Optional:            true,
 			},
 			"secure_client_custom_attributes": schema.ListNestedAttribute{
@@ -350,8 +350,8 @@ func (r *GroupPolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 					},
 				},
 			},
-			"traffic_filter_acl_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.").String,
+			"traffic_filter_access_list_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of Extended Access List that determine whether to allow or block tunneled data packets coming through the VPN connection.").String,
 				Optional:            true,
 			},
 			"restrict_vpn_to_vlan": schema.Int64Attribute{

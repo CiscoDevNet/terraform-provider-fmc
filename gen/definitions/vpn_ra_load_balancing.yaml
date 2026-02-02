@@ -24,7 +24,7 @@ attributes:
     type: String
     value: LoadBalanacing
 
-  # Gropu Configuration
+  # Group Configuration
   - model_name: enableVpnLoadBalancing
     tf_name: enabled
     type: Bool
@@ -48,11 +48,11 @@ attributes:
     tf_name: interface_id
     type: String
     mandatory: true
-    description: Id of the communication interface which the director and members use to communicate.
+    description: Id of the Security Zone or Interface Group which the director and members use to communicate.
     example: 76d24097-41c4-4558-a4d0
   - model_name: communicationUdpPort
     data_path: [groupSettings]
-    tf_name: udp_port_number
+    tf_name: port
     type: Int64
     description: UDP Port for communication between the director and members in a group. The default port is 9023.
     example: 9023

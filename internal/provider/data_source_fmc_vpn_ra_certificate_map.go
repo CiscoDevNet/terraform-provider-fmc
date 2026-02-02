@@ -77,7 +77,7 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"use_alias_url": schema.BoolAttribute{
-				MarkdownDescription: "Use alias URL (group URL) if alias URL (group URL) and Certificate Map match different Connection Profiles.",
+				MarkdownDescription: "Use Alias URL (Group URL) if Alias URL and Certificate Map match different Connection Profiles.",
 				Computed:            true,
 			},
 			"use_certificate_to_connection_profile_mappings": schema.BoolAttribute{
@@ -85,7 +85,7 @@ func (d *VPNRACertificateMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"certificate_to_connection_profile_mappings": schema.ListNestedAttribute{
-				MarkdownDescription: "Mapping of certificates to connection profiles.",
+				MarkdownDescription: "Mapping of Certificates to Connection Profiles.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

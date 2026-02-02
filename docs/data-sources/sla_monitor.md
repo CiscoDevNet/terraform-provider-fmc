@@ -34,7 +34,7 @@ data "fmc_sla_monitor" "example" {
 - `frequency` (Number) Frequency (in seconds) of ICMP echo request transmissions.
 - `monitor_address` (String) IP address to monitor.
 - `number_of_packets` (Number) Number of packets that are sent.
-- `selected_interfaces` (Attributes List) Security zones or interface groups that contain interfaces through which the device communicates. (see [below for nested schema](#nestedatt--selected_interfaces))
+- `selected_interfaces` (Attributes List) Security Zones or Interface Groups that contain interfaces through which the device communicates. (see [below for nested schema](#nestedatt--selected_interfaces))
 - `sla_monitor_id` (Number) ID number of the SLA operation.
 - `threshold` (Number) Amount of time (in milliseconds) that must pass after an ICMP echo request before a rising threshold is declared.
 - `timeout` (Number) Amount of time (in milliseconds) that the SLA operation waits for a response to the ICMP echo requests.
@@ -46,4 +46,4 @@ data "fmc_sla_monitor" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the security zone or interface group object.
+- `id` (String) Id of the Security Zone or Interface Group object.

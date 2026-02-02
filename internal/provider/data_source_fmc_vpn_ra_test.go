@@ -39,8 +39,8 @@ func TestAccDataSourceFmcVPNRA(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "access_interfaces.0.protocol_ssl", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "access_interfaces.0.protocol_ssl_dtls", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "allow_users_to_select_connection_profile", "true"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "web_access_port_number", "443"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "dtls_port_number", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "web_access_port", "443"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "dtls_port", "443"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_vpn_ra.test", "bypass_access_control_policy_for_decrypted_traffic", "false"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "address_assignment_policy_id"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_vpn_ra.test", "certificate_map_id"))
@@ -393,8 +393,8 @@ func testAccDataSourceFmcVPNRAConfig() string {
 	config += `		protocol_ssl_dtls = true` + "\n"
 	config += `	}]` + "\n"
 	config += `	allow_users_to_select_connection_profile = true` + "\n"
-	config += `	web_access_port_number = 443` + "\n"
-	config += `	dtls_port_number = 443` + "\n"
+	config += `	web_access_port = 443` + "\n"
+	config += `	dtls_port = 443` + "\n"
 	config += `	ssl_global_identity_certificate_id = fmc_certificate_enrollment.test.id` + "\n"
 	config += `	ipsec_ikev2_identity_certificate_id = fmc_certificate_enrollment.test.id` + "\n"
 	config += `	bypass_access_control_policy_for_decrypted_traffic = false` + "\n"
@@ -427,8 +427,8 @@ func testAccNamedDataSourceFmcVPNRAConfig() string {
 	config += `		protocol_ssl_dtls = true` + "\n"
 	config += `	}]` + "\n"
 	config += `	allow_users_to_select_connection_profile = true` + "\n"
-	config += `	web_access_port_number = 443` + "\n"
-	config += `	dtls_port_number = 443` + "\n"
+	config += `	web_access_port = 443` + "\n"
+	config += `	dtls_port = 443` + "\n"
 	config += `	ssl_global_identity_certificate_id = fmc_certificate_enrollment.test.id` + "\n"
 	config += `	ipsec_ikev2_identity_certificate_id = fmc_certificate_enrollment.test.id` + "\n"
 	config += `	bypass_access_control_policy_for_decrypted_traffic = false` + "\n"

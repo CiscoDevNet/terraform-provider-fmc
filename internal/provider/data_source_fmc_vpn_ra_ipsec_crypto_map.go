@@ -82,7 +82,7 @@ func (d *VPNRAIPSecCryptoMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{
-				MarkdownDescription: "Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in VPN RA > Access Interfaces configuraton.",
+				MarkdownDescription: "Id of Interface Group or Security Zone object on which the IPSec Crypto Map is applied. The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.",
 				Optional:            true,
 				Computed:            true,
 			},
@@ -107,7 +107,7 @@ func (d *VPNRAIPSecCryptoMapDataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 			},
 			"client_services_port": schema.Int64Attribute{
-				MarkdownDescription: "Port for Client Services.",
+				MarkdownDescription: "Client Services Port Number.",
 				Computed:            true,
 			},
 			"perfect_forward_secrecy": schema.BoolAttribute{

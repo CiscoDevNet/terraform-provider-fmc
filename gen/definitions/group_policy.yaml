@@ -56,8 +56,8 @@ attributes:
   - model_name: banner
     data_path: ["generalSettings"]
     type: String
-    string_max_length: 491
-    description: Banner text to be displayed to users.
+    string_max_length: 3999
+    description: Banner text to be displayed to users. In case of a line spanning more than 497 characters, split the line into multiple lines.
     example: Welcome to the VPN Connection.
 
   # General - DNS/WINS
@@ -93,7 +93,7 @@ attributes:
     exclude_test: true
   - model_name: id
     data_path: ["generalSettings", "addressAssignment", "dhcpScope"]
-    tf_name: dhcp_network_scope_network_object_id
+    tf_name: ipv4_dhcp_network_scope_network_object_id
     type: String
     description: Id of the Network Object used to determine the DHCP scope.
     example: 12345678-1234-1234-1234-123460
@@ -124,16 +124,16 @@ attributes:
     default_value: TUNNEL_ALL
   - model_name: id
     data_path: ["generalSettings", "splitTunnelSettings", "splitTunnelACL"]
-    tf_name: split_tunnel_acl_id
+    tf_name: split_tunnel_access_list_id
     type: String
-    description: Id of standard or extended ACL used for split tunnel configuration.
+    description: Id of Standard (for IPv4) or Extended (for IPv4 or IPv6) Access List used for split tunnel configuration.
     exclude_example: true
     exclude_test: true
   - model_name: type
     data_path: ["generalSettings", "splitTunnelSettings", "splitTunnelACL"]
-    tf_name: split_tunnel_acl_type
+    tf_name: split_tunnel_access_list_type
     type: String
-    description: Type of ACL used for split tunnel configuration. Mandatory, when `split_tunnel_acl_id` is set.
+    description: Type of Access List used for split tunnel configuration. Mandatory, when `split_tunnel_access_list_id` is set.
     enum_values: [StandardAccessList, ExtendedAccessList]
     exclude_example: true
     exclude_test: true
@@ -147,7 +147,7 @@ attributes:
     default_value: USE_SPLIT_TUNNEL_SETTING
   - model_name: splitDNSDomainList
     data_path: ["generalSettings", "splitTunnelSettings"]
-    tf_name: split_dns_domain_list
+    tf_name: dns_request_split_tunnel_domains
     type: String
     string_max_length: 255
     description: Up to 10, comma separated domains for split DNS requests.
@@ -250,14 +250,14 @@ attributes:
   - model_name: enableGatewayDPD
     data_path: ["anyConnectSettings", "connectionSettings"]
     type: Bool
-    tf_name: gateway_dpd
+    tf_name: gateway_dead_peer_detection
     description: Enable VPN secure gateway Dead Peer Detection (DPD).
     example: "true"
     default_value: true
   - model_name: gatewayDPDInterval
     data_path: ["anyConnectSettings", "connectionSettings"]
     type: Int64
-    tf_name: gateway_dpd_interval
+    tf_name: gateway_dead_peer_detection_interval
     description: VPN secure gateway Dead Peer Detection (DPD) messages interval in seconds.
     example: 30
     min_int: 5
@@ -266,14 +266,14 @@ attributes:
   - model_name: enableClientDPD
     data_path: ["anyConnectSettings", "connectionSettings"]
     type: Bool
-    tf_name: client_dpd
+    tf_name: client_dead_peer_detection
     description: Enable VPN client Dead Peer Detection (DPD).
     example: "true"
     default_value: true
   - model_name: clientDPDInterval
     data_path: ["anyConnectSettings", "connectionSettings"]
     type: Int64
-    tf_name: client_dpd_interval
+    tf_name: client_dead_peer_detection_interval
     description: VPN client Dead Peer Detection (DPD) messages interval in seconds.
     example: 30
     min_int: 5
@@ -308,16 +308,16 @@ attributes:
     max_int: 10080
   - model_name: id
     data_path: ["anyConnectSettings", "connectionSettings", "clientFirewallPrivateNetworkRules"]
-    tf_name: client_firewall_private_network_rules_acl_id
+    tf_name: client_firewall_private_network_rules_access_list_id
     type: String
-    description: Id of extended ACL to configure firewall settings for the VPN client's platform.
+    description: Id of Extended Access List to configure firewall settings for the VPN client's platform.
     example: 12345678-1234-1234-1234-123456
     exclude_test: true
   - model_name: id
     data_path: ["anyConnectSettings", "connectionSettings", "clientFirewallPublicNetworkRules"]
-    tf_name: client_firewall_public_network_rules_acl_id
+    tf_name: client_firewall_public_network_rules_access_list_id
     type: String
-    description: Id of extended ACL to configure firewall settings for the VPN client's platform.
+    description: Id of Extended Access List to configure firewall settings for the VPN client's platform.
     example: 12345678-1234-1234-1234-123456
     exclude_test: true
 
@@ -340,9 +340,9 @@ attributes:
   # Advanced - Traffic filter
   - model_name: id
     data_path: ["advancedSettings", "vpnTrafficFilterACL"]
-    tf_name: traffic_filter_acl_id
+    tf_name: traffic_filter_access_list_id
     type: String
-    description: Id of Extended ACL that determine whether to allow or block tunneled data packets coming through the VPN connection.
+    description: Id of Extended Access List that determine whether to allow or block tunneled data packets coming through the VPN connection.
     example: 12345678-1234-1234-1234-123456
     exclude_test: true
   - model_name: restrictVPNToVLANId
