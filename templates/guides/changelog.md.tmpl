@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## 2.0.0
+
+- Remove deprecated resources and data sources
+
 ## 2.0.0-rc.11
 
 - BREAKING CHANGE: `fmc_vpn_ra_address_assignment_policy`: Rename attributes:
