@@ -125,7 +125,7 @@ func TestAccFmcNetworkGroup_Extended(t *testing.T) {
 	config += `  ip_range = "192.168.1.0-192.168.1.10"` + "\n"
 	config += `}` + "\n"
 
-	config += `resource "fmc_fqdn_object" "ng_fqdn1" {` + "\n"
+	config += `resource "fmc_fqdn" "ng_fqdn1" {` + "\n"
 	config += `  name  = "ng_fqdn1"` + "\n"
 	config += `  fqdn = "www.example.com"` + "\n"
 	config += `}` + "\n"
@@ -148,7 +148,7 @@ func TestAccFmcNetworkGroup_Extended(t *testing.T) {
 	config += `    { id = fmc_host.ng_host1.id },` + "\n"
 	config += `    { id = fmc_network.ng_network1.id },` + "\n"
 	config += `    { id = fmc_range.ng_range1.id },` + "\n"
-	config += `    { id = fmc_fqdn_object.ng_fqdn1.id }` + "\n"
+	config += `    { id = fmc_fqdn.ng_fqdn1.id }` + "\n"
 	config += `  ]` + "\n"
 	config += `  literals = [` + "\n"
 	config += `    { value = "10.10.11.12" },` + "\n"
