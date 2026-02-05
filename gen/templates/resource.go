@@ -1027,11 +1027,9 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 			return
 		}
 
-		for i := range parts {
-			if parts[i] == "" {
+		if slices.Contains(parts, "") {
 				resp.Diagnostics.AddError("Import error", errMsg)
 				return
-			}
 		}
 
 		if len(parts) == 2 {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -859,11 +860,9 @@ func (r *DeviceBGPResource) ImportState(ctx context.Context, req resource.Import
 		return
 	}
 
-	for i := range parts {
-		if parts[i] == "" {
-			resp.Diagnostics.AddError("Import error", errMsg)
-			return
-		}
+	if slices.Contains(parts, "") {
+		resp.Diagnostics.AddError("Import error", errMsg)
+		return
 	}
 
 	if len(parts) == 2 {

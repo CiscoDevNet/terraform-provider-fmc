@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
@@ -430,11 +431,9 @@ func (r *DeviceOSPFInterfaceResource) ImportState(ctx context.Context, req resou
 		return
 	}
 
-	for i := range parts {
-		if parts[i] == "" {
-			resp.Diagnostics.AddError("Import error", errMsg)
-			return
-		}
+	if slices.Contains(parts, "") {
+		resp.Diagnostics.AddError("Import error", errMsg)
+		return
 	}
 
 	if len(parts) == 2 {
@@ -463,15 +462,3 @@ func (r *DeviceOSPFInterfaceResource) ImportState(ctx context.Context, req resou
 }
 
 // End of section. //template:end import
-
-// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
-
-// End of section. //template:end createSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
-
-// End of section. //template:end deleteSubresources
-
-// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
-
-// End of section. //template:end updateSubresources
