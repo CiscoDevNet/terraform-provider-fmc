@@ -103,7 +103,7 @@ func (p *FmcProvider) Schema(ctx context.Context, req provider.SchemaRequest, re
 				Optional:            true,
 			},
 			"req_timeout": schema.StringAttribute{
-				MarkdownDescription: "Timeout for a single HTTPS request made to REST API before it is retried. This can also be set as the FMC_REQTIMEOUT environment variable. A string like `\"1s\"` means one second. Defaults to `\"5s\"`.",
+				MarkdownDescription: "Timeout for a single HTTPS request made to REST API before it is retried. This can also be set as the FMC_REQTIMEOUT environment variable. A string like `\"1s\"` means one second. Defaults to unlimited.",
 				Optional:            true,
 			},
 			"retries": schema.Int64Attribute{
@@ -254,7 +254,7 @@ func (p *FmcProvider) Configure(ctx context.Context, req provider.ConfigureReque
 	if config.ReqTimeout.IsNull() {
 		reqTimeoutStr = os.Getenv("FMC_REQTIMEOUT")
 		if reqTimeoutStr == "" {
-			reqTimeoutStr = "5s"
+			reqTimeoutStr = "0s"
 		}
 	} else {
 		reqTimeoutStr = config.ReqTimeout.ValueString()
