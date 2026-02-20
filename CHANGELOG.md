@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: In certain situations, configuration is not visible in web interface
+- (Fix) `req_timeout` provider property was not applied correctly, resulting in an effectively unlimited timeout. The default value remains unlimited.
 
 ## 2.0.0
 
