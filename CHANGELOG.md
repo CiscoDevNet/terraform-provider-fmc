@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: In certain situations, configuration is not visible in web interface
+
 ## 2.0.0
 
 - Remove deprecated resources and data sources
