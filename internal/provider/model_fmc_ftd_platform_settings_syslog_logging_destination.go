@@ -242,8 +242,8 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBodyUnknowns(ctx co
 // End of section. //template:end fromBodyUnknowns
 
 func (data FTDPlatformSettingsSyslogLoggingDestination) adjustBody(ctx context.Context, req string) string {
-	specificEventConfig := gjson.Get(req, "specificEventConfig")
-	if !specificEventConfig.Exists() {
+	// CSCwt31637 cdFMC logging destinations under syslog platform settings not visible after configuration
+	if !gjson.Get(req, "specificEventConfig").Exists() {
 		req, _ = sjson.SetRaw(req, "specificEventConfig", "[{}]")
 	}
 	return req

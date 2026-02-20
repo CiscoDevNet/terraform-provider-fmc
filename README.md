@@ -4,7 +4,7 @@
 
 The FMC provider provides resources to interact with a Cisco Secure Firewall Management Center (FMC) and Cloud-Delivered FMC (cdFMC) instances. It communicates with FMC via the REST API.
 
-Resources and data sources have been tested with the following releases.
+Resources and Data Sources have been tested with the following releases.
 
 | Platform | Version |
 | -------- | ------- |
@@ -15,14 +15,14 @@ Resources and data sources have been tested with the following releases.
 | FMC      | 10.0.0  |
 | cdFMC    |         |
 
-Please note that resources and data sources support depends on FMC version.
+Please note that Resources and Data Sources support depends on FMC version.
 
 Documentation: <https://registry.terraform.io/providers/CiscoDevNet/fmc/latest>
 
 ## Requirements
 
 - [Terraform](https://www.terraform.io/downloads.html) >= 1.0
-- [Go](https://golang.org/doc/install) >= 1.24
+- [Go](https://golang.org/doc/install) >= 1.25
 
 ## Building The Provider
 

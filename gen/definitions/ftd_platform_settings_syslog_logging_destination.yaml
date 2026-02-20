@@ -1,3 +1,4 @@
+# FMCBUG CSCwt31637 cdFMC logging destinations under syslog platform settings not visible after configuration
 # Manual resource - adjustbody
 ---
 name: FTD Platform Settings Syslog Logging Destination
