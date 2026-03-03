@@ -192,6 +192,28 @@ func TestAccFmcNetworkGroups_Sequential(t *testing.T) {
 		// step 7
 		Config: `resource fmc_network_groups test { items = {` + "\n" +
 			`	"my_network_groups_g1" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
+			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g3" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g4" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g5" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g3", "my_network_groups_g4"]` + "\n" +
+			`	}` + "\n" +
+			`	"my_network_groups_g7" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g2","my_network_groups_g3","my_network_groups_g4","my_network_groups_g5"]` + "\n" +
+			`	}` + "\n" +
+			`}}`,
+	}, {
+		// step 8
+		Config: `resource fmc_network_groups test { items = {` + "\n" +
+			`	"my_network_groups_g1" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
 			`}}`,
