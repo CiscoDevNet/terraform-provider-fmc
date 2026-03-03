@@ -95,22 +95,19 @@ func (data SGTs) toBody(ctx context.Context, state SGTs) string {
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *SGTs) fromBody(ctx context.Context, res gjson.Result) {
+	// Build lookup map for O(1) access
+	itemsByName := make(map[string]gjson.Result)
+	res.Get("items").ForEach(func(_, v gjson.Result) bool {
+		if name := v.Get("name").String(); name != "" {
+			itemsByName[name] = v
+		}
+		return true
+	})
 	for k := range data.Items {
 		parent := &data
 		data := (*parent).Items[k]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.Get("items").ForEach(
-			func(_, v gjson.Result) bool {
-				if v.Get("name").String() == k {
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
+		res, found := itemsByName[k]
+		if !found {
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
 			delete((*parent).Items, k)
 			continue
@@ -148,21 +145,21 @@ func (data *SGTs) fromBody(ctx context.Context, res gjson.Result) {
 // easily change across versions of the backend API.) For List/Set/Map attributes, the func only updates the
 // "managed" elements, instead of all elements.
 func (data *SGTs) fromBodyPartial(ctx context.Context, res gjson.Result) {
+	// Build lookup map for O(1) access by id
+	itemsById := make(map[string]gjson.Result)
+	res.Get("items").ForEach(func(_, v gjson.Result) bool {
+		if id := v.Get("id").String(); id != "" {
+			itemsById[id] = v
+		}
+		return true
+	})
 	for i := range data.Items {
 		parent := &data
 		data := (*parent).Items[i]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.Get("items").ForEach(
-			func(_, v gjson.Result) bool {
-				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
+		if data.Id.ValueString() == "" {
+			continue
+		}
+		res, _ := itemsById[data.Id.ValueString()]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -198,25 +195,25 @@ func (data *SGTs) fromBodyPartial(ctx context.Context, res gjson.Result) {
 // fromBodyUnknowns updates the Unknown Computed tfstate values from a JSON.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *SGTs) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
+	// Build lookup maps for O(1) access
+	itemsByName := make(map[string]gjson.Result)
+	itemsById := make(map[string]gjson.Result)
+	res.Get("items").ForEach(func(_, v gjson.Result) bool {
+		if name := v.Get("name").String(); name != "" {
+			itemsByName[name] = v
+		}
+		if id := v.Get("id").String(); id != "" {
+			itemsById[id] = v
+		}
+		return true
+	})
 	for i, val := range data.Items {
 		var r gjson.Result
-		res.Get("items").ForEach(
-			func(_, v gjson.Result) bool {
-				if val.Id.IsUnknown() {
-					if v.Get("name").String() == i {
-						r = v
-						return false // break ForEach
-					}
-				} else {
-					if v.Get("id").String() == val.Id.ValueString() && val.Id.ValueString() != "" {
-						r = v
-						return false // break ForEach
-					}
-				}
-
-				return true
-			},
-		)
+		if val.Id.IsUnknown() {
+			r = itemsByName[i]
+		} else if val.Id.ValueString() != "" {
+			r = itemsById[val.Id.ValueString()]
+		}
 		if v := data.Items[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
