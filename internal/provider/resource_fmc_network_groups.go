@@ -553,14 +553,15 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 				}
 
 				// Prepare URL filter for bulk delete.
-				idsToRemove.WriteString(url.QueryEscape(state.Items[gn].Id.ValueString()) + ",")
+				idsToRemove.WriteString(state.Items[gn].Id.ValueString())
+				idsToRemove.WriteString(",")
 
 				// Save names of the groups to be deleted, so that we can remove them from the state.
 				namesToRemove = append(namesToRemove, gn)
 			}
 
 			// If this is last element, or the following element is in a different bulk, or the URL parameter length exceeds the limit, AND there are elements to delete
-			if (i == 0 || delSeq[i].bulk != delSeq[i-1].bulk || len(idsToRemove.String()) >= maxUrlParamLength) && len(idsToRemove.String()) > 0 {
+			if (i == 0 || delSeq[i].bulk != delSeq[i-1].bulk || idsToRemove.Len() >= maxUrlParamLength) && idsToRemove.Len() > 0 {
 				// Create new bulk group for deletion
 				deleteGroups = append(deleteGroups, networkGroupsBulkDelete{
 					ids:   idsToRemove.String(),
