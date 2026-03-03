@@ -216,6 +216,9 @@ func TestAccFmcNetworkGroups_Sequential(t *testing.T) {
 			`	"my_network_groups_g1" = {` + "\n" +
 			`		literals = [{value = "10.0.0.0/8"}]` + "\n" +
 			`	}` + "\n" +
+			`	"my_network_groups_g2" = {` + "\n" +
+			`		network_groups = ["my_network_groups_g1"]` + "\n" +
+			`	}` + "\n" +
 			`}}`,
 	}}
 
