@@ -21,12 +21,15 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -92,10 +95,10 @@ func (d *DomainsDataSource) Configure(_ context.Context, req datasource.Configur
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
 func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config Domains
+	var res fmc.Res
+	var err error
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -109,12 +112,57 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
-	// Get all objects from FMC
-	urlPath := config.getPath() + "?expanded=true"
-	res, err := d.client.Get(urlPath, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
-		return
+	if d.client.FMCVersionParsed.GreaterThanOrEqual(version.Must(version.NewVersion("10.0.0"))) {
+		// Get all objects from FMC
+		urlPath := config.getPath() + "?expanded=true"
+		res, err = d.client.Get(urlPath, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+			return
+		}
+	} else {
+		// FMCBUG: pagination is not handled correctly, so we need to make it manually
+		limit := 40
+		offset := 0
+
+		// Build the merged response in a single pass
+		var sb strings.Builder
+		sb.WriteString(`{"items":[`)
+		first := true
+		for {
+			urlPath := fmt.Sprintf("%s?expanded=true&offset=%d&limit=%d", config.getPath(), offset, limit)
+			partialRes, err := d.client.Get(urlPath, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+				return
+			}
+
+			// Check if there are any items in the response
+			items := partialRes.Get("items")
+			if !items.Exists() {
+				break
+			}
+
+			// Strip surrounding square brackets and append items directly
+			if chunk := items.Raw[1 : len(items.Raw)-1]; chunk != "" {
+				if !first {
+					sb.WriteByte(',')
+				}
+				sb.WriteString(chunk)
+				first = false
+			}
+
+			// If there are no more pages, stop reading
+			if !partialRes.Get("paging.next.0").Exists() {
+				break
+			}
+
+			// Increase offset to get next bulk of data
+			offset += limit
+		}
+
+		sb.WriteString(`]}`)
+		res = gjson.Parse(sb.String())
 	}
 
 	config.fromBody(ctx, res)
@@ -124,5 +172,3 @@ func (d *DomainsDataSource) Read(ctx context.Context, req datasource.ReadRequest
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read
