@@ -707,6 +707,52 @@ func (data {{camelCase .Name}}) adjustBodyBulk(ctx context.Context, req string) 
 
 // End of section. //template:end adjustBodyBulk
 
+// Section below is generated&owned by "gen/generator.go". //template:begin toBodyOverrides
+{{if .IsOverride }}
+func (data {{camelCase .Name}}) toBodyOverrides(ctx context.Context, state {{camelCase .Name}}) string {
+	body := data.toBody(ctx, state)
+
+	r := gjson.Get(body, "dummy_overrides")
+	if !r.Exists() {
+		return body
+	}
+
+	r.ForEach(func(key, value gjson.Result) bool {
+		updated := value.Raw
+		updated, _ = sjson.Set(updated, "name", data.ParentName.ValueString())
+		updated, _ = sjson.Set(updated, "overrides.parent.id", data.ParentId.ValueString())
+		body, _ = sjson.SetRaw(body, "dummy_overrides."+key.String(), updated)
+		return true
+	})
+
+	return gjson.Get(body, "dummy_overrides").String()
+}
+{{- end}}
+// End of section. //template:end toBodyOverrides
+
+// Section below is generated&owned by "gen/generator.go". //template:begin synthesizeOverrides
+{{if .IsOverride }}
+// synthesizeOverrides transforms the API response
+// (which uses real field names and contains injected parent fields) back into the dummy_* structure 
+func (data {{camelCase .Name}}) synthesizeOverrides(ctx context.Context, res gjson.Result) gjson.Result {
+	body := ""
+
+	// Map top-level response fields to dummy attributes
+	{{- range .Attributes}}
+	{{- if and (not .Value) (not .Reference) (ne .ModelName "dummy_overrides")}}
+	if value := res.Get("items.0.{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
+		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", value.Value())
+	}
+	{{- end}}
+	{{- end}}
+
+	body, _ = sjson.SetRaw(body, "dummy_overrides", res.Get("items").Raw)
+
+	return gjson.Parse(body)
+}
+{{- end}}
+// End of section. //template:end synthesizeOverrides
+
 {{- range .Attributes}}
 	{{- if isNestedMap .}}
 		{{- $found := false }}

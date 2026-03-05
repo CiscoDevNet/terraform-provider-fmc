@@ -654,9 +654,16 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
         resp.Diagnostics.Append(diags...)
         return
     }
-	{{- end}}
-
-	{{- if not .IsBulk}}
+	{{- else if .IsOverride}}
+	body := plan.toBodyOverrides(ctx, {{camelCase .Name}}{})
+	res, err := r.client.Post(plan.getPath() + "?bulk=true", body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+	plan.Id = plan.ParentId
+	plan.fromBodyUnknowns(ctx, res)
+	{{- else}}
 
 	// Create object
 	body := plan.toBody(ctx, {{camelCase .Name}}{})
@@ -727,6 +734,8 @@ func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.Rea
 	{{if .IsBulk}}
 	// Get all objects from FMC
 	urlPath := state.getPath() + "?expanded=true"
+	{{- else if .IsOverride}}
+	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()) + "/overrides"
 	{{- else}}
 	urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString())
 	{{- end}}
@@ -744,6 +753,10 @@ func (r *{{camelCase .Name}}Resource) Read(ctx context.Context, req resource.Rea
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}
+
+	{{- if .IsOverride}}
+	res = state.synthesizeOverrides(ctx, res)
+	{{- end}}
 
 	// After `terraform import` we switch to a full read.
 	if imp {
@@ -791,35 +804,6 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 	{{- if not .NoUpdate}}
-	{{- if not .IsBulk}}
-
-	body := plan.toBody(ctx, state)
-	{{- if .AdjustBody}}
-	body = plan.adjustBody(ctx, body)
-	{{- end}}
-	res, err := r.client.Put(plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
-		return
-	}
-
-	{{/* 
-	This part of the code was not used to generate any code. Also, this seems to be using harcoded to id, regardless of the actual resource_id is.
-	
-	{{- if hasResourceId .Attributes}}
-	res, err = r.client.Get(plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()), reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, res.String()))
-		return
-	}
-	plan.fromBodyUnknowns(ctx, res)
-	{{- end}}
-	*/}}
-	{{- if hasComputedRefreshValue .Attributes}}
-	plan.fromBodyUnknowns(ctx, res)
-	{{- end}}
-
-	{{- end}}
 
 	{{- if .IsBulk}}
 
@@ -942,6 +926,166 @@ func (r *{{camelCase .Name}}Resource) Update(ctx context.Context, req resource.U
 		}
 	}
 	plan = state
+
+	{{- else if .IsOverride}}
+	var res fmc.Res
+	var err error
+	planOwnedTargetIds := make(map[string]bool)
+	for _, override := range plan.Overrides {
+		planOwnedTargetIds[override.TargetId.ValueString()] = true
+	}
+
+	stateOwnedTargetIds := make(map[string]bool)
+	for _, override := range state.Overrides {
+		stateOwnedTargetIds[override.TargetId.ValueString()] = true
+	}
+
+	// DELETE
+	// Delete objects that are present in state, but missing in plan
+	var toDelete []{{camelCase .Name}}Overrides
+	for _, override := range state.Overrides {
+		if _, ok := planOwnedTargetIds[override.TargetId.ValueString()]; !ok {
+			toDelete = append(toDelete, override)
+		}
+	}
+
+	for idx, override := range toDelete {
+		urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()) + "?overrideTargetId=" + url.QueryEscape(override.TargetId.ValueString())
+		res, err := r.client.Delete(urlPath, reqMods...)
+		if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+			continue
+		} else if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete override entry (DELETE), got error: %s, %s", err, res.String()))
+			// On error, save state with items still existing on the server
+			var remaining []{{camelCase .Name}}Overrides
+			for _, o := range state.Overrides {
+				if _, ok := planOwnedTargetIds[o.TargetId.ValueString()]; ok {
+					remaining = append(remaining, o)
+				}
+			}
+			remaining = append(remaining, toDelete[idx:]...)
+			state.Overrides = remaining
+			diags = resp.State.Set(ctx, &state)
+			resp.Diagnostics.Append(diags...)
+			return
+		}
+	}
+
+	// UPDATE
+	// Check for updates to existing objects (that are present in both plan and state)
+	stateTargetIdToIdx := make(map[string]int)
+	for i, override := range state.Overrides {
+		stateTargetIdToIdx[override.TargetId.ValueString()] = i
+	}
+
+	updatedTargetIds := make(map[string]bool)
+	for pi, override := range plan.Overrides {
+		si, ok := stateTargetIdToIdx[override.TargetId.ValueString()]
+		if !ok {
+			continue
+		}
+
+		// Compare plan and state at respective list indices
+		var pv, sv attr.Value
+		diags = req.Plan.GetAttribute(ctx, path.Root("overrides").AtListIndex(pi), &pv)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+		diags = req.State.GetAttribute(ctx, path.Root("overrides").AtListIndex(si), &sv)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
+
+		if pv.Equal(sv) {
+			continue
+		}
+
+		// Build body for single override update
+		toUpdate := plan
+		toUpdate.Overrides = []{{camelCase .Name}}Overrides{override}
+		updateBody := toUpdate.toBodyOverrides(ctx, {{camelCase .Name}}{})
+		singleBody := gjson.Get(updateBody, "0").Raw
+
+		urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString())
+		res, err = r.client.Put(urlPath, singleBody, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to update override entry (PUT), got error: %s, %s", err, res.String()))
+			// On error, save state with items still existing on the server:
+			// only state overrides that were not scheduled for deletion (intersection of state and plan).
+			// New items from the plan were not yet created, so they must not be in state.
+			// For successfully updated items, use plan values (server has new values).
+			// For not-yet-updated items, use state values (server still has old values).
+			planTargetIdToOverride := make(map[string]{{camelCase .Name}}Overrides)
+			for _, o := range plan.Overrides {
+				planTargetIdToOverride[o.TargetId.ValueString()] = o
+			}
+			var remaining []{{camelCase .Name}}Overrides
+			for _, o := range state.Overrides {
+				tid := o.TargetId.ValueString()
+				if _, ok := planOwnedTargetIds[tid]; !ok {
+					continue
+				}
+				if updatedTargetIds[tid] {
+					remaining = append(remaining, planTargetIdToOverride[tid])
+				} else {
+					remaining = append(remaining, o)
+				}
+			}
+			state.Overrides = remaining
+			diags = resp.State.Set(ctx, &state)
+			resp.Diagnostics.Append(diags...)
+			return
+		}
+		updatedTargetIds[override.TargetId.ValueString()] = true
+	}
+
+	// CREATE
+	// Create objects (that are present in plan, but missing in state)
+	toCreate := plan
+	toCreate.Overrides = []{{camelCase .Name}}Overrides{}
+	for _, override := range plan.Overrides {
+		if _, ok := stateOwnedTargetIds[override.TargetId.ValueString()]; !ok {
+			toCreate.Overrides = append(toCreate.Overrides, override)
+		}
+	}
+
+	if len(toCreate.Overrides) > 0 {
+		body := toCreate.toBodyOverrides(ctx, {{camelCase .Name}}{})
+		res, err = r.client.Post(toCreate.getPath()+"?bulk=true", body, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
+			// On error, save state with items still existing on the server:
+			// deletes and updates succeeded, so plan items that existed in state are on the server
+			// with their updated values. New items from the plan were not created, so exclude them.
+			var remaining []{{camelCase .Name}}Overrides
+			for _, o := range plan.Overrides {
+				if _, ok := stateOwnedTargetIds[o.TargetId.ValueString()]; ok {
+					remaining = append(remaining, o)
+				}
+			}
+			plan.Overrides = remaining
+			diags = resp.State.Set(ctx, &plan)
+			resp.Diagnostics.Append(diags...)
+			return
+		}
+	}
+
+	{{- else}}
+
+	body := plan.toBody(ctx, state)
+	{{- if .AdjustBody}}
+	body = plan.adjustBody(ctx, body)
+	{{- end}}
+	res, err := r.client.Put(plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+
+	{{- if hasComputedRefreshValue .Attributes}}
+	plan.fromBodyUnknowns(ctx, res)
+	{{- end}}
+
 	{{- end}}
 
 	{{- end}}
@@ -976,22 +1120,6 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
 
 	{{- if not .NoDelete}}
-	{{- if not .IsBulk}}
-	{{- if .PutDelete}}
-	body := state.toBodyPutDelete(ctx)
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
-		return
-	}
-	{{- else}}
-	res, err := r.client.Delete(state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()), reqMods...)
-	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
-		return
-	}
-	{{- end}}
-	{{- end}}
 	{{- if .IsBulk}}
 
 	// Execute delete
@@ -1006,6 +1134,46 @@ func (r *{{camelCase .Name}}Resource) Delete(ctx context.Context, req resource.D
 		return
 	}
 
+	{{- else if .IsOverride}}
+	var err error
+	var errElement int
+	var res fmc.Res
+
+	for idx, override := range state.Overrides {
+		urlPath := state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()) + "?overrideTargetId=" + url.QueryEscape(override.TargetId.ValueString())
+		res, err = r.client.Delete(urlPath, reqMods...)
+		if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
+			err = nil
+			continue
+		} else if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete override entry (DELETE), got error: %s, %s", err, res.String()))
+			errElement = idx
+			break
+		}
+	}
+
+	if err != nil {
+		state.Overrides = state.Overrides[errElement:]
+		diags = resp.State.Set(ctx, &state)
+		resp.Diagnostics.Append(diags...)
+		return
+	}
+	
+	{{- else }}
+	{{- if .PutDelete}}
+	body := state.toBodyPutDelete(ctx)
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		return
+	}
+	{{- else}}
+	res, err := r.client.Delete(state.getPath() + "/" + url.QueryEscape(state.Id.ValueString()), reqMods...)
+	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+		return
+	}
+	{{- end}}
 	{{- end}}
 	{{- end}}
 
