@@ -42,10 +42,10 @@ type RangeOverrides struct {
 }
 
 type RangeOverridesOverrides struct {
-	Description types.String `tfsdk:"description"`
-	IpRange     types.String `tfsdk:"ip_range"`
 	TargetId    types.String `tfsdk:"target_id"`
 	TargetType  types.String `tfsdk:"target_type"`
+	Description types.String `tfsdk:"description"`
+	IpRange     types.String `tfsdk:"ip_range"`
 }
 
 // End of section. //template:end types
@@ -79,17 +79,17 @@ func (data RangeOverrides) toBody(ctx context.Context, state RangeOverrides) str
 		body, _ = sjson.Set(body, "dummy_overrides", []any{})
 		for _, item := range data.Overrides {
 			itemBody := ""
-			if !item.Description.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
-			}
-			if !item.IpRange.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "value", item.IpRange.ValueString())
-			}
 			if !item.TargetId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.id", item.TargetId.ValueString())
 			}
 			if !item.TargetType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.type", item.TargetType.ValueString())
+			}
+			if !item.Description.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
+			}
+			if !item.IpRange.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "value", item.IpRange.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
 		}
@@ -117,16 +117,6 @@ func (data *RangeOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RangeOverridesOverrides{}
-			if value := res.Get("description"); value.Exists() {
-				data.Description = types.StringValue(value.String())
-			} else {
-				data.Description = types.StringNull()
-			}
-			if value := res.Get("value"); value.Exists() {
-				data.IpRange = types.StringValue(value.String())
-			} else {
-				data.IpRange = types.StringNull()
-			}
 			if value := res.Get("overrides.target.id"); value.Exists() {
 				data.TargetId = types.StringValue(value.String())
 			} else {
@@ -136,6 +126,16 @@ func (data *RangeOverrides) fromBody(ctx context.Context, res gjson.Result) {
 				data.TargetType = types.StringValue(value.String())
 			} else {
 				data.TargetType = types.StringNull()
+			}
+			if value := res.Get("description"); value.Exists() {
+				data.Description = types.StringValue(value.String())
+			} else {
+				data.Description = types.StringNull()
+			}
+			if value := res.Get("value"); value.Exists() {
+				data.IpRange = types.StringValue(value.String())
+			} else {
+				data.IpRange = types.StringNull()
 			}
 			(*parent).Overrides = append((*parent).Overrides, data)
 			return true
@@ -198,16 +198,6 @@ func (data *RangeOverrides) fromBodyPartial(ctx context.Context, res gjson.Resul
 
 			continue
 		}
-		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-			data.Description = types.StringValue(value.String())
-		} else {
-			data.Description = types.StringNull()
-		}
-		if value := res.Get("value"); value.Exists() && !data.IpRange.IsNull() {
-			data.IpRange = types.StringValue(value.String())
-		} else {
-			data.IpRange = types.StringNull()
-		}
 		if value := res.Get("overrides.target.id"); value.Exists() && !data.TargetId.IsNull() {
 			data.TargetId = types.StringValue(value.String())
 		} else {
@@ -217,6 +207,16 @@ func (data *RangeOverrides) fromBodyPartial(ctx context.Context, res gjson.Resul
 			data.TargetType = types.StringValue(value.String())
 		} else {
 			data.TargetType = types.StringNull()
+		}
+		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			data.Description = types.StringNull()
+		}
+		if value := res.Get("value"); value.Exists() && !data.IpRange.IsNull() {
+			data.IpRange = types.StringValue(value.String())
+		} else {
+			data.IpRange = types.StringNull()
 		}
 		(*parent).Overrides[i] = data
 	}

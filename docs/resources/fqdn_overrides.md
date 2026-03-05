@@ -18,10 +18,10 @@ resource "fmc_fqdn_overrides" "example" {
   parent_id   = "12345678-90ab-cdef-1234-567890abcdef"
   overrides = [
     {
-      description = "My FQDN object"
-      fqdn        = "sub.example.com"
       target_id   = "12345678-90ab-cdef-1234-567890abcdef"
       target_type = "Device"
+      description = "My FQDN object"
+      fqdn        = "sub.example.com"
     }
   ]
 }

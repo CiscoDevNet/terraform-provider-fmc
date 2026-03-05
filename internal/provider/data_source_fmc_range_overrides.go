@@ -85,20 +85,20 @@ func (d *RangeOverridesDataSource) Schema(ctx context.Context, req datasource.Sc
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"description": schema.StringAttribute{
-							MarkdownDescription: "Description of the overridden object.",
-							Computed:            true,
-						},
-						"ip_range": schema.StringAttribute{
-							MarkdownDescription: "Range of addresses, IPv4 or IPv6.",
-							Computed:            true,
-						},
 						"target_id": schema.StringAttribute{
 							MarkdownDescription: "ID of the override target Device or Domain. Note that each target can be defined once only.",
 							Computed:            true,
 						},
 						"target_type": schema.StringAttribute{
 							MarkdownDescription: "Type of the target.",
+							Computed:            true,
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: "Description of the overridden object.",
+							Computed:            true,
+						},
+						"ip_range": schema.StringAttribute{
+							MarkdownDescription: "Range of addresses, IPv4 or IPv6.",
 							Computed:            true,
 						},
 					},

@@ -3,10 +3,10 @@ resource "fmc_range_overrides" "example" {
   parent_id   = "12345678-90ab-cdef-1234-567890abcdef"
   overrides = [
     {
-      description = "My Range object"
-      ip_range    = "10.1.0.1-10.1.0.9"
       target_id   = "12345678-90ab-cdef-1234-567890abcdef"
       target_type = "Device"
+      description = "My Range object"
+      ip_range    = "10.1.0.1-10.1.0.9"
     }
   ]
 }

@@ -30,16 +30,6 @@ attributes:
     max_list: 1000
     mandatory: true
     attributes:
-    - model_name: description
-      type: String
-      description: Description of the overridden object.
-      example: My FQDN object
-    - model_name: value
-      tf_name: fqdn
-      type: String
-      mandatory: true
-      description: FQDN of the object.
-      example: sub.example.com
     - model_name: id
       data_path: ["overrides", "target"]
       tf_name: target_id
@@ -57,6 +47,16 @@ attributes:
       enum_values: ["Device", "Domain"]
       description: Type of the target.
       example: Device
+    - model_name: description
+      type: String
+      description: Description of the overridden object.
+      example: My FQDN object
+    - model_name: value
+      tf_name: fqdn
+      type: String
+      mandatory: true
+      description: FQDN of the object.
+      example: sub.example.com
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

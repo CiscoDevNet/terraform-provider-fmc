@@ -34,9 +34,9 @@ func TestAccFmcFQDNOverrides(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_overrides.test", "overrides.0.target_type", "Device"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_overrides.test", "overrides.0.description", "My FQDN object"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_overrides.test", "overrides.0.fqdn", "sub.example.com"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_fqdn_overrides.test", "overrides.0.target_type", "Device"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
@@ -84,9 +84,9 @@ func testAccFmcFQDNOverridesConfig_minimum() string {
 	config += `	parent_name = fmc_fqdn.test.name` + "\n"
 	config += `	parent_id = fmc_fqdn.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		fqdn = "sub.example.com"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		fqdn = "sub.example.com"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
@@ -101,10 +101,10 @@ func testAccFmcFQDNOverridesConfig_all() string {
 	config += `	parent_name = fmc_fqdn.test.name` + "\n"
 	config += `	parent_id = fmc_fqdn.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		description = "My FQDN object"` + "\n"
-	config += `		fqdn = "sub.example.com"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		description = "My FQDN object"` + "\n"
+	config += `		fqdn = "sub.example.com"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

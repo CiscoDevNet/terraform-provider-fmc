@@ -101,14 +101,6 @@ func (r *NetworkOverridesResource) Schema(ctx context.Context, req resource.Sche
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description of the overridden object.").String,
-							Optional:            true,
-						},
-						"prefix": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Prefix of the Network.").String,
-							Required:            true,
-						},
 						"target_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the override target Device or Domain. Note that each target can be defined once only.").String,
 							Required:            true,
@@ -119,6 +111,14 @@ func (r *NetworkOverridesResource) Schema(ctx context.Context, req resource.Sche
 							Validators: []validator.String{
 								stringvalidator.OneOf("Device", "Domain"),
 							},
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the overridden object.").String,
+							Optional:            true,
+						},
+						"prefix": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Prefix of the Network.").String,
+							Required:            true,
 						},
 					},
 				},

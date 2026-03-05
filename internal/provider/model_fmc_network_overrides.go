@@ -42,10 +42,10 @@ type NetworkOverrides struct {
 }
 
 type NetworkOverridesOverrides struct {
-	Description types.String `tfsdk:"description"`
-	Prefix      types.String `tfsdk:"prefix"`
 	TargetId    types.String `tfsdk:"target_id"`
 	TargetType  types.String `tfsdk:"target_type"`
+	Description types.String `tfsdk:"description"`
+	Prefix      types.String `tfsdk:"prefix"`
 }
 
 // End of section. //template:end types
@@ -79,17 +79,17 @@ func (data NetworkOverrides) toBody(ctx context.Context, state NetworkOverrides)
 		body, _ = sjson.Set(body, "dummy_overrides", []any{})
 		for _, item := range data.Overrides {
 			itemBody := ""
-			if !item.Description.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
-			}
-			if !item.Prefix.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "value", item.Prefix.ValueString())
-			}
 			if !item.TargetId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.id", item.TargetId.ValueString())
 			}
 			if !item.TargetType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.type", item.TargetType.ValueString())
+			}
+			if !item.Description.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
+			}
+			if !item.Prefix.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "value", item.Prefix.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
 		}
@@ -117,16 +117,6 @@ func (data *NetworkOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkOverridesOverrides{}
-			if value := res.Get("description"); value.Exists() {
-				data.Description = types.StringValue(value.String())
-			} else {
-				data.Description = types.StringNull()
-			}
-			if value := res.Get("value"); value.Exists() {
-				data.Prefix = types.StringValue(value.String())
-			} else {
-				data.Prefix = types.StringNull()
-			}
 			if value := res.Get("overrides.target.id"); value.Exists() {
 				data.TargetId = types.StringValue(value.String())
 			} else {
@@ -136,6 +126,16 @@ func (data *NetworkOverrides) fromBody(ctx context.Context, res gjson.Result) {
 				data.TargetType = types.StringValue(value.String())
 			} else {
 				data.TargetType = types.StringNull()
+			}
+			if value := res.Get("description"); value.Exists() {
+				data.Description = types.StringValue(value.String())
+			} else {
+				data.Description = types.StringNull()
+			}
+			if value := res.Get("value"); value.Exists() {
+				data.Prefix = types.StringValue(value.String())
+			} else {
+				data.Prefix = types.StringNull()
 			}
 			(*parent).Overrides = append((*parent).Overrides, data)
 			return true
@@ -198,16 +198,6 @@ func (data *NetworkOverrides) fromBodyPartial(ctx context.Context, res gjson.Res
 
 			continue
 		}
-		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-			data.Description = types.StringValue(value.String())
-		} else {
-			data.Description = types.StringNull()
-		}
-		if value := res.Get("value"); value.Exists() && !data.Prefix.IsNull() {
-			data.Prefix = types.StringValue(value.String())
-		} else {
-			data.Prefix = types.StringNull()
-		}
 		if value := res.Get("overrides.target.id"); value.Exists() && !data.TargetId.IsNull() {
 			data.TargetId = types.StringValue(value.String())
 		} else {
@@ -217,6 +207,16 @@ func (data *NetworkOverrides) fromBodyPartial(ctx context.Context, res gjson.Res
 			data.TargetType = types.StringValue(value.String())
 		} else {
 			data.TargetType = types.StringNull()
+		}
+		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			data.Description = types.StringNull()
+		}
+		if value := res.Get("value"); value.Exists() && !data.Prefix.IsNull() {
+			data.Prefix = types.StringValue(value.String())
+		} else {
+			data.Prefix = types.StringNull()
 		}
 		(*parent).Overrides[i] = data
 	}

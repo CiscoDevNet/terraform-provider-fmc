@@ -85,20 +85,20 @@ func (d *NetworkOverridesDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"description": schema.StringAttribute{
-							MarkdownDescription: "Description of the overridden object.",
-							Computed:            true,
-						},
-						"prefix": schema.StringAttribute{
-							MarkdownDescription: "Prefix of the Network.",
-							Computed:            true,
-						},
 						"target_id": schema.StringAttribute{
 							MarkdownDescription: "ID of the override target Device or Domain. Note that each target can be defined once only.",
 							Computed:            true,
 						},
 						"target_type": schema.StringAttribute{
 							MarkdownDescription: "Type of the target.",
+							Computed:            true,
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: "Description of the overridden object.",
+							Computed:            true,
+						},
+						"prefix": schema.StringAttribute{
+							MarkdownDescription: "Prefix of the Network.",
 							Computed:            true,
 						},
 					},

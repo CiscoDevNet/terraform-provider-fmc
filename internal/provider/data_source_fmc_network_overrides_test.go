@@ -34,9 +34,9 @@ func TestAccDataSourceFmcNetworkOverrides(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_overrides.test", "overrides.0.target_type", "Device"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_overrides.test", "overrides.0.description", "My Network object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_overrides.test", "overrides.0.prefix", "10.1.2.0/24"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_network_overrides.test", "overrides.0.target_type", "Device"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -77,10 +77,10 @@ func testAccDataSourceFmcNetworkOverridesConfig() string {
 	config += `	parent_name = fmc_network.test.name` + "\n"
 	config += `	parent_id = fmc_network.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		description = "My Network object"` + "\n"
-	config += `		prefix = "10.1.2.0/24"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		description = "My Network object"` + "\n"
+	config += `		prefix = "10.1.2.0/24"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
@@ -97,10 +97,10 @@ func testAccNamedDataSourceFmcNetworkOverridesConfig() string {
 	config += `	parent_name = fmc_network.test.name` + "\n"
 	config += `	parent_id = fmc_network.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		description = "My Network object"` + "\n"
-	config += `		prefix = "10.1.2.0/24"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		description = "My Network object"` + "\n"
+	config += `		prefix = "10.1.2.0/24"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

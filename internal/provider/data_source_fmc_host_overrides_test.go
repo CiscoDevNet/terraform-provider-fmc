@@ -34,9 +34,9 @@ func TestAccDataSourceFmcHostOverrides(t *testing.T) {
 		t.Skip("skipping test, set environment variable TF_VAR_device_id")
 	}
 	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host_overrides.test", "overrides.0.target_type", "Device"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host_overrides.test", "overrides.0.description", "My Host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host_overrides.test", "overrides.0.ip", "10.1.1.1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_host_overrides.test", "overrides.0.target_type", "Device"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -77,10 +77,10 @@ func testAccDataSourceFmcHostOverridesConfig() string {
 	config += `	parent_name = fmc_host.test.name` + "\n"
 	config += `	parent_id = fmc_host.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		description = "My Host object"` + "\n"
-	config += `		ip = "10.1.1.1"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		description = "My Host object"` + "\n"
+	config += `		ip = "10.1.1.1"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 
@@ -97,10 +97,10 @@ func testAccNamedDataSourceFmcHostOverridesConfig() string {
 	config += `	parent_name = fmc_host.test.name` + "\n"
 	config += `	parent_id = fmc_host.test.id` + "\n"
 	config += `	overrides = [{` + "\n"
-	config += `		description = "My Host object"` + "\n"
-	config += `		ip = "10.1.1.1"` + "\n"
 	config += `		target_id = var.device_id` + "\n"
 	config += `		target_type = "Device"` + "\n"
+	config += `		description = "My Host object"` + "\n"
+	config += `		ip = "10.1.1.1"` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 

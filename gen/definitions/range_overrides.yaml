@@ -30,16 +30,6 @@ attributes:
     max_list: 1000
     mandatory: true
     attributes:
-    - model_name: description
-      type: String
-      description: Description of the overridden object.
-      example: My Range object
-    - model_name: value
-      tf_name: ip_range
-      type: String
-      description: Range of addresses, IPv4 or IPv6.
-      mandatory: true
-      example: 10.1.0.1-10.1.0.9
     - model_name: id
       data_path: ["overrides", "target"]
       tf_name: target_id
@@ -57,6 +47,16 @@ attributes:
       enum_values: ["Device", "Domain"]
       description: Type of the target.
       example: Device
+    - model_name: description
+      type: String
+      description: Description of the overridden object.
+      example: My Range object
+    - model_name: value
+      tf_name: ip_range
+      type: String
+      description: Range of addresses, IPv4 or IPv6.
+      mandatory: true
+      example: 10.1.0.1-10.1.0.9
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

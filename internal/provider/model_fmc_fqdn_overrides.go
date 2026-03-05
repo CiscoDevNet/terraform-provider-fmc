@@ -42,10 +42,10 @@ type FQDNOverrides struct {
 }
 
 type FQDNOverridesOverrides struct {
-	Description types.String `tfsdk:"description"`
-	Fqdn        types.String `tfsdk:"fqdn"`
 	TargetId    types.String `tfsdk:"target_id"`
 	TargetType  types.String `tfsdk:"target_type"`
+	Description types.String `tfsdk:"description"`
+	Fqdn        types.String `tfsdk:"fqdn"`
 }
 
 // End of section. //template:end types
@@ -79,17 +79,17 @@ func (data FQDNOverrides) toBody(ctx context.Context, state FQDNOverrides) strin
 		body, _ = sjson.Set(body, "dummy_overrides", []any{})
 		for _, item := range data.Overrides {
 			itemBody := ""
-			if !item.Description.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
-			}
-			if !item.Fqdn.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "value", item.Fqdn.ValueString())
-			}
 			if !item.TargetId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.id", item.TargetId.ValueString())
 			}
 			if !item.TargetType.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "overrides.target.type", item.TargetType.ValueString())
+			}
+			if !item.Description.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
+			}
+			if !item.Fqdn.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "value", item.Fqdn.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
 		}
@@ -117,16 +117,6 @@ func (data *FQDNOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FQDNOverridesOverrides{}
-			if value := res.Get("description"); value.Exists() {
-				data.Description = types.StringValue(value.String())
-			} else {
-				data.Description = types.StringNull()
-			}
-			if value := res.Get("value"); value.Exists() {
-				data.Fqdn = types.StringValue(value.String())
-			} else {
-				data.Fqdn = types.StringNull()
-			}
 			if value := res.Get("overrides.target.id"); value.Exists() {
 				data.TargetId = types.StringValue(value.String())
 			} else {
@@ -136,6 +126,16 @@ func (data *FQDNOverrides) fromBody(ctx context.Context, res gjson.Result) {
 				data.TargetType = types.StringValue(value.String())
 			} else {
 				data.TargetType = types.StringNull()
+			}
+			if value := res.Get("description"); value.Exists() {
+				data.Description = types.StringValue(value.String())
+			} else {
+				data.Description = types.StringNull()
+			}
+			if value := res.Get("value"); value.Exists() {
+				data.Fqdn = types.StringValue(value.String())
+			} else {
+				data.Fqdn = types.StringNull()
 			}
 			(*parent).Overrides = append((*parent).Overrides, data)
 			return true
@@ -198,16 +198,6 @@ func (data *FQDNOverrides) fromBodyPartial(ctx context.Context, res gjson.Result
 
 			continue
 		}
-		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
-			data.Description = types.StringValue(value.String())
-		} else {
-			data.Description = types.StringNull()
-		}
-		if value := res.Get("value"); value.Exists() && !data.Fqdn.IsNull() {
-			data.Fqdn = types.StringValue(value.String())
-		} else {
-			data.Fqdn = types.StringNull()
-		}
 		if value := res.Get("overrides.target.id"); value.Exists() && !data.TargetId.IsNull() {
 			data.TargetId = types.StringValue(value.String())
 		} else {
@@ -217,6 +207,16 @@ func (data *FQDNOverrides) fromBodyPartial(ctx context.Context, res gjson.Result
 			data.TargetType = types.StringValue(value.String())
 		} else {
 			data.TargetType = types.StringNull()
+		}
+		if value := res.Get("description"); value.Exists() && !data.Description.IsNull() {
+			data.Description = types.StringValue(value.String())
+		} else {
+			data.Description = types.StringNull()
+		}
+		if value := res.Get("value"); value.Exists() && !data.Fqdn.IsNull() {
+			data.Fqdn = types.StringValue(value.String())
+		} else {
+			data.Fqdn = types.StringNull()
 		}
 		(*parent).Overrides[i] = data
 	}

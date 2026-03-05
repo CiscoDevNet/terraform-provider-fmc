@@ -101,14 +101,6 @@ func (r *RangeOverridesResource) Schema(ctx context.Context, req resource.Schema
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"description": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Description of the overridden object.").String,
-							Optional:            true,
-						},
-						"ip_range": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Range of addresses, IPv4 or IPv6.").String,
-							Required:            true,
-						},
 						"target_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the override target Device or Domain. Note that each target can be defined once only.").String,
 							Required:            true,
@@ -119,6 +111,14 @@ func (r *RangeOverridesResource) Schema(ctx context.Context, req resource.Schema
 							Validators: []validator.String{
 								stringvalidator.OneOf("Device", "Domain"),
 							},
+						},
+						"description": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Description of the overridden object.").String,
+							Optional:            true,
+						},
+						"ip_range": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Range of addresses, IPv4 or IPv6.").String,
+							Required:            true,
 						},
 					},
 				},
