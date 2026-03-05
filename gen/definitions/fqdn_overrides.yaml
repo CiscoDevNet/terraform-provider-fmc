@@ -1,6 +1,6 @@
 ---
-name: Host Overrides
-rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts
+name: FQDN Overrides
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/fqdns
 is_override: true
 doc_category: Objects
 test_tags: [TF_VAR_device_id]
@@ -9,20 +9,20 @@ attributes:
     tf_name: parent_name
     type: String
     mandatory: true
-    description: Name of the parent Host object.
-    example: my_host
+    description: Name of the parent FQDN object.
+    example: my_fqdn
     data_source_query: true
     requires_replace: true
-    test_value: fmc_host.test.name
+    test_value: fmc_fqdn.test.name
   - model_name: id
     data_path: ["overrides", "parent"]
     tf_name: parent_id
     type: String
     mandatory: true
-    description: ID of the parent Host object.
+    description: ID of the parent FQDN object.
     example: 12345678-90ab-cdef-1234-567890abcdef
     requires_replace: true
-    test_value: fmc_host.test.id
+    test_value: fmc_fqdn.test.id
   - model_name: dummy_overrides
     tf_name: overrides
     type: List
@@ -33,13 +33,13 @@ attributes:
     - model_name: description
       type: String
       description: Description of the overridden object.
-      example: My Host object
+      example: My FQDN object
     - model_name: value
-      tf_name: ip
+      tf_name: fqdn
       type: String
       mandatory: true
-      description: Override IP
-      example: 10.1.1.1
+      description: FQDN of the object.
+      example: sub.example.com
     - model_name: id
       data_path: ["overrides", "target"]
       tf_name: target_id
@@ -61,8 +61,8 @@ attributes:
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id
 
-  resource "fmc_host" "test" {
-    name        = "my_host_override"
-    ip          = "10.0.0.1"
+  resource "fmc_fqdn" "test" {
+    name        = "my_fqdn_override"
+    fqdn        = "example.com"
     overridable = true
   }

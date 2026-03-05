@@ -46,26 +46,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &HostOverridesResource{}
-	_ resource.ResourceWithImportState = &HostOverridesResource{}
+	_ resource.Resource                = &NetworkOverridesResource{}
+	_ resource.ResourceWithImportState = &NetworkOverridesResource{}
 )
 
-func NewHostOverridesResource() resource.Resource {
-	return &HostOverridesResource{}
+func NewNetworkOverridesResource() resource.Resource {
+	return &NetworkOverridesResource{}
 }
 
-type HostOverridesResource struct {
+type NetworkOverridesResource struct {
 	client *fmc.Client
 }
 
-func (r *HostOverridesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_host_overrides"
+func (r *NetworkOverridesResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_network_overrides"
 }
 
-func (r *HostOverridesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *NetworkOverridesResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Host Overrides.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Network Overrides.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -83,14 +83,14 @@ func (r *HostOverridesResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"parent_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent Host object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the parent Network object.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"parent_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("ID of the parent Host object.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("ID of the parent Network object.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
@@ -105,8 +105,8 @@ func (r *HostOverridesResource) Schema(ctx context.Context, req resource.SchemaR
 							MarkdownDescription: helpers.NewAttributeDescription("Description of the overridden object.").String,
 							Optional:            true,
 						},
-						"ip": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Override IP").String,
+						"prefix": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Prefix of the Network.").String,
 							Required:            true,
 						},
 						"target_id": schema.StringAttribute{
@@ -130,7 +130,7 @@ func (r *HostOverridesResource) Schema(ctx context.Context, req resource.SchemaR
 	}
 }
 
-func (r *HostOverridesResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *NetworkOverridesResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -142,8 +142,8 @@ func (r *HostOverridesResource) Configure(_ context.Context, req resource.Config
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *HostOverridesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan HostOverrides
+func (r *NetworkOverridesResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan NetworkOverrides
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -158,7 +158,7 @@ func (r *HostOverridesResource) Create(ctx context.Context, req resource.CreateR
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
-	body := plan.toBodyOverrides(ctx, HostOverrides{})
+	body := plan.toBodyOverrides(ctx, NetworkOverrides{})
 	res, err := r.client.Post(plan.getPath()+"?bulk=true", body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -179,8 +179,8 @@ func (r *HostOverridesResource) Create(ctx context.Context, req resource.CreateR
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *HostOverridesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state HostOverrides
+func (r *NetworkOverridesResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state NetworkOverrides
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -232,8 +232,8 @@ func (r *HostOverridesResource) Read(ctx context.Context, req resource.ReadReque
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state HostOverrides
+func (r *NetworkOverridesResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state NetworkOverrides
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -268,7 +268,7 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 
 	// DELETE
 	// Delete objects that are present in state, but missing in plan
-	var toDelete []HostOverridesOverrides
+	var toDelete []NetworkOverridesOverrides
 	for _, override := range state.Overrides {
 		if _, ok := planOwnedTargetIds[override.TargetId.ValueString()]; !ok {
 			toDelete = append(toDelete, override)
@@ -283,7 +283,7 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 		} else if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete override entry (DELETE), got error: %s, %s", err, res.String()))
 			// On error, save state with items still existing on the server
-			var remaining []HostOverridesOverrides
+			var remaining []NetworkOverridesOverrides
 			for _, o := range state.Overrides {
 				if _, ok := planOwnedTargetIds[o.TargetId.ValueString()]; ok {
 					remaining = append(remaining, o)
@@ -328,8 +328,8 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 
 		// Build body for single override update
 		toUpdate := plan
-		toUpdate.Overrides = []HostOverridesOverrides{override}
-		updateBody := toUpdate.toBodyOverrides(ctx, HostOverrides{})
+		toUpdate.Overrides = []NetworkOverridesOverrides{override}
+		updateBody := toUpdate.toBodyOverrides(ctx, NetworkOverrides{})
 		singleBody := gjson.Get(updateBody, "0").Raw
 
 		urlPath := plan.getPath() + "/" + url.QueryEscape(plan.Id.ValueString())
@@ -341,11 +341,11 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 			// New items from the plan were not yet created, so they must not be in state.
 			// For successfully updated items, use plan values (server has new values).
 			// For not-yet-updated items, use state values (server still has old values).
-			planTargetIdToOverride := make(map[string]HostOverridesOverrides)
+			planTargetIdToOverride := make(map[string]NetworkOverridesOverrides)
 			for _, o := range plan.Overrides {
 				planTargetIdToOverride[o.TargetId.ValueString()] = o
 			}
-			var remaining []HostOverridesOverrides
+			var remaining []NetworkOverridesOverrides
 			for _, o := range state.Overrides {
 				tid := o.TargetId.ValueString()
 				if _, ok := planOwnedTargetIds[tid]; !ok {
@@ -368,7 +368,7 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 	// CREATE
 	// Create objects (that are present in plan, but missing in state)
 	toCreate := plan
-	toCreate.Overrides = []HostOverridesOverrides{}
+	toCreate.Overrides = []NetworkOverridesOverrides{}
 	for _, override := range plan.Overrides {
 		if _, ok := stateOwnedTargetIds[override.TargetId.ValueString()]; !ok {
 			toCreate.Overrides = append(toCreate.Overrides, override)
@@ -376,14 +376,14 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 	}
 
 	if len(toCreate.Overrides) > 0 {
-		body := toCreate.toBodyOverrides(ctx, HostOverrides{})
+		body := toCreate.toBodyOverrides(ctx, NetworkOverrides{})
 		res, err = r.client.Post(toCreate.getPath()+"?bulk=true", body, reqMods...)
 		if err != nil {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 			// On error, save state with items still existing on the server:
 			// deletes and updates succeeded, so plan items that existed in state are on the server
 			// with their updated values. New items from the plan were not created, so exclude them.
-			var remaining []HostOverridesOverrides
+			var remaining []NetworkOverridesOverrides
 			for _, o := range plan.Overrides {
 				if _, ok := stateOwnedTargetIds[o.TargetId.ValueString()]; ok {
 					remaining = append(remaining, o)
@@ -406,8 +406,8 @@ func (r *HostOverridesResource) Update(ctx context.Context, req resource.UpdateR
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *HostOverridesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state HostOverrides
+func (r *NetworkOverridesResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state NetworkOverrides
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -454,7 +454,7 @@ func (r *HostOverridesResource) Delete(ctx context.Context, req resource.DeleteR
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *HostOverridesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *NetworkOverridesResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)

@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &HostOverridesDataSource{}
-	_ datasource.DataSourceWithConfigure = &HostOverridesDataSource{}
+	_ datasource.DataSource              = &RangeOverridesDataSource{}
+	_ datasource.DataSourceWithConfigure = &RangeOverridesDataSource{}
 )
 
-func NewHostOverridesDataSource() datasource.DataSource {
-	return &HostOverridesDataSource{}
+func NewRangeOverridesDataSource() datasource.DataSource {
+	return &RangeOverridesDataSource{}
 }
 
-type HostOverridesDataSource struct {
+type RangeOverridesDataSource struct {
 	client *fmc.Client
 }
 
-func (d *HostOverridesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_host_overrides"
+func (d *RangeOverridesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_range_overrides"
 }
 
-func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *RangeOverridesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Host Overrides.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Range Overrides.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,12 +72,12 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 				Optional:            true,
 			},
 			"parent_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the parent Host object.",
+				MarkdownDescription: "Name of the parent Range object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"parent_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the parent Host object.",
+				MarkdownDescription: "ID of the parent Range object.",
 				Computed:            true,
 			},
 			"overrides": schema.ListNestedAttribute{
@@ -89,8 +89,8 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "Description of the overridden object.",
 							Computed:            true,
 						},
-						"ip": schema.StringAttribute{
-							MarkdownDescription: "Override IP",
+						"ip_range": schema.StringAttribute{
+							MarkdownDescription: "Range of addresses, IPv4 or IPv6.",
 							Computed:            true,
 						},
 						"target_id": schema.StringAttribute{
@@ -107,7 +107,7 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 		},
 	}
 }
-func (d *HostOverridesDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *RangeOverridesDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -116,7 +116,7 @@ func (d *HostOverridesDataSource) ConfigValidators(ctx context.Context) []dataso
 	}
 }
 
-func (d *HostOverridesDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *RangeOverridesDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -128,8 +128,8 @@ func (d *HostOverridesDataSource) Configure(_ context.Context, req datasource.Co
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *HostOverridesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config HostOverrides
+func (d *RangeOverridesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config RangeOverrides
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

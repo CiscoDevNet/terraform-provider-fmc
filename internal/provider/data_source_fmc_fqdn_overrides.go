@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &HostOverridesDataSource{}
-	_ datasource.DataSourceWithConfigure = &HostOverridesDataSource{}
+	_ datasource.DataSource              = &FQDNOverridesDataSource{}
+	_ datasource.DataSourceWithConfigure = &FQDNOverridesDataSource{}
 )
 
-func NewHostOverridesDataSource() datasource.DataSource {
-	return &HostOverridesDataSource{}
+func NewFQDNOverridesDataSource() datasource.DataSource {
+	return &FQDNOverridesDataSource{}
 }
 
-type HostOverridesDataSource struct {
+type FQDNOverridesDataSource struct {
 	client *fmc.Client
 }
 
-func (d *HostOverridesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_host_overrides"
+func (d *FQDNOverridesDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_fqdn_overrides"
 }
 
-func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *FQDNOverridesDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Host Overrides.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the FQDN Overrides.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,12 +72,12 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 				Optional:            true,
 			},
 			"parent_name": schema.StringAttribute{
-				MarkdownDescription: "Name of the parent Host object.",
+				MarkdownDescription: "Name of the parent FQDN object.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"parent_id": schema.StringAttribute{
-				MarkdownDescription: "ID of the parent Host object.",
+				MarkdownDescription: "ID of the parent FQDN object.",
 				Computed:            true,
 			},
 			"overrides": schema.ListNestedAttribute{
@@ -89,8 +89,8 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 							MarkdownDescription: "Description of the overridden object.",
 							Computed:            true,
 						},
-						"ip": schema.StringAttribute{
-							MarkdownDescription: "Override IP",
+						"fqdn": schema.StringAttribute{
+							MarkdownDescription: "FQDN of the object.",
 							Computed:            true,
 						},
 						"target_id": schema.StringAttribute{
@@ -107,7 +107,7 @@ func (d *HostOverridesDataSource) Schema(ctx context.Context, req datasource.Sch
 		},
 	}
 }
-func (d *HostOverridesDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *FQDNOverridesDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -116,7 +116,7 @@ func (d *HostOverridesDataSource) ConfigValidators(ctx context.Context) []dataso
 	}
 }
 
-func (d *HostOverridesDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *FQDNOverridesDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -128,8 +128,8 @@ func (d *HostOverridesDataSource) Configure(_ context.Context, req datasource.Co
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *HostOverridesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config HostOverrides
+func (d *FQDNOverridesDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config FQDNOverrides
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
