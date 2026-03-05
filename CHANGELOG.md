@@ -2,6 +2,7 @@
 
 - (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: In certain situations, configuration is not visible in web interface
 - (Fix) `req_timeout` provider property was not applied correctly, resulting in an effectively unlimited timeout. The default value remains unlimited.
+- (Fix) `fmc_domains` would fail to retrieve domains, if there are more than 40 configured on FMC
 
 ## 2.0.0
 
