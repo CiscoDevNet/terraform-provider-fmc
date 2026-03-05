@@ -1,0 +1,68 @@
+---
+name: Host Overrides
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/hosts
+is_override: true
+doc_category: Objects
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: name
+    tf_name: parent_name
+    type: String
+    mandatory: true
+    description: Name of the parent Host object.
+    example: my_host
+    data_source_query: true
+    requires_replace: true
+    test_value: fmc_host.test.name
+  - model_name: id
+    data_path: ["overrides", "parent"]
+    tf_name: parent_id
+    type: String
+    mandatory: true
+    description: ID of the parent Host object.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    requires_replace: true
+    test_value: fmc_host.test.id
+  - model_name: dummy_overrides
+    tf_name: overrides
+    type: List
+    description: List of override entries for the object.
+    max_list: 1000
+    mandatory: true
+    attributes:
+    - model_name: description
+      type: String
+      description: Description of the overriden object.
+      example: My Host object
+    - model_name: value
+      tf_name: ip
+      type: String
+      mandatory: true
+      description: Override IP
+      example: 10.1.1.1
+    - model_name: id
+      data_path: ["overrides", "target"]
+      tf_name: target_id
+      type: String
+      id: true
+      mandatory: true
+      description: ID of the override target Device or Domain. Note that each target can be defined once only.
+      example: 12345678-90ab-cdef-1234-567890abcdef
+      test_value: var.device_id
+    - model_name: type
+      data_path: ["overrides", "target"]
+      tf_name: target_type
+      type: String
+      mandatory: true
+      enum_values: ["Device", "Domain"]
+      description: Type of the target.
+      example: Device
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_host" "test" {
+    name        = "my_host_override"
+    ip          = "10.0.0.1"
+    overridable = true
+  }
