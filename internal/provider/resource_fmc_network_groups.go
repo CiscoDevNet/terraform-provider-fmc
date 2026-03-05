@@ -267,7 +267,6 @@ func (r *NetworkGroupsResource) Read(ctx context.Context, req resource.ReadReque
 // synthesizeNetworkGroups takes a real API Result (json) and converts some of the entries of the original attribute "objects"
 // into synthetic attribute "network_groups". It returns a modified json.
 func synthesizeNetworkGroups(ctx context.Context, res gjson.Result, state *NetworkGroups) gjson.Result {
-	items := `[]`
 	if !res.Get("items").IsArray() {
 		return res
 	}
@@ -280,12 +279,13 @@ func synthesizeNetworkGroups(ctx context.Context, res gjson.Result, state *Netwo
 		ownedIds[item.Id.ValueString()] = name
 	}
 
-	for _, item := range res.Get("items").Array() {
-		item := synthesizeNetworkGroupsItem(ctx, item, ownedIds)
-		items, _ = sjson.SetRaw(items, "-1", item)
+	resItems := res.Get("items").Array()
+	itemStrings := make([]string, 0, len(resItems))
+	for _, item := range resItems {
+		itemStrings = append(itemStrings, synthesizeNetworkGroupsItem(ctx, item, ownedIds))
 	}
 
-	return helpers.SetGjson(res, "items", gjson.Parse(items))
+	return helpers.SetGjson(res, "items", gjson.Parse("["+strings.Join(itemStrings, ",")+"]"))
 }
 
 // synthesizeNetworkGroupsItem takes a single item from the API response and converts some of the entries of the original attribute "objects"
@@ -297,21 +297,28 @@ func synthesizeNetworkGroupsItem(ctx context.Context, item gjson.Result, ownedId
 	}
 
 	ret, _ = sjson.Delete(ret, "objects")
-	for _, obj := range item.Get("objects").Array() {
+	objects := item.Get("objects").Array()
+	var networkGroupNames []string
+	objectStrings := make([]string, 0, len(objects))
+	for _, obj := range objects {
 		name, owned := ownedIds[obj.Get("id").String()]
 
 		if owned && strings.ToLower(obj.Get("type").String()) == "networkgroup" {
 			tflog.Debug(ctx, fmt.Sprintf("%s: child %q: adding it to network_groups and removing it from objects: %s",
 				item.Get("id").String(), name, obj.String()))
 
-			ret, _ = sjson.Set(ret, "network_groups.-1", name)
+			networkGroupNames = append(networkGroupNames, name)
 		} else {
-			ret, _ = sjson.SetRaw(ret, "objects.-1", obj.String())
+			objectStrings = append(objectStrings, obj.String())
 		}
 	}
-
-	// Ensure that network_groups is always present, even if empty, to avoid diffs.
-	if ok := gjson.Parse(ret).Get("network_groups").Exists(); !ok {
+	if len(objectStrings) > 0 {
+		ret, _ = sjson.SetRaw(ret, "objects", "["+strings.Join(objectStrings, ",")+"]")
+	}
+	if len(networkGroupNames) > 0 {
+		ret, _ = sjson.Set(ret, "network_groups", networkGroupNames)
+	} else {
+		// Ensure that network_groups is always present, even if empty, to avoid diffs.
 		ret, _ = sjson.Set(ret, "network_groups", []string{})
 	}
 
@@ -546,14 +553,15 @@ func (r *NetworkGroupsResource) updateSubresources(ctx context.Context, tfsdkPla
 				}
 
 				// Prepare URL filter for bulk delete.
-				idsToRemove.WriteString(url.QueryEscape(state.Items[gn].Id.ValueString()) + ",")
+				idsToRemove.WriteString(state.Items[gn].Id.ValueString())
+				idsToRemove.WriteString(",")
 
 				// Save names of the groups to be deleted, so that we can remove them from the state.
 				namesToRemove = append(namesToRemove, gn)
 			}
 
 			// If this is last element, or the following element is in a different bulk, or the URL parameter length exceeds the limit, AND there are elements to delete
-			if (i == 0 || delSeq[i].bulk != delSeq[i-1].bulk || len(idsToRemove.String()) >= maxUrlParamLength) && len(idsToRemove.String()) > 0 {
+			if (i == 0 || delSeq[i].bulk != delSeq[i-1].bulk || idsToRemove.Len() >= maxUrlParamLength) && idsToRemove.Len() > 0 {
 				// Create new bulk group for deletion
 				deleteGroups = append(deleteGroups, networkGroupsBulkDelete{
 					ids:   idsToRemove.String(),
@@ -677,6 +685,7 @@ func (group *networkGroup) Body(ctx context.Context, state NetworkGroups) (strin
 	ret := group.json
 	ret, _ = sjson.Delete(ret, "network_groups")
 
+	childObjects := make([]string, 0, len(group.children))
 	for _, child := range group.children {
 		existing := state.Items[child].Id
 		if existing.IsUnknown() {
@@ -689,8 +698,18 @@ func (group *networkGroup) Body(ctx context.Context, state NetworkGroups) (strin
 		obj := "{}"
 		obj, _ = sjson.Set(obj, "id", existing.ValueString())
 		obj, _ = sjson.Set(obj, "type", "AnyNonEmptyString")
+		childObjects = append(childObjects, obj)
+	}
 
-		ret, _ = sjson.SetRaw(ret, "objects.-1", obj)
+	if len(childObjects) > 0 {
+		var allObjects []string
+		if existing := gjson.Get(ret, "objects"); existing.Exists() && existing.IsArray() {
+			for _, o := range existing.Array() {
+				allObjects = append(allObjects, o.Raw)
+			}
+		}
+		allObjects = append(allObjects, childObjects...)
+		ret, _ = sjson.SetRaw(ret, "objects", "["+strings.Join(allObjects, ",")+"]")
 	}
 
 	return ret, nil
@@ -728,15 +747,16 @@ func divideToBulks(ctx context.Context, seq []networkGroup, plan NetworkGroups) 
 // Create creates a bulk of network groups in one POST request.
 func (bulk *networkGroupsBulk) Create(ctx context.Context, plan, state NetworkGroups, client *fmc.Client, reqMods ...func(*fmc.Req)) (NetworkGroups, diag.Diagnostics) {
 	ret := state.Clone()
-	bodies := "[]"
+	bodyParts := make([]string, 0, len(bulk.groups))
 	for i := range bulk.groups {
 		body, diags := bulk.groups[i].Body(ctx, state)
 		if diags.HasError() {
 			return ret, diags
 		}
 
-		bodies, _ = sjson.SetRaw(bodies, "-1", body)
+		bodyParts = append(bodyParts, body)
 	}
+	bodies := "[" + strings.Join(bodyParts, ",") + "]"
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Bulk of subresources: Beginning Create", plan.Id.ValueString()))
 

@@ -63,22 +63,19 @@ func (data Continents) getPath() string {
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBody
 
 func (data *Continents) fromBody(ctx context.Context, res gjson.Result) {
+	// Build lookup map for O(1) access
+	itemsByName := make(map[string]gjson.Result)
+	res.Get("items").ForEach(func(_, v gjson.Result) bool {
+		if name := v.Get("name").String(); name != "" {
+			itemsByName[name] = v
+		}
+		return true
+	})
 	for k := range data.Items {
 		parent := &data
 		data := (*parent).Items[k]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.Get("items").ForEach(
-			func(_, v gjson.Result) bool {
-				if v.Get("name").String() == k {
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
+		res, found := itemsByName[k]
+		if !found {
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
 			delete((*parent).Items, k)
 			continue

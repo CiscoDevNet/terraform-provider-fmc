@@ -326,26 +326,34 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	{{- else if isNestedMap .}}
+	// Build lookup map for O(1) access
+	{{- if or $.ImportNameQuery $.IsBulk}}
+	itemsByName := make(map[string]gjson.Result)
+	res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(func(_, v gjson.Result) bool {
+		if name := v.Get("name").String(); name != "" {
+			itemsByName[name] = v
+		}
+		return true
+	})
+	{{- else}}
+	itemsById := make(map[string]gjson.Result)
+	res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(func(_, v gjson.Result) bool {
+		if id := v.Get("id").String(); id != "" {
+			itemsById[id] = v
+		}
+		return true
+	})
+	{{- end}}
 	for k := range data.{{toGoName .TfName}} {
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[k]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
-			func(_, v gjson.Result) bool {
-				{{- if or $.ImportNameQuery $.IsBulk -}}
-				if v.Get("name").String() == k {
-				{{- else -}}
-				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
-				{{- end}}
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
-		if !res.Exists() {
+		{{- if or $.ImportNameQuery $.IsBulk}}
+		res, found := itemsByName[k]
+		if !found {
+		{{- else}}
+		res, found := itemsById[data.Id.ValueString()]
+		if !found || data.Id.ValueString() == "" {
+		{{- end}}
 			{{- if or $.ImportNameQuery $.IsBulk -}}
 			tflog.Debug(ctx, fmt.Sprintf("subresource not found, removing: name=%v", k))
 			{{- else -}}
@@ -393,21 +401,21 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	{{- else if isNestedListMapSet .}}
 	{{- $list := (toGoName .TfName)}}
 	{{- if isNestedMap .}}
+	// Build lookup map for O(1) access by id
+	itemsById := make(map[string]gjson.Result)
+	res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(func(_, v gjson.Result) bool {
+		if id := v.Get("id").String(); id != "" {
+			itemsById[id] = v
+		}
+		return true
+	})
 	for i := range data.{{toGoName .TfName}} {
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
-		parentRes := &res
-		var res gjson.Result
-
-		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
-			func(_, v gjson.Result) bool {
-				if v.Get("id").String() == data.Id.ValueString() && data.Id.ValueString() != "" {
-					res = v
-					return false // break ForEach
-				}
-				return true
-			},
-		)
+		if data.Id.ValueString() == "" {
+			continue
+		}
+		res, _ := itemsById[data.Id.ValueString()]
 	{{- else if .OrderedList }}
 	{
 		l := len(res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array())
@@ -534,25 +542,25 @@ func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson
 			},
 		)
 	{{- else if isNestedMap .}}
+	// Build lookup maps for O(1) access
+	itemsByName := make(map[string]gjson.Result)
+	itemsById := make(map[string]gjson.Result)
+	res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(func(_, v gjson.Result) bool {
+		if name := v.Get("name").String(); name != "" {
+			itemsByName[name] = v
+		}
+		if id := v.Get("id").String(); id != "" {
+			itemsById[id] = v
+		}
+		return true
+	})
 	for i, val := range data.{{toGoName .TfName}} {
 		var r gjson.Result
-		res.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
-			func(_, v gjson.Result) bool {
-				if val.Id.IsUnknown() {
-					if v.Get("name").String() == i {
-						r = v
-						return false // break ForEach
-					}
-				} else {
-					if v.Get("id").String() == val.Id.ValueString() && val.Id.ValueString() != "" {
-						r = v
-						return false // break ForEach
-					}
-				}
-
-				return true
-			},
-		)
+		if val.Id.IsUnknown() {
+			r = itemsByName[i]
+		} else if val.Id.ValueString() != "" {
+			r = itemsById[val.Id.ValueString()]
+		}
 	{{- end}}
 
 		{{- range .Attributes}}
