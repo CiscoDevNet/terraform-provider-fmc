@@ -1,3 +1,5 @@
+# Manual resource - data source Read
+# FMCBUG: Before FMC 10.0.0 pagination in not handled correctly
 ---
 name: Domains
 rest_endpoint: /api/fmc_platform/v1/info/domain
