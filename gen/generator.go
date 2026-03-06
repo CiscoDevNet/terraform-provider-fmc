@@ -121,6 +121,7 @@ type YamlConfig struct {
 	TestTags                 []string              `yaml:"test_tags"`
 	TestPrerequisites        string                `yaml:"test_prerequisites"`
 	IsBulk                   bool                  `yaml:"is_bulk"`
+	IsOverride               bool                  `yaml:"is_override"`
 	BulkSizeCreate           int                   `yaml:"bulk_size_create"`
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
 	AdjustBody               bool                  `yaml:"adjust_body"`
@@ -545,7 +546,7 @@ func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 		}
 	}
 	if config.TfName == "" {
-		config.TfName = strings.Replace(config.Name, " ", "_", -1)
+		config.TfName = strings.ReplaceAll(config.Name, " ", "_")
 	}
 
 	return config, nil
