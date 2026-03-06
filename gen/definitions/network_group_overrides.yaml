@@ -72,7 +72,7 @@ attributes:
     - model_name: literals
       description: Set of literal values (Host or Network).
       type: Set
-      minimum_test_value: true
+      minimum_test_value: 'dummy_value'
       attributes:
         - model_name: value
           type: String
