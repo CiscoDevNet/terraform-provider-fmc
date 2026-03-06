@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## Unlreleased
+
+- (Enh) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, `fmc_fqdn_overrides`
+
 ## 2.0.1
 
 - (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: Resolve an issue where syslog logging destination configuration was not reflected in the web interface under certain conditions
