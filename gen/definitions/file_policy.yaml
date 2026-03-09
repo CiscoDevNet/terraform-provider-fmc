@@ -1,5 +1,5 @@
 # FMCBUG CSCwq61825 FMC API: /policy/filepolicies/{ID}/filerules does not set analysis field
-# FMCBUG CSCwr16023 FMC API: File policies cannot be deleted
+# FMCBUG CSCwr16023 FMC API: File policies cannot be deleted / CSCwq85880 REST API File Policy deletion failed
 # Manual resource - Create, Read, Update
 ---
 name: File Policy
@@ -85,7 +85,7 @@ attributes:
         example: ANY
       - model_name: action
         type: String
-        enum_values: [DETECT, BLOCK_WITH_RESET, DETECT_MALWARE, BLOCK_MALWARE_WITH_RESET]
+        enum_values: [DETECT, BLOCK_WITH_RESET, DETECT_MALWARE, BLOCK_MALWARE, BLOCK_MALWARE_WITH_RESET]
         mandatory: true
         description: Action to be performed on a file.
         example: DETECT

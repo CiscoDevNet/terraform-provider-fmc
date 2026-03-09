@@ -165,10 +165,10 @@ func (r *FilePolicyResource) Schema(ctx context.Context, req resource.SchemaRequ
 							},
 						},
 						"action": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Action to be performed on a file.").AddStringEnumDescription("DETECT", "BLOCK_WITH_RESET", "DETECT_MALWARE", "BLOCK_MALWARE_WITH_RESET").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Action to be performed on a file.").AddStringEnumDescription("DETECT", "BLOCK_WITH_RESET", "DETECT_MALWARE", "BLOCK_MALWARE", "BLOCK_MALWARE_WITH_RESET").String,
 							Required:            true,
 							Validators: []validator.String{
-								stringvalidator.OneOf("DETECT", "BLOCK_WITH_RESET", "DETECT_MALWARE", "BLOCK_MALWARE_WITH_RESET"),
+								stringvalidator.OneOf("DETECT", "BLOCK_WITH_RESET", "DETECT_MALWARE", "BLOCK_MALWARE", "BLOCK_MALWARE_WITH_RESET"),
 							},
 						},
 						"store_files": schema.SetAttribute{
