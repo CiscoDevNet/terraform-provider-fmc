@@ -36,6 +36,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/tfsdk"
@@ -304,8 +305,11 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Protocol number.").String,
+										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").AddStringEnumDescription("6", "17").String,
 										Required:            true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("6", "17"),
+										},
 									},
 									"port": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
@@ -331,12 +335,29 @@ func (r *PrefilterPolicyResource) Schema(ctx context.Context, req resource.Schem
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
-										Required:            true,
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").AddDefaultValueDescription("PortLiteral").String,
+										Optional:            true,
+										Computed:            true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
+										},
+										Default: stringdefault.StaticString("PortLiteral"),
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
+										Optional:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").String,
+										Required:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
+										Optional:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("ICMP code.").String,
 										Optional:            true,
 									},
 								},

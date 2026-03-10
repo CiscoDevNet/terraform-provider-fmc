@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Fix) `fmc_file_policy`: Add missing choice
+- (Fix) Access Control and Prefilter Policies Source \ Destination Port Literals had wrong attributes
 
 ## 2.0.1
 

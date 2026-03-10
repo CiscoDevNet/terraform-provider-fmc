@@ -105,8 +105,11 @@ Read-Only:
 
 Read-Only:
 
-- `port` (String)
-- `protocol` (String)
+- `icmp_code` (String) ICMP code.
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
+- `protocol` (String) IANA protocol number.
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--rules--destination_port_objects"></a>
@@ -149,7 +152,7 @@ Read-Only:
 Read-Only:
 
 - `port` (String) Port number.
-- `protocol` (String) Protocol number.
+- `protocol` (String) IANA protocol number.
 
 
 <a id="nestedatt--rules--source_port_objects"></a>

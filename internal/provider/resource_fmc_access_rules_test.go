@@ -37,9 +37,8 @@ func TestAccFmcAccessRules(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_network_literals.0.value", "10.2.2.0/24"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.vlan_tag_literals.0.start_tag", "11"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.vlan_tag_literals.0.end_tag", "22"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.source_port_literals.0.type", "PortLiteral"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.source_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.source_port_literals.0.protocol", "6"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.source_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.type", "PortLiteral"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.port", "80"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_access_rules.test", "items.0.destination_port_literals.0.protocol", "6"))
@@ -150,9 +149,8 @@ func testAccFmcAccessRulesConfig_all() string {
 	config += `			type = fmc_host.test.type` + "\n"
 	config += `		}]` + "\n"
 	config += `		source_port_literals = [{` + "\n"
-	config += `			type = "PortLiteral"` + "\n"
-	config += `			port = "80"` + "\n"
 	config += `			protocol = "6"` + "\n"
+	config += `			port = "80"` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_port_literals = [{` + "\n"
 	config += `			type = "PortLiteral"` + "\n"

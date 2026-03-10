@@ -45,20 +45,15 @@ resource "fmc_extended_access_list" "example" {
       ]
       destination_port_literals = [
         {
-          type      = "PortLiteral"
-          port      = "80"
-          protocol  = "6"
-          icmp_type = "0"
-          icmp_code = "0"
+          type     = "PortLiteral"
+          port     = "80"
+          protocol = "6"
         }
       ]
       source_port_literals = [
         {
-          type      = "PortLiteral"
-          port      = "80"
-          protocol  = "6"
-          icmp_type = "0"
-          icmp_code = "0"
+          protocol = "6"
+          port     = "80"
         }
       ]
     }

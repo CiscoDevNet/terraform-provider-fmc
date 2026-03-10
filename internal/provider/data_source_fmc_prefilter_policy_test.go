@@ -48,8 +48,9 @@ func TestAccDataSourceFmcPrefilterPolicy(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.vlan_tag_literals.0.end_tag", "22"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.source_port_literals.0.protocol", "6"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.source_port_literals.0.port", "80"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.type", "PortLiteral"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.port", "80"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_begin", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.log_connection_end", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_prefilter_policy.test", "rules.0.send_events_to_fmc", "true"))
@@ -156,8 +157,9 @@ func testAccDataSourceFmcPrefilterPolicyConfig() string {
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_port_literals = [{` + "\n"
-	config += `			protocol = "6"` + "\n"
+	config += `			type = "PortLiteral"` + "\n"
 	config += `			port = "80"` + "\n"
+	config += `			protocol = "6"` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"
@@ -225,8 +227,9 @@ func testAccNamedDataSourceFmcPrefilterPolicyConfig() string {
 	config += `			id = fmc_port.test.id` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_port_literals = [{` + "\n"
-	config += `			protocol = "6"` + "\n"
+	config += `			type = "PortLiteral"` + "\n"
 	config += `			port = "80"` + "\n"
+	config += `			protocol = "6"` + "\n"
 	config += `		}]` + "\n"
 	config += `		destination_port_objects = [{` + "\n"
 	config += `			id = fmc_port.test.id` + "\n"

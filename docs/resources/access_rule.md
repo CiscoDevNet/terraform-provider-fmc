@@ -63,11 +63,8 @@ resource "fmc_access_rule" "example" {
   ]
   source_port_literals = [
     {
-      type      = "PortLiteral"
-      port      = "80"
-      protocol  = "6"
-      icmp_type = "0"
-      icmp_code = "0"
+      protocol = "6"
+      port     = "80"
     }
   ]
   source_port_objects = [
@@ -77,11 +74,9 @@ resource "fmc_access_rule" "example" {
   ]
   destination_port_literals = [
     {
-      type      = "PortLiteral"
-      port      = "80"
-      protocol  = "6"
-      icmp_type = "0"
-      icmp_code = "0"
+      type     = "PortLiteral"
+      port     = "80"
+      protocol = "6"
     }
   ]
   destination_port_objects = [
@@ -430,13 +425,10 @@ Required:
 Required:
 
 - `protocol` (String) IANA protocol number.
-- `type` (String) Type of the object.
-  - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+  - Choices: `6`, `17`
 
 Optional:
 
-- `icmp_code` (String) ICMP code.
-- `icmp_type` (String) ICMP type.
 - `port` (String) Port number.
 
 
