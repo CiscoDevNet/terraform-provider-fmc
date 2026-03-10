@@ -201,6 +201,55 @@ attributes:
         example: 76d24097-41c4-4558-a4d0-a8c07ac08479
         exclude_test: true
         exclude_example: true
+      - model_name: blockAllocation
+        data_path: ["patOptions"]
+        tf_name: pat_block_allocation
+        type: Bool
+        description: Enable port block allocation.
+        exclude_example: true
+        exclude_test: true
+      - model_name: extendedPat
+        data_path: ["patOptions"]
+        tf_name: pat_extended_table
+        type: Bool
+        description: Use Extended PAT.
+        exclude_example: true
+        exclude_test: true
+      - model_name: flatPortRange
+        data_path: ["patOptions"]
+        tf_name: pat_flat_port_range
+        type: Bool
+        description: Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
+        exclude_example: true
+        exclude_test: true
+      - model_name: includeReserve
+        data_path: ["patOptions"]
+        tf_name: pat_include_reserved_ports
+        type: Bool
+        description: Use port range of 1 to 65535.
+        exclude_example: true
+        exclude_test: true
+      - model_name: roundRobin
+        data_path: ["patOptions"]
+        tf_name: pat_round_robin_allocation
+        type: Bool
+        description: Enable round robin addresses/ports allocation.
+        exclude_example: true
+        exclude_test: true
+      - model_name: interfacePat
+        data_path: ["patOptions"]
+        tf_name: pat_use_interface_address
+        type: Bool
+        description: Use interface address for PAT.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: ["patOptions", "patPoolAddress"]
+        tf_name: pat_pool_address_id
+        type: String
+        description: ID of the Host / Network / Range / Network Group object used as PAT pool address.
+        exclude_example: true
+        exclude_test: true
   - model_name: dummy_auto_nat_rules
     tf_name: auto_nat_rules
     type: List
@@ -323,6 +372,56 @@ attributes:
         example: 22
         exclude_example: true
         exclude_test: true
+      - model_name: blockAllocation
+        data_path: ["patOptions"]
+        tf_name: pat_block_allocation
+        type: Bool
+        description: Enable port block allocation.
+        exclude_example: true
+        exclude_test: true
+      - model_name: extendedPat
+        data_path: ["patOptions"]
+        tf_name: pat_extended_table
+        type: Bool
+        description: Use Extended PAT.
+        exclude_example: true
+        exclude_test: true
+      - model_name: flatPortRange
+        data_path: ["patOptions"]
+        tf_name: pat_flat_port_range
+        type: Bool
+        description: Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
+        exclude_example: true
+        exclude_test: true
+      - model_name: includeReserve
+        data_path: ["patOptions"]
+        tf_name: pat_include_reserved_ports
+        type: Bool
+        description: Use port range of 1 to 65535.
+        exclude_example: true
+        exclude_test: true
+      - model_name: roundRobin
+        data_path: ["patOptions"]
+        tf_name: pat_round_robin_allocation
+        type: Bool
+        description: Enable round robin addresses/ports allocation.
+        exclude_example: true
+        exclude_test: true
+      - model_name: interfacePat
+        data_path: ["patOptions"]
+        tf_name: pat_use_interface_address
+        type: Bool
+        description: Use interface address for PAT.
+        exclude_example: true
+        exclude_test: true
+      - model_name: id
+        data_path: ["patOptions", "patPoolAddress"]
+        tf_name: pat_pool_address_id
+        type: String
+        description: ID of the Host / Network / Range / Network Group object used as PAT pool address.
+        exclude_example: true
+        exclude_test: true
+
 test_prerequisites: |-
   resource "fmc_hosts" "test" {
     items = {

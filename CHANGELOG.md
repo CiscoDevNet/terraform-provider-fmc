@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Enh) `fmc_ftd_nat_policy`: Add PAT pool options support
+
 ## 2.0.1
 
 - (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: Resolve an issue where syslog logging destination configuration was not reflected in the web interface under certain conditions
