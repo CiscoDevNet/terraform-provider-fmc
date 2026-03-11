@@ -277,7 +277,7 @@ attributes:
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
-        description: Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group).
+        description: Set of objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).
         type: Set
         attributes:
           - model_name: id
@@ -296,7 +296,7 @@ attributes:
       - model_name: objects
         data_path: [destinationNetworks]
         tf_name: destination_network_objects
-        description: Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group).
+        description: Set of objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).
         type: Set
         attributes:
           - model_name: id

@@ -11,6 +11,7 @@ description: |-
 
 - (Fix) `fmc_file_policy`: Add missing choice
 - (Fix) Access Control and Prefilter Policies Source \ Destination Port Literals had wrong attributes
+- (Doc) Access Rules: Update description of Source \ Destination Objects to include Geolocation objects support
 
 ## 2.0.1
 

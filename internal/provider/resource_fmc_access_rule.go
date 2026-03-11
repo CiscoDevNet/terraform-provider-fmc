@@ -176,7 +176,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"source_network_objects": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -192,7 +192,7 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 			},
 			"destination_network_objects": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

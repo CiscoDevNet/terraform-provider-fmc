@@ -42,7 +42,7 @@ data "fmc_access_rule" "example" {
 - `description` (String) Rule description.
 - `destination_dynamic_objects` (Attributes Set) Set of objects that represent dynamic destinations of traffic. (see [below for nested schema](#nestedatt--destination_dynamic_objects))
 - `destination_network_literals` (Attributes Set) Set of objects that represent destinations of traffic (literally specified). (see [below for nested schema](#nestedatt--destination_network_literals))
-- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--destination_network_objects))
+- `destination_network_objects` (Attributes Set) Set of objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--destination_port_literals))
 - `destination_port_objects` (Attributes Set) Set of objects representing destination ports associated with the rule. (see [below for nested schema](#nestedatt--destination_port_objects))
 - `destination_sgt_objects` (Attributes Set) Set of objects representing the destination ISE Security Group Tags (SGT). (see [below for nested schema](#nestedatt--destination_sgt_objects))
@@ -60,7 +60,7 @@ data "fmc_access_rule" "example" {
 - `snmp_alert_id` (String) Id of the SNMP alert associated with the access rule. Can be set only when either `log_connection_begin` or `log_connection_end` is true.
 - `source_dynamic_objects` (Attributes Set) Set of objects that represent dynamic sources of traffic. (see [below for nested schema](#nestedatt--source_dynamic_objects))
 - `source_network_literals` (Attributes Set) Set of objects that represent sources of traffic (literally specified). (see [below for nested schema](#nestedatt--source_network_literals))
-- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group). (see [below for nested schema](#nestedatt--source_network_objects))
+- `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--source_network_objects))
 - `source_port_literals` (Attributes Set) Set of objects that represent protocol/port (literally specified). (see [below for nested schema](#nestedatt--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports associated with the rule. (see [below for nested schema](#nestedatt--source_port_objects))
 - `source_sgt_objects` (Attributes Set) Set of objects representing the source Security Group Tags (SGT) or ISE Security Group Tags. (see [below for nested schema](#nestedatt--source_sgt_objects))
