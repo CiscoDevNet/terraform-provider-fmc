@@ -73,8 +73,9 @@ resource "fmc_prefilter_policy" "example" {
       ]
       destination_port_literals = [
         {
-          protocol = "6"
+          type     = "PortLiteral"
           port     = "80"
+          protocol = "6"
         }
       ]
       destination_port_objects = [

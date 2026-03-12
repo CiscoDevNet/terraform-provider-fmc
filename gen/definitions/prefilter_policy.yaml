@@ -286,7 +286,8 @@ attributes:
           - model_name: protocol
             type: String
             example: "6"
-            description: Protocol number.
+            enum_values: ["6", "17"]
+            description: IANA protocol number.
             mandatory: true
           - model_name: port
             type: String
@@ -318,14 +319,32 @@ attributes:
         attributes:
           - model_name: type
             type: String
-            value: PortLiteral
+            enum_values: [PortLiteral, ICMPv4PortLiteral]
+            default_value: PortLiteral
+            example: PortLiteral
+            description: Type of the object.
+          - model_name: port
+            type: String
+            example: "80"
+            description: Port number.
           - model_name: protocol
             type: String
             example: "6"
             mandatory: true
-          - model_name: port
+            description: IANA protocol number.
+          - model_name: icmpType
             type: String
-            example: "80"
+            example: "0"
+            exclude_test: true
+            exclude_example: true
+            description: ICMP type.
+          - model_name: code
+            tf_name: icmp_code
+            type: String
+            example: "0"
+            exclude_test: true
+            exclude_example: true
+            description: ICMP code.
       - model_name: objects
         data_path: [destinationPorts]
         tf_name: destination_port_objects
