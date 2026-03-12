@@ -66,7 +66,7 @@ type FTDManualNATRule struct {
 	PatIncludeReservedPorts        types.Bool   `tfsdk:"pat_include_reserved_ports"`
 	PatRoundRobinAllocation        types.Bool   `tfsdk:"pat_round_robin_allocation"`
 	PatUseInterfaceAddress         types.Bool   `tfsdk:"pat_use_interface_address"`
-	PatPoolAddressId               types.String `tfsdk:"pat_pool_address_id"`
+	PatAddressPoolId               types.String `tfsdk:"pat_address_pool_id"`
 }
 
 // End of section. //template:end types
@@ -177,8 +177,8 @@ func (data FTDManualNATRule) toBody(ctx context.Context, state FTDManualNATRule)
 	if !data.PatUseInterfaceAddress.IsNull() {
 		body, _ = sjson.Set(body, "patOptions.interfacePat", data.PatUseInterfaceAddress.ValueBool())
 	}
-	if !data.PatPoolAddressId.IsNull() {
-		body, _ = sjson.Set(body, "patOptions.patPoolAddress.id", data.PatPoolAddressId.ValueString())
+	if !data.PatAddressPoolId.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.patPoolAddress.id", data.PatAddressPoolId.ValueString())
 	}
 	return body
 }
@@ -339,9 +339,9 @@ func (data *FTDManualNATRule) fromBody(ctx context.Context, res gjson.Result) {
 		data.PatUseInterfaceAddress = types.BoolNull()
 	}
 	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() {
-		data.PatPoolAddressId = types.StringValue(value.String())
+		data.PatAddressPoolId = types.StringValue(value.String())
 	} else {
-		data.PatPoolAddressId = types.StringNull()
+		data.PatAddressPoolId = types.StringNull()
 	}
 }
 
@@ -504,10 +504,10 @@ func (data *FTDManualNATRule) fromBodyPartial(ctx context.Context, res gjson.Res
 	} else {
 		data.PatUseInterfaceAddress = types.BoolNull()
 	}
-	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() && !data.PatPoolAddressId.IsNull() {
-		data.PatPoolAddressId = types.StringValue(value.String())
+	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() && !data.PatAddressPoolId.IsNull() {
+		data.PatAddressPoolId = types.StringValue(value.String())
 	} else {
-		data.PatPoolAddressId = types.StringNull()
+		data.PatAddressPoolId = types.StringNull()
 	}
 }
 

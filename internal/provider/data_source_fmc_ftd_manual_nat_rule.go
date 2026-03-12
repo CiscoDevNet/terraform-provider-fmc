@@ -190,7 +190,7 @@ func (d *FTDManualNATRuleDataSource) Schema(ctx context.Context, req datasource.
 				MarkdownDescription: "Use interface address for PAT.",
 				Computed:            true,
 			},
-			"pat_pool_address_id": schema.StringAttribute{
+			"pat_address_pool_id": schema.StringAttribute{
 				MarkdownDescription: "ID of the Host / Network / Range / Network Group object used as PAT pool address.",
 				Computed:            true,
 			},

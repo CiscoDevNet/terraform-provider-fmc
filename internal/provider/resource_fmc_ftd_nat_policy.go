@@ -239,7 +239,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
 							Optional:            true,
 						},
-						"pat_pool_address_id": schema.StringAttribute{
+						"pat_address_pool_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
 							Optional:            true,
 						},
@@ -345,7 +345,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
 							Optional:            true,
 						},
-						"pat_pool_address_id": schema.StringAttribute{
+						"pat_address_pool_id": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
 							Optional:            true,
 						},
