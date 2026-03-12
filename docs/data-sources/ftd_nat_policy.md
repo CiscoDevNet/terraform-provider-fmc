@@ -30,9 +30,9 @@ data "fmc_ftd_nat_policy" "example" {
 
 ### Read-Only
 
-- `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
+- `auto_nat_rules` (Attributes List) The list of Auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Description of the object.
-- `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
+- `manual_nat_rules` (Attributes List) The ordered list of Manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 - `type` (String) Type of the object; this value is always 'FTDNatPolicy'.
 
 <a id="nestedatt--auto_nat_rules"></a>
@@ -44,7 +44,7 @@ Read-Only:
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
 - `id` (String) Id of the Auto NAT rule.
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
 - `net_to_net` (Boolean) Net to Net Mapping.
 - `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
 - `original_network_id` (String) ID of original network object (Host, Network or Range).
@@ -74,11 +74,11 @@ Read-Only:
 - `destination_interface_id` (String) ID of destination security zone or interface group.
 - `enabled` (Boolean) Indicates if the rule is enabled.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
-- `id` (String) Id of the manual nat rule.
+- `id` (String) Id of the Manual NAT rule.
 - `interface_in_original_destination` (Boolean) Use interface address as original destination.
 - `interface_in_translated_source` (Boolean) Translate source network to destination interface address.
 - `ipv6` (Boolean) Use the IPv6 address of the destination interface for interface PAT.
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
 - `net_to_net` (Boolean) Net to Net Mapping.
 - `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
 - `original_destination_id` (String) ID of original destination network object (Host, Network or Range).

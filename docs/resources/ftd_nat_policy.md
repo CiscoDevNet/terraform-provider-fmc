@@ -18,7 +18,7 @@ resource "fmc_ftd_nat_policy" "example" {
   description = "My nat policy"
   manual_nat_rules = [
     {
-      description          = "My manual nat rule 1"
+      description          = "My Manual NAT rule 1"
       enabled              = true
       section              = "BEFORE_AUTO"
       nat_type             = "STATIC"
@@ -46,12 +46,12 @@ resource "fmc_ftd_nat_policy" "example" {
 
 ### Optional
 
-- `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
+- `auto_nat_rules` (Attributes List) The list of Auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `manage_rules` (Boolean) Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
   - Default value: `true`
-- `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
+- `manual_nat_rules` (Attributes List) The ordered list of Manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 ### Read-Only
 
@@ -63,7 +63,7 @@ resource "fmc_ftd_nat_policy" "example" {
 
 Required:
 
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
   - Choices: `STATIC`, `DYNAMIC`
 
 Optional:
@@ -101,7 +101,7 @@ Read-Only:
 
 Required:
 
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
   - Choices: `STATIC`, `DYNAMIC`
 - `section` (String) Name of section to which the rule belongs.
   - Choices: `BEFORE_AUTO`, `AFTER_AUTO`
@@ -139,7 +139,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the manual nat rule.
+- `id` (String) Id of the Manual NAT rule.
 
 ## Import
 

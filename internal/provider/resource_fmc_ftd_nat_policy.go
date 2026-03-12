@@ -109,12 +109,12 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				Default:             booldefault.StaticBool(true),
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of manual NAT rules.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of Manual NAT rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the manual nat rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Manual NAT rule.").String,
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -133,7 +133,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("STATIC", "DYNAMIC"),
@@ -247,7 +247,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				},
 			},
 			"auto_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The list of auto NAT rules.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The list of Auto NAT rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -256,7 +256,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("STATIC", "DYNAMIC"),

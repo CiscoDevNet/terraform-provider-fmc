@@ -30,19 +30,19 @@ attributes:
   - model_name: dummy_manual_nat_rules
     tf_name: manual_nat_rules
     type: List
-    description: The ordered list of manual NAT rules.
+    description: The ordered list of Manual NAT rules.
     ordered_list: true
     attributes:
       - model_name: id
         type: String
-        description: Id of the manual nat rule.
+        description: Id of the Manual NAT rule.
         resource_id: true
         exclude_example: true
         exclude_test: true
       - model_name: description
         type: String
         description: Description of Manual NAT rule.
-        example: My manual nat rule 1
+        example: My Manual NAT rule 1
       - model_name: enabled
         type: Bool
         description: Indicates if the rule is enabled.
@@ -59,7 +59,7 @@ attributes:
       - model_name: natType
         tf_name: nat_type
         type: String
-        description: Type of the rule
+        description: Type of the rule.
         enum_values: [STATIC, DYNAMIC]
         example: STATIC
         mandatory: true
@@ -253,7 +253,7 @@ attributes:
   - model_name: dummy_auto_nat_rules
     tf_name: auto_nat_rules
     type: List
-    description: The list of auto NAT rules.
+    description: The list of Auto NAT rules.
     attributes:
       - model_name: id
         type: String
@@ -265,7 +265,7 @@ attributes:
       - model_name: natType
         tf_name: nat_type
         type: String
-        description: Type of the rule
+        description: Type of the rule.
         enum_values: [STATIC, DYNAMIC]
         example: STATIC
         mandatory: true

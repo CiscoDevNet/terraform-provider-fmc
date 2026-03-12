@@ -15,7 +15,7 @@ This resource manages a FTD Manual NAT Rule.
 ```terraform
 resource "fmc_ftd_manual_nat_rule" "example" {
   ftd_nat_policy_id    = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  description          = "My manual nat rule 1"
+  description          = "My Manual NAT rule 1"
   enabled              = true
   section              = "BEFORE_AUTO"
   nat_type             = "STATIC"
@@ -52,6 +52,13 @@ resource "fmc_ftd_manual_nat_rule" "example" {
 - `original_destination_port_id` (String) ID of original destination port object.
 - `original_source_id` (String) ID of original source network object (Host, Network or Range).
 - `original_source_port_id` (String) ID of original source port object.
+- `pat_block_allocation` (Boolean) Enable port block allocation.
+- `pat_extended_table` (Boolean) Use Extended PAT.
+- `pat_flat_port_range` (Boolean) Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
+- `pat_include_reserved_ports` (Boolean) Use port range of 1 to 65535.
+- `pat_pool_address_id` (String) ID of the Host / Network / Range / Network Group object used as PAT pool address.
+- `pat_round_robin_allocation` (Boolean) Enable round robin addresses/ports allocation.
+- `pat_use_interface_address` (Boolean) Use interface address for PAT.
 - `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
 - `source_interface_id` (String) ID of source security zone or interface group.
 - `translate_dns` (Boolean) Translate DNS replies that match this rule.

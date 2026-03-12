@@ -160,6 +160,34 @@ func (r *FTDAutoNATRuleResource) Schema(ctx context.Context, req resource.Schema
 				MarkdownDescription: helpers.NewAttributeDescription("Translated port number.").String,
 				Optional:            true,
 			},
+			"pat_block_allocation": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable port block allocation.").String,
+				Optional:            true,
+			},
+			"pat_extended_table": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Use Extended PAT.").String,
+				Optional:            true,
+			},
+			"pat_flat_port_range": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.").String,
+				Optional:            true,
+			},
+			"pat_include_reserved_ports": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Use port range of 1 to 65535.").String,
+				Optional:            true,
+			},
+			"pat_round_robin_allocation": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enable round robin addresses/ports allocation.").String,
+				Optional:            true,
+			},
+			"pat_use_interface_address": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
+				Optional:            true,
+			},
+			"pat_pool_address_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
+				Optional:            true,
+			},
 		},
 	}
 }

@@ -1,6 +1,6 @@
 ## Unreleased
 
-- (Enh) `fmc_ftd_nat_policy`: Add PAT pool options support
+- (Enh) Auto / Manual NAT rules: Add PAT pool options support
 
 ## 2.0.1
 

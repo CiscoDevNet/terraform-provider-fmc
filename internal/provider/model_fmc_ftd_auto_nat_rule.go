@@ -52,6 +52,13 @@ type FTDAutoNATRule struct {
 	TranslatedNetworkId                     types.String `tfsdk:"translated_network_id"`
 	TranslatedNetworkIsDestinationInterface types.Bool   `tfsdk:"translated_network_is_destination_interface"`
 	TranslatedPort                          types.Int64  `tfsdk:"translated_port"`
+	PatBlockAllocation                      types.Bool   `tfsdk:"pat_block_allocation"`
+	PatExtendedTable                        types.Bool   `tfsdk:"pat_extended_table"`
+	PatFlatPortRange                        types.Bool   `tfsdk:"pat_flat_port_range"`
+	PatIncludeReservedPorts                 types.Bool   `tfsdk:"pat_include_reserved_ports"`
+	PatRoundRobinAllocation                 types.Bool   `tfsdk:"pat_round_robin_allocation"`
+	PatUseInterfaceAddress                  types.Bool   `tfsdk:"pat_use_interface_address"`
+	PatPoolAddressId                        types.String `tfsdk:"pat_pool_address_id"`
 }
 
 // End of section. //template:end types
@@ -119,6 +126,27 @@ func (data FTDAutoNATRule) toBody(ctx context.Context, state FTDAutoNATRule) str
 	}
 	if !data.TranslatedPort.IsNull() {
 		body, _ = sjson.Set(body, "translatedPort", data.TranslatedPort.ValueInt64())
+	}
+	if !data.PatBlockAllocation.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.blockAllocation", data.PatBlockAllocation.ValueBool())
+	}
+	if !data.PatExtendedTable.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.extendedPat", data.PatExtendedTable.ValueBool())
+	}
+	if !data.PatFlatPortRange.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.flatPortRange", data.PatFlatPortRange.ValueBool())
+	}
+	if !data.PatIncludeReservedPorts.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.includeReserve", data.PatIncludeReservedPorts.ValueBool())
+	}
+	if !data.PatRoundRobinAllocation.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.roundRobin", data.PatRoundRobinAllocation.ValueBool())
+	}
+	if !data.PatUseInterfaceAddress.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.interfacePat", data.PatUseInterfaceAddress.ValueBool())
+	}
+	if !data.PatPoolAddressId.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.patPoolAddress.id", data.PatPoolAddressId.ValueString())
 	}
 	return body
 }
@@ -207,6 +235,41 @@ func (data *FTDAutoNATRule) fromBody(ctx context.Context, res gjson.Result) {
 		data.TranslatedPort = types.Int64Value(value.Int())
 	} else {
 		data.TranslatedPort = types.Int64Null()
+	}
+	if value := res.Get("patOptions.blockAllocation"); value.Exists() {
+		data.PatBlockAllocation = types.BoolValue(value.Bool())
+	} else {
+		data.PatBlockAllocation = types.BoolNull()
+	}
+	if value := res.Get("patOptions.extendedPat"); value.Exists() {
+		data.PatExtendedTable = types.BoolValue(value.Bool())
+	} else {
+		data.PatExtendedTable = types.BoolNull()
+	}
+	if value := res.Get("patOptions.flatPortRange"); value.Exists() {
+		data.PatFlatPortRange = types.BoolValue(value.Bool())
+	} else {
+		data.PatFlatPortRange = types.BoolNull()
+	}
+	if value := res.Get("patOptions.includeReserve"); value.Exists() {
+		data.PatIncludeReservedPorts = types.BoolValue(value.Bool())
+	} else {
+		data.PatIncludeReservedPorts = types.BoolNull()
+	}
+	if value := res.Get("patOptions.roundRobin"); value.Exists() {
+		data.PatRoundRobinAllocation = types.BoolValue(value.Bool())
+	} else {
+		data.PatRoundRobinAllocation = types.BoolNull()
+	}
+	if value := res.Get("patOptions.interfacePat"); value.Exists() {
+		data.PatUseInterfaceAddress = types.BoolValue(value.Bool())
+	} else {
+		data.PatUseInterfaceAddress = types.BoolNull()
+	}
+	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() {
+		data.PatPoolAddressId = types.StringValue(value.String())
+	} else {
+		data.PatPoolAddressId = types.StringNull()
 	}
 }
 
@@ -298,6 +361,41 @@ func (data *FTDAutoNATRule) fromBodyPartial(ctx context.Context, res gjson.Resul
 		data.TranslatedPort = types.Int64Value(value.Int())
 	} else {
 		data.TranslatedPort = types.Int64Null()
+	}
+	if value := res.Get("patOptions.blockAllocation"); value.Exists() && !data.PatBlockAllocation.IsNull() {
+		data.PatBlockAllocation = types.BoolValue(value.Bool())
+	} else {
+		data.PatBlockAllocation = types.BoolNull()
+	}
+	if value := res.Get("patOptions.extendedPat"); value.Exists() && !data.PatExtendedTable.IsNull() {
+		data.PatExtendedTable = types.BoolValue(value.Bool())
+	} else {
+		data.PatExtendedTable = types.BoolNull()
+	}
+	if value := res.Get("patOptions.flatPortRange"); value.Exists() && !data.PatFlatPortRange.IsNull() {
+		data.PatFlatPortRange = types.BoolValue(value.Bool())
+	} else {
+		data.PatFlatPortRange = types.BoolNull()
+	}
+	if value := res.Get("patOptions.includeReserve"); value.Exists() && !data.PatIncludeReservedPorts.IsNull() {
+		data.PatIncludeReservedPorts = types.BoolValue(value.Bool())
+	} else {
+		data.PatIncludeReservedPorts = types.BoolNull()
+	}
+	if value := res.Get("patOptions.roundRobin"); value.Exists() && !data.PatRoundRobinAllocation.IsNull() {
+		data.PatRoundRobinAllocation = types.BoolValue(value.Bool())
+	} else {
+		data.PatRoundRobinAllocation = types.BoolNull()
+	}
+	if value := res.Get("patOptions.interfacePat"); value.Exists() && !data.PatUseInterfaceAddress.IsNull() {
+		data.PatUseInterfaceAddress = types.BoolValue(value.Bool())
+	} else {
+		data.PatUseInterfaceAddress = types.BoolNull()
+	}
+	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() && !data.PatPoolAddressId.IsNull() {
+		data.PatPoolAddressId = types.StringValue(value.String())
+	} else {
+		data.PatPoolAddressId = types.StringNull()
 	}
 }
 
