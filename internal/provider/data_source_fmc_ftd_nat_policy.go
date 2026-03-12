@@ -91,12 +91,12 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 				Computed:            true,
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: "The ordered list of manual NAT rules.",
+				MarkdownDescription: "The ordered list of Manual NAT rules.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the manual nat rule.",
+							MarkdownDescription: "Id of the Manual NAT rule.",
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -112,7 +112,7 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the rule",
+							MarkdownDescription: "Type of the rule.",
 							Computed:            true,
 						},
 						"fall_through": schema.BoolAttribute{
@@ -191,11 +191,39 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 							MarkdownDescription: "ID of translated destination port object.",
 							Computed:            true,
 						},
+						"pat_block_allocation": schema.BoolAttribute{
+							MarkdownDescription: "Enable port block allocation.",
+							Computed:            true,
+						},
+						"pat_extended_table": schema.BoolAttribute{
+							MarkdownDescription: "Use Extended PAT.",
+							Computed:            true,
+						},
+						"pat_flat_port_range": schema.BoolAttribute{
+							MarkdownDescription: "Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.",
+							Computed:            true,
+						},
+						"pat_include_reserved_ports": schema.BoolAttribute{
+							MarkdownDescription: "Use port range of 1 to 65535.",
+							Computed:            true,
+						},
+						"pat_round_robin_allocation": schema.BoolAttribute{
+							MarkdownDescription: "Enable round robin addresses/ports allocation.",
+							Computed:            true,
+						},
+						"pat_use_interface_address": schema.BoolAttribute{
+							MarkdownDescription: "Use interface address for PAT.",
+							Computed:            true,
+						},
+						"pat_address_object_id": schema.StringAttribute{
+							MarkdownDescription: "ID of the Host / Network / Range / Network Group object used as PAT pool address.",
+							Computed:            true,
+						},
 					},
 				},
 			},
 			"auto_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: "The list of auto NAT rules.",
+				MarkdownDescription: "The list of Auto NAT rules.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -204,7 +232,7 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: "Type of the rule",
+							MarkdownDescription: "Type of the rule.",
 							Computed:            true,
 						},
 						"destination_interface_id": schema.StringAttribute{
@@ -261,6 +289,34 @@ func (d *FTDNATPolicyDataSource) Schema(ctx context.Context, req datasource.Sche
 						},
 						"translated_port": schema.Int64Attribute{
 							MarkdownDescription: "Translated port number.",
+							Computed:            true,
+						},
+						"pat_block_allocation": schema.BoolAttribute{
+							MarkdownDescription: "Enable port block allocation.",
+							Computed:            true,
+						},
+						"pat_extended_table": schema.BoolAttribute{
+							MarkdownDescription: "Use Extended PAT.",
+							Computed:            true,
+						},
+						"pat_flat_port_range": schema.BoolAttribute{
+							MarkdownDescription: "Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.",
+							Computed:            true,
+						},
+						"pat_include_reserved_ports": schema.BoolAttribute{
+							MarkdownDescription: "Use port range of 1 to 65535.",
+							Computed:            true,
+						},
+						"pat_round_robin_allocation": schema.BoolAttribute{
+							MarkdownDescription: "Enable round robin addresses/ports allocation.",
+							Computed:            true,
+						},
+						"pat_use_interface_address": schema.BoolAttribute{
+							MarkdownDescription: "Use interface address for PAT.",
+							Computed:            true,
+						},
+						"pat_address_object_id": schema.StringAttribute{
+							MarkdownDescription: "ID of the Host / Network / Range / Network Group object used as PAT pool address.",
 							Computed:            true,
 						},
 					},

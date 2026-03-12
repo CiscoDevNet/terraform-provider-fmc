@@ -3,7 +3,7 @@ resource "fmc_ftd_nat_policy" "example" {
   description = "My nat policy"
   manual_nat_rules = [
     {
-      description          = "My manual nat rule 1"
+      description          = "My Manual NAT rule 1"
       enabled              = true
       section              = "BEFORE_AUTO"
       nat_type             = "STATIC"

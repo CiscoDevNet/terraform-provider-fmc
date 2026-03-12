@@ -18,7 +18,7 @@ resource "fmc_ftd_nat_policy" "example" {
   description = "My nat policy"
   manual_nat_rules = [
     {
-      description          = "My manual nat rule 1"
+      description          = "My Manual NAT rule 1"
       enabled              = true
       section              = "BEFORE_AUTO"
       nat_type             = "STATIC"
@@ -46,12 +46,12 @@ resource "fmc_ftd_nat_policy" "example" {
 
 ### Optional
 
-- `auto_nat_rules` (Attributes List) The list of auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
+- `auto_nat_rules` (Attributes List) The list of Auto NAT rules. (see [below for nested schema](#nestedatt--auto_nat_rules))
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `manage_rules` (Boolean) Should this resource manage Manual and Auto NAT Rules. For Data Sources this defaults to `false` (NAT Rules are not read).
   - Default value: `true`
-- `manual_nat_rules` (Attributes List) The ordered list of manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
+- `manual_nat_rules` (Attributes List) The ordered list of Manual NAT rules. (see [below for nested schema](#nestedatt--manual_nat_rules))
 
 ### Read-Only
 
@@ -63,7 +63,7 @@ resource "fmc_ftd_nat_policy" "example" {
 
 Required:
 
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
   - Choices: `STATIC`, `DYNAMIC`
 
 Optional:
@@ -75,6 +75,13 @@ Optional:
 - `no_proxy_arp` (Boolean) Do not proxy ARP on Destination Interface.
 - `original_network_id` (String) ID of original network object (Host, Network or Range).
 - `original_port` (Number) Original port number.
+- `pat_address_object_id` (String) ID of the Host / Network / Range / Network Group object used as PAT pool address.
+- `pat_block_allocation` (Boolean) Enable port block allocation.
+- `pat_extended_table` (Boolean) Use Extended PAT.
+- `pat_flat_port_range` (Boolean) Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
+- `pat_include_reserved_ports` (Boolean) Use port range of 1 to 65535.
+- `pat_round_robin_allocation` (Boolean) Enable round robin addresses/ports allocation.
+- `pat_use_interface_address` (Boolean) Use interface address for PAT.
 - `protocol` (String) Service protocol.
   - Choices: `TCP`, `UDP`
 - `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
@@ -94,7 +101,7 @@ Read-Only:
 
 Required:
 
-- `nat_type` (String) Type of the rule
+- `nat_type` (String) Type of the rule.
   - Choices: `STATIC`, `DYNAMIC`
 - `section` (String) Name of section to which the rule belongs.
   - Choices: `BEFORE_AUTO`, `AFTER_AUTO`
@@ -114,6 +121,13 @@ Optional:
 - `original_destination_port_id` (String) ID of original destination port object.
 - `original_source_id` (String) ID of original source network object (Host, Network or Range).
 - `original_source_port_id` (String) ID of original source port object.
+- `pat_address_object_id` (String) ID of the Host / Network / Range / Network Group object used as PAT pool address.
+- `pat_block_allocation` (Boolean) Enable port block allocation.
+- `pat_extended_table` (Boolean) Use Extended PAT.
+- `pat_flat_port_range` (Boolean) Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
+- `pat_include_reserved_ports` (Boolean) Use port range of 1 to 65535.
+- `pat_round_robin_allocation` (Boolean) Enable round robin addresses/ports allocation.
+- `pat_use_interface_address` (Boolean) Use interface address for PAT.
 - `route_lookup` (Boolean) Perform Route Lookup for Destination Interface.
 - `source_interface_id` (String) ID of source security zone or interface group.
 - `translate_dns` (Boolean) Translate DNS replies that match this rule.
@@ -125,7 +139,7 @@ Optional:
 
 Read-Only:
 
-- `id` (String) Id of the manual nat rule.
+- `id` (String) Id of the Manual NAT rule.
 
 ## Import
 
