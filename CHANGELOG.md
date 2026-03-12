@@ -1,3 +1,9 @@
+## Unreleased
+
+- (Fix) `fmc_file_policy`: Add missing choice
+- (Fix) Access Control and Prefilter Policies: Source \ Destination Port Literals had wrong attributes
+- (Doc) Access Rules: Update description of Source \ Destination Objects to include Geolocation objects support
+
 ## 2.0.1
 
 - (Fix) `fmc_ftd_platform_settings_syslog_logging_destination`: Resolve an issue where syslog logging destination configuration was not reflected in the web interface under certain conditions

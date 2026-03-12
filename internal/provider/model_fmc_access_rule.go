@@ -117,11 +117,8 @@ type AccessRuleDestinationDynamicObjects struct {
 }
 
 type AccessRuleSourcePortLiterals struct {
-	Type     types.String `tfsdk:"type"`
-	Port     types.String `tfsdk:"port"`
 	Protocol types.String `tfsdk:"protocol"`
-	IcmpType types.String `tfsdk:"icmp_type"`
-	IcmpCode types.String `tfsdk:"icmp_code"`
+	Port     types.String `tfsdk:"port"`
 }
 
 type AccessRuleSourcePortObjects struct {
@@ -345,20 +342,12 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		body, _ = sjson.Set(body, "sourcePorts.literals", []any{})
 		for _, item := range data.SourcePortLiterals {
 			itemBody := ""
-			if !item.Type.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
-			}
-			if !item.Port.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "port", item.Port.ValueString())
-			}
+			itemBody, _ = sjson.Set(itemBody, "type", "PortLiteral")
 			if !item.Protocol.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol", item.Protocol.ValueString())
 			}
-			if !item.IcmpType.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "icmpType", item.IcmpType.ValueString())
-			}
-			if !item.IcmpCode.IsNull() {
-				itemBody, _ = sjson.Set(itemBody, "code", item.IcmpCode.ValueString())
+			if !item.Port.IsNull() {
+				itemBody, _ = sjson.Set(itemBody, "port", item.Port.ValueString())
 			}
 			body, _ = sjson.SetRaw(body, "sourcePorts.literals.-1", itemBody)
 		}
@@ -793,30 +782,15 @@ func (data *AccessRule) fromBody(ctx context.Context, res gjson.Result) {
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := AccessRuleSourcePortLiterals{}
-			if value := res.Get("type"); value.Exists() {
-				data.Type = types.StringValue(value.String())
-			} else {
-				data.Type = types.StringNull()
-			}
-			if value := res.Get("port"); value.Exists() {
-				data.Port = types.StringValue(value.String())
-			} else {
-				data.Port = types.StringNull()
-			}
 			if value := res.Get("protocol"); value.Exists() {
 				data.Protocol = types.StringValue(value.String())
 			} else {
 				data.Protocol = types.StringNull()
 			}
-			if value := res.Get("icmpType"); value.Exists() {
-				data.IcmpType = types.StringValue(value.String())
+			if value := res.Get("port"); value.Exists() {
+				data.Port = types.StringValue(value.String())
 			} else {
-				data.IcmpType = types.StringNull()
-			}
-			if value := res.Get("code"); value.Exists() {
-				data.IcmpCode = types.StringValue(value.String())
-			} else {
-				data.IcmpCode = types.StringNull()
+				data.Port = types.StringNull()
 			}
 			(*parent).SourcePortLiterals = append((*parent).SourcePortLiterals, data)
 			return true
@@ -1594,8 +1568,8 @@ func (data *AccessRule) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		(*parent).DestinationDynamicObjects[i] = data
 	}
 	for i := 0; i < len(data.SourcePortLiterals); i++ {
-		keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
-		keyValues := [...]string{data.SourcePortLiterals[i].Type.ValueString(), data.SourcePortLiterals[i].Port.ValueString(), data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].IcmpType.ValueString(), data.SourcePortLiterals[i].IcmpCode.ValueString()}
+		keys := [...]string{"protocol", "port"}
+		keyValues := [...]string{data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].Port.ValueString()}
 
 		parent := &data
 		data := (*parent).SourcePortLiterals[i]
@@ -1629,30 +1603,15 @@ func (data *AccessRule) fromBodyPartial(ctx context.Context, res gjson.Result) {
 
 			continue
 		}
-		if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
-			data.Type = types.StringValue(value.String())
-		} else {
-			data.Type = types.StringNull()
-		}
-		if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
-			data.Port = types.StringValue(value.String())
-		} else {
-			data.Port = types.StringNull()
-		}
 		if value := res.Get("protocol"); value.Exists() && !data.Protocol.IsNull() {
 			data.Protocol = types.StringValue(value.String())
 		} else {
 			data.Protocol = types.StringNull()
 		}
-		if value := res.Get("icmpType"); value.Exists() && !data.IcmpType.IsNull() {
-			data.IcmpType = types.StringValue(value.String())
+		if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
+			data.Port = types.StringValue(value.String())
 		} else {
-			data.IcmpType = types.StringNull()
-		}
-		if value := res.Get("code"); value.Exists() && !data.IcmpCode.IsNull() {
-			data.IcmpCode = types.StringValue(value.String())
-		} else {
-			data.IcmpCode = types.StringNull()
+			data.Port = types.StringNull()
 		}
 		(*parent).SourcePortLiterals[i] = data
 	}

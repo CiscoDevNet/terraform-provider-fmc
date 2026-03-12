@@ -47,7 +47,7 @@ Read-Only:
 - `logging` (String) Logging mode.
 - `source_network_literals` (Attributes Set) Set of literals that represent sources of traffic. (see [below for nested schema](#nestedatt--entries--source_network_literals))
 - `source_network_objects` (Attributes Set) Set of objects that represent sources of traffic (Host, Network, Range, Network Group). (see [below for nested schema](#nestedatt--entries--source_network_objects))
-- `source_port_literals` (Attributes Set) Set of objects that represent destination port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
+- `source_port_literals` (Attributes Set) Set of objects that represent source port of traffic (literally specified). (see [below for nested schema](#nestedatt--entries--source_port_literals))
 - `source_port_objects` (Attributes Set) Set of objects representing source ports. (see [below for nested schema](#nestedatt--entries--source_port_objects))
 - `source_sgt_objects` (Attributes Set) Set of SGT that represent tag of source traffic. (see [below for nested schema](#nestedatt--entries--source_sgt_objects))
 
@@ -110,11 +110,8 @@ Read-Only:
 
 Read-Only:
 
-- `icmp_code` (String) ICMP code
-- `icmp_type` (String) ICMP type.
 - `port` (String) Port number.
-- `protocol` (String) IANA port number.
-- `type` (String) Type of the object.
+- `protocol` (String) IANA protocol number.
 
 
 <a id="nestedatt--entries--source_port_objects"></a>

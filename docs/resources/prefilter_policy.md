@@ -88,8 +88,9 @@ resource "fmc_prefilter_policy" "example" {
       ]
       destination_port_literals = [
         {
-          protocol = "6"
+          type     = "PortLiteral"
           port     = "80"
+          protocol = "6"
         }
       ]
       destination_port_objects = [
@@ -212,11 +213,16 @@ Required:
 
 Required:
 
-- `protocol` (String)
+- `protocol` (String) IANA protocol number.
 
 Optional:
 
-- `port` (String)
+- `icmp_code` (String) ICMP code.
+- `icmp_type` (String) ICMP type.
+- `port` (String) Port number.
+- `type` (String) Type of the object.
+  - Choices: `PortLiteral`, `ICMPv4PortLiteral`
+  - Default value: `PortLiteral`
 
 
 <a id="nestedatt--rules--destination_port_objects"></a>
@@ -258,7 +264,8 @@ Required:
 
 Required:
 
-- `protocol` (String) Protocol number.
+- `protocol` (String) IANA protocol number.
+  - Choices: `6`, `17`
 
 Optional:
 

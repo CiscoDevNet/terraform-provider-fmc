@@ -86,7 +86,7 @@ resource "fmc_file_policy" "example" {
 Required:
 
 - `action` (String) Action to be performed on a file.
-  - Choices: `DETECT`, `BLOCK_WITH_RESET`, `DETECT_MALWARE`, `BLOCK_MALWARE_WITH_RESET`
+  - Choices: `DETECT`, `BLOCK_WITH_RESET`, `DETECT_MALWARE`, `BLOCK_MALWARE`, `BLOCK_MALWARE_WITH_RESET`
 - `application_protocol` (String) Defines a protocol for file inspection.
   - Choices: `ANY`, `HTTP`, `SMTP`, `IMAP`, `POP3`, `FTP`, `SMB`
 - `direction_of_transfer` (String) Direction of file transfer.

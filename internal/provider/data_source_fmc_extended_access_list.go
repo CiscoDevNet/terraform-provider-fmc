@@ -222,28 +222,16 @@ func (d *ExtendedAccessListDataSource) Schema(ctx context.Context, req datasourc
 							},
 						},
 						"source_port_literals": schema.SetNestedAttribute{
-							MarkdownDescription: "Set of objects that represent destination port of traffic (literally specified).",
+							MarkdownDescription: "Set of objects that represent source port of traffic (literally specified).",
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"type": schema.StringAttribute{
-										MarkdownDescription: "Type of the object.",
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "IANA protocol number.",
 										Computed:            true,
 									},
 									"port": schema.StringAttribute{
 										MarkdownDescription: "Port number.",
-										Computed:            true,
-									},
-									"protocol": schema.StringAttribute{
-										MarkdownDescription: "IANA port number.",
-										Computed:            true,
-									},
-									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: "ICMP type.",
-										Computed:            true,
-									},
-									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: "ICMP code",
 										Computed:            true,
 									},
 								},
