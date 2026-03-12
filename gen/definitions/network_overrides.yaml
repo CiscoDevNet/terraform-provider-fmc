@@ -1,0 +1,68 @@
+---
+name: Network Overrides
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networks
+is_override: true
+doc_category: Objects
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: name
+    tf_name: parent_name
+    type: String
+    mandatory: true
+    description: Name of the parent Network object.
+    example: my_network
+    data_source_query: true
+    requires_replace: true
+    test_value: fmc_network.test.name
+  - model_name: id
+    data_path: ["overrides", "parent"]
+    tf_name: parent_id
+    type: String
+    mandatory: true
+    description: ID of the parent Network object.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    requires_replace: true
+    test_value: fmc_network.test.id
+  - model_name: dummy_overrides
+    tf_name: overrides
+    type: List
+    description: Override entries for the object.
+    max_list: 1000
+    mandatory: true
+    attributes:
+    - model_name: id
+      data_path: ["overrides", "target"]
+      tf_name: target_id
+      type: String
+      id: true
+      mandatory: true
+      description: ID of the override target Device or Domain. Note that each target can be defined once only.
+      example: 12345678-90ab-cdef-1234-567890abcdef
+      test_value: var.device_id
+    - model_name: type
+      data_path: ["overrides", "target"]
+      tf_name: target_type
+      type: String
+      mandatory: true
+      enum_values: ["Device", "Domain"]
+      description: Type of the target.
+      example: Device
+    - model_name: description
+      type: String
+      description: Description of the overridden object.
+      example: My Network object
+    - model_name: value
+      tf_name: prefix
+      type: String
+      mandatory: true
+      description: Prefix of the Network.
+      example: 10.1.2.0/24
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_network" "test" {
+    name        = "my_network_override"
+    prefix      = "10.0.2.0/24"
+    overridable = true
+  }

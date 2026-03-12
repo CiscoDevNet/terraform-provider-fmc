@@ -10,6 +10,7 @@ description: |-
 ## Unreleased
 
 - (Enh) Auto / Manual NAT rules: Add PAT pool options support
+- (Enh) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, `fmc_fqdn_overrides`
 - (Fix) `fmc_file_policy`: Add missing choice
 - (Fix) Access Control and Prefilter Policies: Source \ Destination Port Literals had wrong attributes
 - (Doc) Access Rules: Update description of Source \ Destination Objects to include Geolocation objects support

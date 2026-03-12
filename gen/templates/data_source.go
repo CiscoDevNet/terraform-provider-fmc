@@ -281,6 +281,8 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	
 	// Get all objects from FMC
 	urlPath := config.getPath() + "?expanded=true"
+	{{- else if .IsOverride}}
+	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString()) + "/overrides"
 	{{- else}}
 	urlPath := config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())
 	{{- end}}
@@ -289,6 +291,10 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
+
+	{{- if .IsOverride}}
+	res = config.synthesizeOverrides(ctx, res)
+	{{- end}}
 
 	config.fromBody(ctx, res)
 
