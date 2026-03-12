@@ -272,7 +272,7 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"protocol": schema.StringAttribute{
-										MarkdownDescription: "Protocol number.",
+										MarkdownDescription: "IANA protocol number.",
 										Computed:            true,
 									},
 									"port": schema.StringAttribute{
@@ -299,12 +299,24 @@ func (d *PrefilterPolicyDataSource) Schema(ctx context.Context, req datasource.S
 							Computed:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"protocol": schema.StringAttribute{
-										MarkdownDescription: "",
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the object.",
 										Computed:            true,
 									},
 									"port": schema.StringAttribute{
-										MarkdownDescription: "",
+										MarkdownDescription: "Port number.",
+										Computed:            true,
+									},
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: "IANA protocol number.",
+										Computed:            true,
+									},
+									"icmp_type": schema.StringAttribute{
+										MarkdownDescription: "ICMP type.",
+										Computed:            true,
+									},
+									"icmp_code": schema.StringAttribute{
+										MarkdownDescription: "ICMP code.",
 										Computed:            true,
 									},
 								},

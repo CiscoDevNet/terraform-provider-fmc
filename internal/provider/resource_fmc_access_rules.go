@@ -189,7 +189,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"source_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -205,7 +205,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							},
 						},
 						"destination_network_objects": schema.SetNestedAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Set of objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).").String,
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
@@ -249,27 +249,15 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							Optional:            true,
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
-									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").AddStringEnumDescription("PortLiteral", "ICMPv4PortLiteral").String,
+									"protocol": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").AddStringEnumDescription("6", "17").String,
 										Required:            true,
 										Validators: []validator.String{
-											stringvalidator.OneOf("PortLiteral", "ICMPv4PortLiteral"),
+											stringvalidator.OneOf("6", "17"),
 										},
 									},
 									"port": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
-										Optional:            true,
-									},
-									"protocol": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("IANA protocol number.").String,
-										Required:            true,
-									},
-									"icmp_type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ICMP type.").String,
-										Optional:            true,
-									},
-									"icmp_code": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("ICMP code.").String,
 										Optional:            true,
 									},
 								},

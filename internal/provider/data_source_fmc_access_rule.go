@@ -149,7 +149,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"source_network_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of objects that represent sources of traffic (Host, Network, Range, FQDN or Network Group).",
+				MarkdownDescription: "Set of objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -165,7 +165,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				},
 			},
 			"destination_network_objects": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of objects that represent destinations of traffic (Host, Network, Range, FQDN or Network Group).",
+				MarkdownDescription: "Set of objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -209,24 +209,12 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
-						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object.",
-							Computed:            true,
-						},
-						"port": schema.StringAttribute{
-							MarkdownDescription: "Port number.",
-							Computed:            true,
-						},
 						"protocol": schema.StringAttribute{
 							MarkdownDescription: "IANA protocol number.",
 							Computed:            true,
 						},
-						"icmp_type": schema.StringAttribute{
-							MarkdownDescription: "ICMP type.",
-							Computed:            true,
-						},
-						"icmp_code": schema.StringAttribute{
-							MarkdownDescription: "ICMP code.",
+						"port": schema.StringAttribute{
+							MarkdownDescription: "Port number.",
 							Computed:            true,
 						},
 					},
