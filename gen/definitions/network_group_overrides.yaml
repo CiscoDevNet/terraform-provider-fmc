@@ -1,0 +1,99 @@
+---
+name: Network Group Overrides
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/networkgroups
+is_override: true
+doc_category: Objects
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: name
+    tf_name: parent_name
+    type: String
+    mandatory: true
+    description: Name of the parent Network Group object.
+    example: my_network_group
+    data_source_query: true
+    requires_replace: true
+    test_value: fmc_network_group.test.name
+  - model_name: id
+    data_path: ["overrides", "parent"]
+    tf_name: parent_id
+    type: String
+    mandatory: true
+    description: ID of the parent Network Group object.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    requires_replace: true
+    test_value: fmc_network_group.test.id
+  - model_name: dummy_overrides
+    tf_name: overrides
+    type: List
+    description: Override entries for the object.
+    max_list: 1000
+    mandatory: true
+    attributes:
+    - model_name: id
+      data_path: ["overrides", "target"]
+      tf_name: target_id
+      type: String
+      id: true
+      mandatory: true
+      description: ID of the override target Device or Domain. Note that each target can be defined once only.
+      example: 12345678-90ab-cdef-1234-567890abcdef
+      test_value: var.device_id
+    - model_name: type
+      data_path: ["overrides", "target"]
+      tf_name: target_type
+      type: String
+      mandatory: true
+      enum_values: ["Device", "Domain"]
+      description: Type of the target.
+      example: Device
+    - model_name: description
+      type: String
+      description: Description of the object.
+      example: "My Network Group Overridden name"
+    - model_name: objects
+      description: Set of network objects (Host, Network, Range, FQDN or Network Group).
+      type: Set
+      attributes:
+        - model_name: id
+          type: String
+          description: ID of the network object.
+          id: true
+          example: 12345678-1234-1234-1234-123456789012
+          test_value: fmc_range.test.id
+        - model_name: name
+          type: String
+          description: Name of the network object.
+          example: fmc_network_object_1
+          test_value: fmc_range.test.name
+        - model_name: type
+          type: String
+          value: AnyNonEmptyString
+    - model_name: literals
+      description: Set of literal values (Host or Network).
+      type: Set
+      minimum_test_value: 'dummy_value'
+      attributes:
+        - model_name: value
+          type: String
+          description: IP address or network in CIDR format. Please do not use /32 mask for host.
+          id: true
+          example: 10.1.1.0/24
+          minimum_test_value: '"10.1.1.0/24"'
+        - model_name: type
+          type: String
+          value: AnyNonEmptyString
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_network_group" "test" {
+    name        = "my_network_group_override"
+    literals    = [{ value = "10.1.0.1" }]
+    overridable = true
+  }
+
+  resource "fmc_range" "test" {
+    name      = "fmc_network_group_override"
+    ip_range  = "10.0.1.1-10.0.1.10"
+  }
