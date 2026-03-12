@@ -184,7 +184,7 @@ func (r *FTDAutoNATRuleResource) Schema(ctx context.Context, req resource.Schema
 				MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
 				Optional:            true,
 			},
-			"pat_address_pool_id": schema.StringAttribute{
+			"pat_address_object_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
 				Optional:            true,
 			},

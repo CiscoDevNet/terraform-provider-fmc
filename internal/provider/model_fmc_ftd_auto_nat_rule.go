@@ -58,7 +58,7 @@ type FTDAutoNATRule struct {
 	PatIncludeReservedPorts                 types.Bool   `tfsdk:"pat_include_reserved_ports"`
 	PatRoundRobinAllocation                 types.Bool   `tfsdk:"pat_round_robin_allocation"`
 	PatUseInterfaceAddress                  types.Bool   `tfsdk:"pat_use_interface_address"`
-	PatAddressPoolId                        types.String `tfsdk:"pat_address_pool_id"`
+	PatAddressObjectId                      types.String `tfsdk:"pat_address_object_id"`
 }
 
 // End of section. //template:end types
@@ -145,8 +145,8 @@ func (data FTDAutoNATRule) toBody(ctx context.Context, state FTDAutoNATRule) str
 	if !data.PatUseInterfaceAddress.IsNull() {
 		body, _ = sjson.Set(body, "patOptions.interfacePat", data.PatUseInterfaceAddress.ValueBool())
 	}
-	if !data.PatAddressPoolId.IsNull() {
-		body, _ = sjson.Set(body, "patOptions.patPoolAddress.id", data.PatAddressPoolId.ValueString())
+	if !data.PatAddressObjectId.IsNull() {
+		body, _ = sjson.Set(body, "patOptions.patPoolAddress.id", data.PatAddressObjectId.ValueString())
 	}
 	return body
 }
@@ -267,9 +267,9 @@ func (data *FTDAutoNATRule) fromBody(ctx context.Context, res gjson.Result) {
 		data.PatUseInterfaceAddress = types.BoolNull()
 	}
 	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() {
-		data.PatAddressPoolId = types.StringValue(value.String())
+		data.PatAddressObjectId = types.StringValue(value.String())
 	} else {
-		data.PatAddressPoolId = types.StringNull()
+		data.PatAddressObjectId = types.StringNull()
 	}
 }
 
@@ -392,10 +392,10 @@ func (data *FTDAutoNATRule) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.PatUseInterfaceAddress = types.BoolNull()
 	}
-	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() && !data.PatAddressPoolId.IsNull() {
-		data.PatAddressPoolId = types.StringValue(value.String())
+	if value := res.Get("patOptions.patPoolAddress.id"); value.Exists() && !data.PatAddressObjectId.IsNull() {
+		data.PatAddressObjectId = types.StringValue(value.String())
 	} else {
-		data.PatAddressPoolId = types.StringNull()
+		data.PatAddressObjectId = types.StringNull()
 	}
 }
 

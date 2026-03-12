@@ -52,7 +52,7 @@ resource "fmc_ftd_manual_nat_rule" "example" {
 - `original_destination_port_id` (String) ID of original destination port object.
 - `original_source_id` (String) ID of original source network object (Host, Network or Range).
 - `original_source_port_id` (String) ID of original source port object.
-- `pat_address_pool_id` (String) ID of the Host / Network / Range / Network Group object used as PAT pool address.
+- `pat_address_object_id` (String) ID of the Host / Network / Range / Network Group object used as PAT pool address.
 - `pat_block_allocation` (Boolean) Enable port block allocation.
 - `pat_extended_table` (Boolean) Use Extended PAT.
 - `pat_flat_port_range` (Boolean) Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.
