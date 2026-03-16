@@ -165,6 +165,7 @@ type YamlConfigAttribute struct {
 	TestValue                           string                `yaml:"test_value"`
 	MinimumTestValue                    string                `yaml:"minimum_test_value"`
 	TestTags                            []string              `yaml:"test_tags"`
+	PutCreateDataQuery                  bool                  `yaml:"put_create_data_query"`
 	DataSourceQuery                     bool                  `yaml:"data_source_query"`
 	DataSourceOptionalParameter         bool                  `yaml:"data_source_optional_parameter"`
 	Sensitive                           bool                  `yaml:"sensitive"`
@@ -232,6 +233,26 @@ func HasDataSourceQuery(attributes []YamlConfigAttribute) bool {
 func GetDataSourceQueryAttribute(config YamlConfig) YamlConfigAttribute {
 	for _, attr := range config.Attributes {
 		if attr.DataSourceQuery {
+			return attr
+		}
+	}
+	return YamlConfigAttribute{}
+}
+
+// Templating helper function to check if any of the attributes is a put create data query
+func HasPutCreateDataQuery(attributes []YamlConfigAttribute) bool {
+	for _, attr := range attributes {
+		if attr.PutCreateDataQuery {
+			return true
+		}
+	}
+	return false
+}
+
+// Templating helper function to return Put Create Data Query Attribute
+func GetPutCreateDataQueryAttribute(config YamlConfig) YamlConfigAttribute {
+	for _, attr := range config.Attributes {
+		if attr.PutCreateDataQuery {
 			return attr
 		}
 	}
@@ -418,34 +439,36 @@ func Subtract(a, b int) int {
 
 // Map of templating functions
 var functions = template.FuncMap{
-	"toGoName":                    ToGoName,
-	"camelCase":                   CamelCase,
-	"snakeCase":                   SnakeCase,
-	"sprintf":                     fmt.Sprintf,
-	"errorf":                      Errorf,
-	"toLower":                     strings.ToLower,
-	"path":                        BuildPath,
-	"hasDataSourceQuery":          HasDataSourceQuery,
-	"getDataSourceQueryAttribute": GetDataSourceQueryAttribute,
-	"getAttributeByTfName":        GetAttributeByTfName,
-	"hasId":                       HasId,
-	"hasComputedRefreshValue":     HasComputedRefreshValue,
-	"hasReference":                HasReference,
-	"hasResourceId":               HasResourceId,
-	"hasRequiresReplace":          HasRequiresReplace,
-	"isListSet":                   IsListSet,
-	"isList":                      IsList,
-	"isSet":                       IsSet,
-	"isStringListSet":             IsStringListSet,
-	"isInt64ListSet":              IsInt64ListSet,
-	"isNestedListMapSet":          IsNestedListMapSet,
-	"isNestedListSet":             IsNestedListSet,
-	"isNestedList":                IsNestedList,
-	"isNestedMap":                 IsNestedMap,
-	"isNestedSet":                 IsNestedSet,
-	"isDomainDependent":           IsDomainDependent,
-	"importParts":                 ImportParts,
-	"subtract":                    Subtract,
+	"toGoName":                       ToGoName,
+	"camelCase":                      CamelCase,
+	"snakeCase":                      SnakeCase,
+	"sprintf":                        fmt.Sprintf,
+	"errorf":                         Errorf,
+	"toLower":                        strings.ToLower,
+	"path":                           BuildPath,
+	"hasDataSourceQuery":             HasDataSourceQuery,
+	"getDataSourceQueryAttribute":    GetDataSourceQueryAttribute,
+	"hasPutCreateDataQuery":          HasPutCreateDataQuery,
+	"getPutCreateDataQueryAttribute": GetPutCreateDataQueryAttribute,
+	"getAttributeByTfName":           GetAttributeByTfName,
+	"hasId":                          HasId,
+	"hasComputedRefreshValue":        HasComputedRefreshValue,
+	"hasReference":                   HasReference,
+	"hasResourceId":                  HasResourceId,
+	"hasRequiresReplace":             HasRequiresReplace,
+	"isListSet":                      IsListSet,
+	"isList":                         IsList,
+	"isSet":                          IsSet,
+	"isStringListSet":                IsStringListSet,
+	"isInt64ListSet":                 IsInt64ListSet,
+	"isNestedListMapSet":             IsNestedListMapSet,
+	"isNestedListSet":                IsNestedListSet,
+	"isNestedList":                   IsNestedList,
+	"isNestedMap":                    IsNestedMap,
+	"isNestedSet":                    IsNestedSet,
+	"isDomainDependent":              IsDomainDependent,
+	"importParts":                    ImportParts,
+	"subtract":                       Subtract,
 }
 
 func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
@@ -515,7 +538,7 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 
 func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 	var config YamlConfig
-	var hasDataSourceQuery bool = false
+	var hasPutCreateDataQuery bool = false
 
 	if err := yaml.Unmarshal(bytes, &config); err != nil {
 		return config, err
@@ -525,11 +548,11 @@ func NewYamlConfig(bytes []byte) (YamlConfig, error) {
 		if err := config.Attributes[i].init(CamelCase(config.Name)); err != nil {
 			return YamlConfig{}, err
 		}
-		if config.Attributes[i].DataSourceQuery {
-			if hasDataSourceQuery {
-				return YamlConfig{}, fmt.Errorf("Multiple `data_source_query` attributes found. Only one is allowed.")
+		if config.Attributes[i].PutCreateDataQuery {
+			if hasPutCreateDataQuery {
+				return YamlConfig{}, fmt.Errorf("Multiple `put_create_data_query` attributes found. Only one is allowed.")
 			}
-			hasDataSourceQuery = true
+			hasPutCreateDataQuery = true
 		}
 	}
 	if config.DsDescription == "" {
