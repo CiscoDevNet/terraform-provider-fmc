@@ -109,12 +109,12 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 				Default:             booldefault.StaticBool(true),
 			},
 			"manual_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of manual NAT rules.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The ordered list of Manual NAT rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the manual nat rule.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the Manual NAT rule.").String,
 							Computed:            true,
 						},
 						"description": schema.StringAttribute{
@@ -133,7 +133,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							},
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("STATIC", "DYNAMIC"),
@@ -215,11 +215,39 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							MarkdownDescription: helpers.NewAttributeDescription("ID of translated destination port object.").String,
 							Optional:            true,
 						},
+						"pat_block_allocation": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable port block allocation.").String,
+							Optional:            true,
+						},
+						"pat_extended_table": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use Extended PAT.").String,
+							Optional:            true,
+						},
+						"pat_flat_port_range": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.").String,
+							Optional:            true,
+						},
+						"pat_include_reserved_ports": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use port range of 1 to 65535.").String,
+							Optional:            true,
+						},
+						"pat_round_robin_allocation": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable round robin addresses/ports allocation.").String,
+							Optional:            true,
+						},
+						"pat_use_interface_address": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
+							Optional:            true,
+						},
+						"pat_address_object_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
+							Optional:            true,
+						},
 					},
 				},
 			},
 			"auto_nat_rules": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The list of auto NAT rules.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("The list of Auto NAT rules.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -228,7 +256,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Computed:            true,
 						},
 						"nat_type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule").AddStringEnumDescription("STATIC", "DYNAMIC").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the rule.").AddStringEnumDescription("STATIC", "DYNAMIC").String,
 							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("STATIC", "DYNAMIC"),
@@ -291,6 +319,34 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 						},
 						"translated_port": schema.Int64Attribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Translated port number.").String,
+							Optional:            true,
+						},
+						"pat_block_allocation": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable port block allocation.").String,
+							Optional:            true,
+						},
+						"pat_extended_table": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use Extended PAT.").String,
+							Optional:            true,
+						},
+						"pat_flat_port_range": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use the 1024 to 65535 port range as a single flat range when allocating TCP/UDP ports. This option is always enabled on device(s) starting from v6.7.0, irrespective of its configured value.").String,
+							Optional:            true,
+						},
+						"pat_include_reserved_ports": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use port range of 1 to 65535.").String,
+							Optional:            true,
+						},
+						"pat_round_robin_allocation": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Enable round robin addresses/ports allocation.").String,
+							Optional:            true,
+						},
+						"pat_use_interface_address": schema.BoolAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Use interface address for PAT.").String,
+							Optional:            true,
+						},
+						"pat_address_object_id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("ID of the Host / Network / Range / Network Group object used as PAT pool address.").String,
 							Optional:            true,
 						},
 					},

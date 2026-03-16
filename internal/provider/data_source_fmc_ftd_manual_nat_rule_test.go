@@ -31,7 +31,7 @@ import (
 func TestAccDataSourceFmcFTDManualNATRule(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_ftd_manual_nat_rule.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_manual_nat_rule.test", "description", "My manual nat rule 1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_manual_nat_rule.test", "description", "My Manual NAT rule 1"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_manual_nat_rule.test", "enabled", "true"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_manual_nat_rule.test", "section", "BEFORE_AUTO"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_ftd_manual_nat_rule.test", "nat_type", "STATIC"))
@@ -84,7 +84,7 @@ resource "fmc_hosts" "test" {
 func testAccDataSourceFmcFTDManualNATRuleConfig() string {
 	config := `resource "fmc_ftd_manual_nat_rule" "test" {` + "\n"
 	config += `	ftd_nat_policy_id = fmc_ftd_nat_policy.test.id` + "\n"
-	config += `	description = "My manual nat rule 1"` + "\n"
+	config += `	description = "My Manual NAT rule 1"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	section = "BEFORE_AUTO"` + "\n"
 	config += `	nat_type = "STATIC"` + "\n"
