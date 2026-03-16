@@ -81,6 +81,7 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -403,6 +404,7 @@ func (d *DevicePhysicalInterfaceDataSource) ConfigValidators(ctx context.Context
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
+			path.MatchRoot("logical_name"),
 			path.MatchRoot("name"),
 		),
 	}
@@ -437,6 +439,37 @@ func (d *DevicePhysicalInterfaceDataSource) Read(ctx context.Context, req dataso
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
+			return
+		}
+	}
 	if config.Id.IsNull() && !config.Name.IsNull() {
 		offset := 0
 		limit := 1000

@@ -47,7 +47,7 @@ func TestAccDataSourceFmcHostOverrides(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcHostOverridesPrerequisitesConfig + testAccNamedDataSourceFmcHostOverridesConfig(),
+				Config: testAccDataSourceFmcHostOverridesPrerequisitesConfig + testAccNamedByParentNameDataSourceFmcHostOverridesConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,7 +92,7 @@ func testAccDataSourceFmcHostOverridesConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcHostOverridesConfig() string {
+func testAccNamedByParentNameDataSourceFmcHostOverridesConfig() string {
 	config := `resource "fmc_host_overrides" "test" {` + "\n"
 	config += `	parent_name = fmc_host.test.name` + "\n"
 	config += `	parent_id = fmc_host.test.id` + "\n"

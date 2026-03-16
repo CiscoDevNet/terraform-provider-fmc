@@ -28,6 +28,7 @@ attributes:
     type: String
     description: Logical name of the loopback interface
     example: my_loopback_1
+    data_source_query: true
   - model_name: enabled
     type: Bool
     description: Indicates whether to enable the interface.

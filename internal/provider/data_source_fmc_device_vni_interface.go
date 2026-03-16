@@ -24,10 +24,14 @@ import (
 	"net/url"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -60,7 +64,8 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Id of the object",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "Name of the FMC domain",
@@ -96,6 +101,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
@@ -181,6 +187,14 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 		},
 	}
 }
+func (d *DeviceVNIInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+	return []datasource.ConfigValidator{
+		datasourcevalidator.ExactlyOneOf(
+			path.MatchRoot("id"),
+			path.MatchRoot("logical_name"),
+		),
+	}
+}
 
 func (d *DeviceVNIInterfaceDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
@@ -211,6 +225,37 @@ func (d *DeviceVNIInterfaceDataSource) Read(ctx context.Context, req datasource.
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
+			return
+		}
+	}
 	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
 	res, err := d.client.Get(urlPath, reqMods...)
 	if err != nil {

@@ -91,6 +91,7 @@ func (d *DeviceSubinterfaceDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -365,6 +366,7 @@ func (d *DeviceSubinterfaceDataSource) ConfigValidators(ctx context.Context) []d
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
 			path.MatchRoot("name"),
+			path.MatchRoot("logical_name"),
 		),
 	}
 }

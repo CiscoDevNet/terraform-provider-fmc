@@ -81,7 +81,7 @@ func TestAccDataSourceFmcDeviceBGP(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcDeviceBGPPrerequisitesConfig + testAccNamedDataSourceFmcDeviceBGPConfig(),
+				Config: testAccDataSourceFmcDeviceBGPPrerequisitesConfig + testAccNamedByAsNumberDataSourceFmcDeviceBGPConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -153,7 +153,7 @@ func testAccDataSourceFmcDeviceBGPConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcDeviceBGPConfig() string {
+func testAccNamedByAsNumberDataSourceFmcDeviceBGPConfig() string {
 	config := `resource "fmc_device_bgp" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	ipv4_default_information_orginate = false` + "\n"

@@ -31,6 +31,7 @@ attributes:
     type: String
     description: Logical name of the Bridge Group interface.
     example: my_bridge_group_interface
+    data_source_query: true
   - model_name: description
     type: String
     description: Description of the object.

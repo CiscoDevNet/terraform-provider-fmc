@@ -43,6 +43,7 @@ attributes:
     type: String
     description: Logical name of the VTI interface.
     example: my_vti_interface
+    data_source_query: true
     mandatory: true
   - model_name: enabled
     type: Bool

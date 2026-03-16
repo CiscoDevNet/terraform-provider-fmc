@@ -51,6 +51,10 @@ func TestAccDataSourceFmcDevicePhysicalInterface(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
+				Config: testAccDataSourceFmcDevicePhysicalInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDevicePhysicalInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
+			{
 				Config: testAccDataSourceFmcDevicePhysicalInterfacePrerequisitesConfig + testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
@@ -95,6 +99,29 @@ func testAccDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	return config
 }
 
+func testAccNamedByLogicalNameDataSourceFmcDevicePhysicalInterfaceConfig() string {
+	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "myinterface-0-1"` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	management_only = false` + "\n"
+	config += `	description = "my description"` + "\n"
+	config += `	mode = "NONE"` + "\n"
+	config += `	name = var.interface_name` + "\n"
+	config += `	mtu = 1400` + "\n"
+	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_ra = false` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_physical_interface" "test" {
+			device_id = var.device_id
+			logical_name = fmc_device_physical_interface.test.logical_name
+		}
+	`
+	return config
+}
 func testAccNamedDataSourceFmcDevicePhysicalInterfaceConfig() string {
 	config := `resource "fmc_device_physical_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"

@@ -53,6 +53,10 @@ func TestAccDataSourceFmcDeviceVNIInterface(t *testing.T) {
 				Config: testAccDataSourceFmcDeviceVNIInterfacePrerequisitesConfig + testAccDataSourceFmcDeviceVNIInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccDataSourceFmcDeviceVNIInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceVNIInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -119,6 +123,38 @@ func testAccDataSourceFmcDeviceVNIInterfaceConfig() string {
 		data "fmc_device_vni_interface" "test" {
 			id = fmc_device_vni_interface.test.id
 			device_id = fmc_device_physical_interface.test.device_id
+		}
+	`
+	return config
+}
+
+func testAccNamedByLogicalNameDataSourceFmcDeviceVNIInterfaceConfig() string {
+	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
+	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	vni_id = 42` + "\n"
+	config += `	multicast_group_address = "224.0.0.24"` + "\n"
+	config += `	segment_id = 501` + "\n"
+	config += `	nve_number = fmc_device_vtep_policy.test.vteps[0].nve_number` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	logical_name = "vni42"` + "\n"
+	config += `	description = "my description"` + "\n"
+	config += `	security_zone_id = fmc_security_zone.test.id` + "\n"
+	config += `	ipv4_static_address = "10.2.2.2"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6 = true` + "\n"
+	config += `	ipv6_enforce_eui = true` + "\n"
+	config += `	ipv6_auto_config = true` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2005::"` + "\n"
+	config += `		prefix = 56` + "\n"
+	config += `		enforce_eui = false` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_vni_interface" "test" {
+			device_id = fmc_device_physical_interface.test.device_id
+			logical_name = fmc_device_vni_interface.test.logical_name
 		}
 	`
 	return config

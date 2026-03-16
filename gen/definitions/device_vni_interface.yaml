@@ -59,6 +59,7 @@ attributes:
       Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
       characters. Can only be used when `segment_id` is set.
     example: vni42
+    data_source_query: true
   - model_name: description
     type: String
     description: Optional user-created description.

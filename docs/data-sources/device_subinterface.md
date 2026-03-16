@@ -30,6 +30,7 @@ data "fmc_device_subinterface" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `name` (String) Name of the subinterface in format `interface_name.subinterface_id` (eg. GigabitEthernet0/1.7).
 
 ### Read-Only
@@ -79,7 +80,6 @@ data "fmc_device_subinterface" "example" {
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
 - `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
 - `is_multi_instance` (Boolean) Is parent device multi-instance.
-- `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value

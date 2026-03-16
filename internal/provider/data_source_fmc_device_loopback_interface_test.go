@@ -57,6 +57,10 @@ func TestAccDataSourceFmcDeviceLoopbackInterface(t *testing.T) {
 				Config: testAccDataSourceFmcDeviceLoopbackInterfacePrerequisitesConfig + testAccNamedDataSourceFmcDeviceLoopbackInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccDataSourceFmcDeviceLoopbackInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceLoopbackInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -116,6 +120,29 @@ func testAccNamedDataSourceFmcDeviceLoopbackInterfaceConfig() string {
 		data "fmc_device_loopback_interface" "test" {
 			device_id = var.device_id
 			name = fmc_device_loopback_interface.test.name
+		}
+	`
+	return config
+}
+func testAccNamedByLogicalNameDataSourceFmcDeviceLoopbackInterfaceConfig() string {
+	config := `resource "fmc_device_loopback_interface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "my_loopback_1"` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	loopback_id = 1` + "\n"
+	config += `	description = "my VTI interface"` + "\n"
+	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::10"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_loopback_interface" "test" {
+			device_id = var.device_id
+			logical_name = fmc_device_loopback_interface.test.logical_name
 		}
 	`
 	return config

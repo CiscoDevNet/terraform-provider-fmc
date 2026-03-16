@@ -27,6 +27,8 @@ import (
 
 // End of section. //template:end imports
 
+{{- $dataSourceAttributes := getDataSourceQueryAttributes .}}
+
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSource
 
 func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
@@ -159,10 +161,12 @@ func TestAccDataSourceFmc{{camelCase .Name}}(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(checks...),
 			},
 			{{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
+			{{- range $index, $dataSourceAttribute := $dataSourceAttributes}}
 			{
-				Config: {{if .TestPrerequisites}}testAccDataSourceFmc{{camelCase .Name}}PrerequisitesConfig+{{end}}testAccNamedDataSourceFmc{{camelCase .Name}}Config(),
+				Config: {{if $.TestPrerequisites}}testAccDataSourceFmc{{camelCase $.Name}}PrerequisitesConfig+{{end}}testAccNamed{{- if not (eq $dataSourceAttribute.TfName "name") }}By{{toGoName $dataSourceAttribute.TfName}}{{end}}DataSourceFmc{{camelCase $.Name}}Config(),
 				Check: resource.ComposeTestCheckFunc(checks...),
 			},
+			{{- end}}
 			{{- end}}
 		},
 	})
@@ -304,9 +308,10 @@ func testAccDataSourceFmc{{camelCase .Name}}Config() string {
 }
 
 {{if and (hasDataSourceQuery .Attributes) (not .IsBulk) -}}
-func testAccNamedDataSourceFmc{{camelCase .Name}}Config() string {
+{{- range $index, $dataSourceAttribute := $dataSourceAttributes}}
+func testAccNamed{{- if not (eq $dataSourceAttribute.TfName "name") }}By{{toGoName $dataSourceAttribute.TfName}}{{end}}DataSourceFmc{{camelCase $.Name}}Config() string {
 	config := `resource "fmc_{{snakeCase $name}}" "test" {` + "\n"
-	{{- range  .Attributes}}
+	{{- range  $.Attributes}}
 	{{- if .Computed}}{{- continue }}{{- end}}
 	{{- if and (not .ExcludeTest) (not .Value) (not .ResourceId)}}
 	{{- if isNestedListSet .}}
@@ -390,21 +395,18 @@ func testAccNamedDataSourceFmc{{camelCase .Name}}Config() string {
 	config += `}` + "\n"
 
 	config += `
-		data "fmc_{{snakeCase .Name}}" "test" {
-			{{- range  .Attributes}}
+		data "fmc_{{snakeCase $.Name}}" "test" {
+			{{- range  $.Attributes}}
 			{{- if or .Reference .DataSourceOptionalParameter}}
 			{{.TfName}} = {{if .TestValue}}{{.TestValue}}{{else}}{{if eq .Type "String"}}"{{.Example}}"{{else if isStringListSet .}}["{{.Example}}"]{{else if isInt64ListSet .}}[{{.Example}}]{{else}}{{.Example}}{{end}}{{end}}
 			{{- end}}
 			{{- end}}
-			{{- range  .Attributes}}
-			{{- if .DataSourceQuery}}
-			{{.TfName}} = fmc_{{snakeCase $name}}.test.{{.TfName}}
-			{{- end}}
-			{{- end}}
+			{{$dataSourceAttribute.TfName}} = fmc_{{snakeCase $name}}.test.{{$dataSourceAttribute.TfName}}
 		}
 	`
 	return config
 }
+{{- end}}
 {{- end}}
 
 // End of section. //template:end testAccDataSourceConfig

@@ -24,6 +24,7 @@ attributes:
       characters.
     example: myinterface-0-1
     minimum_test_value: '"iface_minimum"'
+    data_source_query: true
   - model_name: enabled
     type: Bool
     description: Whether to enable the interface.

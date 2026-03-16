@@ -65,6 +65,10 @@ func TestAccDataSourceFmcDeviceVirtualTunnelInterface(t *testing.T) {
 				Config: testAccDataSourceFmcDeviceVirtualTunnelInterfacePrerequisitesConfig + testAccNamedDataSourceFmcDeviceVirtualTunnelInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccDataSourceFmcDeviceVirtualTunnelInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceVirtualTunnelInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -149,6 +153,34 @@ func testAccNamedDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 		data "fmc_device_virtual_tunnel_interface" "test" {
 			device_id = fmc_device_physical_interface.test.device_id
 			name = fmc_device_virtual_tunnel_interface.test.name
+		}
+	`
+	return config
+}
+func testAccNamedByLogicalNameDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
+	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
+	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	tunnel_type = "STATIC"` + "\n"
+	config += `	logical_name = "my_vti_interface"` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	description = "My VTI"` + "\n"
+	config += `	security_zone_id = fmc_security_zone.test.id` + "\n"
+	config += `	priority = 100` + "\n"
+	config += `	tunnel_id = 100` + "\n"
+	config += `	tunnel_source_interface_id = fmc_device_physical_interface.test.id` + "\n"
+	config += `	tunnel_source_interface_name = fmc_device_physical_interface.test.name` + "\n"
+	config += `	tunnel_mode = "ipv4"` + "\n"
+	config += `	ipv4_static_address = "10.10.10.10"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ip_based_monitoring = true` + "\n"
+	config += `	ip_based_monitoring_type = "PEER_IPV4"` + "\n"
+	config += `	ip_based_monitoring_peer_ip = "10.10.10.100"` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_virtual_tunnel_interface" "test" {
+			device_id = fmc_device_physical_interface.test.device_id
+			logical_name = fmc_device_virtual_tunnel_interface.test.logical_name
 		}
 	`
 	return config

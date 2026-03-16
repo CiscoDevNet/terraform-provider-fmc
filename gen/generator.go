@@ -230,13 +230,14 @@ func HasDataSourceQuery(attributes []YamlConfigAttribute) bool {
 }
 
 // Templating helper function to return Data Source Query Attribute
-func GetDataSourceQueryAttribute(config YamlConfig) YamlConfigAttribute {
+func GetDataSourceQueryAttributes(config YamlConfig) []YamlConfigAttribute {
+	var result []YamlConfigAttribute
 	for _, attr := range config.Attributes {
 		if attr.DataSourceQuery {
-			return attr
+			result = append(result, attr)
 		}
 	}
-	return YamlConfigAttribute{}
+	return result
 }
 
 // Templating helper function to check if any of the attributes is a put create data query
@@ -447,7 +448,7 @@ var functions = template.FuncMap{
 	"toLower":                        strings.ToLower,
 	"path":                           BuildPath,
 	"hasDataSourceQuery":             HasDataSourceQuery,
-	"getDataSourceQueryAttribute":    GetDataSourceQueryAttribute,
+	"getDataSourceQueryAttributes":   GetDataSourceQueryAttributes,
 	"hasPutCreateDataQuery":          HasPutCreateDataQuery,
 	"getPutCreateDataQueryAttribute": GetPutCreateDataQueryAttribute,
 	"getAttributeByTfName":           GetAttributeByTfName,

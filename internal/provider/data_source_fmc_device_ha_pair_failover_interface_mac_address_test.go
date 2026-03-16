@@ -47,7 +47,7 @@ func TestAccDataSourceFmcDeviceHAPairFailoverInterfaceMACAddress(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressPrerequisitesConfig + testAccNamedDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressConfig(),
+				Config: testAccDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressPrerequisitesConfig + testAccNamedByInterfaceNameDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -91,7 +91,7 @@ func testAccDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressConfig() string 
 	return config
 }
 
-func testAccNamedDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressConfig() string {
+func testAccNamedByInterfaceNameDataSourceFmcDeviceHAPairFailoverInterfaceMACAddressConfig() string {
 	config := `resource "fmc_device_ha_pair_failover_interface_mac_address" "test" {` + "\n"
 	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	interface_name = data.fmc_device_physical_interface.test.name` + "\n"

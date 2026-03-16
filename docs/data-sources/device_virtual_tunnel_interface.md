@@ -30,6 +30,7 @@ data "fmc_device_virtual_tunnel_interface" "example" {
 
 - `domain` (String) Name of the FMC domain
 - `id` (String) Id of the object
+- `logical_name` (String) Logical name of the VTI interface.
 - `name` (String) Name of the VTI interface, Tunnel<tunnel_id> (for Static) or Virtual-Template<tunnel_id> (for Dynamic).
 
 ### Read-Only
@@ -46,7 +47,6 @@ data "fmc_device_virtual_tunnel_interface" "example" {
 - `ipv4_static_netmask` (String) Netmask (width) for IPv4 address for local VTI tunnel end.
 - `ipv6_address` (String) IPv6 address for local VTI tunnel end.
 - `ipv6_prefix` (String) Prefix length for IPv6 address for local VTI tunnel end.
-- `logical_name` (String) Logical name of the VTI interface.
 - `priority` (Number) Priority to load balance the traffic across multiple VTIs.
 - `security_zone_id` (String) Id of the assigned security zone.
 - `tunnel_id` (Number) Tunnel ID (for Static) or Template ID (for Dynamic).

@@ -25,11 +25,12 @@ data "fmc_device_vni_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `id` (String) Id of the object
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.
 
 ### Read-Only
 
@@ -46,7 +47,6 @@ data "fmc_device_vni_interface" "example" {
 - `ipv6_dhcp_nonaddress` (Boolean) Indicates whether to enable DHCPv6 for non-address config.
 - `ipv6_enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `ipv6_ra` (Boolean) Indicates whether to enable IPv6 router advertisement (RA).
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set on the parent interface.
 - `multicast_group_address` (String) Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to DEFAULT_MULTICAST_GROUP. If unset, the default group from the VTEP source interface is used.
 - `nve_number` (Number) VTEP policy NVE number. If null, not mapped to a VTEP.

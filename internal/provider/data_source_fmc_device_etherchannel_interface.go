@@ -85,6 +85,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -431,6 +432,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) ConfigValidators(ctx context.Con
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
+			path.MatchRoot("logical_name"),
 			path.MatchRoot("name"),
 		),
 	}
