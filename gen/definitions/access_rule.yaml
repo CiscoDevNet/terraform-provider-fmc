@@ -30,6 +30,26 @@ attributes:
     exclude_example: true
     exclude_test: true
     requires_replace: true
+  - tf_name: insert_before_rule
+    tf_only: true
+    type: Int64
+    description: >-
+      Specifies that the rules will be inserted before the specified rule index.
+      Either 'insert_before_rule' or 'insert_after_rule' can be set.
+      This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
+  - tf_name: insert_after_rule
+    tf_only: true
+    type: Int64
+    description: >-
+      Specifies that the rules will be inserted after the specified rule index.
+      Either 'insert_before_rule' or 'insert_after_rule' can be set.
+      This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
   - model_name: action
     type: String
     description: Rule action.

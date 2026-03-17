@@ -1,3 +1,4 @@
+# Manual resource - Create
 ---
 name: Access Category
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/categories
@@ -20,6 +21,44 @@ attributes:
     type: String
     description: Type of the object; this value is always 'Category'.
     computed: true
+  - tf_name: section
+    tf_only: true
+    type: String
+    description: Create the category in the given section.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
+    enum_values: ["mandatory", "default"]
+  - tf_name: insert_before_rule
+    tf_only: true
+    type: Int64
+    description: >-
+      Create the category above the given rule index.
+      One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set.
+      This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
+  - tf_name: insert_after_rule
+    tf_only: true
+    type: Int64
+    description: >-
+      Create the category below the given rule index.
+      One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set.
+      This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
+  - tf_name: insert_before_category
+    tf_only: true
+    type: String
+    description: >-
+      Create the category above the given category.
+      One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set.
+      This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+    requires_replace: true
+    exclude_test: true
+    exclude_example: true
 
 test_prerequisites: |-
   resource "fmc_access_control_policy" "test" {

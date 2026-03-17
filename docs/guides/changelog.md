@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enh) Access Rule and Category: Add posibility to create at specific location
+
 ## 2.1.0
 
 - (Enh) Auto and Manual NAT rules: add support for PAT pool options

@@ -38,6 +38,10 @@ type AccessCategory struct {
 	AccessControlPolicyId types.String `tfsdk:"access_control_policy_id"`
 	Name                  types.String `tfsdk:"name"`
 	Type                  types.String `tfsdk:"type"`
+	Section               types.String `tfsdk:"section"`
+	InsertBeforeRule      types.Int64  `tfsdk:"insert_before_rule"`
+	InsertAfterRule       types.Int64  `tfsdk:"insert_after_rule"`
+	InsertBeforeCategory  types.String `tfsdk:"insert_before_category"`
 }
 
 // End of section. //template:end types
