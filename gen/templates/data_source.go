@@ -292,6 +292,22 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		return
 	}
 
+	{{- if .IsBulk}}
+
+	// Read all items if user did not provide any specific item names in the config
+	if len(config.Items) == 0 {
+		if config.Items == nil {
+			config.Items = map[string]{{camelCase .Name}}Items{}
+		}
+		res.Get("items").ForEach(func(_, v gjson.Result) bool {
+			if name := v.Get("name").String(); name != "" {
+				config.Items[name] = {{camelCase .Name}}Items{}
+			}
+			return true
+		})
+	}
+	{{- end}}
+
 	{{- if .IsOverride}}
 	res = config.synthesizeOverrides(ctx, res)
 	{{- end}}
