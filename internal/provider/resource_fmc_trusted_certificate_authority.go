@@ -61,7 +61,7 @@ func (r *TrustedCertificateAuthorityResource) Metadata(ctx context.Context, req 
 func (r *TrustedCertificateAuthorityResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Trusted Certificate Authority.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Trusted Certificate Authority.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -116,6 +116,12 @@ func (r *TrustedCertificateAuthorityResource) Configure(_ context.Context, req r
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *TrustedCertificateAuthorityResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionTrustedCertificateAuthority) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Trusted Certificate Authority creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan TrustedCertificateAuthority
 
 	// Read plan
@@ -155,6 +161,11 @@ func (r *TrustedCertificateAuthorityResource) Create(ctx context.Context, req re
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *TrustedCertificateAuthorityResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionTrustedCertificateAuthority) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Trusted Certificate Authority, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var state TrustedCertificateAuthority
 
 	// Read state

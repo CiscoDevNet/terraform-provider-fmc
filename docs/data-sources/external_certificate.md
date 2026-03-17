@@ -4,11 +4,16 @@ page_title: "fmc_external_certificate Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the External Certificate.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_external_certificate (Data Source)
 
 This data source reads the External Certificate.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 
