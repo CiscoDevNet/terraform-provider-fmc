@@ -2,13 +2,14 @@
 
 - (Enh) Device interfaces data sources now accept `logical_name` as search parameter.
 
-## Unreleased
+## 2.1.0
 
-- (Enh) Auto / Manual NAT rules: Add PAT pool options support
-- (Enh) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, `fmc_fqdn_overrides`
-- (Fix) `fmc_file_policy`: Add missing choice
-- (Fix) Access Control and Prefilter Policies: Source \ Destination Port Literals had wrong attributes
-- (Doc) Access Rules: Update description of Source \ Destination Objects to include Geolocation objects support
+- (Enh) Auto and Manual NAT rules: add support for PAT pool options
+- (Enh) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, and `fmc_fqdn_overrides`
+- (Fix) `fmc_file_policy`: add a missing choice for `action`
+- (Fix) Access Control and Prefilter Policies: Source port literals used incorrect attributes, that could generate incorrect configuration on FMC
+- (Fix) Prefilter Policies: Added missing attributes to Destination port literals
+- (Doc) Access rules: update the Source and Destination Objects description to include geolocation object support
 
 ## 2.0.1
 
