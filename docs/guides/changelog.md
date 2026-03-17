@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enh) Device interfaces data sources now accept `logical_name` as search parameter.
+
 ## 2.1.0
 
 - (Enh) Auto and Manual NAT rules: add support for PAT pool options
