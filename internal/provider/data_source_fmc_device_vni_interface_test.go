@@ -87,7 +87,7 @@ resource "fmc_device_vtep_policy" "test" {
 }
 
 resource "fmc_security_zone" "test" {
-  name           = "routed1"
+  name           = "vni_interface"
   interface_type = "ROUTED"
 }
 `
@@ -98,7 +98,7 @@ resource "fmc_security_zone" "test" {
 
 func testAccDataSourceFmcDeviceVNIInterfaceConfig() string {
 	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	vni_id = 42` + "\n"
 	config += `	multicast_group_address = "224.0.0.24"` + "\n"
 	config += `	segment_id = 501` + "\n"
@@ -122,7 +122,7 @@ func testAccDataSourceFmcDeviceVNIInterfaceConfig() string {
 	config += `
 		data "fmc_device_vni_interface" "test" {
 			id = fmc_device_vni_interface.test.id
-			device_id = fmc_device_physical_interface.test.device_id
+			device_id = var.device_id
 		}
 	`
 	return config
@@ -130,7 +130,7 @@ func testAccDataSourceFmcDeviceVNIInterfaceConfig() string {
 
 func testAccNamedByLogicalNameDataSourceFmcDeviceVNIInterfaceConfig() string {
 	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	vni_id = 42` + "\n"
 	config += `	multicast_group_address = "224.0.0.24"` + "\n"
 	config += `	segment_id = 501` + "\n"
@@ -153,7 +153,7 @@ func testAccNamedByLogicalNameDataSourceFmcDeviceVNIInterfaceConfig() string {
 
 	config += `
 		data "fmc_device_vni_interface" "test" {
-			device_id = fmc_device_physical_interface.test.device_id
+			device_id = var.device_id
 			logical_name = fmc_device_vni_interface.test.logical_name
 		}
 	`

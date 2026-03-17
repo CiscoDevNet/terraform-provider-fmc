@@ -14,7 +14,7 @@ attributes:
   - model_name: type
     type: String
     computed: true
-    description: Type of the resource.
+    description: Type of the object.
 # General
   - model_name: ifname
     tf_name: logical_name
@@ -27,7 +27,7 @@ attributes:
     data_source_query: true
   - model_name: enabled
     type: Bool
-    description: Whether to enable the interface.
+    description: Enable the interface.
     default_value: true
     test_value: "true"
     exclude_example: true
@@ -41,7 +41,7 @@ attributes:
     exclude_example: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: my description
   - model_name: mode
     type: String
@@ -58,7 +58,7 @@ attributes:
     tf_name: security_zone_id
     type: String
     description: >-
-      Id of the assigned security zone. Can only be used when `logical_name`
+      Id of the assigned Security Zone. Can only be used when `logical_name`
       is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
@@ -78,7 +78,7 @@ attributes:
   - model_name: MTU
     tf_name: mtu
     type: Int64
-    description: Maximum transmission unit. Can only be used when logical_name is set.
+    description: Maximum transmission unit. Can only be used when `logical_name` is set.
     min_int: 64
     max_int: 9000
     example: 1400
@@ -120,7 +120,7 @@ attributes:
     data_path: [ipv4, static, pool]
     tf_name: ipv4_address_pool_id
     type: String
-    description: Id of the assigned IPv4 address pool.
+    description: Id of the assigned IPv4 Address Pool.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
@@ -205,14 +205,14 @@ attributes:
   - model_name: enableIPV6
     data_path: [ipv6]
     tf_name: ipv6
-    description: Whether to enable IPv6.
+    description: Enable IPv6.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enforceEUI64
     data_path: [ipv6]
     tf_name: ipv6_enforce_eui
-    description: Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -226,7 +226,7 @@ attributes:
   - model_name: enableAutoConfig
     data_path: [ipv6]
     tf_name: ipv6_auto_config
-    description: Whether to enable IPv6 autoconfiguration.
+    description: Enable IPv6 autoconfiguration.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -237,6 +237,7 @@ attributes:
     exclude_example: true
     exclude_test: true
     type: List
+    description: Assigned IPv6 addresses.
     attributes:
       - model_name: address
         type: String
@@ -252,7 +253,7 @@ attributes:
         example: "124"
       - model_name: enforceEUI64
         tf_name: enforce_eui
-        description: Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
         example: true
         exclude_example: true
@@ -261,7 +262,7 @@ attributes:
     data_path: [ipv6, pool]
     tf_name: ipv6_address_pool_id
     type: String
-    description: Id of the assigned IPv6 address pool.
+    description: Id of the assigned IPv6 Address Pool.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     exclude_test: true
     exclude_example: true
@@ -272,6 +273,7 @@ attributes:
     exclude_example: true
     exclude_test: true
     type: List
+    description: Assigned IPv6 prefixes.
     attributes:
       - model_name: address
         type: String
@@ -286,7 +288,7 @@ attributes:
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_dad
-    description: Whether to enable IPv6 DAD Loopback Detect (DAD).
+    description: Enable IPv6 DAD Loopback Detect (DAD).
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -312,7 +314,7 @@ attributes:
     data_path: [ipv6]
     tf_name: ipv6_reachable_time
     type: Int64
-    description: The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+    description: The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
     min_int: 0
     max_int: 3600000
     exclude_example: true
@@ -320,7 +322,7 @@ attributes:
   - model_name: enableRA
     data_path: [ipv6]
     tf_name: ipv6_ra
-    description: Whether to enable IPv6 router advertisement (RA).
+    description: Enable IPv6 router advertisement (RA).
     type: Bool
     test_value: "false"
     exclude_example: true
@@ -338,7 +340,7 @@ attributes:
     data_path: [ipv6]
     tf_name: ipv6_ra_interval
     type: Int64
-    description: Interval between Router Advertisements (RA) transmissions
+    description: Interval between Router Advertisements (RA) transmissions.
     min_int: 3
     max_int: 1800
     exclude_example: true
@@ -361,7 +363,7 @@ attributes:
   - model_name: id
     data_path: [ipv6, ipv6DHCPPool]
     tf_name: ipv6_dhcp_pool_id
-    description: Id of the assigned DHCPv6 pool
+    description: Id of the assigned DHCPv6 Pool.
     type: String
     exclude_example: true
     exclude_test: true
@@ -375,14 +377,14 @@ attributes:
   - model_name: enableDHCPAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_dhcp_address_config
-    description: Whether to enable DHCPv6 for address config.
+    description: Enable DHCPv6 for address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableDHCPNonAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_dhcp_nonaddress_config
-    description: Whether to enable DHCPv6 for non-address config.
+    description: Enable DHCPv6 for non-address config.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -404,7 +406,7 @@ attributes:
   - model_name: enable
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring
-    description: Whether to enable IP based Monitoring.
+    description: Enable IP based Monitoring.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -412,7 +414,7 @@ attributes:
     data_path: [pathMonitoring]
     tf_name: ip_based_monitoring_type
     type: String
-    description: PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
+    description: IP based Monitoring - Monitoring Type.
     enum_values: [AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6]
     example: AUTO
     exclude_example: true
@@ -435,14 +437,14 @@ attributes:
   - model_name: duplex
     data_path: [hardware]
     type: String
-    description: Duplex configuraion.
+    description: Duplex configuration.
     enum_values: [AUTO, FULL, HALF]
     exclude_example: true
     exclude_test: true
   - model_name: speed
     data_path: [hardware]
     type: String
-    description: Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
+    description: Speed configuration.
     enum_values: [AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP]
     exclude_example: true
     exclude_test: true
@@ -450,27 +452,27 @@ attributes:
     tf_name: lldp_receive
     data_path: [LLDP]
     type: Bool
-    description: LLDP receive configuraion.
+    description: LLDP receive configuration.
     exclude_example: true
     exclude_test: true
   - model_name: transmit
     tf_name: lldp_transmit
     data_path: [LLDP]
     type: Bool
-    description: LLDP transmit configuraion.
+    description: LLDP transmit configuration.
     exclude_example: true
     exclude_test: true
   - model_name: flowControlSend
     data_path: [hardware]
     type: String
-    description: Flow Control Send configuraion, can be one of ON, OFF.
+    description: Flow Control Send configuration.
     enum_values: ["ON", "OFF"]
     exclude_example: true
     exclude_test: true
   - model_name: fecMode
     data_path: [hardware]
     type: String
-    description: Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
+    description: Forward Error Correction (FEC) mode.
     enum_values: [AUTO, CL108RS, CL74FC, CL91RS, DISABLE]
     exclude_example: true
     exclude_test: true
@@ -478,7 +480,7 @@ attributes:
   - model_name: enableAccess
     data_path: [fmcAccessConfig]
     tf_name: management_access
-    description: Whether to enable Management Access.
+    description: Enable Management Access.
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -488,6 +490,7 @@ attributes:
     exclude_example: true
     exclude_test: true
     type: Set
+    description: Allowed networks for Management Access.
     attributes:
       - model_name: id
         id: true
@@ -498,7 +501,7 @@ attributes:
       - model_name: type
         tf_name: type
         type: String
-        description: Type of the object
+        description: Type of the object.
         exclude_example: true
         exclude_test: true
   # Advanced - Information
@@ -520,6 +523,7 @@ attributes:
     type: List
     exclude_example: true
     exclude_test: true
+    description: Custom IP to MAC address mapping.
     attributes:
       - model_name: macAddress
         type: String
@@ -527,31 +531,31 @@ attributes:
         mandatory: true
       - model_name: ipAddress
         type: String
-        description: IP address for custom ARP entry
+        description: IP address for custom ARP entry.
         mandatory: true
       - model_name: enableAlias
         tf_name: enabled
         type: Bool
-        description: Enable Alias for custom ARP entry
+        description: Enable Alias for custom ARP entry.
         default_value: true
   # Advanced - Security Configuration
   - model_name: enableAntiSpoofing
     tf_name: anti_spoofing
     type: Bool
-    description: Enable Anti Spoofing
+    description: Enable Anti Spoofing.
     exclude_example: true
     exclude_test: true
   - model_name: fragmentReassembly
     tf_name: allow_full_fragment_reassembly
     type: Bool
-    description: Allow Full Fragment Reassembly
+    description: Allow Full Fragment Reassembly.
     exclude_example: true
     exclude_test: true
   - model_name: chain
     data_path: [overrideDefaultFragmentSetting]
     tf_name: override_default_fragment_setting_chain
     type: Int64
-    description: Override Default Fragment Setting - Chain value
+    description: Override Default Fragment Setting - Chain value.
     min_int: 1
     max_int: 8200
     exclude_example: true
@@ -559,7 +563,7 @@ attributes:
   - model_name: size
     data_path: [overrideDefaultFragmentSetting]
     tf_name: override_default_fragment_setting_size
-    description: Override Default Fragment Setting - Fragment Size value
+    description: Override Default Fragment Setting - Fragment Size value.
     type: Int64
     min_int: 1
     max_int: 30000
@@ -568,7 +572,7 @@ attributes:
   - model_name: timeout
     data_path: [overrideDefaultFragmentSetting]
     tf_name: override_default_fragment_setting_timeout
-    description: Override Default Fragment Setting - Time Out value
+    description: Override Default Fragment Setting - Time Out value.
     type: Int64
     min_int: 1
     max_int: 30

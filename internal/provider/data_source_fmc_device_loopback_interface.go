@@ -76,7 +76,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this is always `LoopbackInterface`.",
+				MarkdownDescription: "Type of the object; this value is always 'LoopbackInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -85,12 +85,12 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical name of the loopback interface",
+				MarkdownDescription: "Logical name of the loopback interface.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"loopback_id": schema.Int64Attribute{
@@ -98,7 +98,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Object description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -106,7 +106,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask for ipv4_static_address.",
+				MarkdownDescription: "Netmask for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{

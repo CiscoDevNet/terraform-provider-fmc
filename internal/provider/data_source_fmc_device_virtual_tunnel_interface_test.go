@@ -102,7 +102,7 @@ resource "fmc_security_zone" "test" {
 
 func testAccDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	tunnel_type = "STATIC"` + "\n"
 	config += `	logical_name = "my_vti_interface"` + "\n"
 	config += `	enabled = true` + "\n"
@@ -123,7 +123,7 @@ func testAccDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 	config += `
 		data "fmc_device_virtual_tunnel_interface" "test" {
 			id = fmc_device_virtual_tunnel_interface.test.id
-			device_id = fmc_device_physical_interface.test.device_id
+			device_id = var.device_id
 		}
 	`
 	return config
@@ -131,7 +131,7 @@ func testAccDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 
 func testAccNamedDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	tunnel_type = "STATIC"` + "\n"
 	config += `	logical_name = "my_vti_interface"` + "\n"
 	config += `	enabled = true` + "\n"
@@ -151,7 +151,7 @@ func testAccNamedDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 
 	config += `
 		data "fmc_device_virtual_tunnel_interface" "test" {
-			device_id = fmc_device_physical_interface.test.device_id
+			device_id = var.device_id
 			name = fmc_device_virtual_tunnel_interface.test.name
 		}
 	`
@@ -159,7 +159,7 @@ func testAccNamedDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 }
 func testAccNamedByLogicalNameDataSourceFmcDeviceVirtualTunnelInterfaceConfig() string {
 	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	tunnel_type = "STATIC"` + "\n"
 	config += `	logical_name = "my_vti_interface"` + "\n"
 	config += `	enabled = true` + "\n"
@@ -179,7 +179,7 @@ func testAccNamedByLogicalNameDataSourceFmcDeviceVirtualTunnelInterfaceConfig() 
 
 	config += `
 		data "fmc_device_virtual_tunnel_interface" "test" {
-			device_id = fmc_device_physical_interface.test.device_id
+			device_id = var.device_id
 			logical_name = fmc_device_virtual_tunnel_interface.test.logical_name
 		}
 	`

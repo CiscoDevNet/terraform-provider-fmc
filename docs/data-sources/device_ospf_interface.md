@@ -55,7 +55,7 @@ data "fmc_device_ospf_interface" "example" {
 - `priority` (Number) Designated router for a network.
 - `retransmit_interval` (Number) Time in seconds between LSA retransmissions for adjacencies that belong to the interface.
 - `transmit_delay` (Number) Estimated time in seconds to send an LSA packet on the interface.
-- `type` (String) Type of the object; this is always 'OspfInterface'
+- `type` (String) Type of the object; this value is always 'OspfInterface'.
 
 <a id="nestedatt--authentication_area_md5s"></a>
 ### Nested Schema for `authentication_area_md5s`

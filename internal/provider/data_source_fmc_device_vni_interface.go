@@ -76,7 +76,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object",
+				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
 			"vni_id": schema.Int64Attribute{
@@ -96,7 +96,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
@@ -105,7 +105,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"mtu": schema.Int64Attribute{
@@ -117,7 +117,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned security zone. Can only be used when `logical_name` is set.",
+				MarkdownDescription: "Id of the assigned Security Zone. Can only be used when `logical_name` is set.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -125,7 +125,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask (width) for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
@@ -137,31 +137,31 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv6": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6.",
+				MarkdownDescription: "Enable IPv6.",
 				Computed:            true,
 			},
 			"ipv6_enforce_eui": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+				MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 				Computed:            true,
 			},
 			"ipv6_auto_config": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6 autoconfiguration.",
+				MarkdownDescription: "Enable IPv6 autoconfiguration.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_address": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable DHCPv6 for address config.",
+				MarkdownDescription: "Enable DHCPv6 for address config.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_nonaddress": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable DHCPv6 for non-address config.",
+				MarkdownDescription: "Enable DHCPv6 for non-address config.",
 				Computed:            true,
 			},
 			"ipv6_ra": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6 router advertisement (RA).",
+				MarkdownDescription: "Enable IPv6 router advertisement (RA).",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "List of IPv6 addresses.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -174,14 +174,14 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 							Computed:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+							MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"proxy": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable proxy.",
+				MarkdownDescription: "Enable proxy.",
 				Computed:            true,
 			},
 		},

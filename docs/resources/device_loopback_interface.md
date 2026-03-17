@@ -46,20 +46,20 @@ resource "fmc_device_loopback_interface" "example" {
 
 ### Optional
 
-- `description` (String) Object description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enabled` (Boolean) Enable the interface.
   - Default value: `true`
 - `ipv4_static_address` (String) Static IPv4 address.
-- `ipv4_static_netmask` (String) Netmask for ipv4_static_address.
+- `ipv4_static_netmask` (String) Netmask for `ipv4_static_address`.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `logical_name` (String) Logical name of the loopback interface
+- `logical_name` (String) Logical name of the loopback interface.
 
 ### Read-Only
 
 - `id` (String) Id of the object
 - `name` (String) Name of the loopback interface (Loopback<loopback_id>)
-- `type` (String) Type of the object; this is always `LoopbackInterface`.
+- `type` (String) Type of the object; this value is always 'LoopbackInterface'.
 
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`

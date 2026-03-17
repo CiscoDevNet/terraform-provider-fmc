@@ -64,7 +64,7 @@ resource "fmc_device_bridge_group_interface" "example" {
 - `ipv4_static_address` (String) Static IPv4 address.
 - `ipv4_static_netmask` (String) Netmask for `ipv4_static_address`.
 - `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `ipv6_dad` (Boolean) Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
+- `ipv6_dad` (Boolean) Enable IPv6 DAD Loopback Detect (DAD).
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
   - Range: `0`-`600`
 - `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval in Milliseconds.

@@ -46,23 +46,23 @@ resource "fmc_device_etherchannel_interface" "example" {
 ### Optional
 
 - `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
-- `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly
-- `anti_spoofing` (Boolean) Enable Anti Spoofing
+- `allow_full_fragment_reassembly` (Boolean) Allow Full Fragment Reassembly.
+- `anti_spoofing` (Boolean) Enable Anti Spoofing.
 - `arp_table_entries` (Attributes List) (see [below for nested schema](#nestedatt--arp_table_entries))
 - `auto_negotiation` (Boolean) Enables auto negotiation of duplex and speed.
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `duplex` (String) Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.
+- `duplex` (String) Duplex configuration.
   - Choices: `AUTO`, `FULL`, `HALF`
 - `enabled` (Boolean) Enable the interface.
   - Default value: `true`
-- `fec_mode` (String) Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.
+- `fec_mode` (String) Forward Error Correction (FEC) mode.
   - Choices: `AUTO`, `CL108RS`, `CL74FC`, `CL91RS`, `DISABLE`
-- `flow_control_send` (String) Flow Control Send configuraion, can be one of ON, OFF.
+- `flow_control_send` (String) Flow Control Send configuration.
   - Choices: `ON`, `OFF`
-- `ip_based_monitoring` (Boolean) Whether to enable IP based Monitoring.
+- `ip_based_monitoring` (Boolean) Enable IP based Monitoring.
 - `ip_based_monitoring_next_hop` (String) IP address to monitor.
-- `ip_based_monitoring_type` (String) PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]
+- `ip_based_monitoring_type` (String) IP based Monitoring - Monitoring Type.
   - Choices: `AUTO`, `PEER_IPV4`, `PEER_IPV6`, `AUTO4`, `AUTO6`
 - `ipv4_address_pool_id` (String) Id of the assigned IPv4 address pool.
 - `ipv4_dhcp_default_route_metric` (Number) The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.
@@ -78,56 +78,56 @@ resource "fmc_device_etherchannel_interface" "example" {
 - `ipv4_pppoe_user` (String) PPPoE Configuration - PPPoE User.
 - `ipv4_pppoe_vpdn_group_name` (String) PPPoE Configuration - PPPoE Group Name.
 - `ipv4_static_address` (String) Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.
-- `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
-- `ipv6` (Boolean) Whether to enable IPv6.
-- `ipv6_address_pool_id` (String) Id of the assigned IPv6 address pool.
-- `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `ipv6_auto_config` (Boolean) Whether to enable IPv6 autoconfiguration.
-- `ipv6_dad` (Boolean) Whether to enable IPv6 DAD Loopback Detect (DAD).
+- `ipv4_static_netmask` (String) Netmask (width) for `ipv4_static_address`.
+- `ipv6` (Boolean) Enable IPv6.
+- `ipv6_address_pool_id` (String) Id of the assigned IPv6 Address Pool.
+- `ipv6_addresses` (Attributes List) Assigned IPv6 addresses. (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `ipv6_auto_config` (Boolean) Enable IPv6 autoconfiguration.
+- `ipv6_dad` (Boolean) Enable IPv6 DAD Loopback Detect (DAD).
 - `ipv6_dad_attempts` (Number) Number of Duplicate Address Detection (DAD) attempts.
   - Range: `0`-`600`
 - `ipv6_dhcp` (Boolean) Enable DHCPv6 client.
-- `ipv6_dhcp_address_config` (Boolean) Whether to enable DHCPv6 for address config.
-- `ipv6_dhcp_client_pd_hint_prefixes` (String) Hint Prefixes for Prefix Delegation (PD)
-- `ipv6_dhcp_client_pd_prefix_name` (String) Prefix Name for Prefix Delegation
-- `ipv6_dhcp_nonaddress_config` (Boolean) Whether to enable DHCPv6 for non-address config.
-- `ipv6_dhcp_obtain_default_route` (Boolean) Whether to obtain default route from DHCPv6.
-- `ipv6_dhcp_pool_id` (String) Id of the assigned DHCPv6 pool
+- `ipv6_dhcp_address_config` (Boolean) Enable DHCPv6 for address config.
+- `ipv6_dhcp_client_pd_hint_prefixes` (String) Hint Prefixes for Prefix Delegation (PD).
+- `ipv6_dhcp_client_pd_prefix_name` (String) Prefix Name for Prefix Delegation.
+- `ipv6_dhcp_nonaddress_config` (Boolean) Enable DHCPv6 for non-address config.
+- `ipv6_dhcp_obtain_default_route` (Boolean) Obtain default route from DHCPv6.
+- `ipv6_dhcp_pool_id` (String) Id of the assigned DHCPv6 Pool.
 - `ipv6_dhcp_pool_type` (String) Type of the object; this value is always 'IPv6AddressPool'.
-- `ipv6_enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `ipv6_enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `ipv6_link_local_address` (String) IPv6 Configuration - Link-Local Address.
 - `ipv6_ns_interval` (Number) Neighbor Solicitation (NS) interval.
   - Range: `1000`-`3600000`
-- `ipv6_prefixes` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_prefixes))
-- `ipv6_ra` (Boolean) Whether to enable IPv6 router advertisement (RA).
-- `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions
+- `ipv6_prefixes` (Attributes List) Assigned IPv6 prefixes. (see [below for nested schema](#nestedatt--ipv6_prefixes))
+- `ipv6_ra` (Boolean) Enable IPv6 router advertisement (RA).
+- `ipv6_ra_interval` (Number) Interval between Router Advertisements (RA) transmissions.
   - Range: `3`-`1800`
 - `ipv6_ra_life_time` (Number) Router Advertisement (RA) lifetime.
   - Range: `0`-`9000`
-- `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred
+- `ipv6_reachable_time` (Number) The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
   - Range: `0`-`3600000`
-- `lldp_receive` (Boolean) LLDP receive configuraion.
-- `lldp_transmit` (Boolean) LLDP transmit configuraion.
+- `lldp_receive` (Boolean) LLDP receive configuration.
+- `lldp_transmit` (Boolean) LLDP transmit configuration.
 - `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
-- `management_access` (Boolean) Whether to enable Management Access.
+- `management_access` (Boolean) Enable Management Access.
 - `management_access_network_objects` (Attributes Set) (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
-- `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set.
+- `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
   - Range: `64`-`9000`
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.
-- `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value
+- `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value.
   - Range: `1`-`8200`
-- `override_default_fragment_setting_size` (Number) Override Default Fragment Setting - Fragment Size value
+- `override_default_fragment_setting_size` (Number) Override Default Fragment Setting - Fragment Size value.
   - Range: `1`-`30000`
-- `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value
+- `override_default_fragment_setting_timeout` (Number) Override Default Fragment Setting - Time Out value.
   - Range: `1`-`30`
 - `priority` (Number) Priority. Can only be set for routed interfaces.
   - Range: `0`-`65535`
-- `security_zone_id` (String) Id of the assigned security zone.
-- `selected_interfaces` (Attributes Set) Set of objects representing physical interfaces. (see [below for nested schema](#nestedatt--selected_interfaces))
+- `security_zone_id` (String) Id of the assigned Security Zone.
+- `selected_interfaces` (Attributes Set) Physical Interfaces that are members of the Ether Channel. (see [below for nested schema](#nestedatt--selected_interfaces))
 - `sgt_propagate` (Boolean) Enable SGT propagation.
   - Default value: `false`
-- `speed` (String) Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP
+- `speed` (String) Speed configuration.
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 
@@ -143,12 +143,12 @@ resource "fmc_device_etherchannel_interface" "example" {
 
 Required:
 
-- `ip_address` (String) IP address for custom ARP entry
+- `ip_address` (String) IP address for custom ARP entry.
 - `mac_address` (String) MAC address for custom ARP entry in format 0123.4567.89ab.
 
 Optional:
 
-- `enabled` (Boolean) Enable Alias for custom ARP entry
+- `enabled` (Boolean) Enable Alias for custom ARP entry.
   - Default value: `true`
 
 
@@ -162,7 +162,7 @@ Required:
 
 Optional:
 
-- `enforce_eui` (Boolean) Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 
 
 <a id="nestedatt--ipv6_prefixes"></a>
@@ -180,7 +180,7 @@ Optional:
 Optional:
 
 - `id` (String) ID of the network object (Host, Network or Range).
-- `type` (String) Type of the object
+- `type` (String) Type of the object.
 
 
 <a id="nestedatt--selected_interfaces"></a>
@@ -192,8 +192,8 @@ Required:
 
 Optional:
 
-- `name` (String) Name of the selected interface
-- `type` (String) Type of the selected interface
+- `name` (String) Name of the selected interface.
+- `type` (String) Type of the selected interface.
 
 ## Import
 

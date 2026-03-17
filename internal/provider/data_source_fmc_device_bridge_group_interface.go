@@ -142,7 +142,7 @@ func (d *DeviceBridgeGroupInterfaceDataSource) Schema(ctx context.Context, req d
 				},
 			},
 			"ipv6_dad": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6 DAD Loopback Detect (DAD).",
+				MarkdownDescription: "Enable IPv6 DAD Loopback Detect (DAD).",
 				Computed:            true,
 			},
 			"ipv6_dad_attempts": schema.Int64Attribute{

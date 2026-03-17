@@ -40,22 +40,22 @@ resource "fmc_device_vni_interface" "example" {
 
 ### Optional
 
-- `description` (String) Optional user-created description.
+- `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `enabled` (Boolean) Enable the interface.
   - Default value: `true`
 - `ipv4_dhcp_default_route_metric` (Number) The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.
   - Range: `1`-`255`
 - `ipv4_dhcp_obtain_default_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
 - `ipv4_static_address` (String) Static IPv4 address.
-- `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
-- `ipv6` (Boolean) Indicates whether to enable IPv6.
-- `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `ipv6_auto_config` (Boolean) Indicates whether to enable IPv6 autoconfiguration.
-- `ipv6_dhcp_address` (Boolean) Indicates whether to enable DHCPv6 for address config.
-- `ipv6_dhcp_nonaddress` (Boolean) Indicates whether to enable DHCPv6 for non-address config.
-- `ipv6_enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
-- `ipv6_ra` (Boolean) Indicates whether to enable IPv6 router advertisement (RA).
+- `ipv4_static_netmask` (String) Netmask (width) for `ipv4_static_address`.
+- `ipv6` (Boolean) Enable IPv6.
+- `ipv6_addresses` (Attributes List) List of IPv6 addresses. (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `ipv6_auto_config` (Boolean) Enable IPv6 autoconfiguration.
+- `ipv6_dhcp_address` (Boolean) Enable DHCPv6 for address config.
+- `ipv6_dhcp_nonaddress` (Boolean) Enable DHCPv6 for non-address config.
+- `ipv6_enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `ipv6_ra` (Boolean) Enable IPv6 router advertisement (RA).
 - `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set on the parent interface.
 - `multicast_group_address` (String) Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to DEFAULT_MULTICAST_GROUP. If unset, the default group from the VTEP source interface is used.
@@ -63,16 +63,16 @@ resource "fmc_device_vni_interface" "example" {
   - Range: `1`-`10000`
 - `priority` (Number) Priority.
   - Range: `0`-`65535`
-- `proxy` (Boolean) Indicates whether to enable proxy.
+- `proxy` (Boolean) Enable proxy.
   - Default value: `false`
-- `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `security_zone_id` (String) Id of the assigned Security Zone. Can only be used when `logical_name` is set.
 - `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
   - Range: `1`-`16777215`
 
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object
+- `type` (String) Type of the object.
 
 <a id="nestedatt--ipv6_addresses"></a>
 ### Nested Schema for `ipv6_addresses`
@@ -84,7 +84,7 @@ Required:
 
 Optional:
 
-- `enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 
 ## Import
 

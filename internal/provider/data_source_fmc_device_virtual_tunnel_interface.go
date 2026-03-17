@@ -102,7 +102,7 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned security zone.",
+				MarkdownDescription: "Id of the assigned Security Zone.",
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
@@ -122,11 +122,11 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.",
+				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the `tunnel_source_interface`.",
 				Computed:            true,
 			},
 			"tunnel_mode": schema.StringAttribute{
-				MarkdownDescription: "VTI interface IPSec mode",
+				MarkdownDescription: "VTI interface IPSec mode.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
