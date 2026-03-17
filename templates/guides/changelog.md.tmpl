@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enh) If `items` in bulk objects is empty, all objects from FMC will be loaded
+
 ## 2.1.0
 
 - (Enh) Auto and Manual NAT rules: add support for PAT pool options
