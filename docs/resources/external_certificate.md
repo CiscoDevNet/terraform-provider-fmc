@@ -4,11 +4,16 @@ page_title: "fmc_external_certificate Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This resource manages an External Certificate.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_external_certificate (Resource)
 
 This resource manages an External Certificate.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

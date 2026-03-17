@@ -61,7 +61,7 @@ func (r *InternalCertificateResource) Metadata(ctx context.Context, req resource
 func (r *InternalCertificateResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Internal Certificate.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Internal Certificate.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -129,6 +129,12 @@ func (r *InternalCertificateResource) Configure(_ context.Context, req resource.
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *InternalCertificateResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionInternalCertificate) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Internal Certificate creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan InternalCertificate
 
 	// Read plan
@@ -168,6 +174,11 @@ func (r *InternalCertificateResource) Create(ctx context.Context, req resource.C
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *InternalCertificateResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionInternalCertificate) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Internal Certificate, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var state InternalCertificate
 
 	// Read state

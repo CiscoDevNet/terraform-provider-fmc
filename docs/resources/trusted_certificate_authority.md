@@ -4,11 +4,16 @@ page_title: "fmc_trusted_certificate_authority Resource - terraform-provider-fmc
 subcategory: "Objects"
 description: |-
   This resource manages a Trusted Certificate Authority.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_trusted_certificate_authority (Resource)
 
 This resource manages a Trusted Certificate Authority.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 
