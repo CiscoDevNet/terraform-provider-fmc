@@ -1,3 +1,4 @@
+# Manual resource
 ---
 name: Device Subinterface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/subinterfaces
