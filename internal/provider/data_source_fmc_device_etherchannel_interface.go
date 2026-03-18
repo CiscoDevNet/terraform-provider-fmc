@@ -85,6 +85,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -96,7 +97,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"mode": schema.StringAttribute{
@@ -104,7 +105,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned security zone.",
+				MarkdownDescription: "Id of the assigned Security Zone.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -113,7 +114,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"mtu": schema.Int64Attribute{
-				MarkdownDescription: "Maximum transmission unit. Can only be used when logical_name is set.",
+				MarkdownDescription: "Maximum transmission unit. Can only be used when `logical_name` is set.",
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
@@ -129,7 +130,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"selected_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: "Set of objects representing physical interfaces.",
+				MarkdownDescription: "Physical Interfaces that are members of the Ether Channel.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -138,11 +139,11 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the selected interface",
+							MarkdownDescription: "Type of the selected interface.",
 							Computed:            true,
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: "Name of the selected interface",
+							MarkdownDescription: "Name of the selected interface.",
 							Computed:            true,
 						},
 					},
@@ -157,7 +158,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask (width) for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv4_address_pool_id": schema.StringAttribute{
@@ -201,11 +202,11 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable IPv6.",
+				MarkdownDescription: "Enable IPv6.",
 				Computed:            true,
 			},
 			"ipv6_enforce_eui": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+				MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 				Computed:            true,
 			},
 			"ipv6_link_local_address": schema.StringAttribute{
@@ -213,11 +214,11 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_auto_config": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable IPv6 autoconfiguration.",
+				MarkdownDescription: "Enable IPv6 autoconfiguration.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Assigned IPv6 addresses.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -230,18 +231,18 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 							Computed:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: "Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+							MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"ipv6_address_pool_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned IPv6 address pool.",
+				MarkdownDescription: "Id of the assigned IPv6 Address Pool.",
 				Computed:            true,
 			},
 			"ipv6_prefixes": schema.ListNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "Assigned IPv6 prefixes.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -257,7 +258,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				},
 			},
 			"ipv6_dad": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable IPv6 DAD Loopback Detect (DAD).",
+				MarkdownDescription: "Enable IPv6 DAD Loopback Detect (DAD).",
 				Computed:            true,
 			},
 			"ipv6_dad_attempts": schema.Int64Attribute{
@@ -269,11 +270,11 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_reachable_time": schema.Int64Attribute{
-				MarkdownDescription: "The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred",
+				MarkdownDescription: "The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.",
 				Computed:            true,
 			},
 			"ipv6_ra": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable IPv6 router advertisement (RA).",
+				MarkdownDescription: "Enable IPv6 router advertisement (RA).",
 				Computed:            true,
 			},
 			"ipv6_ra_life_time": schema.Int64Attribute{
@@ -281,7 +282,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_ra_interval": schema.Int64Attribute{
-				MarkdownDescription: "Interval between Router Advertisements (RA) transmissions",
+				MarkdownDescription: "Interval between Router Advertisements (RA) transmissions.",
 				Computed:            true,
 			},
 			"ipv6_dhcp": schema.BoolAttribute{
@@ -289,11 +290,11 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_dhcp_obtain_default_route": schema.BoolAttribute{
-				MarkdownDescription: "Whether to obtain default route from DHCPv6.",
+				MarkdownDescription: "Obtain default route from DHCPv6.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned DHCPv6 pool",
+				MarkdownDescription: "Id of the assigned DHCPv6 Pool.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{
@@ -301,27 +302,27 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"ipv6_dhcp_address_config": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable DHCPv6 for address config.",
+				MarkdownDescription: "Enable DHCPv6 for address config.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_nonaddress_config": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable DHCPv6 for non-address config.",
+				MarkdownDescription: "Enable DHCPv6 for non-address config.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
-				MarkdownDescription: "Prefix Name for Prefix Delegation",
+				MarkdownDescription: "Prefix Name for Prefix Delegation.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
-				MarkdownDescription: "Hint Prefixes for Prefix Delegation (PD)",
+				MarkdownDescription: "Hint Prefixes for Prefix Delegation (PD).",
 				Computed:            true,
 			},
 			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable IP based Monitoring.",
+				MarkdownDescription: "Enable IP based Monitoring.",
 				Computed:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: "PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]",
+				MarkdownDescription: "IP based Monitoring - Monitoring Type.",
 				Computed:            true,
 			},
 			"ip_based_monitoring_next_hop": schema.StringAttribute{
@@ -333,31 +334,31 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 				Computed:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: "Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.",
+				MarkdownDescription: "Duplex configuration.",
 				Computed:            true,
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: "Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP",
+				MarkdownDescription: "Speed configuration.",
 				Computed:            true,
 			},
 			"lldp_receive": schema.BoolAttribute{
-				MarkdownDescription: "LLDP receive configuraion.",
+				MarkdownDescription: "LLDP receive configuration.",
 				Computed:            true,
 			},
 			"lldp_transmit": schema.BoolAttribute{
-				MarkdownDescription: "LLDP transmit configuraion.",
+				MarkdownDescription: "LLDP transmit configuration.",
 				Computed:            true,
 			},
 			"flow_control_send": schema.StringAttribute{
-				MarkdownDescription: "Flow Control Send configuraion, can be one of ON, OFF.",
+				MarkdownDescription: "Flow Control Send configuration.",
 				Computed:            true,
 			},
 			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: "Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.",
+				MarkdownDescription: "Forward Error Correction (FEC) mode.",
 				Computed:            true,
 			},
 			"management_access": schema.BoolAttribute{
-				MarkdownDescription: "Whether to enable Management Access.",
+				MarkdownDescription: "Enable Management Access.",
 				Computed:            true,
 			},
 			"management_access_network_objects": schema.SetNestedAttribute{
@@ -370,7 +371,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: "Type of the object",
+							MarkdownDescription: "Type of the object.",
 							Computed:            true,
 						},
 					},
@@ -394,34 +395,34 @@ func (d *DeviceEtherChannelInterfaceDataSource) Schema(ctx context.Context, req 
 							Computed:            true,
 						},
 						"ip_address": schema.StringAttribute{
-							MarkdownDescription: "IP address for custom ARP entry",
+							MarkdownDescription: "IP address for custom ARP entry.",
 							Computed:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: "Enable Alias for custom ARP entry",
+							MarkdownDescription: "Enable Alias for custom ARP entry.",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"anti_spoofing": schema.BoolAttribute{
-				MarkdownDescription: "Enable Anti Spoofing",
+				MarkdownDescription: "Enable Anti Spoofing.",
 				Computed:            true,
 			},
 			"allow_full_fragment_reassembly": schema.BoolAttribute{
-				MarkdownDescription: "Allow Full Fragment Reassembly",
+				MarkdownDescription: "Allow Full Fragment Reassembly.",
 				Computed:            true,
 			},
 			"override_default_fragment_setting_chain": schema.Int64Attribute{
-				MarkdownDescription: "Override Default Fragment Setting - Chain value",
+				MarkdownDescription: "Override Default Fragment Setting - Chain value.",
 				Computed:            true,
 			},
 			"override_default_fragment_setting_size": schema.Int64Attribute{
-				MarkdownDescription: "Override Default Fragment Setting - Fragment Size value",
+				MarkdownDescription: "Override Default Fragment Setting - Fragment Size value.",
 				Computed:            true,
 			},
 			"override_default_fragment_setting_timeout": schema.Int64Attribute{
-				MarkdownDescription: "Override Default Fragment Setting - Time Out value",
+				MarkdownDescription: "Override Default Fragment Setting - Time Out value.",
 				Computed:            true,
 			},
 		},
@@ -431,6 +432,7 @@ func (d *DeviceEtherChannelInterfaceDataSource) ConfigValidators(ctx context.Con
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
+			path.MatchRoot("logical_name"),
 			path.MatchRoot("name"),
 		),
 	}

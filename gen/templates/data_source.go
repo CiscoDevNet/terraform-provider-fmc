@@ -187,13 +187,15 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 		},
 	}
 }
-{{- $dataSourceAttribute := getDataSourceQueryAttribute .}}
+{{- $dataSourceAttributes := getDataSourceQueryAttributes .}}
 {{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
 func (d *{{camelCase .Name}}DataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
     return []datasource.ConfigValidator{
         datasourcevalidator.ExactlyOneOf(
             path.MatchRoot("id"),
-			path.MatchRoot("{{$dataSourceAttribute.TfName}}"),
+			{{- range $index, $attr := $dataSourceAttributes }}
+			path.MatchRoot("{{$attr.TfName}}"),
+			{{- end }}
         ),
     }
 }
@@ -240,6 +242,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
 	{{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
+	{{- range $index, $dataSourceAttribute := $dataSourceAttributes }}
 	if config.Id.IsNull() && !config.{{toGoName $dataSourceAttribute.TfName}}.IsNull() {
 		offset := 0
 		limit := 1000
@@ -275,6 +278,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 			return
 		}
 	}
+	{{- end}}
 	{{- end}}
 
 	{{- if .IsBulk}}

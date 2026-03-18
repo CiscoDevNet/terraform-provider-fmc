@@ -101,7 +101,7 @@ resource "fmc_security_zone" "test" {
 
 func testAccFmcDeviceVirtualTunnelInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	tunnel_type = "STATIC"` + "\n"
 	config += `	logical_name = "my_vti_interface"` + "\n"
 	config += `	tunnel_id = 100` + "\n"
@@ -120,7 +120,7 @@ func testAccFmcDeviceVirtualTunnelInterfaceConfig_minimum() string {
 
 func testAccFmcDeviceVirtualTunnelInterfaceConfig_all() string {
 	config := `resource "fmc_device_virtual_tunnel_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	tunnel_type = "STATIC"` + "\n"
 	config += `	logical_name = "my_vti_interface"` + "\n"
 	config += `	enabled = true` + "\n"

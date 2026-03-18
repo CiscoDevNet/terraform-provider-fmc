@@ -47,7 +47,7 @@ func TestAccDataSourceFmcFQDNOverrides(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcFQDNOverridesPrerequisitesConfig + testAccNamedDataSourceFmcFQDNOverridesConfig(),
+				Config: testAccDataSourceFmcFQDNOverridesPrerequisitesConfig + testAccNamedByParentNameDataSourceFmcFQDNOverridesConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,7 +92,7 @@ func testAccDataSourceFmcFQDNOverridesConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcFQDNOverridesConfig() string {
+func testAccNamedByParentNameDataSourceFmcFQDNOverridesConfig() string {
 	config := `resource "fmc_fqdn_overrides" "test" {` + "\n"
 	config += `	parent_name = fmc_fqdn.test.name` + "\n"
 	config += `	parent_id = fmc_fqdn.test.id` + "\n"

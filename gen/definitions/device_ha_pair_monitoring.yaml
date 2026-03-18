@@ -24,6 +24,7 @@ attributes:
     type: String
     example: "outside"
     data_source_query: true
+    put_create_data_query: true
     requires_replace: true
   - model_name: monitorForFailures
     tf_name: monitor_interface

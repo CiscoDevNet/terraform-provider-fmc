@@ -47,7 +47,7 @@ func TestAccDataSourceFmcPolicyAssignment(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcPolicyAssignmentPrerequisitesConfig + testAccNamedDataSourceFmcPolicyAssignmentConfig(),
+				Config: testAccDataSourceFmcPolicyAssignmentPrerequisitesConfig + testAccNamedByPolicyNameDataSourceFmcPolicyAssignmentConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -93,7 +93,7 @@ func testAccDataSourceFmcPolicyAssignmentConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcPolicyAssignmentConfig() string {
+func testAccNamedByPolicyNameDataSourceFmcPolicyAssignmentConfig() string {
 	config := `resource "fmc_policy_assignment" "test" {` + "\n"
 	config += `	policy_id = fmc_ftd_nat_policy.example.id` + "\n"
 	config += `	policy_type = "FTDNatPolicy"` + "\n"

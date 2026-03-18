@@ -64,7 +64,7 @@ func TestAccDataSourceFmcDeviceBGPGeneralSettings(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcDeviceBGPGeneralSettingsPrerequisitesConfig + testAccNamedDataSourceFmcDeviceBGPGeneralSettingsConfig(),
+				Config: testAccDataSourceFmcDeviceBGPGeneralSettingsPrerequisitesConfig + testAccNamedByAsNumberDataSourceFmcDeviceBGPGeneralSettingsConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -116,7 +116,7 @@ func testAccDataSourceFmcDeviceBGPGeneralSettingsConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcDeviceBGPGeneralSettingsConfig() string {
+func testAccNamedByAsNumberDataSourceFmcDeviceBGPGeneralSettingsConfig() string {
 	config := `resource "fmc_device_bgp_general_settings" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	as_number = "65535"` + "\n"
