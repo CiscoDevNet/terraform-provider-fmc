@@ -26,11 +26,15 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/resourcevalidator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -96,6 +100,37 @@ func (r *AccessCategoryResource) Schema(ctx context.Context, req resource.Schema
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			"section": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Create the category in the given section.").AddStringEnumDescription("mandatory", "default").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("mandatory", "default"),
+				},
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"insert_before_rule": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Create the category above the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
+			},
+			"insert_after_rule": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Create the category below the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
+			},
+			"insert_before_category": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Create the category above the given category. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
 		},
 	}
 }
@@ -110,7 +145,15 @@ func (r *AccessCategoryResource) Configure(_ context.Context, req resource.Confi
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
+func (r AccessCategoryResource) ConfigValidators(ctx context.Context) []resource.ConfigValidator {
+	return []resource.ConfigValidator{
+		resourcevalidator.Conflicting(
+			path.MatchRoot("insert_before_rule"),
+			path.MatchRoot("insert_after_rule"),
+			path.MatchRoot("insert_before_category"),
+		),
+	}
+}
 
 func (r *AccessCategoryResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
 	var plan AccessCategory
@@ -129,10 +172,26 @@ func (r *AccessCategoryResource) Create(ctx context.Context, req resource.Create
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
+	urlParams := ""
+	urlSeparator := "?"
+
+	if !plan.Section.IsUnknown() && plan.Section.ValueString() != "" {
+		urlParams += fmt.Sprintf("?section=%s", url.QueryEscape(plan.Section.ValueString()))
+		urlSeparator = "&"
+	}
+
+	if !plan.InsertBeforeRule.IsNull() {
+		urlParams += fmt.Sprintf("%sinsertBefore=%d", urlSeparator, plan.InsertBeforeRule.ValueInt64())
+	} else if !plan.InsertAfterRule.IsNull() {
+		urlParams += fmt.Sprintf("%sinsertAfter=%d", urlSeparator, plan.InsertAfterRule.ValueInt64())
+	} else if !plan.InsertBeforeCategory.IsNull() {
+		urlParams += fmt.Sprintf("%saboveCategory=%s", urlSeparator, url.QueryEscape(plan.InsertBeforeCategory.ValueString()))
+	}
+
 	// Create object
 	body := plan.toBody(ctx, AccessCategory{})
 	body = plan.adjustBody(ctx, body)
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
+	res, err := r.client.Post(plan.getPath()+urlParams, body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -147,8 +206,6 @@ func (r *AccessCategoryResource) Create(ctx context.Context, req resource.Create
 
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
-
-// End of section. //template:end create
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 

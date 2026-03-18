@@ -77,3 +77,69 @@ func testAccDataSourceFmcHostsConfig() string {
 }
 
 // End of section. //template:end testAccDataSourceConfig
+
+func TestAccDataSourceFmcHostsGetAll(t *testing.T) {
+	config := `
+		resource "fmc_hosts" "test" {
+			items = {
+				"hosts_getall_1" = {
+					ip = "1.2.3.1",
+					description = "host1"
+					overridable = true
+				},
+				"hosts_getall_2" = {
+					ip = "1.2.3.2",
+				},
+				"hosts_getall_3" = {
+					ip = "1.2.3.3",
+				},
+			} 
+		}
+
+		data "fmc_hosts" "test_1" {
+			depends_on = [fmc_hosts.test]
+		}
+
+		data "fmc_hosts" "test_2" {
+			depends_on = [fmc_hosts.test]
+			items = {}
+		}
+	`
+
+	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_1", "items.hosts_getall_1.description", "host1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_1", "items.hosts_getall_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_1", "items.hosts_getall_1.ip", "1.2.3.1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_2.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_2.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_1", "items.hosts_getall_2.ip", "1.2.3.2"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_3.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_1", "items.hosts_getall_3.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_1", "items.hosts_getall_3.ip", "1.2.3.3"))
+
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_1.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_1.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_2", "items.hosts_getall_1.description", "host1"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_2", "items.hosts_getall_1.overridable", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_2", "items.hosts_getall_1.ip", "1.2.3.1"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_2.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_2.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_2", "items.hosts_getall_2.ip", "1.2.3.2"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_3.id"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_hosts.test_2", "items.hosts_getall_3.type"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_hosts.test_2", "items.hosts_getall_3.ip", "1.2.3.3"))
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
+		Steps: []resource.TestStep{
+			{
+				Config: config,
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
+		},
+	})
+}

@@ -47,7 +47,7 @@ func TestAccDataSourceFmcNetworkGroupOverrides(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcNetworkGroupOverridesPrerequisitesConfig + testAccNamedDataSourceFmcNetworkGroupOverridesConfig(),
+				Config: testAccDataSourceFmcNetworkGroupOverridesPrerequisitesConfig + testAccNamedByParentNameDataSourceFmcNetworkGroupOverridesConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -103,7 +103,7 @@ func testAccDataSourceFmcNetworkGroupOverridesConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcNetworkGroupOverridesConfig() string {
+func testAccNamedByParentNameDataSourceFmcNetworkGroupOverridesConfig() string {
 	config := `resource "fmc_network_group_overrides" "test" {` + "\n"
 	config += `	parent_name = fmc_network_group.test.name` + "\n"
 	config += `	parent_id = fmc_network_group.test.id` + "\n"

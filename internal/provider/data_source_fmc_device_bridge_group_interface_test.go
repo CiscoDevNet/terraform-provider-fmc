@@ -63,6 +63,10 @@ func TestAccDataSourceFmcDeviceBridgeGroupInterface(t *testing.T) {
 				Config: testAccDataSourceFmcDeviceBridgeGroupInterfacePrerequisitesConfig + testAccNamedDataSourceFmcDeviceBridgeGroupInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccDataSourceFmcDeviceBridgeGroupInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceBridgeGroupInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -144,6 +148,37 @@ func testAccNamedDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
 		data "fmc_device_bridge_group_interface" "test" {
 			device_id = var.device_id
 			name = fmc_device_bridge_group_interface.test.name
+		}
+	`
+	return config
+}
+func testAccNamedByLogicalNameDataSourceFmcDeviceBridgeGroupInterfaceConfig() string {
+	config := `resource "fmc_device_bridge_group_interface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "my_bridge_group_interface"` + "\n"
+	config += `	description = "My Bridge Group Interface"` + "\n"
+	config += `	bridge_group_id = 100` + "\n"
+	config += `	selected_interfaces = [{` + "\n"
+	config += `		id = data.fmc_device_physical_interface.test.id` + "\n"
+	config += `		name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	}]` + "\n"
+	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_addresses = [{` + "\n"
+	config += `		address = "2004::1"` + "\n"
+	config += `		prefix = "64"` + "\n"
+	config += `	}]` + "\n"
+	config += `	arp_table_entries = [{` + "\n"
+	config += `		mac_address = "0123.4567.89ab"` + "\n"
+	config += `		ip_address = "10.1.1.10"` + "\n"
+	config += `		enable_alias = true` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_bridge_group_interface" "test" {
+			device_id = var.device_id
+			logical_name = fmc_device_bridge_group_interface.test.logical_name
 		}
 	`
 	return config

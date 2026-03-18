@@ -78,7 +78,7 @@ resource "fmc_device_ospf_interface" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this is always 'OspfInterface'
+- `type` (String) Type of the object; this value is always 'OspfInterface'.
 
 <a id="nestedatt--authentication_area_md5s"></a>
 ### Nested Schema for `authentication_area_md5s`

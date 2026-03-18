@@ -57,6 +57,10 @@ func TestAccDataSourceFmcDeviceSubinterface(t *testing.T) {
 				Config: testAccDataSourceFmcDeviceSubinterfacePrerequisitesConfig + testAccNamedDataSourceFmcDeviceSubinterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
+			{
+				Config: testAccDataSourceFmcDeviceSubinterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceSubinterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
 		},
 	})
 }
@@ -124,6 +128,30 @@ func testAccNamedDataSourceFmcDeviceSubinterfaceConfig() string {
 		data "fmc_device_subinterface" "test" {
 			device_id = var.device_id
 			name = fmc_device_subinterface.test.name
+		}
+	`
+	return config
+}
+func testAccNamedByLogicalNameDataSourceFmcDeviceSubinterfaceConfig() string {
+	config := `resource "fmc_device_subinterface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "myinterface-0-1"` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	management_only = false` + "\n"
+	config += `	description = "my description"` + "\n"
+	config += `	mtu = 9000` + "\n"
+	config += `	interface_name = var.interface_name` + "\n"
+	config += `	sub_interface_id = 7` + "\n"
+	config += `	vlan_id = 4094` + "\n"
+	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `	ipv6_ra = false` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_subinterface" "test" {
+			device_id = var.device_id
+			logical_name = fmc_device_subinterface.test.logical_name
 		}
 	`
 	return config

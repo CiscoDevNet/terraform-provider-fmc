@@ -8,14 +8,13 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    requires_replace: true
     description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
   - model_name: type
     type: String
     computed: true
-    description: Type of the object; this is always `LoopbackInterface`.
+    description: Type of the object; this value is always 'LoopbackInterface'.
   - model_name: name
     type: String
     computed: true
@@ -26,11 +25,12 @@ attributes:
   - model_name: ifname
     tf_name: logical_name
     type: String
-    description: Logical name of the loopback interface
+    description: Logical name of the loopback interface.
     example: my_loopback_1
+    data_source_query: true
   - model_name: enabled
     type: Bool
-    description: Indicates whether to enable the interface.
+    description: Enable the interface.
     default_value: true
     example: "true"
   - model_name: loopbackId
@@ -43,7 +43,7 @@ attributes:
     max_int: 1024
   - model_name: description
     type: String
-    description: Object description.
+    description: Description of the object.
     example: my VTI interface
 # IPv4
   - model_name: address
@@ -56,7 +56,7 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask for ipv4_static_address.
+    description: Netmask for `ipv4_static_address`.
     example: "24"
 # IPv6
   - model_name: addresses

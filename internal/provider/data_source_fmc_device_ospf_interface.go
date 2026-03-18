@@ -75,7 +75,7 @@ func (d *DeviceOSPFInterfaceDataSource) Schema(ctx context.Context, req datasour
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this is always 'OspfInterface'",
+				MarkdownDescription: "Type of the object; this value is always 'OspfInterface'.",
 				Computed:            true,
 			},
 			"interface_id": schema.StringAttribute{

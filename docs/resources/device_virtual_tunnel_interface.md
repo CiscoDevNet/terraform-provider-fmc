@@ -48,7 +48,7 @@ resource "fmc_device_virtual_tunnel_interface" "example" {
 - `logical_name` (String) Logical name of the VTI interface.
 - `tunnel_id` (Number) Tunnel ID (for Static) or Template ID (for Dynamic).
   - Range: `0`-`10413`
-- `tunnel_mode` (String) VTI interface IPSec mode
+- `tunnel_mode` (String) VTI interface IPSec mode.
   - Choices: `ipv4`, `ipv6`
 - `tunnel_source_interface_id` (String) Id of the interface that is used as the tunnel source.
 - `tunnel_source_interface_name` (String) Name of the interface that is used as the tunnel source.
@@ -74,8 +74,8 @@ resource "fmc_device_virtual_tunnel_interface" "example" {
 - `ipv6_prefix` (String) Prefix length for IPv6 address for local VTI tunnel end.
 - `priority` (Number) Priority to load balance the traffic across multiple VTIs.
   - Range: `0`-`65535`
-- `security_zone_id` (String) Id of the assigned security zone.
-- `tunnel_source_interface_ipv6_address` (String) Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
+- `security_zone_id` (String) Id of the assigned Security Zone.
+- `tunnel_source_interface_ipv6_address` (String) Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the `tunnel_source_interface`.
 
 ### Read-Only
 

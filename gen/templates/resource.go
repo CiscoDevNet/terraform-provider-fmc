@@ -589,13 +589,13 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 	}
 
 	{{- else}}
-	{{- $dataSourceAttribute := getAttributeByTfName .Attributes "name"}}
-	{{- if hasDataSourceQuery .Attributes}}
-	{{- $dataSourceAttribute = getDataSourceQueryAttribute . }}
+	{{- $putCreateQueryAttribute := getAttributeByTfName .Attributes "name"}}
+	{{- if hasPutCreateDataQuery .Attributes}}
+	{{- $putCreateQueryAttribute = getPutCreateDataQueryAttribute . }}
 	{{- end}}
 	
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object {{$dataSourceAttribute.TfName}} %s", plan.Id, plan.{{toGoName $dataSourceAttribute.TfName}}))
-	if plan.Id.ValueString() == "" && plan.{{toGoName $dataSourceAttribute.TfName}}.ValueString() != "" {
+	tflog.Debug(ctx, fmt.Sprintf("%s: considering object {{$putCreateQueryAttribute.TfName}} %s", plan.Id, plan.{{toGoName $putCreateQueryAttribute.TfName}}))
+	if plan.Id.ValueString() == "" && plan.{{toGoName $putCreateQueryAttribute.TfName}}.ValueString() != "" {
 		offset := 0
 		limit := 1000
 		for page := 1; ; page++ {
@@ -607,13 +607,13 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 			}
 			if value := res.Get("items"); len(value.Array()) > 0 {
 				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.{{toGoName $dataSourceAttribute.TfName}}.
-						{{- if eq $dataSourceAttribute.Type "Int64" -}}ValueInt64()
-						{{- else -}}ValueString(){{- end -}} == v.Get("{{range $dataSourceAttribute.DataPath}}{{.}}.{{end}}{{$dataSourceAttribute.ModelName}}").
-						{{- if eq $dataSourceAttribute.Type "Int64" -}}Int()
+					if plan.{{toGoName $putCreateQueryAttribute.TfName}}.
+						{{- if eq $putCreateQueryAttribute.Type "Int64" -}}ValueInt64()
+						{{- else -}}ValueString(){{- end -}} == v.Get("{{range $putCreateQueryAttribute.DataPath}}{{.}}.{{end}}{{$putCreateQueryAttribute.ModelName}}").
+						{{- if eq $putCreateQueryAttribute.Type "Int64" -}}Int()
 						{{- else -}}String(){{- end -}} {
 						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$dataSourceAttribute.TfName}} '%v', id: %s", plan.Id.ValueString(), plan.{{toGoName $dataSourceAttribute.TfName}}.{{if eq $dataSourceAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}, plan.Id.ValueString()))
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with {{$putCreateQueryAttribute.TfName}} '%v', id: %s", plan.Id.ValueString(), plan.{{toGoName $putCreateQueryAttribute.TfName}}.{{if eq $putCreateQueryAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}, plan.Id.ValueString()))
 						return false
 					}
 					return true
@@ -626,7 +626,7 @@ func (r *{{camelCase .Name}}Resource) Create(ctx context.Context, req resource.C
 		}
 
 		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$dataSourceAttribute.TfName}}: %v", plan.{{toGoName $dataSourceAttribute.TfName}}.{{if eq $dataSourceAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with {{$putCreateQueryAttribute.TfName}}: %v", plan.{{toGoName $putCreateQueryAttribute.TfName}}.{{if eq $putCreateQueryAttribute.Type "Int64"}}ValueInt64(){{else}}ValueString(){{end}}))
 			return
 		}
 	}

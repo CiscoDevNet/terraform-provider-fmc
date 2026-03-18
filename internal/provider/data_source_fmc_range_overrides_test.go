@@ -47,7 +47,7 @@ func TestAccDataSourceFmcRangeOverrides(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcRangeOverridesPrerequisitesConfig + testAccNamedDataSourceFmcRangeOverridesConfig(),
+				Config: testAccDataSourceFmcRangeOverridesPrerequisitesConfig + testAccNamedByParentNameDataSourceFmcRangeOverridesConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,7 +92,7 @@ func testAccDataSourceFmcRangeOverridesConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcRangeOverridesConfig() string {
+func testAccNamedByParentNameDataSourceFmcRangeOverridesConfig() string {
 	config := `resource "fmc_range_overrides" "test" {` + "\n"
 	config += `	parent_name = fmc_range.test.name` + "\n"
 	config += `	parent_id = fmc_range.test.id` + "\n"

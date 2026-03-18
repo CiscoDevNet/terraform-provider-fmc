@@ -90,7 +90,7 @@ resource "fmc_device_vtep_policy" "test" {
 }
 
 resource "fmc_security_zone" "test" {
-  name           = "routed1"
+  name           = "vni_interface"
   interface_type = "ROUTED"
 }
 `
@@ -101,7 +101,7 @@ resource "fmc_security_zone" "test" {
 
 func testAccFmcDeviceVNIInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	vni_id = 42` + "\n"
 	config += `	segment_id = 401` + "\n"
 	config += `	nve_number = null` + "\n"
@@ -116,7 +116,7 @@ func testAccFmcDeviceVNIInterfaceConfig_minimum() string {
 
 func testAccFmcDeviceVNIInterfaceConfig_all() string {
 	config := `resource "fmc_device_vni_interface" "test" {` + "\n"
-	config += `	device_id = fmc_device_physical_interface.test.device_id` + "\n"
+	config += `	device_id = var.device_id` + "\n"
 	config += `	vni_id = 42` + "\n"
 	config += `	multicast_group_address = "224.0.0.24"` + "\n"
 	config += `	segment_id = 501` + "\n"

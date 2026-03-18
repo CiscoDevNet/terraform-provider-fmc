@@ -76,7 +76,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this is always `LoopbackInterface`.",
+				MarkdownDescription: "Type of the object; this value is always 'LoopbackInterface'.",
 				Computed:            true,
 			},
 			"name": schema.StringAttribute{
@@ -85,11 +85,12 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
-				MarkdownDescription: "Logical name of the loopback interface",
+				MarkdownDescription: "Logical name of the loopback interface.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"loopback_id": schema.Int64Attribute{
@@ -97,7 +98,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Object description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -105,7 +106,7 @@ func (d *DeviceLoopbackInterfaceDataSource) Schema(ctx context.Context, req data
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask for ipv4_static_address.",
+				MarkdownDescription: "Netmask for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
@@ -132,6 +133,7 @@ func (d *DeviceLoopbackInterfaceDataSource) ConfigValidators(ctx context.Context
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
 			path.MatchRoot("name"),
+			path.MatchRoot("logical_name"),
 		),
 	}
 }
@@ -199,6 +201,37 @@ func (d *DeviceLoopbackInterfaceDataSource) Read(ctx context.Context, req dataso
 
 		if config.Id.IsNull() {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
+			return
+		}
+	}
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
 			return
 		}
 	}

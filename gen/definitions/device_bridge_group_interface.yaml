@@ -10,7 +10,6 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    requires_replace: true
     description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: var.device_id
@@ -31,6 +30,7 @@ attributes:
     type: String
     description: Logical name of the Bridge Group interface.
     example: my_bridge_group_interface
+    data_source_query: true
   - model_name: description
     type: String
     description: Description of the object.
@@ -109,7 +109,7 @@ attributes:
   - model_name: enableDADLoopback
     data_path: [ipv6]
     tf_name: ipv6_dad
-    description: Indicates whether to enable IPv6 DAD Loopback Detect (DAD).
+    description: Enable IPv6 DAD Loopback Detect (DAD).
     type: Bool
     example: true
     exclude_test: true # for FMCVERSION <= 7.2

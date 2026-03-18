@@ -129,7 +129,7 @@ func (r *DeviceVirtualTunnelInterfaceResource) Schema(ctx context.Context, req r
 				Optional:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Security Zone.").String,
 				Optional:            true,
 			},
 			"priority": schema.Int64Attribute{
@@ -158,11 +158,11 @@ func (r *DeviceVirtualTunnelInterfaceResource) Schema(ctx context.Context, req r
 				Required:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the `tunnel_source_interface`.").String,
 				Optional:            true,
 			},
 			"tunnel_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VTI interface IPSec mode").AddStringEnumDescription("ipv4", "ipv6").String,
+				MarkdownDescription: helpers.NewAttributeDescription("VTI interface IPSec mode.").AddStringEnumDescription("ipv4", "ipv6").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ipv4", "ipv6"),

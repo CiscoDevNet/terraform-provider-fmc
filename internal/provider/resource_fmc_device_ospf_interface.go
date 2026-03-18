@@ -98,7 +98,7 @@ func (r *DeviceOSPFInterfaceResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this is always 'OspfInterface'").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'OspfInterface'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),

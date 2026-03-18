@@ -25,36 +25,36 @@ data "fmc_device_vni_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `id` (String) Id of the object
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
+- `id` (String) Id of the object
+- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.
 
 ### Read-Only
 
-- `description` (String) Optional user-created description.
-- `enabled` (Boolean) Indicates whether to enable the interface.
+- `description` (String) Description of the object.
+- `enabled` (Boolean) Enable the interface.
 - `ipv4_dhcp_default_route_metric` (Number) The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.
 - `ipv4_dhcp_obtain_default_route` (Boolean) Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1. Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be non-null. The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
 - `ipv4_static_address` (String) Static IPv4 address.
-- `ipv4_static_netmask` (String) Netmask (width) for ipv4_static_address.
-- `ipv6` (Boolean) Indicates whether to enable IPv6.
-- `ipv6_addresses` (Attributes List) (see [below for nested schema](#nestedatt--ipv6_addresses))
-- `ipv6_auto_config` (Boolean) Indicates whether to enable IPv6 autoconfiguration.
-- `ipv6_dhcp_address` (Boolean) Indicates whether to enable DHCPv6 for address config.
-- `ipv6_dhcp_nonaddress` (Boolean) Indicates whether to enable DHCPv6 for non-address config.
-- `ipv6_enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
-- `ipv6_ra` (Boolean) Indicates whether to enable IPv6 router advertisement (RA).
-- `logical_name` (String) Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.
+- `ipv4_static_netmask` (String) Netmask (width) for `ipv4_static_address`.
+- `ipv6` (Boolean) Enable IPv6.
+- `ipv6_addresses` (Attributes List) List of IPv6 addresses. (see [below for nested schema](#nestedatt--ipv6_addresses))
+- `ipv6_auto_config` (Boolean) Enable IPv6 autoconfiguration.
+- `ipv6_dhcp_address` (Boolean) Enable DHCPv6 for address config.
+- `ipv6_dhcp_nonaddress` (Boolean) Enable DHCPv6 for non-address config.
+- `ipv6_enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `ipv6_ra` (Boolean) Enable IPv6 router advertisement (RA).
 - `mtu` (Number) Maximum transmission unit. Can only be used when logical_name is set on the parent interface.
 - `multicast_group_address` (String) Can only be set when VNI interface is mapped to VTEP source interface with `neighbor_discovery` equal to DEFAULT_MULTICAST_GROUP. If unset, the default group from the VTEP source interface is used.
 - `nve_number` (Number) VTEP policy NVE number. If null, not mapped to a VTEP.
 - `priority` (Number) Priority.
-- `proxy` (Boolean) Indicates whether to enable proxy.
-- `security_zone_id` (String) Id of the assigned security zone. Can only be used when `logical_name` is set.
+- `proxy` (Boolean) Enable proxy.
+- `security_zone_id` (String) Id of the assigned Security Zone. Can only be used when `logical_name` is set.
 - `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
-- `type` (String) Type of the object
+- `type` (String) Type of the object.
 - `vni_id` (Number) User-created VNI number for the interface, not exposed over the wire.
 
 <a id="nestedatt--ipv6_addresses"></a>
@@ -63,5 +63,5 @@ data "fmc_device_vni_interface" "example" {
 Read-Only:
 
 - `address` (String) IPv6 address without a slash and prefix.
-- `enforce_eui` (Boolean) Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+- `enforce_eui` (Boolean) Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
 - `prefix` (String) Prefix width for the IPv6 address.

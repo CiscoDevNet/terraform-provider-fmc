@@ -7,6 +7,12 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enh) Access Rule and Category: Add posibility to create at specific location
+- (Enh) Device interfaces data sources now accept `logical_name` as search parameter
+- (Enh) If `items` in bulk data source is empty, all objects from FMC will be loaded
+
 ## 2.1.0
 
 - (Enh) Auto and Manual NAT rules: add support for PAT pool options
