@@ -121,7 +121,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Optional user-created description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
 				Optional:            true,
 			},
 			"mode": schema.StringAttribute{
@@ -132,7 +132,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned security zone.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Security Zone.").String,
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
@@ -143,7 +143,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"mtu": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when logical_name is set.").AddIntegerRangeDescription(64, 9000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when `logical_name` is set.").AddIntegerRangeDescription(64, 9000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(64, 9000),
@@ -167,7 +167,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Required:            true,
 			},
 			"selected_interfaces": schema.SetNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Set of objects representing physical interfaces.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Physical Interfaces that are members of the Ether Channel.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -176,11 +176,11 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 							Required:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the selected interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the selected interface.").String,
 							Optional:            true,
 						},
 						"name": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface.").String,
 							Optional:            true,
 						},
 					},
@@ -195,7 +195,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for ipv4_static_address.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Netmask (width) for `ipv4_static_address`.").String,
 				Optional:            true,
 			},
 			"ipv4_address_pool_id": schema.StringAttribute{
@@ -248,11 +248,11 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"ipv6": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPv6.").String,
 				Optional:            true,
 			},
 			"ipv6_enforce_eui": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 				Optional:            true,
 			},
 			"ipv6_link_local_address": schema.StringAttribute{
@@ -260,11 +260,11 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"ipv6_auto_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 autoconfiguration.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPv6 autoconfiguration.").String,
 				Optional:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Assigned IPv6 addresses.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -277,18 +277,18 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 							Required:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).").String,
 							Optional:            true,
 						},
 					},
 				},
 			},
 			"ipv6_address_pool_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned IPv6 address pool.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned IPv6 Address Pool.").String,
 				Optional:            true,
 			},
 			"ipv6_prefixes": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Assigned IPv6 prefixes.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -304,7 +304,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"ipv6_dad": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 DAD Loopback Detect (DAD).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPv6 DAD Loopback Detect (DAD).").String,
 				Optional:            true,
 			},
 			"ipv6_dad_attempts": schema.Int64Attribute{
@@ -322,14 +322,14 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"ipv6_reachable_time": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred").AddIntegerRangeDescription(0, 3600000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.").AddIntegerRangeDescription(0, 3600000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(0, 3600000),
 				},
 			},
 			"ipv6_ra": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IPv6 router advertisement (RA).").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IPv6 router advertisement (RA).").String,
 				Optional:            true,
 			},
 			"ipv6_ra_life_time": schema.Int64Attribute{
@@ -340,7 +340,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"ipv6_ra_interval": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interval between Router Advertisements (RA) transmissions").AddIntegerRangeDescription(3, 1800).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Interval between Router Advertisements (RA) transmissions.").AddIntegerRangeDescription(3, 1800).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(3, 1800),
@@ -351,11 +351,11 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"ipv6_dhcp_obtain_default_route": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to obtain default route from DHCPv6.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Obtain default route from DHCPv6.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned DHCPv6 pool").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned DHCPv6 Pool.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_pool_type": schema.StringAttribute{
@@ -363,27 +363,27 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"ipv6_dhcp_address_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable DHCPv6 for address config.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable DHCPv6 for address config.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_nonaddress_config": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable DHCPv6 for non-address config.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable DHCPv6 for non-address config.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_client_pd_prefix_name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Prefix Name for Prefix Delegation").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Prefix Name for Prefix Delegation.").String,
 				Optional:            true,
 			},
 			"ipv6_dhcp_client_pd_hint_prefixes": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Hint Prefixes for Prefix Delegation (PD)").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Hint Prefixes for Prefix Delegation (PD).").String,
 				Optional:            true,
 			},
 			"ip_based_monitoring": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable IP based Monitoring.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable IP based Monitoring.").String,
 				Optional:            true,
 			},
 			"ip_based_monitoring_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("PPPoE Configuration - PPPoE route metric, [ AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6 ]").AddStringEnumDescription("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6").String,
+				MarkdownDescription: helpers.NewAttributeDescription("IP based Monitoring - Monitoring Type.").AddStringEnumDescription("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "PEER_IPV4", "PEER_IPV6", "AUTO4", "AUTO6"),
@@ -398,43 +398,43 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				Optional:            true,
 			},
 			"duplex": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Duplex configuraion, can be one of INLINE, PASSIVE, TAP, ERSPAN.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Duplex configuration.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "FULL", "HALF"),
 				},
 			},
 			"speed": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Speed configuraion, can be one of AUTO, TEN, HUNDRED, THOUSAND, TEN_THOUSAND, TWENTY_FIVE_THOUSAND, FORTY_THOUSAND, HUNDRED_THOUSAND, TWO_HUNDRED_THOUSAND, DETECT_SFP").AddStringEnumDescription("AUTO", "TEN", "HUNDRED", "THOUSAND", "TEN_THOUSAND", "TWENTY_FIVE_THOUSAND", "FORTY_THOUSAND", "HUNDRED_THOUSAND", "TWO_HUNDRED_THOUSAND", "DETECT_SFP").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Speed configuration.").AddStringEnumDescription("AUTO", "TEN", "HUNDRED", "THOUSAND", "TEN_THOUSAND", "TWENTY_FIVE_THOUSAND", "FORTY_THOUSAND", "HUNDRED_THOUSAND", "TWO_HUNDRED_THOUSAND", "DETECT_SFP").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "TEN", "HUNDRED", "THOUSAND", "TEN_THOUSAND", "TWENTY_FIVE_THOUSAND", "FORTY_THOUSAND", "HUNDRED_THOUSAND", "TWO_HUNDRED_THOUSAND", "DETECT_SFP"),
 				},
 			},
 			"lldp_receive": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("LLDP receive configuraion.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("LLDP receive configuration.").String,
 				Optional:            true,
 			},
 			"lldp_transmit": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("LLDP transmit configuraion.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("LLDP transmit configuration.").String,
 				Optional:            true,
 			},
 			"flow_control_send": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Flow Control Send configuraion, can be one of ON, OFF.").AddStringEnumDescription("ON", "OFF").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Flow Control Send configuration.").AddStringEnumDescription("ON", "OFF").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("ON", "OFF"),
 				},
 			},
 			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Path Monitoring - Monitoring Type, can be one of AUTO, CL108RS, CL74FC, CL91RS, DISABLE.").AddStringEnumDescription("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Forward Error Correction (FEC) mode.").AddStringEnumDescription("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE").String,
 				Optional:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE"),
 				},
 			},
 			"management_access": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Whether to enable Management Access.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Management Access.").String,
 				Optional:            true,
 			},
 			"management_access_network_objects": schema.SetNestedAttribute{
@@ -447,7 +447,7 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 							Optional:            true,
 						},
 						"type": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Type of the object").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the object.").String,
 							Optional:            true,
 						},
 					},
@@ -471,11 +471,11 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 							Required:            true,
 						},
 						"ip_address": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("IP address for custom ARP entry").String,
+							MarkdownDescription: helpers.NewAttributeDescription("IP address for custom ARP entry.").String,
 							Required:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable Alias for custom ARP entry.").AddDefaultValueDescription("true").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(true),
@@ -484,29 +484,29 @@ func (r *DeviceEtherChannelInterfaceResource) Schema(ctx context.Context, req re
 				},
 			},
 			"anti_spoofing": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enable Anti Spoofing").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable Anti Spoofing.").String,
 				Optional:            true,
 			},
 			"allow_full_fragment_reassembly": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Allow Full Fragment Reassembly").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Allow Full Fragment Reassembly.").String,
 				Optional:            true,
 			},
 			"override_default_fragment_setting_chain": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Chain value").AddIntegerRangeDescription(1, 8200).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Chain value.").AddIntegerRangeDescription(1, 8200).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 8200),
 				},
 			},
 			"override_default_fragment_setting_size": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Fragment Size value").AddIntegerRangeDescription(1, 30000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Fragment Size value.").AddIntegerRangeDescription(1, 30000).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 30000),
 				},
 			},
 			"override_default_fragment_setting_timeout": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Time Out value").AddIntegerRangeDescription(1, 30).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Override Default Fragment Setting - Time Out value.").AddIntegerRangeDescription(1, 30).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 30),

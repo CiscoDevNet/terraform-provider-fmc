@@ -63,7 +63,7 @@ data "fmc_device_ospf" "example" {
 - `router_id` (String) IPv4 address used as the router ID. Do not configure for AUTOMATIC router ID selection.
 - `summary_addresses` (Attributes List) Addresses summarization configuration. (see [below for nested schema](#nestedatt--summary_addresses))
 - `timer_lsa_group` (Number) Interval in seconds at which LSAs are collected into a group and refreshed, check summed, or aged.
-- `type` (String) Type of the object; this is always 'OspfRoute'
+- `type` (String) Type of the object; this value is always 'OspfRoute'.
 
 <a id="nestedatt--areas"></a>
 ### Nested Schema for `areas`

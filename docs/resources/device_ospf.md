@@ -117,7 +117,7 @@ resource "fmc_device_ospf" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `type` (String) Type of the object; this is always 'OspfRoute'
+- `type` (String) Type of the object; this value is always 'OspfRoute'.
 
 <a id="nestedatt--areas"></a>
 ### Nested Schema for `areas`

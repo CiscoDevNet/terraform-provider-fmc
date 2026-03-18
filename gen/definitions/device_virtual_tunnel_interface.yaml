@@ -15,10 +15,9 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    requires_replace: true
     description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_device_physical_interface.test.device_id
+    test_value: var.device_id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'VTIInterface'.
@@ -43,6 +42,7 @@ attributes:
     type: String
     description: Logical name of the VTI interface.
     example: my_vti_interface
+    data_source_query: true
     mandatory: true
   - model_name: enabled
     type: Bool
@@ -57,7 +57,7 @@ attributes:
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
-    description: Id of the assigned security zone.
+    description: Id of the assigned Security Zone.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_security_zone.test.id
   - model_name: type
@@ -98,7 +98,7 @@ attributes:
   - model_name: tunnelSrcIPv6IntfAddr
     tf_name: tunnel_source_interface_ipv6_address
     type: String
-    description: Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.
+    description: Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the `tunnel_source_interface`.
     exclude_example: true
     exclude_test: true
   # Tunnel details
@@ -106,7 +106,7 @@ attributes:
     tf_name: tunnel_mode
     type: String
     enum_values: [ipv4, ipv6]
-    description: VTI interface IPSec mode
+    description: VTI interface IPSec mode.
     example: ipv4
     mandatory: true
   - model_name: address

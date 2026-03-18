@@ -52,7 +52,7 @@ func TestAccDataSourceFmcDeviceHAPairMonitoring(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcDeviceHAPairMonitoringPrerequisitesConfig + testAccNamedDataSourceFmcDeviceHAPairMonitoringConfig(),
+				Config: testAccDataSourceFmcDeviceHAPairMonitoringPrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceHAPairMonitoringConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -92,7 +92,7 @@ func testAccDataSourceFmcDeviceHAPairMonitoringConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcDeviceHAPairMonitoringConfig() string {
+func testAccNamedByLogicalNameDataSourceFmcDeviceHAPairMonitoringConfig() string {
 	config := `resource "fmc_device_ha_pair_monitoring" "test" {` + "\n"
 	config += `	ha_pair_id = var.device_ha_id` + "\n"
 	config += `	logical_name = "outside"` + "\n"

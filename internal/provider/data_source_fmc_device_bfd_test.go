@@ -47,7 +47,7 @@ func TestAccDataSourceFmcDeviceBFD(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
-				Config: testAccDataSourceFmcDeviceBFDPrerequisitesConfig + testAccNamedDataSourceFmcDeviceBFDConfig(),
+				Config: testAccDataSourceFmcDeviceBFDPrerequisitesConfig + testAccNamedByInterfaceLogicalNameDataSourceFmcDeviceBFDConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -99,7 +99,7 @@ func testAccDataSourceFmcDeviceBFDConfig() string {
 	return config
 }
 
-func testAccNamedDataSourceFmcDeviceBFDConfig() string {
+func testAccNamedByInterfaceLogicalNameDataSourceFmcDeviceBFDConfig() string {
 	config := `resource "fmc_device_bfd" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	hop_type = "SINGLE_HOP"` + "\n"

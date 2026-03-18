@@ -54,6 +54,10 @@ func TestAccDataSourceFmcDeviceEtherChannelInterface(t *testing.T) {
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 			{
+				Config: testAccDataSourceFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccNamedByLogicalNameDataSourceFmcDeviceEtherChannelInterfaceConfig(),
+				Check:  resource.ComposeTestCheckFunc(checks...),
+			},
+			{
 				Config: testAccDataSourceFmcDeviceEtherChannelInterfacePrerequisitesConfig + testAccNamedDataSourceFmcDeviceEtherChannelInterfaceConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
@@ -105,6 +109,31 @@ func testAccDataSourceFmcDeviceEtherChannelInterfaceConfig() string {
 	return config
 }
 
+func testAccNamedByLogicalNameDataSourceFmcDeviceEtherChannelInterfaceConfig() string {
+	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
+	config += `	device_id = var.device_id` + "\n"
+	config += `	logical_name = "myinterface-0-1"` + "\n"
+	config += `	enabled = true` + "\n"
+	config += `	description = "my description"` + "\n"
+	config += `	mode = "NONE"` + "\n"
+	config += `	mtu = 9000` + "\n"
+	config += `	ether_channel_id = "1"` + "\n"
+	config += `	selected_interfaces = [{` + "\n"
+	config += `		id = data.fmc_device_physical_interface.test.id` + "\n"
+	config += `		name = data.fmc_device_physical_interface.test.name` + "\n"
+	config += `	}]` + "\n"
+	config += `	ipv4_static_address = "10.1.1.1"` + "\n"
+	config += `	ipv4_static_netmask = "24"` + "\n"
+	config += `}` + "\n"
+
+	config += `
+		data "fmc_device_etherchannel_interface" "test" {
+			device_id = var.device_id
+			logical_name = fmc_device_etherchannel_interface.test.logical_name
+		}
+	`
+	return config
+}
 func testAccNamedDataSourceFmcDeviceEtherChannelInterfaceConfig() string {
 	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"

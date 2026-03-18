@@ -7,13 +7,12 @@ attributes:
   - tf_name: device_id
     type: String
     reference: true
-    requires_replace: true
     description: Id of the parent device.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
-    test_value: fmc_device_physical_interface.test.device_id
+    test_value: var.device_id
   - model_name: type
     type: String
-    description: Type of the object
+    description: Type of the object.
     computed: true
   - model_name: vniId
     type: Int64
@@ -48,7 +47,7 @@ attributes:
     test_value: fmc_device_vtep_policy.test.vteps[0].nve_number
   - model_name: enabled
     type: Bool
-    description: Indicates whether to enable the interface.
+    description: Enable the interface.
     default_value: "true"
     test_value: "true"
     exclude_example: true
@@ -59,9 +58,10 @@ attributes:
       Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash
       characters. Can only be used when `segment_id` is set.
     example: vni42
+    data_source_query: true
   - model_name: description
     type: String
-    description: Optional user-created description.
+    description: Description of the object.
     example: my description
   - model_name: MTU
     tf_name: mtu
@@ -80,7 +80,7 @@ attributes:
     data_path: [securityZone]
     tf_name: security_zone_id
     type: String
-    description: Id of the assigned security zone. Can only be used when `logical_name` is set.
+    description: Id of the assigned Security Zone. Can only be used when `logical_name` is set.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_security_zone.test.id
     minimum_test_value: "null"
@@ -98,7 +98,7 @@ attributes:
     data_path: [ipv4, static]
     tf_name: ipv4_static_netmask
     type: String
-    description: Netmask (width) for ipv4_static_address.
+    description: Netmask (width) for `ipv4_static_address`.
     example: "24"
   - model_name: enableDefaultRouteDHCP
     data_path: [ipv4, dhcp]
@@ -126,40 +126,40 @@ attributes:
   - model_name: enableIPV6
     data_path: [ipv6]
     tf_name: ipv6
-    description: Indicates whether to enable IPv6.
+    description: Enable IPv6.
     type: Bool
     example: "true"
   - model_name: enforceEUI64
     data_path: [ipv6]
     tf_name: ipv6_enforce_eui
-    description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
     type: Bool
     exclude_example: true
     test_value: "true"
   - model_name: enableAutoConfig
     data_path: [ipv6]
     tf_name: ipv6_auto_config
-    description: Indicates whether to enable IPv6 autoconfiguration.
+    description: Enable IPv6 autoconfiguration.
     type: Bool
     example: "true"
   - model_name: enableDHCPAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_dhcp_address
-    description: Indicates whether to enable DHCPv6 for address config.
+    description: Enable DHCPv6 for address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableDHCPNonAddrConfig
     data_path: [ipv6]
     tf_name: ipv6_dhcp_nonaddress
-    description: Indicates whether to enable DHCPv6 for non-address config.
+    description: Enable DHCPv6 for non-address config.
     type: Bool
     exclude_example: true
     exclude_test: true
   - model_name: enableRA
     data_path: [ipv6]
     tf_name: ipv6_ra
-    description: Indicates whether to enable IPv6 router advertisement (RA).
+    description: Enable IPv6 router advertisement (RA).
     type: Bool
     exclude_example: true
     exclude_test: true
@@ -168,6 +168,7 @@ attributes:
     tf_name: ipv6_addresses
     type: List
     exclude_example: true
+    description: List of IPv6 addresses.
     attributes:
       - model_name: address
         type: String
@@ -185,14 +186,14 @@ attributes:
         test_value: "56"
       - model_name: enforceEUI64
         tf_name: enforce_eui
-        description: Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
         type: Bool
         exclude_example: true
         test_value: "false"
   - model_name: enableProxy
     tf_name: proxy
     type: Bool
-    description: Indicates whether to enable proxy.
+    description: Enable proxy.
     default_value: "false"
     exclude_example: true
     exclude_test: true
@@ -219,6 +220,6 @@ test_prerequisites: |-
   }
 
   resource "fmc_security_zone" "test" {
-    name           = "routed1"
+    name           = "vni_interface"
     interface_type = "ROUTED"
   }

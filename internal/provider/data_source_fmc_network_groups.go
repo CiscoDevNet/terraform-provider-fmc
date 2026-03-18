@@ -28,6 +28,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -164,6 +165,19 @@ func (d *NetworkGroupsDataSource) Read(ctx context.Context, req datasource.ReadR
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
+	}
+
+	// Read all items if user did not provide any specific item names in the config
+	if len(config.Items) == 0 {
+		if config.Items == nil {
+			config.Items = map[string]NetworkGroupsItems{}
+		}
+		res.Get("items").ForEach(func(_, v gjson.Result) bool {
+			if name := v.Get("name").String(); name != "" {
+				config.Items[name] = NetworkGroupsItems{}
+			}
+			return true
+		})
 	}
 
 	config.fromBody(ctx, res)

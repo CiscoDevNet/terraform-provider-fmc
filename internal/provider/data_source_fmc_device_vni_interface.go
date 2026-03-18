@@ -24,10 +24,14 @@ import (
 	"net/url"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/path"
+	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -60,7 +64,8 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Id of the object",
-				Required:            true,
+				Optional:            true,
+				Computed:            true,
 			},
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "Name of the FMC domain",
@@ -71,7 +76,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object",
+				MarkdownDescription: "Type of the object.",
 				Computed:            true,
 			},
 			"vni_id": schema.Int64Attribute{
@@ -91,15 +96,16 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable the interface.",
+				MarkdownDescription: "Enable the interface.",
 				Computed:            true,
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Customizable logical name of the interface, unique on the device. Should not contain whitespace or slash characters. Can only be used when `segment_id` is set.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Optional user-created description.",
+				MarkdownDescription: "Description of the object.",
 				Computed:            true,
 			},
 			"mtu": schema.Int64Attribute{
@@ -111,7 +117,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned security zone. Can only be used when `logical_name` is set.",
+				MarkdownDescription: "Id of the assigned Security Zone. Can only be used when `logical_name` is set.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -119,7 +125,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv4_static_netmask": schema.StringAttribute{
-				MarkdownDescription: "Netmask (width) for ipv4_static_address.",
+				MarkdownDescription: "Netmask (width) for `ipv4_static_address`.",
 				Computed:            true,
 			},
 			"ipv4_dhcp_obtain_default_route": schema.BoolAttribute{
@@ -131,31 +137,31 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"ipv6": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6.",
+				MarkdownDescription: "Enable IPv6.",
 				Computed:            true,
 			},
 			"ipv6_enforce_eui": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+				MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 				Computed:            true,
 			},
 			"ipv6_auto_config": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6 autoconfiguration.",
+				MarkdownDescription: "Enable IPv6 autoconfiguration.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_address": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable DHCPv6 for address config.",
+				MarkdownDescription: "Enable DHCPv6 for address config.",
 				Computed:            true,
 			},
 			"ipv6_dhcp_nonaddress": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable DHCPv6 for non-address config.",
+				MarkdownDescription: "Enable DHCPv6 for non-address config.",
 				Computed:            true,
 			},
 			"ipv6_ra": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable IPv6 router advertisement (RA).",
+				MarkdownDescription: "Enable IPv6 router advertisement (RA).",
 				Computed:            true,
 			},
 			"ipv6_addresses": schema.ListNestedAttribute{
-				MarkdownDescription: "",
+				MarkdownDescription: "List of IPv6 addresses.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -168,17 +174,25 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 							Computed:            true,
 						},
 						"enforce_eui": schema.BoolAttribute{
-							MarkdownDescription: "Indicates whether to enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
+							MarkdownDescription: "Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).",
 							Computed:            true,
 						},
 					},
 				},
 			},
 			"proxy": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether to enable proxy.",
+				MarkdownDescription: "Enable proxy.",
 				Computed:            true,
 			},
 		},
+	}
+}
+func (d *DeviceVNIInterfaceDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+	return []datasource.ConfigValidator{
+		datasourcevalidator.ExactlyOneOf(
+			path.MatchRoot("id"),
+			path.MatchRoot("logical_name"),
+		),
 	}
 }
 
@@ -211,6 +225,37 @@ func (d *DeviceVNIInterfaceDataSource) Read(ctx context.Context, req datasource.
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
+			return
+		}
+	}
 	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
 	res, err := d.client.Get(urlPath, reqMods...)
 	if err != nil {

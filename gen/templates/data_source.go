@@ -188,13 +188,15 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 		},
 	}
 }
-{{- $dataSourceAttribute := getDataSourceQueryAttribute .}}
+{{- $dataSourceAttributes := getDataSourceQueryAttributes .}}
 {{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
 func (d *{{camelCase .Name}}DataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
     return []datasource.ConfigValidator{
         datasourcevalidator.ExactlyOneOf(
             path.MatchRoot("id"),
-			path.MatchRoot("{{$dataSourceAttribute.TfName}}"),
+			{{- range $index, $attr := $dataSourceAttributes }}
+			path.MatchRoot("{{$attr.TfName}}"),
+			{{- end }}
         ),
     }
 }
@@ -241,6 +243,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 
 	{{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
+	{{- range $index, $dataSourceAttribute := $dataSourceAttributes }}
 	if config.Id.IsNull() && !config.{{toGoName $dataSourceAttribute.TfName}}.IsNull() {
 		offset := 0
 		limit := 1000
@@ -277,6 +280,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		}
 	}
 	{{- end}}
+	{{- end}}
 
 	{{- if .IsBulk}}
 	
@@ -292,6 +296,22 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
 	}
+
+	{{- if .IsBulk}}
+
+	// Read all items if user did not provide any specific item names in the config
+	if len(config.Items) == 0 {
+		if config.Items == nil {
+			config.Items = map[string]{{camelCase .Name}}Items{}
+		}
+		res.Get("items").ForEach(func(_, v gjson.Result) bool {
+			if name := v.Get("name").String(); name != "" {
+				config.Items[name] = {{camelCase .Name}}Items{}
+			}
+			return true
+		})
+	}
+	{{- end}}
 
 	{{- if .IsOverride}}
 	res = config.synthesizeOverrides(ctx, res)

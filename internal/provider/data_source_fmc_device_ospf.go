@@ -75,7 +75,7 @@ func (d *DeviceOSPFDataSource) Schema(ctx context.Context, req datasource.Schema
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this is always 'OspfRoute'",
+				MarkdownDescription: "Type of the object; this value is always 'OspfRoute'.",
 				Computed:            true,
 			},
 			"process_id": schema.Int64Attribute{

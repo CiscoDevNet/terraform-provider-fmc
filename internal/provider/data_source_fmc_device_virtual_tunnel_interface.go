@@ -90,6 +90,7 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req
 			},
 			"logical_name": schema.StringAttribute{
 				MarkdownDescription: "Logical name of the VTI interface.",
+				Optional:            true,
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
@@ -101,7 +102,7 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"security_zone_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the assigned security zone.",
+				MarkdownDescription: "Id of the assigned Security Zone.",
 				Computed:            true,
 			},
 			"priority": schema.Int64Attribute{
@@ -121,11 +122,11 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"tunnel_source_interface_ipv6_address": schema.StringAttribute{
-				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the tunnel_source_interface.",
+				MarkdownDescription: "Specify the source IPv6 address for the tunnel. Ensure this address is already configured on the `tunnel_source_interface`.",
 				Computed:            true,
 			},
 			"tunnel_mode": schema.StringAttribute{
-				MarkdownDescription: "VTI interface IPSec mode",
+				MarkdownDescription: "VTI interface IPSec mode.",
 				Computed:            true,
 			},
 			"ipv4_static_address": schema.StringAttribute{
@@ -176,6 +177,7 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) ConfigValidators(ctx context.Co
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
 			path.MatchRoot("name"),
+			path.MatchRoot("logical_name"),
 		),
 	}
 }
@@ -237,6 +239,37 @@ func (d *DeviceVirtualTunnelInterfaceDataSource) Read(ctx context.Context, req d
 
 		if config.Id.IsNull() {
 			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
+			return
+		}
+	}
+	if config.Id.IsNull() && !config.LogicalName.IsNull() {
+		offset := 0
+		limit := 1000
+		for page := 1; ; page++ {
+			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
+			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
+			if err != nil {
+				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
+				return
+			}
+			if value := res.Get("items"); len(value.Array()) > 0 {
+				value.ForEach(func(k, v gjson.Result) bool {
+					if config.LogicalName.ValueString() == v.Get("ifname").String() {
+						config.Id = types.StringValue(v.Get("id").String())
+						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with logical_name '%v', id: %v", config.Id.ValueString(), config.LogicalName.ValueString(), config.Id.ValueString()))
+						return false
+					}
+					return true
+				})
+			}
+			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
+				break
+			}
+			offset += limit
+		}
+
+		if config.Id.IsNull() {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with logical_name: %v", config.LogicalName.ValueString()))
 			return
 		}
 	}
