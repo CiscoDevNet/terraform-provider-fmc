@@ -180,6 +180,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 	}
 	{{- range .Attributes}}
 	{{- if and .Computed (not .ComputedBodyParam)}}{{- continue}}{{- end}}
+	{{- if .TfOnly}}{{- continue}}{{- end}}
 	{{- if .Value}}
 	body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{if eq .Type "String"}}"{{end}}{{.Value}}{{if eq .Type "String"}}"{{end}})
 	{{- else if .ResourceId}}
@@ -297,6 +298,7 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result) {
 {{- define "fromBodyTemplate"}}
 	{{- range .Attributes}}
+	{{- if .TfOnly}}{{- continue}}{{- end}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
@@ -377,6 +379,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 // Section below is generated&owned by "gen/generator.go". //template:begin fromBodyPartial
 {{- define "fromBodyPartialTemplate"}}
 	{{- range .Attributes}}
+	{{- if .TfOnly}}{{- continue}}{{- end}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists(){{if not .ResourceId}}{{if not .ComputedRefreshValue}} && !data.{{toGoName .TfName}}.IsNull(){{end}}{{end}} {
@@ -496,6 +499,7 @@ func (data *{{camelCase .Name}}) fromBodyPartial(ctx context.Context, res gjson.
 // Known values are not changed (usual for Computed attributes with UseStateForUnknown or with Default).
 func (data *{{camelCase .Name}}) fromBodyUnknowns(ctx context.Context, res gjson.Result) {
 	{{- range .Attributes}}
+	{{- if .TfOnly}}{{- continue}}{{- end}}
 	{{- if or (and .ResourceId (not .Reference)) .Computed}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	{{- if not .ComputedRefreshValue }}

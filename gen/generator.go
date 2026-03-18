@@ -171,6 +171,7 @@ type YamlConfigAttribute struct {
 	Sensitive                           bool                  `yaml:"sensitive"`
 	MissingInResponseIfSetToEmptyString bool                  `yaml:"missing_in_response_if_set_to_empty_string"`
 	Attributes                          []YamlConfigAttribute `yaml:"attributes"`
+	TfOnly                              bool                  `yaml:"tf_only"`
 	GoTypeName                          string
 }
 

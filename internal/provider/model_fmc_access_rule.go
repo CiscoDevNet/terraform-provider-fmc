@@ -40,6 +40,8 @@ type AccessRule struct {
 	AccessControlPolicyId      types.String                           `tfsdk:"access_control_policy_id"`
 	CategoryName               types.String                           `tfsdk:"category_name"`
 	Section                    types.String                           `tfsdk:"section"`
+	InsertBeforeRule           types.Int64                            `tfsdk:"insert_before_rule"`
+	InsertAfterRule            types.Int64                            `tfsdk:"insert_after_rule"`
 	Action                     types.String                           `tfsdk:"action"`
 	Name                       types.String                           `tfsdk:"name"`
 	Enabled                    types.Bool                             `tfsdk:"enabled"`

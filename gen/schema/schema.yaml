@@ -73,3 +73,4 @@ attribute:
   sensitive: bool(required=False) # Set to true if the attribute is sensitive
   missing_in_response_if_set_to_empty_string: bool(required=False) # Set to true if the attribute is missing in the API GET response when it has been set to an empty string
   attributes: list(include('attribute'), required=False) # List of attributes, only relevant if type is "List" or "Set"
+  tf_only: bool(required=False) # Set to true if the attribute is only relevant for the Terraform resource but not part of the API model (payload)

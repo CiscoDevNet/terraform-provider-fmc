@@ -32,6 +32,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -104,6 +105,20 @@ func (r *AccessRuleResource) Schema(ctx context.Context, req resource.SchemaRequ
 				},
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"insert_before_rule": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Specifies that the rules will be inserted before the specified rule index. Either 'insert_before_rule' or 'insert_after_rule' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
+				},
+			},
+			"insert_after_rule": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Specifies that the rules will be inserted after the specified rule index. Either 'insert_before_rule' or 'insert_after_rule' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.Int64{
+					int64planmodifier.RequiresReplace(),
 				},
 			},
 			"action": schema.StringAttribute{
@@ -609,6 +624,10 @@ func (r AccessRuleResource) ConfigValidators(ctx context.Context) []resource.Con
 			path.MatchRoot("category_name"),
 			path.MatchRoot("section"),
 		),
+		resourcevalidator.Conflicting(
+			path.MatchRoot("insert_before_rule"),
+			path.MatchRoot("insert_after_rule"),
+		),
 	}
 }
 
@@ -628,11 +647,20 @@ func (r *AccessRuleResource) Create(ctx context.Context, req resource.CreateRequ
 	}
 
 	urlParams := ""
+	urlSeparator := "?"
 
 	if !plan.CategoryName.IsUnknown() && plan.CategoryName.ValueString() != "" {
 		urlParams += fmt.Sprintf("?category=%s", url.QueryEscape(plan.CategoryName.ValueString()))
+		urlSeparator = "&"
 	} else if !plan.Section.IsUnknown() && plan.Section.ValueString() != "" {
 		urlParams += fmt.Sprintf("?section=%s", url.QueryEscape(plan.Section.ValueString()))
+		urlSeparator = "&"
+	}
+
+	if !plan.InsertBeforeRule.IsNull() {
+		urlParams += fmt.Sprintf("%sinsertBefore=%d", urlSeparator, plan.InsertBeforeRule.ValueInt64())
+	} else if !plan.InsertAfterRule.IsNull() {
+		urlParams += fmt.Sprintf("%sinsertAfter=%d", urlSeparator, plan.InsertAfterRule.ValueInt64())
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
