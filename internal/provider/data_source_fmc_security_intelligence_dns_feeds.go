@@ -27,6 +27,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/datasource/schema"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
+	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -134,6 +135,19 @@ func (d *SecurityIntelligenceDNSFeedsDataSource) Read(ctx context.Context, req d
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
 		return
+	}
+
+	// Read all items if user did not provide any specific item names in the config
+	if len(config.Items) == 0 {
+		if config.Items == nil {
+			config.Items = map[string]SecurityIntelligenceDNSFeedsItems{}
+		}
+		res.Get("items").ForEach(func(_, v gjson.Result) bool {
+			if name := v.Get("name").String(); name != "" {
+				config.Items[name] = SecurityIntelligenceDNSFeedsItems{}
+			}
+			return true
+		})
 	}
 
 	config.fromBody(ctx, res)
