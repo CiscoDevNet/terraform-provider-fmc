@@ -1,6 +1,6 @@
 ## Unreleased
 
-- (Enh) If `items` in bulk objects is empty, all objects from FMC will be loaded
+- (Enh) If `items` in bulk data source is empty, all objects from FMC will be loaded
 
 ## 2.1.0
 
