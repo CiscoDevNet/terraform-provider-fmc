@@ -79,7 +79,7 @@ func (d *FTDManualNATRuleDataSource) Schema(ctx context.Context, req datasource.
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates if the rule is enabled.",
+				MarkdownDescription: "Enable rule.",
 				Computed:            true,
 			},
 			"section": schema.StringAttribute{

@@ -48,6 +48,6 @@ Read-Only:
 
 Read-Only:
 
-- `action` (String) Indicate redistribution access.
+- `action` (String) Redistribution access.
 - `regular_expression` (String) Regular expression (required if `sub_type` is Expanded)
 - `route_target` (String) Route target (required if `sub_type` is Standard)

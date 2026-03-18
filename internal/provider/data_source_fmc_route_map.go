@@ -90,7 +90,7 @@ func (d *RouteMapDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Indicate the redistribution access.",
+							MarkdownDescription: "Redistribution access.",
 							Computed:            true,
 						},
 						"match_security_zones": schema.ListNestedAttribute{

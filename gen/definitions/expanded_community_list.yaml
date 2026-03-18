@@ -27,7 +27,7 @@ attributes:
       - model_name: action
         type: String
         mandatory: true
-        description: Indicate redistribution access.
+        description: Redistribution access.
         enum_values: [PERMIT, DENY]
         example: PERMIT
       - model_name: regularExpression

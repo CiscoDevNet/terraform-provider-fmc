@@ -47,5 +47,5 @@ Read-Only:
 
 Read-Only:
 
-- `action` (String) Indicate redistribution access.
+- `action` (String) Redistribution access.
 - `regular_expression` (String) Regular expression pattern to match the community.

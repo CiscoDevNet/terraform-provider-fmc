@@ -38,7 +38,7 @@ data "fmc_route_map" "example" {
 
 Read-Only:
 
-- `action` (String) Indicate the redistribution access.
+- `action` (String) Redistribution access.
 - `match_bgp_as_paths` (Attributes List) Match a BGP Autonomous System (AS) path with the specified path access list. (see [below for nested schema](#nestedatt--entries--match_bgp_as_paths))
 - `match_bgp_community_lists` (Attributes List) Match a BGP Community with Standard/Expanded Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_community_lists))
 - `match_bgp_extended_community_lists` (Attributes List) Match a BGP Community with Extended Community Lists. (see [below for nested schema](#nestedatt--entries--match_bgp_extended_community_lists))

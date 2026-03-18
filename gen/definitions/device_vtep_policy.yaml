@@ -21,7 +21,7 @@ attributes:
     computed: true
   - model_name: nveEnable
     tf_name: nve_enabled
-    description: Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.
+    description: Enable NVE on the `device_id`. Can only be false if `vteps` are empty.
     type: Bool
     default_value: "true"
     exclude_example: true

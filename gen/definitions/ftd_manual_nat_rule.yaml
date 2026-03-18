@@ -21,7 +21,7 @@ attributes:
     example: My Manual NAT rule 1
   - model_name: enabled
     type: Bool
-    description: Indicates if the rule is enabled.
+    description: Enable rule.
     example: true
   - model_name: section
     type: String

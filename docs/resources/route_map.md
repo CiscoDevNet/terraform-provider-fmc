@@ -113,7 +113,7 @@ resource "fmc_route_map" "example" {
 
 Required:
 
-- `action` (String) Indicate the redistribution access.
+- `action` (String) Redistribution access.
   - Choices: `PERMIT`, `DENY`
 
 Optional:

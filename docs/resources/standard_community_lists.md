@@ -69,7 +69,7 @@ Read-Only:
 
 Required:
 
-- `action` (String) Indicate redistribution access.
+- `action` (String) Redistribution access.
   - Choices: `PERMIT`, `DENY`
 - `communities` (String) List of communities. Separate multiple values by space. Valid values can be from 1 to 4294967295 or from 0:1 to 65534:65535
 

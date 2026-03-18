@@ -209,7 +209,7 @@ resource "fmc_access_rule" "example" {
 - `destination_sgt_objects` (Attributes Set) Set of objects representing the destination ISE Security Group Tags (SGT). (see [below for nested schema](#nestedatt--destination_sgt_objects))
 - `destination_zones` (Attributes Set) Set of objects representing destination Security Zones associated with the access rule. (see [below for nested schema](#nestedatt--destination_zones))
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Indicates whether the access rule is in effect (true) or not (false).
+- `enabled` (Boolean) Enable rule.
   - Default value: `true`
 - `endpoint_device_types` (Attributes Set) Set of objects representing the source Endpoint Device Types. (see [below for nested schema](#nestedatt--endpoint_device_types))
 - `file_policy_id` (String) Id of the File Policy for the rule action. Cannot be set when action is BLOCK, BLOCK_RESET, TRUST, MONITOR.

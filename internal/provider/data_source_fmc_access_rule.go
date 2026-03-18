@@ -93,7 +93,7 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				Computed:            true,
 			},
 			"enabled": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether the access rule is in effect (true) or not (false).",
+				MarkdownDescription: "Enable rule.",
 				Computed:            true,
 			},
 			"source_network_literals": schema.SetNestedAttribute{

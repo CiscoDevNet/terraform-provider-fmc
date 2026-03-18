@@ -17,7 +17,7 @@ attributes:
   # General
   - model_name: routeBased
     type: Bool
-    description: Indicates whether the VPN is Route Based (true) or Policy Based (false).
+    description: Indicates whether the VPN is Route Based (`true`) or Policy Based (`false`).
     example: true
     requires_replace: true
     mandatory: true
@@ -32,13 +32,13 @@ attributes:
   - model_name: ikeV1Enabled
     tf_name: ikev1
     type: Bool
-    description: Indicates whether IKEv1 is enabled for the VPN.
+    description: Enable IKEv1 for the VPN.
     example: "false"
     default_value: "false"
   - model_name: ikeV2Enabled
     tf_name: ikev2
     type: Bool
-    description: Indicates whether IKEv2 is enabled for the VPN.
+    description: Enable IKEv2 for the VPN.
     example: "true"
     minimum_test_value: '"true"'
     default_value: "false"
