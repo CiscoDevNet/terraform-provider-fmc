@@ -812,6 +812,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
 	var state AccessControlPolicy
+	var hasInheritance bool = false
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -840,6 +841,17 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 	s := resGet.String()
 	policyName := resGet.Get("name").String()
 
+	if (!state.ManageCategories.IsUnknown() && state.ManageCategories.ValueBool()) || (!state.ManageRules.IsUnknown() && state.ManageRules.ValueBool()) {
+		resInh, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/inheritancesettings?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve inheritance settings (GET), got error: %s, %s", err, resInh.String()))
+			return
+		}
+		if resInh.Get("items.0.basePolicy.name").Exists() {
+			hasInheritance = true
+		}
+	}
+
 	// Get categories, if we manage them
 	if !state.ManageCategories.IsUnknown() && state.ManageCategories.ValueBool() {
 		resCats, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString())+"/categories?expanded=true", reqMods...)
@@ -852,7 +864,9 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 			replaceCats = "[]"
 		}
 		// If the rule inheritance is enabled, API will include categories from parent policies in the response
-		replaceCats = state.filterCategoriesByPolicy(replaceCats, policyName)
+		if hasInheritance {
+			replaceCats = state.filterCategoriesByPolicy(replaceCats, policyName)
+		}
 		s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 	}
 
@@ -868,7 +882,9 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 			replaceRules = "[]"
 		}
 		// If the rule inheritance is enabled, API will include rules from parent policies in the response
-		replaceRules = state.filterRulesByPolicy(replaceRules, policyName)
+		if hasInheritance {
+			replaceRules = state.filterRulesByPolicy(replaceRules, policyName)
+		}
 		s, _ = sjson.SetRaw(s, "dummy_rules", replaceRules)
 	}
 
