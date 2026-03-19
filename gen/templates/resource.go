@@ -105,6 +105,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 		{{- end}}
 
 		Attributes: map[string]schema.Attribute{
+			{{- if not .NoId}}
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Id of the object",
 				Computed:            true,
@@ -112,6 +113,7 @@ func (r *{{camelCase .Name}}Resource) Schema(ctx context.Context, req resource.S
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
+			{{- end}}
 			{{- if isDomainDependent .}}
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "Name of the FMC domain",
