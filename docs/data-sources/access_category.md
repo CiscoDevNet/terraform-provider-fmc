@@ -34,4 +34,8 @@ data "fmc_access_category" "example" {
 
 ### Read-Only
 
+- `insert_after_rule` (Number) Create the category below the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+- `insert_before_category` (String) Create the category above the given category. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+- `insert_before_rule` (Number) Create the category above the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.
+- `section` (String) Create the category in the given section.
 - `type` (String) Type of the object; this value is always 'Category'.

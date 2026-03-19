@@ -84,6 +84,22 @@ func (d *AccessCategoryDataSource) Schema(ctx context.Context, req datasource.Sc
 				MarkdownDescription: "Type of the object; this value is always 'Category'.",
 				Computed:            true,
 			},
+			"section": schema.StringAttribute{
+				MarkdownDescription: "Create the category in the given section.",
+				Computed:            true,
+			},
+			"insert_before_rule": schema.Int64Attribute{
+				MarkdownDescription: "Create the category above the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.",
+				Computed:            true,
+			},
+			"insert_after_rule": schema.Int64Attribute{
+				MarkdownDescription: "Create the category below the given rule index. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.",
+				Computed:            true,
+			},
+			"insert_before_category": schema.StringAttribute{
+				MarkdownDescription: "Create the category above the given category. One of 'insert_before_rule', 'insert_after_rule', 'insert_before_category' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.",
+				Computed:            true,
+			},
 		},
 	}
 }

@@ -83,6 +83,14 @@ func (d *AccessRuleDataSource) Schema(ctx context.Context, req datasource.Schema
 				MarkdownDescription: "The section of the policy to which the rule belongs. Either 'section' or 'category_name' can be set.",
 				Computed:            true,
 			},
+			"insert_before_rule": schema.Int64Attribute{
+				MarkdownDescription: "Specifies that the rules will be inserted before the specified rule index. Either 'insert_before_rule' or 'insert_after_rule' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.",
+				Computed:            true,
+			},
+			"insert_after_rule": schema.Int64Attribute{
+				MarkdownDescription: "Specifies that the rules will be inserted after the specified rule index. Either 'insert_before_rule' or 'insert_after_rule' can be set. This attribute is used for initial rule creation only and is ignored during the resource lifecycle.",
+				Computed:            true,
+			},
 			"action": schema.StringAttribute{
 				MarkdownDescription: "Rule action.",
 				Computed:            true,
