@@ -326,6 +326,7 @@ func (p *FmcProvider) Resources(ctx context.Context) []func() resource.Resource 
 	return []func() resource.Resource{
 		NewAccessCategoryResource,
 		NewAccessControlPolicyResource,
+		NewAccessControlPolicyInheritanceResource,
 		NewAccessRuleResource,
 		NewAccessRulesResource,
 		NewApplicationFilterResource,
@@ -513,6 +514,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 	return []func() datasource.DataSource{
 		NewAccessCategoryDataSource,
 		NewAccessControlPolicyDataSource,
+		NewAccessControlPolicyInheritanceDataSource,
 		NewAccessRuleDataSource,
 		NewApplicationDataSource,
 		NewApplicationBusinessRelevanceDataSource,
