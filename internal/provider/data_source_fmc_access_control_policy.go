@@ -721,6 +721,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 
 	// Set string that will have categories and rules injected
 	replace := res.String()
+	policyName := res.Get("name").String()
 
 	// Save state of categories and rules management
 	manageCategories := false
@@ -741,6 +742,8 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		if replaceCats == "" {
 			replaceCats = "[]"
 		}
+		// If the rule inheritance is enabled, API will include categories from parent policies in the response
+		replaceCats = config.filterCategoriesByPolicy(replaceCats, policyName)
 		replace, _ = sjson.SetRaw(replace, "dummy_categories", replaceCats)
 		manageCategories = true
 	}
@@ -760,6 +763,8 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 		if replaceRules == "" {
 			replaceRules = "[]"
 		}
+		// If the rule inheritance is enabled, API will include rules from parent policies in the response
+		replaceRules = config.filterRulesByPolicy(replaceRules, policyName)
 		replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
 		manageRules = true
 	}

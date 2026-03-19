@@ -838,6 +838,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 
 	// Prepare json string to be filled in with categories and rules, that come from separate endpoints.
 	s := resGet.String()
+	policyName := resGet.Get("name").String()
 
 	// Get categories, if we manage them
 	if !state.ManageCategories.IsUnknown() && state.ManageCategories.ValueBool() {
@@ -850,6 +851,8 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		if replaceCats == "" {
 			replaceCats = "[]"
 		}
+		// If the rule inheritance is enabled, API will include categories from parent policies in the response
+		replaceCats = state.filterCategoriesByPolicy(replaceCats, policyName)
 		s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 	}
 
@@ -864,6 +867,8 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		if replaceRules == "" {
 			replaceRules = "[]"
 		}
+		// If the rule inheritance is enabled, API will include rules from parent policies in the response
+		replaceRules = state.filterRulesByPolicy(replaceRules, policyName)
 		s, _ = sjson.SetRaw(s, "dummy_rules", replaceRules)
 	}
 
