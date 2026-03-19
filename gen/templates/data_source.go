@@ -72,6 +72,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 		{{- end}}
 
 		Attributes: map[string]schema.Attribute{
+			{{- if not .NoId}}
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Id of the object",
 				{{- if and (not (hasDataSourceQuery .Attributes)) (not .IsBulk) }}
@@ -83,6 +84,7 @@ func (d *{{camelCase .Name}}DataSource) Schema(ctx context.Context, req datasour
 				Computed:            true,
 				{{- end}}
 			},
+			{{- end}}
 			{{- if isDomainDependent .}}
 			"domain": schema.StringAttribute{
 				MarkdownDescription: "Name of the FMC domain",
@@ -239,7 +241,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	}
 	{{- end}}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", {{if .NoId}}"{{.Name}}"{{else}}config.Id.String(){{end}}))
 
 	{{- if and (hasDataSourceQuery .Attributes) (not .IsBulk)}}
 	{{- range $index, $dataSourceAttribute := $dataSourceAttributes }}
@@ -287,6 +289,8 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 	urlPath := config.getPath() + "?expanded=true"
 	{{- else if .IsOverride}}
 	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString()) + "/overrides"
+	{{- else if .NoId}}
+	urlPath := config.getPath()
 	{{- else}}
 	urlPath := config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())
 	{{- end}}
@@ -318,7 +322,7 @@ func (d *{{camelCase .Name}}DataSource) Read(ctx context.Context, req datasource
 
 	config.fromBody(ctx, res)
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", config.Id.ValueString()))
+	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", {{if .NoId}}"{{.Name}}"{{else}}config.Id.ValueString(){{end}}))
 
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
