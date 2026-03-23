@@ -33,6 +33,7 @@ attributes:
       The interface needs to be already assigned to the VPN in `fmc_vpn_ra.access_interfaces` (VPN RA > Access Interfaces) configuration.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     data_source_query: true
+    put_create_data_query: true
   - model_name: ikev2IpsecProposals
     tf_name: ikev2_ipsec_proposals
     type: List
