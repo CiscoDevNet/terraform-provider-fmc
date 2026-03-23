@@ -1,0 +1,60 @@
+# Manual resource
+---
+name: System Information
+rest_endpoint: /api/fmc_platform/v1/info/serverversion
+no_resource: true
+no_import: true
+no_id: true
+ds_description: Get FMC system information.
+doc_category: System information
+attributes:
+  - model_name: hostname
+    data_path: ["items.0"]
+    type: String
+    description: Hostname.
+    example: firepower
+  - model_name: lspVersion
+    data_path: ["items.0"]
+    type: String
+    description: LSP version.
+    example: lsp-rel-20260316-1856
+  - model_name: model
+    data_path: ["items.0"]
+    type: String
+    description: Model.
+    example: Cisco Secure Firewall Management Center for VMware
+  - model_name: platform
+    data_path: ["items.0"]
+    type: String
+    description: Platform.
+    example: "66"
+  - model_name: serialNumber
+    data_path: ["items.0"]
+    type: String
+    description: Serial number.
+    example: "None"
+  - model_name: serverVersion
+    data_path: ["items.0"]
+    type: String
+    description: Server version.
+    example: "10.0.0 (build 141)"
+  - model_name: sruVersion
+    data_path: ["items.0"]
+    type: String
+    description: SRU version.
+    example: "2026-03-16-001-vrt"
+  - model_name: type
+    data_path: ["items.0"]
+    type: String
+    description: Type of the object.
+    example: "ServerVersion"
+  - model_name: uptime
+    data_path: ["items.0"]
+    type: String
+    description: Uptime.
+    example: "5 days, 3 hours, 20 minutes"
+  - model_name: vdbVersion
+    data_path: ["items.0"]
+    type: String
+    description: VDB version.
+    example: "build 420 ( 2025-12-03 21:36:49 )"

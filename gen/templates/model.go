@@ -37,7 +37,9 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type {{camelCase .Name}} struct {
+{{- if not .NoId}}
 	Id types.String `tfsdk:"id"`
+{{- end}}
 {{- if isDomainDependent .}}
 	Domain types.String `tfsdk:"domain"`
 {{- end}}
