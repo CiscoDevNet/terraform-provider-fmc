@@ -1,0 +1,66 @@
+---
+name: Access Control Policy Inheritance
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/accesspolicies/%v/inheritancesettings
+doc_category: Policies
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - model_name: access_control_policy_id
+    type: String
+    description: Id of the Access Control Policy.
+    reference: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_access_control_policy.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'AccessPolicyInheritanceSetting'.
+    computed: true
+  - model_name: id
+    data_path: ["basePolicy"]
+    tf_name: base_access_control_policy_id
+    type: String
+    description: Id of the base (parent) Access Control Policy.
+    mandatory: true
+    example: 76d24097-41c4-4558-a4d0-a8123ac08470
+    test_value: fmc_access_control_policy.test_base.id
+
+test_prerequisites: |-
+  resource "fmc_access_control_policy" "test" {
+    name           = "acp_inherit"
+    default_action = "BLOCK"
+    categories = [
+      { name = "Cat1", section = "mandatory" },
+      { name = "Cat2", section = "mandatory" },
+      { name = "Cat3", section = "default" },
+      { name = "Cat4", section = "default" },
+    ]
+    rules = [
+      { name = "Rule1", category_name = "Cat1", action = "ALLOW", source_network_literals = [{ value = "10.0.0.1" }] },
+      { name = "Rule2", category_name = "Cat2", action = "ALLOW", source_network_literals = [{ value = "10.0.0.2" }] },
+      { name = "Rule3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.0.0.3" }] },
+      { name = "Rule4", category_name = "Cat3", action = "ALLOW", source_network_literals = [{ value = "10.0.0.4" }] },
+      { name = "Rule5", category_name = "Cat4", action = "ALLOW", source_network_literals = [{ value = "10.0.0.5" }, { value = "10.0.0.6" }] },
+      { name = "Rule6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.0.0.7" }] }
+    ]
+  }
+
+  resource "fmc_access_control_policy" "test_base" {
+    name           = "acp_inherit_base"
+    default_action = "BLOCK"
+    categories = [
+      { name = "base_Cat1", section = "mandatory" },
+      { name = "base_Cat2", section = "mandatory" },
+      { name = "base_Cat3", section = "default" },
+      { name = "base_Cat4", section = "default" },
+    ]
+    rules = [
+      { name = "base_Rule1", category_name = "base_Cat1", action = "ALLOW", source_network_literals = [{ value = "10.1.0.1" }] },
+      { name = "base_Rule2", category_name = "base_Cat2", action = "ALLOW", source_network_literals = [{ value = "10.1.0.2" }] },
+      { name = "base_Rule3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.1.0.3" }] },
+      { name = "base_Rule4", category_name = "base_Cat3", action = "ALLOW", source_network_literals = [{ value = "10.1.0.4" }] },
+      { name = "base_Rule5", category_name = "base_Cat4", action = "ALLOW", source_network_literals = [{ value = "10.1.0.5" }, { value = "10.1.0.6" }] },
+      { name = "base_Rule6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.1.0.7" }] }
+    ]
+  }
