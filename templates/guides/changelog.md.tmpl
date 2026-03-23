@@ -14,6 +14,7 @@ description: |-
 - (Enh) Device interfaces data sources now accept `logical_name` as search parameter
 - (Enh) If `items` in bulk data source is empty, all objects from FMC will be loaded
 - (Fix) Access Control Policies with inheritance enabled would report rules incorrectly
+- (Enh) Add `fmc_system_information` data source
 
 ## 2.1.0
 

@@ -698,6 +698,7 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewStandardCommunityListsDataSource,
 		NewSyslogAlertDataSource,
 		NewSyslogAlertsDataSource,
+		NewSystemInformationDataSource,
 		NewTimeRangeDataSource,
 		NewTimeRangesDataSource,
 		NewTrustedCertificateAuthorityDataSource,

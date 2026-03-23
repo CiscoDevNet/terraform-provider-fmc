@@ -126,6 +126,7 @@ type YamlConfig struct {
 	ImportNameQuery          bool                  `yaml:"import_name_query"`
 	AdjustBody               bool                  `yaml:"adjust_body"`
 	DeprecationMessage       string                `yaml:"deprecation_message"`
+	NoId                     bool                  `yaml:"no_id"`
 }
 
 type YamlConfigAttribute struct {

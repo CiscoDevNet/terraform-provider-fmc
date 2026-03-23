@@ -1,9 +1,10 @@
 ## Unreleased
 
-- (Enh) Add `fmc_access_control_policy_inheritance`
 - (Enh) Access Rule and Category: Add posibility to create at specific location
 - (Enh) Device interfaces data sources now accept `logical_name` as search parameter
 - (Enh) If `items` in bulk data source is empty, all objects from FMC will be loaded
+- (Enh) Add `fmc_system_information` data source
+- (Enh) Add `fmc_access_control_policy_inheritance`
 - (Fix) Access Control Policies with inheritance enabled would report rules incorrectly
 
 ## 2.1.0
