@@ -3090,45 +3090,16 @@ func NewValidAccessControlPolicy(ctx context.Context, tfplan tfsdk.Plan) (Access
 	return plan, diags
 }
 
-// filterRulesByPolicy removes rules inherited from parent policies.
+// filterByPolicyName removes rules / categories inherited from parent policies.
 // Keeps rules where metadata.accessPolicy.name matches policyName,
 // or where that field is absent (defensive: treat as owned).
-func (data *AccessControlPolicy) filterRulesByPolicy(rulesJSON string, policyName string) string {
-	if rulesJSON == "" || rulesJSON == "[]" {
+func (data *AccessControlPolicy) filterByPolicyName(responseJSON string, policyName string) string {
+	if responseJSON == "" || responseJSON == "[]" {
 		return "[]"
 	}
-	parsed := gjson.Parse(rulesJSON)
+	parsed := gjson.Parse(responseJSON)
 	if !parsed.IsArray() {
-		return rulesJSON
-	}
-	var b strings.Builder
-	b.WriteByte('[')
-	first := true
-	parsed.ForEach(func(_, rule gjson.Result) bool {
-		ap := rule.Get("metadata.accessPolicy.name")
-		if !ap.Exists() || ap.String() == policyName {
-			if !first {
-				b.WriteByte(',')
-			}
-			b.WriteString(rule.Raw)
-			first = false
-		}
-		return true
-	})
-	b.WriteByte(']')
-	return b.String()
-}
-
-// filterCategoriesByPolicy removes categories inherited from parent policies.
-// Keeps categories where metadata.accessPolicy.name matches policyName,
-// or where that field is absent (defensive: treat as owned).
-func (data *AccessControlPolicy) filterCategoriesByPolicy(categoriesJSON string, policyName string) string {
-	if categoriesJSON == "" || categoriesJSON == "[]" {
-		return "[]"
-	}
-	parsed := gjson.Parse(categoriesJSON)
-	if !parsed.IsArray() {
-		return categoriesJSON
+		return responseJSON
 	}
 	var b strings.Builder
 	b.WriteByte('[')

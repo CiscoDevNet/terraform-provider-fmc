@@ -743,7 +743,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 			replaceCats = "[]"
 		}
 		// If the rule inheritance is enabled, API will include categories from parent policies in the response
-		replaceCats = config.filterCategoriesByPolicy(replaceCats, policyName)
+		replaceCats = config.filterByPolicyName(replaceCats, policyName)
 		replace, _ = sjson.SetRaw(replace, "dummy_categories", replaceCats)
 		manageCategories = true
 	}
@@ -764,7 +764,7 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 			replaceRules = "[]"
 		}
 		// If the rule inheritance is enabled, API will include rules from parent policies in the response
-		replaceRules = config.filterRulesByPolicy(replaceRules, policyName)
+		replaceRules = config.filterByPolicyName(replaceRules, policyName)
 		replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
 		manageRules = true
 	}

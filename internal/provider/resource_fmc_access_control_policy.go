@@ -865,7 +865,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		}
 		// If the rule inheritance is enabled, API will include categories from parent policies in the response
 		if hasInheritance {
-			replaceCats = state.filterCategoriesByPolicy(replaceCats, policyName)
+			replaceCats = state.filterByPolicyName(replaceCats, policyName)
 		}
 		s, _ = sjson.SetRaw(s, "dummy_categories", replaceCats)
 	}
@@ -883,7 +883,7 @@ func (r *AccessControlPolicyResource) Read(ctx context.Context, req resource.Rea
 		}
 		// If the rule inheritance is enabled, API will include rules from parent policies in the response
 		if hasInheritance {
-			replaceRules = state.filterRulesByPolicy(replaceRules, policyName)
+			replaceRules = state.filterByPolicyName(replaceRules, policyName)
 		}
 		s, _ = sjson.SetRaw(s, "dummy_rules", replaceRules)
 	}

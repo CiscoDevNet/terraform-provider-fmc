@@ -49,41 +49,41 @@ func TestAccDataSourceFmcAccessControlPolicyInheritance(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccDataSourceFmcAccessControlPolicyInheritancePrerequisitesConfig = `
-resource "fmc_access_control_policy" "test_1" {
-  name           = "acp_inherit_parent"
+resource "fmc_access_control_policy" "test" {
+  name           = "acp_inherit"
   default_action = "BLOCK"
   categories = [
-    { name = "par_Cat1", section = "mandatory" },
-    { name = "par_Cat2", section = "mandatory" },
-    { name = "par_Cat3", section = "default" },
-    { name = "par_Cat4", section = "default" },
+    { name = "Cat1", section = "mandatory" },
+    { name = "Cat2", section = "mandatory" },
+    { name = "Cat3", section = "default" },
+    { name = "Cat4", section = "default" },
   ]
   rules = [
-    { name = "par_R1", category_name = "par_Cat1", action = "ALLOW", source_network_literals = [{ value = "10.0.0.1" }] },
-    { name = "par_R2", category_name = "par_Cat2", action = "ALLOW", source_network_literals = [{ value = "10.0.0.2" }] },
-    { name = "par_R3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.0.0.3" }] },
-    { name = "par_R4", category_name = "par_Cat3", action = "ALLOW", source_network_literals = [{ value = "10.0.0.4" }] },
-    { name = "par_R5", category_name = "par_Cat4", action = "ALLOW", source_network_literals = [{ value = "10.0.0.5" }, { value = "10.0.0.6" }] },
-    { name = "par_R6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.0.0.7" }] }
+    { name = "Rule1", category_name = "Cat1", action = "ALLOW", source_network_literals = [{ value = "10.0.0.1" }] },
+    { name = "Rule2", category_name = "Cat2", action = "ALLOW", source_network_literals = [{ value = "10.0.0.2" }] },
+    { name = "Rule3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.0.0.3" }] },
+    { name = "Rule4", category_name = "Cat3", action = "ALLOW", source_network_literals = [{ value = "10.0.0.4" }] },
+    { name = "Rule5", category_name = "Cat4", action = "ALLOW", source_network_literals = [{ value = "10.0.0.5" }, { value = "10.0.0.6" }] },
+    { name = "Rule6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.0.0.7" }] }
   ]
 }
 
-resource "fmc_access_control_policy" "test_2" {
-  name           = "acp_inherit_child"
+resource "fmc_access_control_policy" "test_base" {
+  name           = "acp_inherit_base"
   default_action = "BLOCK"
   categories = [
-    { name = "child_Cat1", section = "mandatory" },
-    { name = "child_Cat2", section = "mandatory" },
-    { name = "child_Cat3", section = "default" },
-    { name = "child_Cat4", section = "default" },
+    { name = "base_Cat1", section = "mandatory" },
+    { name = "base_Cat2", section = "mandatory" },
+    { name = "base_Cat3", section = "default" },
+    { name = "base_Cat4", section = "default" },
   ]
   rules = [
-    { name = "child_R1", category_name = "child_Cat1", action = "ALLOW", source_network_literals = [{ value = "10.0.0.1" }] },
-    { name = "child_R2", category_name = "child_Cat2", action = "ALLOW", source_network_literals = [{ value = "10.0.0.2" }] },
-    { name = "child_R3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.0.0.3" }] },
-    { name = "child_R4", category_name = "child_Cat3", action = "ALLOW", source_network_literals = [{ value = "10.0.0.4" }] },
-    { name = "child_R5", category_name = "child_Cat4", action = "ALLOW", source_network_literals = [{ value = "10.0.0.5" }, { value = "10.0.0.6" }] },
-    { name = "child_R6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.0.0.7" }] }
+    { name = "base_Rule1", category_name = "base_Cat1", action = "ALLOW", source_network_literals = [{ value = "10.1.0.1" }] },
+    { name = "base_Rule2", category_name = "base_Cat2", action = "ALLOW", source_network_literals = [{ value = "10.1.0.2" }] },
+    { name = "base_Rule3", section = "mandatory", action = "ALLOW", source_network_literals = [{ value = "10.1.0.3" }] },
+    { name = "base_Rule4", category_name = "base_Cat3", action = "ALLOW", source_network_literals = [{ value = "10.1.0.4" }] },
+    { name = "base_Rule5", category_name = "base_Cat4", action = "ALLOW", source_network_literals = [{ value = "10.1.0.5" }, { value = "10.1.0.6" }] },
+    { name = "base_Rule6", section = "default", action = "ALLOW", source_network_literals = [{ value = "10.1.0.7" }] }
   ]
 }
 `
@@ -94,14 +94,14 @@ resource "fmc_access_control_policy" "test_2" {
 
 func testAccDataSourceFmcAccessControlPolicyInheritanceConfig() string {
 	config := `resource "fmc_access_control_policy_inheritance" "test" {` + "\n"
-	config += `	access_control_policy_id = fmc_access_control_policy.test_1.id` + "\n"
-	config += `	base_access_control_policy_id = fmc_access_control_policy.test_2.id` + "\n"
+	config += `	access_control_policy_id = fmc_access_control_policy.test.id` + "\n"
+	config += `	base_access_control_policy_id = fmc_access_control_policy.test_base.id` + "\n"
 	config += `}` + "\n"
 
 	config += `
 		data "fmc_access_control_policy_inheritance" "test" {
 			id = fmc_access_control_policy_inheritance.test.id
-			access_control_policy_id = fmc_access_control_policy.test_1.id
+			access_control_policy_id = fmc_access_control_policy.test.id
 		}
 	`
 	return config
