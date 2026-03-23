@@ -663,6 +663,7 @@ func (d *AccessControlPolicyDataSource) Configure(_ context.Context, req datasou
 
 func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
 	var config AccessControlPolicy
+	var hasInheritance bool = false
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -727,6 +728,17 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 	manageCategories := false
 	manageRules := false
 
+	if (!config.ManageCategories.IsUnknown() && config.ManageCategories.ValueBool()) || (!config.ManageRules.IsUnknown() && config.ManageRules.ValueBool()) {
+		resInh, err := d.client.Get(config.getPath()+"/"+url.QueryEscape(config.Id.ValueString())+"/inheritancesettings?expanded=true", reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve inheritance settings (GET), got error: %s, %s", err, resInh.String()))
+			return
+		}
+		if resInh.Get("items.0.basePolicy.name").Exists() {
+			hasInheritance = true
+		}
+	}
+
 	// If manage_categories is set to true, retrieve categories
 	if !config.ManageCategories.IsUnknown() && config.ManageCategories.ValueBool() {
 
@@ -743,7 +755,9 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 			replaceCats = "[]"
 		}
 		// If the rule inheritance is enabled, API will include categories from parent policies in the response
-		replaceCats = config.filterByPolicyName(replaceCats, policyName)
+		if hasInheritance {
+			replaceCats = config.filterByPolicyName(replaceCats, policyName)
+		}
 		replace, _ = sjson.SetRaw(replace, "dummy_categories", replaceCats)
 		manageCategories = true
 	}
@@ -764,7 +778,9 @@ func (d *AccessControlPolicyDataSource) Read(ctx context.Context, req datasource
 			replaceRules = "[]"
 		}
 		// If the rule inheritance is enabled, API will include rules from parent policies in the response
-		replaceRules = config.filterByPolicyName(replaceRules, policyName)
+		if hasInheritance {
+			replaceRules = config.filterByPolicyName(replaceRules, policyName)
+		}
 		replace, _ = sjson.SetRaw(replace, "dummy_rules", replaceRules)
 		manageRules = true
 	}
