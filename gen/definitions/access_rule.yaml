@@ -71,7 +71,7 @@ attributes:
     data_source_query: true
   - model_name: enabled
     type: Bool
-    description: Indicates whether the access rule is in effect (true) or not (false).
+    description: Enable rule.
     default_value: "true"
     exclude_example: true
     test_value: "true"

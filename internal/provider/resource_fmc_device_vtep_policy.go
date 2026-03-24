@@ -99,7 +99,7 @@ func (r *DeviceVTEPPolicyResource) Schema(ctx context.Context, req resource.Sche
 				},
 			},
 			"nve_enabled": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.").AddDefaultValueDescription("true").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Enable NVE on the `device_id`. Can only be false if `vteps` are empty.").AddDefaultValueDescription("true").String,
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(true),

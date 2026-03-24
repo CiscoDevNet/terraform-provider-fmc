@@ -59,7 +59,7 @@ func (d *ExternalCertificateDataSource) Metadata(_ context.Context, req datasour
 func (d *ExternalCertificateDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the External Certificate.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the External Certificate.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -109,6 +109,12 @@ func (d *ExternalCertificateDataSource) Configure(_ context.Context, req datasou
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *ExternalCertificateDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionExternalCertificate) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support External Certificate, minimum required version is 7.4", d.client.FMCVersion))
+		return
+	}
 	var config ExternalCertificate
 
 	// Read config

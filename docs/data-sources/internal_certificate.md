@@ -4,11 +4,16 @@ page_title: "fmc_internal_certificate Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the Internal Certificate.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_internal_certificate (Data Source)
 
 This data source reads the Internal Certificate.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

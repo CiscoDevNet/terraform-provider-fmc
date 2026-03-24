@@ -131,7 +131,7 @@ func (r *AccessRulesResource) Schema(ctx context.Context, req resource.SchemaReq
 							Required:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates whether the access rule is in effect (true) or not (false).").AddDefaultValueDescription("true").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable rule.").AddDefaultValueDescription("true").String,
 							Optional:            true,
 							Computed:            true,
 							Default:             booldefault.StaticBool(true),

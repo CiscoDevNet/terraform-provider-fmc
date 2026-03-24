@@ -36,7 +36,7 @@ resource "fmc_device_vtep_policy" "example" {
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `nve_enabled` (Boolean) Indicates whether to enable NVE on the `device_id`. Can only be false if `vteps` are empty.
+- `nve_enabled` (Boolean) Enable NVE on the `device_id`. Can only be false if `vteps` are empty.
   - Default value: `true`
 - `vteps` (Attributes List) List that can either be empty or contain one VTEP object. (see [below for nested schema](#nestedatt--vteps))
 

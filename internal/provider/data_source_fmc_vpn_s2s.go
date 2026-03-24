@@ -81,7 +81,7 @@ func (d *VPNS2SDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"route_based": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether the VPN is Route Based (true) or Policy Based (false).",
+				MarkdownDescription: "Indicates whether the VPN is Route Based (`true`) or Policy Based (`false`).",
 				Computed:            true,
 			},
 			"network_topology": schema.StringAttribute{
@@ -89,11 +89,11 @@ func (d *VPNS2SDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				Computed:            true,
 			},
 			"ikev1": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether IKEv1 is enabled for the VPN.",
+				MarkdownDescription: "Enable IKEv1 for the VPN.",
 				Computed:            true,
 			},
 			"ikev2": schema.BoolAttribute{
-				MarkdownDescription: "Indicates whether IKEv2 is enabled for the VPN.",
+				MarkdownDescription: "Enable IKEv2 for the VPN.",
 				Computed:            true,
 			},
 			"ipsec_policy_id": schema.StringAttribute{

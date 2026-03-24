@@ -69,7 +69,7 @@ Read-Only:
 
 Required:
 
-- `action` (String) Indicate redistribution access.
+- `action` (String) Redistribution access.
   - Choices: `PERMIT`, `DENY`
 
 Optional:

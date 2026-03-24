@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 
+	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/tidwall/gjson"
 	"github.com/tidwall/sjson"
@@ -41,6 +42,7 @@ type TrustedCertificateAuthority struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionTrustedCertificateAuthority = version.Must(version.NewVersion("7.4"))
 
 // End of section. //template:end minimumVersions
 

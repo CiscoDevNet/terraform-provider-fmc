@@ -4,11 +4,16 @@ page_title: "fmc_trusted_certificate_authority Data Source - terraform-provider-
 subcategory: "Objects"
 description: |-
   This data source reads the Trusted Certificate Authority.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_trusted_certificate_authority (Data Source)
 
 This data source reads the Trusted Certificate Authority.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

@@ -30,14 +30,14 @@ resource "fmc_vpn_s2s" "example" {
 - `name` (String) Name of the VPN Site-to-Site (S2S) Topology.
 - `network_topology` (String) Type of the VPN network topology.
   - Choices: `POINT_TO_POINT`, `HUB_AND_SPOKE`, `FULL_MESH`
-- `route_based` (Boolean) Indicates whether the VPN is Route Based (true) or Policy Based (false).
+- `route_based` (Boolean) Indicates whether the VPN is Route Based (`true`) or Policy Based (`false`).
 
 ### Optional
 
 - `domain` (String) Name of the FMC domain
-- `ikev1` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
+- `ikev1` (Boolean) Enable IKEv1 for the VPN.
   - Default value: `false`
-- `ikev2` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
+- `ikev2` (Boolean) Enable IKEv2 for the VPN.
   - Default value: `false`
 
 ### Read-Only

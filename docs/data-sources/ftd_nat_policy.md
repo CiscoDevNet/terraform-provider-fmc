@@ -72,7 +72,7 @@ Read-Only:
 
 - `description` (String) Description of Manual NAT rule.
 - `destination_interface_id` (String) ID of destination security zone or interface group.
-- `enabled` (Boolean) Indicates if the rule is enabled.
+- `enabled` (Boolean) Enable rule.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
 - `id` (String) Id of the Manual NAT rule.
 - `interface_in_original_destination` (Boolean) Use interface address as original destination.

@@ -4,11 +4,16 @@ page_title: "fmc_internal_certificate Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This resource manages an Internal Certificate.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_internal_certificate (Resource)
 
 This resource manages an Internal Certificate.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

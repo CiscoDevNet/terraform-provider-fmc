@@ -29,7 +29,7 @@ attributes:
       - model_name: action
         type: String
         mandatory: true
-        description: Indicate the redistribution access.
+        description: Redistribution access.
         enum_values: [PERMIT, DENY]
         example: PERMIT
       # Match clauses - Security Zones

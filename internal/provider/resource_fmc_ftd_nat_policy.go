@@ -122,7 +122,7 @@ func (r *FTDNATPolicyResource) Schema(ctx context.Context, req resource.SchemaRe
 							Optional:            true,
 						},
 						"enabled": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Indicates if the rule is enabled.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Enable rule.").String,
 							Optional:            true,
 						},
 						"section": schema.StringAttribute{

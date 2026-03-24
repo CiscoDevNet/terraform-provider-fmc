@@ -31,9 +31,9 @@ data "fmc_vpn_s2s" "example" {
 
 - `advanced_settings_policy_id` (String) The Id of the associated advanced settings policy.
 - `ike_policy_id` (String) The Id of the associated IKE settings policy.
-- `ikev1` (Boolean) Indicates whether IKEv1 is enabled for the VPN.
-- `ikev2` (Boolean) Indicates whether IKEv2 is enabled for the VPN.
+- `ikev1` (Boolean) Enable IKEv1 for the VPN.
+- `ikev2` (Boolean) Enable IKEv2 for the VPN.
 - `ipsec_policy_id` (String) The Id of the associated IPsec settings policy.
 - `network_topology` (String) Type of the VPN network topology.
-- `route_based` (Boolean) Indicates whether the VPN is Route Based (true) or Policy Based (false).
+- `route_based` (Boolean) Indicates whether the VPN is Route Based (`true`) or Policy Based (`false`).
 - `type` (String) Type of the object; this value is always 'FTDS2SVpn'.

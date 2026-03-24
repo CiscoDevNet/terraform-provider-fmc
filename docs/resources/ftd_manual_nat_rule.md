@@ -41,7 +41,7 @@ resource "fmc_ftd_manual_nat_rule" "example" {
 - `description` (String) Description of Manual NAT rule.
 - `destination_interface_id` (String) ID of destination security zone or interface group.
 - `domain` (String) Name of the FMC domain
-- `enabled` (Boolean) Indicates if the rule is enabled.
+- `enabled` (Boolean) Enable rule.
 - `fall_through` (Boolean) Fallthrough to Interface PAT (Destination Interface).
 - `interface_in_original_destination` (Boolean) Use interface address as original destination.
 - `interface_in_translated_source` (Boolean) Translate source network to destination interface address.

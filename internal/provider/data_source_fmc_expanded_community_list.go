@@ -86,7 +86,7 @@ func (d *ExpandedCommunityListDataSource) Schema(ctx context.Context, req dataso
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"action": schema.StringAttribute{
-							MarkdownDescription: "Indicate redistribution access.",
+							MarkdownDescription: "Redistribution access.",
 							Computed:            true,
 						},
 						"regular_expression": schema.StringAttribute{

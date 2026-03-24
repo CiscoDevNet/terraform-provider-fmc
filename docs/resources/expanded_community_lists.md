@@ -66,7 +66,7 @@ Read-Only:
 
 Required:
 
-- `action` (String) Indicate redistribution access.
+- `action` (String) Redistribution access.
   - Choices: `PERMIT`, `DENY`
 - `regular_expression` (String) Regular expression pattern to match the community.
 
