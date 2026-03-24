@@ -7,23 +7,23 @@ description: |-
 
 # Changelog
 
-## Unreleased
+## 2.2.0
 
-- (Enh) Access Rule and Category: Add posibility to create at specific location
-- (Enh) Device interfaces data sources now accept `logical_name` as search parameter
-- (Enh) If `items` in bulk data source is empty, all objects from FMC will be loaded
-- (Enh) Add `fmc_system_information` data source
-- (Enh) Add `fmc_access_control_policy_inheritance`
+- (Enhancement) Access Rule and Category: Add possibility to create at specific location
+- (Enhancement) Device interface data sources now accept `logical_name` as search parameter
+- (Enhancement) If `items` in a bulk data source is empty, all objects from FMC will be loaded
+- (Enhancement) Add `fmc_system_information` data source
+- (Enhancement) Add `fmc_access_control_policy_inheritance` resource and data source
 - (Fix) Access Control Policies with inheritance enabled would report rules incorrectly
 
 ## 2.1.0
 
-- (Enh) Auto and Manual NAT rules: add support for PAT pool options
-- (Enh) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, and `fmc_fqdn_overrides`
+- (Enhancement) Auto and Manual NAT rules: add support for PAT pool options
+- (Enhancement) Add support for `fmc_host_overrides`, `fmc_network_overrides`, `fmc_network_group_overrides`, `fmc_range_overrides`, and `fmc_fqdn_overrides`
 - (Fix) `fmc_file_policy`: add a missing choice for `action`
 - (Fix) Access Control and Prefilter Policies: Source port literals used incorrect attributes, that could generate incorrect configuration on FMC
 - (Fix) Prefilter Policies: Added missing attributes to Destination port literals
-- (Doc) Access rules: update the Source and Destination Objects description to include geolocation object support
+- (Documentation) Access rules: update the Source and Destination Objects description to include geolocation object support
 
 ## 2.0.1
 
