@@ -252,16 +252,16 @@ func (data *VPNRAIPSecCryptoMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.InterfaceId = types.StringNull()
 	}
+	ikev2IpsecProposalsArray := res.Get("ikev2IpsecProposals")
 	for i := 0; i < len(data.Ikev2IpsecProposals); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2IpsecProposals[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2IpsecProposals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikev2IpsecProposals").ForEach(
+		ikev2IpsecProposalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

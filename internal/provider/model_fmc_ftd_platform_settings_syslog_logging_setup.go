@@ -293,16 +293,16 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBodyPartial(ctx context.C
 	} else {
 		data.FtpServerPath = types.StringNull()
 	}
+	ftpServerInterfaceGroupsArray := res.Get("ftpServerInfo.interfaceGroups")
 	for i := 0; i < len(data.FtpServerInterfaceGroups); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.FtpServerInterfaceGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).FtpServerInterfaceGroups[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ftpServerInfo.interfaceGroups").ForEach(
+		ftpServerInterfaceGroupsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

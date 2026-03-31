@@ -931,16 +931,16 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.EtherChannelId = types.StringNull()
 	}
+	selectedInterfacesArray := res.Get("selectedInterfaces")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedInterfaces").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1069,16 +1069,16 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1127,16 +1127,16 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
+	ipv6PrefixesArray := res.Get("ipv6.prefixes")
 	for i := 0; i < len(data.Ipv6Prefixes); i++ {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Prefixes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.prefixes").ForEach(
+		ipv6PrefixesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1305,16 +1305,16 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.ManagementAccess = types.BoolNull()
 	}
+	managementAccessNetworkObjectsArray := res.Get("fmcAccessConfig.allowedNetworks")
 	for i := 0; i < len(data.ManagementAccessNetworkObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.ManagementAccessNetworkObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).ManagementAccessNetworkObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("fmcAccessConfig.allowedNetworks").ForEach(
+		managementAccessNetworkObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1363,16 +1363,16 @@ func (data *DeviceEtherChannelInterface) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.StandbyMacAddress = types.StringNull()
 	}
+	arpTableEntriesArray := res.Get("arpConfig")
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
 		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].Enabled.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig").ForEach(
+		arpTableEntriesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

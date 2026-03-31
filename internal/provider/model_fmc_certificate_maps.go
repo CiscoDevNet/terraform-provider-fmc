@@ -209,16 +209,16 @@ func (data *CertificateMaps) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.Type = types.StringNull()
 		}
+		rulesArray := res.Get("rules")
 		for i := 0; i < len(data.Rules); i++ {
 			keys := [...]string{"field", "component", "operator", "value"}
 			keyValues := [...]string{data.Rules[i].Field.ValueString(), data.Rules[i].Component.ValueString(), data.Rules[i].Operator.ValueString(), data.Rules[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Rules[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("rules").ForEach(
+			rulesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

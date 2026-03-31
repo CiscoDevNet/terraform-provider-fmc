@@ -254,16 +254,16 @@ func (data *FTDPlatformSettingsSyslogServers) fromBodyPartial(ctx context.Contex
 	} else if data.MessageQueueSize.ValueInt64() != 512 {
 		data.MessageQueueSize = types.Int64Null()
 	}
+	serversArray := res.Get("servers")
 	for i := 0; i < len(data.Servers); i++ {
 		keys := [...]string{"ipAddress.object.id"}
 		keyValues := [...]string{data.Servers[i].NetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).Servers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("servers").ForEach(
+		serversArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -325,16 +325,16 @@ func (data *FTDPlatformSettingsSyslogServers) fromBodyPartial(ctx context.Contex
 		} else {
 			data.InterfaceLiterals = types.SetNull(types.StringType)
 		}
+		interfaceObjectsArray := res.Get("interfaces.objects")
 		for i := 0; i < len(data.InterfaceObjects); i++ {
 			keys := [...]string{"id", "type", "name"}
 			keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).InterfaceObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("interfaces.objects").ForEach(
+			interfaceObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

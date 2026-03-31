@@ -228,16 +228,16 @@ func (data *ChassisEtherChannelInterface) fromBodyPartial(ctx context.Context, r
 	} else if data.AdminState.ValueString() != "ENABLED" {
 		data.AdminState = types.StringNull()
 	}
+	selectedInterfacesArray := res.Get("selectedInterfaces")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedInterfaces").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

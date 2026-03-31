@@ -217,16 +217,16 @@ func (data *KeyChain) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			data.Description = types.StringNull()
 		}
 	}
+	keysArray := res.Get("keys")
 	for i := 0; i < len(data.Keys); i++ {
 		keys := [...]string{"keyId"}
 		keyValues := [...]string{strconv.FormatInt(data.Keys[i].Id.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).Keys[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("keys").ForEach(
+		keysArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

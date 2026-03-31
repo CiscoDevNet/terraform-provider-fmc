@@ -173,16 +173,16 @@ func (data *PortGroup) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	objectsArray := res.Get("objects")
 	for i := 0; i < len(data.Objects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Objects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("objects").ForEach(
+		objectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

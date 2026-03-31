@@ -292,16 +292,16 @@ func (data *TimeRanges) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.EndTime = types.StringNull()
 		}
+		recurrenceListArray := res.Get("recurrenceList")
 		for i := 0; i < len(data.RecurrenceList); i++ {
 			keys := [...]string{"recurrenceType", "rangeStartTime", "rangeEndTime", "rangeStartDay", "rangeEndDay", "dailyStartTime", "dailyEndTime"}
 			keyValues := [...]string{data.RecurrenceList[i].RecurrenceType.ValueString(), data.RecurrenceList[i].RangeStartTime.ValueString(), data.RecurrenceList[i].RangeEndTime.ValueString(), data.RecurrenceList[i].RangeStartDay.ValueString(), data.RecurrenceList[i].RangeEndDay.ValueString(), data.RecurrenceList[i].DailyStartTime.ValueString(), data.RecurrenceList[i].DailyEndTime.ValueString()}
 
 			parent := &data
 			data := (*parent).RecurrenceList[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("recurrenceList").ForEach(
+			recurrenceListArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

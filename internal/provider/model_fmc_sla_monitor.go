@@ -259,16 +259,16 @@ func (data *SLAMonitor) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.MonitorAddress = types.StringNull()
 	}
+	selectedInterfacesArray := res.Get("interfaceObjects")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaceObjects").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

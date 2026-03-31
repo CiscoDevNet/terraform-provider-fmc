@@ -207,16 +207,16 @@ func (data *ServiceAccess) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.Action = types.StringNull()
 		}
+		geolocationSourcesArray := res.Get("geoSources")
 		for i := 0; i < len(data.GeolocationSources); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.GeolocationSources[i].Id.ValueString(), data.GeolocationSources[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).GeolocationSources[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("geoSources").ForEach(
+			geolocationSourcesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

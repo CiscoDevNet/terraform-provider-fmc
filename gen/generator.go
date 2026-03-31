@@ -211,6 +211,14 @@ func SnakeCase(s string) string {
 	return strings.Join(g, "_")
 }
 
+// Templating helper function to lowercase the first character of a string
+func LowerFirst(s string) string {
+	if s == "" {
+		return s
+	}
+	return strings.ToLower(s[:1]) + s[1:]
+}
+
 // Templating helper function to fail a template mid-way
 func Errorf(s string, args ...any) (struct{}, error) {
 	return struct{}{}, fmt.Errorf(s, args...)
@@ -445,6 +453,7 @@ var functions = template.FuncMap{
 	"toGoName":                       ToGoName,
 	"camelCase":                      CamelCase,
 	"snakeCase":                      SnakeCase,
+	"lowerFirst":                     LowerFirst,
 	"sprintf":                        fmt.Sprintf,
 	"errorf":                         Errorf,
 	"toLower":                        strings.ToLower,

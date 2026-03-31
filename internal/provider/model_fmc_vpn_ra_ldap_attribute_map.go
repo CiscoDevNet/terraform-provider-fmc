@@ -197,16 +197,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Type = types.StringNull()
 	}
+	realmsArray := res.Get("ldapAttributeMapList")
 	for i := 0; i < len(data.Realms); i++ {
 		keys := [...]string{"ldapServer.id"}
 		keyValues := [...]string{data.Realms[i].RealmAdLdapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Realms[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ldapAttributeMapList").ForEach(
+		realmsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -238,16 +238,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.RealmAdLdapId = types.StringNull()
 		}
+		attributeMapsArray := res.Get("ldapAttributeMaps")
 		for i := 0; i < len(data.AttributeMaps); i++ {
 			keys := [...]string{"ldapName", "ciscoName"}
 			keyValues := [...]string{data.AttributeMaps[i].LdapAttributeName.ValueString(), data.AttributeMaps[i].CiscoAttributeName.ValueString()}
 
 			parent := &data
 			data := (*parent).AttributeMaps[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ldapAttributeMaps").ForEach(
+			attributeMapsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -284,16 +284,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 			} else {
 				data.CiscoAttributeName = types.StringNull()
 			}
+			valueMapsArray := res.Get("valueMappings")
 			for i := 0; i < len(data.ValueMaps); i++ {
 				keys := [...]string{"ldapValue", "ciscoValue"}
 				keyValues := [...]string{data.ValueMaps[i].LdapAttributeValue.ValueString(), data.ValueMaps[i].CiscoAttributeValue.ValueString()}
 
 				parent := &data
 				data := (*parent).ValueMaps[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("valueMappings").ForEach(
+				valueMapsArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {

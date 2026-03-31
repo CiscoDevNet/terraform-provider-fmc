@@ -366,16 +366,16 @@ func (data *DeviceOSPFInterface) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.AuthenticationAreaPassword = types.StringNull()
 	}
+	authenticationAreaMd5sArray := res.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList")
 	for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 		keys := [...]string{"md5KeyId"}
 		keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).AuthenticationAreaMd5s[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList").ForEach(
+		authenticationAreaMd5sArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -414,16 +414,16 @@ func (data *DeviceOSPFInterface) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		(*parent).AuthenticationAreaMd5s[i] = data
 	}
+	authenticationMd5sArray := res.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList")
 	for i := 0; i < len(data.AuthenticationMd5s); i++ {
 		keys := [...]string{"md5KeyId"}
 		keyValues := [...]string{strconv.FormatInt(data.AuthenticationMd5s[i].Id.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).AuthenticationMd5s[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList").ForEach(
+		authenticationMd5sArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

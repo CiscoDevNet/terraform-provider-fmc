@@ -602,16 +602,16 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else if data.ProtocolIpsecIkev2.ValueBool() != true {
 		data.ProtocolIpsecIkev2 = types.BoolNull()
 	}
+	ipv4AddressPoolsArray := res.Get("generalSettings.addressAssignment.ipv4LocalAddressPool")
 	for i := 0; i < len(data.Ipv4AddressPools); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ipv4AddressPools[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4AddressPools[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("generalSettings.addressAssignment.ipv4LocalAddressPool").ForEach(
+		ipv4AddressPoolsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -720,16 +720,16 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.SecureClientManagementProfileId = types.StringNull()
 	}
+	secureClientModulesArray := res.Get("anyConnectSettings.clientModules")
 	for i := 0; i < len(data.SecureClientModules); i++ {
 		keys := [...]string{"moduleType"}
 		keyValues := [...]string{data.SecureClientModules[i].Type.ValueString()}
 
 		parent := &data
 		data := (*parent).SecureClientModules[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("anyConnectSettings.clientModules").ForEach(
+		secureClientModulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -853,16 +853,16 @@ func (data *GroupPolicy) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringNull()
 	}
+	secureClientCustomAttributesArray := res.Get("anyConnectSettings.customAttributes")
 	for i := 0; i < len(data.SecureClientCustomAttributes); i++ {
 		keys := [...]string{"customAttributeObject.id"}
 		keyValues := [...]string{data.SecureClientCustomAttributes[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).SecureClientCustomAttributes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("anyConnectSettings.customAttributes").ForEach(
+		secureClientCustomAttributesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

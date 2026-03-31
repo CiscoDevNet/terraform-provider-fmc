@@ -268,16 +268,16 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.NetworkGroups = types.SetNull(types.StringType)
 		}
+		objectsArray := res.Get("objects")
 		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Objects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("objects").ForEach(
+			objectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -316,16 +316,16 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 			}
 			(*parent).Objects[i] = data
 		}
+		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

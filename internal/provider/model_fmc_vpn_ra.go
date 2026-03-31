@@ -442,16 +442,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.DynamicAccessPolicyId = types.StringNull()
 	}
+	accessInterfacesArray := res.Get("accessInterfaceSettings.interfaceSettings")
 	for i := 0; i < len(data.AccessInterfaces); i++ {
 		keys := [...]string{"accessInterface.id"}
 		keyValues := [...]string{data.AccessInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AccessInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("accessInterfaceSettings.interfaceSettings").ForEach(
+		accessInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -587,16 +587,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.CertificateMapId = types.StringNull()
 	}
+	groupPoliciesArray := res.Get("groupPolicies")
 	for i := 0; i < len(data.GroupPolicies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.GroupPolicies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).GroupPolicies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("groupPolicies").ForEach(
+		groupPoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -640,16 +640,16 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.LoadBalancingId = types.StringNull()
 	}
+	ikev2PoliciesArray := res.Get("ikev2Policies")
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikev2Policies").ForEach(
+		ikev2PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

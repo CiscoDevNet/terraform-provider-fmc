@@ -827,16 +827,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Action = types.StringNull()
 		}
+		matchSecurityZonesArray := res.Get("interfaces")
 		for i := 0; i < len(data.MatchSecurityZones); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.MatchSecurityZones[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchSecurityZones[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("interfaces").ForEach(
+			matchSecurityZonesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -875,16 +875,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.MatchInterfaceNames = types.ListNull(types.StringType)
 		}
+		matchIpv4AddressPrefixListsArray := res.Get("ipv4PrefixListAddresses")
 		for i := 0; i < len(data.MatchIpv4AddressPrefixLists); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.MatchIpv4AddressPrefixLists[i].Id.ValueString(), data.MatchIpv4AddressPrefixLists[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchIpv4AddressPrefixLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ipv4PrefixListAddresses").ForEach(
+			matchIpv4AddressPrefixListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -923,16 +923,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchIpv4AddressPrefixLists[i] = data
 		}
+		matchIpv4NextHopPrefixListsArray := res.Get("ipv4PrefixListNexthops")
 		for i := 0; i < len(data.MatchIpv4NextHopPrefixLists); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.MatchIpv4NextHopPrefixLists[i].Id.ValueString(), data.MatchIpv4NextHopPrefixLists[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchIpv4NextHopPrefixLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ipv4PrefixListNexthops").ForEach(
+			matchIpv4NextHopPrefixListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -971,16 +971,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchIpv4NextHopPrefixLists[i] = data
 		}
+		matchIpv4RouteSourcePrefixListsArray := res.Get("ipv4PrefixListRouteSources")
 		for i := 0; i < len(data.MatchIpv4RouteSourcePrefixLists); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.MatchIpv4RouteSourcePrefixLists[i].Id.ValueString(), data.MatchIpv4RouteSourcePrefixLists[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchIpv4RouteSourcePrefixLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ipv4PrefixListRouteSources").ForEach(
+			matchIpv4RouteSourcePrefixListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1049,16 +1049,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.MatchIpv6RouteSourcePrefixListId = types.StringNull()
 		}
+		matchBgpAsPathsArray := res.Get("asPathLists")
 		for i := 0; i < len(data.MatchBgpAsPaths); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.MatchBgpAsPaths[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchBgpAsPaths[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("asPathLists").ForEach(
+			matchBgpAsPathsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1092,16 +1092,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchBgpAsPaths[i] = data
 		}
+		matchBgpCommunityListsArray := res.Get("communityLists")
 		for i := 0; i < len(data.MatchBgpCommunityLists); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.MatchBgpCommunityLists[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchBgpCommunityLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("communityLists").ForEach(
+			matchBgpCommunityListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1135,16 +1135,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchBgpCommunityLists[i] = data
 		}
+		matchBgpExtendedCommunityListsArray := res.Get("extendedCommunityLists")
 		for i := 0; i < len(data.MatchBgpExtendedCommunityLists); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.MatchBgpExtendedCommunityLists[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchBgpExtendedCommunityLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("extendedCommunityLists").ForEach(
+			matchBgpExtendedCommunityListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1178,16 +1178,16 @@ func (data *RouteMap) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).MatchBgpExtendedCommunityLists[i] = data
 		}
+		matchBgpPolicyListsArray := res.Get("policyLists")
 		for i := 0; i < len(data.MatchBgpPolicyLists); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.MatchBgpPolicyLists[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).MatchBgpPolicyLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("policyLists").ForEach(
+			matchBgpPolicyListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

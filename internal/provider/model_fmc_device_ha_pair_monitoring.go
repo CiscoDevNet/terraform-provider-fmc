@@ -193,16 +193,16 @@ func (data *DeviceHAPairMonitoring) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Ipv4Netmask = types.StringNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6Configuration.ipv6ActiveStandbyPair")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"activeIPv6", "standbyIPv6"}
 		keyValues := [...]string{data.Ipv6Addresses[i].ActiveAddress.ValueString(), data.Ipv6Addresses[i].StandbyAddress.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6Configuration.ipv6ActiveStandbyPair").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

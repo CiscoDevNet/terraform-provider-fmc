@@ -253,16 +253,16 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Ikev1CertificateId = types.StringNull()
 	}
+	ikev1PoliciesArray := res.Get("ikeV1Settings.policies")
 	for i := 0; i < len(data.Ikev1Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev1Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev1Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV1Settings.policies").ForEach(
+		ikev1PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -321,16 +321,16 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Ikev2CertificateId = types.StringNull()
 	}
+	ikev2PoliciesArray := res.Get("ikeV2Settings.policies")
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV2Settings.policies").ForEach(
+		ikev2PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

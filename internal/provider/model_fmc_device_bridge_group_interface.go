@@ -334,16 +334,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.BridgeGroupId = types.Int64Null()
 	}
+	selectedInterfacesArray := res.Get("selectedInterfaces")
 	for i := 0; i < len(data.SelectedInterfaces); i++ {
 		keys := [...]string{"id", "name"}
 		keyValues := [...]string{data.SelectedInterfaces[i].Id.ValueString(), data.SelectedInterfaces[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).SelectedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedInterfaces").ForEach(
+		selectedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -397,16 +397,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -465,16 +465,16 @@ func (data *DeviceBridgeGroupInterface) fromBodyPartial(ctx context.Context, res
 	} else {
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
+	arpTableEntriesArray := res.Get("arpConfig")
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
 		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].EnableAlias.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig").ForEach(
+		arpTableEntriesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

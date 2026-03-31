@@ -227,16 +227,16 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 	} else if data.BurstSize.ValueInt64() != 1 {
 		data.BurstSize = types.Int64Null()
 	}
+	configurationsArray := res.Get("icmpConfigs")
 	for i := 0; i < len(data.Configurations); i++ {
 		keys := [...]string{"icmpService.id", "network.object.id"}
 		keyValues := [...]string{data.Configurations[i].IcmpServiceObjectId.ValueString(), data.Configurations[i].SourceNetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).Configurations[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("icmpConfigs").ForEach(
+		configurationsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -283,16 +283,16 @@ func (data *FTDPlatformSettingsICMPAccess) fromBodyPartial(ctx context.Context, 
 		} else {
 			data.InterfaceLiterals = types.SetNull(types.StringType)
 		}
+		interfaceObjectsArray := res.Get("interfaces.objects")
 		for i := 0; i < len(data.InterfaceObjects); i++ {
 			keys := [...]string{"id", "type", "name"}
 			keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).InterfaceObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("interfaces.objects").ForEach(
+			interfaceObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

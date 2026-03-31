@@ -249,16 +249,16 @@ func (data *VLANTagGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.Overridable = types.BoolNull()
 		}
+		vlanTagsArray := res.Get("objects")
 		for i := 0; i < len(data.VlanTags); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.VlanTags[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTags[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("objects").ForEach(
+			vlanTagsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -292,16 +292,16 @@ func (data *VLANTagGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 			}
 			(*parent).VlanTags[i] = data
 		}
+		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"startTag", "endTag"}
 			keyValues := [...]string{data.Literals[i].StartTag.ValueString(), data.Literals[i].EndTag.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

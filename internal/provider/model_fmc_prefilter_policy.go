@@ -867,16 +867,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.TimeRangeId = types.StringNull()
 		}
+		sourceInterfacesArray := res.Get("sourceInterfaces.objects")
 		for i := 0; i < len(data.SourceInterfaces); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceInterfaces[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceInterfaces[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceInterfaces.objects").ForEach(
+			sourceInterfacesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -915,16 +915,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).SourceInterfaces[i] = data
 		}
+		destinationInterfacesArray := res.Get("destinationInterfaces.objects")
 		for i := 0; i < len(data.DestinationInterfaces); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationInterfaces[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationInterfaces[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationInterfaces.objects").ForEach(
+			destinationInterfacesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -963,16 +963,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).DestinationInterfaces[i] = data
 		}
+		sourceNetworkLiteralsArray := res.Get("sourceNetworks.literals")
 		for i := 0; i < len(data.SourceNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.SourceNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.literals").ForEach(
+			sourceNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1006,16 +1006,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).SourceNetworkLiterals[i] = data
 		}
+		sourceNetworkObjectsArray := res.Get("sourceNetworks.objects")
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.objects").ForEach(
+			sourceNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1054,16 +1054,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).SourceNetworkObjects[i] = data
 		}
+		destinationNetworkLiteralsArray := res.Get("destinationNetworks.literals")
 		for i := 0; i < len(data.DestinationNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.DestinationNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.literals").ForEach(
+			destinationNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1097,16 +1097,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).DestinationNetworkLiterals[i] = data
 		}
+		destinationNetworkObjectsArray := res.Get("destinationNetworks.objects")
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.objects").ForEach(
+			destinationNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1145,16 +1145,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).DestinationNetworkObjects[i] = data
 		}
+		vlanTagLiteralsArray := res.Get("vlanTags.literals")
 		for i := 0; i < len(data.VlanTagLiterals); i++ {
 			keys := [...]string{"startTag", "endTag"}
 			keyValues := [...]string{data.VlanTagLiterals[i].StartTag.ValueString(), data.VlanTagLiterals[i].EndTag.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTagLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("vlanTags.literals").ForEach(
+			vlanTagLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1193,16 +1193,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).VlanTagLiterals[i] = data
 		}
+		vlanTagObjectsArray := res.Get("vlanTags.objects")
 		for i := 0; i < len(data.VlanTagObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.VlanTagObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTagObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("vlanTags.objects").ForEach(
+			vlanTagObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1236,16 +1236,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).VlanTagObjects[i] = data
 		}
+		sourcePortLiteralsArray := res.Get("sourcePorts.literals")
 		for i := 0; i < len(data.SourcePortLiterals); i++ {
 			keys := [...]string{"protocol", "port"}
 			keyValues := [...]string{data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].Port.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.literals").ForEach(
+			sourcePortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1284,16 +1284,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).SourcePortLiterals[i] = data
 		}
+		sourcePortObjectsArray := res.Get("sourcePorts.objects")
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.objects").ForEach(
+			sourcePortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1327,16 +1327,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).SourcePortObjects[i] = data
 		}
+		destinationPortLiteralsArray := res.Get("destinationPorts.literals")
 		for i := 0; i < len(data.DestinationPortLiterals); i++ {
 			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
 			keyValues := [...]string{data.DestinationPortLiterals[i].Type.ValueString(), data.DestinationPortLiterals[i].Port.ValueString(), data.DestinationPortLiterals[i].Protocol.ValueString(), data.DestinationPortLiterals[i].IcmpType.ValueString(), data.DestinationPortLiterals[i].IcmpCode.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.literals").ForEach(
+			destinationPortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1390,16 +1390,16 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 			}
 			(*parent).DestinationPortLiterals[i] = data
 		}
+		destinationPortObjectsArray := res.Get("destinationPorts.objects")
 		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationPortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.objects").ForEach(
+			destinationPortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

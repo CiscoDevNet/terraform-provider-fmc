@@ -602,16 +602,16 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.GroupPolicyId = types.StringNull()
 		}
+		ipv4AddressPoolsArray := res.Get("ipv4AddressPool")
 		for i := 0; i < len(data.Ipv4AddressPools); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Ipv4AddressPools[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Ipv4AddressPools[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ipv4AddressPool").ForEach(
+			ipv4AddressPoolsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -645,16 +645,16 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 			}
 			(*parent).Ipv4AddressPools[i] = data
 		}
+		ipv6AddressPoolsArray := res.Get("ipv6AddressPool")
 		for i := 0; i < len(data.Ipv6AddressPools); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Ipv6AddressPools[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Ipv6AddressPools[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ipv6AddressPool").ForEach(
+			ipv6AddressPoolsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -688,16 +688,16 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 			}
 			(*parent).Ipv6AddressPools[i] = data
 		}
+		dhcpServersArray := res.Get("dhcpServersForAddressAssignment")
 		for i := 0; i < len(data.DhcpServers); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DhcpServers[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DhcpServers[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("dhcpServersForAddressAssignment").ForEach(
+			dhcpServersArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -881,16 +881,16 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.PasswordManagementAdvancePasswordExpirationNotification = types.Int64Null()
 		}
+		aliasNamesArray := res.Get("groupAlias")
 		for i := 0; i < len(data.AliasNames); i++ {
 			keys := [...]string{"aliasName"}
 			keyValues := [...]string{data.AliasNames[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).AliasNames[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("groupAlias").ForEach(
+			aliasNamesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -929,16 +929,16 @@ func (data *VPNRAConnectionProfiles) fromBodyPartial(ctx context.Context, res gj
 			}
 			(*parent).AliasNames[i] = data
 		}
+		aliasUrlsArray := res.Get("groupUrl")
 		for i := 0; i < len(data.AliasUrls); i++ {
 			keys := [...]string{"aliasUrl.id"}
 			keyValues := [...]string{data.AliasUrls[i].UrlObjectId.ValueString()}
 
 			parent := &data
 			data := (*parent).AliasUrls[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("groupUrl").ForEach(
+			aliasUrlsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

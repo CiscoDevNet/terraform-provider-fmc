@@ -210,16 +210,16 @@ func (data *Geolocations) fromBodyPartial(ctx context.Context, res gjson.Result)
 		} else {
 			data.Type = types.StringNull()
 		}
+		continentsArray := res.Get("continents")
 		for i := 0; i < len(data.Continents); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{strconv.FormatInt(data.Continents[i].Id.ValueInt64(), 10)}
 
 			parent := &data
 			data := (*parent).Continents[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("continents").ForEach(
+			continentsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -253,16 +253,16 @@ func (data *Geolocations) fromBodyPartial(ctx context.Context, res gjson.Result)
 			}
 			(*parent).Continents[i] = data
 		}
+		countriesArray := res.Get("countries")
 		for i := 0; i < len(data.Countries); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{strconv.FormatInt(data.Countries[i].Id.ValueInt64(), 10)}
 
 			parent := &data
 			data := (*parent).Countries[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("countries").ForEach(
+			countriesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

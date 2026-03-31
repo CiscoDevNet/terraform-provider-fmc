@@ -353,16 +353,16 @@ func (data *HealthPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else {
 		data.IsDefaultPolicy = types.BoolNull()
 	}
+	healthModulesArray := res.Get("healthModules")
 	for i := 0; i < len(data.HealthModules); i++ {
 		keys := [...]string{"moduleId"}
 		keyValues := [...]string{data.HealthModules[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).HealthModules[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("healthModules").ForEach(
+		healthModulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -419,16 +419,16 @@ func (data *HealthPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 		} else {
 			data.WarningThreshold = types.Int64Null()
 		}
+		customThresholdsArray := res.Get("customThresholds")
 		for i := 0; i < len(data.CustomThresholds); i++ {
 			keys := [...]string{"type"}
 			keyValues := [...]string{data.CustomThresholds[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).CustomThresholds[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("customThresholds").ForEach(
+			customThresholdsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -467,16 +467,16 @@ func (data *HealthPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 			}
 			(*parent).CustomThresholds[i] = data
 		}
+		alertConfigsArray := res.Get("alertConfig")
 		for i := 0; i < len(data.AlertConfigs); i++ {
 			keys := [...]string{"name", "enabled"}
 			keyValues := [...]string{data.AlertConfigs[i].Name.ValueString(), strconv.FormatBool(data.AlertConfigs[i].Enabled.ValueBool())}
 
 			parent := &data
 			data := (*parent).AlertConfigs[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("alertConfig").ForEach(
+			alertConfigsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -513,16 +513,16 @@ func (data *HealthPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 			} else {
 				data.Enabled = types.BoolNull()
 			}
+			thresholdsArray := res.Get("thresholds")
 			for i := 0; i < len(data.Thresholds); i++ {
 				keys := [...]string{"type"}
 				keyValues := [...]string{data.Thresholds[i].Type.ValueString()}
 
 				parent := &data
 				data := (*parent).Thresholds[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("thresholds").ForEach(
+				thresholdsArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {

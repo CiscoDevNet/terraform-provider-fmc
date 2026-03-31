@@ -157,16 +157,16 @@ func (data *FTDPlatformSettingsSyslogEventList) fromBodyPartial(ctx context.Cont
 	} else {
 		data.Name = types.StringNull()
 	}
+	eventClassesArray := res.Get("eventClasses")
 	for i := 0; i < len(data.EventClasses); i++ {
 		keys := [...]string{"class", "severity"}
 		keyValues := [...]string{data.EventClasses[i].Class.ValueString(), data.EventClasses[i].Severity.ValueString()}
 
 		parent := &data
 		data := (*parent).EventClasses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("eventClasses").ForEach(
+		eventClassesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
