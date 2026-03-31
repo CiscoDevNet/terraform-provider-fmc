@@ -121,6 +121,7 @@ attributes:
     data_source_optional_parameter: true
     default_value: "true"
     example: "true"
+    tf_only: true
   - model_name: dummy_categories
     tf_name: categories
     type: List
@@ -159,6 +160,7 @@ attributes:
     data_source_optional_parameter: true
     default_value: "true"
     example: "true"
+    tf_only: true
   - model_name: dummy_rules
     tf_name: rules
     type: List

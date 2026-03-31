@@ -741,9 +741,7 @@ func (r *AccessControlPolicyResource) Create(ctx context.Context, req resource.C
 
 	// Create object
 	body := planBody
-	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
-	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
@@ -941,9 +939,7 @@ func (r *AccessControlPolicyResource) Update(ctx context.Context, req resource.U
 
 	planBody := plan.toBody(ctx, state)
 	body := planBody
-	body, _ = sjson.Delete(body, "dummy_manage_categories")
 	body, _ = sjson.Delete(body, "dummy_categories")
-	body, _ = sjson.Delete(body, "dummy_manage_rules")
 	body, _ = sjson.Delete(body, "dummy_rules")
 
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)

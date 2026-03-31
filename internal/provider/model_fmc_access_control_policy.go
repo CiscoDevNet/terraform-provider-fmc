@@ -310,9 +310,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	if !data.PrefilterPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
 	}
-	if !data.ManageCategories.IsNull() {
-		body, _ = sjson.Set(body, "dummy_manage_categories", data.ManageCategories.ValueBool())
-	}
 	if len(data.Categories) > 0 {
 		body, _ = sjson.Set(body, "dummy_categories", []any{})
 		for _, item := range data.Categories {
@@ -328,9 +325,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			}
 			body, _ = sjson.SetRaw(body, "dummy_categories.-1", itemBody)
 		}
-	}
-	if !data.ManageRules.IsNull() {
-		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.Rules) > 0 {
 		body, _ = sjson.Set(body, "dummy_rules", []any{})
@@ -813,11 +807,6 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 	} else {
 		data.PrefilterPolicyId = types.StringNull()
 	}
-	if value := res.Get("dummy_manage_categories"); value.Exists() {
-		data.ManageCategories = types.BoolValue(value.Bool())
-	} else {
-		data.ManageCategories = types.BoolValue(true)
-	}
 	if value := res.Get("dummy_categories"); value.Exists() {
 		data.Categories = make([]AccessControlPolicyCategories, 0)
 		value.ForEach(func(k, res gjson.Result) bool {
@@ -836,11 +825,6 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			(*parent).Categories = append((*parent).Categories, data)
 			return true
 		})
-	}
-	if value := res.Get("dummy_manage_rules"); value.Exists() {
-		data.ManageRules = types.BoolValue(value.Bool())
-	} else {
-		data.ManageRules = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
 		data.Rules = make([]AccessControlPolicyRules, 0)
@@ -1489,11 +1473,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.PrefilterPolicyId = types.StringNull()
 	}
-	if value := res.Get("dummy_manage_categories"); value.Exists() && !data.ManageCategories.IsNull() {
-		data.ManageCategories = types.BoolValue(value.Bool())
-	} else if data.ManageCategories.ValueBool() != true {
-		data.ManageCategories = types.BoolNull()
-	}
 	{
 		l := len(res.Get("dummy_categories").Array())
 		tflog.Debug(ctx, fmt.Sprintf("dummy_categories array resizing from %d to %d", len(data.Categories), l))
@@ -1520,11 +1499,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.Name = types.StringNull()
 		}
 		(*parent).Categories[i] = data
-	}
-	if value := res.Get("dummy_manage_rules"); value.Exists() && !data.ManageRules.IsNull() {
-		data.ManageRules = types.BoolValue(value.Bool())
-	} else if data.ManageRules.ValueBool() != true {
-		data.ManageRules = types.BoolNull()
 	}
 	{
 		l := len(res.Get("dummy_rules").Array())
