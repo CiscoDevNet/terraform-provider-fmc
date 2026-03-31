@@ -663,7 +663,7 @@ func renderTemplate(templatePath, outputPath string, config any) {
 				matches := endRegex.FindStringSubmatch(line)
 				if len(matches) > 1 && matches[1] == currentSectionName {
 					currentSectionName = ""
-					newSection := getTemplateSection(string(output.Bytes()), matches[1])
+					newSection := getTemplateSection(output.String(), matches[1])
 					newContent += newSection
 				}
 			}
