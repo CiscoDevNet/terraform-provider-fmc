@@ -445,7 +445,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
-		data.Rules = make([]PrefilterPolicyRules, 0)
+		data.Rules = make([]PrefilterPolicyRules, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PrefilterPolicyRules{}
@@ -490,7 +490,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.TimeRangeId = types.StringNull()
 			}
 			if value := res.Get("sourceInterfaces.objects"); value.Exists() {
-				data.SourceInterfaces = make([]PrefilterPolicyRulesSourceInterfaces, 0)
+				data.SourceInterfaces = make([]PrefilterPolicyRulesSourceInterfaces, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesSourceInterfaces{}
@@ -509,7 +509,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationInterfaces.objects"); value.Exists() {
-				data.DestinationInterfaces = make([]PrefilterPolicyRulesDestinationInterfaces, 0)
+				data.DestinationInterfaces = make([]PrefilterPolicyRulesDestinationInterfaces, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesDestinationInterfaces{}
@@ -528,7 +528,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
-				data.SourceNetworkLiterals = make([]PrefilterPolicyRulesSourceNetworkLiterals, 0)
+				data.SourceNetworkLiterals = make([]PrefilterPolicyRulesSourceNetworkLiterals, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesSourceNetworkLiterals{}
@@ -542,7 +542,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
-				data.SourceNetworkObjects = make([]PrefilterPolicyRulesSourceNetworkObjects, 0)
+				data.SourceNetworkObjects = make([]PrefilterPolicyRulesSourceNetworkObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesSourceNetworkObjects{}
@@ -561,7 +561,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
-				data.DestinationNetworkLiterals = make([]PrefilterPolicyRulesDestinationNetworkLiterals, 0)
+				data.DestinationNetworkLiterals = make([]PrefilterPolicyRulesDestinationNetworkLiterals, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesDestinationNetworkLiterals{}
@@ -575,7 +575,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
-				data.DestinationNetworkObjects = make([]PrefilterPolicyRulesDestinationNetworkObjects, 0)
+				data.DestinationNetworkObjects = make([]PrefilterPolicyRulesDestinationNetworkObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesDestinationNetworkObjects{}
@@ -594,7 +594,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.literals"); value.Exists() {
-				data.VlanTagLiterals = make([]PrefilterPolicyRulesVlanTagLiterals, 0)
+				data.VlanTagLiterals = make([]PrefilterPolicyRulesVlanTagLiterals, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesVlanTagLiterals{}
@@ -613,7 +613,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.objects"); value.Exists() {
-				data.VlanTagObjects = make([]PrefilterPolicyRulesVlanTagObjects, 0)
+				data.VlanTagObjects = make([]PrefilterPolicyRulesVlanTagObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesVlanTagObjects{}
@@ -627,7 +627,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.literals"); value.Exists() {
-				data.SourcePortLiterals = make([]PrefilterPolicyRulesSourcePortLiterals, 0)
+				data.SourcePortLiterals = make([]PrefilterPolicyRulesSourcePortLiterals, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesSourcePortLiterals{}
@@ -646,7 +646,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
-				data.SourcePortObjects = make([]PrefilterPolicyRulesSourcePortObjects, 0)
+				data.SourcePortObjects = make([]PrefilterPolicyRulesSourcePortObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesSourcePortObjects{}
@@ -660,7 +660,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.literals"); value.Exists() {
-				data.DestinationPortLiterals = make([]PrefilterPolicyRulesDestinationPortLiterals, 0)
+				data.DestinationPortLiterals = make([]PrefilterPolicyRulesDestinationPortLiterals, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesDestinationPortLiterals{}
@@ -694,7 +694,7 @@ func (data *PrefilterPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
-				data.DestinationPortObjects = make([]PrefilterPolicyRulesDestinationPortObjects, 0)
+				data.DestinationPortObjects = make([]PrefilterPolicyRulesDestinationPortObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := PrefilterPolicyRulesDestinationPortObjects{}

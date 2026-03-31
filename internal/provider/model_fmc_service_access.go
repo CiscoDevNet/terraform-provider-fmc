@@ -129,7 +129,7 @@ func (data *ServiceAccess) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultAction = types.StringNull()
 	}
 	if value := res.Get("rules"); value.Exists() {
-		data.Rules = make([]ServiceAccessRules, 0)
+		data.Rules = make([]ServiceAccessRules, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ServiceAccessRules{}
@@ -139,7 +139,7 @@ func (data *ServiceAccess) fromBody(ctx context.Context, res gjson.Result) {
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("geoSources"); value.Exists() {
-				data.GeolocationSources = make([]ServiceAccessRulesGeolocationSources, 0)
+				data.GeolocationSources = make([]ServiceAccessRulesGeolocationSources, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ServiceAccessRulesGeolocationSources{}

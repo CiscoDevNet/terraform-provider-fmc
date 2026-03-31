@@ -320,7 +320,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	}
 	{{- else if isNestedListSet .}}
 	if value := res{{if .ModelName}}.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}; value.Exists() {
-		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0)
+		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := {{.GoTypeName}}{}

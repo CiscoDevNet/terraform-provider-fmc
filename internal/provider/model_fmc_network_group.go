@@ -137,7 +137,7 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.Objects = make([]NetworkGroupObjects, 0)
+		data.Objects = make([]NetworkGroupObjects, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupObjects{}
@@ -156,7 +156,7 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.Literals = make([]NetworkGroupLiterals, 0)
+		data.Literals = make([]NetworkGroupLiterals, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupLiterals{}

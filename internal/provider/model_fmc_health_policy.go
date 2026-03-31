@@ -212,7 +212,7 @@ func (data *HealthPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.IsDefaultPolicy = types.BoolNull()
 	}
 	if value := res.Get("healthModules"); value.Exists() {
-		data.HealthModules = make([]HealthPolicyHealthModules, 0)
+		data.HealthModules = make([]HealthPolicyHealthModules, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := HealthPolicyHealthModules{}
@@ -247,7 +247,7 @@ func (data *HealthPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.WarningThreshold = types.Int64Null()
 			}
 			if value := res.Get("customThresholds"); value.Exists() {
-				data.CustomThresholds = make([]HealthPolicyHealthModulesCustomThresholds, 0)
+				data.CustomThresholds = make([]HealthPolicyHealthModulesCustomThresholds, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := HealthPolicyHealthModulesCustomThresholds{}
@@ -266,7 +266,7 @@ func (data *HealthPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("alertConfig"); value.Exists() {
-				data.AlertConfigs = make([]HealthPolicyHealthModulesAlertConfigs, 0)
+				data.AlertConfigs = make([]HealthPolicyHealthModulesAlertConfigs, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := HealthPolicyHealthModulesAlertConfigs{}
@@ -281,7 +281,7 @@ func (data *HealthPolicy) fromBody(ctx context.Context, res gjson.Result) {
 						data.Enabled = types.BoolNull()
 					}
 					if value := res.Get("thresholds"); value.Exists() {
-						data.Thresholds = make([]HealthPolicyHealthModulesAlertConfigsThresholds, 0)
+						data.Thresholds = make([]HealthPolicyHealthModulesAlertConfigsThresholds, 0, len(value.Array()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := HealthPolicyHealthModulesAlertConfigsThresholds{}

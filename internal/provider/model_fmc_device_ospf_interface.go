@@ -243,7 +243,7 @@ func (data *DeviceOSPFInterface) fromBody(ctx context.Context, res gjson.Result)
 		data.AuthenticationAreaPassword = types.StringNull()
 	}
 	if value := res.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList"); value.Exists() {
-		data.AuthenticationAreaMd5s = make([]DeviceOSPFInterfaceAuthenticationAreaMd5s, 0)
+		data.AuthenticationAreaMd5s = make([]DeviceOSPFInterfaceAuthenticationAreaMd5s, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFInterfaceAuthenticationAreaMd5s{}
@@ -262,7 +262,7 @@ func (data *DeviceOSPFInterface) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	if value := res.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList"); value.Exists() {
-		data.AuthenticationMd5s = make([]DeviceOSPFInterfaceAuthenticationMd5s, 0)
+		data.AuthenticationMd5s = make([]DeviceOSPFInterfaceAuthenticationMd5s, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFInterfaceAuthenticationMd5s{}

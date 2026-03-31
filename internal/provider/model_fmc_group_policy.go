@@ -320,7 +320,7 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.ProtocolIpsecIkev2 = types.BoolValue(true)
 	}
 	if value := res.Get("generalSettings.addressAssignment.ipv4LocalAddressPool"); value.Exists() {
-		data.Ipv4AddressPools = make([]GroupPolicyIpv4AddressPools, 0)
+		data.Ipv4AddressPools = make([]GroupPolicyIpv4AddressPools, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := GroupPolicyIpv4AddressPools{}
@@ -409,7 +409,7 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.SecureClientManagementProfileId = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.clientModules"); value.Exists() {
-		data.SecureClientModules = make([]GroupPolicySecureClientModules, 0)
+		data.SecureClientModules = make([]GroupPolicySecureClientModules, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := GroupPolicySecureClientModules{}
@@ -513,7 +513,7 @@ func (data *GroupPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.ClientFirewallPublicNetworkRulesAccessListId = types.StringNull()
 	}
 	if value := res.Get("anyConnectSettings.customAttributes"); value.Exists() {
-		data.SecureClientCustomAttributes = make([]GroupPolicySecureClientCustomAttributes, 0)
+		data.SecureClientCustomAttributes = make([]GroupPolicySecureClientCustomAttributes, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := GroupPolicySecureClientCustomAttributes{}

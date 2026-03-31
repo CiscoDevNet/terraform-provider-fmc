@@ -141,7 +141,7 @@ func (data *IPv4PrefixLists) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("entries"); value.Exists() {
-			data.Entries = make([]IPv4PrefixListsItemsEntries, 0)
+			data.Entries = make([]IPv4PrefixListsItemsEntries, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := IPv4PrefixListsItemsEntries{}

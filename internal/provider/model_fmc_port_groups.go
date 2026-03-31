@@ -151,7 +151,7 @@ func (data *PortGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.Objects = make([]PortGroupsItemsObjects, 0)
+			data.Objects = make([]PortGroupsItemsObjects, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := PortGroupsItemsObjects{}

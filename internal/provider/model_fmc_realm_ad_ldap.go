@@ -324,7 +324,7 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 		data.TimeoutGuestCaptivePortalUsers = types.Int64Null()
 	}
 	if value := res.Get("directoryConfigurations"); value.Exists() {
-		data.DirectoryServers = make([]RealmADLDAPDirectoryServers, 0)
+		data.DirectoryServers = make([]RealmADLDAPDirectoryServers, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RealmADLDAPDirectoryServers{}

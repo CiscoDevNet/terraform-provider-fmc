@@ -182,7 +182,7 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodePriority = types.Int64Null()
 	}
 	if value := res.Get("dataDevices"); value.Exists() {
-		data.DataNodes = make([]DeviceClusterDataNodes, 0)
+		data.DataNodes = make([]DeviceClusterDataNodes, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceClusterDataNodes{}

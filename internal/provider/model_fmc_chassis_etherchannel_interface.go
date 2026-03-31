@@ -149,7 +149,7 @@ func (data *ChassisEtherChannelInterface) fromBody(ctx context.Context, res gjso
 		data.AdminState = types.StringValue("ENABLED")
 	}
 	if value := res.Get("selectedInterfaces"); value.Exists() {
-		data.SelectedInterfaces = make([]ChassisEtherChannelInterfaceSelectedInterfaces, 0)
+		data.SelectedInterfaces = make([]ChassisEtherChannelInterfaceSelectedInterfaces, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ChassisEtherChannelInterfaceSelectedInterfaces{}

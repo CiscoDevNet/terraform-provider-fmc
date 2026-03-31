@@ -113,7 +113,7 @@ func (data *HostOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		data.ParentId = types.StringNull()
 	}
 	if value := res.Get("dummy_overrides"); value.Exists() {
-		data.Overrides = make([]HostOverridesOverrides, 0)
+		data.Overrides = make([]HostOverridesOverrides, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := HostOverridesOverrides{}

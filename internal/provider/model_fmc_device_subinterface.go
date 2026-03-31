@@ -502,7 +502,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceSubinterfaceIpv6Addresses, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceIpv6Addresses{}
@@ -531,7 +531,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DeviceSubinterfaceIpv6Prefixes, 0)
+		data.Ipv6Prefixes = make([]DeviceSubinterfaceIpv6Prefixes, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceIpv6Prefixes{}
@@ -650,7 +650,7 @@ func (data *DeviceSubinterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0)
+		data.ArpTableEntries = make([]DeviceSubinterfaceArpTableEntries, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceSubinterfaceArpTableEntries{}

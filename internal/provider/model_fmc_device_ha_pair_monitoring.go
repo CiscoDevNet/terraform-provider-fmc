@@ -134,7 +134,7 @@ func (data *DeviceHAPairMonitoring) fromBody(ctx context.Context, res gjson.Resu
 		data.Ipv4Netmask = types.StringNull()
 	}
 	if value := res.Get("ipv6Configuration.ipv6ActiveStandbyPair"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceHAPairMonitoringIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceHAPairMonitoringIpv6Addresses, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceHAPairMonitoringIpv6Addresses{}

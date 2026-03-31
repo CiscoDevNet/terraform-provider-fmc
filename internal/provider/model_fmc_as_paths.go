@@ -142,7 +142,7 @@ func (data *ASPaths) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("entries"); value.Exists() {
-			data.Entries = make([]ASPathsItemsEntries, 0)
+			data.Entries = make([]ASPathsItemsEntries, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := ASPathsItemsEntries{}

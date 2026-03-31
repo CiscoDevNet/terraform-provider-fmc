@@ -117,7 +117,7 @@ func (data *DeviceVRF) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]DeviceVRFInterfaces, 0)
+		data.Interfaces = make([]DeviceVRFInterfaces, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceVRFInterfaces{}

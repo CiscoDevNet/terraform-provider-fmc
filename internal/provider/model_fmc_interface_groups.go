@@ -138,7 +138,7 @@ func (data *InterfaceGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.InterfaceType = types.StringNull()
 		}
 		if value := res.Get("interfaces"); value.Exists() {
-			data.Interfaces = make([]InterfaceGroupsItemsInterfaces, 0)
+			data.Interfaces = make([]InterfaceGroupsItemsInterfaces, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := InterfaceGroupsItemsInterfaces{}

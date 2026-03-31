@@ -211,7 +211,7 @@ func (data *SLAMonitors) fromBody(ctx context.Context, res gjson.Result) {
 			data.MonitorAddress = types.StringNull()
 		}
 		if value := res.Get("interfaceObjects"); value.Exists() {
-			data.SelectedInterfaces = make([]SLAMonitorsItemsSelectedInterfaces, 0)
+			data.SelectedInterfaces = make([]SLAMonitorsItemsSelectedInterfaces, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := SLAMonitorsItemsSelectedInterfaces{}

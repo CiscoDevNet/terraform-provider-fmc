@@ -122,7 +122,7 @@ func (data *FTDPlatformSettingsSSHAccess) fromBody(ctx context.Context, res gjso
 		data.InterfaceLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("interfaces.objects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0)
+		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSSHAccessInterfaceObjects{}

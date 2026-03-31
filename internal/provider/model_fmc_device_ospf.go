@@ -583,7 +583,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		data.NonStopForwardingStrictMode = types.BoolNull()
 	}
 	if value := res.Get("areas"); value.Exists() {
-		data.Areas = make([]DeviceOSPFAreas, 0)
+		data.Areas = make([]DeviceOSPFAreas, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFAreas{}
@@ -618,7 +618,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.DefaultRouteMetric = types.Int64Null()
 			}
 			if value := res.Get("areaNetworks"); value.Exists() {
-				data.Networks = make([]DeviceOSPFAreasNetworks, 0)
+				data.Networks = make([]DeviceOSPFAreasNetworks, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasNetworks{}
@@ -647,7 +647,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.DefaultCost = types.Int64Null()
 			}
 			if value := res.Get("areaRanges"); value.Exists() {
-				data.Ranges = make([]DeviceOSPFAreasRanges, 0)
+				data.Ranges = make([]DeviceOSPFAreasRanges, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasRanges{}
@@ -666,7 +666,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("virtualLinks"); value.Exists() {
-				data.VirtualLinks = make([]DeviceOSPFAreasVirtualLinks, 0)
+				data.VirtualLinks = make([]DeviceOSPFAreasVirtualLinks, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasVirtualLinks{}
@@ -706,7 +706,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 						data.AuthenticationAreaPassword = types.StringNull()
 					}
 					if value := res.Get("authentication.areaAuth.md5AuthList"); value.Exists() {
-						data.AuthenticationAreaMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s, 0)
+						data.AuthenticationAreaMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s, 0, len(value.Array()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s{}
@@ -725,7 +725,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("authentication.md5AuthList"); value.Exists() {
-						data.AuthenticationMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationMd5s, 0)
+						data.AuthenticationMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationMd5s, 0, len(value.Array()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := DeviceOSPFAreasVirtualLinksAuthenticationMd5s{}
@@ -753,7 +753,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("filterList"); value.Exists() {
-				data.InterAreaFilters = make([]DeviceOSPFAreasInterAreaFilters, 0)
+				data.InterAreaFilters = make([]DeviceOSPFAreasInterAreaFilters, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasInterAreaFilters{}
@@ -781,7 +781,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("redistributeProtocols"); value.Exists() {
-		data.Redistributions = make([]DeviceOSPFRedistributions, 0)
+		data.Redistributions = make([]DeviceOSPFRedistributions, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFRedistributions{}
@@ -855,7 +855,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("filterRules"); value.Exists() {
-		data.FilterRules = make([]DeviceOSPFFilterRules, 0)
+		data.FilterRules = make([]DeviceOSPFFilterRules, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFFilterRules{}
@@ -889,12 +889,12 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("summaryAddresses"); value.Exists() {
-		data.SummaryAddresses = make([]DeviceOSPFSummaryAddresses, 0)
+		data.SummaryAddresses = make([]DeviceOSPFSummaryAddresses, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFSummaryAddresses{}
 			if value := res.Get("summaryNetwork"); value.Exists() {
-				data.Networks = make([]DeviceOSPFSummaryAddressesNetworks, 0)
+				data.Networks = make([]DeviceOSPFSummaryAddressesNetworks, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFSummaryAddressesNetworks{}
@@ -922,7 +922,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("neighbors"); value.Exists() {
-		data.Neighbors = make([]DeviceOSPFNeighbors, 0)
+		data.Neighbors = make([]DeviceOSPFNeighbors, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFNeighbors{}

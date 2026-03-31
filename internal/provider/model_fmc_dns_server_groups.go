@@ -159,7 +159,7 @@ func (data *DNSServerGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Retries = types.Int64Value(2)
 		}
 		if value := res.Get("dnsservers"); value.Exists() {
-			data.DnsServers = make([]DNSServerGroupsItemsDnsServers, 0)
+			data.DnsServers = make([]DNSServerGroupsItemsDnsServers, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := DNSServerGroupsItemsDnsServers{}

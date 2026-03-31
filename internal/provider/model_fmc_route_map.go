@@ -451,7 +451,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]RouteMapEntries, 0)
+		data.Entries = make([]RouteMapEntries, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RouteMapEntries{}
@@ -461,7 +461,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("interfaces"); value.Exists() {
-				data.MatchSecurityZones = make([]RouteMapEntriesMatchSecurityZones, 0)
+				data.MatchSecurityZones = make([]RouteMapEntriesMatchSecurityZones, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchSecurityZones{}
@@ -480,7 +480,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.MatchInterfaceNames = types.ListNull(types.StringType)
 			}
 			if value := res.Get("ipv4PrefixListAddresses"); value.Exists() {
-				data.MatchIpv4AddressPrefixLists = make([]RouteMapEntriesMatchIpv4AddressPrefixLists, 0)
+				data.MatchIpv4AddressPrefixLists = make([]RouteMapEntriesMatchIpv4AddressPrefixLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchIpv4AddressPrefixLists{}
@@ -499,7 +499,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("ipv4PrefixListNexthops"); value.Exists() {
-				data.MatchIpv4NextHopPrefixLists = make([]RouteMapEntriesMatchIpv4NextHopPrefixLists, 0)
+				data.MatchIpv4NextHopPrefixLists = make([]RouteMapEntriesMatchIpv4NextHopPrefixLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchIpv4NextHopPrefixLists{}
@@ -518,7 +518,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("ipv4PrefixListRouteSources"); value.Exists() {
-				data.MatchIpv4RouteSourcePrefixLists = make([]RouteMapEntriesMatchIpv4RouteSourcePrefixLists, 0)
+				data.MatchIpv4RouteSourcePrefixLists = make([]RouteMapEntriesMatchIpv4RouteSourcePrefixLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchIpv4RouteSourcePrefixLists{}
@@ -567,7 +567,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				data.MatchIpv6RouteSourcePrefixListId = types.StringNull()
 			}
 			if value := res.Get("asPathLists"); value.Exists() {
-				data.MatchBgpAsPaths = make([]RouteMapEntriesMatchBgpAsPaths, 0)
+				data.MatchBgpAsPaths = make([]RouteMapEntriesMatchBgpAsPaths, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchBgpAsPaths{}
@@ -581,7 +581,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("communityLists"); value.Exists() {
-				data.MatchBgpCommunityLists = make([]RouteMapEntriesMatchBgpCommunityLists, 0)
+				data.MatchBgpCommunityLists = make([]RouteMapEntriesMatchBgpCommunityLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchBgpCommunityLists{}
@@ -595,7 +595,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("extendedCommunityLists"); value.Exists() {
-				data.MatchBgpExtendedCommunityLists = make([]RouteMapEntriesMatchBgpExtendedCommunityLists, 0)
+				data.MatchBgpExtendedCommunityLists = make([]RouteMapEntriesMatchBgpExtendedCommunityLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchBgpExtendedCommunityLists{}
@@ -609,7 +609,7 @@ func (data *RouteMap) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("policyLists"); value.Exists() {
-				data.MatchBgpPolicyLists = make([]RouteMapEntriesMatchBgpPolicyLists, 0)
+				data.MatchBgpPolicyLists = make([]RouteMapEntriesMatchBgpPolicyLists, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := RouteMapEntriesMatchBgpPolicyLists{}

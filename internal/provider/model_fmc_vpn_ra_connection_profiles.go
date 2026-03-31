@@ -330,7 +330,7 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			data.GroupPolicyId = types.StringNull()
 		}
 		if value := res.Get("ipv4AddressPool"); value.Exists() {
-			data.Ipv4AddressPools = make([]VPNRAConnectionProfilesItemsIpv4AddressPools, 0)
+			data.Ipv4AddressPools = make([]VPNRAConnectionProfilesItemsIpv4AddressPools, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNRAConnectionProfilesItemsIpv4AddressPools{}
@@ -344,7 +344,7 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			})
 		}
 		if value := res.Get("ipv6AddressPool"); value.Exists() {
-			data.Ipv6AddressPools = make([]VPNRAConnectionProfilesItemsIpv6AddressPools, 0)
+			data.Ipv6AddressPools = make([]VPNRAConnectionProfilesItemsIpv6AddressPools, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNRAConnectionProfilesItemsIpv6AddressPools{}
@@ -358,7 +358,7 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			})
 		}
 		if value := res.Get("dhcpServersForAddressAssignment"); value.Exists() {
-			data.DhcpServers = make([]VPNRAConnectionProfilesItemsDhcpServers, 0)
+			data.DhcpServers = make([]VPNRAConnectionProfilesItemsDhcpServers, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNRAConnectionProfilesItemsDhcpServers{}
@@ -522,7 +522,7 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			data.PasswordManagementAdvancePasswordExpirationNotification = types.Int64Null()
 		}
 		if value := res.Get("groupAlias"); value.Exists() {
-			data.AliasNames = make([]VPNRAConnectionProfilesItemsAliasNames, 0)
+			data.AliasNames = make([]VPNRAConnectionProfilesItemsAliasNames, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNRAConnectionProfilesItemsAliasNames{}
@@ -541,7 +541,7 @@ func (data *VPNRAConnectionProfiles) fromBody(ctx context.Context, res gjson.Res
 			})
 		}
 		if value := res.Get("groupUrl"); value.Exists() {
-			data.AliasUrls = make([]VPNRAConnectionProfilesItemsAliasUrls, 0)
+			data.AliasUrls = make([]VPNRAConnectionProfilesItemsAliasUrls, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNRAConnectionProfilesItemsAliasUrls{}

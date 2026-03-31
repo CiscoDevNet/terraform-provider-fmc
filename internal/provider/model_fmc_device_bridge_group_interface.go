@@ -202,7 +202,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.BridgeGroupId = types.Int64Null()
 	}
 	if value := res.Get("selectedInterfaces"); value.Exists() {
-		data.SelectedInterfaces = make([]DeviceBridgeGroupInterfaceSelectedInterfaces, 0)
+		data.SelectedInterfaces = make([]DeviceBridgeGroupInterfaceSelectedInterfaces, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceSelectedInterfaces{}
@@ -236,7 +236,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.Ipv4DhcpObtainDefaultRoute = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceBridgeGroupInterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceBridgeGroupInterfaceIpv6Addresses, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceIpv6Addresses{}
@@ -275,7 +275,7 @@ func (data *DeviceBridgeGroupInterface) fromBody(ctx context.Context, res gjson.
 		data.Ipv6ReachableTime = types.Int64Null()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DeviceBridgeGroupInterfaceArpTableEntries, 0)
+		data.ArpTableEntries = make([]DeviceBridgeGroupInterfaceArpTableEntries, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBridgeGroupInterfaceArpTableEntries{}

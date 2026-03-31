@@ -276,7 +276,7 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 		data.ResourceProfileName = types.StringNull()
 	}
 	if value := res.Get("externalPortLink"); value.Exists() {
-		data.AssignedInterfaces = make([]ChassisLogicalDeviceAssignedInterfaces, 0)
+		data.AssignedInterfaces = make([]ChassisLogicalDeviceAssignedInterfaces, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ChassisLogicalDeviceAssignedInterfaces{}

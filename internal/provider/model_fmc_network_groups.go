@@ -179,7 +179,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.NetworkGroups = types.SetNull(types.StringType)
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.Objects = make([]NetworkGroupsItemsObjects, 0)
+			data.Objects = make([]NetworkGroupsItemsObjects, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := NetworkGroupsItemsObjects{}
@@ -198,7 +198,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("literals"); value.Exists() {
-			data.Literals = make([]NetworkGroupsItemsLiterals, 0)
+			data.Literals = make([]NetworkGroupsItemsLiterals, 0, len(value.Array()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := NetworkGroupsItemsLiterals{}

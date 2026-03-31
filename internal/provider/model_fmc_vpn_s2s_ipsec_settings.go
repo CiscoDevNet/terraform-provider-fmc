@@ -180,7 +180,7 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 		data.Ikev2Mode = types.StringNull()
 	}
 	if value := res.Get("ikeV1IpsecProposal"); value.Exists() {
-		data.Ikev1IpsecProposals = make([]VPNS2SIPSECSettingsIkev1IpsecProposals, 0)
+		data.Ikev1IpsecProposals = make([]VPNS2SIPSECSettingsIkev1IpsecProposals, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIPSECSettingsIkev1IpsecProposals{}
@@ -199,7 +199,7 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	if value := res.Get("ikeV2IpsecProposal"); value.Exists() {
-		data.Ikev2IpsecProposals = make([]VPNS2SIPSECSettingsIkev2IpsecProposals, 0)
+		data.Ikev2IpsecProposals = make([]VPNS2SIPSECSettingsIkev2IpsecProposals, 0, len(value.Array()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIPSECSettingsIkev2IpsecProposals{}
