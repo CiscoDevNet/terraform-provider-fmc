@@ -52,7 +52,7 @@ attributes:
             example: my_secret_key
             mandatory: true
             write_only: true
-            sensivite: true
+            sensitive: true
           - model_name: cryptoEncryptionType
             data_path: [authString]
             type: String
