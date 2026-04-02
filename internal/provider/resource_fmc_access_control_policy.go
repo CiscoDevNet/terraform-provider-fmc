@@ -1030,13 +1030,9 @@ func (r *AccessControlPolicyResource) updateSubresources(ctx context.Context, tf
 }
 
 // countKept compares the state with the plan starting from index 0, and returns:
-//
 // how many categories to keep: they remain identical as to content and order
-//
 // how many rules to keep:
-//
 // - kept rules must belong to some category that is itself kept,
-//
 // - and must themselves remain identical as to id, content, and order
 func (r *AccessControlPolicyResource) countKept(ctx context.Context, state, plan AccessControlPolicy) (int, int) {
 	return 0, 0 // TODO
