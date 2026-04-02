@@ -34,7 +34,6 @@ func TestAccDataSourceFmcKeyChain(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_key_chain.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "description", "My Host object"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.id", "1"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.key", "my_secret_key"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.accept_lifetime_start", "2025-08-25T12:14:23"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.accept_lifetime_end_type", "DATETIME"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_key_chain.test", "keys.0.accept_lifetime_end", "2026-08-25T12:14:23"))

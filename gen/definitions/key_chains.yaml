@@ -51,6 +51,8 @@ attributes:
             type: String
             example: my_secret_key
             mandatory: true
+            write_only: true
+            sensivite: true
           - model_name: cryptoEncryptionType
             data_path: [authString]
             type: String
