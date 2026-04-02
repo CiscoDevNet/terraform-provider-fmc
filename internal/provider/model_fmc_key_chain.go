@@ -148,11 +148,6 @@ func (data *KeyChain) fromBody(ctx context.Context, res gjson.Result) {
 			} else {
 				data.Id = types.Int64Null()
 			}
-			if value := res.Get("authString.cryptoKeyString"); value.Exists() {
-				data.Key = types.StringValue(value.String())
-			} else {
-				data.Key = types.StringNull()
-			}
 			if value := res.Get("acceptLifeTime.startLifeTimeValue"); value.Exists() {
 				data.AcceptLifetimeStart = types.StringValue(value.String())
 			} else {
@@ -257,11 +252,6 @@ func (data *KeyChain) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			data.Id = types.Int64Value(value.Int())
 		} else {
 			data.Id = types.Int64Null()
-		}
-		if value := res.Get("authString.cryptoKeyString"); value.Exists() && !data.Key.IsNull() {
-			data.Key = types.StringValue(value.String())
-		} else {
-			data.Key = types.StringNull()
 		}
 		if value := res.Get("acceptLifeTime.startLifeTimeValue"); value.Exists() && !data.AcceptLifetimeStart.IsNull() {
 			data.AcceptLifetimeStart = types.StringValue(value.String())
