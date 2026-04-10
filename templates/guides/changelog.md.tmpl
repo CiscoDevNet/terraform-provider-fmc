@@ -10,7 +10,7 @@ description: |-
 ## Unreleased
 
 - (Fix) `fmc_key_chain`: `key` attribute is now sensitive and write only, as API may not return its true value
-- (Fix) `fmc_device_ospf`: Sensitive attirbutes are now write-only, as API may not return their true value
+- (Fix) `fmc_device_ospf` and `fmc_device_ospf_interface`: Sensitive attirbutes are now write-only, as API may not return their true value
 
 ## 2.2.0
 
