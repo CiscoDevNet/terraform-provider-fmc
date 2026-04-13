@@ -1,0 +1,287 @@
+// Copyright © 2023 Cisco Systems, Inc. and its affiliates.
+// All rights reserved.
+//
+// Licensed under the Mozilla Public License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://mozilla.org/MPL/2.0/
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// SPDX-License-Identifier: MPL-2.0
+
+package provider
+
+// Section below is generated&owned by "gen/generator.go". //template:begin imports
+import (
+	"testing"
+
+	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
+)
+
+// End of section. //template:end imports
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAcc
+
+func TestAccFmcIdentityPolicy(t *testing.T) {
+	var checks []resource.TestCheckFunc
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "name", "my_identity_policy"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_identity_policy.test", "type"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "description", "My Identity Policy"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "active_authentication_server_certificate_type", "PKI_InternalCert"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "active_authentication_redirect_port", "885"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "active_authentication_maximum_login_attempts", "3"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "active_authentication_session_sharing", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "active_authentication_page", "DEFAULT"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "categories.0.name", "category_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.name", "rule_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.enabled", "true"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.category", "category_1"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.authentication_type", "PASSIVE"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.authentication_realm_type", "IdentityRealm"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.guest_access_fallback", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.active_authentication_fallback", "false"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.source_network_literals.0.type", "Network"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.source_network_literals.0.value", "10.1.1.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.destination_network_literals.0.type", "Network"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.destination_network_literals.0.value", "10.2.2.0/24"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.vlan_tag_literals.0.type", "VlanTagLiteral"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.vlan_tag_literals.0.start_tag", "11"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.vlan_tag_literals.0.end_tag", "22"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.source_port_literals.0.type", "PortLiteral"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.source_port_literals.0.protocol", "6"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.source_port_literals.0.port", "80"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.destination_port_literals.0.type", "PortLiteral"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.destination_port_literals.0.port", "80"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_identity_policy.test", "rules.0.destination_port_literals.0.protocol", "6"))
+
+	var steps []resource.TestStep
+	steps = append(steps, resource.TestStep{
+		Config: testAccFmcIdentityPolicyPrerequisitesConfig + testAccFmcIdentityPolicyConfig_all(),
+		Check:  resource.ComposeTestCheckFunc(checks...),
+	})
+	steps = append(steps, resource.TestStep{
+		ResourceName: "fmc_identity_policy.test",
+		ImportState:  true,
+	})
+
+	resource.Test(t, resource.TestCase{
+		PreCheck:                 func() { testAccPreCheck(t) },
+		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
+		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
+		Steps:                    steps,
+	})
+}
+
+// End of section. //template:end testAcc
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcIdentityPolicyPrerequisitesConfig = `
+resource "fmc_networks" "test" {
+  items = {
+    "id_policy_network1" = { prefix = "10.1.1.0/24" },
+    "id_policy_network2" = { prefix = "10.1.2.0/24" },
+    "id_policy_network3" = { prefix = "10.1.3.0/24" }
+  }
+}
+
+resource "fmc_internal_certificate" "test" {
+  name        = "id_policy_my_internal_cert"
+  certificate = local.cert
+  private_key = local.cert_key
+}
+
+resource "fmc_fqdn" "test" {
+  name = "id_policy_fqdn"
+  fqdn = "id.example.com"
+}
+
+resource "fmc_realm_ad_ldap" "test" {
+  name               = "id_policy_realm"
+  enabled            = true
+  realm_type         = "LDAP"
+  directory_username = "fmctf@example.cisco.com"
+  directory_password = "Cisco123!"
+  base_dn            = "DC=example,DC=cisco,DC=com"
+  group_dn           = "CN=Users,DC=example,DC=cisco,DC=com"
+
+  directory_servers = [
+    {
+      hostname                        = "10.62.158.5"
+      port                            = 389
+      encryption_protocol             = "NONE"
+    },
+  ]
+}
+
+resource "fmc_security_zones" "test" {
+  items = {
+    "id_policy_security_zone1" = { interface_type = "ROUTED" },
+    "id_policy_security_zone2" = { interface_type = "ROUTED" },
+  }
+}
+
+resource "fmc_vlan_tag" "test" {
+  name = "id_policy_vlan_tag"
+  start_tag = "10"
+  end_tag = "10"
+}
+
+resource "fmc_ports" "ports" {
+  items = {
+    "id_policy_TCP_12088" = { protocol = "TCP", port = 12088 },
+    "id_policy_TCP_1088" = { protocol = "TCP", port = 1088 },
+  }
+}
+
+locals {
+  cert = chomp(<<EOT
+-----BEGIN CERTIFICATE-----
+MIIErzCCApegAwIBAgIUU6GBJ2MENn84UcCE7nOSN0g7swIwDQYJKoZIhvcNAQEL
+BQAwXDELMAkGA1UEBhMCUEwxDDAKBgNVBAgMA01QTDEMMAoGA1UEBwwDS1JLMRAw
+DgYDVQQKDAdDaHJhYmFzMQ0wCwYDVQQLDARsYWJzMRAwDgYDVQQDDAdjcm5zLnBs
+MB4XDTIyMDUyMDEyMjkwNFoXDTI3MDQyNDEyMjkwNFowYzELMAkGA1UEBhMCUEwx
+DDAKBgNVBAgMA01QTDEMMAoGA1UEBwwDS1JLMRAwDgYDVQQKDAdDaHJhYmFzMQ0w
+CwYDVQQLDARsYWJzMRcwFQYDVQQDDA5mbWMtMDEuY3Jucy5wbDCCASIwDQYJKoZI
+hvcNAQEBBQADggEPADCCAQoCggEBAL/4XvPRdq54Lw7oDsP2KYKYKf3R9gdl2Gez
+Mxn8SLisocMIIxI+utisIkeNBomBLJqPZvY9+QOsbM/jl9VmK/Lrlzr4cN5rlI4I
+jCY4ut+X/XSYnojVqQ9Agc8NVuWl2yYMrIskdUsZDA7p/dB/mwrD3bGlTTkfvsOn
+lpbR52MvwAF8qKPXzScZq5ibVjOwSoiJKmk3dcGkmgq03q0OJK2JHE4PUAiAhgU1
+mS0tzyMCap+AKysk3k0GmV2O6vdBepAX600tNQoGyqzD9u1JCBMRESW31E0tKMTx
+4KlD/CGDYTivxL+ysUqhS1lsE02Tdyo8X/k2fysax06uAjyePZsCAwEAAaNiMGAw
+DAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCA4gwHQYDVR0lBBYwFAYIKwYBBQUH
+AwEGCCsGAQUFBwMCMCEGA1UdEQQaMBiCDmZtYy0wMS5jcm5zLnBsggZmbWMtMDEw
+DQYJKoZIhvcNAQELBQADggIBAG0oLwM0y8PBfiCTc4ElcPww+hFDeE8OsBgJPjhu
+lh6mzhSZJEJh7SfqSRwDqMjVbS2LK6AubeY9lw52jKy9y8U7UBCg3k4GsNBVd0yV
+6VQlJ76dIe7ksRELCc515jR+5HdoFg2CEEU/xhA/GLVpC6YFSfZseD95gRXPa/bm
+d9rTuT17T3butji4i4DeS+BD+DzCC0vKVPZUlP3F+02Wv8MoyIxJzGVIhuHPHIAY
+40xgvXna2onComp+0JMUmuWYNnBQgiZg5jdEL6EPXuGnrwDShZ9xV7nhXcx3vfyo
+HCNOeRTPi6m0m4kxDrwqwgm8XFDFpetkcuVNC/QARLXcVL1gMRXi16Q2h1WmXSxX
+XoaxyFXlvzzzW8fT4zL92H8F8c1FK/YjLQ4KucT9RXlrFbfp8jyaLhILfFwcJmXv
+JERCDWZ0SD5HiK9tr+0ljGR4Zr4pApmz/0SvPXPMwSPwg1M5zUdUs2rDT+PdgQhs
+PGauMnRNqxxhnq7A5gF3j+L0RJMymFX7d9bv8BKlUzmFB93F5qNKNTVfPbvDKXLM
+m/LE3E4cEQq/O/nZOGkYwqAHu2FckS4a4rJgBdatDu8EjzStACIoDRXD0n3YFq83
+lnkGIuzLdKP2P/6l4By5UzEWKxgbQF0Kt450jMH2pzLIxpMFKXXtXkLlJLmuBHUW
+E+AT
+-----END CERTIFICATE-----
+EOT
+)
+
+  cert_key = chomp(<<EOT
+-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC/+F7z0XaueC8O
+6A7D9imCmCn90fYHZdhnszMZ/Ei4rKHDCCMSPrrYrCJHjQaJgSyaj2b2PfkDrGzP
+45fVZivy65c6+HDea5SOCIwmOLrfl/10mJ6I1akPQIHPDVblpdsmDKyLJHVLGQwO
+6f3Qf5sKw92xpU05H77Dp5aW0edjL8ABfKij180nGauYm1YzsEqIiSppN3XBpJoK
+tN6tDiStiRxOD1AIgIYFNZktLc8jAmqfgCsrJN5NBpldjur3QXqQF+tNLTUKBsqs
+w/btSQgTERElt9RNLSjE8eCpQ/whg2E4r8S/srFKoUtZbBNNk3cqPF/5Nn8rGsdO
+rgI8nj2bAgMBAAECggEBAKCSfcnvsRfqi2IqlP8wzjPgV29pyiMR+1tyNxJLRgDC
+1WOvULaYJe3KvbmfqpIlrEt0G6lo2PtLpJCXTI9BMQ22Jf87hB1nWxEa8S+fUCBq
+n6SBbEoEfa62RF4OSFs6yf4fp8uTKVExmDZ5XsahlewBPVS0cc2QUh6R9ZId7S+2
+dB2hq5/zdndyRIHJDrt5Xega9mz/g+k0NxkhC7s14DydF/NEWnEn1L4Mk7SpbBvx
+62UkluuYpHXCVIosJQTk64qh04wbj9rF85IbYq/oj2tQbmZpYuVsAj0qyaQhysdE
+b41NRt8u5r84MBiLGt2/sdGl8WvHfh5dN8IwajRAdwECgYEA5EDE+V/6avE0+uM2
+dSH5AuBxNh+M/HIwqJZioHiF8Z2Mptgd8p6jzr+mDCL0a1crhpJCMAbE3UH+CJDg
+FogcShBCTGqGJitsDpoJYxxMrhIybHHKI3iaclO/+AYzj20ivzXigke1tqMruGjk
+oXn720EVhHcDoadf9It+0HWtgMECgYEA1057IwukasL/ounD9TtVohRgoFSozDo9
+veQtKMACD51n/NLYq9pmBhCDQrmiJyn3wIR1OhCV6g40kwUmPHLo2d0Wg5zlcw7i
+P9nVnO0X45dr/KTyuAl9QqFKiNd21V0ZTw3nNvWtd9GiY/ceFTdqXjuDU+lrinbH
+PrK+wflmuVsCgYBEiq6btBaexpACRvizc+Ay3PMiLZdIt4GlHoO/bHHMfGMgNwXH
+NZw7GZHjUxvSn/qSDpmRknbLemWubNLd8UGNfBRsnhBqpd9tAxSOjpD4NL6vkfwB
+atX2PvAGqtYQ29TzVlsOhDos/hLC7by6QMdAr+qmPJb6lChcZwdN0gioAQKBgD9h
+HuZmGvRCirYOUlzyJncbwIXx5e6YhmxLqu9/9htanq3R825DUB0g50LRGmak+AV3
++HorP7YykE9nCKZqvRjE+Eet++0uyHM7UKJtOMcKYANzGvAJ+xGOIT6/DoAoc7bN
+xO5sy6+lykPbDsP4GBu9MR+Was3LwUM3oue+3vpZAoGAICS8gnuYP14JrTxCcdPX
+pdwKF6hN9/J4eiACAd4eP9Q+wOik0u21iEUYUDv2DQdPC7Z9akuxZ7MpI84GcnVD
+hy0SpiNifyyZVKb1LkdJp8yTgQG7LAq+gSBRGEJfL1sn6ZweXLmp4QRaFvEy2G1D
+YbHCkyYU6sHHy8N/Z/nqLbM=
+-----END PRIVATE KEY-----
+EOT
+)
+}
+`
+
+// End of section. //template:end testPrerequisites
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
+// End of section. //template:end testAccConfigMinimal
+
+// Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigAll
+
+func testAccFmcIdentityPolicyConfig_all() string {
+	config := `resource "fmc_identity_policy" "test" {` + "\n"
+	config += `	name = "my_identity_policy"` + "\n"
+	config += `	description = "My Identity Policy"` + "\n"
+	config += `	identity_mapping_filter_network_object_id = fmc_networks.test.items["id_policy_network1"].id` + "\n"
+	config += `	identity_mapping_filter_network_object_type = fmc_networks.test.items["id_policy_network1"].type` + "\n"
+	config += `	active_authentication_server_certificate_id = fmc_internal_certificate.test.id` + "\n"
+	config += `	active_authentication_server_certificate_type = "PKI_InternalCert"` + "\n"
+	config += `	active_authentication_redirect_fqdn_id = fmc_fqdn.test.id` + "\n"
+	config += `	active_authentication_redirect_fqdn_type = fmc_fqdn.test.type` + "\n"
+	config += `	active_authentication_redirect_port = 885` + "\n"
+	config += `	active_authentication_maximum_login_attempts = 3` + "\n"
+	config += `	active_authentication_session_sharing = true` + "\n"
+	config += `	active_authentication_page = "DEFAULT"` + "\n"
+	config += `	categories = [{` + "\n"
+	config += `		name = "category_1"` + "\n"
+	config += `	}]` + "\n"
+	config += `	rules = [{` + "\n"
+	config += `		name = "rule_1"` + "\n"
+	config += `		enabled = true` + "\n"
+	config += `		category = "category_1"` + "\n"
+	config += `		authentication_type = "PASSIVE"` + "\n"
+	config += `		authentication_realm_id = fmc_realm_ad_ldap.test.id` + "\n"
+	config += `		authentication_realm_type = "IdentityRealm"` + "\n"
+	config += `		guest_access_fallback = false` + "\n"
+	config += `		active_authentication_fallback = false` + "\n"
+	config += `		source_zones = [{` + "\n"
+	config += `			id = fmc_security_zones.test.items["id_policy_security_zone1"].id` + "\n"
+	config += `			type = fmc_security_zones.test.items["id_policy_security_zone1"].type` + "\n"
+	config += `		}]` + "\n"
+	config += `		source_network_literals = [{` + "\n"
+	config += `			type = "Network"` + "\n"
+	config += `			value = "10.1.1.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		source_network_objects = [{` + "\n"
+	config += `			id = fmc_networks.test.items["id_policy_network2"].id` + "\n"
+	config += `			type = fmc_networks.test.items["id_policy_network2"].type` + "\n"
+	config += `		}]` + "\n"
+	config += `		destination_network_literals = [{` + "\n"
+	config += `			type = "Network"` + "\n"
+	config += `			value = "10.2.2.0/24"` + "\n"
+	config += `		}]` + "\n"
+	config += `		destination_network_objects = [{` + "\n"
+	config += `			id = fmc_networks.test.items["id_policy_network3"].id` + "\n"
+	config += `			type = fmc_networks.test.items["id_policy_network3"].type` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tag_literals = [{` + "\n"
+	config += `			type = "VlanTagLiteral"` + "\n"
+	config += `			start_tag = "11"` + "\n"
+	config += `			end_tag = "22"` + "\n"
+	config += `		}]` + "\n"
+	config += `		vlan_tag_objects = [{` + "\n"
+	config += `			id = fmc_vlan_tag.test.id` + "\n"
+	config += `			type = fmc_vlan_tag.test.type` + "\n"
+	config += `		}]` + "\n"
+	config += `		source_port_literals = [{` + "\n"
+	config += `			type = "PortLiteral"` + "\n"
+	config += `			protocol = "6"` + "\n"
+	config += `			port = "80"` + "\n"
+	config += `		}]` + "\n"
+	config += `		destination_port_literals = [{` + "\n"
+	config += `			type = "PortLiteral"` + "\n"
+	config += `			port = "80"` + "\n"
+	config += `			protocol = "6"` + "\n"
+	config += `		}]` + "\n"
+	config += `	}]` + "\n"
+	config += `}` + "\n"
+	return config
+}
+
+// End of section. //template:end testAccConfigAll
