@@ -102,6 +102,7 @@ Read-Only:
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule. (see [below for nested schema](#nestedatt--rules--url_categories))
 - `url_literals` (Attributes Set) Set of objects representing the URLs associated with the rule (literally specified). (see [below for nested schema](#nestedatt--rules--url_literals))
 - `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule. (see [below for nested schema](#nestedatt--rules--url_objects))
+- `user_objects` (Attributes Set) User objects. (see [below for nested schema](#nestedatt--rules--user_objects))
 - `variable_set_id` (String) Id of the Variable Set for the rule action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--rules--vlan_tag_literals))
 - `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags or vlan tags group. (see [below for nested schema](#nestedatt--rules--vlan_tag_objects))
@@ -330,6 +331,19 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Id of the object.
+
+
+<a id="nestedatt--rules--user_objects"></a>
+### Nested Schema for `rules.user_objects`
+
+Read-Only:
+
+- `id` (String) Id of the User or User group object.
+- `name` (String) Name of the User or User group object.
+- `realm_id` (String) Id of the Realm the User or User group belongs to.
+- `realm_name` (String) Name of the Realm the User or User group belongs to.
+- `realm_type` (String) Type of the Realm the User or User group belongs to.
+- `type` (String) Type of the User or User group object.
 
 
 <a id="nestedatt--rules--vlan_tag_literals"></a>

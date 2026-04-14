@@ -2,6 +2,7 @@
 
 - (Enhancement) Add support for `fmc_identity_policy` resource and data source
 - (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
+- (Enhancement) Add support for user-based Access Rules
 
 ## 2.2.0
 

@@ -189,6 +189,16 @@ resource "fmc_access_rules" "example" {
           ]
         }
       ]
+      user_objects = [
+        {
+          id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type       = "RealmUser"
+          name       = "MyRealmUser1"
+          realm_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          realm_type = "Realm"
+          realm_name = "MyRealm"
+        }
+      ]
     }
   ]
 }
@@ -265,6 +275,7 @@ Optional:
 - `url_categories` (Attributes Set) Set of objects representing the URL Categories associated with the rule. (see [below for nested schema](#nestedatt--items--url_categories))
 - `url_literals` (Attributes Set) Set of objects representing the URLs associated with the rule (literally specified). (see [below for nested schema](#nestedatt--items--url_literals))
 - `url_objects` (Attributes Set) Set of objects representing the URLs associated with the rule. (see [below for nested schema](#nestedatt--items--url_objects))
+- `user_objects` (Attributes Set) User objects. (see [below for nested schema](#nestedatt--items--user_objects))
 - `variable_set_id` (String) Id of the Variable Set for the rule action.
 - `vlan_tag_literals` (Attributes Set) Set of objects that represent vlan tags (literally specified). (see [below for nested schema](#nestedatt--items--vlan_tag_literals))
 - `vlan_tag_objects` (Attributes Set) Set of objects that represent vlan tags or vlan tags group. (see [below for nested schema](#nestedatt--items--vlan_tag_objects))
@@ -506,6 +517,24 @@ Required:
 Optional:
 
 - `id` (String) Id of the object.
+
+
+<a id="nestedatt--items--user_objects"></a>
+### Nested Schema for `items.user_objects`
+
+Required:
+
+- `id` (String) Id of the User or User group object.
+- `name` (String) Name of the User or User group object.
+- `realm_id` (String) Id of the Realm the User or User group belongs to.
+- `type` (String) Type of the User or User group object.
+  - Choices: `RealmUser`, `RealmUserGroup`
+
+Optional:
+
+- `realm_name` (String) Name of the Realm the User or User group belongs to.
+- `realm_type` (String) Type of the Realm the User or User group belongs to.
+  - Choices: `Realm`
 
 
 <a id="nestedatt--items--vlan_tag_literals"></a>

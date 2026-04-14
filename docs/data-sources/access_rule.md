@@ -95,6 +95,7 @@ Read-Only:
 - `risks` (Attributes Set) Set of Application Risk levels. (see [below for nested schema](#nestedatt--application_filters--risks))
 - `tags` (Attributes Set) Set of Application Tags. (see [below for nested schema](#nestedatt--application_filters--tags))
 - `types` (Attributes Set) Set of Application Types. (see [below for nested schema](#nestedatt--application_filters--types))
+- `user_objects` (Attributes Set) User objects. (see [below for nested schema](#nestedatt--application_filters--user_objects))
 
 <a id="nestedatt--application_filters--business_relevances"></a>
 ### Nested Schema for `application_filters.business_relevances`
@@ -134,6 +135,19 @@ Read-Only:
 Read-Only:
 
 - `id` (String) Id of the Application Type.
+
+
+<a id="nestedatt--application_filters--user_objects"></a>
+### Nested Schema for `application_filters.user_objects`
+
+Read-Only:
+
+- `id` (String) Id of the User or User group object.
+- `name` (String) Name of the User or User group object.
+- `realm_id` (String) Id of the Realm the User or User group belongs to.
+- `realm_name` (String) Name of the Realm the User or User group belongs to.
+- `realm_type` (String) Type of the Realm the User or User group belongs to.
+- `type` (String) Type of the User or User group object.
 
 
 

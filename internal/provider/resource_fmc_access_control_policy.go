@@ -703,6 +703,44 @@ func (r *AccessControlPolicyResource) Schema(ctx context.Context, req resource.S
 								},
 							},
 						},
+						"user_objects": schema.SetNestedAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("User objects.").String,
+							Optional:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the User or User group object.").String,
+										Required:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the User or User group object.").AddStringEnumDescription("RealmUser", "RealmUserGroup").String,
+										Required:            true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("RealmUser", "RealmUserGroup"),
+										},
+									},
+									"name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the User or User group object.").String,
+										Required:            true,
+									},
+									"realm_id": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Id of the Realm the User or User group belongs to.").String,
+										Required:            true,
+									},
+									"realm_type": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the Realm the User or User group belongs to.").AddStringEnumDescription("Realm").String,
+										Optional:            true,
+										Validators: []validator.String{
+											stringvalidator.OneOf("Realm"),
+										},
+									},
+									"realm_name": schema.StringAttribute{
+										MarkdownDescription: helpers.NewAttributeDescription("Name of the Realm the User or User group belongs to.").String,
+										Optional:            true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},

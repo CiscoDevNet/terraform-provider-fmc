@@ -650,6 +650,51 @@ attributes:
           example: "24"
           id: true
           mandatory: true
+    - model_name: objects
+      data_path: [users]
+      tf_name: user_objects
+      type: Set
+      description: User objects.
+      exclude_test: true
+      attributes:
+        - model_name: id
+          type: String
+          description: Id of the User or User group object.
+          id: true
+          mandatory: true
+          example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        - model_name: type
+          type: String
+          description: Type of the User or User group object.
+          enum_values: [RealmUser, RealmUserGroup]
+          example: RealmUser
+          mandatory: true
+        - model_name: name
+          type: String
+          description: Name of the User or User group object.
+          mandatory: true
+          example: MyRealmUser1
+        - model_name: id
+          data_path: [realm]
+          tf_name: realm_id
+          type: String
+          id: true
+          mandatory: true
+          description: Id of the Realm the User or User group belongs to.
+          example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        - model_name: type
+          data_path: [realm]
+          tf_name: realm_type
+          type: String
+          description: Type of the Realm the User or User group belongs to.
+          enum_values: [Realm]
+          example: "Realm"
+        - model_name: name
+          data_path: [realm]
+          tf_name: realm_name
+          type: String
+          description: Name of the Realm the User or User group belongs to.
+          example: "MyRealm"
 
 test_prerequisites: |-
   resource "fmc_access_control_policy" "test" {
