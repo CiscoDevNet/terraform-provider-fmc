@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Enhancement) Add support for Intrusion Rule Group
+
 ## 2.2.0
 
 - (Enhancement) Access Rule and Category: Add possibility to create at specific location
