@@ -1,0 +1,33 @@
+---
+name: Intrusion Rule
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/intrusionrules
+doc_category: Policies
+attributes:
+  - model_name: name
+    type: String
+    description: "Name of the Intrusion Rule in gid:sid format."
+    data_source_query: true
+    computed: true
+  - model_name: ruleData
+    type: String
+    description: Snort formated rule data.
+    mandatory: true
+    example: 'alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )'
+  - model_name: ruleGroups
+    type: List
+    description: List of Intrusion Rule Groups this rule belongs to.
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the Intrusion Rule Group.
+        mandatory: true
+        example: 12da34567890-1234-5678-90ab-cdef12345678
+      - model_name: name
+        type: String
+        description: Name of the Intrusion Rule Group.
+        example: "Custom Rule Group 1"
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IntrusionRule'.
+    computed: true
