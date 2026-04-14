@@ -9,7 +9,8 @@ description: |-
 
 ## Unreleased
 
-- (Enhancement) Add support for `fmc_identity_policy`
+- (Enhancement) Add support for `fmc_identity_policy` resource and data source
+- (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
 
 ## 2.2.0
 
