@@ -636,6 +636,38 @@ func (d *AccessControlPolicyDataSource) Schema(ctx context.Context, req datasour
 								},
 							},
 						},
+						"user_objects": schema.SetNestedAttribute{
+							MarkdownDescription: "User objects.",
+							Computed:            true,
+							NestedObject: schema.NestedAttributeObject{
+								Attributes: map[string]schema.Attribute{
+									"id": schema.StringAttribute{
+										MarkdownDescription: "Id of the User or User group object.",
+										Computed:            true,
+									},
+									"type": schema.StringAttribute{
+										MarkdownDescription: "Type of the User or User group object.",
+										Computed:            true,
+									},
+									"name": schema.StringAttribute{
+										MarkdownDescription: "Name of the User or User group object.",
+										Computed:            true,
+									},
+									"realm_id": schema.StringAttribute{
+										MarkdownDescription: "Id of the Realm the User or User group belongs to.",
+										Computed:            true,
+									},
+									"realm_type": schema.StringAttribute{
+										MarkdownDescription: "Type of the Realm the User or User group belongs to.",
+										Computed:            true,
+									},
+									"realm_name": schema.StringAttribute{
+										MarkdownDescription: "Name of the Realm the User or User group belongs to.",
+										Computed:            true,
+									},
+								},
+							},
+						},
 					},
 				},
 			},

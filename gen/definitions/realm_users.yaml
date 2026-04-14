@@ -1,0 +1,30 @@
+# Manual resource - Data Source (Read)
+---
+name: Realm Users
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/realmusers
+no_resource: true
+no_import: true
+is_bulk: true
+doc_category: Objects
+attributes:
+  - model_name: realm_id
+    type: String
+    description: Id of the Realm to which the users belong.
+    data_source_optional_parameter: true
+    exclude_example: true
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Users. The key of the map is the name of the individual User.
+    map_key_example: User1
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the User.
+        exclude_example: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'RealmUser'.
+        computed: true

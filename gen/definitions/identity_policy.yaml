@@ -1,0 +1,575 @@
+# FMCBUG CSCwt93493 FMC API: Identity Policy configuration is not applied on initial POST request
+# FMCBUG CSCwt93472 FMC API: Identity Rules are not returned in order they are defined in the policy
+# Manual resource - Create, Read, Update, Data Source Test
+---
+name: Identity Policy
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/identitypolicies
+doc_category: Policies
+res_description: This resource manages Identity Policy with corresponding Categories and Rules.
+skip_minimum_test: true
+minimum_version: "7.2"
+minimum_version_create: "10.0"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Identity Policy.
+    example: my_identity_policy
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IdentityPolicy'.
+    computed: true
+  - model_name: type
+    type: String
+    value: IdentityPolicy
+  - model_name: description
+    type: String
+    description: Description of the Identity Policy.
+    example: My Identity Policy
+  - model_name: id
+    data_path: [mappingFilter]
+    tf_name: identity_mapping_filter_network_object_id
+    type: String
+    description: Id of the Host, Network or Network Group used as an Identity Mapping Filter.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    test_value: fmc_networks.test.items["id_policy_network1"].id
+  - model_name: type
+    data_path: [mappingFilter]
+    tf_name: identity_mapping_filter_network_object_type
+    type: String
+    description: Type of the Host, Network or Network Group used as an Identity Mapping Filter.
+    example: Network
+    test_value: fmc_networks.test.items["id_policy_network1"].type
+
+  # Active Authentication
+  - model_name: id
+    data_path: [authCert]
+    tf_name: active_authentication_server_certificate_id
+    type: String
+    description: Id of the Internal Certificate object used as an active authentication server certificate.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    test_value: fmc_internal_certificate.test.id
+  - model_name: type
+    data_path: [authCert]
+    tf_name: active_authentication_server_certificate_type
+    type: String
+    description: Type of the Internal Certificate object used as an active authentication server certificate.
+    example: PKI_InternalCert
+    enum_values: [PKI_InternalCert]
+    default_value: PKI_InternalCert
+  - model_name: id
+    data_path: [redirectHost]
+    tf_name: active_authentication_redirect_fqdn_id
+    type: String
+    description: Id of the FQDN object used for active authentication redirection (Redirect to Host Name). Supported only in Snort 3.0 or later.
+    example: 12345678-90ab-cdef-1234-567890abcdef
+    test_value: fmc_fqdn.test.id
+  - model_name: type
+    data_path: [redirectHost]
+    tf_name: active_authentication_redirect_fqdn_type
+    type: String
+    description: Type of the FQDN object used for active authentication redirection.
+    example: FQDN
+    enum_values: [FQDN]
+    default_value: FQDN
+    test_value: fmc_fqdn.test.type
+  - model_name: redirectPort
+    tf_name: active_authentication_redirect_port
+    type: Int64
+    description: Port used for active authentication redirection. Valid values are 885 or 1025-65535.
+    min_int: 885
+    max_int: 65535
+    example: 885
+    default_value: 885
+  - model_name: maxLoginAttempts
+    tf_name: active_authentication_maximum_login_attempts
+    type: Int64
+    description: Maximum login attempts. Use 0 for unlimited attempts.
+    example: 3
+    default_value: 3
+  - model_name: activeSessionSharing
+    tf_name: active_authentication_session_sharing
+    type: Bool
+    description: Share active authentication sessions across firewalls. Supported only in 7.4.1 and later.
+    example: true
+    default_value: true
+  - model_name: activeAuthPage
+    tf_name: active_authentication_page
+    type: String
+    description: Active authentication page type.
+    example: DEFAULT
+    enum_values: [DEFAULT, CUSTOM]
+    default_value: DEFAULT
+  - model_name: htmlActiveAuthPage
+    tf_name: active_authentication_page_html
+    type: String
+    description: Custom HTML content for the active authentication login page. Only used when `active_authentication_page` is set to 'CUSTOM'.
+    exclude_example: true
+    exclude_test: true
+    default_value: '<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n<title>Login</title>\n<style type=\"text/css\">\nbody {\n    margin:0;\n    font-family:verdana,sans-serif;\n}\nh1 {\n    margin:0;\n    padding:12px 25px;\n    background-color:#343434;\n    color:#ddd;\n}\np {\n    margin:12px 25px;\n}\nstrong {\n    color:#E0042D;\n}\ndiv {\n    padding-left:23px;\n    font-weight: normal;\n    font-size: 8pt;\n}\ninput {\n    margin:12px 25px;\n}\n</style>\n</head>\n<body>\n    <form action=\"\" id=\"loginForm\" method=\"post\" name=\"loginForm\">\n        <h1>Login</h1>\n        <p><strong>Please enter your username and password or log in as a guest.</strong></p>\n        <div class=\"label\">Username\n            <input id=\"name\" maxlength=\"100\" name=\"login\" type=\"text\" value=\"\"/>\n            <b>realm</b>\n            <select name=\"realm\" id=\"realm\"></select>\n        </div>\n        <div class=\"label\" id=\"label-password\">Password\n            <input id=\"pass\" name=\"pass\" type=\"password\" value=\"\"/>\n        </div>\n        <input id=\"submit-btn\" type=\"submit\" name=\"login_action\" value=\"Submit\"/>\n        <p><font size=2 >-or-</font></p>\n        <input id=\"login-btn\" type=\"submit\" name=\"guest_action\" value=\"Login as guest\"/>\n    </form>\n</body>\n</html>\n'
+
+  # Categories
+  - model_name: dummy_categories
+    tf_name: categories
+    type: List
+    description: Ordered list of Categories. Those are created between default categories - Standard Rules and Root Rules in order specified below. Do not specify default categories in the list.
+    ordered_list: true
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the Category.
+        resource_id: true
+        exclude_example: true
+        exclude_test: true
+      - model_name: name
+        type: String
+        description: Name of the Category.
+        mandatory: true
+        example: category_1
+      - model_name: type
+        type: String
+        value: IdentityPolicyCategory
+
+  # Rules
+  - model_name: dummy_rules
+    tf_name: rules
+    type: List
+    ordered_list: true
+    description: Ordered list of Rules.
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the Identity Rule.
+        resource_id: true
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        value: IdentityPolicyRule
+      - model_name: name
+        type: String
+        description: Name of the Identity Rule.
+        mandatory: true
+        example: rule_1
+      - model_name: enabled
+        type: Bool
+        description: Enable rule.
+        example: true
+      - model_name: category
+        type: String
+        mandatory: true
+        description: Name of the Category the rule should belong to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+        example: category_1
+        tf_only: true
+      - model_name: authenticationType
+        tf_name: authentication_type
+        type: String
+        description: Authentication type action for the rule.
+        enum_values: ["PASSIVE", "ACTIVE", "NO"]
+        example: PASSIVE
+
+      # Realm & Settings
+      - model_name: id
+        data_path: [realm]
+        tf_name: authentication_realm_id
+        type: String
+        description: Id of the Authentication Realm (AD/LDAP).
+        example: 12345678-90ab-cdef-1234-567890abcdef
+        test_value: fmc_realm_ad_ldap.test.id
+      - model_name: type
+        data_path: [realm]
+        tf_name: authentication_realm_type
+        type: String
+        description: Type of the Authentication Realm.
+        example: IdentityRealm
+        enum_values: [IdentityRealm]
+      - model_name: guestAccessFallback
+        tf_name: guest_access_fallback
+        type: Bool
+        description: Identify as Special Identities/Guest if authentication cannot identify user.
+        example: false
+      - model_name: captivePortalFallback
+        tf_name: active_authentication_fallback
+        type: Bool
+        description: Use active authentication if passive or VPN identity cannot be established.
+        example: false
+      - model_name: authenticationProtocol
+        tf_name: authentication_protocol
+        type: String
+        description: Protocol used for active authentication.
+        enum_values: ["HTTP_BASIC", "NTLM", "KERBEROS", "HTTP NEGOTIATE", "HTTP RESPONSE PAGE", "SAML"]
+        exclude_test: true
+      - model_name: excludedUserAgent
+        tf_name: excluded_user_agents
+        type: List
+        description: List of excluded User Agents (Applications).
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            id: true
+            description: Id of the Application object.
+            example: 12345678-90ab-cdef-1234-567890abcdef
+            mandatory: true
+          - model_name: type
+            type: String
+            description: Type of the Application object.
+            example: Application
+            enum_values: [Application]
+            mandatory: true
+      
+      # Match criteria
+      - model_name: sourceZones
+        tf_name: source_zones
+        description: Source Security Zones.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Security Zone object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            mandatory: true
+            test_value: fmc_security_zones.test.items["id_policy_security_zone1"].id
+          - model_name: type
+            type: String
+            description: Type of the Security Zone object.
+            default_value: SecurityZone
+            example: SecurityZone
+            enum_values: [SecurityZone]
+            test_value: fmc_security_zones.test.items["id_policy_security_zone1"].type
+      - model_name: destinationZones
+        tf_name: destination_zones
+        description: Destination Security Zones.
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Security Zone object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            mandatory: true
+            test_value: fmc_security_zones.test.items["id_policy_security_zone2"].id
+          - model_name: type
+            type: String
+            description: Type of the Security Zone object.
+            default_value: SecurityZone
+            example: SecurityZone
+            enum_values: [SecurityZone]
+            test_value: fmc_security_zones.test.items["id_policy_security_zone2"].type
+      - model_name: literals
+        data_path: [sourceNetworks]
+        tf_name: source_network_literals
+        description: Source Network literals.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            description: Type of the Network Object.
+            example: Network
+            enum_values: [Host, Network]
+          - model_name: value
+            type: String
+            id: true
+            description: IP address or network in CIDR format.
+            example: 10.1.1.0/24
+      - model_name: objects
+        data_path: [sourceNetworks]
+        tf_name: source_network_objects
+        description: Objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Network Object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_networks.test.items["id_policy_network2"].id
+            mandatory: true
+          - model_name: type
+            type: String
+            description: Type of the Network Object.
+            example: Network
+            test_value: fmc_networks.test.items["id_policy_network2"].type
+            mandatory: true
+      - model_name: literals
+        data_path: [destinationNetworks]
+        tf_name: destination_network_literals
+        description: Destination Network literals.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            description: Type of the Network Object.
+            example: Network
+            enum_values: [Host, Network]
+          - model_name: value
+            type: String
+            id: true
+            description: IP address or network in CIDR format.
+            example: 10.2.2.0/24
+      - model_name: objects
+        data_path: [destinationNetworks]
+        tf_name: destination_network_objects
+        description: Objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation).
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Network Object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_networks.test.items["id_policy_network3"].id
+            mandatory: true
+          - model_name: type
+            type: String
+            description: Type of the Network Object.
+            example: Network
+            test_value: fmc_networks.test.items["id_policy_network3"].type
+            mandatory: true
+      - model_name: literals
+        data_path: [vlanTags]
+        tf_name: vlan_tag_literals
+        description: VLAN Tag literals.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            description: Type of the VLAN tag literal.
+            example: VlanTagLiteral
+            enum_values: [VlanTagLiteral]
+            default_value: VlanTagLiteral
+          - model_name: startTag
+            type: String
+            example: "11"
+            description: Start of the VLAN tag range.
+          - model_name: endTag
+            type: String
+            example: "22"
+            description: End of the VLAN tag range.
+      - model_name: objects
+        data_path: [vlanTags]
+        tf_name: vlan_tag_objects
+        description: VLAN Tag objects.
+        type: Set
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the VLAN Tag object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_vlan_tag.test.id
+          - model_name: type
+            type: String
+            description: Type of the VLAN Tag object.
+            id: true
+            example: VlanTag
+            test_value: fmc_vlan_tag.test.type
+            enum_values: [VlanTag, VlanGroupTag]
+      - model_name: literals
+        data_path: [sourcePorts]
+        tf_name: source_port_literals
+        description: Source Port literals.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            description: Type of the port literal.
+            example: PortLiteral
+            default_value: PortLiteral
+            enum_values: [PortLiteral]
+          - model_name: protocol
+            type: String
+            example: "6"
+            enum_values: ["6", "17"]
+            mandatory: true
+            description: IANA protocol number.
+          - model_name: port
+            type: String
+            example: "80"
+            description: Port number.
+      - model_name: objects
+        data_path: [sourcePorts]
+        tf_name: source_port_objects
+        description: Source Port objects.
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Port object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_ports.test.items["id_policy_TCP_12088"].id
+          - model_name: type
+            type: String
+            description: Type of the Port object.
+            enum_values: [ProtocolPortObject]
+            example: ProtocolPortObject
+            test_value: fmc_ports.test.items["id_policy_TCP_12088"].type
+      - model_name: literals
+        data_path: [destinationPorts]
+        tf_name: destination_port_literals
+        description: Destination Port literals.
+        type: Set
+        attributes:
+          - model_name: type
+            type: String
+            enum_values: [PortLiteral]
+            mandatory: true
+            example: PortLiteral
+            description: Type of the port literal.
+          - model_name: port
+            type: String
+            example: "80"
+            description: Port number.
+          - model_name: protocol
+            type: String
+            example: "6"
+            mandatory: true
+            description: IANA protocol number.
+      - model_name: objects
+        data_path: [destinationPorts]
+        tf_name: destination_port_objects
+        description: Destination Port objects.
+        type: Set
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the Port object.
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_ports.test.items["id_policy_TCP_1088"].id
+          - model_name: type
+            type: String
+            description: Type of the Port object.
+            enum_values: [ProtocolPortObject]
+            example: ProtocolPortObject
+            test_value: fmc_ports.test.items["id_policy_TCP_1088"].type
+
+test_prerequisites: |
+  resource "fmc_networks" "test" {
+    items = {
+      "id_policy_network1" = { prefix = "10.1.1.0/24" },
+      "id_policy_network2" = { prefix = "10.1.2.0/24" },
+      "id_policy_network3" = { prefix = "10.1.3.0/24" }
+    }
+  }
+
+  resource "fmc_internal_certificate" "test" {
+    name        = "id_policy_my_internal_cert"
+    certificate = local.cert
+    private_key = local.cert_key
+  }
+
+  resource "fmc_fqdn" "test" {
+    name = "id_policy_fqdn"
+    fqdn = "id.example.com"
+  }
+
+  resource "fmc_realm_ad_ldap" "test" {
+    name               = "id_policy_realm"
+    enabled            = true
+    realm_type         = "LDAP"
+    directory_username = "fmctf@example.cisco.com"
+    directory_password = "Cisco123!"
+    base_dn            = "DC=example,DC=cisco,DC=com"
+    group_dn           = "CN=Users,DC=example,DC=cisco,DC=com"
+
+    directory_servers = [
+      {
+        hostname                        = "10.62.158.5"
+        port                            = 389
+        encryption_protocol             = "NONE"
+      },
+    ]
+  }
+
+  resource "fmc_security_zones" "test" {
+    items = {
+      "id_policy_security_zone1" = { interface_type = "ROUTED" },
+      "id_policy_security_zone2" = { interface_type = "ROUTED" },
+    }
+  }
+
+  resource "fmc_vlan_tag" "test" {
+    name = "id_policy_vlan_tag"
+    start_tag = "10"
+    end_tag = "10"
+  }
+
+  resource "fmc_ports" "ports" {
+    items = {
+      "id_policy_TCP_12088" = { protocol = "TCP", port = 12088 },
+      "id_policy_TCP_1088" = { protocol = "TCP", port = 1088 },
+    }
+  }
+
+  locals {
+    cert = chomp(<<EOT
+  -----BEGIN CERTIFICATE-----
+  MIIErzCCApegAwIBAgIUU6GBJ2MENn84UcCE7nOSN0g7swIwDQYJKoZIhvcNAQEL
+  BQAwXDELMAkGA1UEBhMCUEwxDDAKBgNVBAgMA01QTDEMMAoGA1UEBwwDS1JLMRAw
+  DgYDVQQKDAdDaHJhYmFzMQ0wCwYDVQQLDARsYWJzMRAwDgYDVQQDDAdjcm5zLnBs
+  MB4XDTIyMDUyMDEyMjkwNFoXDTI3MDQyNDEyMjkwNFowYzELMAkGA1UEBhMCUEwx
+  DDAKBgNVBAgMA01QTDEMMAoGA1UEBwwDS1JLMRAwDgYDVQQKDAdDaHJhYmFzMQ0w
+  CwYDVQQLDARsYWJzMRcwFQYDVQQDDA5mbWMtMDEuY3Jucy5wbDCCASIwDQYJKoZI
+  hvcNAQEBBQADggEPADCCAQoCggEBAL/4XvPRdq54Lw7oDsP2KYKYKf3R9gdl2Gez
+  Mxn8SLisocMIIxI+utisIkeNBomBLJqPZvY9+QOsbM/jl9VmK/Lrlzr4cN5rlI4I
+  jCY4ut+X/XSYnojVqQ9Agc8NVuWl2yYMrIskdUsZDA7p/dB/mwrD3bGlTTkfvsOn
+  lpbR52MvwAF8qKPXzScZq5ibVjOwSoiJKmk3dcGkmgq03q0OJK2JHE4PUAiAhgU1
+  mS0tzyMCap+AKysk3k0GmV2O6vdBepAX600tNQoGyqzD9u1JCBMRESW31E0tKMTx
+  4KlD/CGDYTivxL+ysUqhS1lsE02Tdyo8X/k2fysax06uAjyePZsCAwEAAaNiMGAw
+  DAYDVR0TAQH/BAIwADAOBgNVHQ8BAf8EBAMCA4gwHQYDVR0lBBYwFAYIKwYBBQUH
+  AwEGCCsGAQUFBwMCMCEGA1UdEQQaMBiCDmZtYy0wMS5jcm5zLnBsggZmbWMtMDEw
+  DQYJKoZIhvcNAQELBQADggIBAG0oLwM0y8PBfiCTc4ElcPww+hFDeE8OsBgJPjhu
+  lh6mzhSZJEJh7SfqSRwDqMjVbS2LK6AubeY9lw52jKy9y8U7UBCg3k4GsNBVd0yV
+  6VQlJ76dIe7ksRELCc515jR+5HdoFg2CEEU/xhA/GLVpC6YFSfZseD95gRXPa/bm
+  d9rTuT17T3butji4i4DeS+BD+DzCC0vKVPZUlP3F+02Wv8MoyIxJzGVIhuHPHIAY
+  40xgvXna2onComp+0JMUmuWYNnBQgiZg5jdEL6EPXuGnrwDShZ9xV7nhXcx3vfyo
+  HCNOeRTPi6m0m4kxDrwqwgm8XFDFpetkcuVNC/QARLXcVL1gMRXi16Q2h1WmXSxX
+  XoaxyFXlvzzzW8fT4zL92H8F8c1FK/YjLQ4KucT9RXlrFbfp8jyaLhILfFwcJmXv
+  JERCDWZ0SD5HiK9tr+0ljGR4Zr4pApmz/0SvPXPMwSPwg1M5zUdUs2rDT+PdgQhs
+  PGauMnRNqxxhnq7A5gF3j+L0RJMymFX7d9bv8BKlUzmFB93F5qNKNTVfPbvDKXLM
+  m/LE3E4cEQq/O/nZOGkYwqAHu2FckS4a4rJgBdatDu8EjzStACIoDRXD0n3YFq83
+  lnkGIuzLdKP2P/6l4By5UzEWKxgbQF0Kt450jMH2pzLIxpMFKXXtXkLlJLmuBHUW
+  E+AT
+  -----END CERTIFICATE-----
+  EOT
+  )
+
+    cert_key = chomp(<<EOT
+  -----BEGIN PRIVATE KEY-----
+  MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC/+F7z0XaueC8O
+  6A7D9imCmCn90fYHZdhnszMZ/Ei4rKHDCCMSPrrYrCJHjQaJgSyaj2b2PfkDrGzP
+  45fVZivy65c6+HDea5SOCIwmOLrfl/10mJ6I1akPQIHPDVblpdsmDKyLJHVLGQwO
+  6f3Qf5sKw92xpU05H77Dp5aW0edjL8ABfKij180nGauYm1YzsEqIiSppN3XBpJoK
+  tN6tDiStiRxOD1AIgIYFNZktLc8jAmqfgCsrJN5NBpldjur3QXqQF+tNLTUKBsqs
+  w/btSQgTERElt9RNLSjE8eCpQ/whg2E4r8S/srFKoUtZbBNNk3cqPF/5Nn8rGsdO
+  rgI8nj2bAgMBAAECggEBAKCSfcnvsRfqi2IqlP8wzjPgV29pyiMR+1tyNxJLRgDC
+  1WOvULaYJe3KvbmfqpIlrEt0G6lo2PtLpJCXTI9BMQ22Jf87hB1nWxEa8S+fUCBq
+  n6SBbEoEfa62RF4OSFs6yf4fp8uTKVExmDZ5XsahlewBPVS0cc2QUh6R9ZId7S+2
+  dB2hq5/zdndyRIHJDrt5Xega9mz/g+k0NxkhC7s14DydF/NEWnEn1L4Mk7SpbBvx
+  62UkluuYpHXCVIosJQTk64qh04wbj9rF85IbYq/oj2tQbmZpYuVsAj0qyaQhysdE
+  b41NRt8u5r84MBiLGt2/sdGl8WvHfh5dN8IwajRAdwECgYEA5EDE+V/6avE0+uM2
+  dSH5AuBxNh+M/HIwqJZioHiF8Z2Mptgd8p6jzr+mDCL0a1crhpJCMAbE3UH+CJDg
+  FogcShBCTGqGJitsDpoJYxxMrhIybHHKI3iaclO/+AYzj20ivzXigke1tqMruGjk
+  oXn720EVhHcDoadf9It+0HWtgMECgYEA1057IwukasL/ounD9TtVohRgoFSozDo9
+  veQtKMACD51n/NLYq9pmBhCDQrmiJyn3wIR1OhCV6g40kwUmPHLo2d0Wg5zlcw7i
+  P9nVnO0X45dr/KTyuAl9QqFKiNd21V0ZTw3nNvWtd9GiY/ceFTdqXjuDU+lrinbH
+  PrK+wflmuVsCgYBEiq6btBaexpACRvizc+Ay3PMiLZdIt4GlHoO/bHHMfGMgNwXH
+  NZw7GZHjUxvSn/qSDpmRknbLemWubNLd8UGNfBRsnhBqpd9tAxSOjpD4NL6vkfwB
+  atX2PvAGqtYQ29TzVlsOhDos/hLC7by6QMdAr+qmPJb6lChcZwdN0gioAQKBgD9h
+  HuZmGvRCirYOUlzyJncbwIXx5e6YhmxLqu9/9htanq3R825DUB0g50LRGmak+AV3
+  +HorP7YykE9nCKZqvRjE+Eet++0uyHM7UKJtOMcKYANzGvAJ+xGOIT6/DoAoc7bN
+  xO5sy6+lykPbDsP4GBu9MR+Was3LwUM3oue+3vpZAoGAICS8gnuYP14JrTxCcdPX
+  pdwKF6hN9/J4eiACAd4eP9Q+wOik0u21iEUYUDv2DQdPC7Z9akuxZ7MpI84GcnVD
+  hy0SpiNifyyZVKb1LkdJp8yTgQG7LAq+gSBRGEJfL1sn6ZweXLmp4QRaFvEy2G1D
+  YbHCkyYU6sHHy8N/Z/nqLbM=
+  -----END PRIVATE KEY-----
+  EOT
+  )
+  }

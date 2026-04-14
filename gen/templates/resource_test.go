@@ -54,11 +54,11 @@ func TestAccFmc{{camelCase .Name}}(t *testing.T) {
 	{{- if isNestedListSet .}}
 	{{- $clist := .TfName }}
 	{{- range  .Attributes}}
-	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) (not (isSet .))}}
+	{{- if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) (not (isSet .)) (not .TfOnly) }}
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{$clist}}.0.{{.TfName}}", "{{.Example}}"))
 	{{- end}}
 	{{- end}}
-	{{- else if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) (not (isSet .))}}
+	{{- else if and (not .WriteOnly) (not .ExcludeTest) (not .Value) (not .TestValue) (not .Computed) (not (isSet .)) (not .TfOnly)}}
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_{{snakeCase $name}}.test", "{{$list}}.{{$map}}.{{.TfName}}", "{{.Example}}"))
 	{{- end}}
 	{{- end}}
