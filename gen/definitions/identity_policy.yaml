@@ -1,5 +1,5 @@
-# FMCBUG: Identity policy configuration is not applied on inital POST request
-# FMCBUG: Identity Rules are not returned in order they are defined in the policy
+# FMCBUG CSCwt93493 FMC API: Identity Policy configuration is not applied on initial POST request
+# FMCBUG CSCwt93472 FMC API: Identity Rules are not returned in order they are defined in the policy
 # Manual resource - Create, Read, Update, Data Source Test
 ---
 name: Identity Policy
