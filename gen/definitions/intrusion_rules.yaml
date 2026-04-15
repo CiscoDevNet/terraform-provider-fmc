@@ -29,6 +29,7 @@ attributes:
         mandatory: true
         attributes:
           - model_name: id
+            id: true
             type: String
             description: Id of the Intrusion Rule Group.
             mandatory: true

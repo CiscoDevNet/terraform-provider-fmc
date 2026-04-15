@@ -199,8 +199,8 @@ func (data *IntrusionRules) fromBodyPartial(ctx context.Context, res gjson.Resul
 			data.RuleData = types.StringNull()
 		}
 		for i := 0; i < len(data.RuleGroups); i++ {
-			keys := [...]string{"id", "name"}
-			keyValues := [...]string{data.RuleGroups[i].Id.ValueString(), data.RuleGroups[i].Name.ValueString()}
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.RuleGroups[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).RuleGroups[i]

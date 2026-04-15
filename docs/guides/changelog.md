@@ -10,6 +10,7 @@ description: |-
 ## Unreleased
 
 - (Enhancement) Add support for Intrusion Rule Group
+- (Enhancement) Add support for Intrusion Rules
 
 ## 2.2.0
 
