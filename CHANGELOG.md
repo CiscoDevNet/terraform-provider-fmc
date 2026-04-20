@@ -1,6 +1,6 @@
 ## Unreleased
 
-- (Enhancement) Add support for Intrusion Rules and Intrusion Rule Group
+- (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
 - (Enhancement) Add support for Intrusion Policy Group Overrides
 
 ## 2.2.0

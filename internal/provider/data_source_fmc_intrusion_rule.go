@@ -72,12 +72,12 @@ func (d *IntrusionRuleDataSource) Schema(ctx context.Context, req datasource.Sch
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the Intrusion Rule in gid:sid format.",
+				MarkdownDescription: "Name of the Intrusion Rule in gid:sid format (eg. 2000:10000301).",
 				Optional:            true,
 				Computed:            true,
 			},
 			"rule_data": schema.StringAttribute{
-				MarkdownDescription: "Snort formated rule data.",
+				MarkdownDescription: "Snort formatted rule data.",
 				Computed:            true,
 			},
 			"rule_groups": schema.ListNestedAttribute{

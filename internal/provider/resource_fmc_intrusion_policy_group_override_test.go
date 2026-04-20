@@ -30,15 +30,13 @@ import (
 
 func TestAccFmcIntrusionPolicyGroupOverride(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy_group_override.test", "intrusion_policy_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy_group_override.test", "intrusion_rule_group_id", "76d24097-41c4-4558-a4d0-a8c07ac08471"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_intrusion_policy_group_override.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_intrusion_policy_group_override.test", "default_security_level"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy_group_override.test", "override_security_level", "LEVEL_3"))
+	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_policy_group_override.test", "override_security_level", "LEVEL_2"))
 
 	var steps []resource.TestStep
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcIntrusionPolicyGroupOverrideConfig_all(),
+		Config: testAccFmcIntrusionPolicyGroupOverridePrerequisitesConfig + testAccFmcIntrusionPolicyGroupOverrideConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 
@@ -53,6 +51,22 @@ func TestAccFmcIntrusionPolicyGroupOverride(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcIntrusionPolicyGroupOverridePrerequisitesConfig = `
+data "fmc_intrusion_policy" "builtin" {
+  name = "Balanced Security and Connectivity"
+}
+
+resource "fmc_intrusion_policy" "test" {
+  name        = "Intrusion Policy Group Override"
+  base_policy_id = data.fmc_intrusion_policy.builtin.id
+}
+
+resource "fmc_intrusion_rule_group" "test" {
+  name = "Intrusion Policy Group Override"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -62,9 +76,9 @@ func TestAccFmcIntrusionPolicyGroupOverride(t *testing.T) {
 
 func testAccFmcIntrusionPolicyGroupOverrideConfig_all() string {
 	config := `resource "fmc_intrusion_policy_group_override" "test" {` + "\n"
-	config += `	intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	intrusion_rule_group_id = "76d24097-41c4-4558-a4d0-a8c07ac08471"` + "\n"
-	config += `	override_security_level = "LEVEL_3"` + "\n"
+	config += `	intrusion_policy_id = fmc_intrusion_policy.test.id` + "\n"
+	config += `	intrusion_rule_group_id = fmc_intrusion_rule_group.test.id` + "\n"
+	config += `	override_security_level = "LEVEL_2"` + "\n"
 	config += `}` + "\n"
 	return config
 }

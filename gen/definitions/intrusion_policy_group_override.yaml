@@ -13,12 +13,14 @@ attributes:
     reference: true
     description: Id of the parent Intrusion Policy.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_intrusion_policy.test.id
   - model_name: id
     tf_name: intrusion_rule_group_id
     type: String
     description: Id of the parent Intrusion Rule Group.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08471
     mandatory: true
+    test_value: fmc_intrusion_rule_group.test.id
   - model_name: type
     type: String
     description: Type of the object; this value is always 'IntrusionRuleGroup'.
@@ -31,5 +33,19 @@ attributes:
     type: String
     description: Security level override for the rule group.
     enum_values: [DISABLED, LEVEL_1, LEVEL_2, LEVEL_3, LEVEL_4, DEFAULT]
-    example: LEVEL_3
+    example: LEVEL_2
     mandatory: true
+
+test_prerequisites: |-
+  data "fmc_intrusion_policy" "builtin" {
+    name = "Balanced Security and Connectivity"
+  }
+
+  resource "fmc_intrusion_policy" "test" {
+    name        = "Intrusion Policy Group Override"
+    base_policy_id = data.fmc_intrusion_policy.builtin.id
+  }
+
+  resource "fmc_intrusion_rule_group" "test" {
+    name = "Intrusion Policy Group Override"
+  }

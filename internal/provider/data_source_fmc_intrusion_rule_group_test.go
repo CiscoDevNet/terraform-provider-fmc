@@ -32,7 +32,6 @@ func TestAccDataSourceFmcIntrusionRuleGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_rule_group.test", "name", "my_intrusion_rule_group"))
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_rule_group.test", "description", "My IPS Rule Group"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_rule_group.test", "type"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,

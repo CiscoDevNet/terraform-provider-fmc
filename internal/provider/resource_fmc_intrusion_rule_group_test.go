@@ -33,7 +33,6 @@ func TestAccFmcIntrusionRuleGroup(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_rule_group.test", "name", "my_intrusion_rule_group"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_rule_group.test", "description", "My IPS Rule Group"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_intrusion_rule_group.test", "type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {

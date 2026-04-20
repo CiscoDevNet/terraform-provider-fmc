@@ -30,18 +30,16 @@ import (
 
 func TestAccDataSourceFmcIntrusionPolicyGroupOverride(t *testing.T) {
 	var checks []resource.TestCheckFunc
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_group_override.test", "intrusion_policy_id", "76d24097-41c4-4558-a4d0-a8c07ac08470"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_group_override.test", "intrusion_rule_group_id", "76d24097-41c4-4558-a4d0-a8c07ac08471"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_policy_group_override.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_policy_group_override.test", "default_security_level"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_group_override.test", "override_security_level", "LEVEL_3"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_group_override.test", "override_security_level", "LEVEL_2"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
 		ErrorCheck:               func(err error) error { return testAccErrorCheck(t, err) },
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceFmcIntrusionPolicyGroupOverrideConfig(),
+				Config: testAccDataSourceFmcIntrusionPolicyGroupOverridePrerequisitesConfig + testAccDataSourceFmcIntrusionPolicyGroupOverrideConfig(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
@@ -51,21 +49,37 @@ func TestAccDataSourceFmcIntrusionPolicyGroupOverride(t *testing.T) {
 // End of section. //template:end testAccDataSource
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccDataSourceFmcIntrusionPolicyGroupOverridePrerequisitesConfig = `
+data "fmc_intrusion_policy" "builtin" {
+  name = "Balanced Security and Connectivity"
+}
+
+resource "fmc_intrusion_policy" "test" {
+  name        = "Intrusion Policy Group Override"
+  base_policy_id = data.fmc_intrusion_policy.builtin.id
+}
+
+resource "fmc_intrusion_rule_group" "test" {
+  name = "Intrusion Policy Group Override"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccDataSourceConfig
 
 func testAccDataSourceFmcIntrusionPolicyGroupOverrideConfig() string {
 	config := `resource "fmc_intrusion_policy_group_override" "test" {` + "\n"
-	config += `	intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"` + "\n"
-	config += `	intrusion_rule_group_id = "76d24097-41c4-4558-a4d0-a8c07ac08471"` + "\n"
-	config += `	override_security_level = "LEVEL_3"` + "\n"
+	config += `	intrusion_policy_id = fmc_intrusion_policy.test.id` + "\n"
+	config += `	intrusion_rule_group_id = fmc_intrusion_rule_group.test.id` + "\n"
+	config += `	override_security_level = "LEVEL_2"` + "\n"
 	config += `}` + "\n"
 
 	config += `
 		data "fmc_intrusion_policy_group_override" "test" {
 			id = fmc_intrusion_policy_group_override.test.id
-			intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+			intrusion_policy_id = fmc_intrusion_policy.test.id
 		}
 	`
 	return config

@@ -33,18 +33,16 @@ func TestAccFmcIntrusionRule(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_intrusion_rule.test", "name"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_rule.test", "rule_data", "alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_rule.test", "rule_groups.0.id", "12da34567890-1234-5678-90ab-cdef12345678"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_intrusion_rule.test", "rule_groups.0.name", "Custom Rule Group 1"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_intrusion_rule.test", "type"))
 
 	var steps []resource.TestStep
 	if os.Getenv("SKIP_MINIMUM_TEST") == "" {
 		steps = append(steps, resource.TestStep{
-			Config: testAccFmcIntrusionRuleConfig_minimum(),
+			Config: testAccFmcIntrusionRulePrerequisitesConfig + testAccFmcIntrusionRuleConfig_minimum(),
 		})
 	}
 	steps = append(steps, resource.TestStep{
-		Config: testAccFmcIntrusionRuleConfig_all(),
+		Config: testAccFmcIntrusionRulePrerequisitesConfig + testAccFmcIntrusionRuleConfig_all(),
 		Check:  resource.ComposeTestCheckFunc(checks...),
 	})
 	steps = append(steps, resource.TestStep{
@@ -63,6 +61,13 @@ func TestAccFmcIntrusionRule(t *testing.T) {
 // End of section. //template:end testAcc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
+
+const testAccFmcIntrusionRulePrerequisitesConfig = `
+resource "fmc_intrusion_rule_group" "test" {
+  name = "intrusion_rule"
+}
+`
+
 // End of section. //template:end testPrerequisites
 
 // Section below is generated&owned by "gen/generator.go". //template:begin testAccConfigMinimal
@@ -71,7 +76,7 @@ func testAccFmcIntrusionRuleConfig_minimum() string {
 	config := `resource "fmc_intrusion_rule" "test" {` + "\n"
 	config += `	rule_data = "alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )"` + "\n"
 	config += `	rule_groups = [{` + "\n"
-	config += `		id = "12da34567890-1234-5678-90ab-cdef12345678"` + "\n"
+	config += `		id = fmc_intrusion_rule_group.test.id` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config
@@ -85,8 +90,8 @@ func testAccFmcIntrusionRuleConfig_all() string {
 	config := `resource "fmc_intrusion_rule" "test" {` + "\n"
 	config += `	rule_data = "alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )"` + "\n"
 	config += `	rule_groups = [{` + "\n"
-	config += `		id = "12da34567890-1234-5678-90ab-cdef12345678"` + "\n"
-	config += `		name = "Custom Rule Group 1"` + "\n"
+	config += `		id = fmc_intrusion_rule_group.test.id` + "\n"
+	config += `		name = fmc_intrusion_rule_group.test.name` + "\n"
 	config += `	}]` + "\n"
 	config += `}` + "\n"
 	return config

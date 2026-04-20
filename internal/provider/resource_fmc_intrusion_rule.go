@@ -79,14 +79,14 @@ func (r *IntrusionRuleResource) Schema(ctx context.Context, req resource.SchemaR
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the Intrusion Rule in gid:sid format.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the Intrusion Rule in gid:sid format (eg. 2000:10000301).").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"rule_data": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Snort formated rule data.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Snort formatted rule data.").String,
 				Required:            true,
 			},
 			"rule_groups": schema.ListNestedAttribute{

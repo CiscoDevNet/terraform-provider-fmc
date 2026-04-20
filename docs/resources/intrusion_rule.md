@@ -29,7 +29,7 @@ resource "fmc_intrusion_rule" "example" {
 
 ### Required
 
-- `rule_data` (String) Snort formated rule data.
+- `rule_data` (String) Snort formatted rule data.
 - `rule_groups` (Attributes List) List of Intrusion Rule Groups this rule belongs to. (see [below for nested schema](#nestedatt--rule_groups))
 
 ### Optional
@@ -39,7 +39,7 @@ resource "fmc_intrusion_rule" "example" {
 ### Read-Only
 
 - `id` (String) Id of the object
-- `name` (String) Name of the Intrusion Rule in gid:sid format.
+- `name` (String) Name of the Intrusion Rule in gid:sid format (eg. 2000:10000301).
 - `type` (String) Type of the object; this value is always 'IntrusionRule'.
 
 <a id="nestedatt--rule_groups"></a>
