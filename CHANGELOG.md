@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Fix) `fmc_device_vni_interface`: Add `proxy_type` attribute
+
 ## 2.2.0
 
 - (Enhancement) Access Rule and Category: Add possibility to create at specific location

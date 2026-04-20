@@ -184,6 +184,10 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				MarkdownDescription: "Enable proxy.",
 				Computed:            true,
 			},
+			"proxy_type": schema.StringAttribute{
+				MarkdownDescription: "Proxy type. Can only be used when `proxy` is true.",
+				Computed:            true,
+			},
 		},
 	}
 }

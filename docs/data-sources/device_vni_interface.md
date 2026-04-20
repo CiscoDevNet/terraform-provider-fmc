@@ -52,6 +52,7 @@ data "fmc_device_vni_interface" "example" {
 - `nve_number` (Number) VTEP policy NVE number. If null, not mapped to a VTEP.
 - `priority` (Number) Priority.
 - `proxy` (Boolean) Enable proxy.
+- `proxy_type` (String) Proxy type. Can only be used when `proxy` is true.
 - `security_zone_id` (String) Id of the assigned Security Zone. Can only be used when `logical_name` is set.
 - `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
 - `type` (String) Type of the object.

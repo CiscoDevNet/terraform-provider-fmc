@@ -197,6 +197,13 @@ attributes:
     default_value: "false"
     exclude_example: true
     exclude_test: true
+  - model_name: proxyType
+    tf_name: proxy_type
+    type: String
+    description: Proxy type. Can only be used when `proxy` is true.
+    enum_values: [SINGLE_ARM, DUAL_ARM, PAIRED]
+    exclude_example: true
+    exclude_test: true
 
 test_prerequisites: |-
   variable "device_id" { default = null } // tests will set $TF_VAR_device_id

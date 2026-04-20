@@ -61,6 +61,7 @@ type DeviceVNIInterface struct {
 	Ipv6Ra                     types.Bool                        `tfsdk:"ipv6_ra"`
 	Ipv6Addresses              []DeviceVNIInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
 	Proxy                      types.Bool                        `tfsdk:"proxy"`
+	ProxyType                  types.String                      `tfsdk:"proxy_type"`
 }
 
 type DeviceVNIInterfaceIpv6Addresses struct {
@@ -169,6 +170,9 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 	}
 	if !data.Proxy.IsNull() {
 		body, _ = sjson.Set(body, "enableProxy", data.Proxy.ValueBool())
+	}
+	if !data.ProxyType.IsNull() {
+		body, _ = sjson.Set(body, "proxyType", data.ProxyType.ValueString())
 	}
 	return body
 }
@@ -311,6 +315,11 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Proxy = types.BoolValue(value.Bool())
 	} else {
 		data.Proxy = types.BoolValue(false)
+	}
+	if value := res.Get("proxyType"); value.Exists() {
+		data.ProxyType = types.StringValue(value.String())
+	} else {
+		data.ProxyType = types.StringNull()
 	}
 }
 
@@ -485,6 +494,11 @@ func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 		data.Proxy = types.BoolValue(value.Bool())
 	} else if data.Proxy.ValueBool() != false {
 		data.Proxy = types.BoolNull()
+	}
+	if value := res.Get("proxyType"); value.Exists() && !data.ProxyType.IsNull() {
+		data.ProxyType = types.StringValue(value.String())
+	} else {
+		data.ProxyType = types.StringNull()
 	}
 }
 

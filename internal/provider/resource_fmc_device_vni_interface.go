@@ -27,6 +27,7 @@ import (
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
+	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
@@ -222,6 +223,13 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 				Computed:            true,
 				Default:             booldefault.StaticBool(false),
+			},
+			"proxy_type": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Proxy type. Can only be used when `proxy` is true.").AddStringEnumDescription("SINGLE_ARM", "DUAL_ARM", "PAIRED").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("SINGLE_ARM", "DUAL_ARM", "PAIRED"),
+				},
 			},
 		},
 	}
