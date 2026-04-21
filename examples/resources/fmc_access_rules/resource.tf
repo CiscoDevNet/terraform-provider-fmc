@@ -168,6 +168,16 @@ resource "fmc_access_rules" "example" {
           ]
         }
       ]
+      user_objects = [
+        {
+          id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type       = "RealmUser"
+          name       = "MyRealmUser1"
+          realm_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          realm_type = "Realm"
+          realm_name = "MyRealm"
+        }
+      ]
     }
   ]
 }
