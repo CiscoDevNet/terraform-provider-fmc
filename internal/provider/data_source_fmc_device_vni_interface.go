@@ -88,7 +88,7 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 				Computed:            true,
 			},
 			"segment_id": schema.Int64Attribute{
-				MarkdownDescription: "VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.",
+				MarkdownDescription: "VNI tag value used in packets over the wire. If null, the `proxy` must be true.",
 				Computed:            true,
 			},
 			"nve_number": schema.Int64Attribute{
@@ -182,6 +182,18 @@ func (d *DeviceVNIInterfaceDataSource) Schema(ctx context.Context, req datasourc
 			},
 			"proxy": schema.BoolAttribute{
 				MarkdownDescription: "Enable proxy.",
+				Computed:            true,
+			},
+			"proxy_type": schema.StringAttribute{
+				MarkdownDescription: "Proxy type. Can only be used when `proxy` is true.",
+				Computed:            true,
+			},
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address for active interface in format 0123.4567.89ab.",
+				Computed:            true,
+			},
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: "MAC address for standby interface in format 0123.4567.89ab.",
 				Computed:            true,
 			},
 		},
