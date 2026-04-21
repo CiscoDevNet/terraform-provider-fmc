@@ -34,6 +34,7 @@ data "fmc_device_vni_interface" "example" {
 
 ### Read-Only
 
+- `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `description` (String) Description of the object.
 - `enabled` (Boolean) Enable the interface.
 - `ipv4_dhcp_default_route_metric` (Number) The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be null when using `ipv4_static_address`.
@@ -54,7 +55,8 @@ data "fmc_device_vni_interface" "example" {
 - `proxy` (Boolean) Enable proxy.
 - `proxy_type` (String) Proxy type. Can only be used when `proxy` is true.
 - `security_zone_id` (String) Id of the assigned Security Zone. Can only be used when `logical_name` is set.
-- `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+- `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `proxy` must be true.
+- `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 - `type` (String) Type of the object.
 - `vni_id` (Number) User-created VNI number for the interface, not exposed over the wire.
 

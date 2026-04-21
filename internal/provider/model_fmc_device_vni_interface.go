@@ -62,6 +62,8 @@ type DeviceVNIInterface struct {
 	Ipv6Addresses              []DeviceVNIInterfaceIpv6Addresses `tfsdk:"ipv6_addresses"`
 	Proxy                      types.Bool                        `tfsdk:"proxy"`
 	ProxyType                  types.String                      `tfsdk:"proxy_type"`
+	ActiveMacAddress           types.String                      `tfsdk:"active_mac_address"`
+	StandbyMacAddress          types.String                      `tfsdk:"standby_mac_address"`
 }
 
 type DeviceVNIInterfaceIpv6Addresses struct {
@@ -173,6 +175,12 @@ func (data DeviceVNIInterface) toBody(ctx context.Context, state DeviceVNIInterf
 	}
 	if !data.ProxyType.IsNull() {
 		body, _ = sjson.Set(body, "proxyType", data.ProxyType.ValueString())
+	}
+	if !data.ActiveMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
+	}
+	if !data.StandbyMacAddress.IsNull() {
+		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	return body
 }
@@ -320,6 +328,16 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.ProxyType = types.StringValue(value.String())
 	} else {
 		data.ProxyType = types.StringNull()
+	}
+	if value := res.Get("activeMACAddress"); value.Exists() {
+		data.ActiveMacAddress = types.StringValue(value.String())
+	} else {
+		data.ActiveMacAddress = types.StringNull()
+	}
+	if value := res.Get("standbyMACAddress"); value.Exists() {
+		data.StandbyMacAddress = types.StringValue(value.String())
+	} else {
+		data.StandbyMacAddress = types.StringNull()
 	}
 }
 
@@ -499,6 +517,16 @@ func (data *DeviceVNIInterface) fromBodyPartial(ctx context.Context, res gjson.R
 		data.ProxyType = types.StringValue(value.String())
 	} else {
 		data.ProxyType = types.StringNull()
+	}
+	if value := res.Get("activeMACAddress"); value.Exists() && !data.ActiveMacAddress.IsNull() {
+		data.ActiveMacAddress = types.StringValue(value.String())
+	} else {
+		data.ActiveMacAddress = types.StringNull()
+	}
+	if value := res.Get("standbyMACAddress"); value.Exists() && !data.StandbyMacAddress.IsNull() {
+		data.StandbyMacAddress = types.StringValue(value.String())
+	} else {
+		data.StandbyMacAddress = types.StringNull()
 	}
 }
 

@@ -31,7 +31,7 @@ attributes:
     example: 224.0.0.24
   - model_name: segmentId
     type: Int64
-    description: VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+    description: VNI tag value used in packets over the wire. If null, the `proxy` must be true.
     min_int: 1
     max_int: 16777215
     example: 501
@@ -202,6 +202,19 @@ attributes:
     type: String
     description: Proxy type. Can only be used when `proxy` is true.
     enum_values: [SINGLE_ARM, DUAL_ARM, PAIRED]
+    exclude_example: true
+    exclude_test: true
+  # Advanced - Information
+  - model_name: activeMACAddress
+    tf_name: active_mac_address
+    type: String
+    description: MAC address for active interface in format 0123.4567.89ab.
+    exclude_example: true
+    exclude_test: true
+  - model_name: standbyMACAddress
+    tf_name: standby_mac_address
+    type: String
+    description: MAC address for standby interface in format 0123.4567.89ab.
     exclude_example: true
     exclude_test: true
 

@@ -113,7 +113,7 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"segment_id": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.").AddIntegerRangeDescription(1, 16777215).String,
+				MarkdownDescription: helpers.NewAttributeDescription("VNI tag value used in packets over the wire. If null, the `proxy` must be true.").AddIntegerRangeDescription(1, 16777215).String,
 				Optional:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 16777215),
@@ -230,6 +230,14 @@ func (r *DeviceVNIInterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Validators: []validator.String{
 					stringvalidator.OneOf("SINGLE_ARM", "DUAL_ARM", "PAIRED"),
 				},
+			},
+			"active_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address for active interface in format 0123.4567.89ab.").String,
+				Optional:            true,
+			},
+			"standby_mac_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("MAC address for standby interface in format 0123.4567.89ab.").String,
+				Optional:            true,
 			},
 		},
 	}
