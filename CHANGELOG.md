@@ -1,7 +1,7 @@
 ## Unreleased
 
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
-- (Enhancement) Add support for Intrusion Policy Group Overrides
+- (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
 - (Enhancement) `fmc_device_vni_interface`: Add `proxy_type` attribute
 - (Enhancement) Add support for `fmc_identity_policy` resource and data source
 - (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
