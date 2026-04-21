@@ -213,7 +213,7 @@ input {
   - Default value: `PKI_InternalCert`
 - `active_authentication_session_sharing` (Boolean) Share active authentication sessions across firewalls. Supported only in 7.4.1 and later.
   - Default value: `true`
-- `categories` (Attributes List) Ordered list of Categories. Those are created between default categories - Standard Rules and Root Rules in order specified below. Do not specify default categories in the list. (see [below for nested schema](#nestedatt--categories))
+- `categories` (Attributes List) Ordered list of Categories created between default categories - Standard Rules and Root Rules. Do not include default categories in the list. (see [below for nested schema](#nestedatt--categories))
 - `description` (String) Description of the Identity Policy.
 - `domain` (String) Name of the FMC domain
 - `identity_mapping_filter_network_object_id` (String) Id of the Host, Network or Network Group used as an Identity Mapping Filter.
@@ -242,7 +242,9 @@ Read-Only:
 
 Required:
 
-- `category` (String) Name of the Category the rule should belong to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+- `authentication_type` (String) Authentication type action for the rule.
+  - Choices: `PASSIVE`, `ACTIVE`, `NO`
+- `category` (String) Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
 - `name` (String) Name of the Identity Rule.
 
 Optional:
@@ -253,8 +255,6 @@ Optional:
 - `authentication_realm_id` (String) Id of the Authentication Realm (AD/LDAP).
 - `authentication_realm_type` (String) Type of the Authentication Realm.
   - Choices: `IdentityRealm`
-- `authentication_type` (String) Authentication type action for the rule.
-  - Choices: `PASSIVE`, `ACTIVE`, `NO`
 - `destination_network_literals` (Attributes Set) Destination Network literals. (see [below for nested schema](#nestedatt--rules--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Destination Port literals. (see [below for nested schema](#nestedatt--rules--destination_port_literals))
@@ -262,7 +262,7 @@ Optional:
 - `destination_zones` (Attributes Set) Destination Security Zones. (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Enable rule.
 - `excluded_user_agents` (Attributes List) List of excluded User Agents (Applications). (see [below for nested schema](#nestedatt--rules--excluded_user_agents))
-- `guest_access_fallback` (Boolean) Identify as Special Identities/Guest if authentication cannot identify user.
+- `guest_access_fallback` (Boolean) Identify as Special Identities/Guest if user cannot be authenticated.
 - `source_network_literals` (Attributes Set) Source Network literals. (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Source Port literals. (see [below for nested schema](#nestedatt--rules--source_port_literals))
@@ -278,7 +278,7 @@ Read-Only:
 <a id="nestedatt--rules--destination_network_literals"></a>
 ### Nested Schema for `rules.destination_network_literals`
 
-Optional:
+Required:
 
 - `type` (String) Type of the Network Object.
   - Choices: `Host`, `Network`
@@ -300,22 +300,27 @@ Required:
 Required:
 
 - `protocol` (String) IANA protocol number.
-- `type` (String) Type of the port literal.
-  - Choices: `PortLiteral`
 
 Optional:
 
 - `port` (String) Port number.
+- `type` (String) Type of the port literal.
+  - Choices: `PortLiteral`
+  - Default value: `PortLiteral`
 
 
 <a id="nestedatt--rules--destination_port_objects"></a>
 ### Nested Schema for `rules.destination_port_objects`
 
-Optional:
+Required:
 
 - `id` (String) Id of the Port object.
+
+Optional:
+
 - `type` (String) Type of the Port object.
   - Choices: `ProtocolPortObject`
+  - Default value: `ProtocolPortObject`
 
 
 <a id="nestedatt--rules--destination_zones"></a>
@@ -345,7 +350,7 @@ Required:
 <a id="nestedatt--rules--source_network_literals"></a>
 ### Nested Schema for `rules.source_network_literals`
 
-Optional:
+Required:
 
 - `type` (String) Type of the Network Object.
   - Choices: `Host`, `Network`
@@ -380,11 +385,15 @@ Optional:
 <a id="nestedatt--rules--source_port_objects"></a>
 ### Nested Schema for `rules.source_port_objects`
 
-Optional:
+Required:
 
 - `id` (String) Id of the Port object.
+
+Optional:
+
 - `type` (String) Type of the Port object.
   - Choices: `ProtocolPortObject`
+  - Default value: `ProtocolPortObject`
 
 
 <a id="nestedatt--rules--source_zones"></a>
@@ -404,10 +413,13 @@ Optional:
 <a id="nestedatt--rules--vlan_tag_literals"></a>
 ### Nested Schema for `rules.vlan_tag_literals`
 
-Optional:
+Required:
 
 - `end_tag` (String) End of the VLAN tag range.
 - `start_tag` (String) Start of the VLAN tag range.
+
+Optional:
+
 - `type` (String) Type of the VLAN tag literal.
   - Choices: `VlanTagLiteral`
   - Default value: `VlanTagLiteral`
@@ -416,7 +428,7 @@ Optional:
 <a id="nestedatt--rules--vlan_tag_objects"></a>
 ### Nested Schema for `rules.vlan_tag_objects`
 
-Optional:
+Required:
 
 - `id` (String) Id of the VLAN Tag object.
 - `type` (String) Type of the VLAN Tag object.

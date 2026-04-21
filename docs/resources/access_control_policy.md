@@ -576,16 +576,16 @@ Optional:
 
 Required:
 
-- `id` (String) Id of the User or User group object.
-- `name` (String) Name of the User or User group object.
-- `realm_id` (String) Id of the Realm the User or User group belongs to.
-- `type` (String) Type of the User or User group object.
+- `id` (String) Id of the User or User Group object.
+- `name` (String) Name of the User or User Group object.
+- `realm_id` (String) Id of the Realm the User or User Group belongs to.
+- `type` (String) Type of the User or User Group object.
   - Choices: `RealmUser`, `RealmUserGroup`
 
 Optional:
 
-- `realm_name` (String) Name of the Realm the User or User group belongs to.
-- `realm_type` (String) Type of the Realm the User or User group belongs to.
+- `realm_name` (String) Name of the Realm the User or User Group belongs to.
+- `realm_type` (String) Type of the Realm the User or User Group belongs to.
   - Choices: `Realm`
 
 

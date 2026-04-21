@@ -113,7 +113,7 @@ attributes:
   - model_name: dummy_categories
     tf_name: categories
     type: List
-    description: Ordered list of Categories. Those are created between default categories - Standard Rules and Root Rules in order specified below. Do not specify default categories in the list.
+    description: Ordered list of Categories created between default categories - Standard Rules and Root Rules. Do not include default categories in the list.
     ordered_list: true
     attributes:
       - model_name: id
@@ -159,7 +159,7 @@ attributes:
       - model_name: category
         type: String
         mandatory: true
-        description: Name of the Category the rule should belong to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+        description: Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
         example: category_1
         tf_only: true
       - model_name: authenticationType
@@ -168,6 +168,7 @@ attributes:
         description: Authentication type action for the rule.
         enum_values: ["PASSIVE", "ACTIVE", "NO"]
         example: PASSIVE
+        mandatory: true
 
       # Realm & Settings
       - model_name: id
@@ -187,7 +188,7 @@ attributes:
       - model_name: guestAccessFallback
         tf_name: guest_access_fallback
         type: Bool
-        description: Identify as Special Identities/Guest if authentication cannot identify user.
+        description: Identify as Special Identities/Guest if user cannot be authenticated.
         example: false
       - model_name: captivePortalFallback
         tf_name: active_authentication_fallback
@@ -270,11 +271,13 @@ attributes:
             description: Type of the Network Object.
             example: Network
             enum_values: [Host, Network]
+            mandatory: true
           - model_name: value
             type: String
             id: true
             description: IP address or network in CIDR format.
             example: 10.1.1.0/24
+            mandatory: true
       - model_name: objects
         data_path: [sourceNetworks]
         tf_name: source_network_objects
@@ -305,11 +308,13 @@ attributes:
             description: Type of the Network Object.
             example: Network
             enum_values: [Host, Network]
+            mandatory: true
           - model_name: value
             type: String
             id: true
             description: IP address or network in CIDR format.
             example: 10.2.2.0/24
+            mandatory: true
       - model_name: objects
         data_path: [destinationNetworks]
         tf_name: destination_network_objects
@@ -345,10 +350,12 @@ attributes:
             type: String
             example: "11"
             description: Start of the VLAN tag range.
+            mandatory: true
           - model_name: endTag
             type: String
             example: "22"
             description: End of the VLAN tag range.
+            mandatory: true
       - model_name: objects
         data_path: [vlanTags]
         tf_name: vlan_tag_objects
@@ -361,13 +368,14 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_vlan_tag.test.id
+            mandatory: true
           - model_name: type
             type: String
             description: Type of the VLAN Tag object.
-            id: true
             example: VlanTag
             test_value: fmc_vlan_tag.test.type
             enum_values: [VlanTag, VlanGroupTag]
+            mandatory: true
       - model_name: literals
         data_path: [sourcePorts]
         tf_name: source_port_literals
@@ -403,10 +411,12 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_ports.test.items["id_policy_TCP_12088"].id
+            mandatory: true
           - model_name: type
             type: String
             description: Type of the Port object.
             enum_values: [ProtocolPortObject]
+            default_value: ProtocolPortObject
             example: ProtocolPortObject
             test_value: fmc_ports.test.items["id_policy_TCP_12088"].type
       - model_name: literals
@@ -418,8 +428,8 @@ attributes:
           - model_name: type
             type: String
             enum_values: [PortLiteral]
-            mandatory: true
             example: PortLiteral
+            default_value: PortLiteral
             description: Type of the port literal.
           - model_name: port
             type: String
@@ -443,10 +453,12 @@ attributes:
             id: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
             test_value: fmc_ports.test.items["id_policy_TCP_1088"].id
+            mandatory: true
           - model_name: type
             type: String
             description: Type of the Port object.
             enum_values: [ProtocolPortObject]
+            default_value: ProtocolPortObject
             example: ProtocolPortObject
             test_value: fmc_ports.test.items["id_policy_TCP_1088"].type
 

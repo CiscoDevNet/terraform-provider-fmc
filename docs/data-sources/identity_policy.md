@@ -43,7 +43,7 @@ data "fmc_identity_policy" "example" {
 - `active_authentication_server_certificate_id` (String) Id of the Internal Certificate object used as an active authentication server certificate.
 - `active_authentication_server_certificate_type` (String) Type of the Internal Certificate object used as an active authentication server certificate.
 - `active_authentication_session_sharing` (Boolean) Share active authentication sessions across firewalls. Supported only in 7.4.1 and later.
-- `categories` (Attributes List) Ordered list of Categories. Those are created between default categories - Standard Rules and Root Rules in order specified below. Do not specify default categories in the list. (see [below for nested schema](#nestedatt--categories))
+- `categories` (Attributes List) Ordered list of Categories created between default categories - Standard Rules and Root Rules. Do not include default categories in the list. (see [below for nested schema](#nestedatt--categories))
 - `description` (String) Description of the Identity Policy.
 - `identity_mapping_filter_network_object_id` (String) Id of the Host, Network or Network Group used as an Identity Mapping Filter.
 - `identity_mapping_filter_network_object_type` (String) Type of the Host, Network or Network Group used as an Identity Mapping Filter.
@@ -69,7 +69,7 @@ Read-Only:
 - `authentication_realm_id` (String) Id of the Authentication Realm (AD/LDAP).
 - `authentication_realm_type` (String) Type of the Authentication Realm.
 - `authentication_type` (String) Authentication type action for the rule.
-- `category` (String) Name of the Category the rule should belong to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+- `category` (String) Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
 - `destination_network_literals` (Attributes Set) Destination Network literals. (see [below for nested schema](#nestedatt--rules--destination_network_literals))
 - `destination_network_objects` (Attributes Set) Objects that represent destinations of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--destination_network_objects))
 - `destination_port_literals` (Attributes Set) Destination Port literals. (see [below for nested schema](#nestedatt--rules--destination_port_literals))
@@ -77,7 +77,7 @@ Read-Only:
 - `destination_zones` (Attributes Set) Destination Security Zones. (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Enable rule.
 - `excluded_user_agents` (Attributes List) List of excluded User Agents (Applications). (see [below for nested schema](#nestedatt--rules--excluded_user_agents))
-- `guest_access_fallback` (Boolean) Identify as Special Identities/Guest if authentication cannot identify user.
+- `guest_access_fallback` (Boolean) Identify as Special Identities/Guest if user cannot be authenticated.
 - `id` (String) Id of the Identity Rule.
 - `name` (String) Name of the Identity Rule.
 - `source_network_literals` (Attributes Set) Source Network literals. (see [below for nested schema](#nestedatt--rules--source_network_literals))

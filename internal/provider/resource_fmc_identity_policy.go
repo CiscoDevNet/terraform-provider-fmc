@@ -175,7 +175,7 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 				Default:             stringdefault.StaticString("<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n<title>Login</title>\n<style type=\"text/css\">\nbody {\n    margin:0;\n    font-family:verdana,sans-serif;\n}\nh1 {\n    margin:0;\n    padding:12px 25px;\n    background-color:#343434;\n    color:#ddd;\n}\np {\n    margin:12px 25px;\n}\nstrong {\n    color:#E0042D;\n}\ndiv {\n    padding-left:23px;\n    font-weight: normal;\n    font-size: 8pt;\n}\ninput {\n    margin:12px 25px;\n}\n</style>\n</head>\n<body>\n    <form action=\"\" id=\"loginForm\" method=\"post\" name=\"loginForm\">\n        <h1>Login</h1>\n        <p><strong>Please enter your username and password or log in as a guest.</strong></p>\n        <div class=\"label\">Username\n            <input id=\"name\" maxlength=\"100\" name=\"login\" type=\"text\" value=\"\"/>\n            <b>realm</b>\n            <select name=\"realm\" id=\"realm\"></select>\n        </div>\n        <div class=\"label\" id=\"label-password\">Password\n            <input id=\"pass\" name=\"pass\" type=\"password\" value=\"\"/>\n        </div>\n        <input id=\"submit-btn\" type=\"submit\" name=\"login_action\" value=\"Submit\"/>\n        <p><font size=2 >-or-</font></p>\n        <input id=\"login-btn\" type=\"submit\" name=\"guest_action\" value=\"Login as guest\"/>\n    </form>\n</body>\n</html>\n"),
 			},
 			"categories": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of Categories. Those are created between default categories - Standard Rules and Root Rules in order specified below. Do not specify default categories in the list.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Ordered list of Categories created between default categories - Standard Rules and Root Rules. Do not include default categories in the list.").String,
 				Optional:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
@@ -208,12 +208,12 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 							Optional:            true,
 						},
 						"category": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Name of the Category the rule should belong to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.").String,
 							Required:            true,
 						},
 						"authentication_type": schema.StringAttribute{
 							MarkdownDescription: helpers.NewAttributeDescription("Authentication type action for the rule.").AddStringEnumDescription("PASSIVE", "ACTIVE", "NO").String,
-							Optional:            true,
+							Required:            true,
 							Validators: []validator.String{
 								stringvalidator.OneOf("PASSIVE", "ACTIVE", "NO"),
 							},
@@ -230,7 +230,7 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 							},
 						},
 						"guest_access_fallback": schema.BoolAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Identify as Special Identities/Guest if authentication cannot identify user.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Identify as Special Identities/Guest if user cannot be authenticated.").String,
 							Optional:            true,
 						},
 						"active_authentication_fallback": schema.BoolAttribute{
@@ -312,14 +312,14 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of the Network Object.").AddStringEnumDescription("Host", "Network").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("Host", "Network"),
 										},
 									},
 									"value": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -347,14 +347,14 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of the Network Object.").AddStringEnumDescription("Host", "Network").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("Host", "Network"),
 										},
 									},
 									"value": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("IP address or network in CIDR format.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -391,11 +391,11 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 									},
 									"start_tag": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Start of the VLAN tag range.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"end_tag": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("End of the VLAN tag range.").String,
-										Optional:            true,
+										Required:            true,
 									},
 								},
 							},
@@ -407,11 +407,11 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the VLAN Tag object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"type": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Type of the VLAN Tag object.").AddStringEnumDescription("VlanTag", "VlanGroupTag").String,
-										Optional:            true,
+										Required:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("VlanTag", "VlanGroupTag"),
 										},
@@ -454,14 +454,16 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the Port object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the Port object.").AddStringEnumDescription("ProtocolPortObject").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the Port object.").AddStringEnumDescription("ProtocolPortObject").AddDefaultValueDescription("ProtocolPortObject").String,
 										Optional:            true,
+										Computed:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("ProtocolPortObject"),
 										},
+										Default: stringdefault.StaticString("ProtocolPortObject"),
 									},
 								},
 							},
@@ -472,11 +474,13 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 							NestedObject: schema.NestedAttributeObject{
 								Attributes: map[string]schema.Attribute{
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the port literal.").AddStringEnumDescription("PortLiteral").String,
-										Required:            true,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the port literal.").AddStringEnumDescription("PortLiteral").AddDefaultValueDescription("PortLiteral").String,
+										Optional:            true,
+										Computed:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("PortLiteral"),
 										},
+										Default: stringdefault.StaticString("PortLiteral"),
 									},
 									"port": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Port number.").String,
@@ -496,14 +500,16 @@ func (r *IdentityPolicyResource) Schema(ctx context.Context, req resource.Schema
 								Attributes: map[string]schema.Attribute{
 									"id": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Id of the Port object.").String,
-										Optional:            true,
+										Required:            true,
 									},
 									"type": schema.StringAttribute{
-										MarkdownDescription: helpers.NewAttributeDescription("Type of the Port object.").AddStringEnumDescription("ProtocolPortObject").String,
+										MarkdownDescription: helpers.NewAttributeDescription("Type of the Port object.").AddStringEnumDescription("ProtocolPortObject").AddDefaultValueDescription("ProtocolPortObject").String,
 										Optional:            true,
+										Computed:            true,
 										Validators: []validator.String{
 											stringvalidator.OneOf("ProtocolPortObject"),
 										},
+										Default: stringdefault.StaticString("ProtocolPortObject"),
 									},
 								},
 							},

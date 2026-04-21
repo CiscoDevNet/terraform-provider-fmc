@@ -798,7 +798,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 					if value := res.Get("type"); value.Exists() {
 						data.Type = types.StringValue(value.String())
 					} else {
-						data.Type = types.StringNull()
+						data.Type = types.StringValue("ProtocolPortObject")
 					}
 					(*parent).SourcePortObjects = append((*parent).SourcePortObjects, data)
 					return true
@@ -812,7 +812,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 					if value := res.Get("type"); value.Exists() {
 						data.Type = types.StringValue(value.String())
 					} else {
-						data.Type = types.StringNull()
+						data.Type = types.StringValue("PortLiteral")
 					}
 					if value := res.Get("port"); value.Exists() {
 						data.Port = types.StringValue(value.String())
@@ -841,7 +841,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 					if value := res.Get("type"); value.Exists() {
 						data.Type = types.StringValue(value.String())
 					} else {
-						data.Type = types.StringNull()
+						data.Type = types.StringValue("ProtocolPortObject")
 					}
 					(*parent).DestinationPortObjects = append((*parent).DestinationPortObjects, data)
 					return true
@@ -1409,8 +1409,8 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 			(*parent).VlanTagLiterals[i] = data
 		}
 		for i := 0; i < len(data.VlanTagObjects); i++ {
-			keys := [...]string{"id", "type"}
-			keyValues := [...]string{data.VlanTagObjects[i].Id.ValueString(), data.VlanTagObjects[i].Type.ValueString()}
+			keys := [...]string{"id"}
+			keyValues := [...]string{data.VlanTagObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTagObjects[i]
@@ -1552,7 +1552,7 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 			}
 			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 				data.Type = types.StringValue(value.String())
-			} else {
+			} else if data.Type.ValueString() != "ProtocolPortObject" {
 				data.Type = types.StringNull()
 			}
 			(*parent).SourcePortObjects[i] = data
@@ -1595,7 +1595,7 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 			}
 			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 				data.Type = types.StringValue(value.String())
-			} else {
+			} else if data.Type.ValueString() != "PortLiteral" {
 				data.Type = types.StringNull()
 			}
 			if value := res.Get("port"); value.Exists() && !data.Port.IsNull() {
@@ -1653,7 +1653,7 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 			}
 			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
 				data.Type = types.StringValue(value.String())
-			} else {
+			} else if data.Type.ValueString() != "ProtocolPortObject" {
 				data.Type = types.StringNull()
 			}
 			(*parent).DestinationPortObjects[i] = data

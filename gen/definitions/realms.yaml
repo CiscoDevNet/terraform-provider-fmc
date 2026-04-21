@@ -1,10 +1,11 @@
 ---
 name: Realms
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/realms
+ds_description: This data source reads the Realms, including built-in ones like Special Identities.
 no_resource: true
 no_import: true
 is_bulk: true
-doc_category: Objects
+doc_category: Integrations
 attributes:
   - model_name: items
     type: Map

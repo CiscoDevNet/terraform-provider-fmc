@@ -824,19 +824,19 @@ attributes:
         attributes:
           - model_name: id
             type: String
-            description: Id of the User or User group object.
+            description: Id of the User or User Group object.
             id: true
             mandatory: true
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
           - model_name: type
             type: String
-            description: Type of the User or User group object.
+            description: Type of the User or User Group object.
             enum_values: [RealmUser, RealmUserGroup]
             example: RealmUser
             mandatory: true
           - model_name: name
             type: String
-            description: Name of the User or User group object.
+            description: Name of the User or User Group object.
             mandatory: true
             example: MyRealmUser1
           - model_name: id
@@ -845,20 +845,20 @@ attributes:
             type: String
             id: true
             mandatory: true
-            description: Id of the Realm the User or User group belongs to.
+            description: Id of the Realm the User or User Group belongs to.
             example: 76d24097-41c4-4558-a4d0-a8c07ac08470
           - model_name: type
             data_path: [realm]
             tf_name: realm_type
             type: String
-            description: Type of the Realm the User or User group belongs to.
+            description: Type of the Realm the User or User Group belongs to.
             enum_values: [Realm]
             example: "Realm"
           - model_name: name
             data_path: [realm]
             tf_name: realm_name
             type: String
-            description: Name of the Realm the User or User group belongs to.
+            description: Name of the Realm the User or User Group belongs to.
             example: "MyRealm"
 
 test_prerequisites: |-

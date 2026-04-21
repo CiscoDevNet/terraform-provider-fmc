@@ -55,7 +55,7 @@ func (d *RealmsDataSource) Metadata(_ context.Context, req datasource.MetadataRe
 func (d *RealmsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Realms.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Realms, including built-in ones like Special Identities.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
