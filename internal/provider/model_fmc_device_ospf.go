@@ -695,16 +695,6 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 					} else {
 						data.DeadInterval = types.Int64Value(40)
 					}
-					if value := res.Get("authentication.passwdAuth.authKey"); value.Exists() {
-						data.AuthenticationPassword = types.StringValue(value.String())
-					} else {
-						data.AuthenticationPassword = types.StringNull()
-					}
-					if value := res.Get("authentication.areaAuth.passwdAuth.authKey"); value.Exists() {
-						data.AuthenticationAreaPassword = types.StringValue(value.String())
-					} else {
-						data.AuthenticationAreaPassword = types.StringNull()
-					}
 					if value := res.Get("authentication.areaAuth.md5AuthList"); value.Exists() {
 						data.AuthenticationAreaMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s, 0)
 						value.ForEach(func(k, res gjson.Result) bool {
@@ -714,11 +704,6 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 								data.Id = types.Int64Value(value.Int())
 							} else {
 								data.Id = types.Int64Null()
-							}
-							if value := res.Get("md5Key"); value.Exists() {
-								data.Key = types.StringValue(value.String())
-							} else {
-								data.Key = types.StringNull()
 							}
 							(*parent).AuthenticationAreaMd5s = append((*parent).AuthenticationAreaMd5s, data)
 							return true
@@ -733,11 +718,6 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 								data.Id = types.Int64Value(value.Int())
 							} else {
 								data.Id = types.Int64Null()
-							}
-							if value := res.Get("md5Key"); value.Exists() {
-								data.Key = types.StringValue(value.String())
-							} else {
-								data.Key = types.StringNull()
 							}
 							(*parent).AuthenticationMd5s = append((*parent).AuthenticationMd5s, data)
 							return true
@@ -1284,16 +1264,6 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else if data.DeadInterval.ValueInt64() != 40 {
 				data.DeadInterval = types.Int64Null()
 			}
-			if value := res.Get("authentication.passwdAuth.authKey"); value.Exists() && !data.AuthenticationPassword.IsNull() {
-				data.AuthenticationPassword = types.StringValue(value.String())
-			} else {
-				data.AuthenticationPassword = types.StringNull()
-			}
-			if value := res.Get("authentication.areaAuth.passwdAuth.authKey"); value.Exists() && !data.AuthenticationAreaPassword.IsNull() {
-				data.AuthenticationAreaPassword = types.StringValue(value.String())
-			} else {
-				data.AuthenticationAreaPassword = types.StringNull()
-			}
 			for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 				keys := [...]string{"md5KeyId"}
 				keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}
@@ -1334,11 +1304,6 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 					data.Id = types.Int64Value(value.Int())
 				} else {
 					data.Id = types.Int64Null()
-				}
-				if value := res.Get("md5Key"); value.Exists() && !data.Key.IsNull() {
-					data.Key = types.StringValue(value.String())
-				} else {
-					data.Key = types.StringNull()
 				}
 				(*parent).AuthenticationAreaMd5s[i] = data
 			}
@@ -1382,11 +1347,6 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 					data.Id = types.Int64Value(value.Int())
 				} else {
 					data.Id = types.Int64Null()
-				}
-				if value := res.Get("md5Key"); value.Exists() && !data.Key.IsNull() {
-					data.Key = types.StringValue(value.String())
-				} else {
-					data.Key = types.StringNull()
 				}
 				(*parent).AuthenticationMd5s[i] = data
 			}
