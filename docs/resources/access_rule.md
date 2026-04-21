@@ -179,6 +179,16 @@ resource "fmc_access_rule" "example" {
           id = "24"
         }
       ]
+      user_objects = [
+        {
+          id         = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          type       = "RealmUser"
+          name       = "MyRealmUser1"
+          realm_id   = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+          realm_type = "Realm"
+          realm_name = "MyRealm"
+        }
+      ]
     }
   ]
 }
@@ -269,6 +279,7 @@ Optional:
 - `risks` (Attributes Set) Set of Application Risk levels. (see [below for nested schema](#nestedatt--application_filters--risks))
 - `tags` (Attributes Set) Set of Application Tags. (see [below for nested schema](#nestedatt--application_filters--tags))
 - `types` (Attributes Set) Set of Application Types. (see [below for nested schema](#nestedatt--application_filters--types))
+- `user_objects` (Attributes Set) User objects. (see [below for nested schema](#nestedatt--application_filters--user_objects))
 
 <a id="nestedatt--application_filters--business_relevances"></a>
 ### Nested Schema for `application_filters.business_relevances`
@@ -308,6 +319,24 @@ Required:
 Required:
 
 - `id` (String) Id of the Application Type.
+
+
+<a id="nestedatt--application_filters--user_objects"></a>
+### Nested Schema for `application_filters.user_objects`
+
+Required:
+
+- `id` (String) Id of the User or User Group object.
+- `name` (String) Name of the User or User Group object.
+- `realm_id` (String) Id of the Realm the User or User Group belongs to.
+- `type` (String) Type of the User or User Group object.
+  - Choices: `RealmUser`, `RealmUserGroup`
+
+Optional:
+
+- `realm_name` (String) Name of the Realm the User or User Group belongs to.
+- `realm_type` (String) Type of the Realm the User or User Group belongs to.
+  - Choices: `Realm`
 
 
 

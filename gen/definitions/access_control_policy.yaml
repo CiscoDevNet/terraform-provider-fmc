@@ -1,3 +1,5 @@
+# FMCBUG CSCwt93465 FMC API: Identity Policy cannot be assigned to Access Control Policy
+# FMCBUG CSCwo61693 FMC API: Prefilter policies not assigned to newly created access policies
 # Manual resource - Data Source (Read), Resource (Read, Create, Update, Delete)
 ---
 name: Access Control Policy
@@ -114,6 +116,27 @@ attributes:
     description: Id of the Prefilter Policy.
     example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
     test_value: fmc_prefilter_policy.test.id
+  # - model_name: id
+  #   data_path: [identityPolicySetting]
+  #   tf_name: identity_policy_id
+  #   type: String
+  #   description: Id of the Identity Policy.
+  #   example: 35e197ca-33a8-11ef-b2d1-d98ae17766e7
+  #   exclude_test: true
+  # - model_name: name
+  #   data_path: [identityPolicySetting]
+  #   tf_name: identity_policy_name
+  #   type: String
+  #   description: Name of the Identity Policy.
+  #   example: identity_policy_1
+  #   exclude_test: true
+  # - model_name: type
+  #   data_path: [identityPolicySetting]
+  #   tf_name: identity_policy_type
+  #   type: String
+  #   description: Type of the Identity Policy.
+  #   example: identity_policy_1
+  #   exclude_test: true
   - model_name: dummy_manage_categories
     tf_name: manage_categories
     type: Bool
@@ -792,6 +815,51 @@ attributes:
               example: "24"
               id: true
               mandatory: true
+      - model_name: objects
+        data_path: [users]
+        tf_name: user_objects
+        type: Set
+        description: User objects.
+        exclude_test: true
+        attributes:
+          - model_name: id
+            type: String
+            description: Id of the User or User Group object.
+            id: true
+            mandatory: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+          - model_name: type
+            type: String
+            description: Type of the User or User Group object.
+            enum_values: [RealmUser, RealmUserGroup]
+            example: RealmUser
+            mandatory: true
+          - model_name: name
+            type: String
+            description: Name of the User or User Group object.
+            mandatory: true
+            example: MyRealmUser1
+          - model_name: id
+            data_path: [realm]
+            tf_name: realm_id
+            type: String
+            id: true
+            mandatory: true
+            description: Id of the Realm the User or User Group belongs to.
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+          - model_name: type
+            data_path: [realm]
+            tf_name: realm_type
+            type: String
+            description: Type of the Realm the User or User Group belongs to.
+            enum_values: [Realm]
+            example: "Realm"
+          - model_name: name
+            data_path: [realm]
+            tf_name: realm_name
+            type: String
+            description: Name of the Realm the User or User Group belongs to.
+            example: "MyRealm"
 
 test_prerequisites: |-
   resource "fmc_network" "test" {
