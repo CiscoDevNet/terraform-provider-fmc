@@ -244,7 +244,7 @@ Required:
 
 - `authentication_type` (String) Authentication type action for the rule.
   - Choices: `PASSIVE`, `ACTIVE`, `NO`
-- `category` (String) Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+- `category` (String) Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or a user-defined one.
 - `name` (String) Name of the Identity Rule.
 
 Optional:
@@ -262,7 +262,7 @@ Optional:
 - `destination_zones` (Attributes Set) Destination Security Zones. (see [below for nested schema](#nestedatt--rules--destination_zones))
 - `enabled` (Boolean) Enable rule.
 - `excluded_user_agents` (Attributes List) List of excluded User Agents (Applications). (see [below for nested schema](#nestedatt--rules--excluded_user_agents))
-- `guest_access_fallback` (Boolean) Identify as Special Identities/Guest if user cannot be authenticated.
+- `guest_access_fallback` (Boolean) Identify the user as Special Identities/Guest if user cannot be authenticated.
 - `source_network_literals` (Attributes Set) Source Network literals. (see [below for nested schema](#nestedatt--rules--source_network_literals))
 - `source_network_objects` (Attributes Set) Objects that represent sources of traffic (Host, Network, Range, FQDN, Network Group, Country, Continent or Geolocation). (see [below for nested schema](#nestedatt--rules--source_network_objects))
 - `source_port_literals` (Attributes Set) Source Port literals. (see [below for nested schema](#nestedatt--rules--source_port_literals))

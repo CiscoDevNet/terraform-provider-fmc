@@ -159,7 +159,7 @@ attributes:
       - model_name: category
         type: String
         mandatory: true
-        description: Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.
+        description: Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or a user-defined one.
         example: category_1
         tf_only: true
       - model_name: authenticationType
@@ -188,7 +188,7 @@ attributes:
       - model_name: guestAccessFallback
         tf_name: guest_access_fallback
         type: Bool
-        description: Identify as Special Identities/Guest if user cannot be authenticated.
+        description: Identify the user as Special Identities/Guest if user cannot be authenticated.
         example: false
       - model_name: captivePortalFallback
         tf_name: active_authentication_fallback

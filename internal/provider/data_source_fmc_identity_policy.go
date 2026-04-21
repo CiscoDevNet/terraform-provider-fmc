@@ -162,7 +162,7 @@ func (d *IdentityPolicyDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed:            true,
 						},
 						"category": schema.StringAttribute{
-							MarkdownDescription: "Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or user-defined one.",
+							MarkdownDescription: "Name of the Category the rule belongs to. Can be one of the default categories (Administrator, Standard or Root Rules) or a user-defined one.",
 							Computed:            true,
 						},
 						"authentication_type": schema.StringAttribute{
@@ -178,7 +178,7 @@ func (d *IdentityPolicyDataSource) Schema(ctx context.Context, req datasource.Sc
 							Computed:            true,
 						},
 						"guest_access_fallback": schema.BoolAttribute{
-							MarkdownDescription: "Identify as Special Identities/Guest if user cannot be authenticated.",
+							MarkdownDescription: "Identify the user as Special Identities/Guest if user cannot be authenticated.",
 							Computed:            true,
 						},
 						"active_authentication_fallback": schema.BoolAttribute{
