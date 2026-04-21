@@ -96,6 +96,7 @@ func (d *KeyChainDataSource) Schema(ctx context.Context, req datasource.SchemaRe
 						"key": schema.StringAttribute{
 							MarkdownDescription: "Crypto key string.",
 							Computed:            true,
+							Sensitive:           true,
 						},
 						"accept_lifetime_start": schema.StringAttribute{
 							MarkdownDescription: "Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.",

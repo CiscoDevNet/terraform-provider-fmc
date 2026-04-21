@@ -192,6 +192,7 @@ type AccessRuleApplicationFilters struct {
 	BusinessRelevances []AccessRuleApplicationFiltersBusinessRelevances `tfsdk:"business_relevances"`
 	Categories         []AccessRuleApplicationFiltersCategories         `tfsdk:"categories"`
 	Tags               []AccessRuleApplicationFiltersTags               `tfsdk:"tags"`
+	UserObjects        []AccessRuleApplicationFiltersUserObjects        `tfsdk:"user_objects"`
 }
 
 type AccessRuleApplicationFiltersTypes struct {
@@ -208,6 +209,14 @@ type AccessRuleApplicationFiltersCategories struct {
 }
 type AccessRuleApplicationFiltersTags struct {
 	Id types.String `tfsdk:"id"`
+}
+type AccessRuleApplicationFiltersUserObjects struct {
+	Id        types.String `tfsdk:"id"`
+	Type      types.String `tfsdk:"type"`
+	Name      types.String `tfsdk:"name"`
+	RealmId   types.String `tfsdk:"realm_id"`
+	RealmType types.String `tfsdk:"realm_type"`
+	RealmName types.String `tfsdk:"realm_name"`
 }
 
 // End of section. //template:end types
@@ -614,6 +623,31 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
 					itemBody, _ = sjson.SetRaw(itemBody, "tags.-1", itemChildBody)
+				}
+			}
+			if len(item.UserObjects) > 0 {
+				itemBody, _ = sjson.Set(itemBody, "users.objects", []any{})
+				for _, childItem := range item.UserObjects {
+					itemChildBody := ""
+					if !childItem.Id.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
+					}
+					if !childItem.Type.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
+					}
+					if !childItem.Name.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
+					}
+					if !childItem.RealmId.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "realm.id", childItem.RealmId.ValueString())
+					}
+					if !childItem.RealmType.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "realm.type", childItem.RealmType.ValueString())
+					}
+					if !childItem.RealmName.IsNull() {
+						itemChildBody, _ = sjson.Set(itemChildBody, "realm.name", childItem.RealmName.ValueString())
+					}
+					itemBody, _ = sjson.SetRaw(itemBody, "users.objects.-1", itemChildBody)
 				}
 			}
 			body, _ = sjson.SetRaw(body, "applications.inlineApplicationFilters.-1", itemBody)
@@ -1167,6 +1201,45 @@ func (data *AccessRule) fromBody(ctx context.Context, res gjson.Result) {
 						data.Id = types.StringNull()
 					}
 					(*parent).Tags = append((*parent).Tags, data)
+					return true
+				})
+			}
+			if value := res.Get("users.objects"); value.Exists() {
+				data.UserObjects = make([]AccessRuleApplicationFiltersUserObjects, 0)
+				value.ForEach(func(k, res gjson.Result) bool {
+					parent := &data
+					data := AccessRuleApplicationFiltersUserObjects{}
+					if value := res.Get("id"); value.Exists() {
+						data.Id = types.StringValue(value.String())
+					} else {
+						data.Id = types.StringNull()
+					}
+					if value := res.Get("type"); value.Exists() {
+						data.Type = types.StringValue(value.String())
+					} else {
+						data.Type = types.StringNull()
+					}
+					if value := res.Get("name"); value.Exists() {
+						data.Name = types.StringValue(value.String())
+					} else {
+						data.Name = types.StringNull()
+					}
+					if value := res.Get("realm.id"); value.Exists() {
+						data.RealmId = types.StringValue(value.String())
+					} else {
+						data.RealmId = types.StringNull()
+					}
+					if value := res.Get("realm.type"); value.Exists() {
+						data.RealmType = types.StringValue(value.String())
+					} else {
+						data.RealmType = types.StringNull()
+					}
+					if value := res.Get("realm.name"); value.Exists() {
+						data.RealmName = types.StringValue(value.String())
+					} else {
+						data.RealmName = types.StringNull()
+					}
+					(*parent).UserObjects = append((*parent).UserObjects, data)
 					return true
 				})
 			}
@@ -2520,6 +2593,74 @@ func (data *AccessRule) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				data.Id = types.StringNull()
 			}
 			(*parent).Tags[i] = data
+		}
+		for i := 0; i < len(data.UserObjects); i++ {
+			keys := [...]string{"id", "realm.id"}
+			keyValues := [...]string{data.UserObjects[i].Id.ValueString(), data.UserObjects[i].RealmId.ValueString()}
+
+			parent := &data
+			data := (*parent).UserObjects[i]
+			parentRes := &res
+			var res gjson.Result
+
+			parentRes.Get("users.objects").ForEach(
+				func(_, v gjson.Result) bool {
+					found := false
+					for ik := range keys {
+						if v.Get(keys[ik]).String() != keyValues[ik] {
+							found = false
+							break
+						}
+						found = true
+					}
+					if found {
+						res = v
+						return false
+					}
+					return true
+				},
+			)
+			if !res.Exists() {
+				tflog.Debug(ctx, fmt.Sprintf("removing UserObjects[%d] = %+v",
+					i,
+					(*parent).UserObjects[i],
+				))
+				(*parent).UserObjects = slices.Delete((*parent).UserObjects, i, i+1)
+				i--
+
+				continue
+			}
+			if value := res.Get("id"); value.Exists() && !data.Id.IsNull() {
+				data.Id = types.StringValue(value.String())
+			} else {
+				data.Id = types.StringNull()
+			}
+			if value := res.Get("type"); value.Exists() && !data.Type.IsNull() {
+				data.Type = types.StringValue(value.String())
+			} else {
+				data.Type = types.StringNull()
+			}
+			if value := res.Get("name"); value.Exists() && !data.Name.IsNull() {
+				data.Name = types.StringValue(value.String())
+			} else {
+				data.Name = types.StringNull()
+			}
+			if value := res.Get("realm.id"); value.Exists() && !data.RealmId.IsNull() {
+				data.RealmId = types.StringValue(value.String())
+			} else {
+				data.RealmId = types.StringNull()
+			}
+			if value := res.Get("realm.type"); value.Exists() && !data.RealmType.IsNull() {
+				data.RealmType = types.StringValue(value.String())
+			} else {
+				data.RealmType = types.StringNull()
+			}
+			if value := res.Get("realm.name"); value.Exists() && !data.RealmName.IsNull() {
+				data.RealmName = types.StringValue(value.String())
+			} else {
+				data.RealmName = types.StringNull()
+			}
+			(*parent).UserObjects[i] = data
 		}
 		(*parent).ApplicationFilters[i] = data
 	}
