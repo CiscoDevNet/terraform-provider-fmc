@@ -62,7 +62,7 @@ func TestAccFmcInternalCertificate(t *testing.T) {
 // Section below is generated&owned by "gen/generator.go". //template:begin testPrerequisites
 
 const testAccFmcInternalCertificatePrerequisitesConfig = `
-local {
+locals {
   cert = chomp(<<EOT
 -----BEGIN CERTIFICATE-----
 MIIErzCCApegAwIBAgIUU6GBJ2MENn84UcCE7nOSN0g7swIwDQYJKoZIhvcNAQEL

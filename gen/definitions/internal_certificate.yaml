@@ -41,7 +41,7 @@ attributes:
     write_only: true
 
 test_prerequisites: |-
-  local {
+  locals {
     cert = chomp(<<EOT
   -----BEGIN CERTIFICATE-----
   MIIErzCCApegAwIBAgIUU6GBJ2MENn84UcCE7nOSN0g7swIwDQYJKoZIhvcNAQEL
