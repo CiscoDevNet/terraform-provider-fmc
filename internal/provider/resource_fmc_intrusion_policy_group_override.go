@@ -147,7 +147,6 @@ func (r *IntrusionPolicyGroupOverrideResource) Create(ctx context.Context, req r
 
 	// Create object
 	body := plan.toBody(ctx, IntrusionPolicyGroupOverride{})
-	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -242,7 +241,6 @@ func (r *IntrusionPolicyGroupOverrideResource) Update(ctx context.Context, req r
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	body = plan.adjustBody(ctx, body)
 	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
