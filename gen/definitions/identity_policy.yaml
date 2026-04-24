@@ -1,6 +1,6 @@
 # FMCBUG CSCwt93493 FMC API: Identity Policy configuration is not applied on initial POST request
 # FMCBUG CSCwt93472 FMC API: Identity Rules are not returned in order they are defined in the policy
-# Manual resource - Create, Read, Update, Data Source Test
+# Manual resource - Create, Read, Update, Data Source Test (Rules are not read by data source)
 ---
 name: Identity Policy
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/identitypolicies
@@ -9,6 +9,7 @@ res_description: This resource manages Identity Policy with corresponding Catego
 skip_minimum_test: true
 minimum_version: "7.2"
 minimum_version_create: "10.0"
+skip_test_for_versions: ["7.2", "7.4", "7.6", "7.7"]
 attributes:
   - model_name: name
     type: String

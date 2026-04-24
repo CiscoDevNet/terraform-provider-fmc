@@ -19,6 +19,8 @@ package provider
 
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
+	"os"
+	"slices"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -27,6 +29,9 @@ import (
 // End of section. //template:end imports
 
 func TestAccDataSourceFmcIdentityPolicy(t *testing.T) {
+	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.2", "7.4", "7.6", "7.7"}, v) {
+		t.Skip("skipping test for FMC version " + v)
+	}
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_identity_policy.test", "name", "my_identity_policy"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_identity_policy.test", "type"))
