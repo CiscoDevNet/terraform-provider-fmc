@@ -1,11 +1,10 @@
-## Unreleased
+## 2.3.0
 
 - (Enhancement) `fmc_device_vni_interface`: Add `proxy_type` attribute
 - (Enhancement) Add support for `fmc_identity_policy` resource and data source
 - (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
-- (Enhancement) Add support for user-based Access Rules
-- (Fix) `fmc_key_chain`: `key` attribute is now sensitive and write only, as API may not return its true value
-- (Fix) `fmc_device_ospf` and `fmc_device_ospf_interface`: Sensitive attirbutes are now write-only, as API may not return their true value
+- (Enhancement) `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Add support for Identity Based Access Rules
+- (Fix) `fmc_key_chain`: `key` attribute is now sensitive
 
 ## 2.2.0
 
