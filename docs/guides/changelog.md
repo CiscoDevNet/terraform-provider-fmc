@@ -7,10 +7,13 @@ description: |-
 
 # Changelog
 
-## 2.3.0
+## Unreleased
 
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
 - (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
+
+## 2.3.0
+
 - (Enhancement) `fmc_device_vni_interface`: Add `proxy_type` attribute
 - (Enhancement) Add support for `fmc_identity_policy` resource and data source
 - (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
