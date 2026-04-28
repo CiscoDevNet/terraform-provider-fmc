@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &IntrusionPolicyDataSource{}
-	_ datasource.DataSourceWithConfigure = &IntrusionPolicyDataSource{}
+	_ datasource.DataSource              = &IntrusionRuleGroupDataSource{}
+	_ datasource.DataSourceWithConfigure = &IntrusionRuleGroupDataSource{}
 )
 
-func NewIntrusionPolicyDataSource() datasource.DataSource {
-	return &IntrusionPolicyDataSource{}
+func NewIntrusionRuleGroupDataSource() datasource.DataSource {
+	return &IntrusionRuleGroupDataSource{}
 }
 
-type IntrusionPolicyDataSource struct {
+type IntrusionRuleGroupDataSource struct {
 	client *fmc.Client
 }
 
-func (d *IntrusionPolicyDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_intrusion_policy"
+func (d *IntrusionRuleGroupDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_intrusion_rule_group"
 }
 
-func (d *IntrusionPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *IntrusionRuleGroupDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Intrusion Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Intrusion Rule Group.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,30 +72,22 @@ func (d *IntrusionPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the policy.",
+				MarkdownDescription: "Name of the Intrusion Rule Group.",
 				Optional:            true,
 				Computed:            true,
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the policy.",
+				MarkdownDescription: "Description of the Intrusion Rule Group.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'intrusionpolicy'.",
-				Computed:            true,
-			},
-			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Base Intrusion Policy.",
-				Computed:            true,
-			},
-			"inspection_mode": schema.StringAttribute{
-				MarkdownDescription: "Inspection mode.",
+				MarkdownDescription: "Type of the object; this value is always 'IntrusionRuleGroup'.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *IntrusionPolicyDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *IntrusionRuleGroupDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -104,7 +96,7 @@ func (d *IntrusionPolicyDataSource) ConfigValidators(ctx context.Context) []data
 	}
 }
 
-func (d *IntrusionPolicyDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *IntrusionRuleGroupDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -116,8 +108,8 @@ func (d *IntrusionPolicyDataSource) Configure(_ context.Context, req datasource.
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (d *IntrusionPolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config IntrusionPolicy
+func (d *IntrusionRuleGroupDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config IntrusionRuleGroup
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)

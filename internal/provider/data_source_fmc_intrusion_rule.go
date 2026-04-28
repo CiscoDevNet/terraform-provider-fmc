@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework-validators/datasourcevalidator"
@@ -31,7 +32,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -40,26 +40,26 @@ import (
 
 // Ensure the implementation satisfies the expected interfaces.
 var (
-	_ datasource.DataSource              = &IntrusionPolicyDataSource{}
-	_ datasource.DataSourceWithConfigure = &IntrusionPolicyDataSource{}
+	_ datasource.DataSource              = &IntrusionRuleDataSource{}
+	_ datasource.DataSourceWithConfigure = &IntrusionRuleDataSource{}
 )
 
-func NewIntrusionPolicyDataSource() datasource.DataSource {
-	return &IntrusionPolicyDataSource{}
+func NewIntrusionRuleDataSource() datasource.DataSource {
+	return &IntrusionRuleDataSource{}
 }
 
-type IntrusionPolicyDataSource struct {
+type IntrusionRuleDataSource struct {
 	client *fmc.Client
 }
 
-func (d *IntrusionPolicyDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_intrusion_policy"
+func (d *IntrusionRuleDataSource) Metadata(_ context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_intrusion_rule"
 }
 
-func (d *IntrusionPolicyDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *IntrusionRuleDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Intrusion Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Intrusion Rule.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -72,30 +72,38 @@ func (d *IntrusionPolicyDataSource) Schema(ctx context.Context, req datasource.S
 				Optional:            true,
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: "Name of the policy.",
+				MarkdownDescription: "Name of the Intrusion Rule in gid:sid format (eg. 2000:10000301).",
 				Optional:            true,
 				Computed:            true,
 			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: "Description of the policy.",
+			"rule_data": schema.StringAttribute{
+				MarkdownDescription: "Snort formatted rule data.",
 				Computed:            true,
+			},
+			"rule_groups": schema.ListNestedAttribute{
+				MarkdownDescription: "List of Intrusion Rule Groups this Intrusion Rule belongs to.",
+				Computed:            true,
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: "Id of the Intrusion Rule Group.",
+							Computed:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: "Name of the Intrusion Rule Group.",
+							Computed:            true,
+						},
+					},
+				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: "Type of the object; this value is always 'intrusionpolicy'.",
-				Computed:            true,
-			},
-			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the Base Intrusion Policy.",
-				Computed:            true,
-			},
-			"inspection_mode": schema.StringAttribute{
-				MarkdownDescription: "Inspection mode.",
+				MarkdownDescription: "Type of the object; this value is always 'IntrusionRule'.",
 				Computed:            true,
 			},
 		},
 	}
 }
-func (d *IntrusionPolicyDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
+func (d *IntrusionRuleDataSource) ConfigValidators(ctx context.Context) []datasource.ConfigValidator {
 	return []datasource.ConfigValidator{
 		datasourcevalidator.ExactlyOneOf(
 			path.MatchRoot("id"),
@@ -104,7 +112,7 @@ func (d *IntrusionPolicyDataSource) ConfigValidators(ctx context.Context) []data
 	}
 }
 
-func (d *IntrusionPolicyDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
+func (d *IntrusionRuleDataSource) Configure(_ context.Context, req datasource.ConfigureRequest, _ *datasource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -114,10 +122,10 @@ func (d *IntrusionPolicyDataSource) Configure(_ context.Context, req datasource.
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin read
-
-func (d *IntrusionPolicyDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var config IntrusionPolicy
+func (d *IntrusionRuleDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var config IntrusionRule
+	var res fmc.Res
+	var err error
 
 	// Read config
 	diags := req.Config.Get(ctx, &config)
@@ -134,41 +142,28 @@ func (d *IntrusionPolicyDataSource) Read(ctx context.Context, req datasource.Rea
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", config.Id.String()))
 	if config.Id.IsNull() && !config.Name.IsNull() {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
-			res, err := d.client.Get(config.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if config.Name.ValueString() == v.Get("name").String() {
-						config.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %v", config.Id.ValueString(), config.Name.ValueString(), config.Id.ValueString()))
-						return false
-					}
-					return true
-				})
-			}
-			if !config.Id.IsNull() || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if config.Id.IsNull() {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", config.Name.ValueString()))
+		// Split name into sid and gid
+		split := strings.Split(config.Name.ValueString(), ":")
+		if len(split) != 2 {
+			resp.Diagnostics.AddError("Invalid Name Format", "Name must be in gid:sid format (eg. 2000:10000301).")
 			return
 		}
-	}
-	urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
-	res, err := d.client.Get(urlPath, reqMods...)
-	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
-		return
+		urlPath := config.getPath() + fmt.Sprintf("?filter=gid:%s;sid:%s&expanded=true", split[0], split[1])
+		res, err = d.client.Get(urlPath, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+			return
+		}
+		res = res.Get("items").Array()[0]
+		config.Id = types.StringValue(res.Get("id").String())
+
+	} else {
+		urlPath := config.getPath() + "/" + url.QueryEscape(config.Id.ValueString())
+		res, err = d.client.Get(urlPath, reqMods...)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object, got error: %s", err))
+			return
+		}
 	}
 
 	config.fromBody(ctx, res)
@@ -178,5 +173,3 @@ func (d *IntrusionPolicyDataSource) Read(ctx context.Context, req datasource.Rea
 	diags = resp.State.Set(ctx, &config)
 	resp.Diagnostics.Append(diags...)
 }
-
-// End of section. //template:end read

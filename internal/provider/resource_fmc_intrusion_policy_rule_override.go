@@ -31,7 +31,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -45,26 +44,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &IntrusionPolicyResource{}
-	_ resource.ResourceWithImportState = &IntrusionPolicyResource{}
+	_ resource.Resource                = &IntrusionPolicyRuleOverrideResource{}
+	_ resource.ResourceWithImportState = &IntrusionPolicyRuleOverrideResource{}
 )
 
-func NewIntrusionPolicyResource() resource.Resource {
-	return &IntrusionPolicyResource{}
+func NewIntrusionPolicyRuleOverrideResource() resource.Resource {
+	return &IntrusionPolicyRuleOverrideResource{}
 }
 
-type IntrusionPolicyResource struct {
+type IntrusionPolicyRuleOverrideResource struct {
 	client *fmc.Client
 }
 
-func (r *IntrusionPolicyResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_intrusion_policy"
+func (r *IntrusionPolicyRuleOverrideResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_intrusion_policy_rule_override"
 }
 
-func (r *IntrusionPolicyResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *IntrusionPolicyRuleOverrideResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Intrusion Policy.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Intrusion Policy Rule Override.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -81,39 +80,47 @@ func (r *IntrusionPolicyResource) Schema(ctx context.Context, req resource.Schem
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the policy.").String,
+			"intrusion_policy_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy.").String,
+				Required:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"intrusion_rule_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the overridden Intrusion Rule.").String,
 				Required:            true,
 			},
-			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Description of the policy.").String,
-				Optional:            true,
-			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'intrusionpolicy'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'IntrusionRule'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the Base Intrusion Policy.").String,
-				Required:            true,
-			},
-			"inspection_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Inspection mode.").AddStringEnumDescription("PREVENTION", "DETECTION").AddDefaultValueDescription("PREVENTION").String,
-				Optional:            true,
+			"default_rule_action": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Default rule action.").String,
 				Computed:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("PREVENTION", "DETECTION"),
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.UseStateForUnknown(),
 				},
-				Default: stringdefault.StaticString("PREVENTION"),
+			},
+			"override_rule_action": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Overriden rule action.").AddStringEnumDescription("DROP", "BLOCK", "ALERT", "DISABLE", "DEFAULT", "PASS", "REJECT", "REACT", "REWRITE").String,
+				Required:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("DROP", "BLOCK", "ALERT", "DISABLE", "DEFAULT", "PASS", "REJECT", "REACT", "REWRITE"),
+				},
+			},
+			"rule_data": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Snort formatted rule data.").String,
+				Required:            true,
 			},
 		},
 	}
 }
 
-func (r *IntrusionPolicyResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *IntrusionPolicyRuleOverrideResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -123,10 +130,8 @@ func (r *IntrusionPolicyResource) Configure(_ context.Context, req resource.Conf
 
 // End of section. //template:end model
 
-// Section below is generated&owned by "gen/generator.go". //template:begin create
-
-func (r *IntrusionPolicyResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan IntrusionPolicy
+func (r *IntrusionPolicyRuleOverrideResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan IntrusionPolicyRuleOverride
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -140,11 +145,13 @@ func (r *IntrusionPolicyResource) Create(ctx context.Context, req resource.Creat
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
 
+	plan.Id = plan.IntrusionRuleId
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, IntrusionPolicy{})
-	res, err := r.client.Post(plan.getPath(), body, reqMods...)
+	body := plan.toBody(ctx, IntrusionPolicyRuleOverride{})
+	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -160,12 +167,10 @@ func (r *IntrusionPolicyResource) Create(ctx context.Context, req resource.Creat
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-// End of section. //template:end create
-
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *IntrusionPolicyResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state IntrusionPolicy
+func (r *IntrusionPolicyRuleOverrideResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state IntrusionPolicyRuleOverride
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -214,8 +219,10 @@ func (r *IntrusionPolicyResource) Read(ctx context.Context, req resource.ReadReq
 
 // End of section. //template:end read
 
-func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state IntrusionPolicy
+// Section below is generated&owned by "gen/generator.go". //template:begin update
+
+func (r *IntrusionPolicyRuleOverrideResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state IntrusionPolicyRuleOverride
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -238,7 +245,7 @@ func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.Updat
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Update", plan.Id.ValueString()))
 
 	body := plan.toBody(ctx, state)
-	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString())+"?replicateInspectionMode=true", body, reqMods...)
+	res, err := r.client.Put(plan.getPath()+"/"+url.QueryEscape(plan.Id.ValueString()), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (PUT), got error: %s, %s", err, res.String()))
 		return
@@ -250,10 +257,12 @@ func (r *IntrusionPolicyResource) Update(ctx context.Context, req resource.Updat
 	resp.Diagnostics.Append(diags...)
 }
 
+// End of section. //template:end update
+
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *IntrusionPolicyResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state IntrusionPolicy
+func (r *IntrusionPolicyRuleOverrideResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state IntrusionPolicyRuleOverride
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -268,9 +277,10 @@ func (r *IntrusionPolicyResource) Delete(ctx context.Context, req resource.Delet
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
+	body := state.toBodyPutDelete(ctx)
+	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -282,12 +292,12 @@ func (r *IntrusionPolicyResource) Delete(ctx context.Context, req resource.Delet
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *IntrusionPolicyResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *IntrusionPolicyRuleOverrideResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
-	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
+	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<intrusion_policy_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
 	if match == nil {
-		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<intrusion_policy_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
 		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
@@ -297,8 +307,21 @@ func (r *IntrusionPolicyResource) ImportState(ctx context.Context, req resource.
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
+	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("intrusion_policy_id"), match[inputPattern.SubexpIndex("intrusion_policy_id")])...)
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

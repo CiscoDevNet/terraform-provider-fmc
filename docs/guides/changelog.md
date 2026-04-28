@@ -7,6 +7,11 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
+- (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
+
 ## 2.3.0
 
 - (Enhancement) `fmc_device_vni_interface`: Add `proxy_type` attribute

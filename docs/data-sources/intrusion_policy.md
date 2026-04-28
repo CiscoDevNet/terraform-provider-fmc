@@ -29,7 +29,7 @@ data "fmc_intrusion_policy" "example" {
 
 ### Read-Only
 
-- `base_policy_id` (String) Id of the base policy.
+- `base_policy_id` (String) Id of the Base Intrusion Policy.
 - `description` (String) Description of the policy.
 - `inspection_mode` (String) Inspection mode.
 - `type` (String) Type of the object; this value is always 'intrusionpolicy'.

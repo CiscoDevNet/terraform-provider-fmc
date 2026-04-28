@@ -1,0 +1,42 @@
+# Manual resource - Data Source (Read)
+---
+name: Intrusion Rule
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/intrusionrules
+doc_category: Policies
+attributes:
+  - model_name: name
+    type: String
+    description: "Name of the Intrusion Rule in gid:sid format (eg. 2000:10000301)."
+    data_source_query: true
+    computed: true
+  - model_name: ruleData
+    type: String
+    description: Snort formatted rule data.
+    mandatory: true
+    example: 'alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )'
+  - model_name: ruleGroups
+    type: List
+    description: List of Intrusion Rule Groups this Intrusion Rule belongs to.
+    mandatory: true
+    attributes:
+      - model_name: id
+        id: true
+        type: String
+        description: Id of the Intrusion Rule Group.
+        mandatory: true
+        example: 12da34567890-1234-5678-90ab-cdef12345678
+        test_value: fmc_intrusion_rule_group.test.id
+      - model_name: name
+        type: String
+        description: Name of the Intrusion Rule Group.
+        example: "Custom Rule Group 1"
+        test_value: fmc_intrusion_rule_group.test.name
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'IntrusionRule'.
+    computed: true
+
+test_prerequisites: |-
+  resource "fmc_intrusion_rule_group" "test" {
+    name = "intrusion_rule"
+  }
