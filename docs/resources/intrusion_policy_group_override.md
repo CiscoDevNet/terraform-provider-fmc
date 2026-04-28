@@ -25,9 +25,9 @@ resource "fmc_intrusion_policy_group_override" "example" {
 
 ### Required
 
-- `intrusion_policy_id` (String) Id of the parent Intrusion Policy.
-- `intrusion_rule_group_id` (String) Id of the parent Intrusion Rule Group.
-- `override_security_level` (String) Security level override for the rule group.
+- `intrusion_policy_id` (String) Id of the Intrusion Policy.
+- `intrusion_rule_group_id` (String) Id of the overridden Intrusion Rule Group.
+- `override_security_level` (String) Overriden security level.
   - Choices: `DISABLED`, `LEVEL_1`, `LEVEL_2`, `LEVEL_3`, `LEVEL_4`, `DEFAULT`
 
 ### Optional
@@ -36,7 +36,7 @@ resource "fmc_intrusion_policy_group_override" "example" {
 
 ### Read-Only
 
-- `default_security_level` (String) Default security.
+- `default_security_level` (String) Default security level.
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'IntrusionRuleGroup'.
 

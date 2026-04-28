@@ -25,7 +25,7 @@ data "fmc_intrusion_policy_rule_override" "example" {
 ### Required
 
 - `id` (String) Id of the object
-- `intrusion_policy_id` (String) Id of the parent Intrusion Policy.
+- `intrusion_policy_id` (String) Id of the Intrusion Policy.
 
 ### Optional
 
@@ -33,8 +33,8 @@ data "fmc_intrusion_policy_rule_override" "example" {
 
 ### Read-Only
 
-- `default_state` (String) Default security.
-- `intrusion_rule_id` (String) Id of the parent Intrusion Rule.
-- `override_state` (String) Security level override for the rule.
+- `default_rule_action` (String) Default rule action.
+- `intrusion_rule_id` (String) Id of the overridden Intrusion Rule.
+- `override_rule_action` (String) Overriden rule action.
 - `rule_data` (String) Snort formatted rule data.
 - `type` (String) Type of the object; this value is always 'IntrusionRule'.

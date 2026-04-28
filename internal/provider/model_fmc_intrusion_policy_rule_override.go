@@ -33,14 +33,14 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type IntrusionPolicyRuleOverride struct {
-	Id                types.String `tfsdk:"id"`
-	Domain            types.String `tfsdk:"domain"`
-	IntrusionPolicyId types.String `tfsdk:"intrusion_policy_id"`
-	IntrusionRuleId   types.String `tfsdk:"intrusion_rule_id"`
-	Type              types.String `tfsdk:"type"`
-	DefaultState      types.String `tfsdk:"default_state"`
-	OverrideState     types.String `tfsdk:"override_state"`
-	RuleData          types.String `tfsdk:"rule_data"`
+	Id                 types.String `tfsdk:"id"`
+	Domain             types.String `tfsdk:"domain"`
+	IntrusionPolicyId  types.String `tfsdk:"intrusion_policy_id"`
+	IntrusionRuleId    types.String `tfsdk:"intrusion_rule_id"`
+	Type               types.String `tfsdk:"type"`
+	DefaultRuleAction  types.String `tfsdk:"default_rule_action"`
+	OverrideRuleAction types.String `tfsdk:"override_rule_action"`
+	RuleData           types.String `tfsdk:"rule_data"`
 }
 
 // End of section. //template:end types
@@ -67,8 +67,8 @@ func (data IntrusionPolicyRuleOverride) toBody(ctx context.Context, state Intrus
 	if !data.IntrusionRuleId.IsNull() {
 		body, _ = sjson.Set(body, "id", data.IntrusionRuleId.ValueString())
 	}
-	if !data.OverrideState.IsNull() {
-		body, _ = sjson.Set(body, "overrideState", data.OverrideState.ValueString())
+	if !data.OverrideRuleAction.IsNull() {
+		body, _ = sjson.Set(body, "overrideState", data.OverrideRuleAction.ValueString())
 	}
 	if !data.RuleData.IsNull() {
 		body, _ = sjson.Set(body, "ruleData", data.RuleData.ValueString())
@@ -92,14 +92,14 @@ func (data *IntrusionPolicyRuleOverride) fromBody(ctx context.Context, res gjson
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("defaultState"); value.Exists() {
-		data.DefaultState = types.StringValue(value.String())
+		data.DefaultRuleAction = types.StringValue(value.String())
 	} else {
-		data.DefaultState = types.StringNull()
+		data.DefaultRuleAction = types.StringNull()
 	}
 	if value := res.Get("overrideState"); value.Exists() {
-		data.OverrideState = types.StringValue(value.String())
+		data.OverrideRuleAction = types.StringValue(value.String())
 	} else {
-		data.OverrideState = types.StringNull()
+		data.OverrideRuleAction = types.StringNull()
 	}
 	if value := res.Get("ruleData"); value.Exists() {
 		data.RuleData = types.StringValue(value.String())
@@ -127,15 +127,15 @@ func (data *IntrusionPolicyRuleOverride) fromBodyPartial(ctx context.Context, re
 	} else {
 		data.Type = types.StringNull()
 	}
-	if value := res.Get("defaultState"); value.Exists() && !data.DefaultState.IsNull() {
-		data.DefaultState = types.StringValue(value.String())
+	if value := res.Get("defaultState"); value.Exists() && !data.DefaultRuleAction.IsNull() {
+		data.DefaultRuleAction = types.StringValue(value.String())
 	} else {
-		data.DefaultState = types.StringNull()
+		data.DefaultRuleAction = types.StringNull()
 	}
-	if value := res.Get("overrideState"); value.Exists() && !data.OverrideState.IsNull() {
-		data.OverrideState = types.StringValue(value.String())
+	if value := res.Get("overrideState"); value.Exists() && !data.OverrideRuleAction.IsNull() {
+		data.OverrideRuleAction = types.StringValue(value.String())
 	} else {
-		data.OverrideState = types.StringNull()
+		data.OverrideRuleAction = types.StringNull()
 	}
 	if value := res.Get("ruleData"); value.Exists() && !data.RuleData.IsNull() {
 		data.RuleData = types.StringValue(value.String())
@@ -158,11 +158,11 @@ func (data *IntrusionPolicyRuleOverride) fromBodyUnknowns(ctx context.Context, r
 			data.Type = types.StringNull()
 		}
 	}
-	if data.DefaultState.IsUnknown() {
+	if data.DefaultRuleAction.IsUnknown() {
 		if value := res.Get("defaultState"); value.Exists() {
-			data.DefaultState = types.StringValue(value.String())
+			data.DefaultRuleAction = types.StringValue(value.String())
 		} else {
-			data.DefaultState = types.StringNull()
+			data.DefaultRuleAction = types.StringNull()
 		}
 	}
 }

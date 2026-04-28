@@ -81,14 +81,14 @@ func (r *IntrusionPolicyGroupOverrideResource) Schema(ctx context.Context, req r
 				},
 			},
 			"intrusion_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent Intrusion Policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"intrusion_rule_group_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent Intrusion Rule Group.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the overridden Intrusion Rule Group.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -99,14 +99,14 @@ func (r *IntrusionPolicyGroupOverrideResource) Schema(ctx context.Context, req r
 				},
 			},
 			"default_security_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default security.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Default security level.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"override_security_level": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Security level override for the rule group.").AddStringEnumDescription("DISABLED", "LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4", "DEFAULT").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Overriden security level.").AddStringEnumDescription("DISABLED", "LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4", "DEFAULT").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DISABLED", "LEVEL_1", "LEVEL_2", "LEVEL_3", "LEVEL_4", "DEFAULT"),

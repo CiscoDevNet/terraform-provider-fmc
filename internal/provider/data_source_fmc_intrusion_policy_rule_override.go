@@ -67,23 +67,23 @@ func (d *IntrusionPolicyRuleOverrideDataSource) Schema(ctx context.Context, req 
 				Optional:            true,
 			},
 			"intrusion_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent Intrusion Policy.",
+				MarkdownDescription: "Id of the Intrusion Policy.",
 				Required:            true,
 			},
 			"intrusion_rule_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent Intrusion Rule.",
+				MarkdownDescription: "Id of the overridden Intrusion Rule.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
 				MarkdownDescription: "Type of the object; this value is always 'IntrusionRule'.",
 				Computed:            true,
 			},
-			"default_state": schema.StringAttribute{
-				MarkdownDescription: "Default security.",
+			"default_rule_action": schema.StringAttribute{
+				MarkdownDescription: "Default rule action.",
 				Computed:            true,
 			},
-			"override_state": schema.StringAttribute{
-				MarkdownDescription: "Security level override for the rule.",
+			"override_rule_action": schema.StringAttribute{
+				MarkdownDescription: "Overriden rule action.",
 				Computed:            true,
 			},
 			"rule_data": schema.StringAttribute{

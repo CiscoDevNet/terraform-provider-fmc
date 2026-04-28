@@ -67,11 +67,11 @@ func (d *IntrusionPolicyGroupOverrideDataSource) Schema(ctx context.Context, req
 				Optional:            true,
 			},
 			"intrusion_policy_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent Intrusion Policy.",
+				MarkdownDescription: "Id of the Intrusion Policy.",
 				Required:            true,
 			},
 			"intrusion_rule_group_id": schema.StringAttribute{
-				MarkdownDescription: "Id of the parent Intrusion Rule Group.",
+				MarkdownDescription: "Id of the overridden Intrusion Rule Group.",
 				Computed:            true,
 			},
 			"type": schema.StringAttribute{
@@ -79,11 +79,11 @@ func (d *IntrusionPolicyGroupOverrideDataSource) Schema(ctx context.Context, req
 				Computed:            true,
 			},
 			"default_security_level": schema.StringAttribute{
-				MarkdownDescription: "Default security.",
+				MarkdownDescription: "Default security level.",
 				Computed:            true,
 			},
 			"override_security_level": schema.StringAttribute{
-				MarkdownDescription: "Security level override for the rule group.",
+				MarkdownDescription: "Overriden security level.",
 				Computed:            true,
 			},
 		},

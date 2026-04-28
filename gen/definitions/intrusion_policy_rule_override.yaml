@@ -10,13 +10,13 @@ attributes:
   - tf_name: intrusion_policy_id
     type: String
     reference: true
-    description: Id of the parent Intrusion Policy.
+    description: Id of the Intrusion Policy.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08470
     test_value: fmc_intrusion_policy.test.id
   - model_name: id
     tf_name: intrusion_rule_id
     type: String
-    description: Id of the parent Intrusion Rule.
+    description: Id of the overridden Intrusion Rule.
     example: 76d24097-41c4-4558-a4d0-a8c07ac08471
     mandatory: true
     test_value: fmc_intrusion_rule.test.id
@@ -25,12 +25,14 @@ attributes:
     description: Type of the object; this value is always 'IntrusionRule'.
     computed: true
   - model_name: defaultState
+    tf_name: default_rule_action
     type: String
-    description: Default security.
+    description: Default rule action.
     computed: true
   - model_name: overrideState
+    tf_name: override_rule_action
     type: String
-    description: Security level override for the rule.
+    description: Overriden rule action.
     enum_values: [DROP, BLOCK, ALERT, DISABLE, DEFAULT, PASS, REJECT, REACT, REWRITE]
     example: BLOCK
     mandatory: true

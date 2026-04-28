@@ -26,7 +26,7 @@ resource "fmc_intrusion_policy" "example" {
 
 ### Required
 
-- `base_policy_id` (String) Id of the base policy.
+- `base_policy_id` (String) Id of the Base Intrusion Policy.
 - `name` (String) Name of the policy.
 
 ### Optional

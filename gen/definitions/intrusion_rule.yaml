@@ -16,7 +16,7 @@ attributes:
     example: 'alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )'
   - model_name: ruleGroups
     type: List
-    description: List of Intrusion Rule Groups this rule belongs to.
+    description: List of Intrusion Rule Groups this Intrusion Rule belongs to.
     mandatory: true
     attributes:
       - model_name: id

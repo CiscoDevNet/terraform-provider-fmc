@@ -90,7 +90,7 @@ func (r *IntrusionRuleResource) Schema(ctx context.Context, req resource.SchemaR
 				Required:            true,
 			},
 			"rule_groups": schema.ListNestedAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("List of Intrusion Rule Groups this rule belongs to.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("List of Intrusion Rule Groups this Intrusion Rule belongs to.").String,
 				Required:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

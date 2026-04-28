@@ -14,10 +14,10 @@ This resource manages an Intrusion Policy Rule Override.
 
 ```terraform
 resource "fmc_intrusion_policy_rule_override" "example" {
-  intrusion_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
-  intrusion_rule_id   = "76d24097-41c4-4558-a4d0-a8c07ac08471"
-  override_state      = "BLOCK"
-  rule_data           = "alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )"
+  intrusion_policy_id  = "76d24097-41c4-4558-a4d0-a8c07ac08470"
+  intrusion_rule_id    = "76d24097-41c4-4558-a4d0-a8c07ac08471"
+  override_rule_action = "BLOCK"
+  rule_data            = "alert icmp any any -> any any ( sid:10000301; gid:2000; msg:\"CUSTOM RULE1\"; classtype:icmp-event; rev:1; )"
 }
 ```
 
@@ -26,9 +26,9 @@ resource "fmc_intrusion_policy_rule_override" "example" {
 
 ### Required
 
-- `intrusion_policy_id` (String) Id of the parent Intrusion Policy.
-- `intrusion_rule_id` (String) Id of the parent Intrusion Rule.
-- `override_state` (String) Security level override for the rule.
+- `intrusion_policy_id` (String) Id of the Intrusion Policy.
+- `intrusion_rule_id` (String) Id of the overridden Intrusion Rule.
+- `override_rule_action` (String) Overriden rule action.
   - Choices: `DROP`, `BLOCK`, `ALERT`, `DISABLE`, `DEFAULT`, `PASS`, `REJECT`, `REACT`, `REWRITE`
 - `rule_data` (String) Snort formatted rule data.
 
@@ -38,7 +38,7 @@ resource "fmc_intrusion_policy_rule_override" "example" {
 
 ### Read-Only
 
-- `default_state` (String) Default security.
+- `default_rule_action` (String) Default rule action.
 - `id` (String) Id of the object
 - `type` (String) Type of the object; this value is always 'IntrusionRule'.
 

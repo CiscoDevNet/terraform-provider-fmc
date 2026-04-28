@@ -30,7 +30,7 @@ resource "fmc_intrusion_rule" "example" {
 ### Required
 
 - `rule_data` (String) Snort formatted rule data.
-- `rule_groups` (Attributes List) List of Intrusion Rule Groups this rule belongs to. (see [below for nested schema](#nestedatt--rule_groups))
+- `rule_groups` (Attributes List) List of Intrusion Rule Groups this Intrusion Rule belongs to. (see [below for nested schema](#nestedatt--rule_groups))
 
 ### Optional
 

@@ -31,8 +31,8 @@ import (
 func TestAccDataSourceFmcIntrusionPolicyRuleOverride(t *testing.T) {
 	var checks []resource.TestCheckFunc
 	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_policy_rule_override.test", "type"))
-	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_policy_rule_override.test", "default_state"))
-	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_rule_override.test", "override_state", "BLOCK"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("data.fmc_intrusion_policy_rule_override.test", "default_rule_action"))
+	checks = append(checks, resource.TestCheckResourceAttr("data.fmc_intrusion_policy_rule_override.test", "override_rule_action", "BLOCK"))
 	resource.Test(t, resource.TestCase{
 		PreCheck:                 func() { testAccPreCheck(t) },
 		ProtoV6ProviderFactories: testAccProtoV6ProviderFactories,
@@ -80,7 +80,7 @@ func testAccDataSourceFmcIntrusionPolicyRuleOverrideConfig() string {
 	config := `resource "fmc_intrusion_policy_rule_override" "test" {` + "\n"
 	config += `	intrusion_policy_id = fmc_intrusion_policy.test.id` + "\n"
 	config += `	intrusion_rule_id = fmc_intrusion_rule.test.id` + "\n"
-	config += `	override_state = "BLOCK"` + "\n"
+	config += `	override_rule_action = "BLOCK"` + "\n"
 	config += `	rule_data = fmc_intrusion_rule.test.rule_data` + "\n"
 	config += `}` + "\n"
 

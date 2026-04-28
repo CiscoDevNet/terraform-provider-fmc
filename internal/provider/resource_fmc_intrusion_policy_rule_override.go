@@ -81,14 +81,14 @@ func (r *IntrusionPolicyRuleOverrideResource) Schema(ctx context.Context, req re
 				},
 			},
 			"intrusion_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent Intrusion Policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Intrusion Policy.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"intrusion_rule_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent Intrusion Rule.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the overridden Intrusion Rule.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
@@ -98,15 +98,15 @@ func (r *IntrusionPolicyRuleOverrideResource) Schema(ctx context.Context, req re
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"default_state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Default security.").String,
+			"default_rule_action": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Default rule action.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
-			"override_state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Security level override for the rule.").AddStringEnumDescription("DROP", "BLOCK", "ALERT", "DISABLE", "DEFAULT", "PASS", "REJECT", "REACT", "REWRITE").String,
+			"override_rule_action": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Overriden rule action.").AddStringEnumDescription("DROP", "BLOCK", "ALERT", "DISABLE", "DEFAULT", "PASS", "REJECT", "REACT", "REWRITE").String,
 				Required:            true,
 				Validators: []validator.String{
 					stringvalidator.OneOf("DROP", "BLOCK", "ALERT", "DISABLE", "DEFAULT", "PASS", "REJECT", "REACT", "REWRITE"),

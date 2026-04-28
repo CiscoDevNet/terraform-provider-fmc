@@ -81,7 +81,7 @@ func (d *IntrusionRuleDataSource) Schema(ctx context.Context, req datasource.Sch
 				Computed:            true,
 			},
 			"rule_groups": schema.ListNestedAttribute{
-				MarkdownDescription: "List of Intrusion Rule Groups this rule belongs to.",
+				MarkdownDescription: "List of Intrusion Rule Groups this Intrusion Rule belongs to.",
 				Computed:            true,
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{

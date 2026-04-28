@@ -30,7 +30,7 @@ data "fmc_intrusion_rule" "example" {
 ### Read-Only
 
 - `rule_data` (String) Snort formatted rule data.
-- `rule_groups` (Attributes List) List of Intrusion Rule Groups this rule belongs to. (see [below for nested schema](#nestedatt--rule_groups))
+- `rule_groups` (Attributes List) List of Intrusion Rule Groups this Intrusion Rule belongs to. (see [below for nested schema](#nestedatt--rule_groups))
 - `type` (String) Type of the object; this value is always 'IntrusionRule'.
 
 <a id="nestedatt--rule_groups"></a>
