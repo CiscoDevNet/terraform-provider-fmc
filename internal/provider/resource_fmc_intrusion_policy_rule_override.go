@@ -63,7 +63,7 @@ func (r *IntrusionPolicyRuleOverrideResource) Metadata(ctx context.Context, req 
 func (r *IntrusionPolicyRuleOverrideResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Intrusion Policy Rule Override.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages an Intrusion Policy Rule Override.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -170,6 +170,11 @@ func (r *IntrusionPolicyRuleOverrideResource) Create(ctx context.Context, req re
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *IntrusionPolicyRuleOverrideResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionIntrusionPolicyRuleOverride) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Intrusion Policy Rule Override, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var state IntrusionPolicyRuleOverride
 
 	// Read state

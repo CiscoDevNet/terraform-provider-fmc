@@ -4,11 +4,16 @@ page_title: "fmc_intrusion_policy_rule_override Data Source - terraform-provider
 subcategory: "Policies"
 description: |-
   This data source reads the Intrusion Policy Rule Override.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_intrusion_policy_rule_override (Data Source)
 
 This data source reads the Intrusion Policy Rule Override.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

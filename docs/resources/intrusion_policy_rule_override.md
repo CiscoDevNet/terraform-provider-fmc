@@ -4,11 +4,16 @@ page_title: "fmc_intrusion_policy_rule_override Resource - terraform-provider-fm
 subcategory: "Policies"
 description: |-
   This resource manages an Intrusion Policy Rule Override.
+  The following restrictions apply:
+  Minimum FMC version: 7.7
 ---
 
 # fmc_intrusion_policy_rule_override (Resource)
 
 This resource manages an Intrusion Policy Rule Override.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 
