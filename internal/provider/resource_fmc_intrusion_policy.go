@@ -97,7 +97,7 @@ func (r *IntrusionPolicyResource) Schema(ctx context.Context, req resource.Schem
 				},
 			},
 			"base_policy_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the base policy.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the Base Intrusion Policy.").String,
 				Required:            true,
 			},
 			"inspection_mode": schema.StringAttribute{

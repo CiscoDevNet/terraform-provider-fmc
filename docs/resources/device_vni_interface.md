@@ -40,6 +40,7 @@ resource "fmc_device_vni_interface" "example" {
 
 ### Optional
 
+- `active_mac_address` (String) MAC address for active interface in format 0123.4567.89ab.
 - `description` (String) Description of the object.
 - `domain` (String) Name of the FMC domain
 - `enabled` (Boolean) Enable the interface.
@@ -65,9 +66,12 @@ resource "fmc_device_vni_interface" "example" {
   - Range: `0`-`65535`
 - `proxy` (Boolean) Enable proxy.
   - Default value: `false`
+- `proxy_type` (String) Proxy type. Can only be used when `proxy` is true.
+  - Choices: `SINGLE_ARM`, `DUAL_ARM`, `PAIRED`
 - `security_zone_id` (String) Id of the assigned Security Zone. Can only be used when `logical_name` is set.
-- `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `enable_proxy` must be true.
+- `segment_id` (Number) VNI tag value used in packets over the wire. If null, the `proxy` must be true.
   - Range: `1`-`16777215`
+- `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
 
 ### Read-Only
 

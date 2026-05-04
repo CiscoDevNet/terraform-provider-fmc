@@ -119,6 +119,7 @@ attributes:
     type: String
     string_max_length: 8
     sensitive: true
+    write_only: true
     description: Password for authentication.
     exclude_example: true
     exclude_test: true
@@ -127,6 +128,7 @@ attributes:
     tf_name: authentication_area_password
     type: String
     sensitive: true
+    write_only: true
     string_max_length: 8
     description: Password for area authentication.
     exclude_example: true
@@ -149,6 +151,7 @@ attributes:
         tf_name: key
         type: String
         sensitive: true
+        write_only: true
         description: MD5 authentication key.
         mandatory: true
   - model_name: md5AuthList
@@ -169,6 +172,7 @@ attributes:
         tf_name: key
         type: String
         sensitive: true
+        write_only: true
         description: MD5 authentication key.
         mandatory: true
   - model_name: id

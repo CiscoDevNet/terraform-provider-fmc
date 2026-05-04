@@ -122,6 +122,7 @@ func (r *KeyChainsResource) Schema(ctx context.Context, req resource.SchemaReque
 									"key": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Crypto key string.").String,
 										Required:            true,
+										Sensitive:           true,
 									},
 									"accept_lifetime_start": schema.StringAttribute{
 										MarkdownDescription: helpers.NewAttributeDescription("Start time for key acceptance lifetime in YYYY-MM-DDTHH:mm:ss format.").String,

@@ -78,7 +78,7 @@ Required:
 
 - `id` (Number) Key ID.
   - Range: `0`-`255`
-- `key` (String) Crypto key string.
+- `key` (String, Sensitive) Crypto key string.
 
 Optional:
 

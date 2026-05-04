@@ -1,3 +1,16 @@
+## Unreleased
+
+- (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
+- (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
+
+## 2.3.0
+
+- (Enhancement) `fmc_device_vni_interface`: Add `proxy_type` attribute
+- (Enhancement) Add support for `fmc_identity_policy` resource and data source
+- (Enhancement) Add support for `fmc_realms`, `fmc_realm_users` and `fmc_realm_user_groups` data sources
+- (Enhancement) `fmc_access_control_policy`, `fmc_access_rule`, `fmc_access_rules`: Add support for Identity Based Access Rules
+- (Fix) `fmc_key_chain`: `key` attribute is now sensitive
+
 ## 2.2.0
 
 - (Enhancement) Access Rule and Category: Add possibility to create at specific location
