@@ -1206,7 +1206,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("users.objects"); value.Exists() {
-				data.UserObjects = make([]AccessRulesItemsUserObjects, 0)
+				data.UserObjects = make([]AccessRulesItemsUserObjects, 0, len(value.Array()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsUserObjects{}
@@ -2617,16 +2617,16 @@ func (data *AccessRules) fromBodyPartial(ctx context.Context, res gjson.Result) 
 			}
 			(*parent).ApplicationFilters[i] = data
 		}
+		userObjectsArray := res.Get("users.objects")
 		for i := 0; i < len(data.UserObjects); i++ {
 			keys := [...]string{"id", "realm.id"}
 			keyValues := [...]string{data.UserObjects[i].Id.ValueString(), data.UserObjects[i].RealmId.ValueString()}
 
 			parent := &data
 			data := (*parent).UserObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("users.objects").ForEach(
+			userObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

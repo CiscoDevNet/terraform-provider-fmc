@@ -336,6 +336,7 @@ func (data *DeviceOSPFInterface) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.Bfd = types.BoolNull()
 	}
+	authenticationAreaMd5sArray := res.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList")
 	for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 		keys := [...]string{"md5KeyId"}
 		keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}

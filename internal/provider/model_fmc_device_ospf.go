@@ -1264,6 +1264,7 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else if data.DeadInterval.ValueInt64() != 40 {
 				data.DeadInterval = types.Int64Null()
 			}
+			authenticationAreaMd5sArray := res.Get("authentication.areaAuth.md5AuthList")
 			for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 				keys := [...]string{"md5KeyId"}
 				keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}
