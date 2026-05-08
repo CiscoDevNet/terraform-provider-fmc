@@ -65,7 +65,7 @@ Required:
   - Range: `120`-`2147483647`
 - `prf_algorithms` (Set of String) IKEv2 Pseudo-Random Function (PRF) algorithms.
   - Choices: `SHA`, `SHA-256`, `SHA-384`, `SHA-512`, `MD5`
-- `priority` (Number) Priority of the IKEv1 Policy.
+- `priority` (Number) Priority of the IKEv2 Policy.
   - Range: `1`-`65535`
 
 Optional:

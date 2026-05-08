@@ -86,7 +86,7 @@ func (d *IKEv2PoliciesDataSource) Schema(ctx context.Context, req datasource.Sch
 							Computed:            true,
 						},
 						"priority": schema.Int64Attribute{
-							MarkdownDescription: "Priority of the IKEv1 Policy.",
+							MarkdownDescription: "Priority of the IKEv2 Policy.",
 							Computed:            true,
 						},
 						"lifetime": schema.Int64Attribute{
