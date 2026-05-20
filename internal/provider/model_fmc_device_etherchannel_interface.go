@@ -491,7 +491,7 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.EtherChannelId = types.StringNull()
 	}
 	if value := res.Get("selectedInterfaces"); value.Exists() {
-		data.SelectedInterfaces = make([]DeviceEtherChannelInterfaceSelectedInterfaces, 0, len(value.Array()))
+		data.SelectedInterfaces = make([]DeviceEtherChannelInterfaceSelectedInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceEtherChannelInterfaceSelectedInterfaces{}
@@ -600,7 +600,7 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceEtherChannelInterfaceIpv6Addresses, 0, len(value.Array()))
+		data.Ipv6Addresses = make([]DeviceEtherChannelInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceEtherChannelInterfaceIpv6Addresses{}
@@ -629,7 +629,7 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DeviceEtherChannelInterfaceIpv6Prefixes, 0, len(value.Array()))
+		data.Ipv6Prefixes = make([]DeviceEtherChannelInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceEtherChannelInterfaceIpv6Prefixes{}
@@ -778,7 +778,7 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.ManagementAccess = types.BoolNull()
 	}
 	if value := res.Get("fmcAccessConfig.allowedNetworks"); value.Exists() {
-		data.ManagementAccessNetworkObjects = make([]DeviceEtherChannelInterfaceManagementAccessNetworkObjects, 0, len(value.Array()))
+		data.ManagementAccessNetworkObjects = make([]DeviceEtherChannelInterfaceManagementAccessNetworkObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceEtherChannelInterfaceManagementAccessNetworkObjects{}
@@ -807,7 +807,7 @@ func (data *DeviceEtherChannelInterface) fromBody(ctx context.Context, res gjson
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DeviceEtherChannelInterfaceArpTableEntries, 0, len(value.Array()))
+		data.ArpTableEntries = make([]DeviceEtherChannelInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceEtherChannelInterfaceArpTableEntries{}

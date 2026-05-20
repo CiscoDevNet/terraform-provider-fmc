@@ -296,7 +296,7 @@ func (data *DeviceVNIInterface) fromBody(ctx context.Context, res gjson.Result) 
 		data.Ipv6Ra = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceVNIInterfaceIpv6Addresses, 0, len(value.Array()))
+		data.Ipv6Addresses = make([]DeviceVNIInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceVNIInterfaceIpv6Addresses{}

@@ -113,7 +113,7 @@ func (data *RangeOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		data.ParentId = types.StringNull()
 	}
 	if value := res.Get("dummy_overrides"); value.Exists() {
-		data.Overrides = make([]RangeOverridesOverrides, 0, len(value.Array()))
+		data.Overrides = make([]RangeOverridesOverrides, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RangeOverridesOverrides{}

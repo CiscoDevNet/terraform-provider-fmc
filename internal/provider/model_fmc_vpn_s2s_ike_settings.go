@@ -165,7 +165,7 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev1CertificateId = types.StringNull()
 	}
 	if value := res.Get("ikeV1Settings.policies"); value.Exists() {
-		data.Ikev1Policies = make([]VPNS2SIKESettingsIkev1Policies, 0, len(value.Array()))
+		data.Ikev1Policies = make([]VPNS2SIKESettingsIkev1Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIKESettingsIkev1Policies{}
@@ -204,7 +204,7 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev2CertificateId = types.StringNull()
 	}
 	if value := res.Get("ikeV2Settings.policies"); value.Exists() {
-		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0, len(value.Array()))
+		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIKESettingsIkev2Policies{}

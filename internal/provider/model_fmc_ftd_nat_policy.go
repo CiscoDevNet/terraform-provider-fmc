@@ -339,7 +339,7 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.ManageRules = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_manual_nat_rules"); value.Exists() {
-		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0, len(value.Array()))
+		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDNATPolicyManualNatRules{}
@@ -503,7 +503,7 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("dummy_auto_nat_rules"); value.Exists() {
-		data.AutoNatRules = make([]FTDNATPolicyAutoNatRules, 0, len(value.Array()))
+		data.AutoNatRules = make([]FTDNATPolicyAutoNatRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDNATPolicyAutoNatRules{}

@@ -153,7 +153,7 @@ func (data *VPNRAIPSecCryptoMap) fromBody(ctx context.Context, res gjson.Result)
 		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("ikev2IpsecProposals"); value.Exists() {
-		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0, len(value.Array()))
+		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAIPSecCryptoMapIkev2IpsecProposals{}

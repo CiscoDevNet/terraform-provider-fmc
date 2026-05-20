@@ -303,7 +303,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result) {
 {{- define "fromBodyTemplate"}}
 	{{- range .Attributes}}
-	{{- if .TfOnly}}{{- continue}}{{- end}}
+	{{- if .TfOnly}}
+	{{- if .DefaultValue}}
+	data.{{toGoName .TfName}} = types.{{.Type}}Value({{.DefaultValue}})
+	{{- end}}
+	{{- continue}}
+	{{- end}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
@@ -323,7 +328,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	}
 	{{- else if isNestedListSet .}}
 	if value := res{{if .ModelName}}.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}; value.Exists() {
-		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0, len(value.Array()))
+		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := {{.GoTypeName}}{}

@@ -187,7 +187,7 @@ func (data *TimeRanges) fromBody(ctx context.Context, res gjson.Result) {
 			data.EndTime = types.StringNull()
 		}
 		if value := res.Get("recurrenceList"); value.Exists() {
-			data.RecurrenceList = make([]TimeRangesItemsRecurrenceList, 0, len(value.Array()))
+			data.RecurrenceList = make([]TimeRangesItemsRecurrenceList, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := TimeRangesItemsRecurrenceList{}

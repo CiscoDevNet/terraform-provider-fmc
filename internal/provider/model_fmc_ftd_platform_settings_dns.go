@@ -135,7 +135,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("dnsServerGroups"); value.Exists() {
-		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0, len(value.Array()))
+		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSDnsServerGroups{}
@@ -169,7 +169,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.PollTimer = types.Int64Null()
 	}
 	if value := res.Get("interfaceObjects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0, len(value.Array()))
+		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSInterfaceObjects{}

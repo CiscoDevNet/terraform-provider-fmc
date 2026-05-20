@@ -541,7 +541,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0, len(value.Array()))
+		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceIpv6Addresses{}
@@ -570,7 +570,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DevicePhysicalInterfaceIpv6Prefixes, 0, len(value.Array()))
+		data.Ipv6Prefixes = make([]DevicePhysicalInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceIpv6Prefixes{}
@@ -719,7 +719,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.ManagementAccess = types.BoolNull()
 	}
 	if value := res.Get("fmcAccessConfig.allowedNetworks"); value.Exists() {
-		data.ManagementAccessNetworkObjects = make([]DevicePhysicalInterfaceManagementAccessNetworkObjects, 0, len(value.Array()))
+		data.ManagementAccessNetworkObjects = make([]DevicePhysicalInterfaceManagementAccessNetworkObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceManagementAccessNetworkObjects{}
@@ -748,7 +748,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DevicePhysicalInterfaceArpTableEntries, 0, len(value.Array()))
+		data.ArpTableEntries = make([]DevicePhysicalInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceArpTableEntries{}

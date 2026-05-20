@@ -199,7 +199,7 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBody(ctx context.Context,
 		data.FtpServerPath = types.StringNull()
 	}
 	if value := res.Get("ftpServerInfo.interfaceGroups"); value.Exists() {
-		data.FtpServerInterfaceGroups = make([]FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups, 0, len(value.Array()))
+		data.FtpServerInterfaceGroups = make([]FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups{}

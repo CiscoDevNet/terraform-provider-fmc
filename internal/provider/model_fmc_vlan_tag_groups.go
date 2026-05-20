@@ -165,7 +165,7 @@ func (data *VLANTagGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.Overridable = types.BoolNull()
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.VlanTags = make([]VLANTagGroupsItemsVlanTags, 0, len(value.Array()))
+			data.VlanTags = make([]VLANTagGroupsItemsVlanTags, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VLANTagGroupsItemsVlanTags{}
@@ -179,7 +179,7 @@ func (data *VLANTagGroups) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("literals"); value.Exists() {
-			data.Literals = make([]VLANTagGroupsItemsLiterals, 0, len(value.Array()))
+			data.Literals = make([]VLANTagGroupsItemsLiterals, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VLANTagGroupsItemsLiterals{}

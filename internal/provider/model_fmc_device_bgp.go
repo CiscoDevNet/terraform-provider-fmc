@@ -625,7 +625,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4NumberOfEbgpPaths = types.Int64Value(1)
 	}
 	if value := res.Get("addressFamilyIPv4.neighbors"); value.Exists() {
-		data.Ipv4Neighbors = make([]DeviceBGPIpv4Neighbors, 0, len(value.Array()))
+		data.Ipv4Neighbors = make([]DeviceBGPIpv4Neighbors, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Neighbors{}
@@ -675,7 +675,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.Description = types.StringNull()
 			}
 			if value := res.Get("neighborFiltering.neighborDistributeLists"); value.Exists() {
-				data.FilterAccessLists = make([]DeviceBGPIpv4NeighborsFilterAccessLists, 0, len(value.Array()))
+				data.FilterAccessLists = make([]DeviceBGPIpv4NeighborsFilterAccessLists, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterAccessLists{}
@@ -694,7 +694,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborRouteMap"); value.Exists() {
-				data.FilterRouteMaps = make([]DeviceBGPIpv4NeighborsFilterRouteMaps, 0, len(value.Array()))
+				data.FilterRouteMaps = make([]DeviceBGPIpv4NeighborsFilterRouteMaps, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterRouteMaps{}
@@ -713,7 +713,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.ipv4PrefixListFilter"); value.Exists() {
-				data.FilterPrefixLists = make([]DeviceBGPIpv4NeighborsFilterPrefixLists, 0, len(value.Array()))
+				data.FilterPrefixLists = make([]DeviceBGPIpv4NeighborsFilterPrefixLists, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterPrefixLists{}
@@ -732,7 +732,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborFilterList"); value.Exists() {
-				data.FilterAsPaths = make([]DeviceBGPIpv4NeighborsFilterAsPaths, 0, len(value.Array()))
+				data.FilterAsPaths = make([]DeviceBGPIpv4NeighborsFilterAsPaths, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterAsPaths{}
@@ -791,7 +791,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.RoutesGenerateDefaultRouteMapId = types.StringNull()
 			}
 			if value := res.Get("neighborRoutes.neighborAdvertiseMaps"); value.Exists() {
-				data.RoutesAdvertiseMaps = make([]DeviceBGPIpv4NeighborsRoutesAdvertiseMaps, 0, len(value.Array()))
+				data.RoutesAdvertiseMaps = make([]DeviceBGPIpv4NeighborsRoutesAdvertiseMaps, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsRoutesAdvertiseMaps{}
@@ -899,7 +899,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.aggregateAddressesIPv4s"); value.Exists() {
-		data.Ipv4AggregateAddresses = make([]DeviceBGPIpv4AggregateAddresses, 0, len(value.Array()))
+		data.Ipv4AggregateAddresses = make([]DeviceBGPIpv4AggregateAddresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4AggregateAddresses{}
@@ -938,7 +938,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.distributeLists"); value.Exists() {
-		data.Ipv4Filterings = make([]DeviceBGPIpv4Filterings, 0, len(value.Array()))
+		data.Ipv4Filterings = make([]DeviceBGPIpv4Filterings, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Filterings{}
@@ -967,7 +967,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.networks"); value.Exists() {
-		data.Ipv4Networks = make([]DeviceBGPIpv4Networks, 0, len(value.Array()))
+		data.Ipv4Networks = make([]DeviceBGPIpv4Networks, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Networks{}
@@ -986,7 +986,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.redistributeProtocols"); value.Exists() {
-		data.Ipv4Redistributions = make([]DeviceBGPIpv4Redistributions, 0, len(value.Array()))
+		data.Ipv4Redistributions = make([]DeviceBGPIpv4Redistributions, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Redistributions{}
@@ -1040,7 +1040,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.injectMaps"); value.Exists() {
-		data.Ipv4RouteInjections = make([]DeviceBGPIpv4RouteInjections, 0, len(value.Array()))
+		data.Ipv4RouteInjections = make([]DeviceBGPIpv4RouteInjections, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4RouteInjections{}

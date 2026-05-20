@@ -109,7 +109,7 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBody(ctx context.Context, r
 		data.SourceEmailAddress = types.StringNull()
 	}
 	if value := res.Get("destinationEmails"); value.Exists() {
-		data.Destinations = make([]FTDPlatformSettingsSyslogEmailSetupDestinations, 0, len(value.Array()))
+		data.Destinations = make([]FTDPlatformSettingsSyslogEmailSetupDestinations, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogEmailSetupDestinations{}

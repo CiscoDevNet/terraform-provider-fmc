@@ -180,7 +180,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("applications"); value.Exists() {
-		data.Applications = make([]ApplicationFilterApplications, 0, len(value.Array()))
+		data.Applications = make([]ApplicationFilterApplications, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ApplicationFilterApplications{}
@@ -194,12 +194,12 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("appConditions"); value.Exists() {
-		data.Filters = make([]ApplicationFilterFilters, 0, len(value.Array()))
+		data.Filters = make([]ApplicationFilterFilters, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ApplicationFilterFilters{}
 			if value := res.Get("applicationTypes"); value.Exists() {
-				data.Types = make([]ApplicationFilterFiltersTypes, 0, len(value.Array()))
+				data.Types = make([]ApplicationFilterFiltersTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersTypes{}
@@ -213,7 +213,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("risks"); value.Exists() {
-				data.Risks = make([]ApplicationFilterFiltersRisks, 0, len(value.Array()))
+				data.Risks = make([]ApplicationFilterFiltersRisks, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersRisks{}
@@ -227,7 +227,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("productivities"); value.Exists() {
-				data.BusinessRelevances = make([]ApplicationFilterFiltersBusinessRelevances, 0, len(value.Array()))
+				data.BusinessRelevances = make([]ApplicationFilterFiltersBusinessRelevances, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersBusinessRelevances{}
@@ -241,7 +241,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("categories"); value.Exists() {
-				data.Categories = make([]ApplicationFilterFiltersCategories, 0, len(value.Array()))
+				data.Categories = make([]ApplicationFilterFiltersCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersCategories{}
@@ -255,7 +255,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("tags"); value.Exists() {
-				data.Tags = make([]ApplicationFilterFiltersTags, 0, len(value.Array()))
+				data.Tags = make([]ApplicationFilterFiltersTags, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersTags{}

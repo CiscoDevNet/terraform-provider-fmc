@@ -124,7 +124,7 @@ func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.NveEnabled = types.BoolValue(true)
 	}
 	if value := res.Get("vtepEntries"); value.Exists() {
-		data.Vteps = make([]DeviceVTEPPolicyVteps, 0, len(value.Array()))
+		data.Vteps = make([]DeviceVTEPPolicyVteps, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceVTEPPolicyVteps{}

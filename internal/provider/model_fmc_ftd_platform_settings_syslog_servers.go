@@ -161,7 +161,7 @@ func (data *FTDPlatformSettingsSyslogServers) fromBody(ctx context.Context, res 
 		data.MessageQueueSize = types.Int64Value(512)
 	}
 	if value := res.Get("servers"); value.Exists() {
-		data.Servers = make([]FTDPlatformSettingsSyslogServersServers, 0, len(value.Array()))
+		data.Servers = make([]FTDPlatformSettingsSyslogServersServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogServersServers{}
@@ -201,7 +201,7 @@ func (data *FTDPlatformSettingsSyslogServers) fromBody(ctx context.Context, res 
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsSyslogServersServersInterfaceObjects, 0, len(value.Array()))
+				data.InterfaceObjects = make([]FTDPlatformSettingsSyslogServersServersInterfaceObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FTDPlatformSettingsSyslogServersServersInterfaceObjects{}

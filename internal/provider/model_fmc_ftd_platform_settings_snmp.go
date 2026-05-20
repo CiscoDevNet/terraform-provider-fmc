@@ -306,7 +306,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.ServerPort = types.Int64Value(161)
 	}
 	if value := res.Get("snmpMgmtHosts"); value.Exists() {
-		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0, len(value.Array()))
+		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSNMPManagementHosts{}
@@ -351,7 +351,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPManagementHostsInterfaceObjects, 0, len(value.Array()))
+				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPManagementHostsInterfaceObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FTDPlatformSettingsSNMPManagementHostsInterfaceObjects{}
@@ -379,7 +379,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		})
 	}
 	if value := res.Get("snmpv3Users"); value.Exists() {
-		data.Snmpv3Users = make([]FTDPlatformSettingsSNMPSnmpv3Users, 0, len(value.Array()))
+		data.Snmpv3Users = make([]FTDPlatformSettingsSNMPSnmpv3Users, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSNMPSnmpv3Users{}

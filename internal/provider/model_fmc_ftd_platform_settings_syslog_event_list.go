@@ -113,7 +113,7 @@ func (data *FTDPlatformSettingsSyslogEventList) fromBody(ctx context.Context, re
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("eventClasses"); value.Exists() {
-		data.EventClasses = make([]FTDPlatformSettingsSyslogEventListEventClasses, 0, len(value.Array()))
+		data.EventClasses = make([]FTDPlatformSettingsSyslogEventListEventClasses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogEventListEventClasses{}

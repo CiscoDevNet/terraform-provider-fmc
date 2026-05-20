@@ -143,7 +143,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]StandardAccessListEntries, 0, len(value.Array()))
+		data.Entries = make([]StandardAccessListEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := StandardAccessListEntries{}
@@ -153,7 +153,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("networks.objects"); value.Exists() {
-				data.Objects = make([]StandardAccessListEntriesObjects, 0, len(value.Array()))
+				data.Objects = make([]StandardAccessListEntriesObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := StandardAccessListEntriesObjects{}
@@ -172,7 +172,7 @@ func (data *StandardAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("networks.literals"); value.Exists() {
-				data.Literals = make([]StandardAccessListEntriesLiterals, 0, len(value.Array()))
+				data.Literals = make([]StandardAccessListEntriesLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := StandardAccessListEntriesLiterals{}

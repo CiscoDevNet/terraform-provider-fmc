@@ -167,7 +167,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("languageTranslations"); value.Exists() {
-		data.GuiAndTextMessages = make([]VPNRASecureClientCustomizationGuiAndTextMessages, 0, len(value.Array()))
+		data.GuiAndTextMessages = make([]VPNRASecureClientCustomizationGuiAndTextMessages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationGuiAndTextMessages{}
@@ -181,7 +181,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("imagesAndIcons"); value.Exists() {
-		data.IconsAndImages = make([]VPNRASecureClientCustomizationIconsAndImages, 0, len(value.Array()))
+		data.IconsAndImages = make([]VPNRASecureClientCustomizationIconsAndImages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationIconsAndImages{}
@@ -195,7 +195,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("scripts"); value.Exists() {
-		data.Scripts = make([]VPNRASecureClientCustomizationScripts, 0, len(value.Array()))
+		data.Scripts = make([]VPNRASecureClientCustomizationScripts, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationScripts{}
@@ -209,7 +209,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("binaries"); value.Exists() {
-		data.Binaries = make([]VPNRASecureClientCustomizationBinaries, 0, len(value.Array()))
+		data.Binaries = make([]VPNRASecureClientCustomizationBinaries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationBinaries{}
@@ -223,7 +223,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("customizedInstallerTransforms"); value.Exists() {
-		data.CustomInstallerTransforms = make([]VPNRASecureClientCustomizationCustomInstallerTransforms, 0, len(value.Array()))
+		data.CustomInstallerTransforms = make([]VPNRASecureClientCustomizationCustomInstallerTransforms, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationCustomInstallerTransforms{}
@@ -237,7 +237,7 @@ func (data *VPNRASecureClientCustomization) fromBody(ctx context.Context, res gj
 		})
 	}
 	if value := res.Get("localizedInstallerTransforms"); value.Exists() {
-		data.LocalizedInstallerTransforms = make([]VPNRASecureClientCustomizationLocalizedInstallerTransforms, 0, len(value.Array()))
+		data.LocalizedInstallerTransforms = make([]VPNRASecureClientCustomizationLocalizedInstallerTransforms, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientCustomizationLocalizedInstallerTransforms{}

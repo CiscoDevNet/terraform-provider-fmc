@@ -124,7 +124,7 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBody(ctx context.Co
 		data.GlobalEventClassFilterValue = types.StringNull()
 	}
 	if value := res.Get("specificEventConfig"); value.Exists() {
-		data.EventClassFilters = make([]FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters, 0, len(value.Array()))
+		data.EventClassFilters = make([]FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters{}

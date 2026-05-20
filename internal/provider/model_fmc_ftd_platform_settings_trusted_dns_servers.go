@@ -150,7 +150,7 @@ func (data *FTDPlatformSettingsTrustedDNSServers) fromBody(ctx context.Context, 
 		data.TrustedDnsServersLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("dnsServers.objects"); value.Exists() {
-		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0, len(value.Array()))
+		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects{}

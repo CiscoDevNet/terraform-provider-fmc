@@ -139,7 +139,7 @@ func (data *KeyChain) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("keys"); value.Exists() {
-		data.Keys = make([]KeyChainKeys, 0, len(value.Array()))
+		data.Keys = make([]KeyChainKeys, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := KeyChainKeys{}

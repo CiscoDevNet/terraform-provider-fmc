@@ -120,7 +120,7 @@ func (data *PortGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.Objects = make([]PortGroupObjects, 0, len(value.Array()))
+		data.Objects = make([]PortGroupObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PortGroupObjects{}

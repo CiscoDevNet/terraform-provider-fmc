@@ -246,7 +246,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.DynamicAccessPolicyId = types.StringNull()
 	}
 	if value := res.Get("accessInterfaceSettings.interfaceSettings"); value.Exists() {
-		data.AccessInterfaces = make([]VPNRAAccessInterfaces, 0, len(value.Array()))
+		data.AccessInterfaces = make([]VPNRAAccessInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAAccessInterfaces{}
@@ -315,7 +315,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolValue(false)
 	}
 	if value := res.Get("anyConnectClientImages"); value.Exists() {
-		data.SecureClientImages = make([]VPNRASecureClientImages, 0, len(value.Array()))
+		data.SecureClientImages = make([]VPNRASecureClientImages, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRASecureClientImages{}
@@ -354,7 +354,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.CertificateMapId = types.StringNull()
 	}
 	if value := res.Get("groupPolicies"); value.Exists() {
-		data.GroupPolicies = make([]VPNRAGroupPolicies, 0, len(value.Array()))
+		data.GroupPolicies = make([]VPNRAGroupPolicies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAGroupPolicies{}
@@ -378,7 +378,7 @@ func (data *VPNRA) fromBody(ctx context.Context, res gjson.Result) {
 		data.LoadBalancingId = types.StringNull()
 	}
 	if value := res.Get("ikev2Policies"); value.Exists() {
-		data.Ikev2Policies = make([]VPNRAIkev2Policies, 0, len(value.Array()))
+		data.Ikev2Policies = make([]VPNRAIkev2Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAIkev2Policies{}

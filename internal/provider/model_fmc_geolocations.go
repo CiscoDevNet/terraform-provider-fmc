@@ -145,7 +145,7 @@ func (data *Geolocations) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("continents"); value.Exists() {
-			data.Continents = make([]GeolocationsItemsContinents, 0, len(value.Array()))
+			data.Continents = make([]GeolocationsItemsContinents, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := GeolocationsItemsContinents{}
@@ -159,7 +159,7 @@ func (data *Geolocations) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("countries"); value.Exists() {
-			data.Countries = make([]GeolocationsItemsCountries, 0, len(value.Array()))
+			data.Countries = make([]GeolocationsItemsCountries, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := GeolocationsItemsCountries{}

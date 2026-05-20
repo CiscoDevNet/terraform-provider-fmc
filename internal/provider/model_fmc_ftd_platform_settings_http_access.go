@@ -141,7 +141,7 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBody(ctx context.Context, res gjs
 		data.ServerPort = types.Int64Value(443)
 	}
 	if value := res.Get("httpConfiguration"); value.Exists() {
-		data.Configurations = make([]FTDPlatformSettingsHTTPAccessConfigurations, 0, len(value.Array()))
+		data.Configurations = make([]FTDPlatformSettingsHTTPAccessConfigurations, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsHTTPAccessConfigurations{}
@@ -156,7 +156,7 @@ func (data *FTDPlatformSettingsHTTPAccess) fromBody(ctx context.Context, res gjs
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects, 0, len(value.Array()))
+				data.InterfaceObjects = make([]FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FTDPlatformSettingsHTTPAccessConfigurationsInterfaceObjects{}

@@ -144,7 +144,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 		data.ParentId = types.StringNull()
 	}
 	if value := res.Get("dummy_overrides"); value.Exists() {
-		data.Overrides = make([]NetworkGroupOverridesOverrides, 0, len(value.Array()))
+		data.Overrides = make([]NetworkGroupOverridesOverrides, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupOverridesOverrides{}
@@ -164,7 +164,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 				data.Description = types.StringNull()
 			}
 			if value := res.Get("objects"); value.Exists() {
-				data.Objects = make([]NetworkGroupOverridesOverridesObjects, 0, len(value.Array()))
+				data.Objects = make([]NetworkGroupOverridesOverridesObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := NetworkGroupOverridesOverridesObjects{}
@@ -183,7 +183,7 @@ func (data *NetworkGroupOverrides) fromBody(ctx context.Context, res gjson.Resul
 				})
 			}
 			if value := res.Get("literals"); value.Exists() {
-				data.Literals = make([]NetworkGroupOverridesOverridesLiterals, 0, len(value.Array()))
+				data.Literals = make([]NetworkGroupOverridesOverridesLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := NetworkGroupOverridesOverridesLiterals{}

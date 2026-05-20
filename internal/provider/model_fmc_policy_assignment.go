@@ -125,7 +125,7 @@ func (data *PolicyAssignment) fromBody(ctx context.Context, res gjson.Result) {
 		data.PolicyType = types.StringNull()
 	}
 	if value := res.Get("targets"); value.Exists() {
-		data.Targets = make([]PolicyAssignmentTargets, 0, len(value.Array()))
+		data.Targets = make([]PolicyAssignmentTargets, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyAssignmentTargets{}

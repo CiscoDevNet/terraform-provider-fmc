@@ -160,7 +160,7 @@ func (data *DeviceLoopbackInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceLoopbackInterfaceIpv6Addresses, 0, len(value.Array()))
+		data.Ipv6Addresses = make([]DeviceLoopbackInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceLoopbackInterfaceIpv6Addresses{}

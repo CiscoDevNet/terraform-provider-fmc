@@ -276,7 +276,7 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.SendVirtualTunnelInterfaceIpToPeer = types.BoolNull()
 		}
 		if value := res.Get("protectedNetworks.networks"); value.Exists() {
-			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0, len(value.Array()))
+			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNS2SEndpointsItemsProtectedNetworks{}

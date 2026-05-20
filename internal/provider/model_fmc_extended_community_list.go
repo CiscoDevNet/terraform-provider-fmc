@@ -114,7 +114,7 @@ func (data *ExtendedCommunityList) fromBody(ctx context.Context, res gjson.Resul
 		data.SubType = types.StringNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]ExtendedCommunityListEntries, 0, len(value.Array()))
+		data.Entries = make([]ExtendedCommunityListEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ExtendedCommunityListEntries{}

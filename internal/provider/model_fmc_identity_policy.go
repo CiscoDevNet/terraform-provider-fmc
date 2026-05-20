@@ -517,7 +517,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.ActiveAuthenticationPageHtml = types.StringValue("<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n<title>Login</title>\n<style type=\"text/css\">\nbody {\n    margin:0;\n    font-family:verdana,sans-serif;\n}\nh1 {\n    margin:0;\n    padding:12px 25px;\n    background-color:#343434;\n    color:#ddd;\n}\np {\n    margin:12px 25px;\n}\nstrong {\n    color:#E0042D;\n}\ndiv {\n    padding-left:23px;\n    font-weight: normal;\n    font-size: 8pt;\n}\ninput {\n    margin:12px 25px;\n}\n</style>\n</head>\n<body>\n    <form action=\"\" id=\"loginForm\" method=\"post\" name=\"loginForm\">\n        <h1>Login</h1>\n        <p><strong>Please enter your username and password or log in as a guest.</strong></p>\n        <div class=\"label\">Username\n            <input id=\"name\" maxlength=\"100\" name=\"login\" type=\"text\" value=\"\"/>\n            <b>realm</b>\n            <select name=\"realm\" id=\"realm\"></select>\n        </div>\n        <div class=\"label\" id=\"label-password\">Password\n            <input id=\"pass\" name=\"pass\" type=\"password\" value=\"\"/>\n        </div>\n        <input id=\"submit-btn\" type=\"submit\" name=\"login_action\" value=\"Submit\"/>\n        <p><font size=2 >-or-</font></p>\n        <input id=\"login-btn\" type=\"submit\" name=\"guest_action\" value=\"Login as guest\"/>\n    </form>\n</body>\n</html>\n")
 	}
 	if value := res.Get("dummy_categories"); value.Exists() {
-		data.Categories = make([]IdentityPolicyCategories, 0, len(value.Array()))
+		data.Categories = make([]IdentityPolicyCategories, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := IdentityPolicyCategories{}
@@ -536,7 +536,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("dummy_rules"); value.Exists() {
-		data.Rules = make([]IdentityPolicyRules, 0, len(value.Array()))
+		data.Rules = make([]IdentityPolicyRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := IdentityPolicyRules{}
@@ -586,7 +586,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.AuthenticationProtocol = types.StringNull()
 			}
 			if value := res.Get("excludedUserAgent"); value.Exists() {
-				data.ExcludedUserAgents = make([]IdentityPolicyRulesExcludedUserAgents, 0, len(value.Array()))
+				data.ExcludedUserAgents = make([]IdentityPolicyRulesExcludedUserAgents, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesExcludedUserAgents{}
@@ -605,7 +605,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceZones"); value.Exists() {
-				data.SourceZones = make([]IdentityPolicyRulesSourceZones, 0, len(value.Array()))
+				data.SourceZones = make([]IdentityPolicyRulesSourceZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesSourceZones{}
@@ -624,7 +624,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationZones"); value.Exists() {
-				data.DestinationZones = make([]IdentityPolicyRulesDestinationZones, 0, len(value.Array()))
+				data.DestinationZones = make([]IdentityPolicyRulesDestinationZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesDestinationZones{}
@@ -643,7 +643,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
-				data.SourceNetworkLiterals = make([]IdentityPolicyRulesSourceNetworkLiterals, 0, len(value.Array()))
+				data.SourceNetworkLiterals = make([]IdentityPolicyRulesSourceNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesSourceNetworkLiterals{}
@@ -662,7 +662,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
-				data.SourceNetworkObjects = make([]IdentityPolicyRulesSourceNetworkObjects, 0, len(value.Array()))
+				data.SourceNetworkObjects = make([]IdentityPolicyRulesSourceNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesSourceNetworkObjects{}
@@ -681,7 +681,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
-				data.DestinationNetworkLiterals = make([]IdentityPolicyRulesDestinationNetworkLiterals, 0, len(value.Array()))
+				data.DestinationNetworkLiterals = make([]IdentityPolicyRulesDestinationNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesDestinationNetworkLiterals{}
@@ -700,7 +700,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
-				data.DestinationNetworkObjects = make([]IdentityPolicyRulesDestinationNetworkObjects, 0, len(value.Array()))
+				data.DestinationNetworkObjects = make([]IdentityPolicyRulesDestinationNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesDestinationNetworkObjects{}
@@ -719,7 +719,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.literals"); value.Exists() {
-				data.VlanTagLiterals = make([]IdentityPolicyRulesVlanTagLiterals, 0, len(value.Array()))
+				data.VlanTagLiterals = make([]IdentityPolicyRulesVlanTagLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesVlanTagLiterals{}
@@ -743,7 +743,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.objects"); value.Exists() {
-				data.VlanTagObjects = make([]IdentityPolicyRulesVlanTagObjects, 0, len(value.Array()))
+				data.VlanTagObjects = make([]IdentityPolicyRulesVlanTagObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesVlanTagObjects{}
@@ -762,7 +762,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.literals"); value.Exists() {
-				data.SourcePortLiterals = make([]IdentityPolicyRulesSourcePortLiterals, 0, len(value.Array()))
+				data.SourcePortLiterals = make([]IdentityPolicyRulesSourcePortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesSourcePortLiterals{}
@@ -786,7 +786,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
-				data.SourcePortObjects = make([]IdentityPolicyRulesSourcePortObjects, 0, len(value.Array()))
+				data.SourcePortObjects = make([]IdentityPolicyRulesSourcePortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesSourcePortObjects{}
@@ -805,7 +805,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.literals"); value.Exists() {
-				data.DestinationPortLiterals = make([]IdentityPolicyRulesDestinationPortLiterals, 0, len(value.Array()))
+				data.DestinationPortLiterals = make([]IdentityPolicyRulesDestinationPortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesDestinationPortLiterals{}
@@ -829,7 +829,7 @@ func (data *IdentityPolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
-				data.DestinationPortObjects = make([]IdentityPolicyRulesDestinationPortObjects, 0, len(value.Array()))
+				data.DestinationPortObjects = make([]IdentityPolicyRulesDestinationPortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := IdentityPolicyRulesDestinationPortObjects{}

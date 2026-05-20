@@ -261,7 +261,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		data.Action = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]PolicyListInterfaces, 0, len(value.Array()))
+		data.Interfaces = make([]PolicyListInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListInterfaces{}
@@ -280,7 +280,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		data.InterfaceNames = types.SetNull(types.StringType)
 	}
 	if value := res.Get("standardAccessListAddresses"); value.Exists() {
-		data.AddressStandardAccessLists = make([]PolicyListAddressStandardAccessLists, 0, len(value.Array()))
+		data.AddressStandardAccessLists = make([]PolicyListAddressStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAddressStandardAccessLists{}
@@ -294,7 +294,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListAddresses"); value.Exists() {
-		data.AddressIpv4PrefixLists = make([]PolicyListAddressIpv4PrefixLists, 0, len(value.Array()))
+		data.AddressIpv4PrefixLists = make([]PolicyListAddressIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAddressIpv4PrefixLists{}
@@ -308,7 +308,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("standardAccessListNextHops"); value.Exists() {
-		data.NextHopStandardAccessLists = make([]PolicyListNextHopStandardAccessLists, 0, len(value.Array()))
+		data.NextHopStandardAccessLists = make([]PolicyListNextHopStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListNextHopStandardAccessLists{}
@@ -322,7 +322,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListNexthops"); value.Exists() {
-		data.NextHopIpv4PrefixLists = make([]PolicyListNextHopIpv4PrefixLists, 0, len(value.Array()))
+		data.NextHopIpv4PrefixLists = make([]PolicyListNextHopIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListNextHopIpv4PrefixLists{}
@@ -336,7 +336,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("standardAccessListRouteSources"); value.Exists() {
-		data.RouteSourceStandardAccessLists = make([]PolicyListRouteSourceStandardAccessLists, 0, len(value.Array()))
+		data.RouteSourceStandardAccessLists = make([]PolicyListRouteSourceStandardAccessLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListRouteSourceStandardAccessLists{}
@@ -350,7 +350,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("ipv4PrefixListRouteSources"); value.Exists() {
-		data.RouteSourceIpv4PrefixLists = make([]PolicyListRouteSourceIpv4PrefixLists, 0, len(value.Array()))
+		data.RouteSourceIpv4PrefixLists = make([]PolicyListRouteSourceIpv4PrefixLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListRouteSourceIpv4PrefixLists{}
@@ -364,7 +364,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("asPathLists"); value.Exists() {
-		data.AsPaths = make([]PolicyListAsPaths, 0, len(value.Array()))
+		data.AsPaths = make([]PolicyListAsPaths, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListAsPaths{}
@@ -378,7 +378,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("communityLists"); value.Exists() {
-		data.CommunityLists = make([]PolicyListCommunityLists, 0, len(value.Array()))
+		data.CommunityLists = make([]PolicyListCommunityLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListCommunityLists{}
@@ -392,7 +392,7 @@ func (data *PolicyList) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("extendedCommunityLists"); value.Exists() {
-		data.ExtendedCommunityLists = make([]PolicyListExtendedCommunityLists, 0, len(value.Array()))
+		data.ExtendedCommunityLists = make([]PolicyListExtendedCommunityLists, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyListExtendedCommunityLists{}

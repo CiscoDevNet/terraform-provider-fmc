@@ -131,7 +131,7 @@ func (data *URLGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.Urls = make([]URLGroupUrls, 0, len(value.Array()))
+		data.Urls = make([]URLGroupUrls, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := URLGroupUrls{}
@@ -145,7 +145,7 @@ func (data *URLGroup) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.Literals = make([]URLGroupLiterals, 0, len(value.Array()))
+		data.Literals = make([]URLGroupLiterals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := URLGroupLiterals{}

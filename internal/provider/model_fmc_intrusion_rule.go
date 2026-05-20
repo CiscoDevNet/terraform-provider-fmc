@@ -103,7 +103,7 @@ func (data *IntrusionRule) fromBody(ctx context.Context, res gjson.Result) {
 		data.RuleData = types.StringNull()
 	}
 	if value := res.Get("ruleGroups"); value.Exists() {
-		data.RuleGroups = make([]IntrusionRuleRuleGroups, 0, len(value.Array()))
+		data.RuleGroups = make([]IntrusionRuleRuleGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := IntrusionRuleRuleGroups{}

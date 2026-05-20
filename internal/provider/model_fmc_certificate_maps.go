@@ -143,7 +143,7 @@ func (data *CertificateMaps) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("rules"); value.Exists() {
-			data.Rules = make([]CertificateMapsItemsRules, 0, len(value.Array()))
+			data.Rules = make([]CertificateMapsItemsRules, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := CertificateMapsItemsRules{}

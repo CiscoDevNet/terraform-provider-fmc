@@ -659,7 +659,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 		data.Section = types.StringNull()
 	}
 	if value := res.Get("items"); value.Exists() {
-		data.Items = make([]AccessRulesItems, 0, len(value.Array()))
+		data.Items = make([]AccessRulesItems, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := AccessRulesItems{}
@@ -684,7 +684,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				data.Enabled = types.BoolValue(true)
 			}
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
-				data.SourceNetworkLiterals = make([]AccessRulesItemsSourceNetworkLiterals, 0, len(value.Array()))
+				data.SourceNetworkLiterals = make([]AccessRulesItemsSourceNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourceNetworkLiterals{}
@@ -698,7 +698,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
-				data.DestinationNetworkLiterals = make([]AccessRulesItemsDestinationNetworkLiterals, 0, len(value.Array()))
+				data.DestinationNetworkLiterals = make([]AccessRulesItemsDestinationNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationNetworkLiterals{}
@@ -712,7 +712,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.literals"); value.Exists() {
-				data.VlanTagLiterals = make([]AccessRulesItemsVlanTagLiterals, 0, len(value.Array()))
+				data.VlanTagLiterals = make([]AccessRulesItemsVlanTagLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsVlanTagLiterals{}
@@ -731,7 +731,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("vlanTags.objects"); value.Exists() {
-				data.VlanTagObjects = make([]AccessRulesItemsVlanTagObjects, 0, len(value.Array()))
+				data.VlanTagObjects = make([]AccessRulesItemsVlanTagObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsVlanTagObjects{}
@@ -745,7 +745,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
-				data.SourceNetworkObjects = make([]AccessRulesItemsSourceNetworkObjects, 0, len(value.Array()))
+				data.SourceNetworkObjects = make([]AccessRulesItemsSourceNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourceNetworkObjects{}
@@ -764,7 +764,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
-				data.DestinationNetworkObjects = make([]AccessRulesItemsDestinationNetworkObjects, 0, len(value.Array()))
+				data.DestinationNetworkObjects = make([]AccessRulesItemsDestinationNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationNetworkObjects{}
@@ -783,7 +783,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceDynamicObjects.objects"); value.Exists() {
-				data.SourceDynamicObjects = make([]AccessRulesItemsSourceDynamicObjects, 0, len(value.Array()))
+				data.SourceDynamicObjects = make([]AccessRulesItemsSourceDynamicObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourceDynamicObjects{}
@@ -797,7 +797,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationDynamicObjects.objects"); value.Exists() {
-				data.DestinationDynamicObjects = make([]AccessRulesItemsDestinationDynamicObjects, 0, len(value.Array()))
+				data.DestinationDynamicObjects = make([]AccessRulesItemsDestinationDynamicObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationDynamicObjects{}
@@ -811,7 +811,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.literals"); value.Exists() {
-				data.SourcePortLiterals = make([]AccessRulesItemsSourcePortLiterals, 0, len(value.Array()))
+				data.SourcePortLiterals = make([]AccessRulesItemsSourcePortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourcePortLiterals{}
@@ -830,7 +830,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
-				data.SourcePortObjects = make([]AccessRulesItemsSourcePortObjects, 0, len(value.Array()))
+				data.SourcePortObjects = make([]AccessRulesItemsSourcePortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourcePortObjects{}
@@ -844,7 +844,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.literals"); value.Exists() {
-				data.DestinationPortLiterals = make([]AccessRulesItemsDestinationPortLiterals, 0, len(value.Array()))
+				data.DestinationPortLiterals = make([]AccessRulesItemsDestinationPortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationPortLiterals{}
@@ -878,7 +878,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
-				data.DestinationPortObjects = make([]AccessRulesItemsDestinationPortObjects, 0, len(value.Array()))
+				data.DestinationPortObjects = make([]AccessRulesItemsDestinationPortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationPortObjects{}
@@ -892,7 +892,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceSecurityGroupTags.objects"); value.Exists() {
-				data.SourceSgtObjects = make([]AccessRulesItemsSourceSgtObjects, 0, len(value.Array()))
+				data.SourceSgtObjects = make([]AccessRulesItemsSourceSgtObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourceSgtObjects{}
@@ -916,7 +916,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("endPointDeviceTypes"); value.Exists() {
-				data.EndpointDeviceTypes = make([]AccessRulesItemsEndpointDeviceTypes, 0, len(value.Array()))
+				data.EndpointDeviceTypes = make([]AccessRulesItemsEndpointDeviceTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsEndpointDeviceTypes{}
@@ -940,7 +940,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
-				data.DestinationSgtObjects = make([]AccessRulesItemsDestinationSgtObjects, 0, len(value.Array()))
+				data.DestinationSgtObjects = make([]AccessRulesItemsDestinationSgtObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationSgtObjects{}
@@ -964,7 +964,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("sourceZones.objects"); value.Exists() {
-				data.SourceZones = make([]AccessRulesItemsSourceZones, 0, len(value.Array()))
+				data.SourceZones = make([]AccessRulesItemsSourceZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsSourceZones{}
@@ -978,7 +978,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("destinationZones.objects"); value.Exists() {
-				data.DestinationZones = make([]AccessRulesItemsDestinationZones, 0, len(value.Array()))
+				data.DestinationZones = make([]AccessRulesItemsDestinationZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsDestinationZones{}
@@ -992,7 +992,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("urls.literals"); value.Exists() {
-				data.UrlLiterals = make([]AccessRulesItemsUrlLiterals, 0, len(value.Array()))
+				data.UrlLiterals = make([]AccessRulesItemsUrlLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsUrlLiterals{}
@@ -1006,7 +1006,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("urls.objects"); value.Exists() {
-				data.UrlObjects = make([]AccessRulesItemsUrlObjects, 0, len(value.Array()))
+				data.UrlObjects = make([]AccessRulesItemsUrlObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsUrlObjects{}
@@ -1020,7 +1020,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("urls.urlCategoriesWithReputation"); value.Exists() {
-				data.UrlCategories = make([]AccessRulesItemsUrlCategories, 0, len(value.Array()))
+				data.UrlCategories = make([]AccessRulesItemsUrlCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsUrlCategories{}
@@ -1099,7 +1099,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				data.VariableSetId = types.StringNull()
 			}
 			if value := res.Get("applications.applications"); value.Exists() {
-				data.Applications = make([]AccessRulesItemsApplications, 0, len(value.Array()))
+				data.Applications = make([]AccessRulesItemsApplications, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsApplications{}
@@ -1113,7 +1113,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("applications.applicationFilters"); value.Exists() {
-				data.ApplicationFilterObjects = make([]AccessRulesItemsApplicationFilterObjects, 0, len(value.Array()))
+				data.ApplicationFilterObjects = make([]AccessRulesItemsApplicationFilterObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsApplicationFilterObjects{}
@@ -1127,12 +1127,12 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("applications.inlineApplicationFilters"); value.Exists() {
-				data.ApplicationFilters = make([]AccessRulesItemsApplicationFilters, 0, len(value.Array()))
+				data.ApplicationFilters = make([]AccessRulesItemsApplicationFilters, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsApplicationFilters{}
 					if value := res.Get("applicationTypes"); value.Exists() {
-						data.Types = make([]AccessRulesItemsApplicationFiltersTypes, 0, len(value.Array()))
+						data.Types = make([]AccessRulesItemsApplicationFiltersTypes, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessRulesItemsApplicationFiltersTypes{}
@@ -1146,7 +1146,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("risks"); value.Exists() {
-						data.Risks = make([]AccessRulesItemsApplicationFiltersRisks, 0, len(value.Array()))
+						data.Risks = make([]AccessRulesItemsApplicationFiltersRisks, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessRulesItemsApplicationFiltersRisks{}
@@ -1160,7 +1160,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("productivities"); value.Exists() {
-						data.BusinessRelevances = make([]AccessRulesItemsApplicationFiltersBusinessRelevances, 0, len(value.Array()))
+						data.BusinessRelevances = make([]AccessRulesItemsApplicationFiltersBusinessRelevances, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessRulesItemsApplicationFiltersBusinessRelevances{}
@@ -1174,7 +1174,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("categories"); value.Exists() {
-						data.Categories = make([]AccessRulesItemsApplicationFiltersCategories, 0, len(value.Array()))
+						data.Categories = make([]AccessRulesItemsApplicationFiltersCategories, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessRulesItemsApplicationFiltersCategories{}
@@ -1188,7 +1188,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("tags"); value.Exists() {
-						data.Tags = make([]AccessRulesItemsApplicationFiltersTags, 0, len(value.Array()))
+						data.Tags = make([]AccessRulesItemsApplicationFiltersTags, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessRulesItemsApplicationFiltersTags{}
@@ -1206,7 +1206,7 @@ func (data *AccessRules) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("users.objects"); value.Exists() {
-				data.UserObjects = make([]AccessRulesItemsUserObjects, 0, len(value.Array()))
+				data.UserObjects = make([]AccessRulesItemsUserObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessRulesItemsUserObjects{}

@@ -246,7 +246,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.MaxArchiveDepth = types.Int64Null()
 	}
 	if value := res.Get("dummy_file_rules"); value.Exists() {
-		data.FileRules = make([]FilePolicyFileRules, 0, len(value.Array()))
+		data.FileRules = make([]FilePolicyFileRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FilePolicyFileRules{}
@@ -281,7 +281,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.DirectionOfTransfer = types.StringNull()
 			}
 			if value := res.Get("fileCategories"); value.Exists() {
-				data.FileCategories = make([]FilePolicyFileRulesFileCategories, 0, len(value.Array()))
+				data.FileCategories = make([]FilePolicyFileRulesFileCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FilePolicyFileRulesFileCategories{}
@@ -305,7 +305,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("fileTypes"); value.Exists() {
-				data.FileTypes = make([]FilePolicyFileRulesFileTypes, 0, len(value.Array()))
+				data.FileTypes = make([]FilePolicyFileRulesFileTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FilePolicyFileRulesFileTypes{}
