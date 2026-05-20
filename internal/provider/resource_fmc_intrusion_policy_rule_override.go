@@ -131,6 +131,11 @@ func (r *IntrusionPolicyRuleOverrideResource) Configure(_ context.Context, req r
 // End of section. //template:end model
 
 func (r *IntrusionPolicyRuleOverrideResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionIntrusionPolicyRuleOverride) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Intrusion Policy Rule Override, minimum required version is 7.7", r.client.FMCVersion))
+		return
+	}
 	var plan IntrusionPolicyRuleOverride
 
 	// Read plan

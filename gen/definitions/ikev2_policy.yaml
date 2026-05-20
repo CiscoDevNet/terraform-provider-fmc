@@ -23,7 +23,7 @@ attributes:
     value: IKEv2Policy
   - model_name: priority
     type: Int64
-    description: Priority of the IKEv1 Policy.
+    description: Priority of the IKEv2 Policy.
     example: 10
     mandatory: true
     min_int: 1

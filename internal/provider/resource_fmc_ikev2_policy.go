@@ -98,7 +98,7 @@ func (r *IKEv2PolicyResource) Schema(ctx context.Context, req resource.SchemaReq
 				},
 			},
 			"priority": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Priority of the IKEv1 Policy.").AddIntegerRangeDescription(1, 65535).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Priority of the IKEv2 Policy.").AddIntegerRangeDescription(1, 65535).String,
 				Required:            true,
 				Validators: []validator.Int64{
 					int64validator.Between(1, 65535),

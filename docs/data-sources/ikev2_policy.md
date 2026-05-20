@@ -35,5 +35,5 @@ data "fmc_ikev2_policy" "example" {
 - `integrity_algorithms` (Set of String) IKEv2 Integrity algorithms.
 - `lifetime` (Number) Lifetime in seconds.
 - `prf_algorithms` (Set of String) IKEv2 Pseudo-Random Function (PRF) algorithms.
-- `priority` (Number) Priority of the IKEv1 Policy.
+- `priority` (Number) Priority of the IKEv2 Policy.
 - `type` (String) Type of the object; this value is always 'IKEv2Policy'.
