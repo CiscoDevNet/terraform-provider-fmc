@@ -43,6 +43,6 @@ data "fmc_device_ecmp_zone" "example" {
 
 Read-Only:
 
-- `id` (String) Id of the object.
+- `id` (String) Id of the selected interface.
 - `name` (String) Name of the selected interface.
 - `type` (String) Type of the selected interface.

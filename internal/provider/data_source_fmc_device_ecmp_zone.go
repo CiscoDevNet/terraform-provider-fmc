@@ -94,7 +94,7 @@ func (d *DeviceECMPZoneDataSource) Schema(ctx context.Context, req datasource.Sc
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: "Id of the object.",
+							MarkdownDescription: "Id of the selected interface.",
 							Computed:            true,
 						},
 						"type": schema.StringAttribute{

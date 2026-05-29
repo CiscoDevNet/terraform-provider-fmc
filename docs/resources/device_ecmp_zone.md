@@ -49,7 +49,7 @@ resource "fmc_device_ecmp_zone" "example" {
 
 Required:
 
-- `id` (String) Id of the object.
+- `id` (String) Id of the selected interface.
 
 Optional:
 

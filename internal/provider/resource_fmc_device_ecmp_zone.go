@@ -110,7 +110,7 @@ func (r *DeviceECMPZoneResource) Schema(ctx context.Context, req resource.Schema
 				NestedObject: schema.NestedAttributeObject{
 					Attributes: map[string]schema.Attribute{
 						"id": schema.StringAttribute{
-							MarkdownDescription: helpers.NewAttributeDescription("Id of the object.").String,
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the selected interface.").String,
 							Required:            true,
 						},
 						"type": schema.StringAttribute{
