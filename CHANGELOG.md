@@ -1,4 +1,4 @@
-## Unreleased
+## 2.4.0
 
 - (Enhancement) Add support for `fmc_device_ecmp_zone`
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
