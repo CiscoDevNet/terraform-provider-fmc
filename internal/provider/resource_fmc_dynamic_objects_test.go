@@ -20,7 +20,6 @@ package provider
 // Section below is generated&owned by "gen/generator.go". //template:begin imports
 import (
 	"os"
-	"slices"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-testing/helper/resource"
@@ -91,10 +90,6 @@ func testAccFmcDynamicObjectsConfig_all() string {
 
 func TestAccFmcDynamicObjects_Sequential(t *testing.T) {
 
-	if v := os.Getenv("FMC_VERSION"); v != "" && slices.Contains([]string{"7.4", "CDFMC"}, v) {
-		t.Skip("skipping test for FMC version " + v)
-	}
-
 	step_01 := `resource "fmc_dynamic_objects" "test" {` + "\n" +
 		`	items = {` + "\n" +
 		`		"dynamic_object_1" = {` + "\n" +
@@ -123,6 +118,10 @@ func TestAccFmcDynamicObjects_Sequential(t *testing.T) {
 		`		"dynamic_object_6" = {` + "\n" +
 		`			object_type = "IP",` + "\n" +
 		`			description = "Dynamic Object 6"` + "\n" +
+		`			mappings    = ["10.6.0.1","10.6.0.2","10.6.0.3"]` + "\n" +
+		`		},` + "\n" +
+		`		"dynamic_object_8" = {` + "\n" +
+		`			object_type = "IP",` + "\n" +
 		`			mappings    = ["10.6.0.1","10.6.0.2","10.6.0.3"]` + "\n" +
 		`		},` + "\n" +
 		`	} ` + "\n" +
@@ -158,6 +157,11 @@ func TestAccFmcDynamicObjects_Sequential(t *testing.T) {
 		`			object_type = "IP",` + "\n" +
 		`			description = "Dynamic Object 7"` + "\n" +
 		`			mappings    = ["10.6.0.1","10.6.0.2","10.6.0.3"]` + "\n" +
+		`		},` + "\n" +
+		`		"dynamic_object_8" = {` + "\n" +
+		`			object_type = "IP",` + "\n" +
+		`			description = "Dynamic Object 8"` + "\n" +
+		`			mappings    = ["10.6.0.1","10.6.0.2"]` + "\n" +
 		`		},` + "\n" +
 		`	} ` + "\n" +
 		`}` + "\n"

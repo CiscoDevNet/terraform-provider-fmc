@@ -191,6 +191,7 @@ func (r *DynamicObjectsResource) Read(ctx context.Context, req resource.ReadRequ
 	}
 
 	// Save objects with mappings saved
+	// Has to be before `imp` check, as this would modify state variable
 	hasMappings := make(map[string]string, len(state.Items))
 	for k, v := range state.Items {
 		if !v.Mappings.IsNull() {
@@ -224,6 +225,10 @@ func (r *DynamicObjectsResource) Read(ctx context.Context, req resource.ReadRequ
 	// After `terraform import` we switch to a full read.
 	if imp {
 		state.fromBody(ctx, res)
+		// After import, read mappings for all items
+		for k, v := range state.Items {
+			hasMappings[k] = v.Id.ValueString()
+		}
 	} else {
 		state.fromBodyPartial(ctx, res)
 	}
@@ -508,7 +513,7 @@ func (r *DynamicObjectsResource) createSubresources(ctx context.Context, state, 
 			tflog.Debug(ctx, fmt.Sprintf("Non empty mappings found %v", v.Mappings))
 			mapping.Add = v.Mappings
 			bulkMappings.Items[k] = mapping
-			v.Mappings = types.Set{}
+			v.Mappings = types.SetNull(types.StringType)
 		}
 		tflog.Debug(ctx, fmt.Sprintf("Bulk mappings: %v", bulkMappings))
 
@@ -614,8 +619,11 @@ func (r *DynamicObjectsResource) updateSubresources(ctx context.Context, state, 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Updating bulk of objects", state.Id.ValueString()))
 
 	for k, v := range plan.Items {
+		// Save mappings before nulling them for the API call
+		savedMappings := state.Items[k].Mappings
+
 		// Remove mappings, as those are handled separately
-		v.Mappings = types.Set{}
+		v.Mappings = types.SetNull(types.StringType)
 		tmpObject.Items[k] = v
 
 		body := tmpObject.toBodyNonBulk(ctx, state)
@@ -627,7 +635,8 @@ func (r *DynamicObjectsResource) updateSubresources(ctx context.Context, state, 
 			}
 		}
 
-		// Update state
+		// Update state, restoring mappings from prior state
+		v.Mappings = savedMappings
 		state.Items[k] = v
 
 		// Clear tmpObject.Items

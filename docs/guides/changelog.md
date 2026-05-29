@@ -11,6 +11,7 @@ description: |-
 
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
 - (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
+- (Fix) `fmc_dynamic_objects`: Fixed type handling that affected import and some update operations
 
 ## 2.3.0
 
