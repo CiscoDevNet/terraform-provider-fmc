@@ -1,0 +1,58 @@
+---
+name: Device ECMP Zone
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/ecmpzones
+rest_endpoint_vrf: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/routing/virtualrouters/%v/ecmpzones
+doc_category: Devices
+res_description: This resource manages Equal-Cost Multipath Routing (ECMP) zone.
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+skip_minimum_test: true
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object; this value is always 'ecmpzones'
+  # General
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the ECMP Zone.
+    example: my_ecmp_zone
+    data_source_query: true
+  - model_name: interfaces
+    description: Interfaces that are members of the ECMP Zone.
+    type: Set
+    attributes:
+      - model_name: id
+        type: String
+        description: Id of the selected interface.
+        id: true
+        mandatory: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: type
+        type: String
+        description: Type of the selected interface.
+        exclude_example: true
+        exclude_test: true
+      - model_name: name
+        type: String
+        description: Name of the selected interface.
+        example: "GigabitEthernet0/1"
+        test_value: fmc_device_physical_interface.test.name
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id = var.device_id
+    name = var.interface_name
+    logical_name = "outside"
+    mode = "NONE"
+  }

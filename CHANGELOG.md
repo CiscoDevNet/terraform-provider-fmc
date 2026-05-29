@@ -1,5 +1,6 @@
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_device_ecmp_zone`
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
 - (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
 - (Fix) `fmc_dynamic_objects`: Fixed type handling that affected import and some update operations
