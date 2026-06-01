@@ -1252,7 +1252,17 @@ func (r *{{camelCase .Name}}Resource) ImportState(ctx context.Context, req resou
 		names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 		itemsMap := make(map[string]{{camelCase .Name}}Items, len(names))
 		for _, v := range names {
-			itemsMap[v] = {{camelCase .Name}}Items{}
+			itemsMap[v] = {{camelCase .Name}}Items{
+				{{- range (getAttributeByTfName .Attributes "items").Attributes}}
+				{{- if .ElementType}}
+				{{- if isSet .}}
+				{{toGoName .TfName}}: types.SetNull(types.{{.ElementType}}Type),
+				{{- else if isList .}}
+				{{toGoName .TfName}}: types.ListNull(types.{{.ElementType}}Type),
+				{{- end}}
+				{{- end}}
+				{{- end}}
+			}
 		}
 		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 		{{- else}}

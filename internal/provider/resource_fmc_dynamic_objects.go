@@ -481,7 +481,9 @@ func (r *DynamicObjectsResource) ImportState(ctx context.Context, req resource.I
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 	itemsMap := make(map[string]DynamicObjectsItems, len(names))
 	for _, v := range names {
-		itemsMap[v] = DynamicObjectsItems{}
+		itemsMap[v] = DynamicObjectsItems{
+			Mappings: types.SetNull(types.StringType),
+		}
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 

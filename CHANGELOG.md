@@ -1,3 +1,7 @@
+## 2.4.1
+
+- (Fix) `fmc_dynamic_objects`: Complete the import fix
+
 ## 2.4.0
 
 - (Enhancement) Add support for `fmc_device_ecmp_zone`

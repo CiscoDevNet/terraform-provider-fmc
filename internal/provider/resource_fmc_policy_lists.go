@@ -556,7 +556,9 @@ func (r *PolicyListsResource) ImportState(ctx context.Context, req resource.Impo
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 	itemsMap := make(map[string]PolicyListsItems, len(names))
 	for _, v := range names {
-		itemsMap[v] = PolicyListsItems{}
+		itemsMap[v] = PolicyListsItems{
+			InterfaceNames: types.ListNull(types.StringType),
+		}
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 
