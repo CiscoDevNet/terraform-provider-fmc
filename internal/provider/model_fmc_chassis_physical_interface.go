@@ -225,7 +225,7 @@ func (data *ChassisPhysicalInterface) fromBodyUnknowns(ctx context.Context, res 
 // End of section. //template:end clearItemIds
 
 // toBodyPutDelete generates minimal required body to reset the resource to its default state.
-func (data ChassisPhysicalInterface) toBodyPutDelete(ctx context.Context, state ChassisPhysicalInterface) string {
+func (data ChassisPhysicalInterface) toBodyPutDelete(ctx context.Context) string {
 	body := ""
 	body, _ = sjson.Set(body, "type", "PhysicalInterface")
 	if data.Id.ValueString() != "" {

@@ -1,3 +1,7 @@
+## Unreleased
+
+- (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
+
 ## 2.4.1
 
 - (Fix) `fmc_dynamic_objects`: Complete the import fix
