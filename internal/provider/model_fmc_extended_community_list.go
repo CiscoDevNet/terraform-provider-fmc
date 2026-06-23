@@ -163,8 +163,9 @@ func (data *ExtendedCommunityList) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.SubType = types.StringNull()
 	}
+	entriesArray := res.Get("entries").Array()
 	{
-		l := len(res.Get("entries").Array())
+		l := len(entriesArray)
 		tflog.Debug(ctx, fmt.Sprintf("entries array resizing from %d to %d", len(data.Entries), l))
 		for i := len(data.Entries); i < l; i++ {
 			data.Entries = append(data.Entries, ExtendedCommunityListEntries{})
@@ -176,8 +177,7 @@ func (data *ExtendedCommunityList) fromBodyPartial(ctx context.Context, res gjso
 	for i := range data.Entries {
 		parent := &data
 		data := (*parent).Entries[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+		res := entriesArray[i]
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {

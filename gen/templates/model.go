@@ -430,8 +430,10 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		}
 		res, _ := itemsById[data.Id.ValueString()]
 	{{- else if .OrderedList }}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array()
 	{
-		l := len(res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").Array())
+		l := len({{$arrayVar}})
 		tflog.Debug(ctx, fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}} array resizing from %d to %d", len(data.{{toGoName .TfName}}), l))
 		for i := len(data.{{toGoName .TfName}}); i < l; i++ {
 			data.{{toGoName .TfName}} = append(data.{{toGoName .TfName}}, {{.GoTypeName}}{})
@@ -443,8 +445,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	for i := range data.{{toGoName .TfName}} {
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
+		res := {{$arrayVar}}[i]
 	{{- else }}
 	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
 	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}

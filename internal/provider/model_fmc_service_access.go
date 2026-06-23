@@ -187,8 +187,9 @@ func (data *ServiceAccess) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.DefaultAction = types.StringNull()
 	}
+	rulesArray := res.Get("rules").Array()
 	{
-		l := len(res.Get("rules").Array())
+		l := len(rulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("rules array resizing from %d to %d", len(data.Rules), l))
 		for i := len(data.Rules); i < l; i++ {
 			data.Rules = append(data.Rules, ServiceAccessRules{})
@@ -200,8 +201,7 @@ func (data *ServiceAccess) fromBodyPartial(ctx context.Context, res gjson.Result
 	for i := range data.Rules {
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("rules.%d", i))
+		res := rulesArray[i]
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {

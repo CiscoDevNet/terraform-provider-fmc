@@ -657,8 +657,9 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else if data.ManageRules.ValueBool() != true {
 		data.ManageRules = types.BoolNull()
 	}
+	manualNatRulesArray := res.Get("dummy_manual_nat_rules").Array()
 	{
-		l := len(res.Get("dummy_manual_nat_rules").Array())
+		l := len(manualNatRulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_manual_nat_rules array resizing from %d to %d", len(data.ManualNatRules), l))
 		for i := len(data.ManualNatRules); i < l; i++ {
 			data.ManualNatRules = append(data.ManualNatRules, FTDNATPolicyManualNatRules{})
@@ -670,8 +671,7 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	for i := range data.ManualNatRules {
 		parent := &data
 		data := (*parent).ManualNatRules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_manual_nat_rules.%d", i))
+		res := manualNatRulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {

@@ -388,8 +388,9 @@ func (data *ApplicationFilters) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).Applications[i] = data
 		}
+		filtersArray := res.Get("appConditions").Array()
 		{
-			l := len(res.Get("appConditions").Array())
+			l := len(filtersArray)
 			tflog.Debug(ctx, fmt.Sprintf("appConditions array resizing from %d to %d", len(data.Filters), l))
 			for i := len(data.Filters); i < l; i++ {
 				data.Filters = append(data.Filters, ApplicationFiltersItemsFilters{})
@@ -401,8 +402,7 @@ func (data *ApplicationFilters) fromBodyPartial(ctx context.Context, res gjson.R
 		for i := range data.Filters {
 			parent := &data
 			data := (*parent).Filters[i]
-			parentRes := &res
-			res := parentRes.Get(fmt.Sprintf("appConditions.%d", i))
+			res := filtersArray[i]
 			typesArray := res.Get("applicationTypes")
 			for i := 0; i < len(data.Types); i++ {
 				keys := [...]string{"id"}

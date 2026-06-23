@@ -766,13 +766,6 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 
 	var tmp string
 
-	gjson.AddModifier("case", func(json, arg string) string {
-		if arg == "lower" {
-			return strings.ToLower(json)
-		}
-		return json
-	})
-
 	if !state.CategoryName.IsUnknown() && state.CategoryName.ValueString() != "" {
 		var category string
 		// Get the categories from the response

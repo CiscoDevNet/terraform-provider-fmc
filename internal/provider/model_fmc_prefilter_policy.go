@@ -812,8 +812,9 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.DefaultActionSnmpAlertId = types.StringNull()
 	}
+	rulesArray := res.Get("dummy_rules").Array()
 	{
-		l := len(res.Get("dummy_rules").Array())
+		l := len(rulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_rules array resizing from %d to %d", len(data.Rules), l))
 		for i := len(data.Rules); i < l; i++ {
 			data.Rules = append(data.Rules, PrefilterPolicyRules{})
@@ -825,8 +826,7 @@ func (data *PrefilterPolicy) fromBodyPartial(ctx context.Context, res gjson.Resu
 	for i := range data.Rules {
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_rules.%d", i))
+		res := rulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {

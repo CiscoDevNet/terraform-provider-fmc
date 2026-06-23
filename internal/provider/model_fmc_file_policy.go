@@ -398,8 +398,9 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.MaxArchiveDepth = types.Int64Null()
 	}
+	fileRulesArray := res.Get("dummy_file_rules").Array()
 	{
-		l := len(res.Get("dummy_file_rules").Array())
+		l := len(fileRulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_file_rules array resizing from %d to %d", len(data.FileRules), l))
 		for i := len(data.FileRules); i < l; i++ {
 			data.FileRules = append(data.FileRules, FilePolicyFileRules{})
@@ -411,8 +412,7 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.FileRules {
 		parent := &data
 		data := (*parent).FileRules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_file_rules.%d", i))
+		res := fileRulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {

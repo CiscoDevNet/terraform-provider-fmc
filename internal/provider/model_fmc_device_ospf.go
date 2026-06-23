@@ -1578,8 +1578,9 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).FilterRules[i] = data
 	}
+	summaryAddressesArray := res.Get("summaryAddresses").Array()
 	{
-		l := len(res.Get("summaryAddresses").Array())
+		l := len(summaryAddressesArray)
 		tflog.Debug(ctx, fmt.Sprintf("summaryAddresses array resizing from %d to %d", len(data.SummaryAddresses), l))
 		for i := len(data.SummaryAddresses); i < l; i++ {
 			data.SummaryAddresses = append(data.SummaryAddresses, DeviceOSPFSummaryAddresses{})
@@ -1591,8 +1592,7 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.SummaryAddresses {
 		parent := &data
 		data := (*parent).SummaryAddresses[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("summaryAddresses.%d", i))
+		res := summaryAddressesArray[i]
 		networksArray := res.Get("summaryNetwork")
 		for i := 0; i < len(data.Networks); i++ {
 			keys := [...]string{"id"}

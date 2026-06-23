@@ -540,8 +540,9 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else if data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool() != false {
 		data.BypassAccessControlPolicyForDecryptedTraffic = types.BoolNull()
 	}
+	secureClientImagesArray := res.Get("anyConnectClientImages").Array()
 	{
-		l := len(res.Get("anyConnectClientImages").Array())
+		l := len(secureClientImagesArray)
 		tflog.Debug(ctx, fmt.Sprintf("anyConnectClientImages array resizing from %d to %d", len(data.SecureClientImages), l))
 		for i := len(data.SecureClientImages); i < l; i++ {
 			data.SecureClientImages = append(data.SecureClientImages, VPNRASecureClientImages{})
@@ -553,8 +554,7 @@ func (data *VPNRA) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.SecureClientImages {
 		parent := &data
 		data := (*parent).SecureClientImages[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("anyConnectClientImages.%d", i))
+		res := secureClientImagesArray[i]
 		if value := res.Get("anyconnectImage.id"); value.Exists() && !data.Id.IsNull() {
 			data.Id = types.StringValue(value.String())
 		} else {

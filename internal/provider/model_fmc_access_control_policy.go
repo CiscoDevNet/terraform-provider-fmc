@@ -1548,8 +1548,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.PrefilterPolicyId = types.StringNull()
 	}
+	categoriesArray := res.Get("dummy_categories").Array()
 	{
-		l := len(res.Get("dummy_categories").Array())
+		l := len(categoriesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_categories array resizing from %d to %d", len(data.Categories), l))
 		for i := len(data.Categories); i < l; i++ {
 			data.Categories = append(data.Categories, AccessControlPolicyCategories{})
@@ -1561,8 +1562,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	for i := range data.Categories {
 		parent := &data
 		data := (*parent).Categories[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_categories.%d", i))
+		res := categoriesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -1575,8 +1575,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		(*parent).Categories[i] = data
 	}
+	rulesArray := res.Get("dummy_rules").Array()
 	{
-		l := len(res.Get("dummy_rules").Array())
+		l := len(rulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_rules array resizing from %d to %d", len(data.Rules), l))
 		for i := len(data.Rules); i < l; i++ {
 			data.Rules = append(data.Rules, AccessControlPolicyRules{})
@@ -1588,8 +1589,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	for i := range data.Rules {
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_rules.%d", i))
+		res := rulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -2701,8 +2701,9 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).ApplicationFilterObjects[i] = data
 		}
+		applicationFiltersArray := res.Get("applications.inlineApplicationFilters").Array()
 		{
-			l := len(res.Get("applications.inlineApplicationFilters").Array())
+			l := len(applicationFiltersArray)
 			tflog.Debug(ctx, fmt.Sprintf("applications.inlineApplicationFilters array resizing from %d to %d", len(data.ApplicationFilters), l))
 			for i := len(data.ApplicationFilters); i < l; i++ {
 				data.ApplicationFilters = append(data.ApplicationFilters, AccessControlPolicyRulesApplicationFilters{})
@@ -2714,8 +2715,7 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		for i := range data.ApplicationFilters {
 			parent := &data
 			data := (*parent).ApplicationFilters[i]
-			parentRes := &res
-			res := parentRes.Get(fmt.Sprintf("applications.inlineApplicationFilters.%d", i))
+			res := applicationFiltersArray[i]
 			typesArray := res.Get("applicationTypes")
 			for i := 0; i < len(data.Types); i++ {
 				keys := [...]string{"id"}

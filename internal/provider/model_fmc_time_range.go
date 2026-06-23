@@ -243,8 +243,9 @@ func (data *TimeRange) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.EndTime = types.StringNull()
 	}
+	recurrenceListArray := res.Get("recurrenceList").Array()
 	{
-		l := len(res.Get("recurrenceList").Array())
+		l := len(recurrenceListArray)
 		tflog.Debug(ctx, fmt.Sprintf("recurrenceList array resizing from %d to %d", len(data.RecurrenceList), l))
 		for i := len(data.RecurrenceList); i < l; i++ {
 			data.RecurrenceList = append(data.RecurrenceList, TimeRangeRecurrenceList{})
@@ -256,8 +257,7 @@ func (data *TimeRange) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	for i := range data.RecurrenceList {
 		parent := &data
 		data := (*parent).RecurrenceList[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("recurrenceList.%d", i))
+		res := recurrenceListArray[i]
 		if value := res.Get("recurrenceType"); value.Exists() && !data.RecurrenceType.IsNull() {
 			data.RecurrenceType = types.StringValue(value.String())
 		} else {

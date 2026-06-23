@@ -932,8 +932,9 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else if data.ActiveAuthenticationPageHtml.ValueString() != "<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\" />\n<title>Login</title>\n<style type=\"text/css\">\nbody {\n    margin:0;\n    font-family:verdana,sans-serif;\n}\nh1 {\n    margin:0;\n    padding:12px 25px;\n    background-color:#343434;\n    color:#ddd;\n}\np {\n    margin:12px 25px;\n}\nstrong {\n    color:#E0042D;\n}\ndiv {\n    padding-left:23px;\n    font-weight: normal;\n    font-size: 8pt;\n}\ninput {\n    margin:12px 25px;\n}\n</style>\n</head>\n<body>\n    <form action=\"\" id=\"loginForm\" method=\"post\" name=\"loginForm\">\n        <h1>Login</h1>\n        <p><strong>Please enter your username and password or log in as a guest.</strong></p>\n        <div class=\"label\">Username\n            <input id=\"name\" maxlength=\"100\" name=\"login\" type=\"text\" value=\"\"/>\n            <b>realm</b>\n            <select name=\"realm\" id=\"realm\"></select>\n        </div>\n        <div class=\"label\" id=\"label-password\">Password\n            <input id=\"pass\" name=\"pass\" type=\"password\" value=\"\"/>\n        </div>\n        <input id=\"submit-btn\" type=\"submit\" name=\"login_action\" value=\"Submit\"/>\n        <p><font size=2 >-or-</font></p>\n        <input id=\"login-btn\" type=\"submit\" name=\"guest_action\" value=\"Login as guest\"/>\n    </form>\n</body>\n</html>\n" {
 		data.ActiveAuthenticationPageHtml = types.StringNull()
 	}
+	categoriesArray := res.Get("dummy_categories").Array()
 	{
-		l := len(res.Get("dummy_categories").Array())
+		l := len(categoriesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_categories array resizing from %d to %d", len(data.Categories), l))
 		for i := len(data.Categories); i < l; i++ {
 			data.Categories = append(data.Categories, IdentityPolicyCategories{})
@@ -945,8 +946,7 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 	for i := range data.Categories {
 		parent := &data
 		data := (*parent).Categories[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_categories.%d", i))
+		res := categoriesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -959,8 +959,9 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 		}
 		(*parent).Categories[i] = data
 	}
+	rulesArray := res.Get("dummy_rules").Array()
 	{
-		l := len(res.Get("dummy_rules").Array())
+		l := len(rulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_rules array resizing from %d to %d", len(data.Rules), l))
 		for i := len(data.Rules); i < l; i++ {
 			data.Rules = append(data.Rules, IdentityPolicyRules{})
@@ -972,8 +973,7 @@ func (data *IdentityPolicy) fromBodyPartial(ctx context.Context, res gjson.Resul
 	for i := range data.Rules {
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_rules.%d", i))
+		res := rulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
