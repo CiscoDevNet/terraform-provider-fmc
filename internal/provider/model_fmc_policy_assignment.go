@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -81,7 +82,8 @@ func (data PolicyAssignment) toBody(ctx context.Context, state PolicyAssignment)
 		body, _ = sjson.Set(body, "dummy_after_destroy_policy_id", data.AfterDestroyPolicyId.ValueString())
 	}
 	if len(data.Targets) > 0 {
-		body, _ = sjson.Set(body, "targets", []any{})
+		var targetsBody strings.Builder
+		targetsBody.WriteString("[")
 		for _, item := range data.Targets {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -93,8 +95,15 @@ func (data PolicyAssignment) toBody(ctx context.Context, state PolicyAssignment)
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "targets.-1", itemBody)
+			if itemBody != "" {
+				if targetsBody.Len() > 1 {
+					targetsBody.WriteString(",")
+				}
+				targetsBody.WriteString(itemBody)
+			}
 		}
+		targetsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "targets", targetsBody.String())
 	}
 	return body
 }

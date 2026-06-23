@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -164,7 +165,8 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -424,8 +426,15 @@ func (data RouteMap) toBody(ctx context.Context, state RouteMap) string {
 			if !item.SetBgpIpv6PrefixListId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "prefixListIPV6Setting.id", item.SetBgpIpv6PrefixListId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }

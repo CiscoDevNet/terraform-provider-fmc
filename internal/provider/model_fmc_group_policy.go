@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -134,14 +135,22 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "enableIPsecIKEv2Protocol", data.ProtocolIpsecIkev2.ValueBool())
 	}
 	if len(data.Ipv4AddressPools) > 0 {
-		body, _ = sjson.Set(body, "generalSettings.addressAssignment.ipv4LocalAddressPool", []any{})
+		var ipv4AddressPoolsBody strings.Builder
+		ipv4AddressPoolsBody.WriteString("[")
 		for _, item := range data.Ipv4AddressPools {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "generalSettings.addressAssignment.ipv4LocalAddressPool.-1", itemBody)
+			if itemBody != "" {
+				if ipv4AddressPoolsBody.Len() > 1 {
+					ipv4AddressPoolsBody.WriteString(",")
+				}
+				ipv4AddressPoolsBody.WriteString(itemBody)
+			}
 		}
+		ipv4AddressPoolsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "generalSettings.addressAssignment.ipv4LocalAddressPool", ipv4AddressPoolsBody.String())
 	}
 	if !data.Banner.IsNull() {
 		body, _ = sjson.Set(body, "generalSettings.banner", data.Banner.ValueString())
@@ -189,7 +198,8 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "anyConnectSettings.managementProfile.id", data.SecureClientManagementProfileId.ValueString())
 	}
 	if len(data.SecureClientModules) > 0 {
-		body, _ = sjson.Set(body, "anyConnectSettings.clientModules", []any{})
+		var secureClientModulesBody strings.Builder
+		secureClientModulesBody.WriteString("[")
 		for _, item := range data.SecureClientModules {
 			itemBody := ""
 			if !item.Type.IsNull() {
@@ -201,8 +211,15 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 			if !item.DownloadModule.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableModuleDownload", item.DownloadModule.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "anyConnectSettings.clientModules.-1", itemBody)
+			if itemBody != "" {
+				if secureClientModulesBody.Len() > 1 {
+					secureClientModulesBody.WriteString(",")
+				}
+				secureClientModulesBody.WriteString(itemBody)
+			}
 		}
+		secureClientModulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "anyConnectSettings.clientModules", secureClientModulesBody.String())
 	}
 	if !data.SslCompression.IsNull() {
 		body, _ = sjson.Set(body, "anyConnectSettings.sslSettings.sslCompression", data.SslCompression.ValueString())
@@ -253,14 +270,22 @@ func (data GroupPolicy) toBody(ctx context.Context, state GroupPolicy) string {
 		body, _ = sjson.Set(body, "anyConnectSettings.connectionSettings.clientFirewallPublicNetworkRules.id", data.ClientFirewallPublicNetworkRulesAccessListId.ValueString())
 	}
 	if len(data.SecureClientCustomAttributes) > 0 {
-		body, _ = sjson.Set(body, "anyConnectSettings.customAttributes", []any{})
+		var secureClientCustomAttributesBody strings.Builder
+		secureClientCustomAttributesBody.WriteString("[")
 		for _, item := range data.SecureClientCustomAttributes {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "customAttributeObject.id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "anyConnectSettings.customAttributes.-1", itemBody)
+			if itemBody != "" {
+				if secureClientCustomAttributesBody.Len() > 1 {
+					secureClientCustomAttributesBody.WriteString(",")
+				}
+				secureClientCustomAttributesBody.WriteString(itemBody)
+			}
 		}
+		secureClientCustomAttributesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "anyConnectSettings.customAttributes", secureClientCustomAttributesBody.String())
 	}
 	if !data.TrafficFilterAccessListId.IsNull() {
 		body, _ = sjson.Set(body, "advancedSettings.vpnTrafficFilterACL.id", data.TrafficFilterAccessListId.ValueString())

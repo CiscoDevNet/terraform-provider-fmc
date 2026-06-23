@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -124,7 +125,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "dapPolicy.id", data.DynamicAccessPolicyId.ValueString())
 	}
 	if len(data.AccessInterfaces) > 0 {
-		body, _ = sjson.Set(body, "accessInterfaceSettings.interfaceSettings", []any{})
+		var accessInterfacesBody strings.Builder
+		accessInterfacesBody.WriteString("[")
 		for _, item := range data.AccessInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -142,8 +144,15 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 			if !item.InterfaceSpecificCertificateId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "idCertificate.id", item.InterfaceSpecificCertificateId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "accessInterfaceSettings.interfaceSettings.-1", itemBody)
+			if itemBody != "" {
+				if accessInterfacesBody.Len() > 1 {
+					accessInterfacesBody.WriteString(",")
+				}
+				accessInterfacesBody.WriteString(itemBody)
+			}
 		}
+		accessInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "accessInterfaceSettings.interfaceSettings", accessInterfacesBody.String())
 	}
 	if !data.AllowUsersToSelectConnectionProfile.IsNull() {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.allowConnectionProfileSelection", data.AllowUsersToSelectConnectionProfile.ValueBool())
@@ -167,7 +176,8 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 		body, _ = sjson.Set(body, "accessInterfaceSettings.bypassACPolicyForDecryptTraffic", data.BypassAccessControlPolicyForDecryptedTraffic.ValueBool())
 	}
 	if len(data.SecureClientImages) > 0 {
-		body, _ = sjson.Set(body, "anyConnectClientImages", []any{})
+		var secureClientImagesBody strings.Builder
+		secureClientImagesBody.WriteString("[")
 		for _, item := range data.SecureClientImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -176,31 +186,54 @@ func (data VPNRA) toBody(ctx context.Context, state VPNRA) string {
 			if !item.OperatingSystem.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "operatingSystem", item.OperatingSystem.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "anyConnectClientImages.-1", itemBody)
+			if itemBody != "" {
+				if secureClientImagesBody.Len() > 1 {
+					secureClientImagesBody.WriteString(",")
+				}
+				secureClientImagesBody.WriteString(itemBody)
+			}
 		}
+		secureClientImagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "anyConnectClientImages", secureClientImagesBody.String())
 	}
 	if !data.ExternalBrowserPackageId.IsNull() {
 		body, _ = sjson.Set(body, "externalBrowserPackage.id", data.ExternalBrowserPackageId.ValueString())
 	}
 	if len(data.GroupPolicies) > 0 {
-		body, _ = sjson.Set(body, "groupPolicies", []any{})
+		var groupPoliciesBody strings.Builder
+		groupPoliciesBody.WriteString("[")
 		for _, item := range data.GroupPolicies {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "groupPolicies.-1", itemBody)
+			if itemBody != "" {
+				if groupPoliciesBody.Len() > 1 {
+					groupPoliciesBody.WriteString(",")
+				}
+				groupPoliciesBody.WriteString(itemBody)
+			}
 		}
+		groupPoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "groupPolicies", groupPoliciesBody.String())
 	}
 	if len(data.Ikev2Policies) > 0 {
-		body, _ = sjson.Set(body, "ikev2Policies", []any{})
+		var ikev2PoliciesBody strings.Builder
+		ikev2PoliciesBody.WriteString("[")
 		for _, item := range data.Ikev2Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikev2Policies.-1", itemBody)
+			if itemBody != "" {
+				if ikev2PoliciesBody.Len() > 1 {
+					ikev2PoliciesBody.WriteString(",")
+				}
+				ikev2PoliciesBody.WriteString(itemBody)
+			}
 		}
+		ikev2PoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikev2Policies", ikev2PoliciesBody.String())
 	}
 	return body
 }

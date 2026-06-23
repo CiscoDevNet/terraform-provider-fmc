@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -86,14 +87,22 @@ func (data VPNRAIPSecCryptoMap) toBody(ctx context.Context, state VPNRAIPSecCryp
 		body, _ = sjson.Set(body, "interfaceObject.id", data.InterfaceId.ValueString())
 	}
 	if len(data.Ikev2IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikev2IpsecProposals", []any{})
+		var ikev2IpsecProposalsBody strings.Builder
+		ikev2IpsecProposalsBody.WriteString("[")
 		for _, item := range data.Ikev2IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikev2IpsecProposals.-1", itemBody)
+			if itemBody != "" {
+				if ikev2IpsecProposalsBody.Len() > 1 {
+					ikev2IpsecProposalsBody.WriteString(",")
+				}
+				ikev2IpsecProposalsBody.WriteString(itemBody)
+			}
 		}
+		ikev2IpsecProposalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikev2IpsecProposals", ikev2IpsecProposalsBody.String())
 	}
 	if !data.ReverseRouteInjection.IsNull() {
 		body, _ = sjson.Set(body, "enableRRI", data.ReverseRouteInjection.ValueBool())

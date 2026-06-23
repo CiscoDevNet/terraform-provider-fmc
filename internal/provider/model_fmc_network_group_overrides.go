@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -85,7 +86,8 @@ func (data NetworkGroupOverrides) toBody(ctx context.Context, state NetworkGroup
 		body, _ = sjson.Set(body, "overrides.parent.id", data.ParentId.ValueString())
 	}
 	if len(data.Overrides) > 0 {
-		body, _ = sjson.Set(body, "dummy_overrides", []any{})
+		var overridesBody strings.Builder
+		overridesBody.WriteString("[")
 		for _, item := range data.Overrides {
 			itemBody := ""
 			if !item.TargetId.IsNull() {
@@ -122,8 +124,15 @@ func (data NetworkGroupOverrides) toBody(ctx context.Context, state NetworkGroup
 					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
+			if itemBody != "" {
+				if overridesBody.Len() > 1 {
+					overridesBody.WriteString(",")
+				}
+				overridesBody.WriteString(itemBody)
+			}
 		}
+		overridesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_overrides", overridesBody.String())
 	}
 	return body
 }

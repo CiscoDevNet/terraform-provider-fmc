@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -96,7 +97,8 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 		body, _ = sjson.Set(body, "ikeV1Settings.certificateAuth.id", data.Ikev1CertificateId.ValueString())
 	}
 	if len(data.Ikev1Policies) > 0 {
-		body, _ = sjson.Set(body, "ikeV1Settings.policies", []any{})
+		var ikev1PoliciesBody strings.Builder
+		ikev1PoliciesBody.WriteString("[")
 		for _, item := range data.Ikev1Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -105,8 +107,15 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikeV1Settings.policies.-1", itemBody)
+			if itemBody != "" {
+				if ikev1PoliciesBody.Len() > 1 {
+					ikev1PoliciesBody.WriteString(",")
+				}
+				ikev1PoliciesBody.WriteString(itemBody)
+			}
 		}
+		ikev1PoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikeV1Settings.policies", ikev1PoliciesBody.String())
 	}
 	if !data.Ikev2AuthenticationType.IsNull() {
 		body, _ = sjson.Set(body, "ikeV2Settings.authenticationType", data.Ikev2AuthenticationType.ValueString())
@@ -124,7 +133,8 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 		body, _ = sjson.Set(body, "ikeV2Settings.certificateAuth.id", data.Ikev2CertificateId.ValueString())
 	}
 	if len(data.Ikev2Policies) > 0 {
-		body, _ = sjson.Set(body, "ikeV2Settings.policies", []any{})
+		var ikev2PoliciesBody strings.Builder
+		ikev2PoliciesBody.WriteString("[")
 		for _, item := range data.Ikev2Policies {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -133,8 +143,15 @@ func (data VPNS2SIKESettings) toBody(ctx context.Context, state VPNS2SIKESetting
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikeV2Settings.policies.-1", itemBody)
+			if itemBody != "" {
+				if ikev2PoliciesBody.Len() > 1 {
+					ikev2PoliciesBody.WriteString(",")
+				}
+				ikev2PoliciesBody.WriteString(itemBody)
+			}
 		}
+		ikev2PoliciesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikeV2Settings.policies", ikev2PoliciesBody.String())
 	}
 	return body
 }

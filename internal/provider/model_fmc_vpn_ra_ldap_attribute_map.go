@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -81,7 +82,8 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnLdapAttributeMap")
 	if len(data.Realms) > 0 {
-		body, _ = sjson.Set(body, "ldapAttributeMapList", []any{})
+		var realmsBody strings.Builder
+		realmsBody.WriteString("[")
 		for _, item := range data.Realms {
 			itemBody := ""
 			if !item.RealmAdLdapId.IsNull() {
@@ -113,8 +115,15 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 					itemBody, _ = sjson.SetRaw(itemBody, "ldapAttributeMaps.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "ldapAttributeMapList.-1", itemBody)
+			if itemBody != "" {
+				if realmsBody.Len() > 1 {
+					realmsBody.WriteString(",")
+				}
+				realmsBody.WriteString(itemBody)
+			}
 		}
+		realmsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ldapAttributeMapList", realmsBody.String())
 	}
 	return body
 }

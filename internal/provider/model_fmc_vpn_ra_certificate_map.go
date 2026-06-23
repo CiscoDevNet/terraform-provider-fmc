@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -78,7 +79,8 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 		body, _ = sjson.Set(body, "enableCertificateToConnectionProfileMapping", data.UseCertificateToConnectionProfileMappings.ValueBool())
 	}
 	if len(data.CertificateToConnectionProfileMappings) > 0 {
-		body, _ = sjson.Set(body, "certificateToConnectionProfileMap", []any{})
+		var certificateToConnectionProfileMappingsBody strings.Builder
+		certificateToConnectionProfileMappingsBody.WriteString("[")
 		for _, item := range data.CertificateToConnectionProfileMappings {
 			itemBody := ""
 			if !item.CertificateMapId.IsNull() {
@@ -87,8 +89,15 @@ func (data VPNRACertificateMap) toBody(ctx context.Context, state VPNRACertifica
 			if !item.ConnectionProfileId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "connectionProfile.id", item.ConnectionProfileId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "certificateToConnectionProfileMap.-1", itemBody)
+			if itemBody != "" {
+				if certificateToConnectionProfileMappingsBody.Len() > 1 {
+					certificateToConnectionProfileMappingsBody.WriteString(",")
+				}
+				certificateToConnectionProfileMappingsBody.WriteString(itemBody)
+			}
 		}
+		certificateToConnectionProfileMappingsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "certificateToConnectionProfileMap", certificateToConnectionProfileMappingsBody.String())
 	}
 	return body
 }

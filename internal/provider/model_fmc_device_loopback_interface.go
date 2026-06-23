@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -99,7 +100,8 @@ func (data DeviceLoopbackInterface) toBody(ctx context.Context, state DeviceLoop
 		body, _ = sjson.Set(body, "ipv4.static.netmask", data.Ipv4StaticNetmask.ValueString())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -108,8 +110,15 @@ func (data DeviceLoopbackInterface) toBody(ctx context.Context, state DeviceLoop
 			if !item.Prefix.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "prefix", item.Prefix.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.addresses", ipv6AddressesBody.String())
 	}
 	return body
 }

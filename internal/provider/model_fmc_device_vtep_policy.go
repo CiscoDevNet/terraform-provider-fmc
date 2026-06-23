@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -78,7 +79,8 @@ func (data DeviceVTEPPolicy) toBody(ctx context.Context, state DeviceVTEPPolicy)
 		body, _ = sjson.Set(body, "nveEnable", data.NveEnabled.ValueBool())
 	}
 	if len(data.Vteps) > 0 {
-		body, _ = sjson.Set(body, "vtepEntries", []any{})
+		var vtepsBody strings.Builder
+		vtepsBody.WriteString("[")
 		for _, item := range data.Vteps {
 			itemBody := ""
 			if !item.SourceInterfaceId.IsNull() {
@@ -102,8 +104,15 @@ func (data DeviceVTEPPolicy) toBody(ctx context.Context, state DeviceVTEPPolicy)
 			if !item.NeighborAddressId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "nveNeighborAddress.object.id", item.NeighborAddressId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "vtepEntries.-1", itemBody)
+			if itemBody != "" {
+				if vtepsBody.Len() > 1 {
+					vtepsBody.WriteString(",")
+				}
+				vtepsBody.WriteString(itemBody)
+			}
 		}
+		vtepsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "vtepEntries", vtepsBody.String())
 	}
 	return body
 }

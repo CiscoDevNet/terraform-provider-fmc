@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -136,7 +137,8 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.passwdAuth.authKey", data.AuthenticationAreaPassword.ValueString())
 	}
 	if len(data.AuthenticationAreaMd5s) > 0 {
-		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList", []any{})
+		var authenticationAreaMd5sBody strings.Builder
+		authenticationAreaMd5sBody.WriteString("[")
 		for _, item := range data.AuthenticationAreaMd5s {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -145,11 +147,19 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 			if !item.Key.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "md5Key", item.Key.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList.-1", itemBody)
+			if itemBody != "" {
+				if authenticationAreaMd5sBody.Len() > 1 {
+					authenticationAreaMd5sBody.WriteString(",")
+				}
+				authenticationAreaMd5sBody.WriteString(itemBody)
+			}
 		}
+		authenticationAreaMd5sBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList", authenticationAreaMd5sBody.String())
 	}
 	if len(data.AuthenticationMd5s) > 0 {
-		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList", []any{})
+		var authenticationMd5sBody strings.Builder
+		authenticationMd5sBody.WriteString("[")
 		for _, item := range data.AuthenticationMd5s {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -158,8 +168,15 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 			if !item.Key.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "md5Key", item.Key.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList.-1", itemBody)
+			if itemBody != "" {
+				if authenticationMd5sBody.Len() > 1 {
+					authenticationMd5sBody.WriteString(",")
+				}
+				authenticationMd5sBody.WriteString(itemBody)
+			}
 		}
+		authenticationMd5sBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList", authenticationMd5sBody.String())
 	}
 	if !data.AuthenticationKeyChainId.IsNull() {
 		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.keyChain.authKey.id", data.AuthenticationKeyChainId.ValueString())

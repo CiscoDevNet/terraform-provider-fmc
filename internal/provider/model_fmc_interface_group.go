@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -74,14 +75,22 @@ func (data InterfaceGroup) toBody(ctx context.Context, state InterfaceGroup) str
 		body, _ = sjson.Set(body, "interfaceMode", data.InterfaceType.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []any{})
+		var interfacesBody strings.Builder
+		interfacesBody.WriteString("[")
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.-1", itemBody)
+			if itemBody != "" {
+				if interfacesBody.Len() > 1 {
+					interfacesBody.WriteString(",")
+				}
+				interfacesBody.WriteString(itemBody)
+			}
 		}
+		interfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces", interfacesBody.String())
 	}
 	return body
 }

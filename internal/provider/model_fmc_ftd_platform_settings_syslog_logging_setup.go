@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -117,14 +118,22 @@ func (data FTDPlatformSettingsSyslogLoggingSetup) toBody(ctx context.Context, st
 		body, _ = sjson.Set(body, "ftpServerInfo.path", data.FtpServerPath.ValueString())
 	}
 	if len(data.FtpServerInterfaceGroups) > 0 {
-		body, _ = sjson.Set(body, "ftpServerInfo.interfaceGroups", []any{})
+		var ftpServerInterfaceGroupsBody strings.Builder
+		ftpServerInterfaceGroupsBody.WriteString("[")
 		for _, item := range data.FtpServerInterfaceGroups {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ftpServerInfo.interfaceGroups.-1", itemBody)
+			if itemBody != "" {
+				if ftpServerInterfaceGroupsBody.Len() > 1 {
+					ftpServerInterfaceGroupsBody.WriteString(",")
+				}
+				ftpServerInterfaceGroupsBody.WriteString(itemBody)
+			}
 		}
+		ftpServerInterfaceGroupsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ftpServerInfo.interfaceGroups", ftpServerInterfaceGroupsBody.String())
 	}
 	if !data.FlashEnabled.IsNull() {
 		body, _ = sjson.Set(body, "enableFlash", data.FlashEnabled.ValueBool())

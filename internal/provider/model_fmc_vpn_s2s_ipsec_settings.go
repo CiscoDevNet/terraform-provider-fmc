@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -95,7 +96,8 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 		body, _ = sjson.Set(body, "ikeV2Mode", data.Ikev2Mode.ValueString())
 	}
 	if len(data.Ikev1IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikeV1IpsecProposal", []any{})
+		var ikev1IpsecProposalsBody strings.Builder
+		ikev1IpsecProposalsBody.WriteString("[")
 		for _, item := range data.Ikev1IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -104,11 +106,19 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikeV1IpsecProposal.-1", itemBody)
+			if itemBody != "" {
+				if ikev1IpsecProposalsBody.Len() > 1 {
+					ikev1IpsecProposalsBody.WriteString(",")
+				}
+				ikev1IpsecProposalsBody.WriteString(itemBody)
+			}
 		}
+		ikev1IpsecProposalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikeV1IpsecProposal", ikev1IpsecProposalsBody.String())
 	}
 	if len(data.Ikev2IpsecProposals) > 0 {
-		body, _ = sjson.Set(body, "ikeV2IpsecProposal", []any{})
+		var ikev2IpsecProposalsBody strings.Builder
+		ikev2IpsecProposalsBody.WriteString("[")
 		for _, item := range data.Ikev2IpsecProposals {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -117,8 +127,15 @@ func (data VPNS2SIPSECSettings) toBody(ctx context.Context, state VPNS2SIPSECSet
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ikeV2IpsecProposal.-1", itemBody)
+			if itemBody != "" {
+				if ikev2IpsecProposalsBody.Len() > 1 {
+					ikev2IpsecProposalsBody.WriteString(",")
+				}
+				ikev2IpsecProposalsBody.WriteString(itemBody)
+			}
 		}
+		ikev2IpsecProposalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ikeV2IpsecProposal", ikev2IpsecProposalsBody.String())
 	}
 	if !data.SecurityAssociationStrengthEnforcement.IsNull() {
 		body, _ = sjson.Set(body, "enableSaStrengthEnforcement", data.SecurityAssociationStrengthEnforcement.ValueBool())

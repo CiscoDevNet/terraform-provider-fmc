@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -74,7 +75,8 @@ func (data ASPath) toBody(ctx context.Context, state ASPath) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -83,8 +85,15 @@ func (data ASPath) toBody(ctx context.Context, state ASPath) string {
 			if !item.RegularExpression.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "regularExpression", item.RegularExpression.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }

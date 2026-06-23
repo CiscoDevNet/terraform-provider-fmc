@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -109,7 +110,8 @@ func (data HealthPolicy) toBody(ctx context.Context, state HealthPolicy) string 
 		body, _ = sjson.Set(body, "defaultPolicy", data.IsDefaultPolicy.ValueBool())
 	}
 	if len(data.HealthModules) > 0 {
-		body, _ = sjson.Set(body, "healthModules", []any{})
+		var healthModulesBody strings.Builder
+		healthModulesBody.WriteString("[")
 		for _, item := range data.HealthModules {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -169,8 +171,15 @@ func (data HealthPolicy) toBody(ctx context.Context, state HealthPolicy) string 
 					itemBody, _ = sjson.SetRaw(itemBody, "alertConfig.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "healthModules.-1", itemBody)
+			if itemBody != "" {
+				if healthModulesBody.Len() > 1 {
+					healthModulesBody.WriteString(",")
+				}
+				healthModulesBody.WriteString(itemBody)
+			}
 		}
+		healthModulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "healthModules", healthModulesBody.String())
 	}
 	if !data.HealthModuleRunTimeInterval.IsNull() {
 		body, _ = sjson.Set(body, "setting.alertEvaluationInterval", data.HealthModuleRunTimeInterval.ValueInt64())

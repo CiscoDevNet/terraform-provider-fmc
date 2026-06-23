@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -114,7 +115,8 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 		body, _ = sjson.Set(body, "mergeDaclPlacementOrder", data.MergeDownloadableAccessListOrder.ValueString())
 	}
 	if len(data.RadiusServers) > 0 {
-		body, _ = sjson.Set(body, "radiusServers", []any{})
+		var radiusServersBody strings.Builder
+		radiusServersBody.WriteString("[")
 		for _, item := range data.RadiusServers {
 			itemBody := ""
 			if !item.Hostname.IsNull() {
@@ -144,8 +146,15 @@ func (data RadiusServerGroup) toBody(ctx context.Context, state RadiusServerGrou
 			if !item.RedirectAccessListId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "redirectACL.id", item.RedirectAccessListId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "radiusServers.-1", itemBody)
+			if itemBody != "" {
+				if radiusServersBody.Len() > 1 {
+					radiusServersBody.WriteString(",")
+				}
+				radiusServersBody.WriteString(itemBody)
+			}
 		}
+		radiusServersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "radiusServers", radiusServersBody.String())
 	}
 	return body
 }

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -256,29 +257,46 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		body, _ = sjson.Set(body, "enabled", data.Enabled.ValueBool())
 	}
 	if len(data.SourceNetworkLiterals) > 0 {
-		body, _ = sjson.Set(body, "sourceNetworks.literals", []any{})
+		var sourceNetworkLiteralsBody strings.Builder
+		sourceNetworkLiteralsBody.WriteString("[")
 		for _, item := range data.SourceNetworkLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
 			if !item.Value.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Value.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "sourceNetworks.literals.-1", itemBody)
+			if itemBody != "" {
+				if sourceNetworkLiteralsBody.Len() > 1 {
+					sourceNetworkLiteralsBody.WriteString(",")
+				}
+				sourceNetworkLiteralsBody.WriteString(itemBody)
+			}
 		}
+		sourceNetworkLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourceNetworks.literals", sourceNetworkLiteralsBody.String())
 	}
 	if len(data.DestinationNetworkLiterals) > 0 {
-		body, _ = sjson.Set(body, "destinationNetworks.literals", []any{})
+		var destinationNetworkLiteralsBody strings.Builder
+		destinationNetworkLiteralsBody.WriteString("[")
 		for _, item := range data.DestinationNetworkLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
 			if !item.Value.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Value.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "destinationNetworks.literals.-1", itemBody)
+			if itemBody != "" {
+				if destinationNetworkLiteralsBody.Len() > 1 {
+					destinationNetworkLiteralsBody.WriteString(",")
+				}
+				destinationNetworkLiteralsBody.WriteString(itemBody)
+			}
 		}
+		destinationNetworkLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationNetworks.literals", destinationNetworkLiteralsBody.String())
 	}
 	if len(data.VlanTagLiterals) > 0 {
-		body, _ = sjson.Set(body, "vlanTags.literals", []any{})
+		var vlanTagLiteralsBody strings.Builder
+		vlanTagLiteralsBody.WriteString("[")
 		for _, item := range data.VlanTagLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
@@ -288,21 +306,37 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.EndTag.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "endTag", item.EndTag.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "vlanTags.literals.-1", itemBody)
+			if itemBody != "" {
+				if vlanTagLiteralsBody.Len() > 1 {
+					vlanTagLiteralsBody.WriteString(",")
+				}
+				vlanTagLiteralsBody.WriteString(itemBody)
+			}
 		}
+		vlanTagLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "vlanTags.literals", vlanTagLiteralsBody.String())
 	}
 	if len(data.VlanTagObjects) > 0 {
-		body, _ = sjson.Set(body, "vlanTags.objects", []any{})
+		var vlanTagObjectsBody strings.Builder
+		vlanTagObjectsBody.WriteString("[")
 		for _, item := range data.VlanTagObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "vlanTags.objects.-1", itemBody)
+			if itemBody != "" {
+				if vlanTagObjectsBody.Len() > 1 {
+					vlanTagObjectsBody.WriteString(",")
+				}
+				vlanTagObjectsBody.WriteString(itemBody)
+			}
 		}
+		vlanTagObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "vlanTags.objects", vlanTagObjectsBody.String())
 	}
 	if len(data.SourceNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceNetworks.objects", []any{})
+		var sourceNetworkObjectsBody strings.Builder
+		sourceNetworkObjectsBody.WriteString("[")
 		for _, item := range data.SourceNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -311,11 +345,19 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "sourceNetworks.objects.-1", itemBody)
+			if itemBody != "" {
+				if sourceNetworkObjectsBody.Len() > 1 {
+					sourceNetworkObjectsBody.WriteString(",")
+				}
+				sourceNetworkObjectsBody.WriteString(itemBody)
+			}
 		}
+		sourceNetworkObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourceNetworks.objects", sourceNetworkObjectsBody.String())
 	}
 	if len(data.DestinationNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationNetworks.objects", []any{})
+		var destinationNetworkObjectsBody strings.Builder
+		destinationNetworkObjectsBody.WriteString("[")
 		for _, item := range data.DestinationNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -324,33 +366,57 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "destinationNetworks.objects.-1", itemBody)
+			if itemBody != "" {
+				if destinationNetworkObjectsBody.Len() > 1 {
+					destinationNetworkObjectsBody.WriteString(",")
+				}
+				destinationNetworkObjectsBody.WriteString(itemBody)
+			}
 		}
+		destinationNetworkObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationNetworks.objects", destinationNetworkObjectsBody.String())
 	}
 	if len(data.SourceDynamicObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceDynamicObjects.objects", []any{})
+		var sourceDynamicObjectsBody strings.Builder
+		sourceDynamicObjectsBody.WriteString("[")
 		for _, item := range data.SourceDynamicObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "DynamicObject")
-			body, _ = sjson.SetRaw(body, "sourceDynamicObjects.objects.-1", itemBody)
+			if itemBody != "" {
+				if sourceDynamicObjectsBody.Len() > 1 {
+					sourceDynamicObjectsBody.WriteString(",")
+				}
+				sourceDynamicObjectsBody.WriteString(itemBody)
+			}
 		}
+		sourceDynamicObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourceDynamicObjects.objects", sourceDynamicObjectsBody.String())
 	}
 	if len(data.DestinationDynamicObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationDynamicObjects.objects", []any{})
+		var destinationDynamicObjectsBody strings.Builder
+		destinationDynamicObjectsBody.WriteString("[")
 		for _, item := range data.DestinationDynamicObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "DynamicObject")
-			body, _ = sjson.SetRaw(body, "destinationDynamicObjects.objects.-1", itemBody)
+			if itemBody != "" {
+				if destinationDynamicObjectsBody.Len() > 1 {
+					destinationDynamicObjectsBody.WriteString(",")
+				}
+				destinationDynamicObjectsBody.WriteString(itemBody)
+			}
 		}
+		destinationDynamicObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationDynamicObjects.objects", destinationDynamicObjectsBody.String())
 	}
 	if len(data.SourcePortLiterals) > 0 {
-		body, _ = sjson.Set(body, "sourcePorts.literals", []any{})
+		var sourcePortLiteralsBody strings.Builder
+		sourcePortLiteralsBody.WriteString("[")
 		for _, item := range data.SourcePortLiterals {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "PortLiteral")
@@ -360,22 +426,38 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Port.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "port", item.Port.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "sourcePorts.literals.-1", itemBody)
+			if itemBody != "" {
+				if sourcePortLiteralsBody.Len() > 1 {
+					sourcePortLiteralsBody.WriteString(",")
+				}
+				sourcePortLiteralsBody.WriteString(itemBody)
+			}
 		}
+		sourcePortLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourcePorts.literals", sourcePortLiteralsBody.String())
 	}
 	if len(data.SourcePortObjects) > 0 {
-		body, _ = sjson.Set(body, "sourcePorts.objects", []any{})
+		var sourcePortObjectsBody strings.Builder
+		sourcePortObjectsBody.WriteString("[")
 		for _, item := range data.SourcePortObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "sourcePorts.objects.-1", itemBody)
+			if itemBody != "" {
+				if sourcePortObjectsBody.Len() > 1 {
+					sourcePortObjectsBody.WriteString(",")
+				}
+				sourcePortObjectsBody.WriteString(itemBody)
+			}
 		}
+		sourcePortObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourcePorts.objects", sourcePortObjectsBody.String())
 	}
 	if len(data.DestinationPortLiterals) > 0 {
-		body, _ = sjson.Set(body, "destinationPorts.literals", []any{})
+		var destinationPortLiteralsBody strings.Builder
+		destinationPortLiteralsBody.WriteString("[")
 		for _, item := range data.DestinationPortLiterals {
 			itemBody := ""
 			if !item.Type.IsNull() {
@@ -393,22 +475,38 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.IcmpCode.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "code", item.IcmpCode.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "destinationPorts.literals.-1", itemBody)
+			if itemBody != "" {
+				if destinationPortLiteralsBody.Len() > 1 {
+					destinationPortLiteralsBody.WriteString(",")
+				}
+				destinationPortLiteralsBody.WriteString(itemBody)
+			}
 		}
+		destinationPortLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationPorts.literals", destinationPortLiteralsBody.String())
 	}
 	if len(data.DestinationPortObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationPorts.objects", []any{})
+		var destinationPortObjectsBody strings.Builder
+		destinationPortObjectsBody.WriteString("[")
 		for _, item := range data.DestinationPortObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "destinationPorts.objects.-1", itemBody)
+			if itemBody != "" {
+				if destinationPortObjectsBody.Len() > 1 {
+					destinationPortObjectsBody.WriteString(",")
+				}
+				destinationPortObjectsBody.WriteString(itemBody)
+			}
 		}
+		destinationPortObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationPorts.objects", destinationPortObjectsBody.String())
 	}
 	if len(data.SourceSgtObjects) > 0 {
-		body, _ = sjson.Set(body, "sourceSecurityGroupTags.objects", []any{})
+		var sourceSgtObjectsBody strings.Builder
+		sourceSgtObjectsBody.WriteString("[")
 		for _, item := range data.SourceSgtObjects {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -420,11 +518,19 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "sourceSecurityGroupTags.objects.-1", itemBody)
+			if itemBody != "" {
+				if sourceSgtObjectsBody.Len() > 1 {
+					sourceSgtObjectsBody.WriteString(",")
+				}
+				sourceSgtObjectsBody.WriteString(itemBody)
+			}
 		}
+		sourceSgtObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourceSecurityGroupTags.objects", sourceSgtObjectsBody.String())
 	}
 	if len(data.EndpointDeviceTypes) > 0 {
-		body, _ = sjson.Set(body, "endPointDeviceTypes", []any{})
+		var endpointDeviceTypesBody strings.Builder
+		endpointDeviceTypesBody.WriteString("[")
 		for _, item := range data.EndpointDeviceTypes {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -436,11 +542,19 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "endPointDeviceTypes.-1", itemBody)
+			if itemBody != "" {
+				if endpointDeviceTypesBody.Len() > 1 {
+					endpointDeviceTypesBody.WriteString(",")
+				}
+				endpointDeviceTypesBody.WriteString(itemBody)
+			}
 		}
+		endpointDeviceTypesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "endPointDeviceTypes", endpointDeviceTypesBody.String())
 	}
 	if len(data.DestinationSgtObjects) > 0 {
-		body, _ = sjson.Set(body, "destinationSecurityGroupTags.objects", []any{})
+		var destinationSgtObjectsBody strings.Builder
+		destinationSgtObjectsBody.WriteString("[")
 		for _, item := range data.DestinationSgtObjects {
 			itemBody := ""
 			if !item.Name.IsNull() {
@@ -452,54 +566,94 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "destinationSecurityGroupTags.objects.-1", itemBody)
+			if itemBody != "" {
+				if destinationSgtObjectsBody.Len() > 1 {
+					destinationSgtObjectsBody.WriteString(",")
+				}
+				destinationSgtObjectsBody.WriteString(itemBody)
+			}
 		}
+		destinationSgtObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationSecurityGroupTags.objects", destinationSgtObjectsBody.String())
 	}
 	if len(data.SourceZones) > 0 {
-		body, _ = sjson.Set(body, "sourceZones.objects", []any{})
+		var sourceZonesBody strings.Builder
+		sourceZonesBody.WriteString("[")
 		for _, item := range data.SourceZones {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "SecurityZone")
-			body, _ = sjson.SetRaw(body, "sourceZones.objects.-1", itemBody)
+			if itemBody != "" {
+				if sourceZonesBody.Len() > 1 {
+					sourceZonesBody.WriteString(",")
+				}
+				sourceZonesBody.WriteString(itemBody)
+			}
 		}
+		sourceZonesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "sourceZones.objects", sourceZonesBody.String())
 	}
 	if len(data.DestinationZones) > 0 {
-		body, _ = sjson.Set(body, "destinationZones.objects", []any{})
+		var destinationZonesBody strings.Builder
+		destinationZonesBody.WriteString("[")
 		for _, item := range data.DestinationZones {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "SecurityZone")
-			body, _ = sjson.SetRaw(body, "destinationZones.objects.-1", itemBody)
+			if itemBody != "" {
+				if destinationZonesBody.Len() > 1 {
+					destinationZonesBody.WriteString(",")
+				}
+				destinationZonesBody.WriteString(itemBody)
+			}
 		}
+		destinationZonesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationZones.objects", destinationZonesBody.String())
 	}
 	if len(data.UrlLiterals) > 0 {
-		body, _ = sjson.Set(body, "urls.literals", []any{})
+		var urlLiteralsBody strings.Builder
+		urlLiteralsBody.WriteString("[")
 		for _, item := range data.UrlLiterals {
 			itemBody := ""
 			if !item.Url.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "url", item.Url.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "urls.literals.-1", itemBody)
+			if itemBody != "" {
+				if urlLiteralsBody.Len() > 1 {
+					urlLiteralsBody.WriteString(",")
+				}
+				urlLiteralsBody.WriteString(itemBody)
+			}
 		}
+		urlLiteralsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "urls.literals", urlLiteralsBody.String())
 	}
 	if len(data.UrlObjects) > 0 {
-		body, _ = sjson.Set(body, "urls.objects", []any{})
+		var urlObjectsBody strings.Builder
+		urlObjectsBody.WriteString("[")
 		for _, item := range data.UrlObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "urls.objects.-1", itemBody)
+			if itemBody != "" {
+				if urlObjectsBody.Len() > 1 {
+					urlObjectsBody.WriteString(",")
+				}
+				urlObjectsBody.WriteString(itemBody)
+			}
 		}
+		urlObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "urls.objects", urlObjectsBody.String())
 	}
 	if len(data.UrlCategories) > 0 {
-		body, _ = sjson.Set(body, "urls.urlCategoriesWithReputation", []any{})
+		var urlCategoriesBody strings.Builder
+		urlCategoriesBody.WriteString("[")
 		for _, item := range data.UrlCategories {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -509,8 +663,15 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 			if !item.Reputation.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "reputation", item.Reputation.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "urls.urlCategoriesWithReputation.-1", itemBody)
+			if itemBody != "" {
+				if urlCategoriesBody.Len() > 1 {
+					urlCategoriesBody.WriteString(",")
+				}
+				urlCategoriesBody.WriteString(itemBody)
+			}
 		}
+		urlCategoriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "urls.urlCategoriesWithReputation", urlCategoriesBody.String())
 	}
 	if !data.LogConnectionBegin.IsNull() {
 		body, _ = sjson.Set(body, "logBegin", data.LogConnectionBegin.ValueBool())
@@ -552,27 +713,44 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 		body, _ = sjson.Set(body, "variableSet.id", data.VariableSetId.ValueString())
 	}
 	if len(data.Applications) > 0 {
-		body, _ = sjson.Set(body, "applications.applications", []any{})
+		var applicationsBody strings.Builder
+		applicationsBody.WriteString("[")
 		for _, item := range data.Applications {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "applications.applications.-1", itemBody)
+			if itemBody != "" {
+				if applicationsBody.Len() > 1 {
+					applicationsBody.WriteString(",")
+				}
+				applicationsBody.WriteString(itemBody)
+			}
 		}
+		applicationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "applications.applications", applicationsBody.String())
 	}
 	if len(data.ApplicationFilterObjects) > 0 {
-		body, _ = sjson.Set(body, "applications.applicationFilters", []any{})
+		var applicationFilterObjectsBody strings.Builder
+		applicationFilterObjectsBody.WriteString("[")
 		for _, item := range data.ApplicationFilterObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "applications.applicationFilters.-1", itemBody)
+			if itemBody != "" {
+				if applicationFilterObjectsBody.Len() > 1 {
+					applicationFilterObjectsBody.WriteString(",")
+				}
+				applicationFilterObjectsBody.WriteString(itemBody)
+			}
 		}
+		applicationFilterObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "applications.applicationFilters", applicationFilterObjectsBody.String())
 	}
 	if len(data.ApplicationFilters) > 0 {
-		body, _ = sjson.Set(body, "applications.inlineApplicationFilters", []any{})
+		var applicationFiltersBody strings.Builder
+		applicationFiltersBody.WriteString("[")
 		for _, item := range data.ApplicationFilters {
 			itemBody := ""
 			if len(item.Types) > 0 {
@@ -650,8 +828,15 @@ func (data AccessRule) toBody(ctx context.Context, state AccessRule) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "users.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "applications.inlineApplicationFilters.-1", itemBody)
+			if itemBody != "" {
+				if applicationFiltersBody.Len() > 1 {
+					applicationFiltersBody.WriteString(",")
+				}
+				applicationFiltersBody.WriteString(itemBody)
+			}
 		}
+		applicationFiltersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "applications.inlineApplicationFilters", applicationFiltersBody.String())
 	}
 	return body
 }

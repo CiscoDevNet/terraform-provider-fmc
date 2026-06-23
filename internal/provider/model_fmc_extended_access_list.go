@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -119,7 +120,8 @@ func (data ExtendedAccessList) toBody(ctx context.Context, state ExtendedAccessL
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -247,8 +249,15 @@ func (data ExtendedAccessList) toBody(ctx context.Context, state ExtendedAccessL
 					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.literals.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,24 +84,40 @@ func (data URLGroup) toBody(ctx context.Context, state URLGroup) string {
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Urls) > 0 {
-		body, _ = sjson.Set(body, "objects", []any{})
+		var urlsBody strings.Builder
+		urlsBody.WriteString("[")
 		for _, item := range data.Urls {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
+			if itemBody != "" {
+				if urlsBody.Len() > 1 {
+					urlsBody.WriteString(",")
+				}
+				urlsBody.WriteString(itemBody)
+			}
 		}
+		urlsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "objects", urlsBody.String())
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var literalsBody strings.Builder
+		literalsBody.WriteString("[")
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Url.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "url", item.Url.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if literalsBody.Len() > 1 {
+					literalsBody.WriteString(",")
+				}
+				literalsBody.WriteString(itemBody)
+			}
 		}
+		literalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", literalsBody.String())
 	}
 	return body
 }

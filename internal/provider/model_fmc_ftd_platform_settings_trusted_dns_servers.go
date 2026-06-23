@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -97,14 +98,22 @@ func (data FTDPlatformSettingsTrustedDNSServers) toBody(ctx context.Context, sta
 		body, _ = sjson.Set(body, "dnsServers.literals", values)
 	}
 	if len(data.TrustedDnsServersObjects) > 0 {
-		body, _ = sjson.Set(body, "dnsServers.objects", []any{})
+		var trustedDnsServersObjectsBody strings.Builder
+		trustedDnsServersObjectsBody.WriteString("[")
 		for _, item := range data.TrustedDnsServersObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dnsServers.objects.-1", itemBody)
+			if itemBody != "" {
+				if trustedDnsServersObjectsBody.Len() > 1 {
+					trustedDnsServersObjectsBody.WriteString(",")
+				}
+				trustedDnsServersObjectsBody.WriteString(itemBody)
+			}
 		}
+		trustedDnsServersObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dnsServers.objects", trustedDnsServersObjectsBody.String())
 	}
 	return body
 }

@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -72,7 +73,8 @@ func (data IPv4PrefixList) toBody(ctx context.Context, state IPv4PrefixList) str
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -87,8 +89,15 @@ func (data IPv4PrefixList) toBody(ctx context.Context, state IPv4PrefixList) str
 			if !item.MaxPrefixLength.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "maxPrefixLength", item.MaxPrefixLength.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }

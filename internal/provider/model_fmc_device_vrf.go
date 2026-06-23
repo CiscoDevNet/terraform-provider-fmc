@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -78,7 +79,8 @@ func (data DeviceVRF) toBody(ctx context.Context, state DeviceVRF) string {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []any{})
+		var interfacesBody strings.Builder
+		interfacesBody.WriteString("[")
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -90,8 +92,15 @@ func (data DeviceVRF) toBody(ctx context.Context, state DeviceVRF) string {
 			if !item.LogicalName.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ifname", item.LogicalName.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.-1", itemBody)
+			if itemBody != "" {
+				if interfacesBody.Len() > 1 {
+					interfacesBody.WriteString(",")
+				}
+				interfacesBody.WriteString(itemBody)
+			}
 		}
+		interfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces", interfacesBody.String())
 	}
 	return body
 }

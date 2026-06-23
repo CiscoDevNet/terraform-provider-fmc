@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -136,7 +137,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 		body, _ = sjson.Set(body, "port", data.ServerPort.ValueInt64())
 	}
 	if len(data.ManagementHosts) > 0 {
-		body, _ = sjson.Set(body, "snmpMgmtHosts", []any{})
+		var managementHostsBody strings.Builder
+		managementHostsBody.WriteString("[")
 		for _, item := range data.ManagementHosts {
 			itemBody := ""
 			if !item.NetworkObjectId.IsNull() {
@@ -184,11 +186,19 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "snmpMgmtHosts.-1", itemBody)
+			if itemBody != "" {
+				if managementHostsBody.Len() > 1 {
+					managementHostsBody.WriteString(",")
+				}
+				managementHostsBody.WriteString(itemBody)
+			}
 		}
+		managementHostsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "snmpMgmtHosts", managementHostsBody.String())
 	}
 	if len(data.Snmpv3Users) > 0 {
-		body, _ = sjson.Set(body, "snmpv3Users", []any{})
+		var snmpv3UsersBody strings.Builder
+		snmpv3UsersBody.WriteString("[")
 		for _, item := range data.Snmpv3Users {
 			itemBody := ""
 			if !item.SecurityLevel.IsNull() {
@@ -212,8 +222,15 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 			if !item.EncryptionPassword.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "encryptionPassword", item.EncryptionPassword.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "snmpv3Users.-1", itemBody)
+			if itemBody != "" {
+				if snmpv3UsersBody.Len() > 1 {
+					snmpv3UsersBody.WriteString(",")
+				}
+				snmpv3UsersBody.WriteString(itemBody)
+			}
 		}
+		snmpv3UsersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "snmpv3Users", snmpv3UsersBody.String())
 	}
 	if !data.TrapSyslog.IsNull() {
 		body, _ = sjson.Set(body, "snmpTrap.syslog", data.TrapSyslog.ValueBool())

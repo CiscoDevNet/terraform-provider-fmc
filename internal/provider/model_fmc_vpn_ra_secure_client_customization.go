@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -94,64 +95,112 @@ func (data VPNRASecureClientCustomization) toBody(ctx context.Context, state VPN
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnSecureClientCustomization")
 	if len(data.GuiAndTextMessages) > 0 {
-		body, _ = sjson.Set(body, "languageTranslations", []any{})
+		var guiAndTextMessagesBody strings.Builder
+		guiAndTextMessagesBody.WriteString("[")
 		for _, item := range data.GuiAndTextMessages {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "languageTranslations.-1", itemBody)
+			if itemBody != "" {
+				if guiAndTextMessagesBody.Len() > 1 {
+					guiAndTextMessagesBody.WriteString(",")
+				}
+				guiAndTextMessagesBody.WriteString(itemBody)
+			}
 		}
+		guiAndTextMessagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "languageTranslations", guiAndTextMessagesBody.String())
 	}
 	if len(data.IconsAndImages) > 0 {
-		body, _ = sjson.Set(body, "imagesAndIcons", []any{})
+		var iconsAndImagesBody strings.Builder
+		iconsAndImagesBody.WriteString("[")
 		for _, item := range data.IconsAndImages {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "imagesAndIcons.-1", itemBody)
+			if itemBody != "" {
+				if iconsAndImagesBody.Len() > 1 {
+					iconsAndImagesBody.WriteString(",")
+				}
+				iconsAndImagesBody.WriteString(itemBody)
+			}
 		}
+		iconsAndImagesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "imagesAndIcons", iconsAndImagesBody.String())
 	}
 	if len(data.Scripts) > 0 {
-		body, _ = sjson.Set(body, "scripts", []any{})
+		var scriptsBody strings.Builder
+		scriptsBody.WriteString("[")
 		for _, item := range data.Scripts {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "scripts.-1", itemBody)
+			if itemBody != "" {
+				if scriptsBody.Len() > 1 {
+					scriptsBody.WriteString(",")
+				}
+				scriptsBody.WriteString(itemBody)
+			}
 		}
+		scriptsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "scripts", scriptsBody.String())
 	}
 	if len(data.Binaries) > 0 {
-		body, _ = sjson.Set(body, "binaries", []any{})
+		var binariesBody strings.Builder
+		binariesBody.WriteString("[")
 		for _, item := range data.Binaries {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "binaries.-1", itemBody)
+			if itemBody != "" {
+				if binariesBody.Len() > 1 {
+					binariesBody.WriteString(",")
+				}
+				binariesBody.WriteString(itemBody)
+			}
 		}
+		binariesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "binaries", binariesBody.String())
 	}
 	if len(data.CustomInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "customizedInstallerTransforms", []any{})
+		var customInstallerTransformsBody strings.Builder
+		customInstallerTransformsBody.WriteString("[")
 		for _, item := range data.CustomInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "customizedInstallerTransforms.-1", itemBody)
+			if itemBody != "" {
+				if customInstallerTransformsBody.Len() > 1 {
+					customInstallerTransformsBody.WriteString(",")
+				}
+				customInstallerTransformsBody.WriteString(itemBody)
+			}
 		}
+		customInstallerTransformsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "customizedInstallerTransforms", customInstallerTransformsBody.String())
 	}
 	if len(data.LocalizedInstallerTransforms) > 0 {
-		body, _ = sjson.Set(body, "localizedInstallerTransforms", []any{})
+		var localizedInstallerTransformsBody strings.Builder
+		localizedInstallerTransformsBody.WriteString("[")
 		for _, item := range data.LocalizedInstallerTransforms {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "localizedInstallerTransforms.-1", itemBody)
+			if itemBody != "" {
+				if localizedInstallerTransformsBody.Len() > 1 {
+					localizedInstallerTransformsBody.WriteString(",")
+				}
+				localizedInstallerTransformsBody.WriteString(itemBody)
+			}
 		}
+		localizedInstallerTransformsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "localizedInstallerTransforms", localizedInstallerTransformsBody.String())
 	}
 	return body
 }

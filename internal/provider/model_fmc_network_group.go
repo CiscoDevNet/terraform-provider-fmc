@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -84,7 +85,8 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Objects) > 0 {
-		body, _ = sjson.Set(body, "objects", []any{})
+		var objectsBody strings.Builder
+		objectsBody.WriteString("[")
 		for _, item := range data.Objects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -94,19 +96,34 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
+			if itemBody != "" {
+				if objectsBody.Len() > 1 {
+					objectsBody.WriteString(",")
+				}
+				objectsBody.WriteString(itemBody)
+			}
 		}
+		objectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "objects", objectsBody.String())
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var literalsBody strings.Builder
+		literalsBody.WriteString("[")
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Value.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Value.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if literalsBody.Len() > 1 {
+					literalsBody.WriteString(",")
+				}
+				literalsBody.WriteString(itemBody)
+			}
 		}
+		literalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", literalsBody.String())
 	}
 	return body
 }

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -83,7 +84,8 @@ func (data FTDPlatformSettingsSyslogLoggingDestination) toBody(ctx context.Conte
 		body, _ = sjson.Set(body, "allEventConfig.value", data.GlobalEventClassFilterValue.ValueString())
 	}
 	if len(data.EventClassFilters) > 0 {
-		body, _ = sjson.Set(body, "specificEventConfig", []any{})
+		var eventClassFiltersBody strings.Builder
+		eventClassFiltersBody.WriteString("[")
 		for _, item := range data.EventClassFilters {
 			itemBody := ""
 			if !item.Class.IsNull() {
@@ -92,8 +94,15 @@ func (data FTDPlatformSettingsSyslogLoggingDestination) toBody(ctx context.Conte
 			if !item.Severity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "severity", item.Severity.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "specificEventConfig.-1", itemBody)
+			if itemBody != "" {
+				if eventClassFiltersBody.Len() > 1 {
+					eventClassFiltersBody.WriteString(",")
+				}
+				eventClassFiltersBody.WriteString(itemBody)
+			}
 		}
+		eventClassFiltersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "specificEventConfig", eventClassFiltersBody.String())
 	}
 	return body
 }

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,7 +84,8 @@ func (data DeviceHAPairMonitoring) toBody(ctx context.Context, state DeviceHAPai
 		body, _ = sjson.Set(body, "ipv4Configuration.standbyIPv4Address", data.Ipv4StandbyAddress.ValueString())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.ActiveAddress.IsNull() {
@@ -92,8 +94,15 @@ func (data DeviceHAPairMonitoring) toBody(ctx context.Context, state DeviceHAPai
 			if !item.StandbyAddress.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "standbyIPv6", item.StandbyAddress.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6Configuration.ipv6ActiveStandbyPair.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6Configuration.ipv6ActiveStandbyPair", ipv6AddressesBody.String())
 	}
 	return body
 }

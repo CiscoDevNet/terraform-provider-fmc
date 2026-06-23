@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -174,7 +175,8 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 		body, _ = sjson.Set(body, "defaultAction.snmpConfig.id", data.DefaultActionSnmpAlertId.ValueString())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "dummy_rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -383,8 +385,15 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 			if !item.SnmpAlertId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "snmpConfig.id", item.SnmpAlertId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_rules", rulesBody.String())
 	}
 	return body
 }

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -149,14 +150,22 @@ func (data ChassisLogicalDevice) toBody(ctx context.Context, state ChassisLogica
 		body, _ = sjson.Set(body, "resourceProfile.name", data.ResourceProfileName.ValueString())
 	}
 	if len(data.AssignedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "externalPortLink", []any{})
+		var assignedInterfacesBody strings.Builder
+		assignedInterfacesBody.WriteString("[")
 		for _, item := range data.AssignedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "externalPortLink.-1", itemBody)
+			if itemBody != "" {
+				if assignedInterfacesBody.Len() > 1 {
+					assignedInterfacesBody.WriteString(",")
+				}
+				assignedInterfacesBody.WriteString(itemBody)
+			}
 		}
+		assignedInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "externalPortLink", assignedInterfacesBody.String())
 	}
 	if !data.DeviceGroupId.IsNull() {
 		body, _ = sjson.Set(body, "deviceRegistration.deviceGroup.id", data.DeviceGroupId.ValueString())

@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -89,7 +90,8 @@ func (data TimeRange) toBody(ctx context.Context, state TimeRange) string {
 		body, _ = sjson.Set(body, "effectiveEndDateTime", data.EndTime.ValueString())
 	}
 	if len(data.RecurrenceList) > 0 {
-		body, _ = sjson.Set(body, "recurrenceList", []any{})
+		var recurrenceListBody strings.Builder
+		recurrenceListBody.WriteString("[")
 		for _, item := range data.RecurrenceList {
 			itemBody := ""
 			if !item.RecurrenceType.IsNull() {
@@ -118,8 +120,15 @@ func (data TimeRange) toBody(ctx context.Context, state TimeRange) string {
 				item.DailyDays.ElementsAs(ctx, &values, false)
 				itemBody, _ = sjson.Set(itemBody, "days", values)
 			}
-			body, _ = sjson.SetRaw(body, "recurrenceList.-1", itemBody)
+			if itemBody != "" {
+				if recurrenceListBody.Len() > 1 {
+					recurrenceListBody.WriteString(",")
+				}
+				recurrenceListBody.WriteString(itemBody)
+			}
 		}
+		recurrenceListBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "recurrenceList", recurrenceListBody.String())
 	}
 	return body
 }

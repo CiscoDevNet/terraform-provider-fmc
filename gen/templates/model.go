@@ -201,8 +201,10 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", values)
 	}
 	{{- else if isNestedListMapSet .}}
+	{{- $listBld := printf "%sBody" (lowerFirst (toGoName .TfName))}}
 	if len(data.{{toGoName .TfName}}) > 0 {
-		body, _ = sjson.Set(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", []any{})
+		var {{$listBld}} strings.Builder
+		{{$listBld}}.WriteString("[")
 		{{- if isNestedMap .}}
 		for key, item := range data.{{toGoName .TfName}} {
 			itemBody, _ := sjson.Set("{}", "name", key)
@@ -283,8 +285,15 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 			{{- end}}
 			{{- end}}
 			{{- end}}
-			body, _ = sjson.SetRaw(body, "{{range .DataPath}}{{.}}.{{end}}{{if .ModelName}}{{.ModelName}}.{{end}}-1", itemBody)
+			if itemBody != "" {
+				if {{$listBld}}.Len() > 1 {
+					{{$listBld}}.WriteString(",")
+				}
+				{{$listBld}}.WriteString(itemBody)
+			}
 		}
+		{{$listBld}}.WriteString("]")
+		body, _ = sjson.SetRaw(body, "{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{$listBld}}.String())
 	}
 	{{- end}}
 	{{- end}}

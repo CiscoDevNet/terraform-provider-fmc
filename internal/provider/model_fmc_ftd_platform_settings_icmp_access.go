@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -89,7 +90,8 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 		body, _ = sjson.Set(body, "burstSize", data.BurstSize.ValueInt64())
 	}
 	if len(data.Configurations) > 0 {
-		body, _ = sjson.Set(body, "icmpConfigs", []any{})
+		var configurationsBody strings.Builder
+		configurationsBody.WriteString("[")
 		for _, item := range data.Configurations {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -122,8 +124,15 @@ func (data FTDPlatformSettingsICMPAccess) toBody(ctx context.Context, state FTDP
 					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "icmpConfigs.-1", itemBody)
+			if itemBody != "" {
+				if configurationsBody.Len() > 1 {
+					configurationsBody.WriteString(",")
+				}
+				configurationsBody.WriteString(itemBody)
+			}
 		}
+		configurationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "icmpConfigs", configurationsBody.String())
 	}
 	return body
 }

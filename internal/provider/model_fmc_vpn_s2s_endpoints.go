@@ -24,6 +24,7 @@ import (
 	"maps"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -99,7 +100,8 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -187,8 +189,15 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 			if !item.BackupLocalIdentityString.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "backupInterfaces.0.localIdentityString", item.BackupLocalIdentityString.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }

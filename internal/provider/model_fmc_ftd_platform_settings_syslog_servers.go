@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -92,7 +93,8 @@ func (data FTDPlatformSettingsSyslogServers) toBody(ctx context.Context, state F
 		body, _ = sjson.Set(body, "messageSizeQueue", data.MessageQueueSize.ValueInt64())
 	}
 	if len(data.Servers) > 0 {
-		body, _ = sjson.Set(body, "servers", []any{})
+		var serversBody strings.Builder
+		serversBody.WriteString("[")
 		for _, item := range data.Servers {
 			itemBody := ""
 			if !item.NetworkObjectId.IsNull() {
@@ -134,8 +136,15 @@ func (data FTDPlatformSettingsSyslogServers) toBody(ctx context.Context, state F
 					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "servers.-1", itemBody)
+			if itemBody != "" {
+				if serversBody.Len() > 1 {
+					serversBody.WriteString(",")
+				}
+				serversBody.WriteString(itemBody)
+			}
 		}
+		serversBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "servers", serversBody.String())
 	}
 	return body
 }

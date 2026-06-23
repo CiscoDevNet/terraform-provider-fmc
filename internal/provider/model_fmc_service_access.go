@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -83,7 +84,8 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 		body, _ = sjson.Set(body, "defaultAction", data.DefaultAction.ValueString())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Action.IsNull() {
@@ -102,8 +104,15 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 					itemBody, _ = sjson.SetRaw(itemBody, "geoSources.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "rules", rulesBody.String())
 	}
 	return body
 }

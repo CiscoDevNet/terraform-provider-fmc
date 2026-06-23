@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -212,7 +213,8 @@ func (data IdentityPolicy) toBody(ctx context.Context, state IdentityPolicy) str
 		body, _ = sjson.Set(body, "htmlActiveAuthPage", data.ActiveAuthenticationPageHtml.ValueString())
 	}
 	if len(data.Categories) > 0 {
-		body, _ = sjson.Set(body, "dummy_categories", []any{})
+		var categoriesBody strings.Builder
+		categoriesBody.WriteString("[")
 		for _, item := range data.Categories {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -222,11 +224,19 @@ func (data IdentityPolicy) toBody(ctx context.Context, state IdentityPolicy) str
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "IdentityPolicyCategory")
-			body, _ = sjson.SetRaw(body, "dummy_categories.-1", itemBody)
+			if itemBody != "" {
+				if categoriesBody.Len() > 1 {
+					categoriesBody.WriteString(",")
+				}
+				categoriesBody.WriteString(itemBody)
+			}
 		}
+		categoriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_categories", categoriesBody.String())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "dummy_rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -435,8 +445,15 @@ func (data IdentityPolicy) toBody(ctx context.Context, state IdentityPolicy) str
 					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_rules", rulesBody.String())
 	}
 	return body
 }

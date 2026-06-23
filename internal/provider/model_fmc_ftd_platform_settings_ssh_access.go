@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -83,7 +84,8 @@ func (data FTDPlatformSettingsSSHAccess) toBody(ctx context.Context, state FTDPl
 		body, _ = sjson.Set(body, "interfaces.literals", values)
 	}
 	if len(data.InterfaceObjects) > 0 {
-		body, _ = sjson.Set(body, "interfaces.objects", []any{})
+		var interfaceObjectsBody strings.Builder
+		interfaceObjectsBody.WriteString("[")
 		for _, item := range data.InterfaceObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -95,8 +97,15 @@ func (data FTDPlatformSettingsSSHAccess) toBody(ctx context.Context, state FTDPl
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.objects.-1", itemBody)
+			if itemBody != "" {
+				if interfaceObjectsBody.Len() > 1 {
+					interfaceObjectsBody.WriteString(",")
+				}
+				interfaceObjectsBody.WriteString(itemBody)
+			}
 		}
+		interfaceObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces.objects", interfaceObjectsBody.String())
 	}
 	return body
 }

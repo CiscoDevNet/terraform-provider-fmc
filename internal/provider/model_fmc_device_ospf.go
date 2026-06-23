@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -241,7 +242,8 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 		body, _ = sjson.Set(body, "processConfiguration.nsfGracefulRestart.nsfEnforceGlobal", data.NonStopForwardingStrictMode.ValueBool())
 	}
 	if len(data.Areas) > 0 {
-		body, _ = sjson.Set(body, "areas", []any{})
+		var areasBody strings.Builder
+		areasBody.WriteString("[")
 		for _, item := range data.Areas {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -367,11 +369,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "filterList.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "areas.-1", itemBody)
+			if itemBody != "" {
+				if areasBody.Len() > 1 {
+					areasBody.WriteString(",")
+				}
+				areasBody.WriteString(itemBody)
+			}
 		}
+		areasBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "areas", areasBody.String())
 	}
 	if len(data.Redistributions) > 0 {
-		body, _ = sjson.Set(body, "redistributeProtocols", []any{})
+		var redistributionsBody strings.Builder
+		redistributionsBody.WriteString("[")
 		for _, item := range data.Redistributions {
 			itemBody := ""
 			if !item.RedistributeProtocol.IsNull() {
@@ -413,11 +423,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 			if !item.RouteMapId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "routeMap.id", item.RouteMapId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "redistributeProtocols.-1", itemBody)
+			if itemBody != "" {
+				if redistributionsBody.Len() > 1 {
+					redistributionsBody.WriteString(",")
+				}
+				redistributionsBody.WriteString(itemBody)
+			}
 		}
+		redistributionsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "redistributeProtocols", redistributionsBody.String())
 	}
 	if len(data.FilterRules) > 0 {
-		body, _ = sjson.Set(body, "filterRules", []any{})
+		var filterRulesBody strings.Builder
+		filterRulesBody.WriteString("[")
 		for _, item := range data.FilterRules {
 			itemBody := ""
 			if !item.AccessListId.IsNull() {
@@ -435,11 +453,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 			if !item.InterfaceId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "inInterface.id", item.InterfaceId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "filterRules.-1", itemBody)
+			if itemBody != "" {
+				if filterRulesBody.Len() > 1 {
+					filterRulesBody.WriteString(",")
+				}
+				filterRulesBody.WriteString(itemBody)
+			}
 		}
+		filterRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "filterRules", filterRulesBody.String())
 	}
 	if len(data.SummaryAddresses) > 0 {
-		body, _ = sjson.Set(body, "summaryAddresses", []any{})
+		var summaryAddressesBody strings.Builder
+		summaryAddressesBody.WriteString("[")
 		for _, item := range data.SummaryAddresses {
 			itemBody := ""
 			if len(item.Networks) > 0 {
@@ -458,11 +484,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 			if !item.Advertise.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "advertise", item.Advertise.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "summaryAddresses.-1", itemBody)
+			if itemBody != "" {
+				if summaryAddressesBody.Len() > 1 {
+					summaryAddressesBody.WriteString(",")
+				}
+				summaryAddressesBody.WriteString(itemBody)
+			}
 		}
+		summaryAddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "summaryAddresses", summaryAddressesBody.String())
 	}
 	if len(data.Neighbors) > 0 {
-		body, _ = sjson.Set(body, "neighbors", []any{})
+		var neighborsBody strings.Builder
+		neighborsBody.WriteString("[")
 		for _, item := range data.Neighbors {
 			itemBody := ""
 			if !item.InterfaceId.IsNull() {
@@ -471,8 +505,15 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 			if !item.NeighborHostId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ipAddress.id", item.NeighborHostId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "neighbors.-1", itemBody)
+			if itemBody != "" {
+				if neighborsBody.Len() > 1 {
+					neighborsBody.WriteString(",")
+				}
+				neighborsBody.WriteString(itemBody)
+			}
 		}
+		neighborsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "neighbors", neighborsBody.String())
 	}
 	return body
 }

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -72,7 +73,8 @@ func (data IntrusionRule) toBody(ctx context.Context, state IntrusionRule) strin
 		body, _ = sjson.Set(body, "ruleData", data.RuleData.ValueString())
 	}
 	if len(data.RuleGroups) > 0 {
-		body, _ = sjson.Set(body, "ruleGroups", []any{})
+		var ruleGroupsBody strings.Builder
+		ruleGroupsBody.WriteString("[")
 		for _, item := range data.RuleGroups {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -81,8 +83,15 @@ func (data IntrusionRule) toBody(ctx context.Context, state IntrusionRule) strin
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ruleGroups.-1", itemBody)
+			if itemBody != "" {
+				if ruleGroupsBody.Len() > 1 {
+					ruleGroupsBody.WriteString(",")
+				}
+				ruleGroupsBody.WriteString(itemBody)
+			}
 		}
+		ruleGroupsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ruleGroups", ruleGroupsBody.String())
 	}
 	return body
 }

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -86,14 +87,22 @@ func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4St
 		body, _ = sjson.Set(body, "links.parent", data.InterfaceId.ValueString())
 	}
 	if len(data.DestinationNetworks) > 0 {
-		body, _ = sjson.Set(body, "selectedNetworks", []any{})
+		var destinationNetworksBody strings.Builder
+		destinationNetworksBody.WriteString("[")
 		for _, item := range data.DestinationNetworks {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "selectedNetworks.-1", itemBody)
+			if itemBody != "" {
+				if destinationNetworksBody.Len() > 1 {
+					destinationNetworksBody.WriteString(",")
+				}
+				destinationNetworksBody.WriteString(itemBody)
+			}
 		}
+		destinationNetworksBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "selectedNetworks", destinationNetworksBody.String())
 	}
 	if !data.Metric.IsNull() {
 		body, _ = sjson.Set(body, "metricValue", data.Metric.ValueInt64())

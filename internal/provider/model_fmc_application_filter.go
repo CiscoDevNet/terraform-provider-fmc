@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -92,7 +93,8 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Applications) > 0 {
-		body, _ = sjson.Set(body, "applications", []any{})
+		var applicationsBody strings.Builder
+		applicationsBody.WriteString("[")
 		for _, item := range data.Applications {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -101,11 +103,19 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "applications.-1", itemBody)
+			if itemBody != "" {
+				if applicationsBody.Len() > 1 {
+					applicationsBody.WriteString(",")
+				}
+				applicationsBody.WriteString(itemBody)
+			}
 		}
+		applicationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "applications", applicationsBody.String())
 	}
 	if len(data.Filters) > 0 {
-		body, _ = sjson.Set(body, "appConditions", []any{})
+		var filtersBody strings.Builder
+		filtersBody.WriteString("[")
 		for _, item := range data.Filters {
 			itemBody := ""
 			if len(item.Types) > 0 {
@@ -158,8 +168,15 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 					itemBody, _ = sjson.SetRaw(itemBody, "tags.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "appConditions.-1", itemBody)
+			if itemBody != "" {
+				if filtersBody.Len() > 1 {
+					filtersBody.WriteString(",")
+				}
+				filtersBody.WriteString(itemBody)
+			}
 		}
+		filtersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "appConditions", filtersBody.String())
 	}
 	return body
 }

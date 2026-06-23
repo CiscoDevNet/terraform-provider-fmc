@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -135,7 +136,8 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.ManualNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_manual_nat_rules", []any{})
+		var manualNatRulesBody strings.Builder
+		manualNatRulesBody.WriteString("[")
 		for _, item := range data.ManualNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -231,11 +233,19 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 			if !item.PatAddressObjectId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "patOptions.patPoolAddress.id", item.PatAddressObjectId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_manual_nat_rules.-1", itemBody)
+			if itemBody != "" {
+				if manualNatRulesBody.Len() > 1 {
+					manualNatRulesBody.WriteString(",")
+				}
+				manualNatRulesBody.WriteString(itemBody)
+			}
 		}
+		manualNatRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_manual_nat_rules", manualNatRulesBody.String())
 	}
 	if len(data.AutoNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_auto_nat_rules", []any{})
+		var autoNatRulesBody strings.Builder
+		autoNatRulesBody.WriteString("[")
 		for _, item := range data.AutoNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -307,8 +317,15 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 			if !item.PatAddressObjectId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "patOptions.patPoolAddress.id", item.PatAddressObjectId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_auto_nat_rules.-1", itemBody)
+			if itemBody != "" {
+				if autoNatRulesBody.Len() > 1 {
+					autoNatRulesBody.WriteString(",")
+				}
+				autoNatRulesBody.WriteString(itemBody)
+			}
 		}
+		autoNatRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_auto_nat_rules", autoNatRulesBody.String())
 	}
 	return body
 }

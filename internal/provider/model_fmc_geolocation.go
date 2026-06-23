@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -76,24 +77,40 @@ func (data Geolocation) toBody(ctx context.Context, state Geolocation) string {
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Continents) > 0 {
-		body, _ = sjson.Set(body, "continents", []any{})
+		var continentsBody strings.Builder
+		continentsBody.WriteString("[")
 		for _, item := range data.Continents {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "continents.-1", itemBody)
+			if itemBody != "" {
+				if continentsBody.Len() > 1 {
+					continentsBody.WriteString(",")
+				}
+				continentsBody.WriteString(itemBody)
+			}
 		}
+		continentsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "continents", continentsBody.String())
 	}
 	if len(data.Countries) > 0 {
-		body, _ = sjson.Set(body, "countries", []any{})
+		var countriesBody strings.Builder
+		countriesBody.WriteString("[")
 		for _, item := range data.Countries {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "countries.-1", itemBody)
+			if itemBody != "" {
+				if countriesBody.Len() > 1 {
+					countriesBody.WriteString(",")
+				}
+				countriesBody.WriteString(itemBody)
+			}
 		}
+		countriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "countries", countriesBody.String())
 	}
 	return body
 }

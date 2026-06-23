@@ -722,7 +722,6 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 	// Create URL path for the request
 	var ruleNames strings.Builder
 	var bulks []string
-	var resAccessRules string = ""
 	var counter int = 0
 	for i := 0; i < len(state.Items); i++ {
 		counter += 1
@@ -742,27 +741,35 @@ func (r *AccessRulesResource) Read(ctx context.Context, req resource.ReadRequest
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Read", state.Id.ValueString()))
+	// Collect the items from each bulk into a single raw JSON array and assemble once.
+	// Appending into the growing response with sjson on every bulk would re-parse and
+	// re-serialize the whole (potentially multi-MB) document each time, i.e. O(bulks^2).
+	var itemsBuilder strings.Builder
+	itemsBuilder.WriteString("[")
 	for _, bulk := range bulks {
 		urlPath := state.getPath() + "?expanded=true&limit=1000&filter=name:" + url.QueryEscape(bulk)
 
 		// Read Access Rules
 		resTemp, err := r.client.Get(urlPath, reqMods...)
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s, %s", err, resAccessRules))
+			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve object (GET), got error: %s", err))
 			return
 		}
-		if resAccessRules == "" {
-			resAccessRules = resTemp.String()
-		} else {
-			items := gjson.Get(resTemp.String(), "items")
-			if !items.Exists() {
-				continue
+
+		items := gjson.Get(resTemp.String(), "items")
+		if !items.Exists() {
+			continue
+		}
+		// items.Raw is "[...]"; strip the surrounding brackets to get the raw elements.
+		if inner := items.Raw[1 : len(items.Raw)-1]; strings.TrimSpace(inner) != "" {
+			if itemsBuilder.Len() > 1 {
+				itemsBuilder.WriteString(",")
 			}
-			if resItems := items.String()[1 : len(items.String())-1]; resItems != "" {
-				resAccessRules, _ = sjson.SetRaw(resAccessRules, "items.-1", resItems)
-			}
+			itemsBuilder.WriteString(inner)
 		}
 	}
+	itemsBuilder.WriteString("]")
+	resAccessRules, _ := sjson.SetRaw("{}", "items", itemsBuilder.String())
 
 	var tmp string
 

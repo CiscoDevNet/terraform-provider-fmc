@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -85,7 +86,8 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -133,8 +135,15 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "recurrenceList.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }

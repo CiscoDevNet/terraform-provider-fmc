@@ -320,7 +320,8 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
 	}
 	if len(data.Categories) > 0 {
-		body, _ = sjson.Set(body, "dummy_categories", []any{})
+		var categoriesBody strings.Builder
+		categoriesBody.WriteString("[")
 		for _, item := range data.Categories {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -332,11 +333,19 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			if !item.Section.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "metadata.section", item.Section.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_categories.-1", itemBody)
+			if itemBody != "" {
+				if categoriesBody.Len() > 1 {
+					categoriesBody.WriteString(",")
+				}
+				categoriesBody.WriteString(itemBody)
+			}
 		}
+		categoriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_categories", categoriesBody.String())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "dummy_rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -755,8 +764,15 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 					itemBody, _ = sjson.SetRaw(itemBody, "users.objects.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "dummy_rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_rules", rulesBody.String())
 	}
 	return body
 }

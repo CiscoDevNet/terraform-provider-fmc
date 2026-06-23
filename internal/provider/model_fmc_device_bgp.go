@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -234,7 +235,8 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 		body, _ = sjson.Set(body, "addressFamilyIPv4.ebgp", data.Ipv4NumberOfEbgpPaths.ValueInt64())
 	}
 	if len(data.Ipv4Neighbors) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.neighbors", []any{})
+		var ipv4NeighborsBody strings.Builder
+		ipv4NeighborsBody.WriteString("[")
 		for _, item := range data.Ipv4Neighbors {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -404,11 +406,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.CustomizedAcceptBothAs.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "neighborLocalAs.dualAs", item.CustomizedAcceptBothAs.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.neighbors.-1", itemBody)
+			if itemBody != "" {
+				if ipv4NeighborsBody.Len() > 1 {
+					ipv4NeighborsBody.WriteString(",")
+				}
+				ipv4NeighborsBody.WriteString(itemBody)
+			}
 		}
+		ipv4NeighborsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.neighbors", ipv4NeighborsBody.String())
 	}
 	if len(data.Ipv4AggregateAddresses) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.aggregateAddressesIPv4s", []any{})
+		var ipv4AggregateAddressesBody strings.Builder
+		ipv4AggregateAddressesBody.WriteString("[")
 		for _, item := range data.Ipv4AggregateAddresses {
 			itemBody := ""
 			if !item.GenerateAs.IsNull() {
@@ -429,11 +439,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.SuppressMapId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "suppressMap.id", item.SuppressMapId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.aggregateAddressesIPv4s.-1", itemBody)
+			if itemBody != "" {
+				if ipv4AggregateAddressesBody.Len() > 1 {
+					ipv4AggregateAddressesBody.WriteString(",")
+				}
+				ipv4AggregateAddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv4AggregateAddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.aggregateAddressesIPv4s", ipv4AggregateAddressesBody.String())
 	}
 	if len(data.Ipv4Filterings) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.distributeLists", []any{})
+		var ipv4FilteringsBody strings.Builder
+		ipv4FilteringsBody.WriteString("[")
 		for _, item := range data.Ipv4Filterings {
 			itemBody := ""
 			if !item.AccessListId.IsNull() {
@@ -448,11 +466,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.ProcessId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protocol.processId", item.ProcessId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.distributeLists.-1", itemBody)
+			if itemBody != "" {
+				if ipv4FilteringsBody.Len() > 1 {
+					ipv4FilteringsBody.WriteString(",")
+				}
+				ipv4FilteringsBody.WriteString(itemBody)
+			}
 		}
+		ipv4FilteringsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.distributeLists", ipv4FilteringsBody.String())
 	}
 	if len(data.Ipv4Networks) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.networks", []any{})
+		var ipv4NetworksBody strings.Builder
+		ipv4NetworksBody.WriteString("[")
 		for _, item := range data.Ipv4Networks {
 			itemBody := ""
 			if !item.NetworkId.IsNull() {
@@ -461,11 +487,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.RouteMapId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "routeMap.id", item.RouteMapId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.networks.-1", itemBody)
+			if itemBody != "" {
+				if ipv4NetworksBody.Len() > 1 {
+					ipv4NetworksBody.WriteString(",")
+				}
+				ipv4NetworksBody.WriteString(itemBody)
+			}
 		}
+		ipv4NetworksBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.networks", ipv4NetworksBody.String())
 	}
 	if len(data.Ipv4Redistributions) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.redistributeProtocols", []any{})
+		var ipv4RedistributionsBody strings.Builder
+		ipv4RedistributionsBody.WriteString("[")
 		for _, item := range data.Ipv4Redistributions {
 			itemBody := ""
 			if !item.SourceProtocol.IsNull() {
@@ -495,11 +529,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.MatchNssaExternal2.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "matchNssaExternal2", item.MatchNssaExternal2.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.redistributeProtocols.-1", itemBody)
+			if itemBody != "" {
+				if ipv4RedistributionsBody.Len() > 1 {
+					ipv4RedistributionsBody.WriteString(",")
+				}
+				ipv4RedistributionsBody.WriteString(itemBody)
+			}
 		}
+		ipv4RedistributionsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.redistributeProtocols", ipv4RedistributionsBody.String())
 	}
 	if len(data.Ipv4RouteInjections) > 0 {
-		body, _ = sjson.Set(body, "addressFamilyIPv4.injectMaps", []any{})
+		var ipv4RouteInjectionsBody strings.Builder
+		ipv4RouteInjectionsBody.WriteString("[")
 		for _, item := range data.Ipv4RouteInjections {
 			itemBody := ""
 			if !item.InjectRouteMapId.IsNull() {
@@ -511,8 +553,15 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 			if !item.InheritAttributes.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "copyAttributes", item.InheritAttributes.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "addressFamilyIPv4.injectMaps.-1", itemBody)
+			if itemBody != "" {
+				if ipv4RouteInjectionsBody.Len() > 1 {
+					ipv4RouteInjectionsBody.WriteString(",")
+				}
+				ipv4RouteInjectionsBody.WriteString(itemBody)
+			}
 		}
+		ipv4RouteInjectionsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "addressFamilyIPv4.injectMaps", ipv4RouteInjectionsBody.String())
 	}
 	if !data.Ipv4ImportRouteTargets.IsNull() {
 		var values []string

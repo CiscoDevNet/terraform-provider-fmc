@@ -21,6 +21,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -73,7 +74,8 @@ func (data StandardCommunityList) toBody(ctx context.Context, state StandardComm
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Entries) > 0 {
-		body, _ = sjson.Set(body, "entries", []any{})
+		var entriesBody strings.Builder
+		entriesBody.WriteString("[")
 		for _, item := range data.Entries {
 			itemBody := ""
 			itemBody, _ = sjson.Set(itemBody, "type", "Standard")
@@ -92,8 +94,15 @@ func (data StandardCommunityList) toBody(ctx context.Context, state StandardComm
 			if !item.NoExport.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "noExport", item.NoExport.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "entries.-1", itemBody)
+			if itemBody != "" {
+				if entriesBody.Len() > 1 {
+					entriesBody.WriteString(",")
+				}
+				entriesBody.WriteString(itemBody)
+			}
 		}
+		entriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "entries", entriesBody.String())
 	}
 	return body
 }

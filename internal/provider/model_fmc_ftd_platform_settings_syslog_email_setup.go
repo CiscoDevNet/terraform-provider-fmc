@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -76,7 +77,8 @@ func (data FTDPlatformSettingsSyslogEmailSetup) toBody(ctx context.Context, stat
 		body, _ = sjson.Set(body, "sourceEmail", data.SourceEmailAddress.ValueString())
 	}
 	if len(data.Destinations) > 0 {
-		body, _ = sjson.Set(body, "destinationEmails", []any{})
+		var destinationsBody strings.Builder
+		destinationsBody.WriteString("[")
 		for _, item := range data.Destinations {
 			itemBody := ""
 			if !item.EmailAddresses.IsNull() {
@@ -87,8 +89,15 @@ func (data FTDPlatformSettingsSyslogEmailSetup) toBody(ctx context.Context, stat
 			if !item.LoggingLevel.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "logLevel", item.LoggingLevel.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "destinationEmails.-1", itemBody)
+			if itemBody != "" {
+				if destinationsBody.Len() > 1 {
+					destinationsBody.WriteString(",")
+				}
+				destinationsBody.WriteString(itemBody)
+			}
 		}
+		destinationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "destinationEmails", destinationsBody.String())
 	}
 	return body
 }

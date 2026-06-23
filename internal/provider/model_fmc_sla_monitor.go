@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -107,14 +108,22 @@ func (data SLAMonitor) toBody(ctx context.Context, state SLAMonitor) string {
 		body, _ = sjson.Set(body, "monitorAddress", data.MonitorAddress.ValueString())
 	}
 	if len(data.SelectedInterfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaceObjects", []any{})
+		var selectedInterfacesBody strings.Builder
+		selectedInterfacesBody.WriteString("[")
 		for _, item := range data.SelectedInterfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaceObjects.-1", itemBody)
+			if itemBody != "" {
+				if selectedInterfacesBody.Len() > 1 {
+					selectedInterfacesBody.WriteString(",")
+				}
+				selectedInterfacesBody.WriteString(itemBody)
+			}
 		}
+		selectedInterfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaceObjects", selectedInterfacesBody.String())
 	}
 	return body
 }

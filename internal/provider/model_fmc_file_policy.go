@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -127,7 +128,8 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 		body, _ = sjson.Set(body, "archiveDepth", data.MaxArchiveDepth.ValueInt64())
 	}
 	if len(data.FileRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_file_rules", []any{})
+		var fileRulesBody strings.Builder
+		fileRulesBody.WriteString("[")
 		for _, item := range data.FileRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -179,8 +181,15 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 					itemBody, _ = sjson.SetRaw(itemBody, "fileTypes.-1", itemChildBody)
 				}
 			}
-			body, _ = sjson.SetRaw(body, "dummy_file_rules.-1", itemBody)
+			if itemBody != "" {
+				if fileRulesBody.Len() > 1 {
+					fileRulesBody.WriteString(",")
+				}
+				fileRulesBody.WriteString(itemBody)
+			}
 		}
+		fileRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_file_rules", fileRulesBody.String())
 	}
 	return body
 }

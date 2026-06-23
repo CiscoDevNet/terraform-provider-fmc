@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,7 +84,8 @@ func (data KeyChain) toBody(ctx context.Context, state KeyChain) string {
 		body, _ = sjson.Set(body, "description", data.Description.ValueString())
 	}
 	if len(data.Keys) > 0 {
-		body, _ = sjson.Set(body, "keys", []any{})
+		var keysBody strings.Builder
+		keysBody.WriteString("[")
 		for _, item := range data.Keys {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -112,8 +114,15 @@ func (data KeyChain) toBody(ctx context.Context, state KeyChain) string {
 			if !item.SendLifetimeEnd.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "sendLifeTime.endLifeTimeValue", item.SendLifetimeEnd.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "keys.-1", itemBody)
+			if itemBody != "" {
+				if keysBody.Len() > 1 {
+					keysBody.WriteString(",")
+				}
+				keysBody.WriteString(itemBody)
+			}
 		}
+		keysBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "keys", keysBody.String())
 	}
 	return body
 }

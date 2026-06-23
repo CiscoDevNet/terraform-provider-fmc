@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -77,7 +78,8 @@ func (data FTDPlatformSettingsSyslogEventList) toBody(ctx context.Context, state
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.EventClasses) > 0 {
-		body, _ = sjson.Set(body, "eventClasses", []any{})
+		var eventClassesBody strings.Builder
+		eventClassesBody.WriteString("[")
 		for _, item := range data.EventClasses {
 			itemBody := ""
 			if !item.Class.IsNull() {
@@ -86,8 +88,15 @@ func (data FTDPlatformSettingsSyslogEventList) toBody(ctx context.Context, state
 			if !item.Severity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "severity", item.Severity.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "eventClasses.-1", itemBody)
+			if itemBody != "" {
+				if eventClassesBody.Len() > 1 {
+					eventClassesBody.WriteString(",")
+				}
+				eventClassesBody.WriteString(itemBody)
+			}
 		}
+		eventClassesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "eventClasses", eventClassesBody.String())
 	}
 	if !data.MessageIds.IsNull() {
 		var values []string

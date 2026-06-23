@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -108,7 +109,8 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 		body, _ = sjson.Set(body, "controlDevice.clusterNodeBootstrap.priority", data.ControlNodePriority.ValueInt64())
 	}
 	if len(data.DataNodes) > 0 {
-		body, _ = sjson.Set(body, "dataDevices", []any{})
+		var dataNodesBody strings.Builder
+		dataNodesBody.WriteString("[")
 		for _, item := range data.DataNodes {
 			itemBody := ""
 			if !item.DeviceId.IsNull() {
@@ -120,8 +122,15 @@ func (data DeviceCluster) toBody(ctx context.Context, state DeviceCluster) strin
 			if !item.Priority.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "clusterNodeBootstrap.priority", item.Priority.ValueInt64())
 			}
-			body, _ = sjson.SetRaw(body, "dataDevices.-1", itemBody)
+			if itemBody != "" {
+				if dataNodesBody.Len() > 1 {
+					dataNodesBody.WriteString(",")
+				}
+				dataNodesBody.WriteString(itemBody)
+			}
 		}
+		dataNodesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dataDevices", dataNodesBody.String())
 	}
 	return body
 }

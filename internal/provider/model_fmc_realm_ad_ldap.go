@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -176,7 +177,8 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 		body, _ = sjson.Set(body, "guestSessionTimeout", data.TimeoutGuestCaptivePortalUsers.ValueInt64())
 	}
 	if len(data.DirectoryServers) > 0 {
-		body, _ = sjson.Set(body, "directoryConfigurations", []any{})
+		var directoryServersBody strings.Builder
+		directoryServersBody.WriteString("[")
 		for _, item := range data.DirectoryServers {
 			itemBody := ""
 			if !item.Hostname.IsNull() {
@@ -197,8 +199,15 @@ func (data RealmADLDAP) toBody(ctx context.Context, state RealmADLDAP) string {
 			if !item.InterfaceGroupId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "interface.id", item.InterfaceGroupId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "directoryConfigurations.-1", itemBody)
+			if itemBody != "" {
+				if directoryServersBody.Len() > 1 {
+					directoryServersBody.WriteString(",")
+				}
+				directoryServersBody.WriteString(itemBody)
+			}
 		}
+		directoryServersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "directoryConfigurations", directoryServersBody.String())
 	}
 	return body
 }

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -85,14 +86,22 @@ func (data DNSServerGroup) toBody(ctx context.Context, state DNSServerGroup) str
 		body, _ = sjson.Set(body, "retries", data.Retries.ValueInt64())
 	}
 	if len(data.DnsServers) > 0 {
-		body, _ = sjson.Set(body, "dnsservers", []any{})
+		var dnsServersBody strings.Builder
+		dnsServersBody.WriteString("[")
 		for _, item := range data.DnsServers {
 			itemBody := ""
 			if !item.Ip.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name-server", item.Ip.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dnsservers.-1", itemBody)
+			if itemBody != "" {
+				if dnsServersBody.Len() > 1 {
+					dnsServersBody.WriteString(",")
+				}
+				dnsServersBody.WriteString(itemBody)
+			}
 		}
+		dnsServersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dnsservers", dnsServersBody.String())
 	}
 	return body
 }
