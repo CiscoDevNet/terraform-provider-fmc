@@ -150,7 +150,7 @@ func (data *FTDPlatformSettingsTrustedDNSServers) fromBody(ctx context.Context, 
 		data.TrustedDnsServersLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("dnsServers.objects"); value.Exists() {
-		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0)
+		data.TrustedDnsServersObjects = make([]FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsTrustedDNSServersTrustedDnsServersObjects{}
@@ -209,16 +209,16 @@ func (data *FTDPlatformSettingsTrustedDNSServers) fromBodyPartial(ctx context.Co
 	} else {
 		data.TrustedDnsServersLiterals = types.SetNull(types.StringType)
 	}
+	trustedDnsServersObjectsArray := res.Get("dnsServers.objects")
 	for i := 0; i < len(data.TrustedDnsServersObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.TrustedDnsServersObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).TrustedDnsServersObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsServers.objects").ForEach(
+		trustedDnsServersObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

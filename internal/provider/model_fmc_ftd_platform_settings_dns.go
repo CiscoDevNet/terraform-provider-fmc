@@ -135,7 +135,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("dnsServerGroups"); value.Exists() {
-		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0)
+		data.DnsServerGroups = make([]FTDPlatformSettingsDNSDnsServerGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSDnsServerGroups{}
@@ -169,7 +169,7 @@ func (data *FTDPlatformSettingsDNS) fromBody(ctx context.Context, res gjson.Resu
 		data.PollTimer = types.Int64Null()
 	}
 	if value := res.Get("interfaceObjects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0)
+		data.InterfaceObjects = make([]FTDPlatformSettingsDNSInterfaceObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsDNSInterfaceObjects{}
@@ -208,16 +208,16 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Type = types.StringNull()
 	}
+	dnsServerGroupsArray := res.Get("dnsServerGroups")
 	for i := 0; i < len(data.DnsServerGroups); i++ {
 		keys := [...]string{"dnsServerGroup.id"}
 		keyValues := [...]string{data.DnsServerGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).DnsServerGroups[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsServerGroups").ForEach(
+		dnsServerGroupsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -271,16 +271,16 @@ func (data *FTDPlatformSettingsDNS) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.PollTimer = types.Int64Null()
 	}
+	interfaceObjectsArray := res.Get("interfaceObjects")
 	for i := 0; i < len(data.InterfaceObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).InterfaceObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaceObjects").ForEach(
+		interfaceObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

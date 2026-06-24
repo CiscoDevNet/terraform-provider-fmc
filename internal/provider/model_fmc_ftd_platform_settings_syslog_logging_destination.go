@@ -124,7 +124,7 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBody(ctx context.Co
 		data.GlobalEventClassFilterValue = types.StringNull()
 	}
 	if value := res.Get("specificEventConfig"); value.Exists() {
-		data.EventClassFilters = make([]FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters, 0)
+		data.EventClassFilters = make([]FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogLoggingDestinationEventClassFilters{}
@@ -173,16 +173,16 @@ func (data *FTDPlatformSettingsSyslogLoggingDestination) fromBodyPartial(ctx con
 	} else {
 		data.GlobalEventClassFilterValue = types.StringNull()
 	}
+	eventClassFiltersArray := res.Get("specificEventConfig")
 	for i := 0; i < len(data.EventClassFilters); i++ {
 		keys := [...]string{"class", "severity"}
 		keyValues := [...]string{data.EventClassFilters[i].Class.ValueString(), data.EventClassFilters[i].Severity.ValueString()}
 
 		parent := &data
 		data := (*parent).EventClassFilters[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("specificEventConfig").ForEach(
+		eventClassFiltersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

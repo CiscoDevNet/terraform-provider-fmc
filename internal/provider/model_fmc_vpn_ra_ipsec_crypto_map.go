@@ -153,7 +153,7 @@ func (data *VPNRAIPSecCryptoMap) fromBody(ctx context.Context, res gjson.Result)
 		data.InterfaceId = types.StringNull()
 	}
 	if value := res.Get("ikev2IpsecProposals"); value.Exists() {
-		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0)
+		data.Ikev2IpsecProposals = make([]VPNRAIPSecCryptoMapIkev2IpsecProposals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRAIPSecCryptoMapIkev2IpsecProposals{}
@@ -252,16 +252,16 @@ func (data *VPNRAIPSecCryptoMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.InterfaceId = types.StringNull()
 	}
+	ikev2IpsecProposalsArray := res.Get("ikev2IpsecProposals")
 	for i := 0; i < len(data.Ikev2IpsecProposals); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2IpsecProposals[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2IpsecProposals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikev2IpsecProposals").ForEach(
+		ikev2IpsecProposalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

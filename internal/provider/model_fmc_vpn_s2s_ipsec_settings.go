@@ -180,7 +180,7 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 		data.Ikev2Mode = types.StringNull()
 	}
 	if value := res.Get("ikeV1IpsecProposal"); value.Exists() {
-		data.Ikev1IpsecProposals = make([]VPNS2SIPSECSettingsIkev1IpsecProposals, 0)
+		data.Ikev1IpsecProposals = make([]VPNS2SIPSECSettingsIkev1IpsecProposals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIPSECSettingsIkev1IpsecProposals{}
@@ -199,7 +199,7 @@ func (data *VPNS2SIPSECSettings) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	if value := res.Get("ikeV2IpsecProposal"); value.Exists() {
-		data.Ikev2IpsecProposals = make([]VPNS2SIPSECSettingsIkev2IpsecProposals, 0)
+		data.Ikev2IpsecProposals = make([]VPNS2SIPSECSettingsIkev2IpsecProposals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIPSECSettingsIkev2IpsecProposals{}
@@ -303,16 +303,16 @@ func (data *VPNS2SIPSECSettings) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.Ikev2Mode = types.StringNull()
 	}
+	ikev1IpsecProposalsArray := res.Get("ikeV1IpsecProposal")
 	for i := 0; i < len(data.Ikev1IpsecProposals); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev1IpsecProposals[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev1IpsecProposals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV1IpsecProposal").ForEach(
+		ikev1IpsecProposalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -351,16 +351,16 @@ func (data *VPNS2SIPSECSettings) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		(*parent).Ikev1IpsecProposals[i] = data
 	}
+	ikev2IpsecProposalsArray := res.Get("ikeV2IpsecProposal")
 	for i := 0; i < len(data.Ikev2IpsecProposals); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2IpsecProposals[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2IpsecProposals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV2IpsecProposal").ForEach(
+		ikev2IpsecProposalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

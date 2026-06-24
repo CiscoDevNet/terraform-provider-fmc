@@ -583,7 +583,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		data.NonStopForwardingStrictMode = types.BoolNull()
 	}
 	if value := res.Get("areas"); value.Exists() {
-		data.Areas = make([]DeviceOSPFAreas, 0)
+		data.Areas = make([]DeviceOSPFAreas, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFAreas{}
@@ -618,7 +618,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.DefaultRouteMetric = types.Int64Null()
 			}
 			if value := res.Get("areaNetworks"); value.Exists() {
-				data.Networks = make([]DeviceOSPFAreasNetworks, 0)
+				data.Networks = make([]DeviceOSPFAreasNetworks, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasNetworks{}
@@ -647,7 +647,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				data.DefaultCost = types.Int64Null()
 			}
 			if value := res.Get("areaRanges"); value.Exists() {
-				data.Ranges = make([]DeviceOSPFAreasRanges, 0)
+				data.Ranges = make([]DeviceOSPFAreasRanges, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasRanges{}
@@ -666,7 +666,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("virtualLinks"); value.Exists() {
-				data.VirtualLinks = make([]DeviceOSPFAreasVirtualLinks, 0)
+				data.VirtualLinks = make([]DeviceOSPFAreasVirtualLinks, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasVirtualLinks{}
@@ -696,7 +696,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 						data.DeadInterval = types.Int64Value(40)
 					}
 					if value := res.Get("authentication.areaAuth.md5AuthList"); value.Exists() {
-						data.AuthenticationAreaMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s, 0)
+						data.AuthenticationAreaMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := DeviceOSPFAreasVirtualLinksAuthenticationAreaMd5s{}
@@ -710,7 +710,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 						})
 					}
 					if value := res.Get("authentication.md5AuthList"); value.Exists() {
-						data.AuthenticationMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationMd5s, 0)
+						data.AuthenticationMd5s = make([]DeviceOSPFAreasVirtualLinksAuthenticationMd5s, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := DeviceOSPFAreasVirtualLinksAuthenticationMd5s{}
@@ -733,7 +733,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("filterList"); value.Exists() {
-				data.InterAreaFilters = make([]DeviceOSPFAreasInterAreaFilters, 0)
+				data.InterAreaFilters = make([]DeviceOSPFAreasInterAreaFilters, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFAreasInterAreaFilters{}
@@ -761,7 +761,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("redistributeProtocols"); value.Exists() {
-		data.Redistributions = make([]DeviceOSPFRedistributions, 0)
+		data.Redistributions = make([]DeviceOSPFRedistributions, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFRedistributions{}
@@ -835,7 +835,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("filterRules"); value.Exists() {
-		data.FilterRules = make([]DeviceOSPFFilterRules, 0)
+		data.FilterRules = make([]DeviceOSPFFilterRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFFilterRules{}
@@ -869,12 +869,12 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("summaryAddresses"); value.Exists() {
-		data.SummaryAddresses = make([]DeviceOSPFSummaryAddresses, 0)
+		data.SummaryAddresses = make([]DeviceOSPFSummaryAddresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFSummaryAddresses{}
 			if value := res.Get("summaryNetwork"); value.Exists() {
-				data.Networks = make([]DeviceOSPFSummaryAddressesNetworks, 0)
+				data.Networks = make([]DeviceOSPFSummaryAddressesNetworks, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceOSPFSummaryAddressesNetworks{}
@@ -902,7 +902,7 @@ func (data *DeviceOSPF) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("neighbors"); value.Exists() {
-		data.Neighbors = make([]DeviceOSPFNeighbors, 0)
+		data.Neighbors = make([]DeviceOSPFNeighbors, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFNeighbors{}
@@ -1031,16 +1031,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.NonStopForwardingStrictMode = types.BoolNull()
 	}
+	areasArray := res.Get("areas")
 	for i := 0; i < len(data.Areas); i++ {
 		keys := [...]string{"areaId"}
 		keyValues := [...]string{data.Areas[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Areas[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("areas").ForEach(
+		areasArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1097,16 +1097,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.DefaultRouteMetric = types.Int64Null()
 		}
+		networksArray := res.Get("areaNetworks")
 		for i := 0; i < len(data.Networks); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Networks[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Networks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("areaNetworks").ForEach(
+			networksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1155,16 +1155,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.DefaultCost = types.Int64Null()
 		}
+		rangesArray := res.Get("areaRanges")
 		for i := 0; i < len(data.Ranges); i++ {
 			keys := [...]string{"addressNetwork.id"}
 			keyValues := [...]string{data.Ranges[i].NetworkObjectId.ValueString()}
 
 			parent := &data
 			data := (*parent).Ranges[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("areaRanges").ForEach(
+			rangesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1203,16 +1203,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).Ranges[i] = data
 		}
+		virtualLinksArray := res.Get("virtualLinks")
 		for i := 0; i < len(data.VirtualLinks); i++ {
 			keys := [...]string{"routerId"}
 			keyValues := [...]string{data.VirtualLinks[i].PeerRouterHostId.ValueString()}
 
 			parent := &data
 			data := (*parent).VirtualLinks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("virtualLinks").ForEach(
+			virtualLinksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1264,16 +1264,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			} else if data.DeadInterval.ValueInt64() != 40 {
 				data.DeadInterval = types.Int64Null()
 			}
+			authenticationAreaMd5sArray := res.Get("authentication.areaAuth.md5AuthList")
 			for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 				keys := [...]string{"md5KeyId"}
 				keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}
 
 				parent := &data
 				data := (*parent).AuthenticationAreaMd5s[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("authentication.areaAuth.md5AuthList").ForEach(
+				authenticationAreaMd5sArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -1307,16 +1307,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				}
 				(*parent).AuthenticationAreaMd5s[i] = data
 			}
+			authenticationMd5sArray := res.Get("authentication.md5AuthList")
 			for i := 0; i < len(data.AuthenticationMd5s); i++ {
 				keys := [...]string{"md5KeyId"}
 				keyValues := [...]string{strconv.FormatInt(data.AuthenticationMd5s[i].Id.ValueInt64(), 10)}
 
 				parent := &data
 				data := (*parent).AuthenticationMd5s[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("authentication.md5AuthList").ForEach(
+				authenticationMd5sArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -1357,16 +1357,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).VirtualLinks[i] = data
 		}
+		interAreaFiltersArray := res.Get("filterList")
 		for i := 0; i < len(data.InterAreaFilters); i++ {
 			keys := [...]string{"prefixList.id"}
 			keyValues := [...]string{data.InterAreaFilters[i].PrefixListId.ValueString()}
 
 			parent := &data
 			data := (*parent).InterAreaFilters[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("filterList").ForEach(
+			interAreaFiltersArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1412,16 +1412,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Areas[i] = data
 	}
+	redistributionsArray := res.Get("redistributeProtocols")
 	for i := 0; i < len(data.Redistributions); i++ {
 		keys := [...]string{"type"}
 		keyValues := [...]string{data.Redistributions[i].RedistributeProtocol.ValueString()}
 
 		parent := &data
 		data := (*parent).Redistributions[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("redistributeProtocols").ForEach(
+		redistributionsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1515,16 +1515,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Redistributions[i] = data
 	}
+	filterRulesArray := res.Get("filterRules")
 	for i := 0; i < len(data.FilterRules); i++ {
 		keys := [...]string{"accessList.id", "type"}
 		keyValues := [...]string{data.FilterRules[i].AccessListId.ValueString(), data.FilterRules[i].TrafficDirection.ValueString()}
 
 		parent := &data
 		data := (*parent).FilterRules[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("filterRules").ForEach(
+		filterRulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1593,16 +1593,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		data := (*parent).SummaryAddresses[i]
 		parentRes := &res
 		res := parentRes.Get(fmt.Sprintf("summaryAddresses.%d", i))
+		networksArray := res.Get("summaryNetwork")
 		for i := 0; i < len(data.Networks); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Networks[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Networks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("summaryNetwork").ForEach(
+			networksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1648,16 +1648,16 @@ func (data *DeviceOSPF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).SummaryAddresses[i] = data
 	}
+	neighborsArray := res.Get("neighbors")
 	for i := 0; i < len(data.Neighbors); i++ {
 		keys := [...]string{"neighborInterface.id", "ipAddress.id"}
 		keyValues := [...]string{data.Neighbors[i].InterfaceId.ValueString(), data.Neighbors[i].NeighborHostId.ValueString()}
 
 		parent := &data
 		data := (*parent).Neighbors[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("neighbors").ForEach(
+		neighborsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

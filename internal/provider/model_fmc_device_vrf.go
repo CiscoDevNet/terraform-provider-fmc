@@ -117,7 +117,7 @@ func (data *DeviceVRF) fromBody(ctx context.Context, res gjson.Result) {
 		data.Description = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]DeviceVRFInterfaces, 0)
+		data.Interfaces = make([]DeviceVRFInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceVRFInterfaces{}
@@ -166,16 +166,16 @@ func (data *DeviceVRF) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else {
 		data.Description = types.StringNull()
 	}
+	interfacesArray := res.Get("interfaces")
 	for i := 0; i < len(data.Interfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Interfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Interfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces").ForEach(
+		interfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

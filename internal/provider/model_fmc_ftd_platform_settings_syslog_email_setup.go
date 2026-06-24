@@ -109,7 +109,7 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBody(ctx context.Context, r
 		data.SourceEmailAddress = types.StringNull()
 	}
 	if value := res.Get("destinationEmails"); value.Exists() {
-		data.Destinations = make([]FTDPlatformSettingsSyslogEmailSetupDestinations, 0)
+		data.Destinations = make([]FTDPlatformSettingsSyslogEmailSetupDestinations, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogEmailSetupDestinations{}
@@ -148,16 +148,16 @@ func (data *FTDPlatformSettingsSyslogEmailSetup) fromBodyPartial(ctx context.Con
 	} else {
 		data.SourceEmailAddress = types.StringNull()
 	}
+	destinationsArray := res.Get("destinationEmails")
 	for i := 0; i < len(data.Destinations); i++ {
 		keys := [...]string{"logLevel"}
 		keyValues := [...]string{data.Destinations[i].LoggingLevel.ValueString()}
 
 		parent := &data
 		data := (*parent).Destinations[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("destinationEmails").ForEach(
+		destinationsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

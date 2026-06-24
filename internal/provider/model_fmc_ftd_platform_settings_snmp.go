@@ -306,7 +306,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		data.ServerPort = types.Int64Value(161)
 	}
 	if value := res.Get("snmpMgmtHosts"); value.Exists() {
-		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0)
+		data.ManagementHosts = make([]FTDPlatformSettingsSNMPManagementHosts, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSNMPManagementHosts{}
@@ -351,7 +351,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 				data.InterfaceLiterals = types.SetNull(types.StringType)
 			}
 			if value := res.Get("interfaces.objects"); value.Exists() {
-				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPManagementHostsInterfaceObjects, 0)
+				data.InterfaceObjects = make([]FTDPlatformSettingsSNMPManagementHostsInterfaceObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FTDPlatformSettingsSNMPManagementHostsInterfaceObjects{}
@@ -379,7 +379,7 @@ func (data *FTDPlatformSettingsSNMP) fromBody(ctx context.Context, res gjson.Res
 		})
 	}
 	if value := res.Get("snmpv3Users"); value.Exists() {
-		data.Snmpv3Users = make([]FTDPlatformSettingsSNMPSnmpv3Users, 0)
+		data.Snmpv3Users = make([]FTDPlatformSettingsSNMPSnmpv3Users, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSNMPSnmpv3Users{}
@@ -543,16 +543,16 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 	} else if data.ServerPort.ValueInt64() != 161 {
 		data.ServerPort = types.Int64Null()
 	}
+	managementHostsArray := res.Get("snmpMgmtHosts")
 	for i := 0; i < len(data.ManagementHosts); i++ {
 		keys := [...]string{"ipAddress.id"}
 		keyValues := [...]string{data.ManagementHosts[i].NetworkObjectId.ValueString()}
 
 		parent := &data
 		data := (*parent).ManagementHosts[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("snmpMgmtHosts").ForEach(
+		managementHostsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -619,16 +619,16 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 		} else {
 			data.InterfaceLiterals = types.SetNull(types.StringType)
 		}
+		interfaceObjectsArray := res.Get("interfaces.objects")
 		for i := 0; i < len(data.InterfaceObjects); i++ {
 			keys := [...]string{"id", "type", "name"}
 			keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).InterfaceObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("interfaces.objects").ForEach(
+			interfaceObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -674,16 +674,16 @@ func (data *FTDPlatformSettingsSNMP) fromBodyPartial(ctx context.Context, res gj
 		}
 		(*parent).ManagementHosts[i] = data
 	}
+	snmpv3UsersArray := res.Get("snmpv3Users")
 	for i := 0; i < len(data.Snmpv3Users); i++ {
 		keys := [...]string{"userName"}
 		keyValues := [...]string{data.Snmpv3Users[i].Username.ValueString()}
 
 		parent := &data
 		data := (*parent).Snmpv3Users[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("snmpv3Users").ForEach(
+		snmpv3UsersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

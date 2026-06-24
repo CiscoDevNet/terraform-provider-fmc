@@ -319,9 +319,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 	if !data.PrefilterPolicyId.IsNull() {
 		body, _ = sjson.Set(body, "prefilterPolicySetting.id", data.PrefilterPolicyId.ValueString())
 	}
-	if !data.ManageCategories.IsNull() {
-		body, _ = sjson.Set(body, "dummy_manage_categories", data.ManageCategories.ValueBool())
-	}
 	if len(data.Categories) > 0 {
 		body, _ = sjson.Set(body, "dummy_categories", []any{})
 		for _, item := range data.Categories {
@@ -337,9 +334,6 @@ func (data AccessControlPolicy) toBody(ctx context.Context, state AccessControlP
 			}
 			body, _ = sjson.SetRaw(body, "dummy_categories.-1", itemBody)
 		}
-	}
-	if !data.ManageRules.IsNull() {
-		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.Rules) > 0 {
 		body, _ = sjson.Set(body, "dummy_rules", []any{})
@@ -847,13 +841,9 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 	} else {
 		data.PrefilterPolicyId = types.StringNull()
 	}
-	if value := res.Get("dummy_manage_categories"); value.Exists() {
-		data.ManageCategories = types.BoolValue(value.Bool())
-	} else {
-		data.ManageCategories = types.BoolValue(true)
-	}
+	data.ManageCategories = types.BoolValue(true)
 	if value := res.Get("dummy_categories"); value.Exists() {
-		data.Categories = make([]AccessControlPolicyCategories, 0)
+		data.Categories = make([]AccessControlPolicyCategories, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := AccessControlPolicyCategories{}
@@ -871,13 +861,9 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 			return true
 		})
 	}
-	if value := res.Get("dummy_manage_rules"); value.Exists() {
-		data.ManageRules = types.BoolValue(value.Bool())
-	} else {
-		data.ManageRules = types.BoolValue(true)
-	}
+	data.ManageRules = types.BoolValue(true)
 	if value := res.Get("dummy_rules"); value.Exists() {
-		data.Rules = make([]AccessControlPolicyRules, 0)
+		data.Rules = make([]AccessControlPolicyRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := AccessControlPolicyRules{}
@@ -912,7 +898,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.Enabled = types.BoolValue(true)
 			}
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
-				data.SourceNetworkLiterals = make([]AccessControlPolicyRulesSourceNetworkLiterals, 0)
+				data.SourceNetworkLiterals = make([]AccessControlPolicyRulesSourceNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceNetworkLiterals{}
@@ -926,7 +912,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
-				data.DestinationNetworkLiterals = make([]AccessControlPolicyRulesDestinationNetworkLiterals, 0)
+				data.DestinationNetworkLiterals = make([]AccessControlPolicyRulesDestinationNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationNetworkLiterals{}
@@ -940,7 +926,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("vlanTags.literals"); value.Exists() {
-				data.VlanTagLiterals = make([]AccessControlPolicyRulesVlanTagLiterals, 0)
+				data.VlanTagLiterals = make([]AccessControlPolicyRulesVlanTagLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesVlanTagLiterals{}
@@ -959,7 +945,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("vlanTags.objects"); value.Exists() {
-				data.VlanTagObjects = make([]AccessControlPolicyRulesVlanTagObjects, 0)
+				data.VlanTagObjects = make([]AccessControlPolicyRulesVlanTagObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesVlanTagObjects{}
@@ -973,7 +959,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
-				data.SourceNetworkObjects = make([]AccessControlPolicyRulesSourceNetworkObjects, 0)
+				data.SourceNetworkObjects = make([]AccessControlPolicyRulesSourceNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceNetworkObjects{}
@@ -992,7 +978,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
-				data.DestinationNetworkObjects = make([]AccessControlPolicyRulesDestinationNetworkObjects, 0)
+				data.DestinationNetworkObjects = make([]AccessControlPolicyRulesDestinationNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationNetworkObjects{}
@@ -1011,7 +997,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourceDynamicObjects.objects"); value.Exists() {
-				data.SourceDynamicObjects = make([]AccessControlPolicyRulesSourceDynamicObjects, 0)
+				data.SourceDynamicObjects = make([]AccessControlPolicyRulesSourceDynamicObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceDynamicObjects{}
@@ -1025,7 +1011,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationDynamicObjects.objects"); value.Exists() {
-				data.DestinationDynamicObjects = make([]AccessControlPolicyRulesDestinationDynamicObjects, 0)
+				data.DestinationDynamicObjects = make([]AccessControlPolicyRulesDestinationDynamicObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationDynamicObjects{}
@@ -1039,7 +1025,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourcePorts.literals"); value.Exists() {
-				data.SourcePortLiterals = make([]AccessControlPolicyRulesSourcePortLiterals, 0)
+				data.SourcePortLiterals = make([]AccessControlPolicyRulesSourcePortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourcePortLiterals{}
@@ -1058,7 +1044,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
-				data.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0)
+				data.SourcePortObjects = make([]AccessControlPolicyRulesSourcePortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourcePortObjects{}
@@ -1072,7 +1058,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationPorts.literals"); value.Exists() {
-				data.DestinationPortLiterals = make([]AccessControlPolicyRulesDestinationPortLiterals, 0)
+				data.DestinationPortLiterals = make([]AccessControlPolicyRulesDestinationPortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationPortLiterals{}
@@ -1106,7 +1092,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
-				data.DestinationPortObjects = make([]AccessControlPolicyRulesDestinationPortObjects, 0)
+				data.DestinationPortObjects = make([]AccessControlPolicyRulesDestinationPortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationPortObjects{}
@@ -1120,7 +1106,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourceSecurityGroupTags.objects"); value.Exists() {
-				data.SourceSgtObjects = make([]AccessControlPolicyRulesSourceSgtObjects, 0)
+				data.SourceSgtObjects = make([]AccessControlPolicyRulesSourceSgtObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceSgtObjects{}
@@ -1144,7 +1130,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("endPointDeviceTypes"); value.Exists() {
-				data.EndpointDeviceTypes = make([]AccessControlPolicyRulesEndpointDeviceTypes, 0)
+				data.EndpointDeviceTypes = make([]AccessControlPolicyRulesEndpointDeviceTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesEndpointDeviceTypes{}
@@ -1168,7 +1154,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationSecurityGroupTags.objects"); value.Exists() {
-				data.DestinationSgtObjects = make([]AccessControlPolicyRulesDestinationSgtObjects, 0)
+				data.DestinationSgtObjects = make([]AccessControlPolicyRulesDestinationSgtObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationSgtObjects{}
@@ -1192,7 +1178,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("sourceZones.objects"); value.Exists() {
-				data.SourceZones = make([]AccessControlPolicyRulesSourceZones, 0)
+				data.SourceZones = make([]AccessControlPolicyRulesSourceZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesSourceZones{}
@@ -1206,7 +1192,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("destinationZones.objects"); value.Exists() {
-				data.DestinationZones = make([]AccessControlPolicyRulesDestinationZones, 0)
+				data.DestinationZones = make([]AccessControlPolicyRulesDestinationZones, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesDestinationZones{}
@@ -1220,7 +1206,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("urls.literals"); value.Exists() {
-				data.UrlLiterals = make([]AccessControlPolicyRulesUrlLiterals, 0)
+				data.UrlLiterals = make([]AccessControlPolicyRulesUrlLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesUrlLiterals{}
@@ -1234,7 +1220,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("urls.objects"); value.Exists() {
-				data.UrlObjects = make([]AccessControlPolicyRulesUrlObjects, 0)
+				data.UrlObjects = make([]AccessControlPolicyRulesUrlObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesUrlObjects{}
@@ -1248,7 +1234,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("urls.urlCategoriesWithReputation"); value.Exists() {
-				data.UrlCategories = make([]AccessControlPolicyRulesUrlCategories, 0)
+				data.UrlCategories = make([]AccessControlPolicyRulesUrlCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesUrlCategories{}
@@ -1327,7 +1313,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				data.VariableSetId = types.StringNull()
 			}
 			if value := res.Get("applications.applications"); value.Exists() {
-				data.Applications = make([]AccessControlPolicyRulesApplications, 0)
+				data.Applications = make([]AccessControlPolicyRulesApplications, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesApplications{}
@@ -1341,7 +1327,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("applications.applicationFilters"); value.Exists() {
-				data.ApplicationFilterObjects = make([]AccessControlPolicyRulesApplicationFilterObjects, 0)
+				data.ApplicationFilterObjects = make([]AccessControlPolicyRulesApplicationFilterObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesApplicationFilterObjects{}
@@ -1355,12 +1341,12 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("applications.inlineApplicationFilters"); value.Exists() {
-				data.ApplicationFilters = make([]AccessControlPolicyRulesApplicationFilters, 0)
+				data.ApplicationFilters = make([]AccessControlPolicyRulesApplicationFilters, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesApplicationFilters{}
 					if value := res.Get("applicationTypes"); value.Exists() {
-						data.Types = make([]AccessControlPolicyRulesApplicationFiltersTypes, 0)
+						data.Types = make([]AccessControlPolicyRulesApplicationFiltersTypes, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessControlPolicyRulesApplicationFiltersTypes{}
@@ -1374,7 +1360,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						})
 					}
 					if value := res.Get("risks"); value.Exists() {
-						data.Risks = make([]AccessControlPolicyRulesApplicationFiltersRisks, 0)
+						data.Risks = make([]AccessControlPolicyRulesApplicationFiltersRisks, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessControlPolicyRulesApplicationFiltersRisks{}
@@ -1388,7 +1374,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						})
 					}
 					if value := res.Get("productivities"); value.Exists() {
-						data.BusinessRelevances = make([]AccessControlPolicyRulesApplicationFiltersBusinessRelevances, 0)
+						data.BusinessRelevances = make([]AccessControlPolicyRulesApplicationFiltersBusinessRelevances, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessControlPolicyRulesApplicationFiltersBusinessRelevances{}
@@ -1402,7 +1388,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						})
 					}
 					if value := res.Get("categories"); value.Exists() {
-						data.Categories = make([]AccessControlPolicyRulesApplicationFiltersCategories, 0)
+						data.Categories = make([]AccessControlPolicyRulesApplicationFiltersCategories, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessControlPolicyRulesApplicationFiltersCategories{}
@@ -1416,7 +1402,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 						})
 					}
 					if value := res.Get("tags"); value.Exists() {
-						data.Tags = make([]AccessControlPolicyRulesApplicationFiltersTags, 0)
+						data.Tags = make([]AccessControlPolicyRulesApplicationFiltersTags, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := AccessControlPolicyRulesApplicationFiltersTags{}
@@ -1434,7 +1420,7 @@ func (data *AccessControlPolicy) fromBody(ctx context.Context, res gjson.Result)
 				})
 			}
 			if value := res.Get("users.objects"); value.Exists() {
-				data.UserObjects = make([]AccessControlPolicyRulesUserObjects, 0)
+				data.UserObjects = make([]AccessControlPolicyRulesUserObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := AccessControlPolicyRulesUserObjects{}
@@ -1562,11 +1548,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.PrefilterPolicyId = types.StringNull()
 	}
-	if value := res.Get("dummy_manage_categories"); value.Exists() && !data.ManageCategories.IsNull() {
-		data.ManageCategories = types.BoolValue(value.Bool())
-	} else if data.ManageCategories.ValueBool() != true {
-		data.ManageCategories = types.BoolNull()
-	}
 	{
 		l := len(res.Get("dummy_categories").Array())
 		tflog.Debug(ctx, fmt.Sprintf("dummy_categories array resizing from %d to %d", len(data.Categories), l))
@@ -1593,11 +1574,6 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data.Name = types.StringNull()
 		}
 		(*parent).Categories[i] = data
-	}
-	if value := res.Get("dummy_manage_rules"); value.Exists() && !data.ManageRules.IsNull() {
-		data.ManageRules = types.BoolValue(value.Bool())
-	} else if data.ManageRules.ValueBool() != true {
-		data.ManageRules = types.BoolNull()
 	}
 	{
 		l := len(res.Get("dummy_rules").Array())
@@ -1644,16 +1620,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else if data.Enabled.ValueBool() != true {
 			data.Enabled = types.BoolNull()
 		}
+		sourceNetworkLiteralsArray := res.Get("sourceNetworks.literals")
 		for i := 0; i < len(data.SourceNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.SourceNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.literals").ForEach(
+			sourceNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1687,16 +1663,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourceNetworkLiterals[i] = data
 		}
+		destinationNetworkLiteralsArray := res.Get("destinationNetworks.literals")
 		for i := 0; i < len(data.DestinationNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.DestinationNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.literals").ForEach(
+			destinationNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1730,16 +1706,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationNetworkLiterals[i] = data
 		}
+		vlanTagLiteralsArray := res.Get("vlanTags.literals")
 		for i := 0; i < len(data.VlanTagLiterals); i++ {
 			keys := [...]string{"startTag", "endTag"}
 			keyValues := [...]string{data.VlanTagLiterals[i].StartTag.ValueString(), data.VlanTagLiterals[i].EndTag.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTagLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("vlanTags.literals").ForEach(
+			vlanTagLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1778,16 +1754,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).VlanTagLiterals[i] = data
 		}
+		vlanTagObjectsArray := res.Get("vlanTags.objects")
 		for i := 0; i < len(data.VlanTagObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.VlanTagObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).VlanTagObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("vlanTags.objects").ForEach(
+			vlanTagObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1821,16 +1797,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).VlanTagObjects[i] = data
 		}
+		sourceNetworkObjectsArray := res.Get("sourceNetworks.objects")
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.objects").ForEach(
+			sourceNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1869,16 +1845,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourceNetworkObjects[i] = data
 		}
+		destinationNetworkObjectsArray := res.Get("destinationNetworks.objects")
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.objects").ForEach(
+			destinationNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1917,16 +1893,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationNetworkObjects[i] = data
 		}
+		sourceDynamicObjectsArray := res.Get("sourceDynamicObjects.objects")
 		for i := 0; i < len(data.SourceDynamicObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceDynamicObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceDynamicObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceDynamicObjects.objects").ForEach(
+			sourceDynamicObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1960,16 +1936,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourceDynamicObjects[i] = data
 		}
+		destinationDynamicObjectsArray := res.Get("destinationDynamicObjects.objects")
 		for i := 0; i < len(data.DestinationDynamicObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationDynamicObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationDynamicObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationDynamicObjects.objects").ForEach(
+			destinationDynamicObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2003,16 +1979,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationDynamicObjects[i] = data
 		}
+		sourcePortLiteralsArray := res.Get("sourcePorts.literals")
 		for i := 0; i < len(data.SourcePortLiterals); i++ {
 			keys := [...]string{"protocol", "port"}
 			keyValues := [...]string{data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].Port.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.literals").ForEach(
+			sourcePortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2051,16 +2027,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourcePortLiterals[i] = data
 		}
+		sourcePortObjectsArray := res.Get("sourcePorts.objects")
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.objects").ForEach(
+			sourcePortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2094,16 +2070,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourcePortObjects[i] = data
 		}
+		destinationPortLiteralsArray := res.Get("destinationPorts.literals")
 		for i := 0; i < len(data.DestinationPortLiterals); i++ {
 			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
 			keyValues := [...]string{data.DestinationPortLiterals[i].Type.ValueString(), data.DestinationPortLiterals[i].Port.ValueString(), data.DestinationPortLiterals[i].Protocol.ValueString(), data.DestinationPortLiterals[i].IcmpType.ValueString(), data.DestinationPortLiterals[i].IcmpCode.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.literals").ForEach(
+			destinationPortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2157,16 +2133,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationPortLiterals[i] = data
 		}
+		destinationPortObjectsArray := res.Get("destinationPorts.objects")
 		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationPortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.objects").ForEach(
+			destinationPortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2200,16 +2176,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationPortObjects[i] = data
 		}
+		sourceSgtObjectsArray := res.Get("sourceSecurityGroupTags.objects")
 		for i := 0; i < len(data.SourceSgtObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceSgtObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceSecurityGroupTags.objects").ForEach(
+			sourceSgtObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2253,16 +2229,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourceSgtObjects[i] = data
 		}
+		endpointDeviceTypesArray := res.Get("endPointDeviceTypes")
 		for i := 0; i < len(data.EndpointDeviceTypes); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.EndpointDeviceTypes[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).EndpointDeviceTypes[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("endPointDeviceTypes").ForEach(
+			endpointDeviceTypesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2306,16 +2282,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).EndpointDeviceTypes[i] = data
 		}
+		destinationSgtObjectsArray := res.Get("destinationSecurityGroupTags.objects")
 		for i := 0; i < len(data.DestinationSgtObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationSgtObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationSgtObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationSecurityGroupTags.objects").ForEach(
+			destinationSgtObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2359,16 +2335,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationSgtObjects[i] = data
 		}
+		sourceZonesArray := res.Get("sourceZones.objects")
 		for i := 0; i < len(data.SourceZones); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceZones[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceZones[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceZones.objects").ForEach(
+			sourceZonesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2402,16 +2378,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).SourceZones[i] = data
 		}
+		destinationZonesArray := res.Get("destinationZones.objects")
 		for i := 0; i < len(data.DestinationZones); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationZones[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationZones[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationZones.objects").ForEach(
+			destinationZonesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2445,16 +2421,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).DestinationZones[i] = data
 		}
+		urlLiteralsArray := res.Get("urls.literals")
 		for i := 0; i < len(data.UrlLiterals); i++ {
 			keys := [...]string{"url"}
 			keyValues := [...]string{data.UrlLiterals[i].Url.ValueString()}
 
 			parent := &data
 			data := (*parent).UrlLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("urls.literals").ForEach(
+			urlLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2488,16 +2464,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).UrlLiterals[i] = data
 		}
+		urlObjectsArray := res.Get("urls.objects")
 		for i := 0; i < len(data.UrlObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.UrlObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).UrlObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("urls.objects").ForEach(
+			urlObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2531,16 +2507,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).UrlObjects[i] = data
 		}
+		urlCategoriesArray := res.Get("urls.urlCategoriesWithReputation")
 		for i := 0; i < len(data.UrlCategories); i++ {
 			keys := [...]string{"category.id"}
 			keyValues := [...]string{data.UrlCategories[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).UrlCategories[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("urls.urlCategoriesWithReputation").ForEach(
+			urlCategoriesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2639,16 +2615,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 		} else {
 			data.VariableSetId = types.StringNull()
 		}
+		applicationsArray := res.Get("applications.applications")
 		for i := 0; i < len(data.Applications); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Applications[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Applications[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("applications.applications").ForEach(
+			applicationsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2682,16 +2658,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).Applications[i] = data
 		}
+		applicationFilterObjectsArray := res.Get("applications.applicationFilters")
 		for i := 0; i < len(data.ApplicationFilterObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.ApplicationFilterObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).ApplicationFilterObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("applications.applicationFilters").ForEach(
+			applicationFilterObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -2740,16 +2716,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			data := (*parent).ApplicationFilters[i]
 			parentRes := &res
 			res := parentRes.Get(fmt.Sprintf("applications.inlineApplicationFilters.%d", i))
+			typesArray := res.Get("applicationTypes")
 			for i := 0; i < len(data.Types); i++ {
 				keys := [...]string{"id"}
 				keyValues := [...]string{data.Types[i].Id.ValueString()}
 
 				parent := &data
 				data := (*parent).Types[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("applicationTypes").ForEach(
+				typesArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -2783,16 +2759,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				}
 				(*parent).Types[i] = data
 			}
+			risksArray := res.Get("risks")
 			for i := 0; i < len(data.Risks); i++ {
 				keys := [...]string{"id"}
 				keyValues := [...]string{data.Risks[i].Id.ValueString()}
 
 				parent := &data
 				data := (*parent).Risks[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("risks").ForEach(
+				risksArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -2826,16 +2802,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				}
 				(*parent).Risks[i] = data
 			}
+			businessRelevancesArray := res.Get("productivities")
 			for i := 0; i < len(data.BusinessRelevances); i++ {
 				keys := [...]string{"id"}
 				keyValues := [...]string{data.BusinessRelevances[i].Id.ValueString()}
 
 				parent := &data
 				data := (*parent).BusinessRelevances[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("productivities").ForEach(
+				businessRelevancesArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -2869,16 +2845,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				}
 				(*parent).BusinessRelevances[i] = data
 			}
+			categoriesArray := res.Get("categories")
 			for i := 0; i < len(data.Categories); i++ {
 				keys := [...]string{"id"}
 				keyValues := [...]string{data.Categories[i].Id.ValueString()}
 
 				parent := &data
 				data := (*parent).Categories[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("categories").ForEach(
+				categoriesArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -2912,16 +2888,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 				}
 				(*parent).Categories[i] = data
 			}
+			tagsArray := res.Get("tags")
 			for i := 0; i < len(data.Tags); i++ {
 				keys := [...]string{"id"}
 				keyValues := [...]string{data.Tags[i].Id.ValueString()}
 
 				parent := &data
 				data := (*parent).Tags[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("tags").ForEach(
+				tagsArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {
@@ -2957,16 +2933,16 @@ func (data *AccessControlPolicy) fromBodyPartial(ctx context.Context, res gjson.
 			}
 			(*parent).ApplicationFilters[i] = data
 		}
+		userObjectsArray := res.Get("users.objects")
 		for i := 0; i < len(data.UserObjects); i++ {
 			keys := [...]string{"id", "realm.id"}
 			keyValues := [...]string{data.UserObjects[i].Id.ValueString(), data.UserObjects[i].RealmId.ValueString()}
 
 			parent := &data
 			data := (*parent).UserObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("users.objects").ForEach(
+			userObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

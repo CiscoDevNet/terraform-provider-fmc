@@ -125,7 +125,7 @@ func (data *DeviceIPv6StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("selectedNetworks"); value.Exists() {
-		data.DestinationNetworks = make([]DeviceIPv6StaticRouteDestinationNetworks, 0)
+		data.DestinationNetworks = make([]DeviceIPv6StaticRouteDestinationNetworks, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceIPv6StaticRouteDestinationNetworks{}
@@ -179,16 +179,16 @@ func (data *DeviceIPv6StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Type = types.StringNull()
 	}
+	destinationNetworksArray := res.Get("selectedNetworks")
 	for i := 0; i < len(data.DestinationNetworks); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DestinationNetworks[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).DestinationNetworks[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedNetworks").ForEach(
+		destinationNetworksArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

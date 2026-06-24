@@ -122,7 +122,7 @@ func (data *FTDPlatformSettingsSSHAccess) fromBody(ctx context.Context, res gjso
 		data.InterfaceLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("interfaces.objects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0)
+		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSSHAccessInterfaceObjects{}
@@ -171,16 +171,16 @@ func (data *FTDPlatformSettingsSSHAccess) fromBodyPartial(ctx context.Context, r
 	} else {
 		data.InterfaceLiterals = types.SetNull(types.StringType)
 	}
+	interfaceObjectsArray := res.Get("interfaces.objects")
 	for i := 0; i < len(data.InterfaceObjects); i++ {
 		keys := [...]string{"id", "type", "name"}
 		keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).InterfaceObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces.objects").ForEach(
+		interfaceObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

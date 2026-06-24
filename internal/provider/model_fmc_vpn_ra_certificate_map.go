@@ -114,7 +114,7 @@ func (data *VPNRACertificateMap) fromBody(ctx context.Context, res gjson.Result)
 		data.UseCertificateToConnectionProfileMappings = types.BoolNull()
 	}
 	if value := res.Get("certificateToConnectionProfileMap"); value.Exists() {
-		data.CertificateToConnectionProfileMappings = make([]VPNRACertificateMapCertificateToConnectionProfileMappings, 0)
+		data.CertificateToConnectionProfileMappings = make([]VPNRACertificateMapCertificateToConnectionProfileMappings, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRACertificateMapCertificateToConnectionProfileMappings{}
@@ -158,16 +158,16 @@ func (data *VPNRACertificateMap) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.UseCertificateToConnectionProfileMappings = types.BoolNull()
 	}
+	certificateToConnectionProfileMappingsArray := res.Get("certificateToConnectionProfileMap")
 	for i := 0; i < len(data.CertificateToConnectionProfileMappings); i++ {
 		keys := [...]string{"certificateMap.id"}
 		keyValues := [...]string{data.CertificateToConnectionProfileMappings[i].CertificateMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).CertificateToConnectionProfileMappings[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("certificateToConnectionProfileMap").ForEach(
+		certificateToConnectionProfileMappingsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

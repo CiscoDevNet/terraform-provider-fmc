@@ -276,7 +276,7 @@ func (data *ChassisLogicalDevice) fromBody(ctx context.Context, res gjson.Result
 		data.ResourceProfileName = types.StringNull()
 	}
 	if value := res.Get("externalPortLink"); value.Exists() {
-		data.AssignedInterfaces = make([]ChassisLogicalDeviceAssignedInterfaces, 0)
+		data.AssignedInterfaces = make([]ChassisLogicalDeviceAssignedInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ChassisLogicalDeviceAssignedInterfaces{}
@@ -435,16 +435,16 @@ func (data *ChassisLogicalDevice) fromBodyPartial(ctx context.Context, res gjson
 	} else {
 		data.ResourceProfileName = types.StringNull()
 	}
+	assignedInterfacesArray := res.Get("externalPortLink")
 	for i := 0; i < len(data.AssignedInterfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AssignedInterfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AssignedInterfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("externalPortLink").ForEach(
+		assignedInterfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

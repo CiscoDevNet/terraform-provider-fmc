@@ -146,7 +146,7 @@ func (data *StandardCommunityLists) fromBody(ctx context.Context, res gjson.Resu
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("entries"); value.Exists() {
-			data.Entries = make([]StandardCommunityListsItemsEntries, 0)
+			data.Entries = make([]StandardCommunityListsItemsEntries, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := StandardCommunityListsItemsEntries{}

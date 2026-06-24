@@ -303,7 +303,12 @@ func (data {{camelCase .Name}}) toBody(ctx context.Context, state {{camelCase .N
 func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result) {
 {{- define "fromBodyTemplate"}}
 	{{- range .Attributes}}
-	{{- if .TfOnly}}{{- continue}}{{- end}}
+	{{- if .TfOnly}}
+	{{- if .DefaultValue}}
+	data.{{toGoName .TfName}} = types.{{.Type}}Value({{.DefaultValue}})
+	{{- end}}
+	{{- continue}}
+	{{- end}}
 	{{- if and (not .Value) (not .WriteOnly) (not .Reference)}}
 	{{- if or (eq .Type "String") (eq .Type "Int64") (eq .Type "Float64") (eq .Type "Bool")}}
 	if value := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"); value.Exists() {
@@ -323,7 +328,7 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 	}
 	{{- else if isNestedListSet .}}
 	if value := res{{if .ModelName}}.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}; value.Exists() {
-		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0)
+		data.{{toGoName .TfName}} = make([]{{.GoTypeName}}, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := {{.GoTypeName}}{}
@@ -441,16 +446,17 @@ func (data *{{camelCase .Name}}) fromBody(ctx context.Context, res gjson.Result)
 		parentRes := &res
 		res := parentRes.Get(fmt.Sprintf("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}.%d", i))
 	{{- else }}
+	{{- $arrayVar := printf "%sArray" (lowerFirst (toGoName .TfName))}}
+	{{if .ModelName}}{{$arrayVar}} := res.Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}"){{end}}
 	for i := 0; i < len(data.{{toGoName .TfName}}); i++ {
 		keys := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if or (eq .Type "Int64") (eq .Type "Bool") (eq .Type "String")}}"{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}", {{end}}{{end}}{{end}} }
 		keyValues := [...]string{ {{$noId := not (hasId .Attributes)}}{{range .Attributes}}{{if or .Id (and $noId (not .Value))}}{{if eq .Type "Int64"}}strconv.FormatInt(data.{{$list}}[i].{{toGoName .TfName}}.ValueInt64(), 10), {{else if eq .Type "Bool"}}strconv.FormatBool(data.{{$list}}[i].{{toGoName .TfName}}.ValueBool()), {{else if eq .Type "String"}}data.{{$list}}[i].{{toGoName .TfName}}.Value{{.Type}}(), {{end}}{{end}}{{end}} }
 
 		parent := &data
 		data := (*parent).{{toGoName .TfName}}[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.{{if .ModelName}}Get("{{range .DataPath}}{{.}}.{{end}}{{.ModelName}}").{{end}}ForEach(
+		{{if .ModelName}}{{$arrayVar}}{{else}}res{{end}}.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

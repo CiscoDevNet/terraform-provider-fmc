@@ -269,7 +269,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("entries"); value.Exists() {
-		data.Entries = make([]ExtendedAccessListEntries, 0)
+		data.Entries = make([]ExtendedAccessListEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ExtendedAccessListEntries{}
@@ -294,7 +294,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				data.LogInterval = types.Int64Value(300)
 			}
 			if value := res.Get("sourceNetworks.literals"); value.Exists() {
-				data.SourceNetworkLiterals = make([]ExtendedAccessListEntriesSourceNetworkLiterals, 0)
+				data.SourceNetworkLiterals = make([]ExtendedAccessListEntriesSourceNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesSourceNetworkLiterals{}
@@ -313,7 +313,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("destinationNetworks.literals"); value.Exists() {
-				data.DestinationNetworkLiterals = make([]ExtendedAccessListEntriesDestinationNetworkLiterals, 0)
+				data.DestinationNetworkLiterals = make([]ExtendedAccessListEntriesDestinationNetworkLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesDestinationNetworkLiterals{}
@@ -332,7 +332,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("sourceNetworks.objects"); value.Exists() {
-				data.SourceNetworkObjects = make([]ExtendedAccessListEntriesSourceNetworkObjects, 0)
+				data.SourceNetworkObjects = make([]ExtendedAccessListEntriesSourceNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesSourceNetworkObjects{}
@@ -346,7 +346,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("destinationNetworks.objects"); value.Exists() {
-				data.DestinationNetworkObjects = make([]ExtendedAccessListEntriesDestinationNetworkObjects, 0)
+				data.DestinationNetworkObjects = make([]ExtendedAccessListEntriesDestinationNetworkObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesDestinationNetworkObjects{}
@@ -360,7 +360,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("securityGroupTags.objects"); value.Exists() {
-				data.SourceSgtObjects = make([]ExtendedAccessListEntriesSourceSgtObjects, 0)
+				data.SourceSgtObjects = make([]ExtendedAccessListEntriesSourceSgtObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesSourceSgtObjects{}
@@ -374,7 +374,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("sourcePorts.objects"); value.Exists() {
-				data.SourcePortObjects = make([]ExtendedAccessListEntriesSourcePortObjects, 0)
+				data.SourcePortObjects = make([]ExtendedAccessListEntriesSourcePortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesSourcePortObjects{}
@@ -388,7 +388,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("destinationPorts.objects"); value.Exists() {
-				data.DestinationPortObjects = make([]ExtendedAccessListEntriesDestinationPortObjects, 0)
+				data.DestinationPortObjects = make([]ExtendedAccessListEntriesDestinationPortObjects, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesDestinationPortObjects{}
@@ -402,7 +402,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("destinationPorts.literals"); value.Exists() {
-				data.DestinationPortLiterals = make([]ExtendedAccessListEntriesDestinationPortLiterals, 0)
+				data.DestinationPortLiterals = make([]ExtendedAccessListEntriesDestinationPortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesDestinationPortLiterals{}
@@ -436,7 +436,7 @@ func (data *ExtendedAccessList) fromBody(ctx context.Context, res gjson.Result) 
 				})
 			}
 			if value := res.Get("sourcePorts.literals"); value.Exists() {
-				data.SourcePortLiterals = make([]ExtendedAccessListEntriesSourcePortLiterals, 0)
+				data.SourcePortLiterals = make([]ExtendedAccessListEntriesSourcePortLiterals, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ExtendedAccessListEntriesSourcePortLiterals{}
@@ -514,16 +514,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 		} else if data.LogInterval.ValueInt64() != 300 {
 			data.LogInterval = types.Int64Null()
 		}
+		sourceNetworkLiteralsArray := res.Get("sourceNetworks.literals")
 		for i := 0; i < len(data.SourceNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.SourceNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.literals").ForEach(
+			sourceNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -562,16 +562,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).SourceNetworkLiterals[i] = data
 		}
+		destinationNetworkLiteralsArray := res.Get("destinationNetworks.literals")
 		for i := 0; i < len(data.DestinationNetworkLiterals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.DestinationNetworkLiterals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.literals").ForEach(
+			destinationNetworkLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -610,16 +610,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).DestinationNetworkLiterals[i] = data
 		}
+		sourceNetworkObjectsArray := res.Get("sourceNetworks.objects")
 		for i := 0; i < len(data.SourceNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourceNetworks.objects").ForEach(
+			sourceNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -653,16 +653,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).SourceNetworkObjects[i] = data
 		}
+		destinationNetworkObjectsArray := res.Get("destinationNetworks.objects")
 		for i := 0; i < len(data.DestinationNetworkObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationNetworkObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationNetworkObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationNetworks.objects").ForEach(
+			destinationNetworkObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -696,16 +696,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).DestinationNetworkObjects[i] = data
 		}
+		sourceSgtObjectsArray := res.Get("securityGroupTags.objects")
 		for i := 0; i < len(data.SourceSgtObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourceSgtObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourceSgtObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("securityGroupTags.objects").ForEach(
+			sourceSgtObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -739,16 +739,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).SourceSgtObjects[i] = data
 		}
+		sourcePortObjectsArray := res.Get("sourcePorts.objects")
 		for i := 0; i < len(data.SourcePortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.SourcePortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.objects").ForEach(
+			sourcePortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -782,16 +782,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).SourcePortObjects[i] = data
 		}
+		destinationPortObjectsArray := res.Get("destinationPorts.objects")
 		for i := 0; i < len(data.DestinationPortObjects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.DestinationPortObjects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortObjects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.objects").ForEach(
+			destinationPortObjectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -825,16 +825,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).DestinationPortObjects[i] = data
 		}
+		destinationPortLiteralsArray := res.Get("destinationPorts.literals")
 		for i := 0; i < len(data.DestinationPortLiterals); i++ {
 			keys := [...]string{"type", "port", "protocol", "icmpType", "code"}
 			keyValues := [...]string{data.DestinationPortLiterals[i].Type.ValueString(), data.DestinationPortLiterals[i].Port.ValueString(), data.DestinationPortLiterals[i].Protocol.ValueString(), data.DestinationPortLiterals[i].IcmpType.ValueString(), data.DestinationPortLiterals[i].IcmpCode.ValueString()}
 
 			parent := &data
 			data := (*parent).DestinationPortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("destinationPorts.literals").ForEach(
+			destinationPortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -888,16 +888,16 @@ func (data *ExtendedAccessList) fromBodyPartial(ctx context.Context, res gjson.R
 			}
 			(*parent).DestinationPortLiterals[i] = data
 		}
+		sourcePortLiteralsArray := res.Get("sourcePorts.literals")
 		for i := 0; i < len(data.SourcePortLiterals); i++ {
 			keys := [...]string{"protocol", "port"}
 			keyValues := [...]string{data.SourcePortLiterals[i].Protocol.ValueString(), data.SourcePortLiterals[i].Port.ValueString()}
 
 			parent := &data
 			data := (*parent).SourcePortLiterals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("sourcePorts.literals").ForEach(
+			sourcePortLiteralsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

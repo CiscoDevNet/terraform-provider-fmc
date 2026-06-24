@@ -211,7 +211,7 @@ func (data *RadiusServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.MergeDownloadableAccessListOrder = types.StringNull()
 	}
 	if value := res.Get("radiusServers"); value.Exists() {
-		data.RadiusServers = make([]RadiusServerGroupRadiusServers, 0)
+		data.RadiusServers = make([]RadiusServerGroupRadiusServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RadiusServerGroupRadiusServers{}
@@ -325,16 +325,16 @@ func (data *RadiusServerGroup) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.MergeDownloadableAccessListOrder = types.StringNull()
 	}
+	radiusServersArray := res.Get("radiusServers")
 	for i := 0; i < len(data.RadiusServers); i++ {
 		keys := [...]string{"host"}
 		keyValues := [...]string{data.RadiusServers[i].Hostname.ValueString()}
 
 		parent := &data
 		data := (*parent).RadiusServers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("radiusServers").ForEach(
+		radiusServersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

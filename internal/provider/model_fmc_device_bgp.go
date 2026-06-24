@@ -625,7 +625,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ipv4NumberOfEbgpPaths = types.Int64Value(1)
 	}
 	if value := res.Get("addressFamilyIPv4.neighbors"); value.Exists() {
-		data.Ipv4Neighbors = make([]DeviceBGPIpv4Neighbors, 0)
+		data.Ipv4Neighbors = make([]DeviceBGPIpv4Neighbors, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Neighbors{}
@@ -675,7 +675,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.Description = types.StringNull()
 			}
 			if value := res.Get("neighborFiltering.neighborDistributeLists"); value.Exists() {
-				data.FilterAccessLists = make([]DeviceBGPIpv4NeighborsFilterAccessLists, 0)
+				data.FilterAccessLists = make([]DeviceBGPIpv4NeighborsFilterAccessLists, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterAccessLists{}
@@ -694,7 +694,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborRouteMap"); value.Exists() {
-				data.FilterRouteMaps = make([]DeviceBGPIpv4NeighborsFilterRouteMaps, 0)
+				data.FilterRouteMaps = make([]DeviceBGPIpv4NeighborsFilterRouteMaps, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterRouteMaps{}
@@ -713,7 +713,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.ipv4PrefixListFilter"); value.Exists() {
-				data.FilterPrefixLists = make([]DeviceBGPIpv4NeighborsFilterPrefixLists, 0)
+				data.FilterPrefixLists = make([]DeviceBGPIpv4NeighborsFilterPrefixLists, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterPrefixLists{}
@@ -732,7 +732,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("neighborFiltering.neighborFilterList"); value.Exists() {
-				data.FilterAsPaths = make([]DeviceBGPIpv4NeighborsFilterAsPaths, 0)
+				data.FilterAsPaths = make([]DeviceBGPIpv4NeighborsFilterAsPaths, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsFilterAsPaths{}
@@ -791,7 +791,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 				data.RoutesGenerateDefaultRouteMapId = types.StringNull()
 			}
 			if value := res.Get("neighborRoutes.neighborAdvertiseMaps"); value.Exists() {
-				data.RoutesAdvertiseMaps = make([]DeviceBGPIpv4NeighborsRoutesAdvertiseMaps, 0)
+				data.RoutesAdvertiseMaps = make([]DeviceBGPIpv4NeighborsRoutesAdvertiseMaps, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceBGPIpv4NeighborsRoutesAdvertiseMaps{}
@@ -899,7 +899,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.aggregateAddressesIPv4s"); value.Exists() {
-		data.Ipv4AggregateAddresses = make([]DeviceBGPIpv4AggregateAddresses, 0)
+		data.Ipv4AggregateAddresses = make([]DeviceBGPIpv4AggregateAddresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4AggregateAddresses{}
@@ -938,7 +938,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.distributeLists"); value.Exists() {
-		data.Ipv4Filterings = make([]DeviceBGPIpv4Filterings, 0)
+		data.Ipv4Filterings = make([]DeviceBGPIpv4Filterings, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Filterings{}
@@ -967,7 +967,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.networks"); value.Exists() {
-		data.Ipv4Networks = make([]DeviceBGPIpv4Networks, 0)
+		data.Ipv4Networks = make([]DeviceBGPIpv4Networks, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Networks{}
@@ -986,7 +986,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.redistributeProtocols"); value.Exists() {
-		data.Ipv4Redistributions = make([]DeviceBGPIpv4Redistributions, 0)
+		data.Ipv4Redistributions = make([]DeviceBGPIpv4Redistributions, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4Redistributions{}
@@ -1040,7 +1040,7 @@ func (data *DeviceBGP) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("addressFamilyIPv4.injectMaps"); value.Exists() {
-		data.Ipv4RouteInjections = make([]DeviceBGPIpv4RouteInjections, 0)
+		data.Ipv4RouteInjections = make([]DeviceBGPIpv4RouteInjections, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceBGPIpv4RouteInjections{}
@@ -1184,16 +1184,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 	} else if data.Ipv4NumberOfEbgpPaths.ValueInt64() != 1 {
 		data.Ipv4NumberOfEbgpPaths = types.Int64Null()
 	}
+	ipv4NeighborsArray := res.Get("addressFamilyIPv4.neighbors")
 	for i := 0; i < len(data.Ipv4Neighbors); i++ {
 		keys := [...]string{"ipv4Address"}
 		keyValues := [...]string{data.Ipv4Neighbors[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Neighbors[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.neighbors").ForEach(
+		ipv4NeighborsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1265,16 +1265,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.Description = types.StringNull()
 		}
+		filterAccessListsArray := res.Get("neighborFiltering.neighborDistributeLists")
 		for i := 0; i < len(data.FilterAccessLists); i++ {
 			keys := [...]string{"accessList.id", "filterUpdateAction"}
 			keyValues := [...]string{data.FilterAccessLists[i].AccessListId.ValueString(), data.FilterAccessLists[i].UpdateDirection.ValueString()}
 
 			parent := &data
 			data := (*parent).FilterAccessLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborFiltering.neighborDistributeLists").ForEach(
+			filterAccessListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1313,16 +1313,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).FilterAccessLists[i] = data
 		}
+		filterRouteMapsArray := res.Get("neighborFiltering.neighborRouteMap")
 		for i := 0; i < len(data.FilterRouteMaps); i++ {
 			keys := [...]string{"routeMap.id", "filterUpdateAction"}
 			keyValues := [...]string{data.FilterRouteMaps[i].RouteMapId.ValueString(), data.FilterRouteMaps[i].UpdateDirection.ValueString()}
 
 			parent := &data
 			data := (*parent).FilterRouteMaps[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborFiltering.neighborRouteMap").ForEach(
+			filterRouteMapsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1361,16 +1361,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).FilterRouteMaps[i] = data
 		}
+		filterPrefixListsArray := res.Get("neighborFiltering.ipv4PrefixListFilter")
 		for i := 0; i < len(data.FilterPrefixLists); i++ {
 			keys := [...]string{"ipv4PrefixList.id", "filterUpdateAction"}
 			keyValues := [...]string{data.FilterPrefixLists[i].PrefixListId.ValueString(), data.FilterPrefixLists[i].UpdateDirection.ValueString()}
 
 			parent := &data
 			data := (*parent).FilterPrefixLists[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborFiltering.ipv4PrefixListFilter").ForEach(
+			filterPrefixListsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1409,16 +1409,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).FilterPrefixLists[i] = data
 		}
+		filterAsPathsArray := res.Get("neighborFiltering.neighborFilterList")
 		for i := 0; i < len(data.FilterAsPaths); i++ {
 			keys := [...]string{"asPathList.id", "asPathList.name", "filterUpdateAction"}
 			keyValues := [...]string{data.FilterAsPaths[i].AsPathId.ValueString(), data.FilterAsPaths[i].AsPathName.ValueString(), data.FilterAsPaths[i].UpdateDirection.ValueString()}
 
 			parent := &data
 			data := (*parent).FilterAsPaths[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborFiltering.neighborFilterList").ForEach(
+			filterAsPathsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1497,16 +1497,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.RoutesGenerateDefaultRouteMapId = types.StringNull()
 		}
+		routesAdvertiseMapsArray := res.Get("neighborRoutes.neighborAdvertiseMaps")
 		for i := 0; i < len(data.RoutesAdvertiseMaps); i++ {
 			keys := [...]string{"routeMap.id", "existRouteMap.id"}
 			keyValues := [...]string{data.RoutesAdvertiseMaps[i].AdvertiseMapId.ValueString(), data.RoutesAdvertiseMaps[i].ExistNonexistMapId.ValueString()}
 
 			parent := &data
 			data := (*parent).RoutesAdvertiseMaps[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("neighborRoutes.neighborAdvertiseMaps").ForEach(
+			routesAdvertiseMapsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -1632,16 +1632,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Ipv4Neighbors[i] = data
 	}
+	ipv4AggregateAddressesArray := res.Get("addressFamilyIPv4.aggregateAddressesIPv4s")
 	for i := 0; i < len(data.Ipv4AggregateAddresses); i++ {
 		keys := [...]string{"ipv4AggregateNetwork.id", "advertiseMap.id", "attributeMap.id", "suppressMap.id"}
 		keyValues := [...]string{data.Ipv4AggregateAddresses[i].NetworkId.ValueString(), data.Ipv4AggregateAddresses[i].AdvertiseMapId.ValueString(), data.Ipv4AggregateAddresses[i].AttributeMapId.ValueString(), data.Ipv4AggregateAddresses[i].SuppressMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4AggregateAddresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.aggregateAddressesIPv4s").ForEach(
+		ipv4AggregateAddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1700,16 +1700,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Ipv4AggregateAddresses[i] = data
 	}
+	ipv4FilteringsArray := res.Get("addressFamilyIPv4.distributeLists")
 	for i := 0; i < len(data.Ipv4Filterings); i++ {
 		keys := [...]string{"accessList.id", "type", "protocol.protocol", "protocol.processId"}
 		keyValues := [...]string{data.Ipv4Filterings[i].AccessListId.ValueString(), data.Ipv4Filterings[i].Direction.ValueString(), data.Ipv4Filterings[i].Protocol.ValueString(), data.Ipv4Filterings[i].ProcessId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Filterings[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.distributeLists").ForEach(
+		ipv4FilteringsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1758,16 +1758,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Ipv4Filterings[i] = data
 	}
+	ipv4NetworksArray := res.Get("addressFamilyIPv4.networks")
 	for i := 0; i < len(data.Ipv4Networks); i++ {
 		keys := [...]string{"ipv4Address.id", "routeMap.id"}
 		keyValues := [...]string{data.Ipv4Networks[i].NetworkId.ValueString(), data.Ipv4Networks[i].RouteMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Networks[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.networks").ForEach(
+		ipv4NetworksArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1806,16 +1806,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Ipv4Networks[i] = data
 	}
+	ipv4RedistributionsArray := res.Get("addressFamilyIPv4.redistributeProtocols")
 	for i := 0; i < len(data.Ipv4Redistributions); i++ {
 		keys := [...]string{"type", "processId"}
 		keyValues := [...]string{data.Ipv4Redistributions[i].SourceProtocol.ValueString(), data.Ipv4Redistributions[i].ProcessId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4Redistributions[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.redistributeProtocols").ForEach(
+		ipv4RedistributionsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1889,16 +1889,16 @@ func (data *DeviceBGP) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		}
 		(*parent).Ipv4Redistributions[i] = data
 	}
+	ipv4RouteInjectionsArray := res.Get("addressFamilyIPv4.injectMaps")
 	for i := 0; i < len(data.Ipv4RouteInjections); i++ {
 		keys := [...]string{"injectMap.id"}
 		keyValues := [...]string{data.Ipv4RouteInjections[i].InjectRouteMapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv4RouteInjections[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("addressFamilyIPv4.injectMaps").ForEach(
+		ipv4RouteInjectionsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

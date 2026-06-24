@@ -165,7 +165,7 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev1CertificateId = types.StringNull()
 	}
 	if value := res.Get("ikeV1Settings.policies"); value.Exists() {
-		data.Ikev1Policies = make([]VPNS2SIKESettingsIkev1Policies, 0)
+		data.Ikev1Policies = make([]VPNS2SIKESettingsIkev1Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIKESettingsIkev1Policies{}
@@ -204,7 +204,7 @@ func (data *VPNS2SIKESettings) fromBody(ctx context.Context, res gjson.Result) {
 		data.Ikev2CertificateId = types.StringNull()
 	}
 	if value := res.Get("ikeV2Settings.policies"); value.Exists() {
-		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0)
+		data.Ikev2Policies = make([]VPNS2SIKESettingsIkev2Policies, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNS2SIKESettingsIkev2Policies{}
@@ -253,16 +253,16 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Ikev1CertificateId = types.StringNull()
 	}
+	ikev1PoliciesArray := res.Get("ikeV1Settings.policies")
 	for i := 0; i < len(data.Ikev1Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev1Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev1Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV1Settings.policies").ForEach(
+		ikev1PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -321,16 +321,16 @@ func (data *VPNS2SIKESettings) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Ikev2CertificateId = types.StringNull()
 	}
+	ikev2PoliciesArray := res.Get("ikeV2Settings.policies")
 	for i := 0; i < len(data.Ikev2Policies); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Ikev2Policies[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Ikev2Policies[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ikeV2Settings.policies").ForEach(
+		ikev2PoliciesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -160,7 +160,7 @@ func (data *DeviceLoopbackInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceLoopbackInterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceLoopbackInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceLoopbackInterfaceIpv6Addresses{}
@@ -229,16 +229,16 @@ func (data *DeviceLoopbackInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ipv4StaticNetmask = types.StringNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

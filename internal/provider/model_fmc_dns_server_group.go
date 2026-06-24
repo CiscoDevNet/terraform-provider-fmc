@@ -128,7 +128,7 @@ func (data *DNSServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Retries = types.Int64Null()
 	}
 	if value := res.Get("dnsservers"); value.Exists() {
-		data.DnsServers = make([]DNSServerGroupDnsServers, 0)
+		data.DnsServers = make([]DNSServerGroupDnsServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DNSServerGroupDnsServers{}
@@ -177,16 +177,16 @@ func (data *DNSServerGroup) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Retries = types.Int64Null()
 	}
+	dnsServersArray := res.Get("dnsservers")
 	for i := 0; i < len(data.DnsServers); i++ {
 		keys := [...]string{"name-server"}
 		keyValues := [...]string{data.DnsServers[i].Ip.ValueString()}
 
 		parent := &data
 		data := (*parent).DnsServers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsservers").ForEach(
+		dnsServersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

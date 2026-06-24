@@ -124,7 +124,7 @@ func (data *DeviceVTEPPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.NveEnabled = types.BoolValue(true)
 	}
 	if value := res.Get("vtepEntries"); value.Exists() {
-		data.Vteps = make([]DeviceVTEPPolicyVteps, 0)
+		data.Vteps = make([]DeviceVTEPPolicyVteps, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceVTEPPolicyVteps{}
@@ -188,16 +188,16 @@ func (data *DeviceVTEPPolicy) fromBodyPartial(ctx context.Context, res gjson.Res
 	} else if data.NveEnabled.ValueBool() != true {
 		data.NveEnabled = types.BoolNull()
 	}
+	vtepsArray := res.Get("vtepEntries")
 	for i := 0; i < len(data.Vteps); i++ {
 		keys := [...]string{"sourceInterface.id"}
 		keyValues := [...]string{data.Vteps[i].SourceInterfaceId.ValueString()}
 
 		parent := &data
 		data := (*parent).Vteps[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("vtepEntries").ForEach(
+		vtepsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -125,7 +125,7 @@ func (data *PolicyAssignment) fromBody(ctx context.Context, res gjson.Result) {
 		data.PolicyType = types.StringNull()
 	}
 	if value := res.Get("targets"); value.Exists() {
-		data.Targets = make([]PolicyAssignmentTargets, 0)
+		data.Targets = make([]PolicyAssignmentTargets, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := PolicyAssignmentTargets{}
@@ -179,16 +179,16 @@ func (data *PolicyAssignment) fromBodyPartial(ctx context.Context, res gjson.Res
 	} else {
 		data.PolicyType = types.StringNull()
 	}
+	targetsArray := res.Get("targets")
 	for i := 0; i < len(data.Targets); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Targets[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Targets[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("targets").ForEach(
+		targetsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

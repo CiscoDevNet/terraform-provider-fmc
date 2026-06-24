@@ -107,7 +107,7 @@ func (data *InterfaceGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]InterfaceGroupInterfaces, 0)
+		data.Interfaces = make([]InterfaceGroupInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := InterfaceGroupInterfaces{}
@@ -146,16 +146,16 @@ func (data *InterfaceGroup) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Type = types.StringNull()
 	}
+	interfacesArray := res.Get("interfaces")
 	for i := 0; i < len(data.Interfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Interfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Interfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces").ForEach(
+		interfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

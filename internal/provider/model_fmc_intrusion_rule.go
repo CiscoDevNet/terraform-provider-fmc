@@ -103,7 +103,7 @@ func (data *IntrusionRule) fromBody(ctx context.Context, res gjson.Result) {
 		data.RuleData = types.StringNull()
 	}
 	if value := res.Get("ruleGroups"); value.Exists() {
-		data.RuleGroups = make([]IntrusionRuleRuleGroups, 0)
+		data.RuleGroups = make([]IntrusionRuleRuleGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := IntrusionRuleRuleGroups{}
@@ -147,16 +147,16 @@ func (data *IntrusionRule) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.RuleData = types.StringNull()
 	}
+	ruleGroupsArray := res.Get("ruleGroups")
 	for i := 0; i < len(data.RuleGroups); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.RuleGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).RuleGroups[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ruleGroups").ForEach(
+		ruleGroupsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -182,7 +182,7 @@ func (data *DeviceCluster) fromBody(ctx context.Context, res gjson.Result) {
 		data.ControlNodePriority = types.Int64Null()
 	}
 	if value := res.Get("dataDevices"); value.Exists() {
-		data.DataNodes = make([]DeviceClusterDataNodes, 0)
+		data.DataNodes = make([]DeviceClusterDataNodes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceClusterDataNodes{}
@@ -266,16 +266,16 @@ func (data *DeviceCluster) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.ControlNodePriority = types.Int64Null()
 	}
+	dataNodesArray := res.Get("dataDevices")
 	for i := 0; i < len(data.DataNodes); i++ {
 		keys := [...]string{"deviceDetails.id"}
 		keyValues := [...]string{data.DataNodes[i].DeviceId.ValueString()}
 
 		parent := &data
 		data := (*parent).DataNodes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dataDevices").ForEach(
+		dataNodesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

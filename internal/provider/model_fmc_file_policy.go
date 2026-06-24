@@ -246,7 +246,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.MaxArchiveDepth = types.Int64Null()
 	}
 	if value := res.Get("dummy_file_rules"); value.Exists() {
-		data.FileRules = make([]FilePolicyFileRules, 0)
+		data.FileRules = make([]FilePolicyFileRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FilePolicyFileRules{}
@@ -281,7 +281,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				data.DirectionOfTransfer = types.StringNull()
 			}
 			if value := res.Get("fileCategories"); value.Exists() {
-				data.FileCategories = make([]FilePolicyFileRulesFileCategories, 0)
+				data.FileCategories = make([]FilePolicyFileRulesFileCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FilePolicyFileRulesFileCategories{}
@@ -305,7 +305,7 @@ func (data *FilePolicy) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("fileTypes"); value.Exists() {
-				data.FileTypes = make([]FilePolicyFileRulesFileTypes, 0)
+				data.FileTypes = make([]FilePolicyFileRulesFileTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := FilePolicyFileRulesFileTypes{}
@@ -443,16 +443,16 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.DirectionOfTransfer = types.StringNull()
 		}
+		fileCategoriesArray := res.Get("fileCategories")
 		for i := 0; i < len(data.FileCategories); i++ {
 			keys := [...]string{"id", "name", "type"}
 			keyValues := [...]string{data.FileCategories[i].Id.ValueString(), data.FileCategories[i].Name.ValueString(), data.FileCategories[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).FileCategories[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("fileCategories").ForEach(
+			fileCategoriesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -496,16 +496,16 @@ func (data *FilePolicy) fromBodyPartial(ctx context.Context, res gjson.Result) {
 			}
 			(*parent).FileCategories[i] = data
 		}
+		fileTypesArray := res.Get("fileTypes")
 		for i := 0; i < len(data.FileTypes); i++ {
 			keys := [...]string{"id", "name", "type"}
 			keyValues := [...]string{data.FileTypes[i].Id.ValueString(), data.FileTypes[i].Name.ValueString(), data.FileTypes[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).FileTypes[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("fileTypes").ForEach(
+			fileTypesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

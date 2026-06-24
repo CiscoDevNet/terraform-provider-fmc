@@ -276,7 +276,7 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.SendVirtualTunnelInterfaceIpToPeer = types.BoolNull()
 		}
 		if value := res.Get("protectedNetworks.networks"); value.Exists() {
-			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0)
+			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNS2SEndpointsItemsProtectedNetworks{}
@@ -437,16 +437,16 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.SendVirtualTunnelInterfaceIpToPeer = types.BoolNull()
 		}
+		protectedNetworksArray := res.Get("protectedNetworks.networks")
 		for i := 0; i < len(data.ProtectedNetworks); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.ProtectedNetworks[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).ProtectedNetworks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("protectedNetworks.networks").ForEach(
+			protectedNetworksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -324,7 +324,7 @@ func (data *RealmADLDAP) fromBody(ctx context.Context, res gjson.Result) {
 		data.TimeoutGuestCaptivePortalUsers = types.Int64Null()
 	}
 	if value := res.Get("directoryConfigurations"); value.Exists() {
-		data.DirectoryServers = make([]RealmADLDAPDirectoryServers, 0)
+		data.DirectoryServers = make([]RealmADLDAPDirectoryServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := RealmADLDAPDirectoryServers{}
@@ -488,16 +488,16 @@ func (data *RealmADLDAP) fromBodyPartial(ctx context.Context, res gjson.Result) 
 	} else {
 		data.TimeoutGuestCaptivePortalUsers = types.Int64Null()
 	}
+	directoryServersArray := res.Get("directoryConfigurations")
 	for i := 0; i < len(data.DirectoryServers); i++ {
 		keys := [...]string{"hostname"}
 		keyValues := [...]string{data.DirectoryServers[i].Hostname.ValueString()}
 
 		parent := &data
 		data := (*parent).DirectoryServers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("directoryConfigurations").ForEach(
+		directoryServersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
