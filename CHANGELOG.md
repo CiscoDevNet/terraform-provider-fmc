@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
+- (Fix) `fmc_device_ha_pair` may not detect unsuccessful split request
 
 ## 2.4.1
 

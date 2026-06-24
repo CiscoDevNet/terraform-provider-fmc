@@ -47,6 +47,12 @@ func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string
 	const maxWait time.Duration = 15 * time.Minute
 	var task gjson.Result
 	var err error
+
+	if jobId == "" {
+		diags.AddError("Client Error", "Job ID is empty")
+		return diags
+	}
+
 	var taskUrl string = "/api/fmc_config/v1/domain/{DOMAIN_UUID}/job/taskstatuses/" + url.QueryEscape(jobId)
 
 	for i := time.Duration(0); i < maxWait; i += atom {
