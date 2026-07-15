@@ -42,6 +42,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/go-version"
+	"github.com/google/uuid"
 )
 
 // End of section. //template:end imports
