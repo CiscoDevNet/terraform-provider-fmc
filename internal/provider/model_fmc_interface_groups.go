@@ -87,14 +87,22 @@ func (data InterfaceGroups) toBody(ctx context.Context, state InterfaceGroups) s
 				itemBody, _ = sjson.Set(itemBody, "interfaceMode", item.InterfaceType.ValueString())
 			}
 			if len(item.Interfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces", []any{})
+				var interfacesChildBody strings.Builder
+				interfacesChildBody.WriteString("[")
 				for _, childItem := range item.Interfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.-1", itemChildBody)
+					if itemChildBody != "" {
+						if interfacesChildBody.Len() > 1 {
+							interfacesChildBody.WriteString(",")
+						}
+						interfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				interfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "interfaces", interfacesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

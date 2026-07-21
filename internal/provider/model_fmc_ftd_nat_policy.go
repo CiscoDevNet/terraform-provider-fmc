@@ -1015,8 +1015,12 @@ func (data *FTDNATPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result
 			data.Type = types.StringNull()
 		}
 	}
+	manualNatRulesArray := res.Get("dummy_manual_nat_rules").Array()
 	for i := range data.ManualNatRules {
-		r := res.Get(fmt.Sprintf("dummy_manual_nat_rules.%d", i))
+		var r gjson.Result
+		if i < len(manualNatRulesArray) {
+			r = manualNatRulesArray[i]
+		}
 		if v := data.ManualNatRules[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
@@ -1026,12 +1030,13 @@ func (data *FTDNATPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result
 			data.ManualNatRules[i] = v
 		}
 	}
+	autoNatRulesArray := res.Get("dummy_auto_nat_rules")
 	for i := range data.AutoNatRules {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AutoNatRules[i].Id.ValueString()}
 
 		var r gjson.Result
-		res.Get("dummy_auto_nat_rules").ForEach(
+		autoNatRulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

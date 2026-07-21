@@ -96,17 +96,26 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.VlanTags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var vlanTagsChildBody strings.Builder
+				vlanTagsChildBody.WriteString("[")
 				for _, childItem := range item.VlanTags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if vlanTagsChildBody.Len() > 1 {
+							vlanTagsChildBody.WriteString(",")
+						}
+						vlanTagsChildBody.WriteString(itemChildBody)
+					}
 				}
+				vlanTagsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", vlanTagsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.StartTag.IsNull() {
@@ -115,8 +124,15 @@ func (data VLANTagGroups) toBody(ctx context.Context, state VLANTagGroups) strin
 					if !childItem.EndTag.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "endTag", childItem.EndTag.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", literalsChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

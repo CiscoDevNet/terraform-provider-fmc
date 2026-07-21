@@ -95,24 +95,40 @@ func (data URLGroups) toBody(ctx context.Context, state URLGroups) string {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.Urls) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var urlsChildBody strings.Builder
+				urlsChildBody.WriteString("[")
 				for _, childItem := range item.Urls {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if urlsChildBody.Len() > 1 {
+							urlsChildBody.WriteString(",")
+						}
+						urlsChildBody.WriteString(itemChildBody)
+					}
 				}
+				urlsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", urlsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Url.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "url", childItem.Url.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", literalsChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

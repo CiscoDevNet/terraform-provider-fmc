@@ -90,7 +90,8 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 				itemBody, _ = sjson.Set(itemBody, "ldapServer.id", item.RealmAdLdapId.ValueString())
 			}
 			if len(item.AttributeMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ldapAttributeMaps", []any{})
+				var attributeMapsChildBody strings.Builder
+				attributeMapsChildBody.WriteString("[")
 				for _, childItem := range item.AttributeMaps {
 					itemChildBody := ""
 					if !childItem.LdapAttributeName.IsNull() {
@@ -100,7 +101,8 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 						itemChildBody, _ = sjson.Set(itemChildBody, "ciscoName", childItem.CiscoAttributeName.ValueString())
 					}
 					if len(childItem.ValueMaps) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "valueMappings", []any{})
+						var valueMapsChildChildBody strings.Builder
+						valueMapsChildChildBody.WriteString("[")
 						for _, childChildItem := range childItem.ValueMaps {
 							itemChildChildBody := ""
 							if !childChildItem.LdapAttributeValue.IsNull() {
@@ -109,11 +111,25 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 							if !childChildItem.CiscoAttributeValue.IsNull() {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ciscoValue", childChildItem.CiscoAttributeValue.ValueString())
 							}
-							itemChildBody, _ = sjson.SetRaw(itemChildBody, "valueMappings.-1", itemChildChildBody)
+							if itemChildChildBody != "" {
+								if valueMapsChildChildBody.Len() > 1 {
+									valueMapsChildChildBody.WriteString(",")
+								}
+								valueMapsChildChildBody.WriteString(itemChildChildBody)
+							}
 						}
+						valueMapsChildChildBody.WriteString("]")
+						itemChildBody, _ = sjson.SetRaw(itemChildBody, "valueMappings", valueMapsChildChildBody.String())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "ldapAttributeMaps.-1", itemChildBody)
+					if itemChildBody != "" {
+						if attributeMapsChildBody.Len() > 1 {
+							attributeMapsChildBody.WriteString(",")
+						}
+						attributeMapsChildBody.WriteString(itemChildBody)
+					}
 				}
+				attributeMapsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "ldapAttributeMaps", attributeMapsChildBody.String())
 			}
 			if itemBody != "" {
 				if realmsBody.Len() > 1 {

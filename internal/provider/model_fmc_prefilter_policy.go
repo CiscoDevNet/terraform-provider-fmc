@@ -205,7 +205,8 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 				itemBody, _ = sjson.Set(itemBody, "timeRangeObjects.0.id", item.TimeRangeId.ValueString())
 			}
 			if len(item.SourceInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceInterfaces.objects", []any{})
+				var sourceInterfacesChildBody strings.Builder
+				sourceInterfacesChildBody.WriteString("[")
 				for _, childItem := range item.SourceInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -214,11 +215,19 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "sourceInterfaces.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if sourceInterfacesChildBody.Len() > 1 {
+							sourceInterfacesChildBody.WriteString(",")
+						}
+						sourceInterfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				sourceInterfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "sourceInterfaces.objects", sourceInterfacesChildBody.String())
 			}
 			if len(item.DestinationInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationInterfaces.objects", []any{})
+				var destinationInterfacesChildBody strings.Builder
+				destinationInterfacesChildBody.WriteString("[")
 				for _, childItem := range item.DestinationInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -227,22 +236,38 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationInterfaces.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if destinationInterfacesChildBody.Len() > 1 {
+							destinationInterfacesChildBody.WriteString(",")
+						}
+						destinationInterfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				destinationInterfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "destinationInterfaces.objects", destinationInterfacesChildBody.String())
 			}
 			if len(item.SourceNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.literals", []any{})
+				var sourceNetworkLiteralsChildBody strings.Builder
+				sourceNetworkLiteralsChildBody.WriteString("[")
 				for _, childItem := range item.SourceNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if sourceNetworkLiteralsChildBody.Len() > 1 {
+							sourceNetworkLiteralsChildBody.WriteString(",")
+						}
+						sourceNetworkLiteralsChildBody.WriteString(itemChildBody)
+					}
 				}
+				sourceNetworkLiteralsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.literals", sourceNetworkLiteralsChildBody.String())
 			}
 			if len(item.SourceNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourceNetworks.objects", []any{})
+				var sourceNetworkObjectsChildBody strings.Builder
+				sourceNetworkObjectsChildBody.WriteString("[")
 				for _, childItem := range item.SourceNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -251,22 +276,38 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if sourceNetworkObjectsChildBody.Len() > 1 {
+							sourceNetworkObjectsChildBody.WriteString(",")
+						}
+						sourceNetworkObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				sourceNetworkObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "sourceNetworks.objects", sourceNetworkObjectsChildBody.String())
 			}
 			if len(item.DestinationNetworkLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.literals", []any{})
+				var destinationNetworkLiteralsChildBody strings.Builder
+				destinationNetworkLiteralsChildBody.WriteString("[")
 				for _, childItem := range item.DestinationNetworkLiterals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if destinationNetworkLiteralsChildBody.Len() > 1 {
+							destinationNetworkLiteralsChildBody.WriteString(",")
+						}
+						destinationNetworkLiteralsChildBody.WriteString(itemChildBody)
+					}
 				}
+				destinationNetworkLiteralsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.literals", destinationNetworkLiteralsChildBody.String())
 			}
 			if len(item.DestinationNetworkObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationNetworks.objects", []any{})
+				var destinationNetworkObjectsChildBody strings.Builder
+				destinationNetworkObjectsChildBody.WriteString("[")
 				for _, childItem := range item.DestinationNetworkObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -275,11 +316,19 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if destinationNetworkObjectsChildBody.Len() > 1 {
+							destinationNetworkObjectsChildBody.WriteString(",")
+						}
+						destinationNetworkObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				destinationNetworkObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "destinationNetworks.objects", destinationNetworkObjectsChildBody.String())
 			}
 			if len(item.VlanTagLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.literals", []any{})
+				var vlanTagLiteralsChildBody strings.Builder
+				vlanTagLiteralsChildBody.WriteString("[")
 				for _, childItem := range item.VlanTagLiterals {
 					itemChildBody := ""
 					if !childItem.StartTag.IsNull() {
@@ -288,21 +337,37 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.EndTag.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "endTag", childItem.EndTag.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if vlanTagLiteralsChildBody.Len() > 1 {
+							vlanTagLiteralsChildBody.WriteString(",")
+						}
+						vlanTagLiteralsChildBody.WriteString(itemChildBody)
+					}
 				}
+				vlanTagLiteralsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.literals", vlanTagLiteralsChildBody.String())
 			}
 			if len(item.VlanTagObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "vlanTags.objects", []any{})
+				var vlanTagObjectsChildBody strings.Builder
+				vlanTagObjectsChildBody.WriteString("[")
 				for _, childItem := range item.VlanTagObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if vlanTagObjectsChildBody.Len() > 1 {
+							vlanTagObjectsChildBody.WriteString(",")
+						}
+						vlanTagObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				vlanTagObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "vlanTags.objects", vlanTagObjectsChildBody.String())
 			}
 			if len(item.SourcePortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.literals", []any{})
+				var sourcePortLiteralsChildBody strings.Builder
+				sourcePortLiteralsChildBody.WriteString("[")
 				for _, childItem := range item.SourcePortLiterals {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "PortLiteral")
@@ -312,22 +377,38 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.Port.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "port", childItem.Port.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if sourcePortLiteralsChildBody.Len() > 1 {
+							sourcePortLiteralsChildBody.WriteString(",")
+						}
+						sourcePortLiteralsChildBody.WriteString(itemChildBody)
+					}
 				}
+				sourcePortLiteralsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.literals", sourcePortLiteralsChildBody.String())
 			}
 			if len(item.SourcePortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "sourcePorts.objects", []any{})
+				var sourcePortObjectsChildBody strings.Builder
+				sourcePortObjectsChildBody.WriteString("[")
 				for _, childItem := range item.SourcePortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if sourcePortObjectsChildBody.Len() > 1 {
+							sourcePortObjectsChildBody.WriteString(",")
+						}
+						sourcePortObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				sourcePortObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "sourcePorts.objects", sourcePortObjectsChildBody.String())
 			}
 			if len(item.DestinationPortLiterals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.literals", []any{})
+				var destinationPortLiteralsChildBody strings.Builder
+				destinationPortLiteralsChildBody.WriteString("[")
 				for _, childItem := range item.DestinationPortLiterals {
 					itemChildBody := ""
 					if !childItem.Type.IsNull() {
@@ -345,19 +426,34 @@ func (data PrefilterPolicy) toBody(ctx context.Context, state PrefilterPolicy) s
 					if !childItem.IcmpCode.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "code", childItem.IcmpCode.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if destinationPortLiteralsChildBody.Len() > 1 {
+							destinationPortLiteralsChildBody.WriteString(",")
+						}
+						destinationPortLiteralsChildBody.WriteString(itemChildBody)
+					}
 				}
+				destinationPortLiteralsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.literals", destinationPortLiteralsChildBody.String())
 			}
 			if len(item.DestinationPortObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "destinationPorts.objects", []any{})
+				var destinationPortObjectsChildBody strings.Builder
+				destinationPortObjectsChildBody.WriteString("[")
 				for _, childItem := range item.DestinationPortObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if destinationPortObjectsChildBody.Len() > 1 {
+							destinationPortObjectsChildBody.WriteString(",")
+						}
+						destinationPortObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				destinationPortObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "destinationPorts.objects", destinationPortObjectsChildBody.String())
 			}
 			if !item.EncapsulationPorts.IsNull() {
 				var values []string
@@ -1507,8 +1603,12 @@ func (data *PrefilterPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Res
 			data.DefaultActionId = types.StringNull()
 		}
 	}
+	rulesArray := res.Get("dummy_rules").Array()
 	for i := range data.Rules {
-		r := res.Get(fmt.Sprintf("dummy_rules.%d", i))
+		var r gjson.Result
+		if i < len(rulesArray) {
+			r = rulesArray[i]
+		}
 		if v := data.Rules[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())

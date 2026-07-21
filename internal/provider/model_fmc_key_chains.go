@@ -96,7 +96,8 @@ func (data KeyChains) toBody(ctx context.Context, state KeyChains) string {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
 			if len(item.Keys) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "keys", []any{})
+				var keysChildBody strings.Builder
+				keysChildBody.WriteString("[")
 				for _, childItem := range item.Keys {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -125,8 +126,15 @@ func (data KeyChains) toBody(ctx context.Context, state KeyChains) string {
 					if !childItem.SendLifetimeEnd.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "sendLifeTime.endLifeTimeValue", childItem.SendLifetimeEnd.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "keys.-1", itemChildBody)
+					if itemChildBody != "" {
+						if keysChildBody.Len() > 1 {
+							keysChildBody.WriteString(",")
+						}
+						keysChildBody.WriteString(itemChildBody)
+					}
 				}
+				keysChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "keys", keysChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

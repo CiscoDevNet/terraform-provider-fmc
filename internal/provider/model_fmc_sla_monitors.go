@@ -120,14 +120,22 @@ func (data SLAMonitors) toBody(ctx context.Context, state SLAMonitors) string {
 				itemBody, _ = sjson.Set(itemBody, "monitorAddress", item.MonitorAddress.ValueString())
 			}
 			if len(item.SelectedInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaceObjects", []any{})
+				var selectedInterfacesChildBody strings.Builder
+				selectedInterfacesChildBody.WriteString("[")
 				for _, childItem := range item.SelectedInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "interfaceObjects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if selectedInterfacesChildBody.Len() > 1 {
+							selectedInterfacesChildBody.WriteString(",")
+						}
+						selectedInterfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				selectedInterfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "interfaceObjects", selectedInterfacesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

@@ -86,7 +86,8 @@ func (data IPv4PrefixLists) toBody(ctx context.Context, state IPv4PrefixLists) s
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Entries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "entries", []any{})
+				var entriesChildBody strings.Builder
+				entriesChildBody.WriteString("[")
 				for _, childItem := range item.Entries {
 					itemChildBody := ""
 					if !childItem.Action.IsNull() {
@@ -101,8 +102,15 @@ func (data IPv4PrefixLists) toBody(ctx context.Context, state IPv4PrefixLists) s
 					if !childItem.MaxPrefixLength.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "maxPrefixLength", childItem.MaxPrefixLength.ValueInt64())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if entriesChildBody.Len() > 1 {
+							entriesChildBody.WriteString(",")
+						}
+						entriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				entriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "entries", entriesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

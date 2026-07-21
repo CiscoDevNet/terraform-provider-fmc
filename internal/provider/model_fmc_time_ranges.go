@@ -103,7 +103,8 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 				itemBody, _ = sjson.Set(itemBody, "effectiveEndDateTime", item.EndTime.ValueString())
 			}
 			if len(item.RecurrenceList) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "recurrenceList", []any{})
+				var recurrenceListChildBody strings.Builder
+				recurrenceListChildBody.WriteString("[")
 				for _, childItem := range item.RecurrenceList {
 					itemChildBody := ""
 					if !childItem.RecurrenceType.IsNull() {
@@ -132,8 +133,15 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 						childItem.DailyDays.ElementsAs(ctx, &values, false)
 						itemChildBody, _ = sjson.Set(itemChildBody, "days", values)
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "recurrenceList.-1", itemChildBody)
+					if itemChildBody != "" {
+						if recurrenceListChildBody.Len() > 1 {
+							recurrenceListChildBody.WriteString(",")
+						}
+						recurrenceListChildBody.WriteString(itemChildBody)
+					}
 				}
+				recurrenceListChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "recurrenceList", recurrenceListChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

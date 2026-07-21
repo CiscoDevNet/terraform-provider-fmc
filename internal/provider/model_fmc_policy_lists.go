@@ -129,14 +129,22 @@ func (data PolicyLists) toBody(ctx context.Context, state PolicyLists) string {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.Interfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces", []any{})
+				var interfacesChildBody strings.Builder
+				interfacesChildBody.WriteString("[")
 				for _, childItem := range item.Interfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.-1", itemChildBody)
+					if itemChildBody != "" {
+						if interfacesChildBody.Len() > 1 {
+							interfacesChildBody.WriteString(",")
+						}
+						interfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				interfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "interfaces", interfacesChildBody.String())
 			}
 			if !item.InterfaceNames.IsNull() {
 				var values []string
@@ -144,94 +152,166 @@ func (data PolicyLists) toBody(ctx context.Context, state PolicyLists) string {
 				itemBody, _ = sjson.Set(itemBody, "interfaceNames", values)
 			}
 			if len(item.AddressStandardAccessLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "standardAccessListAddresses", []any{})
+				var addressStandardAccessListsChildBody strings.Builder
+				addressStandardAccessListsChildBody.WriteString("[")
 				for _, childItem := range item.AddressStandardAccessLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListAddresses.-1", itemChildBody)
+					if itemChildBody != "" {
+						if addressStandardAccessListsChildBody.Len() > 1 {
+							addressStandardAccessListsChildBody.WriteString(",")
+						}
+						addressStandardAccessListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				addressStandardAccessListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListAddresses", addressStandardAccessListsChildBody.String())
 			}
 			if len(item.AddressIpv4PrefixLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ipv4PrefixListAddresses", []any{})
+				var addressIpv4PrefixListsChildBody strings.Builder
+				addressIpv4PrefixListsChildBody.WriteString("[")
 				for _, childItem := range item.AddressIpv4PrefixLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListAddresses.-1", itemChildBody)
+					if itemChildBody != "" {
+						if addressIpv4PrefixListsChildBody.Len() > 1 {
+							addressIpv4PrefixListsChildBody.WriteString(",")
+						}
+						addressIpv4PrefixListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				addressIpv4PrefixListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListAddresses", addressIpv4PrefixListsChildBody.String())
 			}
 			if len(item.NextHopStandardAccessLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "standardAccessListNextHops", []any{})
+				var nextHopStandardAccessListsChildBody strings.Builder
+				nextHopStandardAccessListsChildBody.WriteString("[")
 				for _, childItem := range item.NextHopStandardAccessLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListNextHops.-1", itemChildBody)
+					if itemChildBody != "" {
+						if nextHopStandardAccessListsChildBody.Len() > 1 {
+							nextHopStandardAccessListsChildBody.WriteString(",")
+						}
+						nextHopStandardAccessListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				nextHopStandardAccessListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListNextHops", nextHopStandardAccessListsChildBody.String())
 			}
 			if len(item.NextHopIpv4PrefixLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ipv4PrefixListNexthops", []any{})
+				var nextHopIpv4PrefixListsChildBody strings.Builder
+				nextHopIpv4PrefixListsChildBody.WriteString("[")
 				for _, childItem := range item.NextHopIpv4PrefixLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListNexthops.-1", itemChildBody)
+					if itemChildBody != "" {
+						if nextHopIpv4PrefixListsChildBody.Len() > 1 {
+							nextHopIpv4PrefixListsChildBody.WriteString(",")
+						}
+						nextHopIpv4PrefixListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				nextHopIpv4PrefixListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListNexthops", nextHopIpv4PrefixListsChildBody.String())
 			}
 			if len(item.RouteSourceStandardAccessLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "standardAccessListRouteSources", []any{})
+				var routeSourceStandardAccessListsChildBody strings.Builder
+				routeSourceStandardAccessListsChildBody.WriteString("[")
 				for _, childItem := range item.RouteSourceStandardAccessLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListRouteSources.-1", itemChildBody)
+					if itemChildBody != "" {
+						if routeSourceStandardAccessListsChildBody.Len() > 1 {
+							routeSourceStandardAccessListsChildBody.WriteString(",")
+						}
+						routeSourceStandardAccessListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				routeSourceStandardAccessListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "standardAccessListRouteSources", routeSourceStandardAccessListsChildBody.String())
 			}
 			if len(item.RouteSourceIpv4PrefixLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ipv4PrefixListRouteSources", []any{})
+				var routeSourceIpv4PrefixListsChildBody strings.Builder
+				routeSourceIpv4PrefixListsChildBody.WriteString("[")
 				for _, childItem := range item.RouteSourceIpv4PrefixLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListRouteSources.-1", itemChildBody)
+					if itemChildBody != "" {
+						if routeSourceIpv4PrefixListsChildBody.Len() > 1 {
+							routeSourceIpv4PrefixListsChildBody.WriteString(",")
+						}
+						routeSourceIpv4PrefixListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				routeSourceIpv4PrefixListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "ipv4PrefixListRouteSources", routeSourceIpv4PrefixListsChildBody.String())
 			}
 			if len(item.AsPaths) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "asPathLists", []any{})
+				var asPathsChildBody strings.Builder
+				asPathsChildBody.WriteString("[")
 				for _, childItem := range item.AsPaths {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "asPathLists.-1", itemChildBody)
+					if itemChildBody != "" {
+						if asPathsChildBody.Len() > 1 {
+							asPathsChildBody.WriteString(",")
+						}
+						asPathsChildBody.WriteString(itemChildBody)
+					}
 				}
+				asPathsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "asPathLists", asPathsChildBody.String())
 			}
 			if len(item.CommunityLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "communityLists", []any{})
+				var communityListsChildBody strings.Builder
+				communityListsChildBody.WriteString("[")
 				for _, childItem := range item.CommunityLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "communityLists.-1", itemChildBody)
+					if itemChildBody != "" {
+						if communityListsChildBody.Len() > 1 {
+							communityListsChildBody.WriteString(",")
+						}
+						communityListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				communityListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "communityLists", communityListsChildBody.String())
 			}
 			if len(item.ExtendedCommunityLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "extendedCommunityLists", []any{})
+				var extendedCommunityListsChildBody strings.Builder
+				extendedCommunityListsChildBody.WriteString("[")
 				for _, childItem := range item.ExtendedCommunityLists {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "extendedCommunityLists.-1", itemChildBody)
+					if itemChildBody != "" {
+						if extendedCommunityListsChildBody.Len() > 1 {
+							extendedCommunityListsChildBody.WriteString(",")
+						}
+						extendedCommunityListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				extendedCommunityListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "extendedCommunityLists", extendedCommunityListsChildBody.String())
 			}
 			if !item.MatchCommunityExactly.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "matchCommunityExactly", item.MatchCommunityExactly.ValueBool())

@@ -267,7 +267,8 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				itemBody, _ = sjson.Set(itemBody, "neighborGeneral.description", item.Description.ValueString())
 			}
 			if len(item.FilterAccessLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDistributeLists", []any{})
+				var filterAccessListsChildBody strings.Builder
+				filterAccessListsChildBody.WriteString("[")
 				for _, childItem := range item.FilterAccessLists {
 					itemChildBody := ""
 					if !childItem.AccessListId.IsNull() {
@@ -276,11 +277,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					if !childItem.UpdateDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborDistributeLists.-1", itemChildBody)
+					if itemChildBody != "" {
+						if filterAccessListsChildBody.Len() > 1 {
+							filterAccessListsChildBody.WriteString(",")
+						}
+						filterAccessListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				filterAccessListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborDistributeLists", filterAccessListsChildBody.String())
 			}
 			if len(item.FilterRouteMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborRouteMap", []any{})
+				var filterRouteMapsChildBody strings.Builder
+				filterRouteMapsChildBody.WriteString("[")
 				for _, childItem := range item.FilterRouteMaps {
 					itemChildBody := ""
 					if !childItem.RouteMapId.IsNull() {
@@ -289,11 +298,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					if !childItem.UpdateDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborRouteMap.-1", itemChildBody)
+					if itemChildBody != "" {
+						if filterRouteMapsChildBody.Len() > 1 {
+							filterRouteMapsChildBody.WriteString(",")
+						}
+						filterRouteMapsChildBody.WriteString(itemChildBody)
+					}
 				}
+				filterRouteMapsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborRouteMap", filterRouteMapsChildBody.String())
 			}
 			if len(item.FilterPrefixLists) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.ipv4PrefixListFilter", []any{})
+				var filterPrefixListsChildBody strings.Builder
+				filterPrefixListsChildBody.WriteString("[")
 				for _, childItem := range item.FilterPrefixLists {
 					itemChildBody := ""
 					if !childItem.PrefixListId.IsNull() {
@@ -302,11 +319,19 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					if !childItem.UpdateDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.ipv4PrefixListFilter.-1", itemChildBody)
+					if itemChildBody != "" {
+						if filterPrefixListsChildBody.Len() > 1 {
+							filterPrefixListsChildBody.WriteString(",")
+						}
+						filterPrefixListsChildBody.WriteString(itemChildBody)
+					}
 				}
+				filterPrefixListsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.ipv4PrefixListFilter", filterPrefixListsChildBody.String())
 			}
 			if len(item.FilterAsPaths) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborFilterList", []any{})
+				var filterAsPathsChildBody strings.Builder
+				filterAsPathsChildBody.WriteString("[")
 				for _, childItem := range item.FilterAsPaths {
 					itemChildBody := ""
 					if !childItem.AsPathId.IsNull() {
@@ -318,8 +343,15 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					if !childItem.UpdateDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterUpdateAction", childItem.UpdateDirection.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborFilterList.-1", itemChildBody)
+					if itemChildBody != "" {
+						if filterAsPathsChildBody.Len() > 1 {
+							filterAsPathsChildBody.WriteString(",")
+						}
+						filterAsPathsChildBody.WriteString(itemChildBody)
+					}
 				}
+				filterAsPathsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "neighborFiltering.neighborFilterList", filterAsPathsChildBody.String())
 			}
 			if !item.FilterMaximumPrefixes.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborMaximumPrefix.maxPrefixLimit", item.FilterMaximumPrefixes.ValueInt64())
@@ -343,7 +375,8 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 				itemBody, _ = sjson.Set(itemBody, "neighborFiltering.neighborDefaultOriginate.routeMap.id", item.RoutesGenerateDefaultRouteMapId.ValueString())
 			}
 			if len(item.RoutesAdvertiseMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "neighborRoutes.neighborAdvertiseMaps", []any{})
+				var routesAdvertiseMapsChildBody strings.Builder
+				routesAdvertiseMapsChildBody.WriteString("[")
 				for _, childItem := range item.RoutesAdvertiseMaps {
 					itemChildBody := ""
 					if !childItem.AdvertiseMapId.IsNull() {
@@ -355,8 +388,15 @@ func (data DeviceBGP) toBody(ctx context.Context, state DeviceBGP) string {
 					if !childItem.ExistNonexistMapId.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "existRouteMap.id", childItem.ExistNonexistMapId.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "neighborRoutes.neighborAdvertiseMaps.-1", itemChildBody)
+					if itemChildBody != "" {
+						if routesAdvertiseMapsChildBody.Len() > 1 {
+							routesAdvertiseMapsChildBody.WriteString(",")
+						}
+						routesAdvertiseMapsChildBody.WriteString(itemChildBody)
+					}
 				}
+				routesAdvertiseMapsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "neighborRoutes.neighborAdvertiseMaps", routesAdvertiseMapsChildBody.String())
 			}
 			if !item.KeepaliveInterval.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "neighborTimers.keepAliveInterval", item.KeepaliveInterval.ValueInt64())

@@ -92,7 +92,8 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.GeolocationSources) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "geoSources", []any{})
+				var geolocationSourcesChildBody strings.Builder
+				geolocationSourcesChildBody.WriteString("[")
 				for _, childItem := range item.GeolocationSources {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -101,8 +102,15 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "geoSources.-1", itemChildBody)
+					if itemChildBody != "" {
+						if geolocationSourcesChildBody.Len() > 1 {
+							geolocationSourcesChildBody.WriteString(",")
+						}
+						geolocationSourcesChildBody.WriteString(itemChildBody)
+					}
 				}
+				geolocationSourcesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "geoSources", geolocationSourcesChildBody.String())
 			}
 			if itemBody != "" {
 				if rulesBody.Len() > 1 {

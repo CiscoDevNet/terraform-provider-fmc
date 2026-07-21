@@ -95,7 +95,8 @@ func (data StandardAccessList) toBody(ctx context.Context, state StandardAccessL
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.objects", []any{})
+				var objectsChildBody strings.Builder
+				objectsChildBody.WriteString("[")
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -104,19 +105,34 @@ func (data StandardAccessList) toBody(ctx context.Context, state StandardAccessL
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "networks.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if objectsChildBody.Len() > 1 {
+							objectsChildBody.WriteString(",")
+						}
+						objectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				objectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "networks.objects", objectsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "networks.literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "networks.literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "networks.literals", literalsChildBody.String())
 			}
 			if itemBody != "" {
 				if entriesBody.Len() > 1 {

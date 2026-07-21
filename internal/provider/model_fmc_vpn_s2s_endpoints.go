@@ -141,14 +141,22 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 				itemBody, _ = sjson.Set(itemBody, "sendTunnelInterfaceIpToPeer", item.SendVirtualTunnelInterfaceIpToPeer.ValueBool())
 			}
 			if len(item.ProtectedNetworks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.networks", []any{})
+				var protectedNetworksChildBody strings.Builder
+				protectedNetworksChildBody.WriteString("[")
 				for _, childItem := range item.ProtectedNetworks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "protectedNetworks.networks.-1", itemChildBody)
+					if itemChildBody != "" {
+						if protectedNetworksChildBody.Len() > 1 {
+							protectedNetworksChildBody.WriteString(",")
+						}
+						protectedNetworksChildBody.WriteString(itemChildBody)
+					}
 				}
+				protectedNetworksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "protectedNetworks.networks", protectedNetworksChildBody.String())
 			}
 			if !item.ProtectedNetworksAccessListId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.acl.id", item.ProtectedNetworksAccessListId.ValueString())

@@ -265,7 +265,8 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 				itemBody, _ = sjson.Set(itemBody, "areaType.routeMetric.metricValue", item.DefaultRouteMetric.ValueInt64())
 			}
 			if len(item.Networks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "areaNetworks", []any{})
+				var networksChildBody strings.Builder
+				networksChildBody.WriteString("[")
 				for _, childItem := range item.Networks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -274,8 +275,15 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 					if !childItem.Name.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "areaNetworks.-1", itemChildBody)
+					if itemChildBody != "" {
+						if networksChildBody.Len() > 1 {
+							networksChildBody.WriteString(",")
+						}
+						networksChildBody.WriteString(itemChildBody)
+					}
 				}
+				networksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "areaNetworks", networksChildBody.String())
 			}
 			if !item.Authentication.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "authentication", item.Authentication.ValueString())
@@ -284,7 +292,8 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 				itemBody, _ = sjson.Set(itemBody, "defaultCost", item.DefaultCost.ValueInt64())
 			}
 			if len(item.Ranges) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "areaRanges", []any{})
+				var rangesChildBody strings.Builder
+				rangesChildBody.WriteString("[")
 				for _, childItem := range item.Ranges {
 					itemChildBody := ""
 					if !childItem.NetworkObjectId.IsNull() {
@@ -293,11 +302,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 					if !childItem.Advertise.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "advertise", childItem.Advertise.ValueBool())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "areaRanges.-1", itemChildBody)
+					if itemChildBody != "" {
+						if rangesChildBody.Len() > 1 {
+							rangesChildBody.WriteString(",")
+						}
+						rangesChildBody.WriteString(itemChildBody)
+					}
 				}
+				rangesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "areaRanges", rangesChildBody.String())
 			}
 			if len(item.VirtualLinks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "virtualLinks", []any{})
+				var virtualLinksChildBody strings.Builder
+				virtualLinksChildBody.WriteString("[")
 				for _, childItem := range item.VirtualLinks {
 					itemChildBody := ""
 					if !childItem.PeerRouterHostId.IsNull() {
@@ -322,7 +339,8 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 						itemChildBody, _ = sjson.Set(itemChildBody, "authentication.areaAuth.passwdAuth.authKey", childItem.AuthenticationAreaPassword.ValueString())
 					}
 					if len(childItem.AuthenticationAreaMd5s) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "authentication.areaAuth.md5AuthList", []any{})
+						var authenticationAreaMd5sChildChildBody strings.Builder
+						authenticationAreaMd5sChildChildBody.WriteString("[")
 						for _, childChildItem := range childItem.AuthenticationAreaMd5s {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -331,11 +349,19 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 							if !childChildItem.Key.IsNull() {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "md5Key", childChildItem.Key.ValueString())
 							}
-							itemChildBody, _ = sjson.SetRaw(itemChildBody, "authentication.areaAuth.md5AuthList.-1", itemChildChildBody)
+							if itemChildChildBody != "" {
+								if authenticationAreaMd5sChildChildBody.Len() > 1 {
+									authenticationAreaMd5sChildChildBody.WriteString(",")
+								}
+								authenticationAreaMd5sChildChildBody.WriteString(itemChildChildBody)
+							}
 						}
+						authenticationAreaMd5sChildChildBody.WriteString("]")
+						itemChildBody, _ = sjson.SetRaw(itemChildBody, "authentication.areaAuth.md5AuthList", authenticationAreaMd5sChildChildBody.String())
 					}
 					if len(childItem.AuthenticationMd5s) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "authentication.md5AuthList", []any{})
+						var authenticationMd5sChildChildBody strings.Builder
+						authenticationMd5sChildChildBody.WriteString("[")
 						for _, childChildItem := range childItem.AuthenticationMd5s {
 							itemChildChildBody := ""
 							if !childChildItem.Id.IsNull() {
@@ -344,17 +370,32 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 							if !childChildItem.Key.IsNull() {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "md5Key", childChildItem.Key.ValueString())
 							}
-							itemChildBody, _ = sjson.SetRaw(itemChildBody, "authentication.md5AuthList.-1", itemChildChildBody)
+							if itemChildChildBody != "" {
+								if authenticationMd5sChildChildBody.Len() > 1 {
+									authenticationMd5sChildChildBody.WriteString(",")
+								}
+								authenticationMd5sChildChildBody.WriteString(itemChildChildBody)
+							}
 						}
+						authenticationMd5sChildChildBody.WriteString("]")
+						itemChildBody, _ = sjson.SetRaw(itemChildBody, "authentication.md5AuthList", authenticationMd5sChildChildBody.String())
 					}
 					if !childItem.AuthenticationKeyChainId.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "authentication.keyChain.authKey.id", childItem.AuthenticationKeyChainId.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "virtualLinks.-1", itemChildBody)
+					if itemChildBody != "" {
+						if virtualLinksChildBody.Len() > 1 {
+							virtualLinksChildBody.WriteString(",")
+						}
+						virtualLinksChildBody.WriteString(itemChildBody)
+					}
 				}
+				virtualLinksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "virtualLinks", virtualLinksChildBody.String())
 			}
 			if len(item.InterAreaFilters) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "filterList", []any{})
+				var interAreaFiltersChildBody strings.Builder
+				interAreaFiltersChildBody.WriteString("[")
 				for _, childItem := range item.InterAreaFilters {
 					itemChildBody := ""
 					if !childItem.PrefixListId.IsNull() {
@@ -366,8 +407,15 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 					if !childItem.FilterDirection.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "filterDirection", childItem.FilterDirection.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "filterList.-1", itemChildBody)
+					if itemChildBody != "" {
+						if interAreaFiltersChildBody.Len() > 1 {
+							interAreaFiltersChildBody.WriteString(",")
+						}
+						interAreaFiltersChildBody.WriteString(itemChildBody)
+					}
 				}
+				interAreaFiltersChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "filterList", interAreaFiltersChildBody.String())
 			}
 			if itemBody != "" {
 				if areasBody.Len() > 1 {
@@ -469,14 +517,22 @@ func (data DeviceOSPF) toBody(ctx context.Context, state DeviceOSPF) string {
 		for _, item := range data.SummaryAddresses {
 			itemBody := ""
 			if len(item.Networks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "summaryNetwork", []any{})
+				var networksChildBody strings.Builder
+				networksChildBody.WriteString("[")
 				for _, childItem := range item.Networks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "summaryNetwork.-1", itemChildBody)
+					if itemChildBody != "" {
+						if networksChildBody.Len() > 1 {
+							networksChildBody.WriteString(",")
+						}
+						networksChildBody.WriteString(itemChildBody)
+					}
 				}
+				networksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "summaryNetwork", networksChildBody.String())
 			}
 			if !item.Tag.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "tagNumber", item.Tag.ValueInt64())

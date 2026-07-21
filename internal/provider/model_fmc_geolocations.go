@@ -89,24 +89,40 @@ func (data Geolocations) toBody(ctx context.Context, state Geolocations) string 
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Continents) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "continents", []any{})
+				var continentsChildBody strings.Builder
+				continentsChildBody.WriteString("[")
 				for _, childItem := range item.Continents {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueInt64())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "continents.-1", itemChildBody)
+					if itemChildBody != "" {
+						if continentsChildBody.Len() > 1 {
+							continentsChildBody.WriteString(",")
+						}
+						continentsChildBody.WriteString(itemChildBody)
+					}
 				}
+				continentsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "continents", continentsChildBody.String())
 			}
 			if len(item.Countries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "countries", []any{})
+				var countriesChildBody strings.Builder
+				countriesChildBody.WriteString("[")
 				for _, childItem := range item.Countries {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueInt64())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "countries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if countriesChildBody.Len() > 1 {
+							countriesChildBody.WriteString(",")
+						}
+						countriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				countriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "countries", countriesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

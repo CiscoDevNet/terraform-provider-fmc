@@ -88,7 +88,8 @@ func (data ASPaths) toBody(ctx context.Context, state ASPaths) string {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.Entries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "entries", []any{})
+				var entriesChildBody strings.Builder
+				entriesChildBody.WriteString("[")
 				for _, childItem := range item.Entries {
 					itemChildBody := ""
 					if !childItem.Action.IsNull() {
@@ -97,8 +98,15 @@ func (data ASPaths) toBody(ctx context.Context, state ASPaths) string {
 					if !childItem.RegularExpression.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.RegularExpression.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if entriesChildBody.Len() > 1 {
+							entriesChildBody.WriteString(",")
+						}
+						entriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				entriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "entries", entriesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

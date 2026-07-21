@@ -98,14 +98,22 @@ func (data DNSServerGroups) toBody(ctx context.Context, state DNSServerGroups) s
 				itemBody, _ = sjson.Set(itemBody, "retries", item.Retries.ValueInt64())
 			}
 			if len(item.DnsServers) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "dnsservers", []any{})
+				var dnsServersChildBody strings.Builder
+				dnsServersChildBody.WriteString("[")
 				for _, childItem := range item.DnsServers {
 					itemChildBody := ""
 					if !childItem.Ip.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name-server", childItem.Ip.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "dnsservers.-1", itemChildBody)
+					if itemChildBody != "" {
+						if dnsServersChildBody.Len() > 1 {
+							dnsServersChildBody.WriteString(",")
+						}
+						dnsServersChildBody.WriteString(itemChildBody)
+					}
 				}
+				dnsServersChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "dnsservers", dnsServersChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

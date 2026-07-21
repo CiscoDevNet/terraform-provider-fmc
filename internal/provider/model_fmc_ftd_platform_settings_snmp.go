@@ -171,7 +171,8 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 				itemBody, _ = sjson.Set(itemBody, "interfaces.literals", values)
 			}
 			if len(item.InterfaceObjects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "interfaces.objects", []any{})
+				var interfaceObjectsChildBody strings.Builder
+				interfaceObjectsChildBody.WriteString("[")
 				for _, childItem := range item.InterfaceObjects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -183,8 +184,15 @@ func (data FTDPlatformSettingsSNMP) toBody(ctx context.Context, state FTDPlatfor
 					if !childItem.Name.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if interfaceObjectsChildBody.Len() > 1 {
+							interfaceObjectsChildBody.WriteString(",")
+						}
+						interfaceObjectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				interfaceObjectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "interfaces.objects", interfaceObjectsChildBody.String())
 			}
 			if itemBody != "" {
 				if managementHostsBody.Len() > 1 {

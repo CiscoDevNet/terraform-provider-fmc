@@ -92,7 +92,8 @@ func (data PortGroups) toBody(ctx context.Context, state PortGroups) string {
 				itemBody, _ = sjson.Set(itemBody, "overridable", item.Overridable.ValueBool())
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var objectsChildBody strings.Builder
+				objectsChildBody.WriteString("[")
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -101,8 +102,15 @@ func (data PortGroups) toBody(ctx context.Context, state PortGroups) string {
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if objectsChildBody.Len() > 1 {
+							objectsChildBody.WriteString(",")
+						}
+						objectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				objectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", objectsChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

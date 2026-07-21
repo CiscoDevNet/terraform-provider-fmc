@@ -88,7 +88,8 @@ func (data CertificateMaps) toBody(ctx context.Context, state CertificateMaps) s
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "CertificateMap")
 			if len(item.Rules) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "rules", []any{})
+				var rulesChildBody strings.Builder
+				rulesChildBody.WriteString("[")
 				for _, childItem := range item.Rules {
 					itemChildBody := ""
 					if !childItem.Field.IsNull() {
@@ -103,8 +104,15 @@ func (data CertificateMaps) toBody(ctx context.Context, state CertificateMaps) s
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "rules.-1", itemChildBody)
+					if itemChildBody != "" {
+						if rulesChildBody.Len() > 1 {
+							rulesChildBody.WriteString(",")
+						}
+						rulesChildBody.WriteString(itemChildBody)
+					}
 				}
+				rulesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "rules", rulesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

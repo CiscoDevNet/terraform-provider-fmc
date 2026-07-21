@@ -87,7 +87,8 @@ func (data StandardCommunityLists) toBody(ctx context.Context, state StandardCom
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Entries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "entries", []any{})
+				var entriesChildBody strings.Builder
+				entriesChildBody.WriteString("[")
 				for _, childItem := range item.Entries {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "Standard")
@@ -106,8 +107,15 @@ func (data StandardCommunityLists) toBody(ctx context.Context, state StandardCom
 					if !childItem.NoExport.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "noExport", childItem.NoExport.ValueBool())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if entriesChildBody.Len() > 1 {
+							entriesChildBody.WriteString(",")
+						}
+						entriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				entriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "entries", entriesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

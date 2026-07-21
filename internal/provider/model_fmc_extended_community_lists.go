@@ -89,7 +89,8 @@ func (data ExtendedCommunityLists) toBody(ctx context.Context, state ExtendedCom
 				itemBody, _ = sjson.Set(itemBody, "subType", item.SubType.ValueString())
 			}
 			if len(item.Entries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "entries", []any{})
+				var entriesChildBody strings.Builder
+				entriesChildBody.WriteString("[")
 				for _, childItem := range item.Entries {
 					itemChildBody := ""
 					if !childItem.Action.IsNull() {
@@ -101,8 +102,15 @@ func (data ExtendedCommunityLists) toBody(ctx context.Context, state ExtendedCom
 					if !childItem.RegularExpression.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "regularExpression", childItem.RegularExpression.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if entriesChildBody.Len() > 1 {
+							entriesChildBody.WriteString(",")
+						}
+						entriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				entriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "entries", entriesChildBody.String())
 			}
 			if itemBody != "" {
 				if itemsBody.Len() > 1 {

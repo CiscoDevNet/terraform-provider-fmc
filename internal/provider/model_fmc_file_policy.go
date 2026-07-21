@@ -150,7 +150,8 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 				itemBody, _ = sjson.Set(itemBody, "direction", item.DirectionOfTransfer.ValueString())
 			}
 			if len(item.FileCategories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "fileCategories", []any{})
+				var fileCategoriesChildBody strings.Builder
+				fileCategoriesChildBody.WriteString("[")
 				for _, childItem := range item.FileCategories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -162,11 +163,19 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "fileCategories.-1", itemChildBody)
+					if itemChildBody != "" {
+						if fileCategoriesChildBody.Len() > 1 {
+							fileCategoriesChildBody.WriteString(",")
+						}
+						fileCategoriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				fileCategoriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "fileCategories", fileCategoriesChildBody.String())
 			}
 			if len(item.FileTypes) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "fileTypes", []any{})
+				var fileTypesChildBody strings.Builder
+				fileTypesChildBody.WriteString("[")
 				for _, childItem := range item.FileTypes {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -178,8 +187,15 @@ func (data FilePolicy) toBody(ctx context.Context, state FilePolicy) string {
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "fileTypes.-1", itemChildBody)
+					if itemChildBody != "" {
+						if fileTypesChildBody.Len() > 1 {
+							fileTypesChildBody.WriteString(",")
+						}
+						fileTypesChildBody.WriteString(itemChildBody)
+					}
 				}
+				fileTypesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "fileTypes", fileTypesChildBody.String())
 			}
 			if itemBody != "" {
 				if fileRulesBody.Len() > 1 {
@@ -576,8 +592,12 @@ func (data *FilePolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result) 
 			data.Type = types.StringNull()
 		}
 	}
+	fileRulesArray := res.Get("dummy_file_rules").Array()
 	for i := range data.FileRules {
-		r := res.Get(fmt.Sprintf("dummy_file_rules.%d", i))
+		var r gjson.Result
+		if i < len(fileRulesArray) {
+			r = fileRulesArray[i]
+		}
 		if v := data.FileRules[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
