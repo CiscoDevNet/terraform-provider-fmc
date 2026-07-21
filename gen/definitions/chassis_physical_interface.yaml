@@ -2,8 +2,8 @@
 name: Chassis Physical Interface
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/chassis/fmcmanagedchassis/%v/physicalinterfaces
 put_create: true
+put_delete: true
 doc_category: Devices
-no_delete: true
 test_tags: [TF_VAR_chassis_id]
 attributes:
   - tf_name: chassis_id

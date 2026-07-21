@@ -615,10 +615,15 @@ func (r *DeviceHAPairResource) Delete(ctx context.Context, req resource.DeleteRe
 	// End of HA Break code
 
 	// Adding code to poll object
-	taskID := res.Get("metadata.task.id").String()
+	taskID := res.Get("metadata.task.id")
+	if !taskID.Exists() {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to initiate async task for HA Pair deletion, got response: %s", res.String()))
+		return
+	}
+
 	tflog.Debug(ctx, fmt.Sprintf("%s: Async task initiated successfully (id: %s)", state.Id.ValueString(), taskID))
 
-	diags = FMCWaitForJobToFinish(ctx, r.client, taskID, reqMods)
+	diags = FMCWaitForJobToFinish(ctx, r.client, taskID.String(), reqMods)
 	if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 		return
 	}

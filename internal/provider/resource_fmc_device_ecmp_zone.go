@@ -22,22 +22,19 @@ import (
 	"context"
 	"fmt"
 	"net/url"
-	"regexp"
+	"slices"
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
-	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
+	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
-	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
-	"github.com/tidwall/gjson"
 )
 
 // End of section. //template:end imports
@@ -46,26 +43,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &ChassisPhysicalInterfaceResource{}
-	_ resource.ResourceWithImportState = &ChassisPhysicalInterfaceResource{}
+	_ resource.Resource                = &DeviceECMPZoneResource{}
+	_ resource.ResourceWithImportState = &DeviceECMPZoneResource{}
 )
 
-func NewChassisPhysicalInterfaceResource() resource.Resource {
-	return &ChassisPhysicalInterfaceResource{}
+func NewDeviceECMPZoneResource() resource.Resource {
+	return &DeviceECMPZoneResource{}
 }
 
-type ChassisPhysicalInterfaceResource struct {
+type DeviceECMPZoneResource struct {
 	client *fmc.Client
 }
 
-func (r *ChassisPhysicalInterfaceResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_chassis_physical_interface"
+func (r *DeviceECMPZoneResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_device_ecmp_zone"
 }
 
-func (r *ChassisPhysicalInterfaceResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *DeviceECMPZoneResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Chassis Physical Interface.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Equal-Cost Multipath Routing (ECMP) zone.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -82,70 +79,56 @@ func (r *ChassisPhysicalInterfaceResource) Schema(ctx context.Context, req resou
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
-			"chassis_id": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent chassis.").String,
+			"vrf_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent VRF.").String,
+				Optional:            true,
+				PlanModifiers: []planmodifier.String{
+					stringplanmodifier.RequiresReplace(),
+				},
+			},
+			"device_id": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Id of the parent device.").String,
 				Required:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.RequiresReplace(),
 				},
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the resource, This value is always 'PhysicalInterface'.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'ecmpzones'").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of the interface; it must already be present on the chassis.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the ECMP Zone.").String,
 				Required:            true,
 			},
-			"port_type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the port.").AddStringEnumDescription("DATA", "DATA_SHARING").String,
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("DATA", "DATA_SHARING"),
-				},
-			},
-			"admin_state": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Administrative state of the interface.").AddStringEnumDescription("ENABLED", "DISABLED").AddDefaultValueDescription("ENABLED").String,
+			"interfaces": schema.SetNestedAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Interfaces that are members of the ECMP Zone.").String,
 				Optional:            true,
-				Computed:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("ENABLED", "DISABLED"),
-				},
-				Default: stringdefault.StaticString("ENABLED"),
-			},
-			"auto_negotiation": schema.BoolAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Enables auto negotiation of duplex and speed.").String,
-				Optional:            true,
-			},
-			"duplex": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface duplex mode.").AddStringEnumDescription("AUTO", "FULL", "HALF").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "FULL", "HALF"),
-				},
-			},
-			"speed": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Interface speed.").AddStringEnumDescription("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP").String,
-				Required:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "TEN_MBPS", "HUNDRED_MBPS", "ONE_GBPS", "TEN_GBPS", "TWENTY_FIVE_GBPS", "FORTY_GBPS", "HUNDRED_GBPS", "TWO_HUNDRED_GBPS", "FOUR_HUNDRED_GBPS", "DETECT_SFP"),
-				},
-			},
-			"fec_mode": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Forward Error Correction (FEC) mode.").AddStringEnumDescription("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE").String,
-				Optional:            true,
-				Validators: []validator.String{
-					stringvalidator.OneOf("AUTO", "CL108RS", "CL74FC", "CL91RS", "DISABLE"),
+				NestedObject: schema.NestedAttributeObject{
+					Attributes: map[string]schema.Attribute{
+						"id": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Id of the selected interface.").String,
+							Required:            true,
+						},
+						"type": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Type of the selected interface.").String,
+							Optional:            true,
+						},
+						"name": schema.StringAttribute{
+							MarkdownDescription: helpers.NewAttributeDescription("Name of the selected interface.").String,
+							Optional:            true,
+						},
+					},
 				},
 			},
 		},
 	}
 }
 
-func (r *ChassisPhysicalInterfaceResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *DeviceECMPZoneResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -157,8 +140,8 @@ func (r *ChassisPhysicalInterfaceResource) Configure(_ context.Context, req reso
 
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
-func (r *ChassisPhysicalInterfaceResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	var plan ChassisPhysicalInterface
+func (r *DeviceECMPZoneResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan DeviceECMPZone
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -172,44 +155,11 @@ func (r *ChassisPhysicalInterfaceResource) Create(ctx context.Context, req resou
 		reqMods = append(reqMods, fmc.DomainName(plan.Domain.ValueString()))
 	}
 
-	tflog.Debug(ctx, fmt.Sprintf("%s: considering object name %s", plan.Id, plan.Name))
-	if plan.Id.ValueString() == "" && plan.Name.ValueString() != "" {
-		offset := 0
-		limit := 1000
-		for page := 1; ; page++ {
-			queryString := fmt.Sprintf("?limit=%d&offset=%d&expanded=true", limit, offset)
-			res, err := r.client.Get(plan.getPath()+queryString, reqMods...)
-			if err != nil {
-				resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to retrieve objects, got error: %s", err))
-				return
-			}
-			if value := res.Get("items"); len(value.Array()) > 0 {
-				value.ForEach(func(k, v gjson.Result) bool {
-					if plan.Name.ValueString() == v.Get("name").String() {
-						plan.Id = types.StringValue(v.Get("id").String())
-						tflog.Debug(ctx, fmt.Sprintf("%s: Found object with name '%v', id: %s", plan.Id.ValueString(), plan.Name.ValueString(), plan.Id.ValueString()))
-						return false
-					}
-					return true
-				})
-			}
-			if plan.Id.ValueString() != "" || !res.Get("paging.next.0").Exists() {
-				break
-			}
-			offset += limit
-		}
-
-		if plan.Id.ValueString() == "" {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to find object with name: %v", plan.Name.ValueString()))
-			return
-		}
-	}
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, ChassisPhysicalInterface{})
-	res, err := r.client.Put(plan.getPath()+"/"+url.PathEscape(plan.Id.ValueString()), body, reqMods...)
+	body := plan.toBody(ctx, DeviceECMPZone{})
+	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
 		return
@@ -229,8 +179,8 @@ func (r *ChassisPhysicalInterfaceResource) Create(ctx context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
-func (r *ChassisPhysicalInterfaceResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state ChassisPhysicalInterface
+func (r *DeviceECMPZoneResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state DeviceECMPZone
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -281,8 +231,8 @@ func (r *ChassisPhysicalInterfaceResource) Read(ctx context.Context, req resourc
 
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *ChassisPhysicalInterfaceResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state ChassisPhysicalInterface
+func (r *DeviceECMPZoneResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state DeviceECMPZone
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -321,8 +271,8 @@ func (r *ChassisPhysicalInterfaceResource) Update(ctx context.Context, req resou
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *ChassisPhysicalInterfaceResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state ChassisPhysicalInterface
+func (r *DeviceECMPZoneResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state DeviceECMPZone
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -337,10 +287,9 @@ func (r *ChassisPhysicalInterfaceResource) Delete(ctx context.Context, req resou
 	}
 
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Delete", state.Id.ValueString()))
-	body := state.toBodyPutDelete(ctx)
-	res, err := r.client.Put(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), body, reqMods...)
+	res, err := r.client.Delete(state.getPath()+"/"+url.QueryEscape(state.Id.ValueString()), reqMods...)
 	if err != nil && !strings.Contains(err.Error(), "StatusCode 404") {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (PUT), got error: %s, %s", err, res.String()))
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to delete object (DELETE), got error: %s, %s", err, res.String()))
 		return
 	}
 
@@ -352,24 +301,54 @@ func (r *ChassisPhysicalInterfaceResource) Delete(ctx context.Context, req resou
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *ChassisPhysicalInterfaceResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
-	// Parse import ID
-	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<chassis_id>[^\s,]+),(?P<id>[^\s,]+?)$`)
-	match := inputPattern.FindStringSubmatch(req.ID)
-	if match == nil {
-		errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<chassis_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n" + fmt.Sprintf("Got: %q", req.ID)
+func (r *DeviceECMPZoneResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+	errMsg := "Failed to parse import parameters.\nPlease provide import string in the following format: <domain>,<device_id>,<vrf_id>,<id>\n<domain> is optional. If not provided, `Global` is used implicitly and resource's `domain` attribute is not set.\n<vrf_id> is optional.\n" + fmt.Sprintf("Got: %q", req.ID)
+	parts := strings.Split(req.ID, ",")
+	if len(parts) < 2 || len(parts) > 4 {
 		resp.Diagnostics.AddError("Import error", errMsg)
 		return
 	}
 
-	// Set domain, if provided
-	if tmpDomain := match[inputPattern.SubexpIndex("domain")]; tmpDomain != "" {
-		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), tmpDomain)...)
+	if slices.Contains(parts, "") {
+		resp.Diagnostics.AddError("Import error", errMsg)
+		return
 	}
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), match[inputPattern.SubexpIndex("id")])...)
-	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("chassis_id"), match[inputPattern.SubexpIndex("chassis_id")])...)
+
+	if len(parts) == 2 {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[0])...)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[1])...)
+	} else if len(parts) == 3 {
+		if err := uuid.Validate(parts[0]); err == nil {
+			// First part is UUID, so it's device_id
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[0])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vrf_id"), parts[1])...)
+		} else {
+			// First part is domain
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), parts[0])...)
+			resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[1])...)
+		}
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[2])...)
+
+	} else if len(parts) == 4 {
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("domain"), parts[0])...)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("device_id"), parts[1])...)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("vrf_id"), parts[2])...)
+		resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("id"), parts[3])...)
+	}
 
 	helpers.SetFlagImporting(ctx, true, resp.Private, &resp.Diagnostics)
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

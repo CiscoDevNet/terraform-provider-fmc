@@ -430,7 +430,10 @@ func (r *IKEv2IPsecProposalsResource) ImportState(ctx context.Context, req resou
 	names := strings.Split(match[inputPattern.SubexpIndex("names")], ",")
 	itemsMap := make(map[string]IKEv2IPsecProposalsItems, len(names))
 	for _, v := range names {
-		itemsMap[v] = IKEv2IPsecProposalsItems{}
+		itemsMap[v] = IKEv2IPsecProposalsItems{
+			EspEncryptions: types.SetNull(types.StringType),
+			EspHashes:      types.SetNull(types.StringType),
+		}
 	}
 	resp.Diagnostics.Append(resp.State.SetAttribute(ctx, path.Root("items"), itemsMap)...)
 

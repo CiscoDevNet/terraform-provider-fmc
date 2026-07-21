@@ -9,8 +9,19 @@ description: |-
 
 ## Unreleased
 
+- (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
+- (Fix) `fmc_device_ha_pair` may not detect unsuccessful split request
+
+## 2.4.1
+
+- (Fix) `fmc_dynamic_objects`: Complete the import fix
+
+## 2.4.0
+
+- (Enhancement) Add support for `fmc_device_ecmp_zone`
 - (Enhancement) Add support for Intrusion Rule and Intrusion Rule Group
 - (Enhancement) Add support for Intrusion Policy Group and Rules Overrides
+- (Fix) `fmc_dynamic_objects`: Fixed type handling that affected import and some update operations
 
 ## 2.3.0
 
