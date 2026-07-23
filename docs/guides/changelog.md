@@ -9,6 +9,7 @@ description: |-
 
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_mac_address_pool` and `fmc_mac_address_pools`
 - (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
 - (Fix) `fmc_device_ha_pair` may not detect unsuccessful split request
 

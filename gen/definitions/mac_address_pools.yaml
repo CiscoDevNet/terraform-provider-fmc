@@ -1,0 +1,44 @@
+---
+name: MAC Address Pools
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/macaddresspools
+doc_category: Objects
+is_bulk: true
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of MAC Address Pools. The key of the map is the name of the individual MAC Address Pool.
+    map_key_example: my_mac_address_pools
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the MAC Address Pool object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'MacAddressPool'.
+        computed: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'MacAddressPool'.
+        value: MacAddressPool
+      - model_name: description
+        type: String
+        description: Description of the object.
+        example: My MAC Address Pool object
+        missing_in_response_if_set_to_empty_string: true
+      - model_name: macAddressRange
+        tf_name: mac_address_range
+        type: String
+        mandatory: true
+        description: Range of MAC addresses in the format of `start-end`, using Cisco dotted-hex notation.
+        example: "aaaa.bbbb.1130-aaaa.bbbb.1140"
+      - model_name: overridable
+        type: Bool
+        description: Whether the object values can be overridden.
+        example: "true"
