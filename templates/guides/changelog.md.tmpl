@@ -9,6 +9,7 @@ description: |-
 
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_sinkhole` and `fmc_sinkholes`
 - (Enhancement) Add support for `fmc_distingiushed_name` and `fmc_distingiushed_names`
 - (Enhancement) Add support for `fmc_cipher_suite_list` and `fmc_cipher_suite_lists`
 - (Enhancement) Add support for `fmc_mac_address_pool` and `fmc_mac_address_pools`
