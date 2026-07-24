@@ -737,6 +737,8 @@ func (p *FmcProvider) DataSources(ctx context.Context) []func() datasource.DataS
 		NewTunnelZoneDataSource,
 		NewTunnelZonesDataSource,
 		NewURLDataSource,
+		NewURLCategoriesDataSource,
+		NewURLCategoryDataSource,
 		NewURLGroupDataSource,
 		NewURLGroupsDataSource,
 		NewURLsDataSource,
