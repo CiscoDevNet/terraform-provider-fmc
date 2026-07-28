@@ -1,0 +1,222 @@
+---
+name: Device DDNS
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/dhcp/ddnssettings
+minimum_version: "7.4"
+doc_category: Devices
+put_create: true
+retrieve_id: true
+put_delete: true
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DDNSSetting'.
+    computed: true
+  - model_name: dhcpClientRequestType
+    tf_name: dhcp_client_request_type
+    type: String
+    description: Determine which records you want the DHCP server to update.
+    enum_values: [NOT_SELECTED, NO_UPDATE, ONLY_PTR, BOTH_A_AND_PTR_RECORD]
+    example: BOTH_A_AND_PTR_RECORD
+    test_value: '"BOTH_A_AND_PTR_RECORD"'
+  - model_name: enableDHCPClientBroadcast
+    tf_name: dhcp_client_broadcast
+    type: Bool
+    description: Request that the DHCP server broadcast the DHCP reply (DHCP option 1).
+    example: "true"
+    test_value: "true"
+  - model_name: dynamicDDNSUpdateType
+    tf_name: dynamic_dns_update
+    type: String
+    description: Which DNS RRs you want the DHCP server to update.
+    enum_values: [NOT_SELECTED, ONLY_PTR, BOTH_A_AND_PTR_RECORD]
+    example: BOTH_A_AND_PTR_RECORD
+    test_value: '"BOTH_A_AND_PTR_RECORD"'
+  - model_name: overrideDHCPClientRequest
+    tf_name: dhcp_client_request_override
+    type: Bool
+    description: Override the update actions requested by the DHCP client.
+    example: "true"
+    test_value: "true"
+  - model_name: dhcpClientIdInterfaces
+    tf_name: dhcp_client_id_interfaces
+    type: List
+    description: List of interfaces on which the DHCP client sets the client identifier.
+    exclude_test: true
+    exclude_example: true
+    attributes:
+      - model_name: id
+        tf_name: id
+        type: String
+        description: Id of the interface.
+        mandatory: true
+        id: true
+      - model_name: name
+        tf_name: name
+        type: String
+        description: Name of the interface.
+        mandatory: true
+      - model_name: type
+        tf_name: type
+        type: String
+        description: Type of the interface.
+        mandatory: true
+  - model_name: ddnsUpdateMethods
+    tf_name: ddns_update_methods
+    type: List
+    description: List of DDNS update methods.
+    attributes:
+      - model_name: name
+        tf_name: name
+        type: String
+        description: Name of the DDNS update method.
+        mandatory: true
+        id: true
+        example: my_ddns_method
+        test_value: '"my_ddns_method"'
+      - model_name: methodOption
+        tf_name: method
+        type: String
+        description: DDNS update method type.
+        mandatory: true
+        enum_values: [DDNS, WEB, FMC_ONLY]
+        example: DDNS
+        test_value: '"DDNS"'
+      - model_name: day
+        data_path: [updateInterval]
+        tf_name: update_interval_day
+        type: Int64
+        description: Update interval day portion.
+        min_int: 0
+        max_int: 364
+        example: 0
+        test_value: "1"
+      - model_name: hourOfTheDay
+        data_path: [updateInterval]
+        tf_name: update_interval_hour
+        type: Int64
+        description: Update interval hour portion.
+        min_int: 0
+        max_int: 23
+        example: 0
+        exclude_test: true
+      - model_name: minute
+        data_path: [updateInterval]
+        tf_name: update_interval_minute
+        type: Int64
+        description: Update interval minute portion.
+        min_int: 0
+        max_int: 59
+        example: 5
+        test_value: "5"
+      - model_name: second
+        data_path: [updateInterval]
+        tf_name: update_interval_second
+        type: Int64
+        description: Update interval second portion.
+        min_int: 0
+        max_int: 59
+        example: 0
+        exclude_test: true
+      - model_name: webURL
+        tf_name: web_url
+        type: String
+        description: URL of the web update server, used when `method` is `WEB`. Syntax https://username:password@provider-domain/xyz?hostname=<h>&myip=<a>.
+        exclude_example: true
+        exclude_test: true
+      - model_name: webUpdateType
+        tf_name: web_update_type
+        type: String
+        description: Addresses to update when `method` is `WEB`.
+        enum_values: [ALL_ADDRESSES, IPV4_ADDRESS, IPV4_AND_ONE_IPV6_ADDRESS, ONE_IPV6_ADDRESS, ALL_IPV6_ADDRESSES]
+        exclude_example: true
+        exclude_test: true
+      - model_name: updateRecords
+        tf_name: update_records
+        type: String
+        description: DNS records to update.
+        enum_values: [NOT_DEFINED, A_RECORDS, BOTH_A_AND_PTR_RECORDS]
+        example: BOTH_A_AND_PTR_RECORDS
+        test_value: '"BOTH_A_AND_PTR_RECORDS"'
+  - model_name: ddnsInterfaceSettings
+    tf_name: ddns_interface_settings
+    type: List
+    description: List of per-interface DDNS settings.
+    attributes:
+      - model_name: id
+        data_path: [interface]
+        tf_name: interface_id
+        type: String
+        description: Id of the interface. Id, name, and type must all be specified together.
+        mandatory: true
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: name
+        data_path: [interface]
+        tf_name: interface_name
+        type: String
+        description: Name of the interface. Id, name, and type must all be specified together.
+        mandatory: true
+        example: GigabitEthernet0/1
+        test_value: fmc_device_physical_interface.test.name
+      - model_name: type
+        data_path: [interface]
+        tf_name: interface_type
+        type: String
+        description: Type of the interface. Id, name, and type must all be specified together.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test.type
+      - model_name: updateMethodName
+        tf_name: method_name
+        type: String
+        description: Name of the DDNS update method (from `update_methods`) applied to the interface.
+        example: my_ddns_method
+        test_value: '"my_ddns_method"'
+      - model_name: hostname
+        tf_name: hostname
+        type: String
+        description: Set hostname for the interface.
+        example: host.example.com
+        test_value: '"host.example.com"'
+      - model_name: dhcpClientRequestType
+        tf_name: dhcp_client_request_type
+        type: String
+        description: How the DHCP client requests the DHCP server to perform DNS updates.
+        enum_values: [NOT_SELECTED, NO_UPDATE, ONLY_PTR, BOTH_A_AND_PTR_RECORD]
+        example: NO_UPDATE
+        exclude_test: true
+      - model_name: dynamicDDNSUpdateType
+        tf_name: dynamic_dns_update
+        type: String
+        description: DNS records that the DDNS method updates.
+        enum_values: [NOT_SELECTED, ONLY_PTR, BOTH_A_AND_PTR_RECORD]
+        example: BOTH_A_AND_PTR_RECORD
+        test_value: '"BOTH_A_AND_PTR_RECORD"'
+      - model_name: overrideDHCPClientRequest
+        tf_name: dhcp_client_request_override
+        type: Bool
+        description: Override the DDNS updates that the DHCP client requests the DHCP server to perform.
+        example: "true"
+        exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id           = var.device_id
+    name                = var.interface_name
+    logical_name        = "myinterface-0-1"
+    mode                = "NONE"
+    enabled             = true
+    ipv4_static_address = "10.1.1.1"
+    ipv4_static_netmask = "24"
+  }

@@ -1,0 +1,27 @@
+---
+name: Distinguished Name
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/distinguishednames
+doc_category: Objects
+minimum_version: "7.4"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Distinguished Name object.
+    example: my_distinguished_name
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DistinguishedName'.
+    computed: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DistinguishedName'.
+    value: DistinguishedName
+  - model_name: dn
+    tf_name: distinguished_name
+    type: String
+    mandatory: true
+    description: >-
+      The value of the distinguished name, provided as comma-separated attribute-value pairs (for example `CN=example.com,OU=IT,O=Example,C=US`).
+    example: "C=US,CN=example.com,O=Example,OU=IT"

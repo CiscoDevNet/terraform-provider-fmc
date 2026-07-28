@@ -1,5 +1,12 @@
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_device_certificate`
+- (Enhancement) Add support for `fmc_device_dhcp_server`, `fmc_device_dhcp_relay` and `fmc_device_ddns`
+- (Enhancement) Add support for `fmc_url_category` and `fmc_url_categories`
+- (Enhancement) Add support for `fmc_sinkhole` and `fmc_sinkholes`
+- (Enhancement) Add support for `fmc_distingiushed_name` and `fmc_distingiushed_names`
+- (Enhancement) Add support for `fmc_cipher_suite_list` and `fmc_cipher_suite_lists`
+- (Enhancement) Add support for `fmc_mac_address_pool` and `fmc_mac_address_pools`
 - (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
 - (Fix) `fmc_device_ha_pair` may not detect unsuccessful split request
 

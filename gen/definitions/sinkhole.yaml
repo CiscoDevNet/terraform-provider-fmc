@@ -1,0 +1,44 @@
+---
+name: Sinkhole
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/sinkholes
+doc_category: Objects
+minimum_version_create: "10.0"
+attributes:
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Sinkhole object.
+    example: my_sinkhole
+    data_source_query: true
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'Sinkhole'.
+    computed: true
+  - model_name: type
+    type: String
+    value: Sinkhole
+  - model_name: ipv4
+    tf_name: ipv4_address
+    type: String
+    mandatory: true
+    description: IPv4 address of the Sinkhole.
+    example: 10.1.1.1
+  - model_name: ipv6
+    tf_name: ipv6_address
+    type: String
+    mandatory: true
+    description: IPv6 address of the Sinkhole.
+    example: "2001:db8::1"
+  - model_name: action
+    type: String
+    enum_values: [MONITOR, BLOCK]
+    description: >-
+      Action of the Sinkhole. MONITOR redirects traffic to a sinkhole server (Log Connections to Sinkhole).
+      BLOCK redirects traffic to a non-resolving IP address (Block and Log Connections to Sinkhole).
+    example: MONITOR
+  - model_name: sinkholeType
+    tf_name: log_connection_type
+    type: String
+    enum_values: [SINKHOLE_CNC, SINKHOLE_MALWARE, SINKHOLE_PHISHING, NONE]
+    description: Type of infection logged when the action is MONITOR.
+    example: SINKHOLE_CNC

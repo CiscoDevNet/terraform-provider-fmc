@@ -1,0 +1,42 @@
+---
+name: Cipher Suite Lists
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ciphersuitelists
+doc_category: Objects
+is_bulk: true
+minimum_version: "7.4"
+minimum_version_bulk_create: "999"
+minimum_version_bulk_delete: "999"
+attributes:
+  - model_name: items
+    type: Map
+    description: >-
+      Map of Cipher Suite Lists. The key of the map is the name of the individual Cipher Suite List.
+    map_key_example: my_cipher_suite_lists
+    mandatory: true
+    attributes:
+      - model_name: id
+        type: String
+        resource_id: true
+        description: Id of the Cipher Suite List object.
+        exclude_example: true
+        exclude_test: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CipherSuiteList'.
+        computed: true
+      - model_name: type
+        type: String
+        description: Type of the object; this value is always 'CipherSuiteList'.
+        value: CipherSuiteList
+      - model_name: literals
+        tf_name: cipher_suites
+        type: Set
+        description: Set of predefined cipher suites which are part of the cipher suite list object.
+        mandatory: true
+        attributes:
+          - model_name: name
+            type: String
+            id: true
+            mandatory: true
+            description: Name of the cipher suite.
+            example: TLS_RSA_WITH_AES_128_CBC_SHA
