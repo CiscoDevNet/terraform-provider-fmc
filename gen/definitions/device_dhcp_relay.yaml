@@ -1,0 +1,182 @@
+---
+name: Device DHCP Relay
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/dhcp/dhcprelaysettings
+minimum_version: "7.4"
+doc_category: Devices
+put_create: true
+retrieve_id: true
+put_delete: true
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DHCPRelaySettings'.
+    computed: true
+  - model_name: ipv4TimeoutInSec
+    tf_name: ipv4_relay_timeout
+    type: Int64
+    description: Amount of time in seconds that the Firewall Threat Defense device waits to time out the DHCP relay agent.
+    example: 60
+    default_value: 60
+    min_int: 1
+    max_int: 3600
+  - model_name: ipv6TimeoutInSec
+    tf_name: ipv6_relay_timeout
+    type: Int64
+    description: Amount of time in seconds that the Firewall Threat Defense device waits to time out the DHCPv6 relay agent.
+    example: 60
+    default_value: 60
+    min_int: 1
+    max_int: 3600
+  - model_name: trustAllInformation
+    tf_name: trust_all_information
+    type: Bool
+    description: Set all client interfaces as trusted.
+    example: "true"
+    exclude_test: true
+  - model_name: dhcpRelayAgent
+    tf_name: relay_agents
+    type: List
+    description: List of per-interface DHCP relay agents.
+    attributes:
+      - model_name: id
+        data_path: [interface]
+        tf_name: interface_id
+        type: String
+        description: Id of the interface connected to DHCP clients.
+        mandatory: true
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: name
+        data_path: [interface]
+        tf_name: interface_name
+        type: String
+        description: Name of the interface connected to DHCP clients.
+        mandatory: true
+        example: GigabitEthernet0/1
+        test_value: fmc_device_physical_interface.test.name
+      - model_name: type
+        data_path: [interface]
+        tf_name: interface_type
+        type: String
+        description: Type of the interface connected to DHCP clients.
+        mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test.type
+      - model_name: enableDHCPIPv4Relay
+        tf_name: ipv4_relay
+        type: Bool
+        description: Enable the IPv4 DHCP relay agent on the interface.
+        example: "true"
+        test_value: "true"
+      - model_name: enableDHCPIPv6Relay
+        tf_name: ipv6_relay
+        type: Bool
+        description: Enable the IPv6 DHCP relay agent on the interface.
+        example: "false"
+        exclude_test: true
+      - model_name: setRoute
+        tf_name: set_route
+        type: Bool
+        description: >-
+          (IPv4 only) Changes the default gateway address in the DHCP message from the server to that of the Firewall Threat Defense device interface
+          that is closest to the DHCP client, which relayed the original DHCP request.
+        example: "true"
+        exclude_test: true
+  - model_name: dhcpRelayServers
+    tf_name: servers
+    type: List
+    description: List of DHCP servers that client requests are relayed to.
+    attributes:
+      - model_name: id
+        data_path: [server]
+        tf_name: server_id
+        type: String
+        description: Id of the Host identifying the DHCP server.
+        mandatory: true
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_hosts.test.items["device_dhcp_relay_server"].id
+      - model_name: id
+        data_path: [interface]
+        tf_name: server_interface_id
+        type: String
+        description: >-
+          Id of the server-side interface used to reach the DHCP server. Id, name, and type must all be specified
+          together. Mutually exclusive with `client_interfaces`.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        exclude_test: true
+      - model_name: name
+        data_path: [interface]
+        tf_name: server_interface_name
+        type: String
+        description: >-
+          Name of the server-side interface used to reach the DHCP server. Id, name, and type must all be specified
+          together. Mutually exclusive with `client_interfaces`.
+        example: GigabitEthernet0/1
+        exclude_test: true
+      - model_name: type
+        data_path: [interface]
+        tf_name: server_interface_type
+        type: String
+        description: >-
+          Type of the server-side interface used to reach the DHCP server. Id, name, and type must all be specified
+          together. Mutually exclusive with `client_interfaces`.
+        example: PhysicalInterface
+        exclude_test: true
+      - model_name: clientsideInterfaces
+        tf_name: client_interfaces
+        type: List
+        description: >-
+          List of client-side interfaces served by this DHCP relay server. Mutually exclusive
+          with `server_interface_id`.
+        attributes:
+          - model_name: id
+            tf_name: id
+            type: String
+            description: Id of the client-side interface.
+            mandatory: true
+            id: true
+            example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+            test_value: fmc_device_physical_interface.test.id
+          - model_name: name
+            tf_name: name
+            type: String
+            description: Name of the client-side interface.
+            mandatory: true
+            example: GigabitEthernet0/1
+            test_value: fmc_device_physical_interface.test.name
+          - model_name: type
+            tf_name: type
+            type: String
+            description: Type of the client-side interface.
+            mandatory: true
+            example: PhysicalInterface
+            test_value: fmc_device_physical_interface.test.type
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id           = var.device_id
+    name                = var.interface_name
+    logical_name        = "myinterface-0-1"
+    mode                = "NONE"
+    enabled             = true
+    ipv4_static_address = "10.1.1.1"
+    ipv4_static_netmask = "24"
+  }
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "device_dhcp_relay_server" = { ip = "10.0.2.1" },
+    }
+  }

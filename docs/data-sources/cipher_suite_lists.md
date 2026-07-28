@@ -4,11 +4,16 @@ page_title: "fmc_cipher_suite_lists Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the Cipher Suite Lists.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_cipher_suite_lists (Data Source)
 
 This data source reads the Cipher Suite Lists.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

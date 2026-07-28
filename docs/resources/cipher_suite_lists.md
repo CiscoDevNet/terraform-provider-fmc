@@ -5,7 +5,7 @@ subcategory: "Objects"
 description: |-
   This resource manages Cipher Suite Lists through bulk operations.
   The following restrictions apply:
-  Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
+  Minimum FMC version: 7.4Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_cipher_suite_lists (Resource)
@@ -13,6 +13,7 @@ description: |-
 This resource manages Cipher Suite Lists through bulk operations.
 
 The following restrictions apply:
+  - Minimum FMC version: `7.4`
   - Bulk object creation is not supported by FMC, it will be handled one-by-one
   - Bulk object deletion is not supported by FMC, it will be handled one-by-one
   - Updates are always done one-by-one.

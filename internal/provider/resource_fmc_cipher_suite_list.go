@@ -61,7 +61,7 @@ func (r *CipherSuiteListResource) Metadata(ctx context.Context, req resource.Met
 func (r *CipherSuiteListResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Cipher Suite List.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a Cipher Suite List.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -118,6 +118,12 @@ func (r *CipherSuiteListResource) Configure(_ context.Context, req resource.Conf
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *CipherSuiteListResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCipherSuiteList) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Cipher Suite List creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan CipherSuiteList
 
 	// Read plan
@@ -157,6 +163,11 @@ func (r *CipherSuiteListResource) Create(ctx context.Context, req resource.Creat
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *CipherSuiteListResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCipherSuiteList) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Cipher Suite List, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var state CipherSuiteList
 
 	// Read state

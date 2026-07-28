@@ -66,7 +66,7 @@ func (r *MACAddressPoolsResource) Metadata(ctx context.Context, req resource.Met
 func (r *MACAddressPoolsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages MAC Address Pools through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages MAC Address Pools through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.6").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -134,6 +134,12 @@ func (r *MACAddressPoolsResource) Configure(_ context.Context, req resource.Conf
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *MACAddressPoolsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionMACAddressPools) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support MAC Address Pools creation, minumum required version is 7.6", r.client.FMCVersion))
+		return
+	}
 	var plan MACAddressPools
 
 	// Read plan
@@ -181,6 +187,11 @@ func (r *MACAddressPoolsResource) Create(ctx context.Context, req resource.Creat
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *MACAddressPoolsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionMACAddressPools) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support MAC Address Pools, minimum required version is 7.6", r.client.FMCVersion))
+		return
+	}
 	var state MACAddressPools
 
 	// Read state

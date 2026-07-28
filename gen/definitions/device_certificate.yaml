@@ -1,0 +1,57 @@
+# Manual resource - Create, Read, Update, Delete
+# Manual data source - Read
+# This resource spans three different FMC endpoints and therefore requires
+# manual (non-generated) CRUD wiring after `go generate`:
+#   - Create / Delete / Re-enroll: POST /devices/operational/managecertificates
+#     with body {action: ENROLL|RE_ENROLL|DELETE, deviceCertificates: [...]} (async task).
+#   - Read: GET /devices/certificates?filter=deviceId:<device_id> (DeviceCertificateModel list).
+# The rest_endpoint below points at the read endpoint; the manual Create/Update/Delete/Read
+# functions (and their helpers) live in the model files, outside the autogeneration markers.
+---
+name: Device Certificate
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/certificates
+minimum_version: "7.4"
+res_description: >-
+  This resource manages a Device Certificate - the enrollment of a certificate (via a certificate enrollment object)
+  onto a device.
+doc_category: Devices
+no_import: true
+test_tags: [TF_VAR_device_id]
+attributes:
+  - model_name: deviceId
+    tf_name: device_id
+    type: String
+    requires_replace: true
+    mandatory: true
+    data_source_query: true
+    description: Id of the device the certificate is enrolled on.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: id
+    data_path: [certificate]
+    tf_name: certificate_enrollment_id
+    type: String
+    requires_replace: true
+    mandatory: true
+    data_source_query: true
+    description: Id of the certificate enrollment object to enroll on the device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_certificate_enrollment.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DeviceCertificate'.
+    computed: true
+  - model_name: name
+    type: String
+    description: Name of the device certificate (derived from the certificate enrollment).
+    computed: true
+    exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+
+  resource "fmc_certificate_enrollment" "test" {
+    name                    = "device_certificate_enrollment"
+    enrollment_type         = "SELF_SIGNED_CERTFICATE"
+    certificate_common_name = "ftd.example.com"
+  }

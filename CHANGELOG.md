@@ -1,5 +1,7 @@
 ## Unreleased
 
+- (Enhancement) Add support for `fmc_device_certificate`
+- (Enhancement) Add support for `fmc_device_dhcp_server`, `fmc_device_dhcp_relay` and `fmc_device_ddns`
 - (Enhancement) Add support for `fmc_url_category` and `fmc_url_categories`
 - (Enhancement) Add support for `fmc_sinkhole` and `fmc_sinkholes`
 - (Enhancement) Add support for `fmc_distingiushed_name` and `fmc_distingiushed_names`

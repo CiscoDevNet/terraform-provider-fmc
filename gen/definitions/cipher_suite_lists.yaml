@@ -3,6 +3,7 @@ name: Cipher Suite Lists
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ciphersuitelists
 doc_category: Objects
 is_bulk: true
+minimum_version: "7.4"
 minimum_version_bulk_create: "999"
 minimum_version_bulk_delete: "999"
 attributes:

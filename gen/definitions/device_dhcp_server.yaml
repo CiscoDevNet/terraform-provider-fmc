@@ -1,0 +1,207 @@
+---
+name: Device DHCP Server
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/dhcp/dhcpserver
+minimum_version: "7.4"
+doc_category: Devices
+put_create: true
+retrieve_id: true
+put_delete: true
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'DHCPServerSettings'.
+    computed: true
+  - model_name: pingTimeoutInMs
+    tf_name: ping_timeout
+    type: Int64
+    description: Ping timeout in milliseconds.
+    example: 50
+    default_value: 50
+    min_int: 10
+    max_int: 10000
+  - model_name: leaseLengthInSec
+    tf_name: lease_length
+    type: Int64
+    description: Duration (in seconds) that a client can use an assigned IP address before it must renew the lease.
+    example: 3600
+    default_value: 3600
+    min_int: 300
+    max_int: 1048575
+  - model_name: id
+    data_path: [autoConfigInterface]
+    tf_name: auto_config_interface_id
+    type: String
+    description: Id of the interface to be used for autoconfiguration. Id, name, and type must all be specified together.
+    exclude_test: true
+    exclude_example: true
+  - model_name: type
+    data_path: [autoConfigInterface]
+    tf_name: auto_config_interface_type
+    type: String
+    description: Type of the interface to be used for autoconfiguration. Id, name, and type must all be specified together.
+    exclude_test: true
+    exclude_example: true
+  - model_name: name
+    data_path: [autoConfigInterface]
+    tf_name: auto_config_interface_name
+    type: String
+    description: Name of the interface to be used for autoconfiguration. Id, name, and type must all be specified together.
+    exclude_test: true
+    exclude_example: true
+  - model_name: searchDomain
+    tf_name: domain_name
+    type: String
+    description: Domain name given to DHCP clients.
+    example: example.com
+  - model_name: id
+    data_path: [primaryDNSServer]
+    tf_name: primary_dns_server_id
+    type: String
+    description: Id of the Host object used as the primary DNS server offered to DHCP clients.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_hosts.test.items["device_dhcp_server_dns_1"].id
+  - model_name: id
+    data_path: [secondaryDNSServer]
+    tf_name: secondary_dns_server_id
+    type: String
+    description: Id of the Host object used as the secondary DNS server offered to DHCP clients.
+    exclude_example: true
+    test_value: fmc_hosts.test.items["device_dhcp_server_dns_2"].id
+  - model_name: id
+    data_path: [primaryWINSServer]
+    tf_name: primary_wins_server_id
+    type: String
+    description: Id of the Host object used as the primary WINS server offered to DHCP clients.
+    exclude_example: true
+    test_value: fmc_hosts.test.items["device_dhcp_server_wins_1"].id
+  - model_name: id
+    data_path: [secondaryWINSServer]
+    tf_name: secondary_wins_server_id
+    type: String
+    description: Id of the Host object used as the secondary WINS server offered to DHCP clients.
+    exclude_example: true
+    test_value: fmc_hosts.test.items["device_dhcp_server_wins_2"].id
+  - model_name: dhcpServers
+    tf_name: servers
+    type: List
+    description: List of per-interface DHCP server pools.
+    attributes:
+      - model_name: id
+        data_path: [interface]
+        tf_name: interface_id
+        type: String
+        description: Id of the interface on which the DHCP server is enabled.
+        mandatory: true
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: name
+        data_path: [interface]
+        tf_name: interface_name
+        type: String
+        description: Name of the interface on which the DHCP server is enabled.
+        example: GigabitEthernet0/1
+        mandatory: true
+        test_value: fmc_device_physical_interface.test.name
+      - model_name: type
+        data_path: [interface]
+        tf_name: interface_type
+        type: String
+        description: Type of the interface on which the DHCP server is enabled.
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test.type
+        mandatory: true
+      - model_name: addressPool
+        tf_name: address_pool
+        type: String
+        description: >-
+          Range of IP addresses (formatted as `start_ip-end_ip`) the DHCP server can hand out. The pool must be on
+          the same subnet as the associated interface.
+        example: 10.1.1.10-10.1.1.20
+        mandatory: true
+      - model_name: enableDHCP
+        tf_name: enabled
+        type: Bool
+        description: Enable the DHCP server on the associated interface.
+        example: "true"
+        test_value: "true"
+  - model_name: dhcpOptions
+    tf_name: dhcp_options
+    type: List
+    description: List of advanced DHCP option codes (parameters) sent to DHCP clients.
+    attributes:
+      - model_name: optionCode
+        tf_name: code
+        type: Int64
+        description: DHCP option code.
+        min_int: 2
+        max_int: 255
+        mandatory: true
+        example: 3
+        id: true
+      - model_name: optionType
+        tf_name: type
+        type: String
+        description: >-
+          Type of the value carried by the option. `IP` uses `first_ip_address_id` (and optionally
+          `second_ip_address_id`), `ASCII` uses `ascii` and `HEX` uses `hex`.
+        enum_values: [IP, ASCII, HEX]
+        mandatory: true
+        example: IP
+      - model_name: id
+        data_path: [firstIpAddress]
+        tf_name: first_ip_address_id
+        type: String
+        description: Id of the Host object used as the first IP address, when `type` is `IP`.
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_hosts.test.items["device_dhcp_server_option_1"].id
+      - model_name: id
+        data_path: [secondIpAddress]
+        tf_name: second_ip_address_id
+        type: String
+        description: Id of the Host object used as the second IP address, when `type` is `IP`.
+        exclude_test: true
+        exclude_example: true
+      - model_name: ascii
+        tf_name: ascii
+        type: String
+        description: ASCII value, when `type` is `ASCII`.
+        exclude_test: true
+        exclude_example: true
+      - model_name: hex
+        tf_name: hex
+        type: String
+        description: Hexadecimal value, when `type` is `HEX`.
+        exclude_test: true
+        exclude_example: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" {default = null} // tests will set $TF_VAR_interface_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id           = var.device_id
+    name                = var.interface_name
+    logical_name        = "myinterface-0-1"
+    mode                = "NONE"
+    enabled             = true
+    ipv4_static_address = "10.1.1.1"
+    ipv4_static_netmask = "24"
+  }
+
+  resource "fmc_hosts" "test" {
+    items = {
+      "device_dhcp_server_dns_1" = {ip = "10.0.2.1"},
+      "device_dhcp_server_dns_2" = {ip = "10.0.2.2"},
+      "device_dhcp_server_wins_1" = {ip = "10.0.2.3"},
+      "device_dhcp_server_wins_2" = {ip = "10.0.2.4"},
+      "device_dhcp_server_option_1" = {ip = "10.0.2.5"},
+    }
+  }

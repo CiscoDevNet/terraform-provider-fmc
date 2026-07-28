@@ -5,7 +5,7 @@ subcategory: "Objects"
 description: |-
   This resource manages MAC Address Pools through bulk operations.
   The following restrictions apply:
-  Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
+  Minimum FMC version: 7.6Bulk object creation is not supported by FMC, it will be handled one-by-oneBulk object deletion is not supported by FMC, it will be handled one-by-oneUpdates are always done one-by-one.
 ---
 
 # fmc_mac_address_pools (Resource)
@@ -13,6 +13,7 @@ description: |-
 This resource manages MAC Address Pools through bulk operations.
 
 The following restrictions apply:
+  - Minimum FMC version: `7.6`
   - Bulk object creation is not supported by FMC, it will be handled one-by-one
   - Bulk object deletion is not supported by FMC, it will be handled one-by-one
   - Updates are always done one-by-one.

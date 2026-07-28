@@ -4,11 +4,16 @@ page_title: "fmc_mac_address_pools Data Source - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This data source reads the MAC Address Pools.
+  The following restrictions apply:
+  Minimum FMC version: 7.6
 ---
 
 # fmc_mac_address_pools (Data Source)
 
 This data source reads the MAC Address Pools.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.6`
 
 ## Example Usage
 

@@ -55,7 +55,7 @@ func (d *MACAddressPoolsDataSource) Metadata(_ context.Context, req datasource.M
 func (d *MACAddressPoolsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the MAC Address Pools.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the MAC Address Pools.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.6").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -112,6 +112,12 @@ func (d *MACAddressPoolsDataSource) Configure(_ context.Context, req datasource.
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *MACAddressPoolsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionMACAddressPools) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support MAC Address Pools, minimum required version is 7.6", d.client.FMCVersion))
+		return
+	}
 	var config MACAddressPools
 
 	// Read config

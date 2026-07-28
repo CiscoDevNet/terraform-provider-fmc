@@ -51,6 +51,7 @@ type MACAddressPoolsItems struct {
 // End of section. //template:end types
 
 // Section below is generated&owned by "gen/generator.go". //template:begin minimumVersions
+var minFMCVersionMACAddressPools = version.Must(version.NewVersion("7.6"))
 var minFMCVersionBulkCreateMACAddressPools = version.Must(version.NewVersion("999"))
 var minFMCVersionBulkDeleteMACAddressPools = version.Must(version.NewVersion("999"))
 

@@ -2,6 +2,7 @@
 name: Cipher Suite List
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/object/ciphersuitelists
 doc_category: Objects
+minimum_version: "7.4"
 attributes:
   - model_name: name
     type: String

@@ -4,11 +4,16 @@ page_title: "fmc_cipher_suite_list Resource - terraform-provider-fmc"
 subcategory: "Objects"
 description: |-
   This resource manages a Cipher Suite List.
+  The following restrictions apply:
+  Minimum FMC version: 7.4
 ---
 
 # fmc_cipher_suite_list (Resource)
 
 This resource manages a Cipher Suite List.
+
+The following restrictions apply:
+  - Minimum FMC version: `7.4`
 
 ## Example Usage
 

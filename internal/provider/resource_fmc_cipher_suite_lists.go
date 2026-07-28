@@ -66,7 +66,7 @@ func (r *CipherSuiteListsResource) Metadata(ctx context.Context, req resource.Me
 func (r *CipherSuiteListsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Cipher Suite Lists through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages Cipher Suite Lists through bulk operations.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").AddMinimumVersionBulkCreateDescription("999").AddMinimumVersionBulkDeleteDescription("999").AddMinimumVersionBulkUpdateDescription().String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -134,6 +134,12 @@ func (r *CipherSuiteListsResource) Configure(_ context.Context, req resource.Con
 // Section below is generated&owned by "gen/generator.go". //template:begin create
 
 func (r *CipherSuiteListsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCipherSuiteLists) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Cipher Suite Lists creation, minumum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var plan CipherSuiteLists
 
 	// Read plan
@@ -181,6 +187,11 @@ func (r *CipherSuiteListsResource) Create(ctx context.Context, req resource.Crea
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (r *CipherSuiteListsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	// Check if FMC client is connected to supports this object
+	if r.client.FMCVersionParsed.LessThan(minFMCVersionCipherSuiteLists) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Cipher Suite Lists, minimum required version is 7.4", r.client.FMCVersion))
+		return
+	}
 	var state CipherSuiteLists
 
 	// Read state

@@ -55,7 +55,7 @@ func (d *CipherSuiteListsDataSource) Metadata(_ context.Context, req datasource.
 func (d *CipherSuiteListsDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Cipher Suite Lists.").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Cipher Suite Lists.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -112,6 +112,12 @@ func (d *CipherSuiteListsDataSource) Configure(_ context.Context, req datasource
 // Section below is generated&owned by "gen/generator.go". //template:begin read
 
 func (d *CipherSuiteListsDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+
+	// Check if FMC client is connected to supports this object
+	if d.client.FMCVersionParsed.LessThan(minFMCVersionCipherSuiteLists) {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support Cipher Suite Lists, minimum required version is 7.4", d.client.FMCVersion))
+		return
+	}
 	var config CipherSuiteLists
 
 	// Read config
