@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -102,7 +103,8 @@ func (data DeviceDHCPRelay) toBody(ctx context.Context, state DeviceDHCPRelay) s
 		body, _ = sjson.Set(body, "trustAllInformation", data.TrustAllInformation.ValueBool())
 	}
 	if len(data.RelayAgents) > 0 {
-		body, _ = sjson.Set(body, "dhcpRelayAgent", []any{})
+		var relayAgentsBody strings.Builder
+		relayAgentsBody.WriteString("[")
 		for _, item := range data.RelayAgents {
 			itemBody := ""
 			if !item.InterfaceId.IsNull() {
@@ -123,11 +125,19 @@ func (data DeviceDHCPRelay) toBody(ctx context.Context, state DeviceDHCPRelay) s
 			if !item.SetRoute.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "setRoute", item.SetRoute.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "dhcpRelayAgent.-1", itemBody)
+			if itemBody != "" {
+				if relayAgentsBody.Len() > 1 {
+					relayAgentsBody.WriteString(",")
+				}
+				relayAgentsBody.WriteString(itemBody)
+			}
 		}
+		relayAgentsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dhcpRelayAgent", relayAgentsBody.String())
 	}
 	if len(data.Servers) > 0 {
-		body, _ = sjson.Set(body, "dhcpRelayServers", []any{})
+		var serversBody strings.Builder
+		serversBody.WriteString("[")
 		for _, item := range data.Servers {
 			itemBody := ""
 			if !item.ServerId.IsNull() {
@@ -143,7 +153,8 @@ func (data DeviceDHCPRelay) toBody(ctx context.Context, state DeviceDHCPRelay) s
 				itemBody, _ = sjson.Set(itemBody, "interface.type", item.ServerInterfaceType.ValueString())
 			}
 			if len(item.ClientInterfaces) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "clientsideInterfaces", []any{})
+				var clientInterfacesChildBody strings.Builder
+				clientInterfacesChildBody.WriteString("[")
 				for _, childItem := range item.ClientInterfaces {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -155,11 +166,25 @@ func (data DeviceDHCPRelay) toBody(ctx context.Context, state DeviceDHCPRelay) s
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "clientsideInterfaces.-1", itemChildBody)
+					if itemChildBody != "" {
+						if clientInterfacesChildBody.Len() > 1 {
+							clientInterfacesChildBody.WriteString(",")
+						}
+						clientInterfacesChildBody.WriteString(itemChildBody)
+					}
 				}
+				clientInterfacesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "clientsideInterfaces", clientInterfacesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "dhcpRelayServers.-1", itemBody)
+			if itemBody != "" {
+				if serversBody.Len() > 1 {
+					serversBody.WriteString(",")
+				}
+				serversBody.WriteString(itemBody)
+			}
 		}
+		serversBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dhcpRelayServers", serversBody.String())
 	}
 	return body
 }
@@ -190,7 +215,7 @@ func (data *DeviceDHCPRelay) fromBody(ctx context.Context, res gjson.Result) {
 		data.TrustAllInformation = types.BoolNull()
 	}
 	if value := res.Get("dhcpRelayAgent"); value.Exists() {
-		data.RelayAgents = make([]DeviceDHCPRelayRelayAgents, 0)
+		data.RelayAgents = make([]DeviceDHCPRelayRelayAgents, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDHCPRelayRelayAgents{}
@@ -229,7 +254,7 @@ func (data *DeviceDHCPRelay) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("dhcpRelayServers"); value.Exists() {
-		data.Servers = make([]DeviceDHCPRelayServers, 0)
+		data.Servers = make([]DeviceDHCPRelayServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDHCPRelayServers{}
@@ -254,7 +279,7 @@ func (data *DeviceDHCPRelay) fromBody(ctx context.Context, res gjson.Result) {
 				data.ServerInterfaceType = types.StringNull()
 			}
 			if value := res.Get("clientsideInterfaces"); value.Exists() {
-				data.ClientInterfaces = make([]DeviceDHCPRelayServersClientInterfaces, 0)
+				data.ClientInterfaces = make([]DeviceDHCPRelayServersClientInterfaces, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := DeviceDHCPRelayServersClientInterfaces{}
@@ -312,16 +337,16 @@ func (data *DeviceDHCPRelay) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.TrustAllInformation = types.BoolNull()
 	}
+	relayAgentsArray := res.Get("dhcpRelayAgent")
 	for i := 0; i < len(data.RelayAgents); i++ {
 		keys := [...]string{"interface.id"}
 		keyValues := [...]string{data.RelayAgents[i].InterfaceId.ValueString()}
 
 		parent := &data
 		data := (*parent).RelayAgents[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dhcpRelayAgent").ForEach(
+		relayAgentsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -380,16 +405,16 @@ func (data *DeviceDHCPRelay) fromBodyPartial(ctx context.Context, res gjson.Resu
 		}
 		(*parent).RelayAgents[i] = data
 	}
+	serversArray := res.Get("dhcpRelayServers")
 	for i := 0; i < len(data.Servers); i++ {
 		keys := [...]string{"server.id"}
 		keyValues := [...]string{data.Servers[i].ServerId.ValueString()}
 
 		parent := &data
 		data := (*parent).Servers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dhcpRelayServers").ForEach(
+		serversArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -436,16 +461,16 @@ func (data *DeviceDHCPRelay) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.ServerInterfaceType = types.StringNull()
 		}
+		clientInterfacesArray := res.Get("clientsideInterfaces")
 		for i := 0; i < len(data.ClientInterfaces); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.ClientInterfaces[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).ClientInterfaces[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("clientsideInterfaces").ForEach(
+			clientInterfacesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -76,7 +77,8 @@ func (data CipherSuiteLists) toBody(ctx context.Context, state CipherSuiteLists)
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -84,17 +86,32 @@ func (data CipherSuiteLists) toBody(ctx context.Context, state CipherSuiteLists)
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "CipherSuiteList")
 			if len(item.CipherSuites) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var cipherSuitesChildBody strings.Builder
+				cipherSuitesChildBody.WriteString("[")
 				for _, childItem := range item.CipherSuites {
 					itemChildBody := ""
 					if !childItem.Name.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if cipherSuitesChildBody.Len() > 1 {
+							cipherSuitesChildBody.WriteString(",")
+						}
+						cipherSuitesChildBody.WriteString(itemChildBody)
+					}
 				}
+				cipherSuitesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", cipherSuitesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -132,7 +149,7 @@ func (data *CipherSuiteLists) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("literals"); value.Exists() {
-			data.CipherSuites = make([]CipherSuiteListsItemsCipherSuites, 0)
+			data.CipherSuites = make([]CipherSuiteListsItemsCipherSuites, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := CipherSuiteListsItemsCipherSuites{}
@@ -183,16 +200,16 @@ func (data *CipherSuiteLists) fromBodyPartial(ctx context.Context, res gjson.Res
 		} else {
 			data.Type = types.StringNull()
 		}
+		cipherSuitesArray := res.Get("literals")
 		for i := 0; i < len(data.CipherSuites); i++ {
 			keys := [...]string{"name"}
 			keyValues := [...]string{data.CipherSuites[i].Name.ValueString()}
 
 			parent := &data
 			data := (*parent).CipherSuites[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			cipherSuitesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -125,7 +126,8 @@ func (data DeviceDHCPServer) toBody(ctx context.Context, state DeviceDHCPServer)
 		body, _ = sjson.Set(body, "secondaryWINSServer.id", data.SecondaryWinsServerId.ValueString())
 	}
 	if len(data.Servers) > 0 {
-		body, _ = sjson.Set(body, "dhcpServers", []any{})
+		var serversBody strings.Builder
+		serversBody.WriteString("[")
 		for _, item := range data.Servers {
 			itemBody := ""
 			if !item.InterfaceId.IsNull() {
@@ -143,11 +145,19 @@ func (data DeviceDHCPServer) toBody(ctx context.Context, state DeviceDHCPServer)
 			if !item.Enabled.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableDHCP", item.Enabled.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "dhcpServers.-1", itemBody)
+			if itemBody != "" {
+				if serversBody.Len() > 1 {
+					serversBody.WriteString(",")
+				}
+				serversBody.WriteString(itemBody)
+			}
 		}
+		serversBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dhcpServers", serversBody.String())
 	}
 	if len(data.DhcpOptions) > 0 {
-		body, _ = sjson.Set(body, "dhcpOptions", []any{})
+		var dhcpOptionsBody strings.Builder
+		dhcpOptionsBody.WriteString("[")
 		for _, item := range data.DhcpOptions {
 			itemBody := ""
 			if !item.Code.IsNull() {
@@ -168,8 +178,15 @@ func (data DeviceDHCPServer) toBody(ctx context.Context, state DeviceDHCPServer)
 			if !item.Hex.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "hex", item.Hex.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dhcpOptions.-1", itemBody)
+			if itemBody != "" {
+				if dhcpOptionsBody.Len() > 1 {
+					dhcpOptionsBody.WriteString(",")
+				}
+				dhcpOptionsBody.WriteString(itemBody)
+			}
 		}
+		dhcpOptionsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dhcpOptions", dhcpOptionsBody.String())
 	}
 	return body
 }
@@ -235,7 +252,7 @@ func (data *DeviceDHCPServer) fromBody(ctx context.Context, res gjson.Result) {
 		data.SecondaryWinsServerId = types.StringNull()
 	}
 	if value := res.Get("dhcpServers"); value.Exists() {
-		data.Servers = make([]DeviceDHCPServerServers, 0)
+		data.Servers = make([]DeviceDHCPServerServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDHCPServerServers{}
@@ -269,7 +286,7 @@ func (data *DeviceDHCPServer) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("dhcpOptions"); value.Exists() {
-		data.DhcpOptions = make([]DeviceDHCPServerDhcpOptions, 0)
+		data.DhcpOptions = make([]DeviceDHCPServerDhcpOptions, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceDHCPServerDhcpOptions{}
@@ -373,16 +390,16 @@ func (data *DeviceDHCPServer) fromBodyPartial(ctx context.Context, res gjson.Res
 	} else {
 		data.SecondaryWinsServerId = types.StringNull()
 	}
+	serversArray := res.Get("dhcpServers")
 	for i := 0; i < len(data.Servers); i++ {
 		keys := [...]string{"interface.id"}
 		keyValues := [...]string{data.Servers[i].InterfaceId.ValueString()}
 
 		parent := &data
 		data := (*parent).Servers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dhcpServers").ForEach(
+		serversArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -436,16 +453,16 @@ func (data *DeviceDHCPServer) fromBodyPartial(ctx context.Context, res gjson.Res
 		}
 		(*parent).Servers[i] = data
 	}
+	dhcpOptionsArray := res.Get("dhcpOptions")
 	for i := 0; i < len(data.DhcpOptions); i++ {
 		keys := [...]string{"optionCode"}
 		keyValues := [...]string{strconv.FormatInt(data.DhcpOptions[i].Code.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).DhcpOptions[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dhcpOptions").ForEach(
+		dhcpOptionsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
