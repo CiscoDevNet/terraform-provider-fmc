@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This data source reads the Device Certificate.
   The following restrictions apply:
-  Minimum FMC version: 7.4
+  Minimum FMC version: 7.7
 ---
 
 # fmc_device_certificate (Data Source)
@@ -13,7 +13,7 @@ description: |-
 This data source reads the Device Certificate.
 
 The following restrictions apply:
-  - Minimum FMC version: `7.4`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

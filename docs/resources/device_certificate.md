@@ -5,7 +5,7 @@ subcategory: "Devices"
 description: |-
   This resource manages a Device Certificate - the enrollment of a certificate (via a certificate enrollment object) onto a device.
   The following restrictions apply:
-  Minimum FMC version: 7.4
+  Minimum FMC version: 7.7
 ---
 
 # fmc_device_certificate (Resource)
@@ -13,7 +13,7 @@ description: |-
 This resource manages a Device Certificate - the enrollment of a certificate (via a certificate enrollment object) onto a device.
 
 The following restrictions apply:
-  - Minimum FMC version: `7.4`
+  - Minimum FMC version: `7.7`
 
 ## Example Usage
 

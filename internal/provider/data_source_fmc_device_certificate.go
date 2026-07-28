@@ -59,7 +59,7 @@ func (d *DeviceCertificateDataSource) Metadata(_ context.Context, req datasource
 func (d *DeviceCertificateDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Certificate.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.4").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This data source reads the Device Certificate.").AddMinimumVersionHeaderDescription().AddMinimumVersionDescription("7.7").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
