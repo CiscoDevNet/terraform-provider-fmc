@@ -1,10 +1,10 @@
-## Unreleased
+## 2.5.0
 
 - (Enhancement) Add support for `fmc_device_certificate`
 - (Enhancement) Add support for `fmc_device_dhcp_server`, `fmc_device_dhcp_relay` and `fmc_device_ddns`
 - (Enhancement) Add support for `fmc_url_category` and `fmc_url_categories`
 - (Enhancement) Add support for `fmc_sinkhole` and `fmc_sinkholes`
-- (Enhancement) Add support for `fmc_distingiushed_name` and `fmc_distingiushed_names`
+- (Enhancement) Add support for `fmc_distinguished_name` and `fmc_distinguished_names`
 - (Enhancement) Add support for `fmc_cipher_suite_list` and `fmc_cipher_suite_lists`
 - (Enhancement) Add support for `fmc_mac_address_pool` and `fmc_mac_address_pools`
 - (Fix) `fmc_chassis_physical_interface` is not cleared correctly on destroy
@@ -77,7 +77,7 @@
     - `*_dpd_*` to `*_dead_peer_detection_*`
     - `dhcp_network_scope_network_object_id` to `ipv4_dhcp_network_scope_network_object_id`
     - `split_dns_domain_list` to `dns_request_split_tunnel_domains`
-- (Fix) Updated `required` flag for several attributs in multiple resources
+- (Fix) Updated `required` flag for several attributes in multiple resources
 - (Fix) `fmc_vpn_ra_ipsec_ike_parameters`: Added `ipsec_path_maximum_transmission_unit_aging` attribute
 
 ## 2.0.0-rc10
@@ -93,7 +93,7 @@
 - BREAKING CHANGE: `fmc_device_vti_interface`: Rename attribute `ipv4_address/netmask` to `ipv4_static_address/netmask`
 - BREAKING CHANGE: Rename `fmc_device_vti_interface` to `fmc_device_virtual_tunnel_interface`
 - (Change) `fmc_ftd_platform_settings_syslog_settings_syslog_id`: Adjusted to versions with fix for CSCwr26361 (FMC API: FTD Platform Settings Syslog Settings Syslog ID 'enabled' field value gets inverted)
-- (Fix) Updated `required` flag for several attributs in multiple resources
+- (Fix) Updated `required` flag for several attributes in multiple resources
 - (Fix) `fmc_chassis_logical_device`: Deletion would fail if registered device is under deployment
 - (Enhancement) Add multiple bulk/non-bulk variants of already existing resources and data sources
 - (Enhancement) `fmc_certificate_enrollment`: Add support for ACME
@@ -236,8 +236,8 @@
 - (Enhancement) Add support for `fmc_extended_community_list` and `fmc_extended_community_lists` resources and data sources
 - (Enhancement) Add support for `fmc_expanded_community_list` and `fmc_expanded_community_lists` resources and data sources
 - (Enhancement) Add support for `fmc_standard_community_list` and `fmc_standard_community_lists` resources and data sources
-- (Enhancement) Add support for `fmc_ipv6_preflix_list` and `fmc_ipv6_preflix_lists` resources and data sources
-- (Enhancement) Add support for `fmc_ipv4_preflix_list` and `fmc_ipv4_preflix_lists` resources and data sources
+- (Enhancement) Add support for `fmc_ipv6_prefix_list` and `fmc_ipv6_prefix_lists` resources and data sources
+- (Enhancement) Add support for `fmc_ipv4_prefix_list` and `fmc_ipv4_prefix_lists` resources and data sources
 - (Enhancement) Add support for `fmc_as_path` and `fmc_as_paths` resources and data sources
 
 ## 2.0.0-rc0
