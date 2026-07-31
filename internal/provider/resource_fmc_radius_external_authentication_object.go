@@ -26,11 +26,16 @@ import (
 	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
+	"github.com/hashicorp/terraform-plugin-framework-validators/int64validator"
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/int64default"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringdefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
+	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/netascode/go-fmc"
@@ -43,26 +48,26 @@ import (
 
 // Ensure provider defined types fully satisfy framework interfaces
 var (
-	_ resource.Resource                = &FTDPlatformSettingsResource{}
-	_ resource.ResourceWithImportState = &FTDPlatformSettingsResource{}
+	_ resource.Resource                = &RadiusExternalAuthenticationObjectResource{}
+	_ resource.ResourceWithImportState = &RadiusExternalAuthenticationObjectResource{}
 )
 
-func NewFTDPlatformSettingsResource() resource.Resource {
-	return &FTDPlatformSettingsResource{}
+func NewRadiusExternalAuthenticationObjectResource() resource.Resource {
+	return &RadiusExternalAuthenticationObjectResource{}
 }
 
-type FTDPlatformSettingsResource struct {
+type RadiusExternalAuthenticationObjectResource struct {
 	client *fmc.Client
 }
 
-func (r *FTDPlatformSettingsResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_ftd_platform_settings"
+func (r *RadiusExternalAuthenticationObjectResource) Metadata(ctx context.Context, req resource.MetadataRequest, resp *resource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_radius_external_authentication_object"
 }
 
-func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
+func (r *RadiusExternalAuthenticationObjectResource) Schema(ctx context.Context, req resource.SchemaRequest, resp *resource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
-		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a FTD Platform Settings.").AddMinimumVersionHeaderDescription().AddMinimumVersionAnyDescription().AddMinimumVersionCreateDescription("7.4").String,
+		MarkdownDescription: helpers.NewAttributeDescription("This resource manages a RADIUS External Authentication object. It defines the RADIUS server(s) used to authenticate users, and can be referenced by `fmc_ftd_platform_settings_external_authentication` to enable RADIUS-based SSH/CLI authentication on FTD devices, or configured directly on the FMC (System > Users > External Authentication) for FMC login.\n User privileges (e.g. Administrator vs. read-only access) are derived from attributes returned by the RADIUS server for the authenticating user - most commonly the `Service-Type` attribute for FTD CLI access. This can be driven by Active Directory group membership if the RADIUS server (e.g. ISE or NPS) is configured to authenticate against AD and map groups to the appropriate attribute values. FMC does not configure this mapping; it is done entirely on the RADIUS server.").String,
 
 		Attributes: map[string]schema.Attribute{
 			"id": schema.StringAttribute{
@@ -80,25 +85,81 @@ func (r *FTDPlatformSettingsResource) Schema(ctx context.Context, req resource.S
 				},
 			},
 			"name": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Name of FTD platform settings.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the RADIUS External Authentication object.").String,
 				Required:            true,
 			},
 			"type": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'FTDPlatformSettingsPolicy'").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Type of the object; this value is always 'RADIUSConfigObject'.").String,
 				Computed:            true,
 				PlanModifiers: []planmodifier.String{
 					stringplanmodifier.UseStateForUnknown(),
 				},
 			},
 			"description": schema.StringAttribute{
-				MarkdownDescription: helpers.NewAttributeDescription("FTD platform settings description.").String,
+				MarkdownDescription: helpers.NewAttributeDescription("Description of the object.").String,
+				Optional:            true,
+			},
+			"server_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the primary RADIUS server.").String,
+				Required:            true,
+			},
+			"server_port": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Port number of the primary RADIUS server.").AddDefaultValueDescription("1812").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             stringdefault.StaticString("1812"),
+			},
+			"key": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the primary RADIUS server.").String,
+				Required:            true,
+				Sensitive:           true,
+			},
+			"backup_server_address": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("IP address or hostname of the backup RADIUS server.").String,
+				Optional:            true,
+			},
+			"backup_server_port": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Port number of the backup RADIUS server.").String,
+				Optional:            true,
+			},
+			"backup_key": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Shared secret used to communicate with the backup RADIUS server.").String,
+				Optional:            true,
+				Sensitive:           true,
+			},
+			"timeout": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Timeout (in seconds) before retrying the primary server.").AddIntegerRangeDescription(1, 1024).AddDefaultValueDescription("30").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 1024),
+				},
+				Default: int64default.StaticInt64(30),
+			},
+			"retries": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Number of retries before rolling over to the backup RADIUS server.").AddIntegerRangeDescription(0, 10).AddDefaultValueDescription("3").String,
+				Optional:            true,
+				Computed:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(0, 10),
+				},
+				Default: int64default.StaticInt64(3),
+			},
+			"message_authenticator_enabled": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Enables RADIUS Server-Enabled Message Authenticator, requiring the Message-Authenticator attribute in all RADIUS responses.").AddDefaultValueDescription("true").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(true),
+			},
+			"cli_access_user_list": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Comma-separated list of usernames that should have CLI access, when using the predefined user list method instead of defining users on the RADIUS server. Leave unset when users and their privileges are managed on the RADIUS server (recommended when privileges are based on Active Directory group membership).").String,
 				Optional:            true,
 			},
 		},
 	}
 }
 
-func (r *FTDPlatformSettingsResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
+func (r *RadiusExternalAuthenticationObjectResource) Configure(_ context.Context, req resource.ConfigureRequest, _ *resource.ConfigureResponse) {
 	if req.ProviderData == nil {
 		return
 	}
@@ -108,13 +169,10 @@ func (r *FTDPlatformSettingsResource) Configure(_ context.Context, req resource.
 
 // End of section. //template:end model
 
-func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
-	// Check if FMC client is connected to supports this object
-	if r.client.FMCVersionParsed.LessThan(minFMCVersionCreateFTDPlatformSettings) {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("UnsupportedVersion: FMC version %s does not support FTD Platform Settings creation, minumum required version is 7.4", r.client.FMCVersion))
-		return
-	}
-	var plan FTDPlatformSettings
+// Section below is generated&owned by "gen/generator.go". //template:begin create
+
+func (r *RadiusExternalAuthenticationObjectResource) Create(ctx context.Context, req resource.CreateRequest, resp *resource.CreateResponse) {
+	var plan RadiusExternalAuthenticationObject
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -131,7 +189,7 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	tflog.Debug(ctx, fmt.Sprintf("%s: Beginning Create", plan.Id.ValueString()))
 
 	// Create object
-	body := plan.toBody(ctx, FTDPlatformSettings{})
+	body := plan.toBody(ctx, RadiusExternalAuthenticationObject{})
 	res, err := r.client.Post(plan.getPath(), body, reqMods...)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Failed to configure object (POST/PUT), got error: %s, %s", err, res.String()))
@@ -144,9 +202,7 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	} else {
 		// Some FMC/cdFMC deployments (observed via the Security Cloud Control API gateway) omit
 		// the `id` field from the POST response for this endpoint. Fall back to looking up the
-		// newly created object by its (unique) name, to avoid ending up with an empty id in
-		// state (which would make subsequent Update/Delete calls target the collection endpoint
-		// instead of a specific object).
+		// newly created object by its (unique) name.
 		tflog.Debug(ctx, fmt.Sprintf("%s: id missing from POST response, looking up object by name %q", plan.Id.ValueString(), plan.Name.ValueString()))
 		resList, err := r.client.Get(plan.getPath(), reqMods...)
 		if err != nil {
@@ -174,9 +230,6 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	}
 	plan.fromBodyUnknowns(ctx, res)
 
-	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
-	plan.Type = types.StringValue("FTDPlatformSettingsPolicy")
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Create finished successfully", plan.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &plan)
@@ -185,8 +238,12 @@ func (r *FTDPlatformSettingsResource) Create(ctx context.Context, req resource.C
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
-func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
-	var state FTDPlatformSettings
+// End of section. //template:end create
+
+// Section below is generated&owned by "gen/generator.go". //template:begin read
+
+func (r *RadiusExternalAuthenticationObjectResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
+	var state RadiusExternalAuthenticationObject
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -225,9 +282,6 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 		state.fromBodyPartial(ctx, res)
 	}
 
-	// CSCwr13011 FMC API: policy/ftdplatformsettingspolicies returns incorrect type
-	state.Type = types.StringValue("FTDPlatformSettingsPolicy")
-
 	tflog.Debug(ctx, fmt.Sprintf("%s: Read finished successfully", state.Id.ValueString()))
 
 	diags = resp.State.Set(ctx, &state)
@@ -236,10 +290,12 @@ func (r *FTDPlatformSettingsResource) Read(ctx context.Context, req resource.Rea
 	helpers.SetFlagImporting(ctx, false, resp.Private, &resp.Diagnostics)
 }
 
+// End of section. //template:end read
+
 // Section below is generated&owned by "gen/generator.go". //template:begin update
 
-func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
-	var plan, state FTDPlatformSettings
+func (r *RadiusExternalAuthenticationObjectResource) Update(ctx context.Context, req resource.UpdateRequest, resp *resource.UpdateResponse) {
+	var plan, state RadiusExternalAuthenticationObject
 
 	// Read plan
 	diags := req.Plan.Get(ctx, &plan)
@@ -283,8 +339,8 @@ func (r *FTDPlatformSettingsResource) Update(ctx context.Context, req resource.U
 
 // Section below is generated&owned by "gen/generator.go". //template:begin delete
 
-func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
-	var state FTDPlatformSettings
+func (r *RadiusExternalAuthenticationObjectResource) Delete(ctx context.Context, req resource.DeleteRequest, resp *resource.DeleteResponse) {
+	var state RadiusExternalAuthenticationObject
 
 	// Read state
 	diags := req.State.Get(ctx, &state)
@@ -318,7 +374,7 @@ func (r *FTDPlatformSettingsResource) Delete(ctx context.Context, req resource.D
 // End of section. //template:end delete
 
 // Section below is generated&owned by "gen/generator.go". //template:begin import
-func (r *FTDPlatformSettingsResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
+func (r *RadiusExternalAuthenticationObjectResource) ImportState(ctx context.Context, req resource.ImportStateRequest, resp *resource.ImportStateResponse) {
 	// Parse import ID
 	var inputPattern = regexp.MustCompile(`^(?:(?P<domain>[^\s,]+),)?(?P<id>[^\s,]+?)$`)
 	match := inputPattern.FindStringSubmatch(req.ID)
@@ -338,3 +394,15 @@ func (r *FTDPlatformSettingsResource) ImportState(ctx context.Context, req resou
 }
 
 // End of section. //template:end import
+
+// Section below is generated&owned by "gen/generator.go". //template:begin createSubresources
+
+// End of section. //template:end createSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin deleteSubresources
+
+// End of section. //template:end deleteSubresources
+
+// Section below is generated&owned by "gen/generator.go". //template:begin updateSubresources
+
+// End of section. //template:end updateSubresources

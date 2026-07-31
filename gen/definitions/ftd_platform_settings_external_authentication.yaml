@@ -1,0 +1,42 @@
+---
+name: FTD Platform Settings External Authentication
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/policy/ftdplatformsettingspolicies/%v/externalauthsettings
+doc_category: Devices
+minimum_version: "7.7"
+res_description: >-
+ This resource manages FTD Platform Settings - External Authentication. It enables RADIUS-based authentication for SSH/CLI access to the FTD, referencing an `fmc_radius_external_authentication_object`. You can only activate one External Authentication object per FTD Platform Settings policy.\n
+ User privileges (Administrator vs. Basic/read-only CLI access) are derived from attributes returned by the RADIUS server for the authenticating user (commonly the RADIUS `Service-Type` attribute), which can be driven by Active Directory group membership if the RADIUS server is configured to authenticate against AD. This mapping is not configured in FMC/Terraform.
+put_create: true
+retrieve_id: true
+put_delete: true
+skip_minimum_test: true
+attributes:
+  - tf_name: ftd_platform_settings_id
+    type: String
+    reference: true
+    description: Id of the parent FTD Platform Settings.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_ftd_platform_settings.test.id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'ExternalAuthSetting'.
+    computed: true
+  - model_name: id
+    data_path: [externalAuthServer]
+    tf_name: external_auth_server_id
+    type: String
+    description: Id of the RADIUS External Authentication object (`fmc_radius_external_authentication_object`) to use for SSH/CLI authentication on this FTD.
+    mandatory: true
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: fmc_radius_external_authentication_object.test.id
+
+test_prerequisites: |-
+  resource "fmc_ftd_platform_settings" "test" {
+    name = "ftd_platform_settings_external_authentication"
+  }
+
+  resource "fmc_radius_external_authentication_object" "test" {
+    name           = "ftd_platform_settings_external_authentication_radius"
+    server_address = "10.1.1.10"
+    key            = "my_secret_key"
+  }
