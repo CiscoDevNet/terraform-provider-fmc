@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -85,14 +86,22 @@ func (data DNSServerGroup) toBody(ctx context.Context, state DNSServerGroup) str
 		body, _ = sjson.Set(body, "retries", data.Retries.ValueInt64())
 	}
 	if len(data.DnsServers) > 0 {
-		body, _ = sjson.Set(body, "dnsservers", []any{})
+		var dnsServersBody strings.Builder
+		dnsServersBody.WriteString("[")
 		for _, item := range data.DnsServers {
 			itemBody := ""
 			if !item.Ip.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name-server", item.Ip.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dnsservers.-1", itemBody)
+			if itemBody != "" {
+				if dnsServersBody.Len() > 1 {
+					dnsServersBody.WriteString(",")
+				}
+				dnsServersBody.WriteString(itemBody)
+			}
 		}
+		dnsServersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dnsservers", dnsServersBody.String())
 	}
 	return body
 }
@@ -128,7 +137,7 @@ func (data *DNSServerGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Retries = types.Int64Null()
 	}
 	if value := res.Get("dnsservers"); value.Exists() {
-		data.DnsServers = make([]DNSServerGroupDnsServers, 0)
+		data.DnsServers = make([]DNSServerGroupDnsServers, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DNSServerGroupDnsServers{}
@@ -177,16 +186,16 @@ func (data *DNSServerGroup) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Retries = types.Int64Null()
 	}
+	dnsServersArray := res.Get("dnsservers")
 	for i := 0; i < len(data.DnsServers); i++ {
 		keys := [...]string{"name-server"}
 		keyValues := [...]string{data.DnsServers[i].Ip.ValueString()}
 
 		parent := &data
 		data := (*parent).DnsServers[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dnsservers").ForEach(
+		dnsServersArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

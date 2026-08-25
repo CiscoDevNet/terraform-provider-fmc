@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -81,14 +82,16 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 	}
 	body, _ = sjson.Set(body, "type", "RaVpnLdapAttributeMap")
 	if len(data.Realms) > 0 {
-		body, _ = sjson.Set(body, "ldapAttributeMapList", []any{})
+		var realmsBody strings.Builder
+		realmsBody.WriteString("[")
 		for _, item := range data.Realms {
 			itemBody := ""
 			if !item.RealmAdLdapId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "ldapServer.id", item.RealmAdLdapId.ValueString())
 			}
 			if len(item.AttributeMaps) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "ldapAttributeMaps", []any{})
+				var attributeMapsChildBody strings.Builder
+				attributeMapsChildBody.WriteString("[")
 				for _, childItem := range item.AttributeMaps {
 					itemChildBody := ""
 					if !childItem.LdapAttributeName.IsNull() {
@@ -98,7 +101,8 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 						itemChildBody, _ = sjson.Set(itemChildBody, "ciscoName", childItem.CiscoAttributeName.ValueString())
 					}
 					if len(childItem.ValueMaps) > 0 {
-						itemChildBody, _ = sjson.Set(itemChildBody, "valueMappings", []any{})
+						var valueMapsChildChildBody strings.Builder
+						valueMapsChildChildBody.WriteString("[")
 						for _, childChildItem := range childItem.ValueMaps {
 							itemChildChildBody := ""
 							if !childChildItem.LdapAttributeValue.IsNull() {
@@ -107,14 +111,35 @@ func (data VPNRALDAPAttributeMap) toBody(ctx context.Context, state VPNRALDAPAtt
 							if !childChildItem.CiscoAttributeValue.IsNull() {
 								itemChildChildBody, _ = sjson.Set(itemChildChildBody, "ciscoValue", childChildItem.CiscoAttributeValue.ValueString())
 							}
-							itemChildBody, _ = sjson.SetRaw(itemChildBody, "valueMappings.-1", itemChildChildBody)
+							if itemChildChildBody != "" {
+								if valueMapsChildChildBody.Len() > 1 {
+									valueMapsChildChildBody.WriteString(",")
+								}
+								valueMapsChildChildBody.WriteString(itemChildChildBody)
+							}
 						}
+						valueMapsChildChildBody.WriteString("]")
+						itemChildBody, _ = sjson.SetRaw(itemChildBody, "valueMappings", valueMapsChildChildBody.String())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "ldapAttributeMaps.-1", itemChildBody)
+					if itemChildBody != "" {
+						if attributeMapsChildBody.Len() > 1 {
+							attributeMapsChildBody.WriteString(",")
+						}
+						attributeMapsChildBody.WriteString(itemChildBody)
+					}
 				}
+				attributeMapsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "ldapAttributeMaps", attributeMapsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "ldapAttributeMapList.-1", itemBody)
+			if itemBody != "" {
+				if realmsBody.Len() > 1 {
+					realmsBody.WriteString(",")
+				}
+				realmsBody.WriteString(itemBody)
+			}
 		}
+		realmsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ldapAttributeMapList", realmsBody.String())
 	}
 	return body
 }
@@ -130,7 +155,7 @@ func (data *VPNRALDAPAttributeMap) fromBody(ctx context.Context, res gjson.Resul
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("ldapAttributeMapList"); value.Exists() {
-		data.Realms = make([]VPNRALDAPAttributeMapRealms, 0)
+		data.Realms = make([]VPNRALDAPAttributeMapRealms, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VPNRALDAPAttributeMapRealms{}
@@ -140,7 +165,7 @@ func (data *VPNRALDAPAttributeMap) fromBody(ctx context.Context, res gjson.Resul
 				data.RealmAdLdapId = types.StringNull()
 			}
 			if value := res.Get("ldapAttributeMaps"); value.Exists() {
-				data.AttributeMaps = make([]VPNRALDAPAttributeMapRealmsAttributeMaps, 0)
+				data.AttributeMaps = make([]VPNRALDAPAttributeMapRealmsAttributeMaps, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := VPNRALDAPAttributeMapRealmsAttributeMaps{}
@@ -155,7 +180,7 @@ func (data *VPNRALDAPAttributeMap) fromBody(ctx context.Context, res gjson.Resul
 						data.CiscoAttributeName = types.StringNull()
 					}
 					if value := res.Get("valueMappings"); value.Exists() {
-						data.ValueMaps = make([]VPNRALDAPAttributeMapRealmsAttributeMapsValueMaps, 0)
+						data.ValueMaps = make([]VPNRALDAPAttributeMapRealmsAttributeMapsValueMaps, 0, int(value.Get("#").Int()))
 						value.ForEach(func(k, res gjson.Result) bool {
 							parent := &data
 							data := VPNRALDAPAttributeMapRealmsAttributeMapsValueMaps{}
@@ -197,16 +222,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Type = types.StringNull()
 	}
+	realmsArray := res.Get("ldapAttributeMapList")
 	for i := 0; i < len(data.Realms); i++ {
 		keys := [...]string{"ldapServer.id"}
 		keyValues := [...]string{data.Realms[i].RealmAdLdapId.ValueString()}
 
 		parent := &data
 		data := (*parent).Realms[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ldapAttributeMapList").ForEach(
+		realmsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -238,16 +263,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 		} else {
 			data.RealmAdLdapId = types.StringNull()
 		}
+		attributeMapsArray := res.Get("ldapAttributeMaps")
 		for i := 0; i < len(data.AttributeMaps); i++ {
 			keys := [...]string{"ldapName", "ciscoName"}
 			keyValues := [...]string{data.AttributeMaps[i].LdapAttributeName.ValueString(), data.AttributeMaps[i].CiscoAttributeName.ValueString()}
 
 			parent := &data
 			data := (*parent).AttributeMaps[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("ldapAttributeMaps").ForEach(
+			attributeMapsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -284,16 +309,16 @@ func (data *VPNRALDAPAttributeMap) fromBodyPartial(ctx context.Context, res gjso
 			} else {
 				data.CiscoAttributeName = types.StringNull()
 			}
+			valueMapsArray := res.Get("valueMappings")
 			for i := 0; i < len(data.ValueMaps); i++ {
 				keys := [...]string{"ldapValue", "ciscoValue"}
 				keyValues := [...]string{data.ValueMaps[i].LdapAttributeValue.ValueString(), data.ValueMaps[i].CiscoAttributeValue.ValueString()}
 
 				parent := &data
 				data := (*parent).ValueMaps[i]
-				parentRes := &res
 				var res gjson.Result
 
-				parentRes.Get("valueMappings").ForEach(
+				valueMapsArray.ForEach(
 					func(_, v gjson.Result) bool {
 						found := false
 						for ik := range keys {

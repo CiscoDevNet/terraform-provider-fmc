@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -117,14 +118,22 @@ func (data FTDPlatformSettingsSyslogLoggingSetup) toBody(ctx context.Context, st
 		body, _ = sjson.Set(body, "ftpServerInfo.path", data.FtpServerPath.ValueString())
 	}
 	if len(data.FtpServerInterfaceGroups) > 0 {
-		body, _ = sjson.Set(body, "ftpServerInfo.interfaceGroups", []any{})
+		var ftpServerInterfaceGroupsBody strings.Builder
+		ftpServerInterfaceGroupsBody.WriteString("[")
 		for _, item := range data.FtpServerInterfaceGroups {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ftpServerInfo.interfaceGroups.-1", itemBody)
+			if itemBody != "" {
+				if ftpServerInterfaceGroupsBody.Len() > 1 {
+					ftpServerInterfaceGroupsBody.WriteString(",")
+				}
+				ftpServerInterfaceGroupsBody.WriteString(itemBody)
+			}
 		}
+		ftpServerInterfaceGroupsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ftpServerInfo.interfaceGroups", ftpServerInterfaceGroupsBody.String())
 	}
 	if !data.FlashEnabled.IsNull() {
 		body, _ = sjson.Set(body, "enableFlash", data.FlashEnabled.ValueBool())
@@ -199,7 +208,7 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBody(ctx context.Context,
 		data.FtpServerPath = types.StringNull()
 	}
 	if value := res.Get("ftpServerInfo.interfaceGroups"); value.Exists() {
-		data.FtpServerInterfaceGroups = make([]FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups, 0)
+		data.FtpServerInterfaceGroups = make([]FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogLoggingSetupFtpServerInterfaceGroups{}
@@ -293,16 +302,16 @@ func (data *FTDPlatformSettingsSyslogLoggingSetup) fromBodyPartial(ctx context.C
 	} else {
 		data.FtpServerPath = types.StringNull()
 	}
+	ftpServerInterfaceGroupsArray := res.Get("ftpServerInfo.interfaceGroups")
 	for i := 0; i < len(data.FtpServerInterfaceGroups); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.FtpServerInterfaceGroups[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).FtpServerInterfaceGroups[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ftpServerInfo.interfaceGroups").ForEach(
+		ftpServerInterfaceGroupsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

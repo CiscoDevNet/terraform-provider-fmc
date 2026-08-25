@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"maps"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -78,14 +79,16 @@ func (data StandardCommunityLists) toBody(ctx context.Context, state StandardCom
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
 			if len(item.Entries) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "entries", []any{})
+				var entriesChildBody strings.Builder
+				entriesChildBody.WriteString("[")
 				for _, childItem := range item.Entries {
 					itemChildBody := ""
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "Standard")
@@ -104,11 +107,25 @@ func (data StandardCommunityLists) toBody(ctx context.Context, state StandardCom
 					if !childItem.NoExport.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "noExport", childItem.NoExport.ValueBool())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "entries.-1", itemChildBody)
+					if itemChildBody != "" {
+						if entriesChildBody.Len() > 1 {
+							entriesChildBody.WriteString(",")
+						}
+						entriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				entriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "entries", entriesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -146,7 +163,7 @@ func (data *StandardCommunityLists) fromBody(ctx context.Context, res gjson.Resu
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("entries"); value.Exists() {
-			data.Entries = make([]StandardCommunityListsItemsEntries, 0)
+			data.Entries = make([]StandardCommunityListsItemsEntries, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := StandardCommunityListsItemsEntries{}
@@ -217,8 +234,9 @@ func (data *StandardCommunityLists) fromBodyPartial(ctx context.Context, res gjs
 		} else {
 			data.Type = types.StringNull()
 		}
+		entriesArray := res.Get("entries").Array()
 		{
-			l := len(res.Get("entries").Array())
+			l := len(entriesArray)
 			tflog.Debug(ctx, fmt.Sprintf("entries array resizing from %d to %d", len(data.Entries), l))
 			for i := len(data.Entries); i < l; i++ {
 				data.Entries = append(data.Entries, StandardCommunityListsItemsEntries{})
@@ -230,8 +248,7 @@ func (data *StandardCommunityLists) fromBodyPartial(ctx context.Context, res gjs
 		for i := range data.Entries {
 			parent := &data
 			data := (*parent).Entries[i]
-			parentRes := &res
-			res := parentRes.Get(fmt.Sprintf("entries.%d", i))
+			res := entriesArray[i]
 			if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 				data.Action = types.StringValue(value.String())
 			} else {

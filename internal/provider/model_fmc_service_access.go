@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -83,14 +84,16 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 		body, _ = sjson.Set(body, "defaultAction", data.DefaultAction.ValueString())
 	}
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Action.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "action", item.Action.ValueString())
 			}
 			if len(item.GeolocationSources) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "geoSources", []any{})
+				var geolocationSourcesChildBody strings.Builder
+				geolocationSourcesChildBody.WriteString("[")
 				for _, childItem := range item.GeolocationSources {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -99,11 +102,25 @@ func (data ServiceAccess) toBody(ctx context.Context, state ServiceAccess) strin
 					if !childItem.Type.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "type", childItem.Type.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "geoSources.-1", itemChildBody)
+					if itemChildBody != "" {
+						if geolocationSourcesChildBody.Len() > 1 {
+							geolocationSourcesChildBody.WriteString(",")
+						}
+						geolocationSourcesChildBody.WriteString(itemChildBody)
+					}
 				}
+				geolocationSourcesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "geoSources", geolocationSourcesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "rules", rulesBody.String())
 	}
 	return body
 }
@@ -129,7 +146,7 @@ func (data *ServiceAccess) fromBody(ctx context.Context, res gjson.Result) {
 		data.DefaultAction = types.StringNull()
 	}
 	if value := res.Get("rules"); value.Exists() {
-		data.Rules = make([]ServiceAccessRules, 0)
+		data.Rules = make([]ServiceAccessRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ServiceAccessRules{}
@@ -139,7 +156,7 @@ func (data *ServiceAccess) fromBody(ctx context.Context, res gjson.Result) {
 				data.Action = types.StringNull()
 			}
 			if value := res.Get("geoSources"); value.Exists() {
-				data.GeolocationSources = make([]ServiceAccessRulesGeolocationSources, 0)
+				data.GeolocationSources = make([]ServiceAccessRulesGeolocationSources, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ServiceAccessRulesGeolocationSources{}
@@ -187,8 +204,9 @@ func (data *ServiceAccess) fromBodyPartial(ctx context.Context, res gjson.Result
 	} else {
 		data.DefaultAction = types.StringNull()
 	}
+	rulesArray := res.Get("rules").Array()
 	{
-		l := len(res.Get("rules").Array())
+		l := len(rulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("rules array resizing from %d to %d", len(data.Rules), l))
 		for i := len(data.Rules); i < l; i++ {
 			data.Rules = append(data.Rules, ServiceAccessRules{})
@@ -200,23 +218,22 @@ func (data *ServiceAccess) fromBodyPartial(ctx context.Context, res gjson.Result
 	for i := range data.Rules {
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("rules.%d", i))
+		res := rulesArray[i]
 		if value := res.Get("action"); value.Exists() && !data.Action.IsNull() {
 			data.Action = types.StringValue(value.String())
 		} else {
 			data.Action = types.StringNull()
 		}
+		geolocationSourcesArray := res.Get("geoSources")
 		for i := 0; i < len(data.GeolocationSources); i++ {
 			keys := [...]string{"id", "type"}
 			keyValues := [...]string{data.GeolocationSources[i].Id.ValueString(), data.GeolocationSources[i].Type.ValueString()}
 
 			parent := &data
 			data := (*parent).GeolocationSources[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("geoSources").ForEach(
+			geolocationSourcesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -74,7 +75,8 @@ func (data CertificateMap) toBody(ctx context.Context, state CertificateMap) str
 	}
 	body, _ = sjson.Set(body, "type", "CertificateMap")
 	if len(data.Rules) > 0 {
-		body, _ = sjson.Set(body, "rules", []any{})
+		var rulesBody strings.Builder
+		rulesBody.WriteString("[")
 		for _, item := range data.Rules {
 			itemBody := ""
 			if !item.Field.IsNull() {
@@ -89,8 +91,15 @@ func (data CertificateMap) toBody(ctx context.Context, state CertificateMap) str
 			if !item.Value.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Value.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "rules.-1", itemBody)
+			if itemBody != "" {
+				if rulesBody.Len() > 1 {
+					rulesBody.WriteString(",")
+				}
+				rulesBody.WriteString(itemBody)
+			}
 		}
+		rulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "rules", rulesBody.String())
 	}
 	return body
 }
@@ -111,7 +120,7 @@ func (data *CertificateMap) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("rules"); value.Exists() {
-		data.Rules = make([]CertificateMapRules, 0)
+		data.Rules = make([]CertificateMapRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := CertificateMapRules{}
@@ -160,16 +169,16 @@ func (data *CertificateMap) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Type = types.StringNull()
 	}
+	rulesArray := res.Get("rules")
 	for i := 0; i < len(data.Rules); i++ {
 		keys := [...]string{"field", "component", "operator", "value"}
 		keyValues := [...]string{data.Rules[i].Field.ValueString(), data.Rules[i].Component.ValueString(), data.Rules[i].Operator.ValueString(), data.Rules[i].Value.ValueString()}
 
 		parent := &data
 		data := (*parent).Rules[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("rules").ForEach(
+		rulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

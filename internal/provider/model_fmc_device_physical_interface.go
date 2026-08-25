@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -233,7 +234,8 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "ipv6.enableAutoConfig", data.Ipv6AutoConfig.ValueBool())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6.addresses", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -245,14 +247,22 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 			if !item.EnforceEui.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enforceEUI64", item.EnforceEui.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.addresses.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.addresses", ipv6AddressesBody.String())
 	}
 	if !data.Ipv6AddressPoolId.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.pool.id", data.Ipv6AddressPoolId.ValueString())
 	}
 	if len(data.Ipv6Prefixes) > 0 {
-		body, _ = sjson.Set(body, "ipv6.prefixes", []any{})
+		var ipv6PrefixesBody strings.Builder
+		ipv6PrefixesBody.WriteString("[")
 		for _, item := range data.Ipv6Prefixes {
 			itemBody := ""
 			if !item.Address.IsNull() {
@@ -261,8 +271,15 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 			if !item.Default.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "default", item.Default.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6.prefixes.-1", itemBody)
+			if itemBody != "" {
+				if ipv6PrefixesBody.Len() > 1 {
+					ipv6PrefixesBody.WriteString(",")
+				}
+				ipv6PrefixesBody.WriteString(itemBody)
+			}
 		}
+		ipv6PrefixesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6.prefixes", ipv6PrefixesBody.String())
 	}
 	if !data.Ipv6Dad.IsNull() {
 		body, _ = sjson.Set(body, "ipv6.enableDADLoopback", data.Ipv6Dad.ValueBool())
@@ -343,7 +360,8 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "fmcAccessConfig.enableAccess", data.ManagementAccess.ValueBool())
 	}
 	if len(data.ManagementAccessNetworkObjects) > 0 {
-		body, _ = sjson.Set(body, "fmcAccessConfig.allowedNetworks", []any{})
+		var managementAccessNetworkObjectsBody strings.Builder
+		managementAccessNetworkObjectsBody.WriteString("[")
 		for _, item := range data.ManagementAccessNetworkObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -352,8 +370,15 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 			if !item.Type.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "type", item.Type.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "fmcAccessConfig.allowedNetworks.-1", itemBody)
+			if itemBody != "" {
+				if managementAccessNetworkObjectsBody.Len() > 1 {
+					managementAccessNetworkObjectsBody.WriteString(",")
+				}
+				managementAccessNetworkObjectsBody.WriteString(itemBody)
+			}
 		}
+		managementAccessNetworkObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "fmcAccessConfig.allowedNetworks", managementAccessNetworkObjectsBody.String())
 	}
 	if !data.ActiveMacAddress.IsNull() {
 		body, _ = sjson.Set(body, "activeMACAddress", data.ActiveMacAddress.ValueString())
@@ -362,7 +387,8 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 		body, _ = sjson.Set(body, "standbyMACAddress", data.StandbyMacAddress.ValueString())
 	}
 	if len(data.ArpTableEntries) > 0 {
-		body, _ = sjson.Set(body, "arpConfig", []any{})
+		var arpTableEntriesBody strings.Builder
+		arpTableEntriesBody.WriteString("[")
 		for _, item := range data.ArpTableEntries {
 			itemBody := ""
 			if !item.MacAddress.IsNull() {
@@ -374,8 +400,15 @@ func (data DevicePhysicalInterface) toBody(ctx context.Context, state DevicePhys
 			if !item.Enabled.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "enableAlias", item.Enabled.ValueBool())
 			}
-			body, _ = sjson.SetRaw(body, "arpConfig.-1", itemBody)
+			if itemBody != "" {
+				if arpTableEntriesBody.Len() > 1 {
+					arpTableEntriesBody.WriteString(",")
+				}
+				arpTableEntriesBody.WriteString(itemBody)
+			}
 		}
+		arpTableEntriesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "arpConfig", arpTableEntriesBody.String())
 	}
 	if !data.AntiSpoofing.IsNull() {
 		body, _ = sjson.Set(body, "enableAntiSpoofing", data.AntiSpoofing.ValueBool())
@@ -541,7 +574,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
 	if value := res.Get("ipv6.addresses"); value.Exists() {
-		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DevicePhysicalInterfaceIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceIpv6Addresses{}
@@ -570,7 +603,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
 	if value := res.Get("ipv6.prefixes"); value.Exists() {
-		data.Ipv6Prefixes = make([]DevicePhysicalInterfaceIpv6Prefixes, 0)
+		data.Ipv6Prefixes = make([]DevicePhysicalInterfaceIpv6Prefixes, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceIpv6Prefixes{}
@@ -719,7 +752,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.ManagementAccess = types.BoolNull()
 	}
 	if value := res.Get("fmcAccessConfig.allowedNetworks"); value.Exists() {
-		data.ManagementAccessNetworkObjects = make([]DevicePhysicalInterfaceManagementAccessNetworkObjects, 0)
+		data.ManagementAccessNetworkObjects = make([]DevicePhysicalInterfaceManagementAccessNetworkObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceManagementAccessNetworkObjects{}
@@ -748,7 +781,7 @@ func (data *DevicePhysicalInterface) fromBody(ctx context.Context, res gjson.Res
 		data.StandbyMacAddress = types.StringNull()
 	}
 	if value := res.Get("arpConfig"); value.Exists() {
-		data.ArpTableEntries = make([]DevicePhysicalInterfaceArpTableEntries, 0)
+		data.ArpTableEntries = make([]DevicePhysicalInterfaceArpTableEntries, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DevicePhysicalInterfaceArpTableEntries{}
@@ -947,16 +980,16 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ipv6AutoConfig = types.BoolNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6.addresses")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"address", "prefix"}
 		keyValues := [...]string{data.Ipv6Addresses[i].Address.ValueString(), data.Ipv6Addresses[i].Prefix.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.addresses").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1005,16 +1038,16 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.Ipv6AddressPoolId = types.StringNull()
 	}
+	ipv6PrefixesArray := res.Get("ipv6.prefixes")
 	for i := 0; i < len(data.Ipv6Prefixes); i++ {
 		keys := [...]string{"address"}
 		keyValues := [...]string{data.Ipv6Prefixes[i].Address.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Prefixes[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6.prefixes").ForEach(
+		ipv6PrefixesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1183,16 +1216,16 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.ManagementAccess = types.BoolNull()
 	}
+	managementAccessNetworkObjectsArray := res.Get("fmcAccessConfig.allowedNetworks")
 	for i := 0; i < len(data.ManagementAccessNetworkObjects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.ManagementAccessNetworkObjects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).ManagementAccessNetworkObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("fmcAccessConfig.allowedNetworks").ForEach(
+		managementAccessNetworkObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -1241,16 +1274,16 @@ func (data *DevicePhysicalInterface) fromBodyPartial(ctx context.Context, res gj
 	} else {
 		data.StandbyMacAddress = types.StringNull()
 	}
+	arpTableEntriesArray := res.Get("arpConfig")
 	for i := 0; i < len(data.ArpTableEntries); i++ {
 		keys := [...]string{"macAddress", "ipAddress", "enableAlias"}
 		keyValues := [...]string{data.ArpTableEntries[i].MacAddress.ValueString(), data.ArpTableEntries[i].IpAddress.ValueString(), strconv.FormatBool(data.ArpTableEntries[i].Enabled.ValueBool())}
 
 		parent := &data
 		data := (*parent).ArpTableEntries[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("arpConfig").ForEach(
+		arpTableEntriesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

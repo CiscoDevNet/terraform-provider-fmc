@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -83,7 +84,8 @@ func (data DeviceHAPairMonitoring) toBody(ctx context.Context, state DeviceHAPai
 		body, _ = sjson.Set(body, "ipv4Configuration.standbyIPv4Address", data.Ipv4StandbyAddress.ValueString())
 	}
 	if len(data.Ipv6Addresses) > 0 {
-		body, _ = sjson.Set(body, "ipv6Configuration.ipv6ActiveStandbyPair", []any{})
+		var ipv6AddressesBody strings.Builder
+		ipv6AddressesBody.WriteString("[")
 		for _, item := range data.Ipv6Addresses {
 			itemBody := ""
 			if !item.ActiveAddress.IsNull() {
@@ -92,8 +94,15 @@ func (data DeviceHAPairMonitoring) toBody(ctx context.Context, state DeviceHAPai
 			if !item.StandbyAddress.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "standbyIPv6", item.StandbyAddress.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ipv6Configuration.ipv6ActiveStandbyPair.-1", itemBody)
+			if itemBody != "" {
+				if ipv6AddressesBody.Len() > 1 {
+					ipv6AddressesBody.WriteString(",")
+				}
+				ipv6AddressesBody.WriteString(itemBody)
+			}
 		}
+		ipv6AddressesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ipv6Configuration.ipv6ActiveStandbyPair", ipv6AddressesBody.String())
 	}
 	return body
 }
@@ -134,7 +143,7 @@ func (data *DeviceHAPairMonitoring) fromBody(ctx context.Context, res gjson.Resu
 		data.Ipv4Netmask = types.StringNull()
 	}
 	if value := res.Get("ipv6Configuration.ipv6ActiveStandbyPair"); value.Exists() {
-		data.Ipv6Addresses = make([]DeviceHAPairMonitoringIpv6Addresses, 0)
+		data.Ipv6Addresses = make([]DeviceHAPairMonitoringIpv6Addresses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceHAPairMonitoringIpv6Addresses{}
@@ -193,16 +202,16 @@ func (data *DeviceHAPairMonitoring) fromBodyPartial(ctx context.Context, res gjs
 	} else {
 		data.Ipv4Netmask = types.StringNull()
 	}
+	ipv6AddressesArray := res.Get("ipv6Configuration.ipv6ActiveStandbyPair")
 	for i := 0; i < len(data.Ipv6Addresses); i++ {
 		keys := [...]string{"activeIPv6", "standbyIPv6"}
 		keyValues := [...]string{data.Ipv6Addresses[i].ActiveAddress.ValueString(), data.Ipv6Addresses[i].StandbyAddress.ValueString()}
 
 		parent := &data
 		data := (*parent).Ipv6Addresses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ipv6Configuration.ipv6ActiveStandbyPair").ForEach(
+		ipv6AddressesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

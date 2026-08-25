@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -73,14 +74,22 @@ func (data CipherSuiteList) toBody(ctx context.Context, state CipherSuiteList) s
 	}
 	body, _ = sjson.Set(body, "type", "CipherSuiteList")
 	if len(data.CipherSuites) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var cipherSuitesBody strings.Builder
+		cipherSuitesBody.WriteString("[")
 		for _, item := range data.CipherSuites {
 			itemBody := ""
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if cipherSuitesBody.Len() > 1 {
+					cipherSuitesBody.WriteString(",")
+				}
+				cipherSuitesBody.WriteString(itemBody)
+			}
 		}
+		cipherSuitesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", cipherSuitesBody.String())
 	}
 	return body
 }
@@ -101,7 +110,7 @@ func (data *CipherSuiteList) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.CipherSuites = make([]CipherSuiteListCipherSuites, 0)
+		data.CipherSuites = make([]CipherSuiteListCipherSuites, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := CipherSuiteListCipherSuites{}
@@ -135,16 +144,16 @@ func (data *CipherSuiteList) fromBodyPartial(ctx context.Context, res gjson.Resu
 	} else {
 		data.Type = types.StringNull()
 	}
+	cipherSuitesArray := res.Get("literals")
 	for i := 0; i < len(data.CipherSuites); i++ {
 		keys := [...]string{"name"}
 		keyValues := [...]string{data.CipherSuites[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).CipherSuites[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("literals").ForEach(
+		cipherSuitesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

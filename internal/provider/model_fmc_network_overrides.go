@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -76,7 +77,8 @@ func (data NetworkOverrides) toBody(ctx context.Context, state NetworkOverrides)
 		body, _ = sjson.Set(body, "overrides.parent.id", data.ParentId.ValueString())
 	}
 	if len(data.Overrides) > 0 {
-		body, _ = sjson.Set(body, "dummy_overrides", []any{})
+		var overridesBody strings.Builder
+		overridesBody.WriteString("[")
 		for _, item := range data.Overrides {
 			itemBody := ""
 			if !item.TargetId.IsNull() {
@@ -91,8 +93,15 @@ func (data NetworkOverrides) toBody(ctx context.Context, state NetworkOverrides)
 			if !item.Prefix.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Prefix.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_overrides.-1", itemBody)
+			if itemBody != "" {
+				if overridesBody.Len() > 1 {
+					overridesBody.WriteString(",")
+				}
+				overridesBody.WriteString(itemBody)
+			}
 		}
+		overridesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_overrides", overridesBody.String())
 	}
 	return body
 }
@@ -113,7 +122,7 @@ func (data *NetworkOverrides) fromBody(ctx context.Context, res gjson.Result) {
 		data.ParentId = types.StringNull()
 	}
 	if value := res.Get("dummy_overrides"); value.Exists() {
-		data.Overrides = make([]NetworkOverridesOverrides, 0)
+		data.Overrides = make([]NetworkOverridesOverrides, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkOverridesOverrides{}
@@ -162,16 +171,16 @@ func (data *NetworkOverrides) fromBodyPartial(ctx context.Context, res gjson.Res
 	} else {
 		data.ParentId = types.StringNull()
 	}
+	overridesArray := res.Get("dummy_overrides")
 	for i := 0; i < len(data.Overrides); i++ {
 		keys := [...]string{"overrides.target.id"}
 		keyValues := [...]string{data.Overrides[i].TargetId.ValueString()}
 
 		parent := &data
 		data := (*parent).Overrides[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dummy_overrides").ForEach(
+		overridesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

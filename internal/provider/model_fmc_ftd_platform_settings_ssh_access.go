@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -83,7 +84,8 @@ func (data FTDPlatformSettingsSSHAccess) toBody(ctx context.Context, state FTDPl
 		body, _ = sjson.Set(body, "interfaces.literals", values)
 	}
 	if len(data.InterfaceObjects) > 0 {
-		body, _ = sjson.Set(body, "interfaces.objects", []any{})
+		var interfaceObjectsBody strings.Builder
+		interfaceObjectsBody.WriteString("[")
 		for _, item := range data.InterfaceObjects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -95,8 +97,15 @@ func (data FTDPlatformSettingsSSHAccess) toBody(ctx context.Context, state FTDPl
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.objects.-1", itemBody)
+			if itemBody != "" {
+				if interfaceObjectsBody.Len() > 1 {
+					interfaceObjectsBody.WriteString(",")
+				}
+				interfaceObjectsBody.WriteString(itemBody)
+			}
 		}
+		interfaceObjectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces.objects", interfaceObjectsBody.String())
 	}
 	return body
 }
@@ -122,7 +131,7 @@ func (data *FTDPlatformSettingsSSHAccess) fromBody(ctx context.Context, res gjso
 		data.InterfaceLiterals = types.SetNull(types.StringType)
 	}
 	if value := res.Get("interfaces.objects"); value.Exists() {
-		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0)
+		data.InterfaceObjects = make([]FTDPlatformSettingsSSHAccessInterfaceObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSSHAccessInterfaceObjects{}
@@ -171,16 +180,16 @@ func (data *FTDPlatformSettingsSSHAccess) fromBodyPartial(ctx context.Context, r
 	} else {
 		data.InterfaceLiterals = types.SetNull(types.StringType)
 	}
+	interfaceObjectsArray := res.Get("interfaces.objects")
 	for i := 0; i < len(data.InterfaceObjects); i++ {
 		keys := [...]string{"id", "type", "name"}
 		keyValues := [...]string{data.InterfaceObjects[i].Id.ValueString(), data.InterfaceObjects[i].Type.ValueString(), data.InterfaceObjects[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).InterfaceObjects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces.objects").ForEach(
+		interfaceObjectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -24,6 +24,7 @@ import (
 	"net/url"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -136,7 +137,8 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.passwdAuth.authKey", data.AuthenticationAreaPassword.ValueString())
 	}
 	if len(data.AuthenticationAreaMd5s) > 0 {
-		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList", []any{})
+		var authenticationAreaMd5sBody strings.Builder
+		authenticationAreaMd5sBody.WriteString("[")
 		for _, item := range data.AuthenticationAreaMd5s {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -145,11 +147,19 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 			if !item.Key.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "md5Key", item.Key.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList.-1", itemBody)
+			if itemBody != "" {
+				if authenticationAreaMd5sBody.Len() > 1 {
+					authenticationAreaMd5sBody.WriteString(",")
+				}
+				authenticationAreaMd5sBody.WriteString(itemBody)
+			}
 		}
+		authenticationAreaMd5sBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList", authenticationAreaMd5sBody.String())
 	}
 	if len(data.AuthenticationMd5s) > 0 {
-		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList", []any{})
+		var authenticationMd5sBody strings.Builder
+		authenticationMd5sBody.WriteString("[")
 		for _, item := range data.AuthenticationMd5s {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -158,8 +168,15 @@ func (data DeviceOSPFInterface) toBody(ctx context.Context, state DeviceOSPFInte
 			if !item.Key.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "md5Key", item.Key.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList.-1", itemBody)
+			if itemBody != "" {
+				if authenticationMd5sBody.Len() > 1 {
+					authenticationMd5sBody.WriteString(",")
+				}
+				authenticationMd5sBody.WriteString(itemBody)
+			}
 		}
+		authenticationMd5sBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "ospfProtocolConfiguration.ospfAuthentication.md5AuthList", authenticationMd5sBody.String())
 	}
 	if !data.AuthenticationKeyChainId.IsNull() {
 		body, _ = sjson.Set(body, "ospfProtocolConfiguration.ospfAuthentication.keyChain.authKey.id", data.AuthenticationKeyChainId.ValueString())
@@ -233,7 +250,7 @@ func (data *DeviceOSPFInterface) fromBody(ctx context.Context, res gjson.Result)
 		data.Bfd = types.BoolNull()
 	}
 	if value := res.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList"); value.Exists() {
-		data.AuthenticationAreaMd5s = make([]DeviceOSPFInterfaceAuthenticationAreaMd5s, 0)
+		data.AuthenticationAreaMd5s = make([]DeviceOSPFInterfaceAuthenticationAreaMd5s, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFInterfaceAuthenticationAreaMd5s{}
@@ -247,7 +264,7 @@ func (data *DeviceOSPFInterface) fromBody(ctx context.Context, res gjson.Result)
 		})
 	}
 	if value := res.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList"); value.Exists() {
-		data.AuthenticationMd5s = make([]DeviceOSPFInterfaceAuthenticationMd5s, 0)
+		data.AuthenticationMd5s = make([]DeviceOSPFInterfaceAuthenticationMd5s, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceOSPFInterfaceAuthenticationMd5s{}
@@ -336,16 +353,16 @@ func (data *DeviceOSPFInterface) fromBodyPartial(ctx context.Context, res gjson.
 	} else {
 		data.Bfd = types.BoolNull()
 	}
+	authenticationAreaMd5sArray := res.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList")
 	for i := 0; i < len(data.AuthenticationAreaMd5s); i++ {
 		keys := [...]string{"md5KeyId"}
 		keyValues := [...]string{strconv.FormatInt(data.AuthenticationAreaMd5s[i].Id.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).AuthenticationAreaMd5s[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ospfProtocolConfiguration.ospfAuthentication.areaAuth.md5AuthList").ForEach(
+		authenticationAreaMd5sArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -379,16 +396,16 @@ func (data *DeviceOSPFInterface) fromBodyPartial(ctx context.Context, res gjson.
 		}
 		(*parent).AuthenticationAreaMd5s[i] = data
 	}
+	authenticationMd5sArray := res.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList")
 	for i := 0; i < len(data.AuthenticationMd5s); i++ {
 		keys := [...]string{"md5KeyId"}
 		keyValues := [...]string{strconv.FormatInt(data.AuthenticationMd5s[i].Id.ValueInt64(), 10)}
 
 		parent := &data
 		data := (*parent).AuthenticationMd5s[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("ospfProtocolConfiguration.ospfAuthentication.md5AuthList").ForEach(
+		authenticationMd5sArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

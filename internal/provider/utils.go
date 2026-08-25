@@ -41,6 +41,15 @@ import (
 // Mutex to protect deployments
 var deploymentMu sync.Mutex
 
+func init() {
+	gjson.AddModifier("case", func(json, arg string) string {
+		if arg == "lower" {
+			return strings.ToLower(json)
+		}
+		return json
+	})
+}
+
 func FMCWaitForJobToFinish(ctx context.Context, client *fmc.Client, jobId string, reqMods [](func(*fmc.Req))) diag.Diagnostics {
 	var diags diag.Diagnostics
 	const atom time.Duration = 10 * time.Second

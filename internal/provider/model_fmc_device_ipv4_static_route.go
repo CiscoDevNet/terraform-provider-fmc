@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -86,14 +87,22 @@ func (data DeviceIPv4StaticRoute) toBody(ctx context.Context, state DeviceIPv4St
 		body, _ = sjson.Set(body, "links.parent", data.InterfaceId.ValueString())
 	}
 	if len(data.DestinationNetworks) > 0 {
-		body, _ = sjson.Set(body, "selectedNetworks", []any{})
+		var destinationNetworksBody strings.Builder
+		destinationNetworksBody.WriteString("[")
 		for _, item := range data.DestinationNetworks {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "selectedNetworks.-1", itemBody)
+			if itemBody != "" {
+				if destinationNetworksBody.Len() > 1 {
+					destinationNetworksBody.WriteString(",")
+				}
+				destinationNetworksBody.WriteString(itemBody)
+			}
 		}
+		destinationNetworksBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "selectedNetworks", destinationNetworksBody.String())
 	}
 	if !data.Metric.IsNull() {
 		body, _ = sjson.Set(body, "metricValue", data.Metric.ValueInt64())
@@ -129,7 +138,7 @@ func (data *DeviceIPv4StaticRoute) fromBody(ctx context.Context, res gjson.Resul
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("selectedNetworks"); value.Exists() {
-		data.DestinationNetworks = make([]DeviceIPv4StaticRouteDestinationNetworks, 0)
+		data.DestinationNetworks = make([]DeviceIPv4StaticRouteDestinationNetworks, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceIPv4StaticRouteDestinationNetworks{}
@@ -188,16 +197,16 @@ func (data *DeviceIPv4StaticRoute) fromBodyPartial(ctx context.Context, res gjso
 	} else {
 		data.Type = types.StringNull()
 	}
+	destinationNetworksArray := res.Get("selectedNetworks")
 	for i := 0; i < len(data.DestinationNetworks); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.DestinationNetworks[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).DestinationNetworks[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("selectedNetworks").ForEach(
+		destinationNetworksArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -78,7 +79,8 @@ func (data CertificateMaps) toBody(ctx context.Context, state CertificateMaps) s
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -86,7 +88,8 @@ func (data CertificateMaps) toBody(ctx context.Context, state CertificateMaps) s
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "CertificateMap")
 			if len(item.Rules) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "rules", []any{})
+				var rulesChildBody strings.Builder
+				rulesChildBody.WriteString("[")
 				for _, childItem := range item.Rules {
 					itemChildBody := ""
 					if !childItem.Field.IsNull() {
@@ -101,11 +104,25 @@ func (data CertificateMaps) toBody(ctx context.Context, state CertificateMaps) s
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "rules.-1", itemChildBody)
+					if itemChildBody != "" {
+						if rulesChildBody.Len() > 1 {
+							rulesChildBody.WriteString(",")
+						}
+						rulesChildBody.WriteString(itemChildBody)
+					}
 				}
+				rulesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "rules", rulesChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -143,7 +160,7 @@ func (data *CertificateMaps) fromBody(ctx context.Context, res gjson.Result) {
 			data.Type = types.StringNull()
 		}
 		if value := res.Get("rules"); value.Exists() {
-			data.Rules = make([]CertificateMapsItemsRules, 0)
+			data.Rules = make([]CertificateMapsItemsRules, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := CertificateMapsItemsRules{}
@@ -209,16 +226,16 @@ func (data *CertificateMaps) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.Type = types.StringNull()
 		}
+		rulesArray := res.Get("rules")
 		for i := 0; i < len(data.Rules); i++ {
 			keys := [...]string{"field", "component", "operator", "value"}
 			keyValues := [...]string{data.Rules[i].Field.ValueString(), data.Rules[i].Component.ValueString(), data.Rules[i].Operator.ValueString(), data.Rules[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Rules[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("rules").ForEach(
+			rulesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

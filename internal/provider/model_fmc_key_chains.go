@@ -24,6 +24,7 @@ import (
 	"maps"
 	"slices"
 	"strconv"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -83,7 +84,8 @@ func (data KeyChains) toBody(ctx context.Context, state KeyChains) string {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -94,7 +96,8 @@ func (data KeyChains) toBody(ctx context.Context, state KeyChains) string {
 				itemBody, _ = sjson.Set(itemBody, "description", item.Description.ValueString())
 			}
 			if len(item.Keys) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "keys", []any{})
+				var keysChildBody strings.Builder
+				keysChildBody.WriteString("[")
 				for _, childItem := range item.Keys {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -123,11 +126,25 @@ func (data KeyChains) toBody(ctx context.Context, state KeyChains) string {
 					if !childItem.SendLifetimeEnd.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "sendLifeTime.endLifeTimeValue", childItem.SendLifetimeEnd.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "keys.-1", itemChildBody)
+					if itemChildBody != "" {
+						if keysChildBody.Len() > 1 {
+							keysChildBody.WriteString(",")
+						}
+						keysChildBody.WriteString(itemChildBody)
+					}
 				}
+				keysChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "keys", keysChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -170,7 +187,7 @@ func (data *KeyChains) fromBody(ctx context.Context, res gjson.Result) {
 			data.Description = types.StringNull()
 		}
 		if value := res.Get("keys"); value.Exists() {
-			data.Keys = make([]KeyChainsItemsKeys, 0)
+			data.Keys = make([]KeyChainsItemsKeys, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := KeyChainsItemsKeys{}
@@ -260,16 +277,16 @@ func (data *KeyChains) fromBodyPartial(ctx context.Context, res gjson.Result) {
 				data.Description = types.StringNull()
 			}
 		}
+		keysArray := res.Get("keys")
 		for i := 0; i < len(data.Keys); i++ {
 			keys := [...]string{"keyId"}
 			keyValues := [...]string{strconv.FormatInt(data.Keys[i].Id.ValueInt64(), 10)}
 
 			parent := &data
 			data := (*parent).Keys[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("keys").ForEach(
+			keysArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

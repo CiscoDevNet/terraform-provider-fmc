@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -77,7 +78,8 @@ func (data FTDPlatformSettingsSyslogEventList) toBody(ctx context.Context, state
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.EventClasses) > 0 {
-		body, _ = sjson.Set(body, "eventClasses", []any{})
+		var eventClassesBody strings.Builder
+		eventClassesBody.WriteString("[")
 		for _, item := range data.EventClasses {
 			itemBody := ""
 			if !item.Class.IsNull() {
@@ -86,8 +88,15 @@ func (data FTDPlatformSettingsSyslogEventList) toBody(ctx context.Context, state
 			if !item.Severity.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "severity", item.Severity.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "eventClasses.-1", itemBody)
+			if itemBody != "" {
+				if eventClassesBody.Len() > 1 {
+					eventClassesBody.WriteString(",")
+				}
+				eventClassesBody.WriteString(itemBody)
+			}
 		}
+		eventClassesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "eventClasses", eventClassesBody.String())
 	}
 	if !data.MessageIds.IsNull() {
 		var values []string
@@ -113,7 +122,7 @@ func (data *FTDPlatformSettingsSyslogEventList) fromBody(ctx context.Context, re
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("eventClasses"); value.Exists() {
-		data.EventClasses = make([]FTDPlatformSettingsSyslogEventListEventClasses, 0)
+		data.EventClasses = make([]FTDPlatformSettingsSyslogEventListEventClasses, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDPlatformSettingsSyslogEventListEventClasses{}
@@ -157,16 +166,16 @@ func (data *FTDPlatformSettingsSyslogEventList) fromBodyPartial(ctx context.Cont
 	} else {
 		data.Name = types.StringNull()
 	}
+	eventClassesArray := res.Get("eventClasses")
 	for i := 0; i < len(data.EventClasses); i++ {
 		keys := [...]string{"class", "severity"}
 		keyValues := [...]string{data.EventClasses[i].Class.ValueString(), data.EventClasses[i].Severity.ValueString()}
 
 		parent := &data
 		data := (*parent).EventClasses[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("eventClasses").ForEach(
+		eventClassesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

@@ -24,6 +24,7 @@ import (
 	"maps"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/go-version"
 	"github.com/hashicorp/terraform-plugin-framework/types"
@@ -99,7 +100,8 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -139,14 +141,22 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 				itemBody, _ = sjson.Set(itemBody, "sendTunnelInterfaceIpToPeer", item.SendVirtualTunnelInterfaceIpToPeer.ValueBool())
 			}
 			if len(item.ProtectedNetworks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.networks", []any{})
+				var protectedNetworksChildBody strings.Builder
+				protectedNetworksChildBody.WriteString("[")
 				for _, childItem := range item.ProtectedNetworks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "protectedNetworks.networks.-1", itemChildBody)
+					if itemChildBody != "" {
+						if protectedNetworksChildBody.Len() > 1 {
+							protectedNetworksChildBody.WriteString(",")
+						}
+						protectedNetworksChildBody.WriteString(itemChildBody)
+					}
 				}
+				protectedNetworksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "protectedNetworks.networks", protectedNetworksChildBody.String())
 			}
 			if !item.ProtectedNetworksAccessListId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "protectedNetworks.acl.id", item.ProtectedNetworksAccessListId.ValueString())
@@ -187,8 +197,15 @@ func (data VPNS2SEndpoints) toBody(ctx context.Context, state VPNS2SEndpoints) s
 			if !item.BackupLocalIdentityString.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "backupInterfaces.0.localIdentityString", item.BackupLocalIdentityString.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -276,7 +293,7 @@ func (data *VPNS2SEndpoints) fromBody(ctx context.Context, res gjson.Result) {
 			data.SendVirtualTunnelInterfaceIpToPeer = types.BoolNull()
 		}
 		if value := res.Get("protectedNetworks.networks"); value.Exists() {
-			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0)
+			data.ProtectedNetworks = make([]VPNS2SEndpointsItemsProtectedNetworks, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := VPNS2SEndpointsItemsProtectedNetworks{}
@@ -437,16 +454,16 @@ func (data *VPNS2SEndpoints) fromBodyPartial(ctx context.Context, res gjson.Resu
 		} else {
 			data.SendVirtualTunnelInterfaceIpToPeer = types.BoolNull()
 		}
+		protectedNetworksArray := res.Get("protectedNetworks.networks")
 		for i := 0; i < len(data.ProtectedNetworks); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.ProtectedNetworks[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).ProtectedNetworks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("protectedNetworks.networks").ForEach(
+			protectedNetworksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

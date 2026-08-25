@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -84,17 +85,26 @@ func (data VLANTagGroup) toBody(ctx context.Context, state VLANTagGroup) string 
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.VlanTags) > 0 {
-		body, _ = sjson.Set(body, "objects", []any{})
+		var vlanTagsBody strings.Builder
+		vlanTagsBody.WriteString("[")
 		for _, item := range data.VlanTags {
 			itemBody := ""
 			if !item.Id.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "id", item.Id.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
+			if itemBody != "" {
+				if vlanTagsBody.Len() > 1 {
+					vlanTagsBody.WriteString(",")
+				}
+				vlanTagsBody.WriteString(itemBody)
+			}
 		}
+		vlanTagsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "objects", vlanTagsBody.String())
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var literalsBody strings.Builder
+		literalsBody.WriteString("[")
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.StartTag.IsNull() {
@@ -103,8 +113,15 @@ func (data VLANTagGroup) toBody(ctx context.Context, state VLANTagGroup) string 
 			if !item.EndTag.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "endTag", item.EndTag.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if literalsBody.Len() > 1 {
+					literalsBody.WriteString(",")
+				}
+				literalsBody.WriteString(itemBody)
+			}
 		}
+		literalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", literalsBody.String())
 	}
 	return body
 }
@@ -135,7 +152,7 @@ func (data *VLANTagGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.VlanTags = make([]VLANTagGroupVlanTags, 0)
+		data.VlanTags = make([]VLANTagGroupVlanTags, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VLANTagGroupVlanTags{}
@@ -149,7 +166,7 @@ func (data *VLANTagGroup) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.Literals = make([]VLANTagGroupLiterals, 0)
+		data.Literals = make([]VLANTagGroupLiterals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := VLANTagGroupLiterals{}
@@ -202,16 +219,16 @@ func (data *VLANTagGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	vlanTagsArray := res.Get("objects")
 	for i := 0; i < len(data.VlanTags); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.VlanTags[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).VlanTags[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("objects").ForEach(
+		vlanTagsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -245,16 +262,16 @@ func (data *VLANTagGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 		}
 		(*parent).VlanTags[i] = data
 	}
+	literalsArray := res.Get("literals")
 	for i := 0; i < len(data.Literals); i++ {
 		keys := [...]string{"startTag", "endTag"}
 		keyValues := [...]string{data.Literals[i].StartTag.ValueString(), data.Literals[i].EndTag.ValueString()}
 
 		parent := &data
 		data := (*parent).Literals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("literals").ForEach(
+		literalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

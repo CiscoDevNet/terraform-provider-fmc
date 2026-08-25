@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -85,7 +86,8 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -101,7 +103,8 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 				itemBody, _ = sjson.Set(itemBody, "effectiveEndDateTime", item.EndTime.ValueString())
 			}
 			if len(item.RecurrenceList) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "recurrenceList", []any{})
+				var recurrenceListChildBody strings.Builder
+				recurrenceListChildBody.WriteString("[")
 				for _, childItem := range item.RecurrenceList {
 					itemChildBody := ""
 					if !childItem.RecurrenceType.IsNull() {
@@ -130,11 +133,25 @@ func (data TimeRanges) toBody(ctx context.Context, state TimeRanges) string {
 						childItem.DailyDays.ElementsAs(ctx, &values, false)
 						itemChildBody, _ = sjson.Set(itemChildBody, "days", values)
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "recurrenceList.-1", itemChildBody)
+					if itemChildBody != "" {
+						if recurrenceListChildBody.Len() > 1 {
+							recurrenceListChildBody.WriteString(",")
+						}
+						recurrenceListChildBody.WriteString(itemChildBody)
+					}
 				}
+				recurrenceListChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "recurrenceList", recurrenceListChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -187,7 +204,7 @@ func (data *TimeRanges) fromBody(ctx context.Context, res gjson.Result) {
 			data.EndTime = types.StringNull()
 		}
 		if value := res.Get("recurrenceList"); value.Exists() {
-			data.RecurrenceList = make([]TimeRangesItemsRecurrenceList, 0)
+			data.RecurrenceList = make([]TimeRangesItemsRecurrenceList, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := TimeRangesItemsRecurrenceList{}
@@ -292,16 +309,16 @@ func (data *TimeRanges) fromBodyPartial(ctx context.Context, res gjson.Result) {
 		} else {
 			data.EndTime = types.StringNull()
 		}
+		recurrenceListArray := res.Get("recurrenceList")
 		for i := 0; i < len(data.RecurrenceList); i++ {
 			keys := [...]string{"recurrenceType", "rangeStartTime", "rangeEndTime", "rangeStartDay", "rangeEndDay", "dailyStartTime", "dailyEndTime"}
 			keyValues := [...]string{data.RecurrenceList[i].RecurrenceType.ValueString(), data.RecurrenceList[i].RangeStartTime.ValueString(), data.RecurrenceList[i].RangeEndTime.ValueString(), data.RecurrenceList[i].RangeStartDay.ValueString(), data.RecurrenceList[i].RangeEndDay.ValueString(), data.RecurrenceList[i].DailyStartTime.ValueString(), data.RecurrenceList[i].DailyEndTime.ValueString()}
 
 			parent := &data
 			data := (*parent).RecurrenceList[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("recurrenceList").ForEach(
+			recurrenceListArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

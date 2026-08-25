@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"maps"
 	"slices"
+	"strings"
 
 	"github.com/CiscoDevNet/terraform-provider-fmc/internal/provider/helpers"
 	"github.com/hashicorp/go-version"
@@ -83,7 +84,8 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 		body, _ = sjson.Set(body, "id", data.Id.ValueString())
 	}
 	if len(data.Items) > 0 {
-		body, _ = sjson.Set(body, "items", []any{})
+		var itemsBody strings.Builder
+		itemsBody.WriteString("[")
 		for key, item := range data.Items {
 			itemBody, _ := sjson.Set("{}", "name", key)
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -101,7 +103,8 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 				itemBody, _ = sjson.Set(itemBody, "network_groups", values)
 			}
 			if len(item.Objects) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "objects", []any{})
+				var objectsChildBody strings.Builder
+				objectsChildBody.WriteString("[")
 				for _, childItem := range item.Objects {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
@@ -111,22 +114,44 @@ func (data NetworkGroups) toBody(ctx context.Context, state NetworkGroups) strin
 						itemChildBody, _ = sjson.Set(itemChildBody, "name", childItem.Name.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "objects.-1", itemChildBody)
+					if itemChildBody != "" {
+						if objectsChildBody.Len() > 1 {
+							objectsChildBody.WriteString(",")
+						}
+						objectsChildBody.WriteString(itemChildBody)
+					}
 				}
+				objectsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "objects", objectsChildBody.String())
 			}
 			if len(item.Literals) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "literals", []any{})
+				var literalsChildBody strings.Builder
+				literalsChildBody.WriteString("[")
 				for _, childItem := range item.Literals {
 					itemChildBody := ""
 					if !childItem.Value.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "value", childItem.Value.ValueString())
 					}
 					itemChildBody, _ = sjson.Set(itemChildBody, "type", "AnyNonEmptyString")
-					itemBody, _ = sjson.SetRaw(itemBody, "literals.-1", itemChildBody)
+					if itemChildBody != "" {
+						if literalsChildBody.Len() > 1 {
+							literalsChildBody.WriteString(",")
+						}
+						literalsChildBody.WriteString(itemChildBody)
+					}
 				}
+				literalsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "literals", literalsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "items.-1", itemBody)
+			if itemBody != "" {
+				if itemsBody.Len() > 1 {
+					itemsBody.WriteString(",")
+				}
+				itemsBody.WriteString(itemBody)
+			}
 		}
+		itemsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "items", itemsBody.String())
 	}
 	return gjson.Get(body, "items").String()
 }
@@ -179,7 +204,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 			data.NetworkGroups = types.SetNull(types.StringType)
 		}
 		if value := res.Get("objects"); value.Exists() {
-			data.Objects = make([]NetworkGroupsItemsObjects, 0)
+			data.Objects = make([]NetworkGroupsItemsObjects, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := NetworkGroupsItemsObjects{}
@@ -198,7 +223,7 @@ func (data *NetworkGroups) fromBody(ctx context.Context, res gjson.Result) {
 			})
 		}
 		if value := res.Get("literals"); value.Exists() {
-			data.Literals = make([]NetworkGroupsItemsLiterals, 0)
+			data.Literals = make([]NetworkGroupsItemsLiterals, 0, int(value.Get("#").Int()))
 			value.ForEach(func(k, res gjson.Result) bool {
 				parent := &data
 				data := NetworkGroupsItemsLiterals{}
@@ -268,16 +293,16 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 		} else {
 			data.NetworkGroups = types.SetNull(types.StringType)
 		}
+		objectsArray := res.Get("objects")
 		for i := 0; i < len(data.Objects); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Objects[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("objects").ForEach(
+			objectsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -316,16 +341,16 @@ func (data *NetworkGroups) fromBodyPartial(ctx context.Context, res gjson.Result
 			}
 			(*parent).Objects[i] = data
 		}
+		literalsArray := res.Get("literals")
 		for i := 0; i < len(data.Literals); i++ {
 			keys := [...]string{"value"}
 			keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
 			parent := &data
 			data := (*parent).Literals[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("literals").ForEach(
+			literalsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

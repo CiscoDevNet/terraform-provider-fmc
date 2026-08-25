@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -84,7 +85,8 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 		body, _ = sjson.Set(body, "overridable", data.Overridable.ValueBool())
 	}
 	if len(data.Objects) > 0 {
-		body, _ = sjson.Set(body, "objects", []any{})
+		var objectsBody strings.Builder
+		objectsBody.WriteString("[")
 		for _, item := range data.Objects {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -94,19 +96,34 @@ func (data NetworkGroup) toBody(ctx context.Context, state NetworkGroup) string 
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "objects.-1", itemBody)
+			if itemBody != "" {
+				if objectsBody.Len() > 1 {
+					objectsBody.WriteString(",")
+				}
+				objectsBody.WriteString(itemBody)
+			}
 		}
+		objectsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "objects", objectsBody.String())
 	}
 	if len(data.Literals) > 0 {
-		body, _ = sjson.Set(body, "literals", []any{})
+		var literalsBody strings.Builder
+		literalsBody.WriteString("[")
 		for _, item := range data.Literals {
 			itemBody := ""
 			if !item.Value.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "value", item.Value.ValueString())
 			}
 			itemBody, _ = sjson.Set(itemBody, "type", "AnyNonEmptyString")
-			body, _ = sjson.SetRaw(body, "literals.-1", itemBody)
+			if itemBody != "" {
+				if literalsBody.Len() > 1 {
+					literalsBody.WriteString(",")
+				}
+				literalsBody.WriteString(itemBody)
+			}
 		}
+		literalsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "literals", literalsBody.String())
 	}
 	return body
 }
@@ -137,7 +154,7 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 		data.Overridable = types.BoolNull()
 	}
 	if value := res.Get("objects"); value.Exists() {
-		data.Objects = make([]NetworkGroupObjects, 0)
+		data.Objects = make([]NetworkGroupObjects, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupObjects{}
@@ -156,7 +173,7 @@ func (data *NetworkGroup) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("literals"); value.Exists() {
-		data.Literals = make([]NetworkGroupLiterals, 0)
+		data.Literals = make([]NetworkGroupLiterals, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := NetworkGroupLiterals{}
@@ -204,16 +221,16 @@ func (data *NetworkGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else {
 		data.Overridable = types.BoolNull()
 	}
+	objectsArray := res.Get("objects")
 	for i := 0; i < len(data.Objects); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Objects[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Objects[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("objects").ForEach(
+		objectsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -252,16 +269,16 @@ func (data *NetworkGroup) fromBodyPartial(ctx context.Context, res gjson.Result)
 		}
 		(*parent).Objects[i] = data
 	}
+	literalsArray := res.Get("literals")
 	for i := 0; i < len(data.Literals); i++ {
 		keys := [...]string{"value"}
 		keyValues := [...]string{data.Literals[i].Value.ValueString()}
 
 		parent := &data
 		data := (*parent).Literals[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("literals").ForEach(
+		literalsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

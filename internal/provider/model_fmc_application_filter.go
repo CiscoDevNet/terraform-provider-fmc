@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -92,7 +93,8 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Applications) > 0 {
-		body, _ = sjson.Set(body, "applications", []any{})
+		var applicationsBody strings.Builder
+		applicationsBody.WriteString("[")
 		for _, item := range data.Applications {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -101,65 +103,120 @@ func (data ApplicationFilter) toBody(ctx context.Context, state ApplicationFilte
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "applications.-1", itemBody)
+			if itemBody != "" {
+				if applicationsBody.Len() > 1 {
+					applicationsBody.WriteString(",")
+				}
+				applicationsBody.WriteString(itemBody)
+			}
 		}
+		applicationsBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "applications", applicationsBody.String())
 	}
 	if len(data.Filters) > 0 {
-		body, _ = sjson.Set(body, "appConditions", []any{})
+		var filtersBody strings.Builder
+		filtersBody.WriteString("[")
 		for _, item := range data.Filters {
 			itemBody := ""
 			if len(item.Types) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "applicationTypes", []any{})
+				var typesChildBody strings.Builder
+				typesChildBody.WriteString("[")
 				for _, childItem := range item.Types {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "applicationTypes.-1", itemChildBody)
+					if itemChildBody != "" {
+						if typesChildBody.Len() > 1 {
+							typesChildBody.WriteString(",")
+						}
+						typesChildBody.WriteString(itemChildBody)
+					}
 				}
+				typesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "applicationTypes", typesChildBody.String())
 			}
 			if len(item.Risks) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "risks", []any{})
+				var risksChildBody strings.Builder
+				risksChildBody.WriteString("[")
 				for _, childItem := range item.Risks {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "risks.-1", itemChildBody)
+					if itemChildBody != "" {
+						if risksChildBody.Len() > 1 {
+							risksChildBody.WriteString(",")
+						}
+						risksChildBody.WriteString(itemChildBody)
+					}
 				}
+				risksChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "risks", risksChildBody.String())
 			}
 			if len(item.BusinessRelevances) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "productivities", []any{})
+				var businessRelevancesChildBody strings.Builder
+				businessRelevancesChildBody.WriteString("[")
 				for _, childItem := range item.BusinessRelevances {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "productivities.-1", itemChildBody)
+					if itemChildBody != "" {
+						if businessRelevancesChildBody.Len() > 1 {
+							businessRelevancesChildBody.WriteString(",")
+						}
+						businessRelevancesChildBody.WriteString(itemChildBody)
+					}
 				}
+				businessRelevancesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "productivities", businessRelevancesChildBody.String())
 			}
 			if len(item.Categories) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "categories", []any{})
+				var categoriesChildBody strings.Builder
+				categoriesChildBody.WriteString("[")
 				for _, childItem := range item.Categories {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "categories.-1", itemChildBody)
+					if itemChildBody != "" {
+						if categoriesChildBody.Len() > 1 {
+							categoriesChildBody.WriteString(",")
+						}
+						categoriesChildBody.WriteString(itemChildBody)
+					}
 				}
+				categoriesChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "categories", categoriesChildBody.String())
 			}
 			if len(item.Tags) > 0 {
-				itemBody, _ = sjson.Set(itemBody, "tags", []any{})
+				var tagsChildBody strings.Builder
+				tagsChildBody.WriteString("[")
 				for _, childItem := range item.Tags {
 					itemChildBody := ""
 					if !childItem.Id.IsNull() {
 						itemChildBody, _ = sjson.Set(itemChildBody, "id", childItem.Id.ValueString())
 					}
-					itemBody, _ = sjson.SetRaw(itemBody, "tags.-1", itemChildBody)
+					if itemChildBody != "" {
+						if tagsChildBody.Len() > 1 {
+							tagsChildBody.WriteString(",")
+						}
+						tagsChildBody.WriteString(itemChildBody)
+					}
 				}
+				tagsChildBody.WriteString("]")
+				itemBody, _ = sjson.SetRaw(itemBody, "tags", tagsChildBody.String())
 			}
-			body, _ = sjson.SetRaw(body, "appConditions.-1", itemBody)
+			if itemBody != "" {
+				if filtersBody.Len() > 1 {
+					filtersBody.WriteString(",")
+				}
+				filtersBody.WriteString(itemBody)
+			}
 		}
+		filtersBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "appConditions", filtersBody.String())
 	}
 	return body
 }
@@ -180,7 +237,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 		data.Type = types.StringNull()
 	}
 	if value := res.Get("applications"); value.Exists() {
-		data.Applications = make([]ApplicationFilterApplications, 0)
+		data.Applications = make([]ApplicationFilterApplications, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ApplicationFilterApplications{}
@@ -194,12 +251,12 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("appConditions"); value.Exists() {
-		data.Filters = make([]ApplicationFilterFilters, 0)
+		data.Filters = make([]ApplicationFilterFilters, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := ApplicationFilterFilters{}
 			if value := res.Get("applicationTypes"); value.Exists() {
-				data.Types = make([]ApplicationFilterFiltersTypes, 0)
+				data.Types = make([]ApplicationFilterFiltersTypes, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersTypes{}
@@ -213,7 +270,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("risks"); value.Exists() {
-				data.Risks = make([]ApplicationFilterFiltersRisks, 0)
+				data.Risks = make([]ApplicationFilterFiltersRisks, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersRisks{}
@@ -227,7 +284,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("productivities"); value.Exists() {
-				data.BusinessRelevances = make([]ApplicationFilterFiltersBusinessRelevances, 0)
+				data.BusinessRelevances = make([]ApplicationFilterFiltersBusinessRelevances, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersBusinessRelevances{}
@@ -241,7 +298,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("categories"); value.Exists() {
-				data.Categories = make([]ApplicationFilterFiltersCategories, 0)
+				data.Categories = make([]ApplicationFilterFiltersCategories, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersCategories{}
@@ -255,7 +312,7 @@ func (data *ApplicationFilter) fromBody(ctx context.Context, res gjson.Result) {
 				})
 			}
 			if value := res.Get("tags"); value.Exists() {
-				data.Tags = make([]ApplicationFilterFiltersTags, 0)
+				data.Tags = make([]ApplicationFilterFiltersTags, 0, int(value.Get("#").Int()))
 				value.ForEach(func(k, res gjson.Result) bool {
 					parent := &data
 					data := ApplicationFilterFiltersTags{}
@@ -293,16 +350,16 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 	} else {
 		data.Type = types.StringNull()
 	}
+	applicationsArray := res.Get("applications")
 	for i := 0; i < len(data.Applications); i++ {
 		keys := [...]string{"name"}
 		keyValues := [...]string{data.Applications[i].Name.ValueString()}
 
 		parent := &data
 		data := (*parent).Applications[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("applications").ForEach(
+		applicationsArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -336,8 +393,9 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 		}
 		(*parent).Applications[i] = data
 	}
+	filtersArray := res.Get("appConditions").Array()
 	{
-		l := len(res.Get("appConditions").Array())
+		l := len(filtersArray)
 		tflog.Debug(ctx, fmt.Sprintf("appConditions array resizing from %d to %d", len(data.Filters), l))
 		for i := len(data.Filters); i < l; i++ {
 			data.Filters = append(data.Filters, ApplicationFilterFilters{})
@@ -349,18 +407,17 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 	for i := range data.Filters {
 		parent := &data
 		data := (*parent).Filters[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("appConditions.%d", i))
+		res := filtersArray[i]
+		typesArray := res.Get("applicationTypes")
 		for i := 0; i < len(data.Types); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Types[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Types[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("applicationTypes").ForEach(
+			typesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -394,16 +451,16 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 			}
 			(*parent).Types[i] = data
 		}
+		risksArray := res.Get("risks")
 		for i := 0; i < len(data.Risks); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Risks[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Risks[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("risks").ForEach(
+			risksArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -437,16 +494,16 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 			}
 			(*parent).Risks[i] = data
 		}
+		businessRelevancesArray := res.Get("productivities")
 		for i := 0; i < len(data.BusinessRelevances); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.BusinessRelevances[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).BusinessRelevances[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("productivities").ForEach(
+			businessRelevancesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -480,16 +537,16 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 			}
 			(*parent).BusinessRelevances[i] = data
 		}
+		categoriesArray := res.Get("categories")
 		for i := 0; i < len(data.Categories); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Categories[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Categories[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("categories").ForEach(
+			categoriesArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {
@@ -523,16 +580,16 @@ func (data *ApplicationFilter) fromBodyPartial(ctx context.Context, res gjson.Re
 			}
 			(*parent).Categories[i] = data
 		}
+		tagsArray := res.Get("tags")
 		for i := 0; i < len(data.Tags); i++ {
 			keys := [...]string{"id"}
 			keyValues := [...]string{data.Tags[i].Id.ValueString()}
 
 			parent := &data
 			data := (*parent).Tags[i]
-			parentRes := &res
 			var res gjson.Result
 
-			parentRes.Get("tags").ForEach(
+			tagsArray.ForEach(
 				func(_, v gjson.Result) bool {
 					found := false
 					for ik := range keys {

@@ -22,6 +22,7 @@ import (
 	"context"
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -135,7 +136,8 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 		body, _ = sjson.Set(body, "dummy_manage_rules", data.ManageRules.ValueBool())
 	}
 	if len(data.ManualNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_manual_nat_rules", []any{})
+		var manualNatRulesBody strings.Builder
+		manualNatRulesBody.WriteString("[")
 		for _, item := range data.ManualNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -231,11 +233,19 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 			if !item.PatAddressObjectId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "patOptions.patPoolAddress.id", item.PatAddressObjectId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_manual_nat_rules.-1", itemBody)
+			if itemBody != "" {
+				if manualNatRulesBody.Len() > 1 {
+					manualNatRulesBody.WriteString(",")
+				}
+				manualNatRulesBody.WriteString(itemBody)
+			}
 		}
+		manualNatRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_manual_nat_rules", manualNatRulesBody.String())
 	}
 	if len(data.AutoNatRules) > 0 {
-		body, _ = sjson.Set(body, "dummy_auto_nat_rules", []any{})
+		var autoNatRulesBody strings.Builder
+		autoNatRulesBody.WriteString("[")
 		for _, item := range data.AutoNatRules {
 			itemBody := ""
 			if !item.Id.IsNull() && !item.Id.IsUnknown() {
@@ -307,8 +317,15 @@ func (data FTDNATPolicy) toBody(ctx context.Context, state FTDNATPolicy) string 
 			if !item.PatAddressObjectId.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "patOptions.patPoolAddress.id", item.PatAddressObjectId.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "dummy_auto_nat_rules.-1", itemBody)
+			if itemBody != "" {
+				if autoNatRulesBody.Len() > 1 {
+					autoNatRulesBody.WriteString(",")
+				}
+				autoNatRulesBody.WriteString(itemBody)
+			}
 		}
+		autoNatRulesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "dummy_auto_nat_rules", autoNatRulesBody.String())
 	}
 	return body
 }
@@ -339,7 +356,7 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		data.ManageRules = types.BoolValue(true)
 	}
 	if value := res.Get("dummy_manual_nat_rules"); value.Exists() {
-		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0)
+		data.ManualNatRules = make([]FTDNATPolicyManualNatRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDNATPolicyManualNatRules{}
@@ -503,7 +520,7 @@ func (data *FTDNATPolicy) fromBody(ctx context.Context, res gjson.Result) {
 		})
 	}
 	if value := res.Get("dummy_auto_nat_rules"); value.Exists() {
-		data.AutoNatRules = make([]FTDNATPolicyAutoNatRules, 0)
+		data.AutoNatRules = make([]FTDNATPolicyAutoNatRules, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := FTDNATPolicyAutoNatRules{}
@@ -657,8 +674,9 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	} else if data.ManageRules.ValueBool() != true {
 		data.ManageRules = types.BoolNull()
 	}
+	manualNatRulesArray := res.Get("dummy_manual_nat_rules").Array()
 	{
-		l := len(res.Get("dummy_manual_nat_rules").Array())
+		l := len(manualNatRulesArray)
 		tflog.Debug(ctx, fmt.Sprintf("dummy_manual_nat_rules array resizing from %d to %d", len(data.ManualNatRules), l))
 		for i := len(data.ManualNatRules); i < l; i++ {
 			data.ManualNatRules = append(data.ManualNatRules, FTDNATPolicyManualNatRules{})
@@ -670,8 +688,7 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 	for i := range data.ManualNatRules {
 		parent := &data
 		data := (*parent).ManualNatRules[i]
-		parentRes := &res
-		res := parentRes.Get(fmt.Sprintf("dummy_manual_nat_rules.%d", i))
+		res := manualNatRulesArray[i]
 		if value := res.Get("id"); value.Exists() {
 			data.Id = types.StringValue(value.String())
 		} else {
@@ -829,16 +846,16 @@ func (data *FTDNATPolicy) fromBodyPartial(ctx context.Context, res gjson.Result)
 		}
 		(*parent).ManualNatRules[i] = data
 	}
+	autoNatRulesArray := res.Get("dummy_auto_nat_rules")
 	for i := 0; i < len(data.AutoNatRules); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AutoNatRules[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).AutoNatRules[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("dummy_auto_nat_rules").ForEach(
+		autoNatRulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
@@ -998,8 +1015,12 @@ func (data *FTDNATPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result
 			data.Type = types.StringNull()
 		}
 	}
+	manualNatRulesArray := res.Get("dummy_manual_nat_rules").Array()
 	for i := range data.ManualNatRules {
-		r := res.Get(fmt.Sprintf("dummy_manual_nat_rules.%d", i))
+		var r gjson.Result
+		if i < len(manualNatRulesArray) {
+			r = manualNatRulesArray[i]
+		}
 		if v := data.ManualNatRules[i]; v.Id.IsUnknown() {
 			if value := r.Get("id"); value.Exists() {
 				v.Id = types.StringValue(value.String())
@@ -1009,12 +1030,13 @@ func (data *FTDNATPolicy) fromBodyUnknowns(ctx context.Context, res gjson.Result
 			data.ManualNatRules[i] = v
 		}
 	}
+	autoNatRulesArray := res.Get("dummy_auto_nat_rules")
 	for i := range data.AutoNatRules {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.AutoNatRules[i].Id.ValueString()}
 
 		var r gjson.Result
-		res.Get("dummy_auto_nat_rules").ForEach(
+		autoNatRulesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {

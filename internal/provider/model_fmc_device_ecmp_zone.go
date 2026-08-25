@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"net/url"
 	"slices"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -79,7 +80,8 @@ func (data DeviceECMPZone) toBody(ctx context.Context, state DeviceECMPZone) str
 		body, _ = sjson.Set(body, "name", data.Name.ValueString())
 	}
 	if len(data.Interfaces) > 0 {
-		body, _ = sjson.Set(body, "interfaces", []any{})
+		var interfacesBody strings.Builder
+		interfacesBody.WriteString("[")
 		for _, item := range data.Interfaces {
 			itemBody := ""
 			if !item.Id.IsNull() {
@@ -91,8 +93,15 @@ func (data DeviceECMPZone) toBody(ctx context.Context, state DeviceECMPZone) str
 			if !item.Name.IsNull() {
 				itemBody, _ = sjson.Set(itemBody, "name", item.Name.ValueString())
 			}
-			body, _ = sjson.SetRaw(body, "interfaces.-1", itemBody)
+			if itemBody != "" {
+				if interfacesBody.Len() > 1 {
+					interfacesBody.WriteString(",")
+				}
+				interfacesBody.WriteString(itemBody)
+			}
 		}
+		interfacesBody.WriteString("]")
+		body, _ = sjson.SetRaw(body, "interfaces", interfacesBody.String())
 	}
 	return body
 }
@@ -113,7 +122,7 @@ func (data *DeviceECMPZone) fromBody(ctx context.Context, res gjson.Result) {
 		data.Name = types.StringNull()
 	}
 	if value := res.Get("interfaces"); value.Exists() {
-		data.Interfaces = make([]DeviceECMPZoneInterfaces, 0)
+		data.Interfaces = make([]DeviceECMPZoneInterfaces, 0, int(value.Get("#").Int()))
 		value.ForEach(func(k, res gjson.Result) bool {
 			parent := &data
 			data := DeviceECMPZoneInterfaces{}
@@ -157,16 +166,16 @@ func (data *DeviceECMPZone) fromBodyPartial(ctx context.Context, res gjson.Resul
 	} else {
 		data.Name = types.StringNull()
 	}
+	interfacesArray := res.Get("interfaces")
 	for i := 0; i < len(data.Interfaces); i++ {
 		keys := [...]string{"id"}
 		keyValues := [...]string{data.Interfaces[i].Id.ValueString()}
 
 		parent := &data
 		data := (*parent).Interfaces[i]
-		parentRes := &res
 		var res gjson.Result
 
-		parentRes.Get("interfaces").ForEach(
+		interfacesArray.ForEach(
 			func(_, v gjson.Result) bool {
 				found := false
 				for ik := range keys {
