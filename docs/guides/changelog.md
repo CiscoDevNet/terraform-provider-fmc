@@ -7,6 +7,10 @@ description: |-
 
 # Changelog
 
+## Unreleased
+
+- (Enhancement) Performance improvements
+
 ## 2.5.0
 
 - (Enhancement) Add support for `fmc_device_certificate`
