@@ -99,7 +99,7 @@ resource "fmc_device_subinterface" "example" {
 - `logical_name` (String) Logical name of the interface, unique on the device. Should not contain whitespace or slash characters.
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
 - `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
-  - Range: `64`-`9000`
+  - Range: `64`-`9198`
 - `override_default_fragment_setting_chain` (Number) Override Default Fragment Setting - Chain value.
   - Range: `1`-`8200`
 - `override_default_fragment_setting_size` (Number) Override Default Fragment Setting - Fragment Size value.
