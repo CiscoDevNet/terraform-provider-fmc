@@ -164,8 +164,8 @@ github.com/mitchellh/mapstructure v1.5.0 h1:jeMsZIYE/09sWLaz43PL7Gy6RuMjD2eJVyua
 github.com/mitchellh/mapstructure v1.5.0/go.mod h1:bFUtVrKA4DC2yAKiSyO/QUcy7e+RRV2QTWOzhPopBRo=
 github.com/mitchellh/reflectwalk v1.0.2 h1:G2LzWKi524PWgd3mLHV8Y5k7s6XUvT0Gef6zxSIeXaQ=
 github.com/mitchellh/reflectwalk v1.0.2/go.mod h1:mSTlrgnPZtwu0c4WaC2kGObEpuNDbx0jmZXqmk4esnw=
-github.com/netascode/go-fmc v0.3.2-0.20260827135816-bca868c5c91e h1:T9Lf1X1G24uneAQcMml31tv0yw8aOq9ahc04YrG6cbo=
-github.com/netascode/go-fmc v0.3.2-0.20260827135816-bca868c5c91e/go.mod h1:bP8yPi0dwoMcywC0t3RGN9OwcrzwflE/ZGcHM3lO1x0=
+github.com/netascode/go-fmc v0.4.0 h1:KyuOnkO0hkfFr+Fi9UH1pFzQz8y4kQOdhiabdLKZD2g=
+github.com/netascode/go-fmc v0.4.0/go.mod h1:0vKT0lFGSCPfHfujsGCOX2BdoAdkKQIVulIJGe8ccoo=
 github.com/oklog/run v1.2.0 h1:O8x3yXwah4A73hJdlrwo/2X6J62gE5qTMusH0dvz60E=
 github.com/oklog/run v1.2.0/go.mod h1:mgDbKRSwPhJfesJ4PntqFUbKQRZ50NgmZTSPlFA0YFk=
 github.com/pjbgf/sha1cd v0.3.2 h1:a9wb0bp1oC2TGwStyn0Umc/IGKQnEgF0vVaZ8QF8eo4=
