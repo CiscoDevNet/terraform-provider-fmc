@@ -137,10 +137,10 @@ func (r *DeviceSubinterfaceResource) Schema(ctx context.Context, req resource.Sc
 				Optional:            true,
 			},
 			"mtu": schema.Int64Attribute{
-				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when `logical_name` is set.").AddIntegerRangeDescription(64, 9000).String,
+				MarkdownDescription: helpers.NewAttributeDescription("Maximum transmission unit. Can only be used when `logical_name` is set.").AddIntegerRangeDescription(64, 9198).String,
 				Optional:            true,
 				Validators: []validator.Int64{
-					int64validator.Between(64, 9000),
+					int64validator.Between(64, 9198),
 				},
 			},
 			"priority": schema.Int64Attribute{
