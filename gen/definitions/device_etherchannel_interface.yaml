@@ -76,7 +76,7 @@ attributes:
     type: Int64
     description: Maximum transmission unit. Can only be used when `logical_name` is set.
     min_int: 64
-    max_int: 9000
+    max_int: 9198
     example: 9000
   - model_name: priority
     type: Int64
