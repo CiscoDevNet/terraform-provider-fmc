@@ -17,7 +17,6 @@ resource "fmc_device_physical_interface" "example" {
   device_id           = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   logical_name        = "myinterface-0-1"
   description         = "my description"
-  mode                = "NONE"
   security_zone_id    = "76d24097-41c4-4558-a4d0-a8c07ac08470"
   name                = "GigabitEthernet0/1"
   mtu                 = 1400
@@ -33,8 +32,6 @@ resource "fmc_device_physical_interface" "example" {
 ### Required
 
 - `device_id` (String) Id of the parent device.
-- `mode` (String) Mode of the interface. Use INLINE if, and only if, the interface is part of fmc_inline_set with tap_mode=false or tap_mode unset. Use TAP if, and only if, the interface is part of fmc_inline_set with tap_mode = true. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
-  - Choices: `INLINE`, `PASSIVE`, `TAP`, `ERSPAN`, `NONE`, `SWITCHPORT`
 - `name` (String) Name of the interface; it must already be present on the device.
 
 ### Optional
@@ -106,6 +103,8 @@ resource "fmc_device_physical_interface" "example" {
 - `management_access` (Boolean) Enable Management Access.
 - `management_access_network_objects` (Attributes Set) Allowed networks for Management Access. (see [below for nested schema](#nestedatt--management_access_network_objects))
 - `management_only` (Boolean) Whether this interface limits traffic to management traffic; when true, through-the-box traffic is disallowed. Value true conflicts with mode INLINE, PASSIVE, TAP, ERSPAN, or with security_zone_id.
+- `mode` (String) Mode of the interface. Leave unset for interfaces that are (or are about to become) members of fmc_device_inline_set - FMC assigns INLINE (or TAP, when the inline set has tap_mode = true) on its own and rejects any attempt to set those values on an interface that is not a member yet. Set INLINE or TAP explicitly only to adopt an interface that already is a member. Defaults to NONE when not set on creation. Use ERSPAN only when both erspan_source_ip and erspan_flow_id are set.
+  - Choices: `INLINE`, `PASSIVE`, `TAP`, `ERSPAN`, `NONE`, `SWITCHPORT`
 - `mtu` (Number) Maximum transmission unit. Can only be used when `logical_name` is set.
   - Range: `64`-`9000`
 - `nve_only` (Boolean) Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.

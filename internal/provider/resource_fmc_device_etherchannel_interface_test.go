@@ -38,7 +38,7 @@ func TestAccFmcDeviceEtherChannelInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "is_multi_instance"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "description", "my description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mode", "NONE"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "mode"))
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_etherchannel_interface.test", "name"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "mtu", "9000"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_etherchannel_interface.test", "ether_channel_id", "1"))
@@ -86,7 +86,6 @@ func testAccFmcDeviceEtherChannelInterfaceConfig_minimum() string {
 	config := `resource "fmc_device_etherchannel_interface" "test" {` + "\n"
 	config += `	device_id = var.device_id` + "\n"
 	config += `	logical_name = "iface_minimum"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	ether_channel_id = "1"` + "\n"
 	config += `}` + "\n"
 	return config
@@ -102,7 +101,6 @@ func testAccFmcDeviceEtherChannelInterfaceConfig_all() string {
 	config += `	logical_name = "myinterface-0-1"` + "\n"
 	config += `	enabled = true` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	mtu = 9000` + "\n"
 	config += `	ether_channel_id = "1"` + "\n"
 	config += `	selected_interfaces = [{` + "\n"
