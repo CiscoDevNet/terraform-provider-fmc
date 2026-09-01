@@ -159,6 +159,7 @@ type YamlConfigAttribute struct {
 	StringMinLength                     int64                 `yaml:"string_min_length"`
 	StringMaxLength                     int64                 `yaml:"string_max_length"`
 	Computed                            bool                  `yaml:"computed"`
+	Optional                            bool                  `yaml:"optional"`
 	ComputedRefreshValue                bool                  `yaml:"computed_refresh_value"`
 	ComputedBodyParam                   bool                  `yaml:"computed_body_param"`
 	DefaultValue                        string                `yaml:"default_value"`
@@ -536,6 +537,14 @@ func (attr *YamlConfigAttribute) init(parentGoTypeName string) error {
 
 	if attr.ComputedBodyParam && !attr.Computed {
 		return fmt.Errorf("%q: `computed_body_param: true` can only be used with `computed: true`", attr.TfName)
+	}
+
+	if attr.Optional && !attr.Computed {
+		return fmt.Errorf("%q: `optional: true` can only be used with `computed: true`, as attributes are optional by default", attr.TfName)
+	}
+
+	if attr.Optional && attr.Mandatory {
+		return fmt.Errorf("%q: `optional: true` cannot be combined with `mandatory: true`", attr.TfName)
 	}
 
 	// Recurse

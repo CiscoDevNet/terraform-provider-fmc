@@ -10,6 +10,8 @@ description: |-
 ## Unreleased
 
 - (Enhancement) Performance improvements
+- (Enhancement) Add support for `fmc_device_inline_set`
+- (Change) `fmc_device_physical_interface`, `fmc_device_etherchannel_interface`: `mode` is now optional and set to `NONE` if not configured
 
 ## 2.5.0
 

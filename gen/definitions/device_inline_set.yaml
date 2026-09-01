@@ -1,0 +1,158 @@
+---
+name: Device Inline Set
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/inlinesets
+doc_category: Devices
+res_description: This resource manages an Inline Set on a device.
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name, TF_VAR_interface_2_name]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    requires_replace: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    computed: true
+    description: Type of the object; this value is always 'InlineSet'.
+  # General
+  - model_name: name
+    type: String
+    mandatory: true
+    description: Name of the Inline Set.
+    example: my_inline_set
+    data_source_query: true
+  - model_name: mtu
+    type: Int64
+    description: Maximum Transmission Unit (MTU) of the Inline Set.
+    min_int: 64
+    max_int: 9198
+    default_value: 1500
+    example: 1500
+  - model_name: failSafe
+    tf_name: fail_safe
+    type: Bool
+    example: "true"
+  - model_name: standBy
+    tf_name: bypass_standby
+    type: Bool
+    description: >-
+      Put the hardware bypass of the Inline Set into standby mode.
+      Available only on interfaces of devices equipped with a bypass-capable network module.
+    exclude_example: true
+    exclude_test: true
+  - model_name: bypass
+    tf_name: bypass_force
+    type: Bool
+    description: >-
+      Enable hardware bypass (bypass-force) for the Inline Set.
+      Available only on interfaces of devices equipped with a bypass-capable network module.
+    exclude_example: true
+    exclude_test: true
+
+  # Interface pairs
+  - model_name: inlinepairs
+    tf_name: interface_pairs
+    type: Set
+    description: Interface pairs that are members of the Inline Set.
+    mandatory: true
+    attributes:
+      - model_name: id
+        data_path: [first]
+        tf_name: first_interface_id
+        type: String
+        description: Id of the first interface of the interface pair.
+        mandatory: true
+        id: true
+        example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+        test_value: fmc_device_physical_interface.test.id
+      - model_name: name
+        data_path: [first]
+        tf_name: first_interface_name
+        type: String
+        description: Name of the first interface of the interface pair.
+        # mandatory: true
+        example: GigabitEthernet0/1
+        test_value: fmc_device_physical_interface.test.name
+      - model_name: type
+        data_path: [first]
+        tf_name: first_interface_type
+        type: String
+        description: Type of the first interface of the interface pair.
+        # mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test.type
+      - model_name: id
+        data_path: [second]
+        tf_name: second_interface_id
+        type: String
+        description: Id of the second interface of the interface pair.
+        mandatory: true
+        id: true
+        example: 22a5b78e-3f6b-4e83-b8f8-c1a0d2b48c31
+        test_value: fmc_device_physical_interface.test_2.id
+      - model_name: name
+        data_path: [second]
+        tf_name: second_interface_name
+        type: String
+        description: Name of the second interface of the interface pair.
+        # mandatory: true
+        example: GigabitEthernet0/2
+        test_value: fmc_device_physical_interface.test_2.name
+      - model_name: type
+        data_path: [second]
+        tf_name: second_interface_type
+        type: String
+        description: Type of the second interface of the interface pair.
+        # mandatory: true
+        example: PhysicalInterface
+        test_value: fmc_device_physical_interface.test_2.type
+
+  # Advanced
+  - model_name: tapMode
+    type: Bool
+    description: >-
+      Enable tap mode, so that a copy of the traffic is inspected while the original traffic is
+      forwarded without being affected by the inspection results.
+    example: "false"
+  - model_name: propogateLinkState
+    tf_name: propagate_link_state
+    type: Bool
+    description: >-
+      Automatically bring down the second interface of an interface pair when one of the
+      interfaces in the pair goes down.
+    example: "true"
+  - model_name: strictTCPEnforcement
+    tf_name: strict_tcp_enforcement
+    type: Bool
+    description: Block all TCP packets that are not part of a properly established TCP session.
+    example: "true"
+  - model_name: failOpenSnortBusy
+    tf_name: snort_fail_open_busy
+    type: Bool
+    description: Allow new traffic to pass without inspection when the Snort process is busy.
+    example: "false"
+  - model_name: failOpenSnortDown
+    tf_name: snort_fail_open_down
+    type: Bool
+    description: Allow new traffic to pass without inspection when the Snort process is down.
+    example: "true"
+
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+  variable "interface_2_name" { default = null } // tests will set $TF_VAR_interface_2_name
+
+  resource "fmc_device_physical_interface" "test" {
+    device_id    = var.device_id
+    name         = var.interface_name
+    logical_name = "inline_member_1"
+  }
+
+  resource "fmc_device_physical_interface" "test_2" {
+    device_id    = var.device_id
+    name         = var.interface_2_name
+    logical_name = "inline_member_2"
+  }

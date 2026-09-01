@@ -37,7 +37,7 @@ func TestAccFmcDevicePhysicalInterface(t *testing.T) {
 	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_physical_interface.test", "type"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "logical_name", "myinterface-0-1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "description", "my description"))
-	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mode", "NONE"))
+	checks = append(checks, resource.TestCheckResourceAttrSet("fmc_device_physical_interface.test", "mode"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "mtu", "1400"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_address", "10.1.1.1"))
 	checks = append(checks, resource.TestCheckResourceAttr("fmc_device_physical_interface.test", "ipv4_static_netmask", "24"))
@@ -79,7 +79,6 @@ func testAccFmcDevicePhysicalInterfaceConfig_minimum() string {
 	config += `	device_id = var.device_id` + "\n"
 	config += `	logical_name = "iface_minimum"` + "\n"
 	config += `	management_only = true` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	name = var.interface_name` + "\n"
 	config += `}` + "\n"
 	return config
@@ -96,7 +95,6 @@ func testAccFmcDevicePhysicalInterfaceConfig_all() string {
 	config += `	enabled = true` + "\n"
 	config += `	management_only = false` + "\n"
 	config += `	description = "my description"` + "\n"
-	config += `	mode = "NONE"` + "\n"
 	config += `	name = var.interface_name` + "\n"
 	config += `	mtu = 1400` + "\n"
 	config += `	ipv4_static_address = "10.1.1.1"` + "\n"

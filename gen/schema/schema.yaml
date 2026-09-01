@@ -61,6 +61,7 @@ attribute:
   string_min_length: int(required=False) # Minimum length of a string, only relevant if type is "String"
   string_max_length: int(required=False) # Maximum length of a string, only relevant if type is "String"
   computed: bool(required=False) # Defines field as read-only (computed) with value derived from the API
+  optional: bool(required=False) # Set to true to keep the attribute user-settable while `computed: true` lets the API own the value when it is not configured. Needs to be used in conjunction with `computed`
   computed_refresh_value: bool(required=False) # Set to true if the computed value should be refreshed on every update (no UseStateForUnknown). Needs to be used in conjunction with `computed`
   computed_body_param: bool(required=False) # Set to true if the computed value should be included in the PUT payload
   default_value: any(str(), int(), bool(), required=False) # Default value for the attribute
