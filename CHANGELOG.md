@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Enhancement) Performance improvements
+- (Enhancement) `fmc_device`: Add `deploy_on_destroy` attribute to trigger device deployment just before the device is removed from FMC
 
 ## 2.5.0
 

@@ -102,6 +102,14 @@ attributes:
     description: Enables Object Group Search
     example: "true"
     exclude_test: true
+  - model_name: dummy_deploy_on_destroy
+    tf_name: deploy_on_destroy
+    type: Bool
+    description: Trigger deployment of the device right before it is removed from FMC.
+    tf_only: true
+    default_value: "false"
+    example: "true"
+    exclude_test: true
   # Policy assignments
   - model_name: id
     tf_name: access_control_policy_id

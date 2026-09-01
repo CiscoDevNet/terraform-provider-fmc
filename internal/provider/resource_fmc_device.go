@@ -34,6 +34,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/path"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema"
+	"github.com/hashicorp/terraform-plugin-framework/resource/schema/booldefault"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/planmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/resource/schema/stringplanmodifier"
 	"github.com/hashicorp/terraform-plugin-framework/schema/validator"
@@ -151,6 +152,12 @@ func (r *DeviceResource) Schema(ctx context.Context, req resource.SchemaRequest,
 			"object_group_search": schema.BoolAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Enables Object Group Search").String,
 				Optional:            true,
+			},
+			"deploy_on_destroy": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Trigger deployment of the device right before it is removed from FMC.").AddDefaultValueDescription("false").String,
+				Optional:            true,
+				Computed:            true,
+				Default:             booldefault.StaticBool(false),
 			},
 			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the assigned Access Control Policy.").String,
@@ -602,6 +609,21 @@ func (r *DeviceResource) Delete(ctx context.Context, req resource.DeleteRequest,
 	reqMods := [](func(*fmc.Req)){}
 	if !state.Domain.IsNull() && state.Domain.ValueString() != "" {
 		reqMods = append(reqMods, fmc.DomainName(state.Domain.ValueString()))
+	}
+
+	// Trigger deployment before the device is removed, if requested.
+	if state.DeployOnDestroy.ValueBool() {
+		tflog.Debug(ctx, fmt.Sprintf("%s: Triggering deployment before device removal", state.Id.ValueString()))
+		deployPlan := DeviceDeploy{
+			Id:             state.Id,
+			Domain:         state.Domain,
+			DeviceIdList:   helpers.GetStringListFromStringSlice([]string{state.Id.ValueString()}),
+			DeploymentNote: types.StringValue("Deployment triggered by Terraform before device removal"),
+		}
+		diags := FMCDeviceDeploy(ctx, r.client, deployPlan, reqMods)
+		if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
+			return
+		}
 	}
 
 	// Deleting a device implicitly mutates also policyassignments.items.*.targets.

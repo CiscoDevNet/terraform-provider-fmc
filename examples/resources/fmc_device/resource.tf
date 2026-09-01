@@ -6,5 +6,6 @@ resource "fmc_device" "example" {
   performance_tier         = "FTDv5"
   snort_engine             = "SNORT3"
   object_group_search      = true
+  deploy_on_destroy        = true
   access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }

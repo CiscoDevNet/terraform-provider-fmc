@@ -47,6 +47,7 @@ type Device struct {
 	PerformanceTier        types.String `tfsdk:"performance_tier"`
 	SnortEngine            types.String `tfsdk:"snort_engine"`
 	ObjectGroupSearch      types.Bool   `tfsdk:"object_group_search"`
+	DeployOnDestroy        types.Bool   `tfsdk:"deploy_on_destroy"`
 	AccessControlPolicyId  types.String `tfsdk:"access_control_policy_id"`
 	NatPolicyId            types.String `tfsdk:"nat_policy_id"`
 	HealthPolicyId         types.String `tfsdk:"health_policy_id"`
@@ -170,6 +171,7 @@ func (data *Device) fromBody(ctx context.Context, res gjson.Result) {
 	} else {
 		data.ObjectGroupSearch = types.BoolNull()
 	}
+	data.DeployOnDestroy = types.BoolValue(false)
 	if value := res.Get("accessPolicy.id"); value.Exists() {
 		data.AccessControlPolicyId = types.StringValue(value.String())
 	} else {

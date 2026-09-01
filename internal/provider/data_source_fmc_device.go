@@ -117,6 +117,10 @@ func (d *DeviceDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Enables Object Group Search",
 				Computed:            true,
 			},
+			"deploy_on_destroy": schema.BoolAttribute{
+				MarkdownDescription: "Trigger deployment of the device right before it is removed from FMC.",
+				Computed:            true,
+			},
 			"access_control_policy_id": schema.StringAttribute{
 				MarkdownDescription: "Id of the assigned Access Control Policy.",
 				Computed:            true,

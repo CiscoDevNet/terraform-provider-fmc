@@ -21,6 +21,7 @@ resource "fmc_device" "example" {
   performance_tier         = "FTDv5"
   snort_engine             = "SNORT3"
   object_group_search      = true
+  deploy_on_destroy        = true
   access_control_policy_id = "76d24097-41c4-4558-a4d0-a8c07ac08470"
 }
 ```
@@ -39,6 +40,8 @@ resource "fmc_device" "example" {
 
 ### Optional
 
+- `deploy_on_destroy` (Boolean) Trigger deployment of the device right before it is removed from FMC.
+  - Default value: `false`
 - `device_group_id` (String) Id of the device group.
 - `domain` (String) Name of the FMC domain
 - `health_policy_id` (String) Id of the assigned Health policy. Every device requires health policy assignment, hence removal of this attribute does not trigger health policy de-assignment.
