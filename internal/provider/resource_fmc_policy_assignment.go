@@ -123,6 +123,10 @@ func (r *PolicyAssignmentResource) Schema(ctx context.Context, req resource.Sche
 				MarkdownDescription: helpers.NewAttributeDescription("Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.").String,
 				Optional:            true,
 			},
+			"after_destroy_policy_domain": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.").String,
+				Optional:            true,
+			},
 			"targets": schema.SetNestedAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("List of devices to which the policy should be attached").String,
 				Required:            true,
@@ -339,9 +343,9 @@ func (r *PolicyAssignmentResource) Update(ctx context.Context, req resource.Upda
 	// Check if this is Health Policy, as this is handled differently
 	if state.PolicyType.ValueString() == "HealthPolicy" {
 		// Check if there are any devices to be removed and policy `after destroy` is set
-		if !state.AfterDestroyPolicyId.IsNull() && len(toRemove.Targets) > 0 {
-			toRemove.PolicyId = state.AfterDestroyPolicyId
-			_, diags = r.createPolicyAssignment(ctx, toRemove, reqMods...)
+		if !plan.AfterDestroyPolicyId.IsNull() && len(toRemove.Targets) > 0 {
+			toRemove.PolicyId = plan.AfterDestroyPolicyId
+			_, diags = r.createPolicyAssignment(ctx, toRemove, plan.afterDestroyReqMods()...)
 			resp.Diagnostics.Append(diags...)
 		}
 		if len(toAdd.Targets) > 0 {
@@ -354,11 +358,12 @@ func (r *PolicyAssignmentResource) Update(ctx context.Context, req resource.Upda
 		// Check if Access Policy target needs to be re-assigned
 		if state.PolicyType.ValueString() == "AccessPolicy" && len(toRemove.Targets) > 0 && !plan.AfterDestroyPolicyId.IsNull() {
 			toRemove.PolicyId = plan.AfterDestroyPolicyId
-			res, err := r.client.Get(plan.getPath()+"/"+url.QueryEscape(toRemove.PolicyId.ValueString()), reqMods...)
+			afterDestroyReqMods := plan.afterDestroyReqMods()
+			res, err := r.client.Get(plan.getPath()+"/"+url.QueryEscape(toRemove.PolicyId.ValueString()), afterDestroyReqMods...)
 			if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 				// Policy assignment does not exist - need to create it
 				tflog.Debug(ctx, fmt.Sprintf("%s: Policy assignment does not exist", plan.Id.ValueString()))
-				_, diags = r.createPolicyAssignment(ctx, toRemove, reqMods...)
+				_, diags = r.createPolicyAssignment(ctx, toRemove, afterDestroyReqMods...)
 				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 					return
 				}
@@ -369,7 +374,7 @@ func (r *PolicyAssignmentResource) Update(ctx context.Context, req resource.Upda
 			} else {
 				// Policy assignment already exists - need to update it
 				tflog.Debug(ctx, fmt.Sprintf("%s: Policy assignment already exists", plan.Id.ValueString()))
-				_, diags = r.updatePolicyAssignment(ctx, res, toRemove, PolicyAssignment{}, toRemove, reqMods...)
+				_, diags = r.updatePolicyAssignment(ctx, res, toRemove, PolicyAssignment{}, toRemove, afterDestroyReqMods...)
 				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 					return
 				}
@@ -434,7 +439,7 @@ func (r *PolicyAssignmentResource) Delete(ctx context.Context, req resource.Dele
 			tflog.Debug(ctx, fmt.Sprintf("%s: No after destroy policy ID provided", state.Id.ValueString()))
 		} else {
 			state.PolicyId = state.AfterDestroyPolicyId
-			_, diags := r.createPolicyAssignment(ctx, state, reqMods...)
+			_, diags := r.createPolicyAssignment(ctx, state, state.afterDestroyReqMods()...)
 			resp.Diagnostics.Append(diags...)
 		}
 	} else if state.PolicyType.ValueString() == "AccessPolicy" {
@@ -443,13 +448,14 @@ func (r *PolicyAssignmentResource) Delete(ctx context.Context, req resource.Dele
 			tflog.Debug(ctx, fmt.Sprintf("%s: No after destroy policy ID provided", state.Id.ValueString()))
 		} else {
 			// 'After destroy' policy ID provided - reassign devices to the new policy
-			res, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.AfterDestroyPolicyId.ValueString()), reqMods...)
+			afterDestroyReqMods := state.afterDestroyReqMods()
+			res, err := r.client.Get(state.getPath()+"/"+url.QueryEscape(state.AfterDestroyPolicyId.ValueString()), afterDestroyReqMods...)
 			if err != nil && strings.Contains(err.Error(), "StatusCode 404") {
 				tflog.Debug(ctx, fmt.Sprintf("%s: After destroy policy assignment does not exist", state.Id.ValueString()))
 
 				// Set desired policy to after destroy policy
 				state.PolicyId = state.AfterDestroyPolicyId
-				_, diags := r.createPolicyAssignment(ctx, state, reqMods...)
+				_, diags := r.createPolicyAssignment(ctx, state, afterDestroyReqMods...)
 				if resp.Diagnostics.Append(diags...); resp.Diagnostics.HasError() {
 					return
 				}
@@ -462,7 +468,7 @@ func (r *PolicyAssignmentResource) Delete(ctx context.Context, req resource.Dele
 				tflog.Debug(ctx, fmt.Sprintf("%s: Policy assignment already exists", state.Id.ValueString()))
 
 				state.PolicyId = state.AfterDestroyPolicyId
-				_, diags := r.updatePolicyAssignment(ctx, res, state, PolicyAssignment{}, state, reqMods...)
+				_, diags := r.updatePolicyAssignment(ctx, res, state, PolicyAssignment{}, state, afterDestroyReqMods...)
 				resp.Diagnostics.Append(diags...)
 			}
 		}
@@ -513,7 +519,6 @@ func (r *PolicyAssignmentResource) createPolicyAssignment(ctx context.Context, d
 	var diag diag.Diagnostics
 
 	body := data.toBody(ctx, PolicyAssignment{})
-	body, _ = sjson.Delete(body, "dummy_after_destroy_policy_id")
 
 	res, err := r.client.Post(data.getPath(), body, reqMods...)
 	if err != nil {
@@ -576,6 +581,22 @@ func (r *PolicyAssignmentResource) updatePolicyAssignment(ctx context.Context, r
 		return resPut, diag
 	}
 	return resPut, diag
+}
+
+// afterDestroyReqMods returns the request modifiers targeting the domain that owns
+// `after_destroy_policy_id`. It falls back to the domain of this resource, when
+// `after_destroy_policy_domain` is not set.
+func (data PolicyAssignment) afterDestroyReqMods() []func(*fmc.Req) {
+	domain := data.Domain
+	if !data.AfterDestroyPolicyDomain.IsNull() && data.AfterDestroyPolicyDomain.ValueString() != "" {
+		domain = data.AfterDestroyPolicyDomain
+	}
+
+	reqMods := [](func(*fmc.Req)){}
+	if !domain.IsNull() && domain.ValueString() != "" {
+		reqMods = append(reqMods, fmc.DomainName(domain.ValueString()))
+	}
+	return reqMods
 }
 
 // Checks if given target is on the target list

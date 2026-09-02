@@ -29,6 +29,7 @@ data "fmc_policy_assignment" "example" {
 
 ### Read-Only
 
+- `after_destroy_policy_domain` (String) Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.
 - `after_destroy_policy_id` (String) Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
 - `policy_id` (String) Id of the policy to be assigned.
 - `policy_type` (String) Type of the policy to be assigned.

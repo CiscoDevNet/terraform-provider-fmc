@@ -1,6 +1,7 @@
 ## Unreleased
 
 - (Enhancement) Performance improvements
+- (Enhancement) `fmc_policy_assignment`: Add `after_destroy_policy_domain` to point in which domain `after_destroy_policy_id` exists
 - (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_subinterface`: Increase the maximum MTU from `9000` to `9198`

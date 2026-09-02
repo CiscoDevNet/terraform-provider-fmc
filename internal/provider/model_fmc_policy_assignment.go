@@ -35,14 +35,15 @@ import (
 // Section below is generated&owned by "gen/generator.go". //template:begin types
 
 type PolicyAssignment struct {
-	Id                   types.String              `tfsdk:"id"`
-	Domain               types.String              `tfsdk:"domain"`
-	Type                 types.String              `tfsdk:"type"`
-	PolicyName           types.String              `tfsdk:"policy_name"`
-	PolicyId             types.String              `tfsdk:"policy_id"`
-	PolicyType           types.String              `tfsdk:"policy_type"`
-	AfterDestroyPolicyId types.String              `tfsdk:"after_destroy_policy_id"`
-	Targets              []PolicyAssignmentTargets `tfsdk:"targets"`
+	Id                       types.String              `tfsdk:"id"`
+	Domain                   types.String              `tfsdk:"domain"`
+	Type                     types.String              `tfsdk:"type"`
+	PolicyName               types.String              `tfsdk:"policy_name"`
+	PolicyId                 types.String              `tfsdk:"policy_id"`
+	PolicyType               types.String              `tfsdk:"policy_type"`
+	AfterDestroyPolicyId     types.String              `tfsdk:"after_destroy_policy_id"`
+	AfterDestroyPolicyDomain types.String              `tfsdk:"after_destroy_policy_domain"`
+	Targets                  []PolicyAssignmentTargets `tfsdk:"targets"`
 }
 
 type PolicyAssignmentTargets struct {
@@ -77,9 +78,6 @@ func (data PolicyAssignment) toBody(ctx context.Context, state PolicyAssignment)
 	}
 	if !data.PolicyType.IsNull() {
 		body, _ = sjson.Set(body, "policy.type", data.PolicyType.ValueString())
-	}
-	if !data.AfterDestroyPolicyId.IsNull() {
-		body, _ = sjson.Set(body, "dummy_after_destroy_policy_id", data.AfterDestroyPolicyId.ValueString())
 	}
 	if len(data.Targets) > 0 {
 		var targetsBody strings.Builder

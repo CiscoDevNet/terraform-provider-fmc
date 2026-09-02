@@ -92,6 +92,10 @@ func (d *PolicyAssignmentDataSource) Schema(ctx context.Context, req datasource.
 				MarkdownDescription: "Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.",
 				Computed:            true,
 			},
+			"after_destroy_policy_domain": schema.StringAttribute{
+				MarkdownDescription: "Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.",
+				Computed:            true,
+			},
 			"targets": schema.SetNestedAttribute{
 				MarkdownDescription: "List of devices to which the policy should be attached",
 				Computed:            true,

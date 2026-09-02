@@ -1,5 +1,5 @@
 # FMCBUG CSCwr27063 FMC API: Policy assignment endpoint does not collect health policy assignments correctly (duplicates CSCwq97093)
-# Manual resource - Read, Create, Update, Delete, createPolicyAssignment, updatePolicyAssignment
+# Manual resource - Read, Create, Update, Delete, createPolicyAssignment, updatePolicyAssignment, afterDestroyReqMods
 ---
 name: Policy Assignment
 rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/assignment/policyassignments
@@ -35,12 +35,17 @@ attributes:
     mandatory: true
     example: FTDNatPolicy
     enum_values: ["FTDNatPolicy", "HealthPolicy", "AccessPolicy", "RAVpn", "FTDPlatformSettingsPolicy"]
-  - model_name: dummy_after_destroy_policy_id
-    tf_name: after_destroy_policy_id
-    write_only: true
+  - tf_name: after_destroy_policy_id
+    tf_only: true
     type: String
     description: Id of the Policy to be assigned after this policy assignment is destroyed. Applicable for Health and Access Control Policies only.
     example: 0050568A-2561-0ed3-0000-004294972836
+    exclude_test: true
+  - tf_name: after_destroy_policy_domain
+    tf_only: true
+    type: String
+    description: Name of the FMC domain that `after_destroy_policy_id` belongs to. If not set, the `domain` of this resource is used. Applicable for Health and Access Control Policies only.
+    exclude_example: true
     exclude_test: true
   - model_name: targets
     type: Set
