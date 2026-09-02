@@ -10,6 +10,7 @@ description: |-
 ## Unreleased
 
 - (Enhancement) Performance improvements
+- (Enhancement) Add support for `fmc_device_redundant_interface`
 - (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_subinterface`: Increase the maximum MTU from `9000` to `9198`
