@@ -1,0 +1,539 @@
+---
+name: Device Redundant Interface
+rest_endpoint: /api/fmc_config/v1/domain/{DOMAIN_UUID}/devices/devicerecords/%v/redundantinterfaces
+doc_category: Devices
+test_tags: [TF_VAR_device_id, TF_VAR_interface_name, TF_VAR_interface_2_name]
+attributes:
+  - tf_name: device_id
+    type: String
+    reference: true
+    description: Id of the parent device.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: var.device_id
+  - model_name: type
+    type: String
+    description: Type of the object; this value is always 'RedundantInterface'.
+    computed: true
+  - model_name: name
+    type: String
+    description: Name of the Redundant interface in format Redundant<redundant_id>.
+    computed: true
+    computed_body_param: true
+    data_source_query: true
+  # General
+  - model_name: ifname
+    tf_name: logical_name
+    type: String
+    description: Logical name of the interface, unique on the device.
+    example: my_redundant_interface
+    data_source_query: true
+  - model_name: enabled
+    type: Bool
+    description: Enable the interface.
+    default_value: true
+    test_value: "true"
+    exclude_example: true
+  - model_name: managementOnly
+    type: Bool
+    description: Whether this interface limits traffic to management traffic.
+    exclude_test: true
+    exclude_example: true
+  - model_name: description
+    type: String
+    description: Description of the object.
+    example: my description
+  - model_name: id
+    data_path: [securityZone]
+    tf_name: security_zone_id
+    type: String
+    description: Id of the assigned Security Zone.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+  - model_name: type
+    tf_name: security_zone_type
+    data_path: [securityZone]
+    type: String
+    value: SecurityZone
+  - model_name: MTU
+    tf_name: mtu
+    type: Int64
+    description: Maximum transmission unit. Can only be used when `logical_name` is set.
+    min_int: 64
+    max_int: 9198
+    example: 9000
+  - model_name: priority
+    type: Int64
+    description: Priority.
+    min_int: 0
+    max_int: 65535
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableSGTPropagate
+    tf_name: sgt_propagate
+    type: Bool
+    description: Enable SGT propagation.
+    example: "false"
+    exclude_test: true
+  - model_name: redundantId
+    tf_name: redundant_interface_id
+    type: Int64
+    description: Id of the Redundant interface.
+    mandatory: true
+    min_int: 1
+    max_int: 8
+    requires_replace: true
+    example: 1
+  - model_name: id
+    data_path: [primaryInterface]
+    tf_name: primary_interface_id
+    type: String
+    description: Id of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    test_value: data.fmc_device_physical_interface.test.id
+  - model_name: name
+    data_path: [primaryInterface]
+    tf_name: primary_interface_name
+    type: String
+    description: Name of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: GigabitEthernet0/1
+    test_value: data.fmc_device_physical_interface.test.name
+  - model_name: type
+    data_path: [primaryInterface]
+    tf_name: primary_interface_type
+    type: String
+    description: Type of the physical interface that is the primary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: PhysicalInterface
+    test_value: data.fmc_device_physical_interface.test.type
+  - model_name: id
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_id
+    type: String
+    description: Id of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08471
+    test_value: data.fmc_device_physical_interface.test_2.id
+  - model_name: name
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_name
+    type: String
+    description: Name of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: GigabitEthernet0/2
+    test_value: data.fmc_device_physical_interface.test_2.name
+  - model_name: type
+    data_path: [secondaryInterface]
+    tf_name: secondary_interface_type
+    type: String
+    description: Type of the physical interface that is the secondary member of the Redundant interface. Id, Name and Type needs to be set.
+    example: PhysicalInterface
+    test_value: data.fmc_device_physical_interface.test_2.type
+  - model_name: nveOnly
+    type: Bool
+    description: >-
+      Used for VTEP's source interface to restrict it to NVE only.
+      For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic.
+      For transparent firewall modes, the `nve_only` is automatically enabled.
+    test_value: "false"
+    exclude_test: true
+    exclude_example: true
+  # IPv4 - Static
+  - model_name: address
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_address
+    type: String
+    description: Static IPv4 address. Conflicts with mode INLINE or TAP.
+    example: "10.1.1.1"
+  - model_name: netmask
+    data_path: [ipv4, static]
+    tf_name: ipv4_static_netmask
+    type: String
+    description: Netmask (width) for `ipv4_static_address`.
+    example: "24"
+  - model_name: id
+    data_path: [ipv4, static, pool]
+    tf_name: ipv4_address_pool_id
+    type: String
+    description: Id of the assigned IPv4 address pool.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+    exclude_example: true
+  # IPv4 - DHCP
+  - model_name: enableDefaultRouteDHCP
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_obtain_default_route
+    type: Bool
+    description: >-
+      Any non-null value here indicates to enable DHCPv4. Value `false` indicates to enable DHCPv4 without obtaining
+      default IPv4 route but anyway requires also `ipv4_dhcp_route_metric` to be set to exactly 1.
+      Value `true` indicates to enable DHCPv4 and obtain the route and also requires `ipv4_dhcp_route_metric` to be
+      non-null.
+      The `ipv4_dhcp_obtain_default_route` must be null when using `ipv4_static_address`.
+    exclude_example: true
+    exclude_test: true
+  - model_name: dhcpRouteMetric
+    data_path: [ipv4, dhcp]
+    tf_name: ipv4_dhcp_default_route_metric
+    type: Int64
+    description: >-
+      The metric for `ipv4_dhcp_obtain_default_route`. Any non-null value enables DHCP as a side effect. Must be
+      null when using `ipv4_static_address`.
+    min_int: 1
+    max_int: 255
+    exclude_example: true
+    exclude_test: true
+  # IPv4 - PPPoE
+  - model_name: vpdnGroupName
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_vpdn_group_name
+    type: String
+    description: PPPoE Configuration - PPPoE Group Name.
+    exclude_example: true
+    exclude_test: true
+  - model_name: pppoeUser
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_user
+    type: String
+    description: PPPoE Configuration - PPPoE User.
+    exclude_example: true
+    exclude_test: true
+  - model_name: pppoePassword
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_password
+    type: String
+    description: PPPoE Configuration - PPPoE Password.
+    exclude_example: true
+    exclude_test: true
+  - model_name: pppAuth
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_authentication
+    type: String
+    description: PPPoE Configuration - PPPoE Authentication, can be one of PAP, CHAP, MSCHAP.
+    enum_values: [PAP, CHAP, MSCHAP]
+    exclude_example: true
+    exclude_test: true
+  - model_name: pppoeRouteMetric
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_route_metric
+    type: Int64
+    min_int: 1
+    max_int: 255
+    description: PPPoE Configuration - PPPoE route metric, can be value between 1 - 255.
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableRouteSettings
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_route_settings
+    type: Bool
+    description: PPPoE Configuration - PPPoE Enable Route Settings.
+    exclude_example: true
+    exclude_test: true
+  - model_name: storeCredsInFlash
+    data_path: [ipv4, pppoe]
+    tf_name: ipv4_pppoe_store_credentials_in_flash
+    type: Bool
+    description: PPPoE Configuration - PPPoE store username and password in Flash.
+    exclude_example: true
+    exclude_test: true
+  # IPv6 - Basic
+  - model_name: enableIPV6
+    data_path: [ipv6]
+    tf_name: ipv6
+    description: Enable IPv6.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: enforceEUI64
+    data_path: [ipv6]
+    tf_name: ipv6_enforce_eui
+    description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: linkLocalAddress
+    data_path: [ipv6]
+    tf_name: ipv6_link_local_address
+    type: String
+    description: IPv6 Configuration - Link-Local Address.
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableAutoConfig
+    data_path: [ipv6]
+    tf_name: ipv6_auto_config
+    description: Enable IPv6 autoconfiguration.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  # IPv6 address
+  - model_name: addresses
+    data_path: [ipv6]
+    tf_name: ipv6_addresses
+    exclude_example: true
+    exclude_test: true
+    type: List
+    description: Assigned IPv6 addresses.
+    attributes:
+      - model_name: address
+        type: String
+        description: IPv6 address without a slash and prefix.
+        id: true
+        mandatory: true
+        example: "2004::"
+      - model_name: prefix
+        type: String
+        description: Prefix width for the IPv6 address.
+        id: true
+        mandatory: true
+        example: "124"
+      - model_name: enforceEUI64
+        tf_name: enforce_eui
+        description: Enforce IPv6 Extended Unique Identifier (EUI64 from RFC2373).
+        type: Bool
+        exclude_example: true
+        exclude_test: true
+  - model_name: id
+    data_path: [ipv6, pool]
+    tf_name: ipv6_address_pool_id
+    type: String
+    description: Id of the assigned IPv6 Address Pool.
+    example: 76d24097-41c4-4558-a4d0-a8c07ac08470
+    exclude_test: true
+    exclude_example: true
+  # IPv6 Prefixes
+  - model_name: prefixes
+    data_path: [ipv6]
+    tf_name: ipv6_prefixes
+    exclude_example: true
+    exclude_test: true
+    type: List
+    description: Assigned IPv6 prefixes.
+    attributes:
+      - model_name: address
+        type: String
+        description: IPv6 address with the prefix length.
+        id: true
+        example: "2004::/64"
+      - model_name: default
+        type: Bool
+        description: Use default prefix.
+        example: "false"
+  # IPv6 Settings:
+  - model_name: enableDADLoopback
+    data_path: [ipv6]
+    tf_name: ipv6_dad
+    description: Enable IPv6 DAD Loopback Detect (DAD).
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: dadAttempts
+    data_path: [ipv6]
+    tf_name: ipv6_dad_attempts
+    type: Int64
+    description: Number of Duplicate Address Detection (DAD) attempts.
+    min_int: 0
+    max_int: 600
+    exclude_example: true
+    exclude_test: true
+  - model_name: nsInterval
+    data_path: [ipv6]
+    tf_name: ipv6_ns_interval
+    type: Int64
+    description: Neighbor Solicitation (NS) interval.
+    min_int: 1000
+    max_int: 3600000
+    exclude_example: true
+    exclude_test: true
+  - model_name: reachableTime
+    data_path: [ipv6]
+    tf_name: ipv6_reachable_time
+    type: Int64
+    description: The amount of time that a remote IPv6 node is considered reachable after a reachability confirmation event has occurred.
+    min_int: 0
+    max_int: 3600000
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableRA
+    data_path: [ipv6]
+    tf_name: ipv6_ra
+    description: Enable IPv6 router advertisement (RA).
+    type: Bool
+    exclude_test: true
+    exclude_example: true
+  - model_name: raLifeTime
+    data_path: [ipv6]
+    tf_name: ipv6_ra_life_time
+    type: Int64
+    description: Router Advertisement (RA) lifetime.
+    min_int: 0
+    max_int: 9000
+    exclude_example: true
+    exclude_test: true
+  - model_name: raInterval
+    data_path: [ipv6]
+    tf_name: ipv6_ra_interval
+    type: Int64
+    description: Interval between Router Advertisements (RA) transmissions.
+    min_int: 3
+    max_int: 1800
+    exclude_example: true
+    exclude_test: true
+  # IPv6 DHCP
+  - model_name: enableDHCPClient
+    data_path: [ipv6, DHCP]
+    tf_name: ipv6_dhcp
+    type: Bool
+    description: Enable DHCPv6 client.
+    exclude_example: true
+    exclude_test: true
+  - model_name: obtainIPV6DefaultRouteDHCP
+    data_path: [ipv6, DHCP]
+    tf_name: ipv6_dhcp_obtain_default_route
+    description: Obtain default route from DHCPv6.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableDHCPAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_dhcp_address_config
+    description: Enable DHCPv6 for address config.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: enableDHCPNonAddrConfig
+    data_path: [ipv6]
+    tf_name: ipv6_dhcp_nonaddress_config
+    description: Enable DHCPv6 for non-address config.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: prefixName
+    data_path: [ipv6, DHCP, clientPd]
+    tf_name: ipv6_dhcp_client_pd_prefix_name
+    type: String
+    description: Prefix Name for Prefix Delegation.
+    exclude_example: true
+    exclude_test: true
+  - model_name: hintPrefixes
+    tf_name: ipv6_dhcp_client_pd_hint_prefixes
+    data_path: [ipv6, DHCP, clientPd]
+    type: String
+    description: Hint Prefixes for Prefix Delegation (PD).
+    exclude_example: true
+    exclude_test: true
+  # Path Monitoring
+  - model_name: enable
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring
+    description: Enable IP based Monitoring.
+    type: Bool
+    exclude_example: true
+    exclude_test: true
+  - model_name: type
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring_type
+    type: String
+    description: IP based Monitoring - Monitoring Type.
+    enum_values: [AUTO, PEER_IPV4, PEER_IPV6, AUTO4, AUTO6]
+    exclude_example: true
+    exclude_test: true
+  - model_name: monitoredIp
+    data_path: [pathMonitoring]
+    tf_name: ip_based_monitoring_next_hop
+    type: String
+    description: IP address to monitor.
+    exclude_example: true
+    exclude_test: true
+  - model_name: enable
+    data_path: [applicationMonitoring]
+    tf_name: http_based_application_monitoring
+    type: Bool
+    description: >-
+      Enable HTTP based Application Monitoring.
+      FMC enables it implicitly whenever `ip_based_monitoring` is enabled.
+    exclude_example: true
+    exclude_test: true
+  # Advanced - Information
+  - model_name: activeMACAddress
+    tf_name: active_mac_address
+    type: String
+    description: MAC address for active interface in format 0123.4567.89ab.
+    exclude_example: true
+    exclude_test: true
+  - model_name: standbyMACAddress
+    tf_name: standby_mac_address
+    type: String
+    description: MAC address for standby interface in format 0123.4567.89ab.
+    exclude_example: true
+    exclude_test: true
+  # Advanced - ARP
+  - model_name: arpConfig
+    tf_name: arp_table_entries
+    type: List
+    exclude_example: true
+    exclude_test: true
+    attributes:
+      - model_name: macAddress
+        type: String
+        description: MAC address for custom ARP entry in format 0123.4567.89ab.
+        mandatory: true
+      - model_name: ipAddress
+        type: String
+        description: IP address for custom ARP entry.
+        mandatory: true
+      - model_name: enableAlias
+        tf_name: enabled
+        type: Bool
+        description: Enable Alias for custom ARP entry.
+        default_value: true
+  # Advanced - Security Configuration
+  - model_name: enableAntiSpoofing
+    tf_name: anti_spoofing
+    type: Bool
+    description: Enable Anti Spoofing.
+    exclude_example: true
+    exclude_test: true
+  - model_name: fragmentReassembly
+    tf_name: allow_full_fragment_reassembly
+    type: Bool
+    description: Allow Full Fragment Reassembly.
+    exclude_example: true
+    exclude_test: true
+  - model_name: chain
+    data_path: [overrideDefaultFragmentSetting]
+    tf_name: override_default_fragment_setting_chain
+    type: Int64
+    description: Override Default Fragment Setting - Chain value.
+    min_int: 1
+    max_int: 8200
+    exclude_example: true
+    exclude_test: true
+  - model_name: size
+    data_path: [overrideDefaultFragmentSetting]
+    tf_name: override_default_fragment_setting_size
+    type: Int64
+    description: Override Default Fragment Setting - Fragment Size value.
+    min_int: 1
+    max_int: 30000
+    exclude_example: true
+    exclude_test: true
+  - model_name: timeout
+    data_path: [overrideDefaultFragmentSetting]
+    tf_name: override_default_fragment_setting_timeout
+    type: Int64
+    description: Override Default Fragment Setting - Time Out value.
+    min_int: 1
+    max_int: 30
+    exclude_example: true
+    exclude_test: true
+
+test_prerequisites: |-
+  variable "device_id" { default = null } // tests will set $TF_VAR_device_id
+  variable "interface_name" { default = null } // tests will set $TF_VAR_interface_name
+  variable "interface_2_name" { default = null } // tests will set $TF_VAR_interface_name_2
+
+  data "fmc_device_physical_interface" "test" {
+    device_id = var.device_id
+    name      = var.interface_name
+  }
+
+  data "fmc_device_physical_interface" "test_2" {
+    device_id = var.device_id
+    name      = var.interface_2_name
+  }
