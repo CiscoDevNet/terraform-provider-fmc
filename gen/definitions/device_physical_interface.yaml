@@ -103,6 +103,51 @@ attributes:
       For transparent firewall modes, the `nve_only` is automatically enabled.
     exclude_test: true
     exclude_example: true
+  # Switch Port
+  - model_name: portMode
+    data_path: [switchPortConfig]
+    tf_name: switchport_mode
+    type: String
+    description: >-
+      Switch port mode. Can only be used when `mode` is SWITCHPORT.
+    enum_values: [ACCESS, TRUNK]
+    exclude_example: true
+    exclude_test: true
+  - model_name: accessModeVlanId
+    data_path: [switchPortConfig]
+    tf_name: switchport_access_vlan_id
+    type: Int64
+    description: VLAN Id assigned to the switch port in ACCESS mode.
+    min_int: 1
+    max_int: 4070
+    exclude_example: true
+    exclude_test: true
+  - model_name: trunkModeNativeVlanId
+    data_path: [switchPortConfig]
+    tf_name: switchport_trunk_native_vlan_id
+    type: Int64
+    description: Native VLAN Id of the switch port in TRUNK mode.
+    min_int: 1
+    max_int: 4070
+    exclude_example: true
+    exclude_test: true
+  - model_name: trunkModeAllowedVlanIds
+    data_path: [switchPortConfig]
+    tf_name: switchport_trunk_allowed_vlan_ids
+    type: String
+    description: >-
+      Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode,
+      for example `2,4-6`.
+    exclude_example: true
+    exclude_test: true
+  - model_name: protectedEnabled
+    data_path: [switchPortConfig]
+    tf_name: switchport_protected
+    type: Bool
+    description: >-
+      Prevent the switch port from communicating with other protected switch ports on the same VLAN.
+    exclude_example: true
+    exclude_test: true
   # IPv4 - Static
   - model_name: address
     data_path: [ipv4, static]

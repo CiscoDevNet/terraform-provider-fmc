@@ -122,6 +122,14 @@ resource "fmc_device_physical_interface" "example" {
 - `speed` (String) Speed configuration.
   - Choices: `AUTO`, `TEN`, `HUNDRED`, `THOUSAND`, `TEN_THOUSAND`, `TWENTY_FIVE_THOUSAND`, `FORTY_THOUSAND`, `HUNDRED_THOUSAND`, `TWO_HUNDRED_THOUSAND`, `DETECT_SFP`
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
+- `switchport_access_vlan_id` (Number) VLAN Id assigned to the switch port in ACCESS mode.
+  - Range: `1`-`4070`
+- `switchport_mode` (String) Switch port mode. Can only be used when `mode` is SWITCHPORT.
+  - Choices: `ACCESS`, `TRUNK`
+- `switchport_protected` (Boolean) Prevent the switch port from communicating with other protected switch ports on the same VLAN.
+- `switchport_trunk_allowed_vlan_ids` (String) Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.
+- `switchport_trunk_native_vlan_id` (Number) Native VLAN Id of the switch port in TRUNK mode.
+  - Range: `1`-`4070`
 
 ### Read-Only
 

@@ -153,6 +153,35 @@ func (r *DevicePhysicalInterfaceResource) Schema(ctx context.Context, req resour
 				MarkdownDescription: helpers.NewAttributeDescription("Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.").String,
 				Optional:            true,
 			},
+			"switchport_mode": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Switch port mode. Can only be used when `mode` is SWITCHPORT.").AddStringEnumDescription("ACCESS", "TRUNK").String,
+				Optional:            true,
+				Validators: []validator.String{
+					stringvalidator.OneOf("ACCESS", "TRUNK"),
+				},
+			},
+			"switchport_access_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("VLAN Id assigned to the switch port in ACCESS mode.").AddIntegerRangeDescription(1, 4070).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 4070),
+				},
+			},
+			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Native VLAN Id of the switch port in TRUNK mode.").AddIntegerRangeDescription(1, 4070).String,
+				Optional:            true,
+				Validators: []validator.Int64{
+					int64validator.Between(1, 4070),
+				},
+			},
+			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.").String,
+				Optional:            true,
+			},
+			"switchport_protected": schema.BoolAttribute{
+				MarkdownDescription: helpers.NewAttributeDescription("Prevent the switch port from communicating with other protected switch ports on the same VLAN.").String,
+				Optional:            true,
+			},
 			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: helpers.NewAttributeDescription("Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.").String,
 				Optional:            true,

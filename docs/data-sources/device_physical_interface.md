@@ -98,6 +98,11 @@ data "fmc_device_physical_interface" "example" {
 - `sgt_propagate` (Boolean) Whether to propagate SGT.
 - `speed` (String) Speed configuration.
 - `standby_mac_address` (String) MAC address for standby interface in format 0123.4567.89ab.
+- `switchport_access_vlan_id` (Number) VLAN Id assigned to the switch port in ACCESS mode.
+- `switchport_mode` (String) Switch port mode. Can only be used when `mode` is SWITCHPORT.
+- `switchport_protected` (Boolean) Prevent the switch port from communicating with other protected switch ports on the same VLAN.
+- `switchport_trunk_allowed_vlan_ids` (String) Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.
+- `switchport_trunk_native_vlan_id` (Number) Native VLAN Id of the switch port in TRUNK mode.
 - `type` (String) Type of the object.
 
 <a id="nestedatt--arp_table_entries"></a>

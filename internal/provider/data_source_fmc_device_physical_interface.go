@@ -125,6 +125,26 @@ func (d *DevicePhysicalInterfaceDataSource) Schema(ctx context.Context, req data
 				MarkdownDescription: "Used for VTEP's source interface to restrict it to NVE only. For routed mode (NONE mode) the `nve_only` restricts interface to VxLAN traffic and common management traffic. For transparent firewall modes, the `nve_only` is automatically enabled.",
 				Computed:            true,
 			},
+			"switchport_mode": schema.StringAttribute{
+				MarkdownDescription: "Switch port mode. Can only be used when `mode` is SWITCHPORT.",
+				Computed:            true,
+			},
+			"switchport_access_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: "VLAN Id assigned to the switch port in ACCESS mode.",
+				Computed:            true,
+			},
+			"switchport_trunk_native_vlan_id": schema.Int64Attribute{
+				MarkdownDescription: "Native VLAN Id of the switch port in TRUNK mode.",
+				Computed:            true,
+			},
+			"switchport_trunk_allowed_vlan_ids": schema.StringAttribute{
+				MarkdownDescription: "Comma-separated list of VLAN Ids and ranges allowed on the switch port in TRUNK mode, for example `2,4-6`.",
+				Computed:            true,
+			},
+			"switchport_protected": schema.BoolAttribute{
+				MarkdownDescription: "Prevent the switch port from communicating with other protected switch ports on the same VLAN.",
+				Computed:            true,
+			},
 			"ipv4_static_address": schema.StringAttribute{
 				MarkdownDescription: "Static IPv4 address. Conflicts with mode INLINE, PASSIVE, TAP, ERSPAN.",
 				Computed:            true,

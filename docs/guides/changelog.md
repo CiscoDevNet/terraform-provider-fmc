@@ -13,6 +13,7 @@ description: |-
 - (Enhancement) `fmc_device_physical_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_etherchannel_interface`: Increase the maximum MTU from `9000` to `9198`
 - (Enhancement) `fmc_device_subinterface`: Increase the maximum MTU from `9000` to `9198`
+- (Enhancement) `fmc_device_physical_interface`: Add `switch_port_mode`, `switch_port_access_vlan_id`, `switch_port_trunk_native_vlan_id`, `switch_port_trunk_allowed_vlan_ids` and `switch_port_protected` attributes
 
 ## 2.5.0
 
